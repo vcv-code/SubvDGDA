@@ -1,0 +1,102 @@
+{
+  "content": [
+    {
+      "id": 793451,
+      "mrr": false,
+      "numeroConvocatoria": "591891",
+      "descripcion": "Subvenciones a entidades de protección animal 2021",
+      "descripcionLeng": null,
+      "fechaRecepcion": "2021-10-26",
+      "nivel1": "ESTADO",
+      "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+      "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+      "codigoInvente": null
+    },
+    {
+      "id": 846805,
+      "mrr": false,
+      "numeroConvocatoria": "645245",
+      "descripcion": "Subvenciones a entidades de protección animal 2022",
+      "descripcionLeng": null,
+      "fechaRecepcion": "2022-08-24",
+      "nivel1": "ESTADO",
+      "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+      "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+      "codigoInvente": null
+    },
+    {
+      "id": 898193,
+      "mrr": false,
+      "numeroConvocatoria": "696633",
+      "descripcion": "Subvenciones a entidades de protección animal 2023",
+      "descripcionLeng": null,
+      "fechaRecepcion": "2023-05-19",
+      "nivel1": "ESTADO",
+      "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+      "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+      "codigoInvente": null
+    },
+    {
+      "id": 970415,
+      "mrr": false,
+      "numeroConvocatoria": "768855",
+      "descripcion": "Subvenciones a entidades de protección animal 2024",
+      "descripcionLeng": null,
+      "fechaRecepcion": "2024-06-17",
+      "nivel1": "ESTADO",
+      "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+      "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+      "codigoInvente": null
+    },
+    {
+      "id": 999429,
+      "mrr": false,
+      "numeroConvocatoria": "797869",
+      "descripcion": "Subvenciones de concesión directa a las entidades sin ánimo de lucro que gestionen centros y refugios de protección animal. Artículo 82 Real Decreto-ley 7/2024, de 11 de noviembre",
+      "descripcionLeng": null,
+      "fechaRecepcion": "2024-11-19",
+      "nivel1": "ESTADO",
+      "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+      "nivel3": "SECRETARÍA DE ESTADO DE DERECHOS SOCIALES",
+      "codigoInvente": null
+    },
+    {
+      "id": 1031960,
+      "mrr": false,
+      "numeroConvocatoria": "830399",
+      "descripcion": "Subvenciones a entidades de protección animal 2025",
+      "descripcionLeng": null,
+      "fechaRecepcion": "2025-05-05",
+      "nivel1": "ESTADO",
+      "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+      "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+      "codigoInvente": null
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "pageNumber": 0,
+    "pageSize": 50,
+    "offset": 0,
+    "unpaged": false,
+    "paged": true
+  },
+  "last": true,
+  "totalElements": 6,
+  "totalPages": 1,
+  "first": true,
+  "sort": {
+    "sorted": true,
+    "unsorted": false,
+    "empty": false
+  },
+  "numberOfElements": 6,
+  "size": 50,
+  "number": 0,
+  "empty": false,
+  "advertencia": "La reutilización de los datos del Sistema Nacional de Publicidad de Subvenciones y Ayudas Públicas está sujeta a una serie de restricciones y consideraciones legales. Consulte el aviso legal en https://www.infosubvenciones.es/bdnstrans/GE/es/avisolegal.Además, el usuario debe ser consciente que la información presentada es de naturaleza dinámica, y que los datos pueden ser sometidos a correcciones, inserciones, modificaciones y eliminaciones en momentos posteriores a su extracción. Accesos al API del sistema Nacional de Publicidad de Subvenciones y Ayudas Públicas. La Administración Presupuestaria, para salvaguardar la protección del acceso libre e irrestricto de los ciudadanos a este Portal y a su información podrá adoptar medidas restrictivas de acceso al API ante situaciones de manifiesto abuso del servicio, riesgos de seguridad, o uso fraudulento de la información descargada, de acuerdo con las buenas prácticas de gestión de datos abiertos (https://datos.gob.es/es/blog/limitaciones-la-consulta-de-una-api) establecidas por el Ministerio para la Transformación Digital y de la Función Pública."
+}
