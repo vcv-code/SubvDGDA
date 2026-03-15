@@ -2,11 +2,20 @@
 
 Proyecto intermodular de **2º FPGS Desarrollo de Aplicaciones Web (DAW)**.
 
-Consiste en el desarrollo de una **plataforma web para analizar subvenciones públicas relacionadas con bienestar animal en España**, centralizando información actualmente dispersa y permitiendo su consulta, filtrado y visualización a partir de datos abiertos y documentos oficiales.
+---
+
+## Autores
+
+Proyecto desarrollado por:
+
+- Miyuki Salvador
+- Verónica Corpa
 
 ---
 
 ## Objetivos del proyecto
+
+El proyecto consiste en el desarrollo de una **plataforma web para analizar subvenciones públicas relacionadas con bienestar animal en España**, centralizando información actualmente dispersa y permitiendo su consulta, filtrado y visualización a partir de datos abiertos y documentos oficiales.
 
 El sistema permitirá:
 
@@ -50,9 +59,13 @@ Frontend
 
 ## Modelo de datos (diagrama ER)
 
-El modelo de datos del sistema se describe en detalle en la documentación técnicase y se ha diseñado para permitir análisis estadísticos sobre subvenciones públicas, como evolución de financiación por año, entidades con mayor financiación o causas más frecuentes de exclusión.
+El modelo de datos del sistema se describe en detalle en la documentación técnica y se ha diseñado para permitir análisis estadísticos sobre subvenciones públicas, como evolución de financiación por año, entidades con mayor financiación o causas más frecuentes de exclusión.
 
-![Modelo de datos](docs/img/modelo-datos-er.png)
+<p align="center">
+  <a href="docs/img/modelo-datos-er.png">
+    <img src="docs/img/modelo-datos-er.png" width="750">
+  </a>
+</p>
 
 ---
 
@@ -61,7 +74,7 @@ El modelo de datos del sistema se describe en detalle en la documentación técn
 | Área | Tecnologías |
 |-----|-------------|
 | Frontend | HTML, CSS, JavaScript, Chart.js |
-| Backend | Python, API REST |
+| Backend | Python (scripts de ingestión y API REST) |
 | Base de datos | MySQL / MariaDB |
 | Infraestructura | Docker, Nginx |
 | Control de versiones | Git, GitHub |
@@ -98,7 +111,7 @@ La aplicación se desplegará mediante contenedores Docker y un servidor Nginx c
 
 ## Fuentes de datos analizadas
 
-Los datos se obtienen de fuentes externas, se procesan y almacenan para permitir su análisis y visualización.
+Los datos se obtienen de fuentes externas, se procesan y posteriormente se almacenan para permitir su análisis y visualización.
 
 ### Base de Datos Nacional de Subvenciones (BDNS)
 
@@ -243,9 +256,45 @@ Descripción general:
 
 ---
 
+## Scripts de ingestión de datos
+
+Actualmente el proyecto incluye un primer script para descargar datos desde la API BDNS.
+
+### Descarga de convocatorias BDNS
+
+Archivo:
+
+`scripts/ingestion/bdns_client.py`
+
+Este script realiza las siguientes tareas:
+
+- consulta el endpoint `/convocatorias/busqueda` de la API BDNS
+- gestiona la paginación de resultados
+- descarga convocatorias relacionadas con bienestar animal
+- guarda los resultados como archivos JSON en `data/raw/`
+
+El script también incluye pequeñas mejoras para mejorar su robustez:
+
+- control básico de errores de conexión
+- timeout en las peticiones HTTP
+- eliminación de duplicados por `numeroConvocatoria`
+- generación automática del campo `anio_convocatoria`
+- guardado de archivos con fecha para mantener histórico de descargas
+
+Ejecutar el script:
+
+```bash
+pip install requests
+python scripts/ingestion/bdns_client.py
+```
+
+---
+
 ## Estado actual del proyecto
 
-Fase actual: **análisis de fuentes de datos y diseño del modelo de datos del sistema**.
+Fase actual: **análisis de fuentes de datos y primeras herramientas de ingestión de datos**.
+
+Durante esta fase se ha desarrollado un primer script en Python para descargar convocatorias desde la API BDNS y analizar la estructura real de los datos.
 
 Se ha confirmado que:
 
@@ -290,6 +339,13 @@ Crear rama de desarrollo:
 ```bash
 git checkout -b dev
 git push -u origin dev
+```
+
+Sincronizar repositorio:
+
+```bash
+git checkout dev
+git pull
 ```
 
 Flujo de trabajo:
