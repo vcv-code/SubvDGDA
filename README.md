@@ -19,7 +19,42 @@ El sistema permitirá:
 
 El proyecto busca facilitar el análisis y comprensión de las políticas públicas de bienestar animal a partir de datos abiertos.
 
+---
+
+## Documentación técnica
+
+La documentación detallada del proyecto se encuentra en la carpeta `docs`.
+
+- [Análisis de la API BDNS](docs/api-bdns.md)
+- [Modelo de datos del sistema](docs/modelo-datos.md)
+
+---
+
 ## Arquitectura prevista del sistema
+
+El sistema sigue una arquitectura cliente–servidor basada en una API REST:
+
+```
+API externa BDNS + PDFs oficiales
+      ↓
+Backend Python
+      ↓
+Base de datos MySQL / MariaDB
+      ↓
+API propia
+      ↓
+Frontend
+```
+
+---
+
+## Modelo de datos (diagrama ER)
+
+El modelo de datos del sistema se describe en detalle en la documentación técnicase y se ha diseñado para permitir análisis estadísticos sobre subvenciones públicas, como evolución de financiación por año, entidades con mayor financiación o causas más frecuentes de exclusión.
+
+![Modelo de datos](docs/img/modelo-datos-er.png)
+
+---
 
 ## Tecnologías 
 
@@ -29,15 +64,12 @@ El proyecto busca facilitar el análisis y comprensión de las políticas públi
 | Backend | Python, API REST |
 | Base de datos | MySQL / MariaDB |
 | Infraestructura | Docker, Nginx |
+| Control de versiones | Git, GitHub |
 | Fuentes de datos | API BDNS, PDFs oficiales |
-
----
 
 ### Frontend
 
 El frontend permitirá explorar los datos mediante filtros y visualizaciones.
-
----
 
 ### Backend
 
@@ -47,8 +79,6 @@ El backend será responsable de:
 - procesar los datos
 - almacenarlos en base de datos
 - exponerlos al frontend mediante una API
-
----
 
 ### Base de datos
 
@@ -60,35 +90,15 @@ Se almacenarán:
 - importes
 - metadatos de las subvenciones
 
----
-
 ### Infraestructura
 
 La aplicación se desplegará mediante contenedores Docker y un servidor Nginx como proxy inverso.
 
 ---
 
-## Flujo general de datos
-
-El sistema seguirá el siguiente flujo:
-
-```
-APIs externas
-      ↓
-Backend Python
-      ↓
-Base de datos
-      ↓
-API propia
-      ↓
-Frontend
-```
+## Fuentes de datos analizadas
 
 Los datos se obtienen de fuentes externas, se procesan y almacenan para permitir su análisis y visualización.
-
----
-
-## Fuentes de datos analizadas
 
 ### Base de Datos Nacional de Subvenciones (BDNS)
 
@@ -129,7 +139,7 @@ Esto implica que la API pública **no contiene toda la información necesaria pa
 
 ### Datos disponibles en los PDFs oficiales
 
-Como alternativa, se prevé utilizar los **PDFs de resoluciones puclicados en la página web oficial de la DGDA**, que contienen tablas estructuradas con información detallada.
+Como alternativa, se prevé utilizar los **PDFs de resoluciones publicados en la página web oficial de la DGDA**, que contienen tablas estructuradas con información detallada.
 
 #### Datos de asociaciones
 
@@ -216,7 +226,7 @@ scripts/
     pdf_extraction/ # extracción de datos de PDFs
 
 docs/
-    images/         # capturas e imágenes de documentación
+    img/            # diagramas e imágenes de la documentación
 
 docker/
     configuración de contenedores
@@ -235,7 +245,7 @@ Descripción general:
 
 ## Estado actual del proyecto
 
-Fase actual: **investigación de fuentes de datos y diseño de la arquitectura del sistema**.
+Fase actual: **análisis de fuentes de datos y diseño del modelo de datos del sistema**.
 
 Se ha confirmado que:
 
@@ -289,6 +299,8 @@ main
 dev
 feature/*
 ```
+
+---
 
 ## Gestión del proyecto
 
