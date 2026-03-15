@@ -52,6 +52,8 @@ Este proceso se ha desarrollado en tres pasos principales:
 2. Identificación de las relaciones entre dichas entidades.
 3. Conversión de las entidades y relaciones en tablas de una base de datos relacional.
 
+---
+
 ## 4. Entidades principales del modelo de datos
 
 A partir del análisis de los datos obtenidos de la API BDNS y de los documentos oficiales en formato PDF, se identificaron las principales entidades implicadas en el proceso de concesión de subvenciones.
@@ -114,6 +116,8 @@ Campos principales:
 - tipo_benefic
 
 Un beneficiario puede presentar varias solicitudes en distintas convocatorias.
+
+Sin embargo, hay que tener en cuenta que en el caso de las entidades locales, estas pueden participar adicionalmente en agrupaciones de ayuntamientos, mientras que las asociaciones de protección animal lo hacen únicamente como beneficiarios individuales.
 
 ---
 
@@ -281,7 +285,7 @@ Si la solicitud es aprobada se genera una concesión; en caso contrario puede qu
 
 ### Líneas de actuación y concesiones
 
-LINEAS_ACTUACION 1 ─── N CONCESIONES
+LINEAS 1 ─── N CONCESIONES
 
 Cada concesión está asociada a una única línea de actuación.
 
@@ -401,8 +405,9 @@ En los documentos PDF oficiales se indica que una solicitud puede estar excluida
 
 Una posible simplificación habría sido almacenar estas causas directamente como texto o como un campo JSON dentro de la tabla de solicitudes.
 
-Por ejemplo: "16,18,19" o [16,18,19]
-
+Por ejemplo: 
+- `"16,18,19"`
+- `[16,18,19]`
 
 Sin embargo, esta aproximación dificultaría la realización de consultas analíticas, como por ejemplo identificar cuáles son las causas de exclusión más frecuentes.
 
