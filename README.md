@@ -371,3 +371,115 @@ Las funcionalidades y tareas de desarrollo se registran como **Issues**, que pos
 - Done
 
 Cada funcionalidad o investigación se desarrolla en una rama `feature/*` y posteriormente se integra en la rama `dev` mediante Pull Requests.
+
+---
+
+## Día 3 — Extracción de datos desde PDFs oficiales
+
+### Contexto
+
+Mientras Verónica continuaba con el modelo de base de datos,
+yo comencé el trabajo correspondiente al Issue #7: la extracción
+de datos de beneficiarios e importes desde los PDFs oficiales de resoluciones
+publicados por la Dirección General de los Derechos de los Animales (DGDA).
+
+Esta tarea era necesaria porque las concesiones de estas subvenciones no
+aparecen en el endpoint `/concesiones/busqueda` de la API BDNS, por lo que
+la única fuente disponible son los documentos PDF oficiales.
+
+---
+
+### Análisis previo de los PDFs
+
+Se descargó `Resolucion_Concesion_Subvenciones_EPA2024.pdf` desde la web
+oficial del Ministerio:
+
+`https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones/EPA`
+
+El PDF contiene 4 anexos:
+
+| Anexo | Contenido | Columnas |
+|-------|-----------|----------|
+| Anexo I | Beneficiarias | Nº expediente, CIF, Entidad, Puntos, Importe |
+| Anexo II | Admitidas no beneficiarias | Nº expediente, CIF, Entidad, Puntos |
+| Anexo III | Excluidas | Nº expediente, CIF, Entidad, Causas de exclusión |
+| Anexo IV | Desistidas | Nº expediente, CIF, Entidad |
+
+![Anexo I del PDF](docs/img/CapturaAnexo1PDF.png)
+
+---
+
+### Configuración del entorno
+```bash
+git checkout dev
+git pull
+git checkout -b feature/extraccion-pdfs
+mkdir scripts\pdf_extraction
+New-Item scripts\pdf_extraction\pdf_extractor.py
+mkdir data\processed
+pip install pdfplumber
+```
+
+---
+
+### Script pdf_extractor.py
+
+Se creó `scripts/pdf_extraction/pdf_extractor.py` con las siguientes
+funcionalidades:
+
+- Detección automática de cada anexo mediante palabras clave
+- Cabeceras definidas manualmente para evitar problemas con celdas partidas
+- Validación del formato de expediente con regex (`\d{4}[A-Z]\d+`)
+- Conversión de importes a float
+- Reconstrucción de filas partidas en varias líneas
+- Filtrado de texto de firma electrónica
+- Metadatos por fila (PDF, página, anexo)
+- Resultados guardados en `data/processed/` con fecha en el nombre
+
+![Explorador VSCode pdf .py](docs/img/pdf_extractorpy.png)
+
+---
+
+### Resultados
+```
+INFO - Procesando: Resolucion_Concesion_Subvenciones_EPA2024.pdf
+INFO -   Página 3: anexo 'beneficiarias'
+INFO -   Página 22: anexo 'admitidas_no_beneficiarias'
+INFO -   Página 27: anexo 'excluidas'
+INFO -   Página 29: anexo 'desistidas'
+INFO -   Guardado: 2026-03-18_..._admitidas_no_beneficiarias.json (226 filas)
+INFO -   Guardado: 2026-03-18_..._beneficiarias.json (620 filas)
+INFO -   Guardado: 2026-03-18_..._excluidas.json (14 filas)
+INFO -   Guardado: 2026-03-18_..._desistidas.json (9 filas)
+INFO - Extracción completada.
+```
+
+Verificación de expedientes únicos en Anexo I:
+```bash
+python -c "import json; data=json.load(open('data/processed/2026-03-18_Resolucion_Concesion_Subvenciones_EPA2024_beneficiarias.json', encoding='utf-8')); exps=set(d['num_expediente'] for d in data); print(f'Expedientes únicos: {len(exps)}')"
+```
+
+Resultado: `Expedientes únicos: 620`
+
+![Carpeta data/processed](docs/img/data-proc-4json.png)
+
+![JSON Beneficiarios](docs/img/json-beneficiciarios.png)
+
+---
+
+### Integración en el repositorio
+```bash
+git add .
+git commit -m "feat: añadir script pdf_extractor.py para extracción de datos desde PDFs oficiales"
+git push --set-upstream origin feature/extraccion-pdfs
+```
+
+PR abierto hacia `dev` solicitando revisión a (nombre compañera).
+
+![PR GitHub](docs/img/PRGitH.png)
+```bash
+git checkout dev
+git pull
+```
+
+![git log](docs/img/gitlogOnline.png)
