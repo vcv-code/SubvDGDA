@@ -1,0 +1,7940 @@
+[
+  {
+    "anio": 2023,
+    "num_expediente": "2023B628",
+    "entidad": "ASOCIACION DE AMIGOS BICHEROS AMIBICHOS.",
+    "cif": "G45844933",
+    "puntuacion": null,
+    "importe": 4028.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B454",
+    "entidad": "ANIMALS SENSE SOSTRE/ANIMALES SIN TECHO.",
+    "cif": "G63133722",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B647",
+    "entidad": "ASOCIACIÓN AKIRA.",
+    "cif": "G54557574",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B842",
+    "entidad": "ASOCIACIÓN PARA LA DEFENSA DE LOS ÉQUIDOS-ADE.",
+    "cif": "G62509369",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B564",
+    "entidad": "ASOCIACIÓN PARA LA INTEGRACIÓN FAMILIAR DE ANIMALES ABANDONADOS (MARLENE).",
+    "cif": "G91395160",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B536",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES GATOCAN.",
+    "cif": "G70047881",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B275",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES SALVANDO PELUDOS.",
+    "cif": "G86945136",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B214",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES Y PLANTAS ARCA DE NOÉ DE ALBACETE.",
+    "cif": "G02119071",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B602",
+    "entidad": "LA HUELLA ROJA ALMERIA.",
+    "cif": "G04722476",
+    "puntuacion": null,
+    "importe": 10000.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B730",
+    "entidad": "ASPROAN ASOCIACION PROTECTORA DE ANIMALES.",
+    "cif": "G39217567",
+    "puntuacion": null,
+    "importe": 9611.97,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B784",
+    "entidad": "ASOCIACIÓN PUPEC DEFENSA Y PROTECCIÓN ANIMAL.",
+    "cif": "G73960122",
+    "puntuacion": null,
+    "importe": 9516.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B451",
+    "entidad": "REFUGIO LA VIDA COLOR FRAMBUESA.",
+    "cif": "G01560747",
+    "puntuacion": null,
+    "importe": 9516.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B401",
+    "entidad": "ASOCIACION TIERSTATION ESPERANZA.",
+    "cif": "G92219237",
+    "puntuacion": null,
+    "importe": 9044.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B642",
+    "entidad": "ASOC PARA LA DEFENSA DE LOS ANIMALES Y PLANTAS EL ARCA DE NOE DE CORDOBA.",
+    "cif": "G14496335",
+    "puntuacion": null,
+    "importe": 8676.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B383",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES SIEMPRE CONTIGO.",
+    "cif": "G72062110",
+    "puntuacion": null,
+    "importe": 8676.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B329",
+    "entidad": "LLIGA PROTECTORA D'ANIMALS I PLANTES DE SABADELL.",
+    "cif": "G08977126",
+    "puntuacion": null,
+    "importe": 8676.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B378",
+    "entidad": "ASOCIACION MODEPRAN.",
+    "cif": "G98265705",
+    "puntuacion": null,
+    "importe": 8585.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B338",
+    "entidad": "REFUGIO DE ANIMALES HORSE HOLYDYS TENERIFE.",
+    "cif": "G76782267",
+    "puntuacion": null,
+    "importe": 8585.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B708",
+    "entidad": "SOS 112 VAGABUNDOS.",
+    "cif": "G55268346",
+    "puntuacion": null,
+    "importe": 8585.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B277",
+    "entidad": "CASA DE POSTAS.",
+    "cif": "G90085945",
+    "puntuacion": null,
+    "importe": 8494.89,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B779",
+    "entidad": "ASOCIACIÓN ANIMALEJOS PARA LA DEFENSA Y PROTECCIÓN ANIMAL.",
+    "cif": "G40254955",
+    "puntuacion": null,
+    "importe": 8315.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B259",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES PIRINEOS.",
+    "cif": "G22141857",
+    "puntuacion": null,
+    "importe": 8315.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B116",
+    "entidad": "ASOC PARA LA DEFENSA Y PROTECCION DE LOS ANIMALES CANARIOS.",
+    "cif": "G38220455",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B431",
+    "entidad": "ASOCIACIÓN FELINA GATOÑESES.",
+    "cif": "G19776780",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B880",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES YY PLANTAS BAJO ARAGON.",
+    "cif": "G44195733",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B129",
+    "entidad": "ASOCIACION REFUGIO CANINO DE ALMENDRALEJO (RECAL).",
+    "cif": "G06275234",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B751",
+    "entidad": "ASSOCIACIO SAR (SALVEM ANIMALS RECOLLITS).",
+    "cif": "G65217416",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B420",
+    "entidad": "PROTECTORA DE ANIMALES Y PLANTAS DE AYAMONTE.",
+    "cif": "G21271705",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B592",
+    "entidad": "SANTUARIO BUENAVIDA.",
+    "cif": "G01987007",
+    "puntuacion": null,
+    "importe": 8138.21,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B268",
+    "entidad": "SUSPIROS DE CUATRO PATAS.",
+    "cif": "G93474252",
+    "puntuacion": null,
+    "importe": 8050.27,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B412",
+    "entidad": "AMIGO GALGO.",
+    "cif": "G72312416",
+    "puntuacion": null,
+    "importe": 7875.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B337",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES TERRENITO ASOS.",
+    "cif": "G42504589",
+    "puntuacion": null,
+    "importe": 7875.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B038",
+    "entidad": "FUNDACION EL HOGAR ANIMAL SANCTUARY.",
+    "cif": "G02537181",
+    "puntuacion": null,
+    "importe": 7875.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B168",
+    "entidad": "PROJECTE ANIMALISTA LA POBLA DE VALLBONA PAP.",
+    "cif": "G98907595",
+    "puntuacion": null,
+    "importe": 7789.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B740",
+    "entidad": "PROTECTORA D¿ANIMALS LYDIA ARGILÉS.",
+    "cif": "G25477191",
+    "puntuacion": null,
+    "importe": 7789.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B663",
+    "entidad": "ASSOCIACIÓ DE COLÒNIES FELINES D´EIVISSA.",
+    "cif": "G19769959",
+    "puntuacion": null,
+    "importe": 7748.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B416",
+    "entidad": "ASOCIACIÓN AMIGOS DE LOS ANIMALES.",
+    "cif": "G18367151",
+    "puntuacion": null,
+    "importe": 7703.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B637",
+    "entidad": "ASSOCIACIÓ ANIMALS D'ALARÓ.",
+    "cif": "G16549479",
+    "puntuacion": null,
+    "importe": 7703.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B402",
+    "entidad": "FUNDACIO DAINA PER LA DEFENSA DELS ANIMALS I LA NATURA.",
+    "cif": "G65327553",
+    "puntuacion": null,
+    "importe": 7703.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B156",
+    "entidad": "GATITUD ASOCIACIÓN PROTECTORA DE LOS GATOS.",
+    "cif": "G56021215",
+    "puntuacion": null,
+    "importe": 7703.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B681",
+    "entidad": "GESTIÓN FELINA AEROPORTUARIA MADRID.",
+    "cif": "G87916169",
+    "puntuacion": null,
+    "importe": 7703.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B066",
+    "entidad": "ASOCIACIÓN PROTECCIÓN FELINA VALDEMORILLO.",
+    "cif": "G87640736",
+    "puntuacion": null,
+    "importe": 7623.35,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B148",
+    "entidad": "ASOCIACIÓN ECOLÓGICA FELINA DE TOLEDO.",
+    "cif": "G45916665",
+    "puntuacion": null,
+    "importe": 7617.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B005",
+    "entidad": "ASOCIACION EL CAPITAN ANIMAL PROJECT.",
+    "cif": "G13980404",
+    "puntuacion": null,
+    "importe": 7448.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B582",
+    "entidad": "DRAC-DEFENSA I RESCAT ANIMAL.",
+    "cif": "G67804617",
+    "puntuacion": null,
+    "importe": 7448.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B767",
+    "entidad": "AMANECER ANIMAL.",
+    "cif": "G87065140",
+    "puntuacion": null,
+    "importe": 7280.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B764",
+    "entidad": "ASOCIACION ADOPTA UN CONEJO.",
+    "cif": "G72697410",
+    "puntuacion": null,
+    "importe": 7280.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B012",
+    "entidad": "ASOCIACION PROTECTORA ALFAGUARA.",
+    "cif": "G56693138",
+    "puntuacion": null,
+    "importe": 7280.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B753",
+    "entidad": "ASOCIACION PROTECTORA FIDO.",
+    "cif": "G72942592",
+    "puntuacion": null,
+    "importe": 7280.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B053",
+    "entidad": "PROTECTORA D'ANIMALS MAÓ.",
+    "cif": "G57659922",
+    "puntuacion": null,
+    "importe": 7280.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B384",
+    "entidad": "REDENCION EL HOGAR DE LOS ANIMALES EN SORIA.",
+    "cif": "G42163592",
+    "puntuacion": null,
+    "importe": 7280.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B119",
+    "entidad": "ASOCIACIÓN PROTECTORA PROYECTO GATO.",
+    "cif": "G36982197",
+    "puntuacion": null,
+    "importe": 7033.15,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B094",
+    "entidad": "ASSOCIACIÓ PROGAT TERRASSA.",
+    "cif": "G63480024",
+    "puntuacion": null,
+    "importe": 6951.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B113",
+    "entidad": "ASOCIACION FELINOS LO MORANT.",
+    "cif": "G54824941",
+    "puntuacion": null,
+    "importe": 6870.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B224",
+    "entidad": "SANTUARIO WINSTON DE AYUDA A CABALLOS MALTRATADOS Y/O ABANDONADOS.",
+    "cif": "G05236989",
+    "puntuacion": null,
+    "importe": 6870.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B605",
+    "entidad": "ASOCIACIÓN CER TOLEDO.",
+    "cif": "G01908540",
+    "puntuacion": null,
+    "importe": 6789.89,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B701",
+    "entidad": "ASOC. BIENESTAR Y DEFENSA DE LOS ANIMALES ABYDA JAEN.",
+    "cif": "G23621972",
+    "puntuacion": null,
+    "importe": 6709.79,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B411",
+    "entidad": "ASOCIACIÓN ANIMALISTA DONKEY DREAMLAND.",
+    "cif": "G01665686",
+    "puntuacion": null,
+    "importe": 6669.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B284",
+    "entidad": "ASOCIACION DE PROTECCION Y RESCATE FELINO PROGATOS.",
+    "cif": "G67705392",
+    "puntuacion": null,
+    "importe": 6630.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B521",
+    "entidad": "ASOC. PROTECTORA D´ANIMALS DEL CAMPELLO I POBLES LIMITROFS.",
+    "cif": "G03842655",
+    "puntuacion": null,
+    "importe": 6551.05,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B826",
+    "entidad": "ASOCIACIÓN CHEMAYSUMANADA.",
+    "cif": "G72767387",
+    "puntuacion": null,
+    "importe": 6551.05,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B502",
+    "entidad": "ASOCIACIÓN MAJADACATS.",
+    "cif": "G88522859",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B728",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES Y PLANTAS DE VIGO.",
+    "cif": "G36638955",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B562",
+    "entidad": "ASSOCIACIO PETJADES DE L'EBRE.",
+    "cif": "G55772057",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B704",
+    "entidad": "EL SOLAR DELS GATS.",
+    "cif": "G09690611",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B745",
+    "entidad": "FUNDACIÓN REFUXIO DE ANIMAIS.",
+    "cif": "G70030762",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B107",
+    "entidad": "GATUNOS DE BUÑOL.",
+    "cif": "G98961378",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B824",
+    "entidad": "LAST HOPE SANCTUARY.",
+    "cif": "G56566300",
+    "puntuacion": null,
+    "importe": 6472.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B298",
+    "entidad": "ASOCIACION PARA LA DEFENSA DE LOS ANIMALES «NO ME ABANDONES».",
+    "cif": "G11745213",
+    "puntuacion": null,
+    "importe": 6441.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B106",
+    "entidad": "ASOCIACION DE RIVAS-VACIAMADRID PARA LA PROTECCION DE LOS ANIMALES (RIVANIMAL).",
+    "cif": "G86315421",
+    "puntuacion": null,
+    "importe": 6433.28,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B080",
+    "entidad": "ASOCIACION EL REFUGIO DEL BURRITO.",
+    "cif": "G92455310",
+    "puntuacion": null,
+    "importe": 6394.26,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B247",
+    "entidad": "LLIGA PER A LA PROTECCIO D'ANIMALS I PLANTES DE BARCELONA.",
+    "cif": "G08346348",
+    "puntuacion": null,
+    "importe": 6394.26,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B559",
+    "entidad": "SOSFELINOSBASTI.",
+    "cif": "G56820194",
+    "puntuacion": null,
+    "importe": 6394.26,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B177",
+    "entidad": "ASOCIACIÓN GATOS Y AMIGOS.",
+    "cif": "G93281038",
+    "puntuacion": null,
+    "importe": 6316.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B324",
+    "entidad": "SOCIEDAD PROTECTORA ANIMALES DE ORIENTE.",
+    "cif": "G33963919",
+    "puntuacion": null,
+    "importe": 6316.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B150",
+    "entidad": "PROTECTORA D'ANIMALS DE CIUTADELLA.",
+    "cif": "G57019218",
+    "puntuacion": null,
+    "importe": 6270.25,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B157",
+    "entidad": "ASOCIACION RED DE AYUDA ANIMAL.",
+    "cif": "G26514026",
+    "puntuacion": null,
+    "importe": 6239.44,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B679",
+    "entidad": "A.P.A.M.A. NATURE.",
+    "cif": "G73912115",
+    "puntuacion": null,
+    "importe": 6162.77,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B242",
+    "entidad": "ASOCIACION A LOS GATITOS DE ALCOY.",
+    "cif": "G42613042",
+    "puntuacion": null,
+    "importe": 6142.73,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B543",
+    "entidad": "ASOCIACIÓN GATICOS Y PERRETES MALLORCA.",
+    "cif": "G16626509",
+    "puntuacion": null,
+    "importe": 6086.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B343",
+    "entidad": "ASOCIACION VILLANIMAL.",
+    "cif": "G87644613",
+    "puntuacion": null,
+    "importe": 6068.37,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B859",
+    "entidad": "ASOCIACIÓN PARA LA PROTECCIÓN FELINA Y APLICACIÓN DEL MÉTODO CER.",
+    "cif": "G19785542",
+    "puntuacion": null,
+    "importe": 6062.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B339",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y PLANTAS EL COBIJO.",
+    "cif": "G30148472",
+    "puntuacion": null,
+    "importe": 6044.89,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B724",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES ABANDONADOS LAS BRUJAS DE EL MOLAR.",
+    "cif": "G86802980",
+    "puntuacion": null,
+    "importe": 6010.88,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B499",
+    "entidad": "RODAMONS DE RUBÍ.",
+    "cif": "G65361941",
+    "puntuacion": null,
+    "importe": 5890.79,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B019",
+    "entidad": "ASOCIACIÓN REFUGIO EL AZAR.",
+    "cif": "G16458499",
+    "puntuacion": null,
+    "importe": 5860.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B173",
+    "entidad": "GRUPO DE PROTECCIÓN ANIMAL DE RUTE.",
+    "cif": "G14842629",
+    "puntuacion": null,
+    "importe": 5860.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B330",
+    "entidad": "SOS GAT SALOU.",
+    "cif": "G55593883",
+    "puntuacion": null,
+    "importe": 5786.73,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B240",
+    "entidad": "ADOPTA UN PERRO ABANDONADO.",
+    "cif": "G98394018",
+    "puntuacion": null,
+    "importe": 5713.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B057",
+    "entidad": "ASOCIACION FEEL.",
+    "cif": "G88313978",
+    "puntuacion": null,
+    "importe": 5713.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B628",
+    "entidad": "HAPPY PETS MELILLA.",
+    "cif": "G72887516",
+    "puntuacion": null,
+    "importe": 5713.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B755",
+    "entidad": "ADOPCATS.",
+    "cif": "G04951547",
+    "puntuacion": null,
+    "importe": 5675.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B622",
+    "entidad": "ASOCIACION PRODA VINAROS.",
+    "cif": "G12750121",
+    "puntuacion": null,
+    "importe": 5661.2,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B604",
+    "entidad": "ADOPTALO.COM-MADRID.",
+    "cif": "G85278646",
+    "puntuacion": null,
+    "importe": 5647.05,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B389",
+    "entidad": "ASOCIACIÓN PROTECORA AMIGOS DE LOS ANIMALES DE GUARDO.",
+    "cif": "G34205187",
+    "puntuacion": null,
+    "importe": 5639.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B023",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES HUELLA VERDE OLVERA.",
+    "cif": "G72289556",
+    "puntuacion": null,
+    "importe": 5567.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B834",
+    "entidad": "ASSOCIACIO MOIX BLAU.",
+    "cif": "G57935819",
+    "puntuacion": null,
+    "importe": 5523.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B469",
+    "entidad": "ASOCIACIÓN DE RESCATE ANIMAL BRIGADA ANIMALISTA.",
+    "cif": "G72313497",
+    "puntuacion": null,
+    "importe": 5422.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B088",
+    "entidad": "PROGAT CATALUNYA.",
+    "cif": "G61647236",
+    "puntuacion": null,
+    "importe": 5422.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B625",
+    "entidad": "REFUGIO DE ANIMALES DE PEDRO MUÑOZ-CIUDAD ANIMAL.",
+    "cif": "G13379995",
+    "puntuacion": null,
+    "importe": 5422.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B561",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES DEL NOROESTE DE TENERIFE.",
+    "cif": "G38609103",
+    "puntuacion": null,
+    "importe": 5351.67,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B348",
+    "entidad": "ASOCIACIÓ GATS D'OLIVELLA.",
+    "cif": "G66598244",
+    "puntuacion": null,
+    "importe": 5266.77,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B261",
+    "entidad": "ASOCIACION REFUGIO CANINO LA RESERVA.",
+    "cif": "G04242756",
+    "puntuacion": null,
+    "importe": 5210.56,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B603",
+    "entidad": "SOCIEDAD VALENCIANA PROTECTORA ANIMALES Y PLANTAS.",
+    "cif": "G46100111",
+    "puntuacion": null,
+    "importe": 5129.62,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B158",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES ALMOHADILLAS FELICES.",
+    "cif": "G73851412",
+    "puntuacion": null,
+    "importe": 5099.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B660",
+    "entidad": "ALMA LIBRE RESCUE ESPAÑA.",
+    "cif": "G16922817",
+    "puntuacion": null,
+    "importe": 5071.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B671",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES DE CAMBADOS.",
+    "cif": "G36328078",
+    "puntuacion": null,
+    "importe": 5064.51,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B534",
+    "entidad": "ASSOCIACIÓ GATS DE MOLINS DE REI.",
+    "cif": "G56225667",
+    "puntuacion": null,
+    "importe": 5030.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B344",
+    "entidad": "ASOCIACIÓN PROYECTO CES GATOS TORREVIEJA.",
+    "cif": "B54999156",
+    "puntuacion": null,
+    "importe": 5019.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B661",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMÁIS OS BIOSBARDOS.",
+    "cif": "G27753268",
+    "puntuacion": null,
+    "importe": 5002.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B201",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES DE DENIA (APAD).",
+    "cif": "G03660305",
+    "puntuacion": null,
+    "importe": 5002.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B133",
+    "entidad": "SPAP SAN ANTONIO ABAD.",
+    "cif": "G96702337",
+    "puntuacion": null,
+    "importe": 5002.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B365",
+    "entidad": "ASOCIACIÓN ESCORIAL FELINO.",
+    "cif": "G86981529",
+    "puntuacion": null,
+    "importe": 4907.03,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B347",
+    "entidad": "ASOCIACIÓN EL BUEN AMIGO.",
+    "cif": "G41457284",
+    "puntuacion": null,
+    "importe": 4866.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B819",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES CUENCANIMAL.",
+    "cif": "G16183436",
+    "puntuacion": null,
+    "importe": 4866.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B474",
+    "entidad": "ASSOCIACIÓ BARCELONA GAT I GOS.",
+    "cif": "G65152258",
+    "puntuacion": null,
+    "importe": 4866.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B725",
+    "entidad": "ASOCIACIÓN MADRILEÑA RESCATE CANINO.",
+    "cif": "G56419518",
+    "puntuacion": null,
+    "importe": 4832.63,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B545",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES EL ARCA DE SANTI.",
+    "cif": "G22183792",
+    "puntuacion": null,
+    "importe": 4754.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B648",
+    "entidad": "ASOCIACIÓN DE AYUDA Y RESCATE ANIMAL GATÓMICAS.",
+    "cif": "G13589379",
+    "puntuacion": null,
+    "importe": 4665.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B657",
+    "entidad": "ASOCIACIÓN GHATO VERDE GUILLENA.",
+    "cif": "G02858298",
+    "puntuacion": null,
+    "importe": 4665.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B031",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES «SOS BILBAO».",
+    "cif": "G95277372",
+    "puntuacion": null,
+    "importe": 4665.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B321",
+    "entidad": "GAB GRUPO DE AYUDA AL PERRO RATONERO BODEGUERO ANDALUZ.",
+    "cif": "G66816224",
+    "puntuacion": null,
+    "importe": 4665.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B043",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES EL CAPRICHO.",
+    "cif": "G18904953",
+    "puntuacion": null,
+    "importe": 4630.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B387",
+    "entidad": "HOMELESS CATS.",
+    "cif": "G86635265",
+    "puntuacion": null,
+    "importe": 4599.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B726",
+    "entidad": "ASOCIACIÓN MADRILEÑA RESCATE FELINO.",
+    "cif": "G56419468",
+    "puntuacion": null,
+    "importe": 4547.48,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B008",
+    "entidad": "UN HOGAR PARA LOS MININOS DE MALLORCA HAPPY CAT.",
+    "cif": "G16595308",
+    "puntuacion": null,
+    "importe": 4534.44,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B530",
+    "entidad": "ASOCIACION FELINA ALMA GATUNA HUMANES.",
+    "cif": "G04952214",
+    "puntuacion": null,
+    "importe": 4475.99,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B638",
+    "entidad": "ASSOCIACIÓ PROTECTORA D'ANIMALS «GATPI».",
+    "cif": "G65986846",
+    "puntuacion": null,
+    "importe": 4469.52,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B770",
+    "entidad": "ASOCIACION REFUGIO ANIMAL LA MANADA CANTABRA.",
+    "cif": "G67737098",
+    "puntuacion": null,
+    "importe": 4347.53,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B706",
+    "entidad": "ALMA FELINA ALMERIA.",
+    "cif": "G04856266",
+    "puntuacion": null,
+    "importe": 4341.16,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B294",
+    "entidad": "ASSOCIACIÓ D'ENGRESCATS DE LES TERRES DE L'EBRE.",
+    "cif": "G55601587",
+    "puntuacion": null,
+    "importe": 4284.03,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B149",
+    "entidad": "HUELLAS PROTECTORA DE ANIMALES ÁVILA.",
+    "cif": "G05120217",
+    "puntuacion": null,
+    "importe": 4280.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B583",
+    "entidad": "PROGAT BARBERA.",
+    "cif": "G64021991",
+    "puntuacion": null,
+    "importe": 4277.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B629",
+    "entidad": "ASOCIACIÓN GATALUNYA.",
+    "cif": "G13685854",
+    "puntuacion": null,
+    "importe": 4222.28,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B556",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y PLANTAS DE LEON.",
+    "cif": "G24202236",
+    "puntuacion": null,
+    "importe": 4214.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B446",
+    "entidad": "AMIGO MÍO-SOCIEDAD PROTECTORA DE ANIMALES DE TERUEL.",
+    "cif": "G44233914",
+    "puntuacion": null,
+    "importe": 4183.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B322",
+    "entidad": "ASOCIACIÓN MÁLAGA FELINA.",
+    "cif": "G93097640",
+    "puntuacion": null,
+    "importe": 4183.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B723",
+    "entidad": "ASOCIACION REFUGIO ARANZADI KATUAK.",
+    "cif": "G71405872",
+    "puntuacion": null,
+    "importe": 4183.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B882",
+    "entidad": "ASOC ANIMALES DE BERJA.",
+    "cif": "G04749784",
+    "puntuacion": null,
+    "importe": 4090.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B305",
+    "entidad": "ASSOCIACIÓ AMICS DELS ANIMALS DEL SEGRIÁ.",
+    "cif": "G25378761",
+    "puntuacion": null,
+    "importe": 4090.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B811",
+    "entidad": "ASOCIACIÓN COLONIA FELINA WAIKIKIGATS.",
+    "cif": "G56322050",
+    "puntuacion": null,
+    "importe": 4028.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B376",
+    "entidad": "ASOCIACION PROTECTORA DE GATOS «4 GATOS Y TU».",
+    "cif": "G99160384",
+    "puntuacion": null,
+    "importe": 4028.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B831",
+    "entidad": "PROTECTORA VIDA.",
+    "cif": "G73418212",
+    "puntuacion": null,
+    "importe": 4028.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B009",
+    "entidad": "SANTUARIO ANIMAL CORAZÓN VERDE.",
+    "cif": "G71311385",
+    "puntuacion": null,
+    "importe": 4028.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B715",
+    "entidad": "ASSOCIACIÓ GATEJADES.",
+    "cif": "G16813859",
+    "puntuacion": null,
+    "importe": 4010.47,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B003",
+    "entidad": "ASSOCIACIO SOL GAT L'ESCALA.",
+    "cif": "G55009583",
+    "puntuacion": null,
+    "importe": 3967.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B332",
+    "entidad": "FUNDACIÓN CENTAURO QUIRÓN.",
+    "cif": "G73919904",
+    "puntuacion": null,
+    "importe": 3967.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B461",
+    "entidad": "PROTECTORA DE ANIMALES DE LA NUCÍA.",
+    "cif": "G53870846",
+    "puntuacion": null,
+    "importe": 3967.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B624",
+    "entidad": "ASOCIACIÓN PROTECCIÓN DE ANIMALES DOMÉSTICOS (PAD).",
+    "cif": "G29810736",
+    "puntuacion": null,
+    "importe": 3937.51,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B390",
+    "entidad": "ASOCIACION ANIMAL REFUGIO TXIMAS.",
+    "cif": "G44715332",
+    "puntuacion": null,
+    "importe": 3907.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B845",
+    "entidad": "ASOCIACION DE ADOPCIONES MELILLA «ADOMEL».",
+    "cif": "G52035748",
+    "puntuacion": null,
+    "importe": 3907.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B865",
+    "entidad": "ASOCIACION DE VOLUNTARIOS POR LOS ANIMALES ABANDONADOS EN TORO.",
+    "cif": "G49302250",
+    "puntuacion": null,
+    "importe": 3907.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B857",
+    "entidad": "ASSOCIACIÓ SOS MAULLIDOS.",
+    "cif": "G66911785",
+    "puntuacion": null,
+    "importe": 3907.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B839",
+    "entidad": "BABA ANIMAL SEVA.",
+    "cif": "G72283526",
+    "puntuacion": null,
+    "importe": 3907.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B752",
+    "entidad": "LA CASA DE MENTA.",
+    "cif": "G39858881",
+    "puntuacion": null,
+    "importe": 3907.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B349",
+    "entidad": "ASOCIACION DE VOLUNTARIOS ALIMENTADORES DE COLONIAS FELINAS MONTE BERRIAGA.",
+    "cif": "G56703358",
+    "puntuacion": null,
+    "importe": 3889.26,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B806",
+    "entidad": "ASOCIACIÓN PROTECTORA MI TROPA.",
+    "cif": "G10979912",
+    "puntuacion": null,
+    "importe": 3847.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B495",
+    "entidad": "EL SENDERO DE NORTE, A.P.A.P.",
+    "cif": "G88069661",
+    "puntuacion": null,
+    "importe": 3847.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B498",
+    "entidad": "ASOCIACION COLECTIVO ANIMALISTA DE LEGANES.",
+    "cif": "G87732293",
+    "puntuacion": null,
+    "importe": 3824.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B063",
+    "entidad": "AMICS DELS ANIMALS DE DOSRIUS.",
+    "cif": "G62312384",
+    "puntuacion": null,
+    "importe": 3817.47,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B539",
+    "entidad": "ASOCIACION LIBERTAD FELINA.",
+    "cif": "G76155530",
+    "puntuacion": null,
+    "importe": 3787.77,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B577",
+    "entidad": "ASSOCIACIÓ PER LA DEFENSA DELS ANIMALS I LA NATURA D'ALELLA (ADANA).",
+    "cif": "G62618202",
+    "puntuacion": null,
+    "importe": 3787.77,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B649",
+    "entidad": "SPAP ALONDRA DE DUPONT.",
+    "cif": "G04118352",
+    "puntuacion": null,
+    "importe": 3758.19,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B178",
+    "entidad": "ASSOCIACIÓ PROTECTORA D'ANIMALS AGOSAGATS.",
+    "cif": "G55669931",
+    "puntuacion": null,
+    "importe": 3746.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B361",
+    "entidad": "ASOCIACIÓN FELINA KAIZEN.",
+    "cif": "G56579725",
+    "puntuacion": null,
+    "importe": 3728.73,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B471",
+    "entidad": "ASOCIACIÓN HUELLAS DE LA SOLIDARIDAD.",
+    "cif": "G67752766",
+    "puntuacion": null,
+    "importe": 3728.73,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B073",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES ARCONATURA.",
+    "cif": "G23454994",
+    "puntuacion": null,
+    "importe": 3670.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B863",
+    "entidad": "COLONIES FELINES DE GODELLA.",
+    "cif": "G40549537",
+    "puntuacion": null,
+    "importe": 3670.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B656",
+    "entidad": "FAUNA Y FLORA SOS ASOC PROTECTORA DE ANIMALES Y PLANTAS.",
+    "cif": "G97186621",
+    "puntuacion": null,
+    "importe": 3655.62,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B810",
+    "entidad": "113 MOTIVO ANIMALES.",
+    "cif": "G47800529",
+    "puntuacion": null,
+    "importe": 3612.12,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B208",
+    "entidad": "ASOCIACIÓN DE GESTORES DE COLONIAS FELINAS DE SEGOVIA.",
+    "cif": "G13899935",
+    "puntuacion": null,
+    "importe": 3612.12,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B123",
+    "entidad": "GATUCOS TORRELAVEGA.",
+    "cif": "G44738011",
+    "puntuacion": null,
+    "importe": 3609.69,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B014",
+    "entidad": "ASOCIACION AREGATOS.",
+    "cif": "G13694666",
+    "puntuacion": null,
+    "importe": 3594.8,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B026",
+    "entidad": "LAS REINAS DEL BIBERÓN.",
+    "cif": "G01821842",
+    "puntuacion": null,
+    "importe": 3583.28,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B036",
+    "entidad": "APA ANIMALEA NOTHUNDE.",
+    "cif": "G02548204",
+    "puntuacion": null,
+    "importe": 3554.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B217",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y PLANTAS BAIX VINALOPO.",
+    "cif": "G53141057",
+    "puntuacion": null,
+    "importe": 3554.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B762",
+    "entidad": "SONRISAS PELUDAS UTRERA.",
+    "cif": "G67691741",
+    "puntuacion": null,
+    "importe": 3554.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B573",
+    "entidad": "MOIXETS DE SA ROQUETA.",
+    "cif": "G16661555",
+    "puntuacion": null,
+    "importe": 3548.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B522",
+    "entidad": "ASOCIACIÓN VILLAFELINA.",
+    "cif": "G88405824",
+    "puntuacion": null,
+    "importe": 3497.48,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B282",
+    "entidad": "SPANDY.",
+    "cif": "G73583700",
+    "puntuacion": null,
+    "importe": 3497.48,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B002",
+    "entidad": "ASOCIACION EL GATO GARDUÑO.",
+    "cif": "G93705358",
+    "puntuacion": null,
+    "importe": 3463.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B600",
+    "entidad": "ASOCIACION PROTECTORA HUELLA DE JAEN.",
+    "cif": "G23756653",
+    "puntuacion": null,
+    "importe": 3454.99,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B083",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES ARGOS-LEON.",
+    "cif": "G24660375",
+    "puntuacion": null,
+    "importe": 3435.26,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B314",
+    "entidad": "ASOC. STREET CATS RESCUE.",
+    "cif": "G72338585",
+    "puntuacion": null,
+    "importe": 3384.79,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B202",
+    "entidad": "ASOCIACION AGECO MERIDA, SL.",
+    "cif": "G02678282",
+    "puntuacion": null,
+    "importe": 3384.79,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B719",
+    "entidad": "ASOCIACIÓN ABAIFA (ASOCIACION BENEFICA PARA LA ADOPCION E INSERCION DE LOS FELINOS EN ALICANTE¿ DE ALICANTE).",
+    "cif": "G54952270",
+    "puntuacion": null,
+    "importe": 3362.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B375",
+    "entidad": "ASOCIACION DE ANIMALES EN APUROS AGUILAS.",
+    "cif": "G05553870",
+    "puntuacion": null,
+    "importe": 3329.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B840",
+    "entidad": "ASOCIACION FELINA LA ESPERANZA.",
+    "cif": "G74371022",
+    "puntuacion": null,
+    "importe": 3329.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B492",
+    "entidad": "ASOCIACIÓN GATOS SIN HOGAR VILLALBA.",
+    "cif": "G87026761",
+    "puntuacion": null,
+    "importe": 3301.56,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B024",
+    "entidad": "ASOCIACIÓN GATA (GATUNO ANIMALISTA TRICANTINA).",
+    "cif": "G83733469",
+    "puntuacion": null,
+    "importe": 3290.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B355",
+    "entidad": "FUNDACION CV SIGRID HERVE JADOUL MES QUE GOSSOS.",
+    "cif": "G98657232",
+    "puntuacion": null,
+    "importe": 3254.98,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B049",
+    "entidad": "AVE FENIX PROTECTORA AVES EXOTICAS.",
+    "cif": "G55194450",
+    "puntuacion": null,
+    "importe": 3252.15,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B232",
+    "entidad": "HUELLAS URBANAS.",
+    "cif": "G72340227",
+    "puntuacion": null,
+    "importe": 3224.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B584",
+    "entidad": "ASOCIACION PROTECTORA LIFE 4.",
+    "cif": "G66168121",
+    "puntuacion": null,
+    "importe": 3219.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B109",
+    "entidad": "ASSOCIACIÓ ARGENTGATS.",
+    "cif": "G02860518",
+    "puntuacion": null,
+    "importe": 3219.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B223",
+    "entidad": "ASOCIACION PROTECTORA GATS DE LA CANYADA, PATERNA.",
+    "cif": "G98972003",
+    "puntuacion": null,
+    "importe": 3208.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B467",
+    "entidad": "MIRADAS FELINAS.",
+    "cif": "G56150360",
+    "puntuacion": null,
+    "importe": 3205.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B147",
+    "entidad": "AMICS DELS ANIMALS DE LA NOGUERA.",
+    "cif": "G62884234",
+    "puntuacion": null,
+    "importe": 3192.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B226",
+    "entidad": "ANIMALES RIOJA.",
+    "cif": "G26457408",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B342",
+    "entidad": "ASOCIACIÓN EN DEFENSA Y AYUDA DE LOS ANIMALES ABANDONADOS (ASOCIACIÓN ADAANA).",
+    "cif": "G98004377",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B290",
+    "entidad": "ASOCIACIÓN MEDIOAMBIENTAL AMECO.",
+    "cif": "G23701485",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B257",
+    "entidad": "ASOCIACIÓN PARA LA PROTECCIÓN Y DEFENSA DE ANIMALES Y PLANTAS (APAP) CUATRO PATAS JUMILLA.",
+    "cif": "G73567794",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B520",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES SOS GATOS MURCIA.",
+    "cif": "G73770240",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B102",
+    "entidad": "ASOCIACIÓN REFUGI LA VEDRUNA.",
+    "cif": "G67356220",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B807",
+    "entidad": "ASOCIACIÓN SOS ANIMAL.",
+    "cif": "G07735988",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B209",
+    "entidad": "ASOCIACION ZARAGOZA PROTECCION ANIMAL.",
+    "cif": "G99140196",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B283",
+    "entidad": "ASSOCIACIÓ RODAGAT.",
+    "cif": "G43853928",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B429",
+    "entidad": "PROTECTORA DE ANIMALES Y PLANTAS HUELLAS PUERTOLLANO.",
+    "cif": "G13521653",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B424",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y PLANTAS DE VILLENA.",
+    "cif": "G03436516",
+    "puntuacion": null,
+    "importe": 3165.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B044",
+    "entidad": "ASOCIACIÓN VIVA POR LOS ANIMALES.",
+    "cif": "G87513743",
+    "puntuacion": null,
+    "importe": 3143.78,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B533",
+    "entidad": "ASOCIACIÓN DE VOLUNTARIOS POR EL BIENESTAR ANIMAL DE LÁCHAR Y PEÑUELAS.",
+    "cif": "G09932369",
+    "puntuacion": null,
+    "importe": 3111.65,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B084",
+    "entidad": "ASOCIACIÓN SALMANTINA PARA LA DEFENSA DE ANIMALES EL HOCICO.",
+    "cif": "G37473196",
+    "puntuacion": null,
+    "importe": 3111.65,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B846",
+    "entidad": "ASSOCIACIÓ SA GATONERA BLANES.",
+    "cif": "G55284079",
+    "puntuacion": null,
+    "importe": 3111.65,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B862",
+    "entidad": "CON LOS ANIMALES.",
+    "cif": "G90288523",
+    "puntuacion": null,
+    "importe": 3111.65,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B366",
+    "entidad": "GATS DE GRÀCIA.",
+    "cif": "G65952152",
+    "puntuacion": null,
+    "importe": 3085.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B614",
+    "entidad": "SOSHUELLITAS.",
+    "cif": "G72400906",
+    "puntuacion": null,
+    "importe": 3058.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B216",
+    "entidad": "FUNDACION LUNA PARA LA PROTECCION DE ANIMALES.",
+    "cif": "G37503034",
+    "puntuacion": null,
+    "importe": 3032.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B195",
+    "entidad": "ASOCIACIÓN HOCICOS DE COLORES.",
+    "cif": "G02837334",
+    "puntuacion": null,
+    "importe": 3005.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B032",
+    "entidad": "ASOCIACION PARA LA PROTECCION DE LOS ANIMALES-BOTXOCATS.",
+    "cif": "G56158520",
+    "puntuacion": null,
+    "importe": 3005.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B313",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES Y PLANTAS.",
+    "cif": "G09099557",
+    "puntuacion": null,
+    "importe": 3005.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B175",
+    "entidad": "ASSOCIACIÓ GAT I CUA.",
+    "cif": "G16734071",
+    "puntuacion": null,
+    "importe": 3005.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B477",
+    "entidad": "ZARPA, ZAMORA RESPUESTA ANIMAL.",
+    "cif": "G16387060",
+    "puntuacion": null,
+    "importe": 3005.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B138",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y MEDIO AMBIENTE SAFOR.",
+    "cif": "G46248928",
+    "puntuacion": null,
+    "importe": 2995.34,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B253",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES VITORIA APASOS.",
+    "cif": "G01375344",
+    "puntuacion": null,
+    "importe": 2979.67,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B691",
+    "entidad": "GATUNAS SALAMANCA.",
+    "cif": "G56395940",
+    "puntuacion": null,
+    "importe": 2978.62,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B716",
+    "entidad": "PROTECCIÓN Y OPORTUNIDAD ANIMAL BURGOS.",
+    "cif": "G09568148",
+    "puntuacion": null,
+    "importe": 2945.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B193",
+    "entidad": "ASOC COLONIAS GATUNAS.",
+    "cif": "G67544544",
+    "puntuacion": null,
+    "importe": 2927.73,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B482",
+    "entidad": "ELS BONS GATS.",
+    "cif": "G55225320",
+    "puntuacion": null,
+    "importe": 2912.25,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B452",
+    "entidad": "ASOCIACION ANIMALISTA SOMOS GOS.",
+    "cif": "G54912316",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B544",
+    "entidad": "ASOCIACIÓN DE PROTECCIÓN ANIMAL Y MEDIOAMBIENTAL RETORNO AL EQUILIBRIO.",
+    "cif": "G90235490",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B853",
+    "entidad": "ASOCIACIÓN EGAPELUDOS.",
+    "cif": "G71149926",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B341",
+    "entidad": "ASOCIACION FELINA CUATRO GATOS MADRID.",
+    "cif": "G87280137",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B523",
+    "entidad": "ASOCIACION REFUGIO CANINO DE LEO.",
+    "cif": "G93575017",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B695",
+    "entidad": "AYUDA A PERROS ENTRE AMIGOS.",
+    "cif": "G40571408",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B634",
+    "entidad": "CAT PROTECTION POLLENSA.",
+    "cif": "G16590473",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B702",
+    "entidad": "GATS CAMPUS.",
+    "cif": "G66191305",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B091",
+    "entidad": "SONRISA ANIMAL UTEBO.",
+    "cif": "G99497869",
+    "puntuacion": null,
+    "importe": 2901.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B211",
+    "entidad": "GALGO LIBRE.",
+    "cif": "G90352188",
+    "puntuacion": null,
+    "importe": 2886.54,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B436",
+    "entidad": "COLONIAS FELINAS LOGROÑO.",
+    "cif": "G26561274",
+    "puntuacion": null,
+    "importe": 2881.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B082",
+    "entidad": "FUNDACIÓN BIGOTES DE COMPASIÓN INFINITA.",
+    "cif": "G16962474",
+    "puntuacion": null,
+    "importe": 2860.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B056",
+    "entidad": "ASOC SALVANDO VIDAS VOLUNTARIAS PERRERA DE BAZA.",
+    "cif": "G06870885",
+    "puntuacion": null,
+    "importe": 2850.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B030",
+    "entidad": "ASOC SOS PERROS DE ADRA.",
+    "cif": "G04794194",
+    "puntuacion": null,
+    "importe": 2850.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B264",
+    "entidad": "GATOS SIN FRONTERAS.",
+    "cif": "G88448105",
+    "puntuacion": null,
+    "importe": 2850.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B018",
+    "entidad": "ASOCIACION PRO ANIMAL GOMERA.",
+    "cif": "G38724035",
+    "puntuacion": null,
+    "importe": 2800.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B077",
+    "entidad": "DIFUSIÓN FELINA PONTEVEDRA «ASOCIACIÓN PROTECTORA DE ANIMALES».",
+    "cif": "G94082591",
+    "puntuacion": null,
+    "importe": 2800.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B426",
+    "entidad": "PROGAT SBD.",
+    "cif": "G62269428",
+    "puntuacion": null,
+    "importe": 2800.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B078",
+    "entidad": "ASSOC PROTECTORA DE MIUS DE CASTELLVELL DEL CAMP.",
+    "cif": "G55655138",
+    "puntuacion": null,
+    "importe": 2774.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B721",
+    "entidad": "ASSOCIACIO GATMOSTER.",
+    "cif": "G55657530",
+    "puntuacion": null,
+    "importe": 2774.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B205",
+    "entidad": "ASSOCOACIO MES K AMNIMALS.",
+    "cif": "G66894916",
+    "puntuacion": null,
+    "importe": 2769.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B747",
+    "entidad": "HOMELESS PETS.",
+    "cif": "G56559263",
+    "puntuacion": null,
+    "importe": 2764.47,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B172",
+    "entidad": "ASOC ADOPTA EN LOS ABEDULES (AELA).",
+    "cif": "G01841758",
+    "puntuacion": null,
+    "importe": 2759.83,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B535",
+    "entidad": "ANAC-ASOCIACION NACIONAL DE AMIGOS DEL CONEJO.",
+    "cif": "G63844518",
+    "puntuacion": null,
+    "importe": 2754.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B041",
+    "entidad": "ABAMA (ASOCIACIÓN POR EL BIENESTAR ANIMAL Y MEDIO AMBIENTE).",
+    "cif": "G88604095",
+    "puntuacion": null,
+    "importe": 2729.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B062",
+    "entidad": "ANIMALCÁZAR.",
+    "cif": "G13565106",
+    "puntuacion": null,
+    "importe": 2729.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B236",
+    "entidad": "ASOCIACION CONTROL COLONIAS FELINAS GRUPO NEBAK.",
+    "cif": "G75203562",
+    "puntuacion": null,
+    "importe": 2705.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B381",
+    "entidad": "A.L.M.A. ASOCIACIÓN DE LUCHA CONTRA EL MALTRATO ANIMAL DE HONDÓN DE LA NIEVES.",
+    "cif": "G54935085",
+    "puntuacion": null,
+    "importe": 2700.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B607",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES HUELLAS ETERNAS DE L'OLLERIA.",
+    "cif": "G09904517",
+    "puntuacion": null,
+    "importe": 2692.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B651",
+    "entidad": "AMOR DE GATOS.",
+    "cif": "G56870587",
+    "puntuacion": null,
+    "importe": 2680.34,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B795",
+    "entidad": "CHIGUITOS FELINOS.",
+    "cif": "G70682372",
+    "puntuacion": null,
+    "importe": 2675.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B198",
+    "entidad": "ASOCIACIÓN AMIGOS DE CUATRO PATAS EL VISO.",
+    "cif": "G56036759",
+    "puntuacion": null,
+    "importe": 2660.66,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B776",
+    "entidad": "ASOCIACIÓN COLONIAS FELINAS DE VEJER.",
+    "cif": "G56914252",
+    "puntuacion": null,
+    "importe": 2652.72,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B081",
+    "entidad": "ASOCIACIÓN ANIMAL FAMILIA BOMBAY PARA LA DEFENSA DE LOS GATOS CON LEUCEMIA.",
+    "cif": "G67715318",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B601",
+    "entidad": "ASOCIACIÓN ANIMALISTAS DE OLOCAU.",
+    "cif": "G72532237",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B197",
+    "entidad": "ASOCIACIÓN CULTURAL PROTECTORA DE ANIMALES CALLEJEROS.",
+    "cif": "G12955803",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B686",
+    "entidad": "ASOCIACION GATA LILIT.",
+    "cif": "G72406663",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B323",
+    "entidad": "ASOCIACIÓN PARA LA DEFENSA ANIMAL «POR PATAS».",
+    "cif": "G19519529",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B722",
+    "entidad": "ASOCIACIÓN PARA LA DEFENSA DE LOS ANIMALES EN TENERIFE 7 VIDAS.",
+    "cif": "G02858330",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B525",
+    "entidad": "ASSOCIACIÓ PROTECTORA DE GATS ABANDONATS.",
+    "cif": "G64864259",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B122",
+    "entidad": "HUELLARANDA PROTECTORA ANIMAL.",
+    "cif": "G09546417",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B176",
+    "entidad": "LA CASITA DE LLUVIA REFUGIO DE ANIMALES DE GRANJA.",
+    "cif": "G55675458",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B367",
+    "entidad": "LA HUELLA DE WONDER.",
+    "cif": "G88527825",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B299",
+    "entidad": "SOCIEDAD PROTECTORA ANMALES Y PLANTAS DE MELILLA.",
+    "cif": "G29952272",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B319",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES DE XÁTIVA (SPAX).",
+    "cif": "G46388385",
+    "puntuacion": null,
+    "importe": 2650.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B479",
+    "entidad": "ASOC PROCAN-HOGAR PARA UN AMIGO.",
+    "cif": "G49160641",
+    "puntuacion": null,
+    "importe": 2626.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B163",
+    "entidad": "ASSOC. PROTECTORA D'ANIMALS DE SEROS.",
+    "cif": "G25801176",
+    "puntuacion": null,
+    "importe": 2626.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B362",
+    "entidad": "ASSOCIACIÓ MASSOS PROTECTORA D'ANIMALS RIBERA D'EBRE.",
+    "cif": "G43311398",
+    "puntuacion": null,
+    "importe": 2626.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B664",
+    "entidad": "APA SOÑANDO FELIZ.",
+    "cif": "G19307867",
+    "puntuacion": null,
+    "importe": 2621.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B244",
+    "entidad": "ASOCIACIÓN PROTECTORA DE PEQUEÑOS ANIMALES LA MADRIGUERA.",
+    "cif": "G85595296",
+    "puntuacion": null,
+    "importe": 2616.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B781",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES EN LA RIOJA.",
+    "cif": "G26075200",
+    "puntuacion": null,
+    "importe": 2602.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B422",
+    "entidad": "GATS IGUALADA.",
+    "cif": "G66736943",
+    "puntuacion": null,
+    "importe": 2602.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B320",
+    "entidad": "ASOCIACION CORAZONES FELINOS EL EJIDO.",
+    "cif": "G04880803",
+    "puntuacion": null,
+    "importe": 2594.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B333",
+    "entidad": "EL JARDINET DELS GATS.",
+    "cif": "G64766900",
+    "puntuacion": null,
+    "importe": 2589.99,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B372",
+    "entidad": "CALLEJEROS DEL PUERTO.",
+    "cif": "G55391361",
+    "puntuacion": null,
+    "importe": 2585.16,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B068",
+    "entidad": "ASOCIACIÓN PROTECTORA CASA GATUNA.",
+    "cif": "G45916129",
+    "puntuacion": null,
+    "importe": 2568.27,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B532",
+    "entidad": "GATITOS EN ADOPCION 7VIDAS ORIHUELA.",
+    "cif": "G42556118",
+    "puntuacion": null,
+    "importe": 2553.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B279",
+    "entidad": "HUELLAS CALLEJERAS, ASOCIACIÓN CULTURAL, EDUCATIVA Y DE MEDIACIÓN DE PROTECCIÓN ANIMAL.",
+    "cif": "G12935003",
+    "puntuacion": null,
+    "importe": 2553.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B443",
+    "entidad": "ASOCIACION PROTECTORA FELINA DE CACERES.",
+    "cif": "G10487320",
+    "puntuacion": null,
+    "importe": 2539.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B567",
+    "entidad": "ASOCIACIÓN NACIONAL ESPAÑOLA DE REHABILITACIÓN Y PROTECCIÓN ANIMAL-ANERPA.",
+    "cif": "G73832354",
+    "puntuacion": null,
+    "importe": 2534.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B675",
+    "entidad": "VIDAS FELINAS CHURRIANA DE LA VEGA.",
+    "cif": "G55383632",
+    "puntuacion": null,
+    "importe": 2534.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B072",
+    "entidad": "MOIXOS GABELLINS.",
+    "cif": "G01952514",
+    "puntuacion": null,
+    "importe": 2527.51,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B413",
+    "entidad": "ALMAS CON ESTRELLA. COLONIAS FELINAS DE ARMILLA.",
+    "cif": "G10779312",
+    "puntuacion": null,
+    "importe": 2506.08,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B881",
+    "entidad": "ASOC. PROTECTORA DE ANIMALES BETILAGUN.",
+    "cif": "G01873652",
+    "puntuacion": null,
+    "importe": 2506.08,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B677",
+    "entidad": "ASSOCIACIÓ COMMUNITY CAN TERRASSA.",
+    "cif": "G66561812",
+    "puntuacion": null,
+    "importe": 2506.08,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B843",
+    "entidad": "PROTECTORA DE ANIMALES NUEVA OPORTUNIDAD.",
+    "cif": "G72263650",
+    "puntuacion": null,
+    "importe": 2506.08,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B808",
+    "entidad": "FUNDACION CAVALLI.",
+    "cif": "G73786279",
+    "puntuacion": null,
+    "importe": 2500.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B633",
+    "entidad": "ADAYRA ADOPCIONES.",
+    "cif": "G88318597",
+    "puntuacion": null,
+    "importe": 2487.11,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B237",
+    "entidad": "ASSOCIACIÓ PROTECTORA D'ANIMALS I PLANTES E TARRAGONA.",
+    "cif": "G43091669",
+    "puntuacion": null,
+    "importe": 2454.19,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B665",
+    "entidad": "ADOPTAMIAUS PROTECCIÓN ANIMAL.",
+    "cif": "G70651765",
+    "puntuacion": null,
+    "importe": 2450.34,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B112",
+    "entidad": "ASOCIACION AGALLAS.",
+    "cif": "G32497109",
+    "puntuacion": null,
+    "importe": 2449.4,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B731",
+    "entidad": "HUELLAS EN LA MONTAÑA.",
+    "cif": "G54981295",
+    "puntuacion": null,
+    "importe": 2440.02,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B180",
+    "entidad": "ASOCIACIÓN ZAFIRO PROTECTORA.",
+    "cif": "G09949611",
+    "puntuacion": null,
+    "importe": 2437.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B267",
+    "entidad": "ASOCIACION ENTRE HUELLAS Y BIGOTES OCAÑA.",
+    "cif": "G45884848",
+    "puntuacion": null,
+    "importe": 2435.34,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B504",
+    "entidad": "ASOC PROTECTORA DE ANIMALES ASISCAT.",
+    "cif": "G04894556",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B291",
+    "entidad": "ASOC. DE GESTORAS DE COLONIAS DE GATOS DE ARUCAS TUTELA FELINA.",
+    "cif": "G76301464",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B739",
+    "entidad": "ASOCIACION ANIMALISTA DE LA VILLA DE INGENIO.",
+    "cif": "G76252261",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B140",
+    "entidad": "ASOCIACIÓN BIGOTES CALLEJEROS.",
+    "cif": "G99486425",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B652",
+    "entidad": "ASOCIACIÓN CIRIANA, PARA LA PRESERVACIÓN DE NATURALEZA Y CULTURA.",
+    "cif": "G93549780",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B124",
+    "entidad": "ASOCIACIÓN COLABORACIÓN ANIMAL.",
+    "cif": "G26560342",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B325",
+    "entidad": "ASOCIACIÓN CUATRO HUELLAS.",
+    "cif": "G88200357",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B580",
+    "entidad": "ASOCIACION DE PROTECCION ANIMAL DE MAZARRON.",
+    "cif": "G30921753",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B676",
+    "entidad": "ASOCIACIÓN DE RESCATE ANIMAL CADELIÑOS.",
+    "cif": "G94138914",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B765",
+    "entidad": "ASOCIACION DEFENSORA DE ANIMALES ABANDONADOS DE COLMENAR.",
+    "cif": "G87397055",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B699",
+    "entidad": "ASOCIACIÓN FINESTRAT GATOS.",
+    "cif": "G42627265",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B137",
+    "entidad": "ASOCIACIÓN MIJAS FELINA.",
+    "cif": "G93405868",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B738",
+    "entidad": "ASOCIACION PARA LA DEFENSA DE ANIMALES DE CASTELLAR DEL VALLES.",
+    "cif": "G66262676",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B007",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES EL BOSQUE.",
+    "cif": "G87226957",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B552",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES MEGACAN.",
+    "cif": "G90251646",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B761",
+    "entidad": "ASOCIACION PROTECTORA DE CABALLOS EL CHAPARRAL.",
+    "cif": "G98852460",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B749",
+    "entidad": "ASOCIACION REFUGIO TURGALIUM DE ANIMALES.",
+    "cif": "G10480168",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B045",
+    "entidad": "ASSOCIACIÓ ANIAMALISTA DE CENTELLES.",
+    "cif": "G67625517",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B363",
+    "entidad": "ASSOCIACIO MOIXOS DE SON TALENT.",
+    "cif": "G16625428",
+    "puntuacion": null,
+    "importe": 2412.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B346",
+    "entidad": "ASSOCIACIO ANIMALS VIDA DIGNE.",
+    "cif": "G55069322",
+    "puntuacion": null,
+    "importe": 2402.24,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B501",
+    "entidad": "ASOCIACIÓN SOL AYUDA ANIMALES ABANDONADOS.",
+    "cif": "G19186402",
+    "puntuacion": null,
+    "importe": 2393.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B218",
+    "entidad": "ASOCIACION EN DEFENSA DE LOS ANIMALES DEJANDO HUELLA ALBACETE.",
+    "cif": "G02559409",
+    "puntuacion": null,
+    "importe": 2388.8,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B407",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES PINTOR JOSÉ MARÍA PÁRRAGA.",
+    "cif": "G73610867",
+    "puntuacion": null,
+    "importe": 2388.8,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B453",
+    "entidad": "ASOCIACIÓN ASENA PROTECTORA.",
+    "cif": "G06886949",
+    "puntuacion": null,
+    "importe": 2365.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B684",
+    "entidad": "ASOCIACION SUERTE GATUNA.",
+    "cif": "G44630374",
+    "puntuacion": null,
+    "importe": 2365.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B775",
+    "entidad": "ASSOCIACIO EMPATIA ANIMAL DE FAVARA.",
+    "cif": "G44622512",
+    "puntuacion": null,
+    "importe": 2365.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B450",
+    "entidad": "ASOCIACIÓN DE DEFENSA ANIMAL Y MEDIOAMBIENTAL X LOS ANIMALES.",
+    "cif": "G19664135",
+    "puntuacion": null,
+    "importe": 2347.32,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B276",
+    "entidad": "COMPAÑEROS DE VIDA.",
+    "cif": "G10626075",
+    "puntuacion": null,
+    "importe": 2342.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B871",
+    "entidad": "ASOCIACIÓN ANIMALISTA ELEOS.",
+    "cif": "G04896916",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B466",
+    "entidad": "ASOCIACIÓN DEFENSA ANIMAL (ADA).",
+    "cif": "G98796386",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B805",
+    "entidad": "ASOCIACIÓN PROTECTORA ANIMAIS ARUME.",
+    "cif": "G02707180",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B139",
+    "entidad": "ASOCIACION PROTECTORA RESCATE ANIMAL DE PINTO VIDA PARA LOS GATOS.",
+    "cif": "G70859814",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B326",
+    "entidad": "ASSOCIACIO BISBALGAT.",
+    "cif": "G55130918",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B301",
+    "entidad": "ASSOCIACIÓ REUS GATS.",
+    "cif": "G55574354",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B393",
+    "entidad": "CANTABRIA FELINA.",
+    "cif": "G39768288",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B597",
+    "entidad": "PROTECTORA ANIMALES Y PLANTAS MONTEHERMOSO.",
+    "cif": "G02903870",
+    "puntuacion": null,
+    "importe": 2319.9,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B464",
+    "entidad": "ASSOCIACIÓ ANIMALISTA ELS POETS.",
+    "cif": "G54780218",
+    "puntuacion": null,
+    "importe": 2297.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B400",
+    "entidad": "ASSOCIACIO PROTECTORA DELTARESCAT.",
+    "cif": "G55666507",
+    "puntuacion": null,
+    "importe": 2297.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B548",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES EL HOGAR DEL GATO.",
+    "cif": "G47533534",
+    "puntuacion": null,
+    "importe": 2297.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B729",
+    "entidad": "UNIDAD DE PROTECCION RESCATE Y DEFENSA ANIMAL.",
+    "cif": "G93718583",
+    "puntuacion": null,
+    "importe": 2297.18,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B733",
+    "entidad": "APA LA LAGUNA DEL GATO DE MORALZARZAL.",
+    "cif": "G87817623",
+    "puntuacion": null,
+    "importe": 2293.05,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B011",
+    "entidad": "ASOCIACION DE AMIGOS DE ANIMALES ABANDONADOS TRIPLE A.",
+    "cif": "G29598059",
+    "puntuacion": null,
+    "importe": 2292.7,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B239",
+    "entidad": "MADRID HELP HORSES.",
+    "cif": "G86977956",
+    "puntuacion": null,
+    "importe": 2280.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B262",
+    "entidad": "FUNDACIO PROJECTE MIRANDA EOLIA.",
+    "cif": "G64857741",
+    "puntuacion": null,
+    "importe": 2274.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B718",
+    "entidad": "ASOCIACIÓN SOS FELINA.",
+    "cif": "G76593201",
+    "puntuacion": null,
+    "importe": 2256.59,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B187",
+    "entidad": "CHIPI GATO FELIZ.",
+    "cif": "G72254360",
+    "puntuacion": null,
+    "importe": 2256.59,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B837",
+    "entidad": "S.O.S. PITBULL.",
+    "cif": "G39817879",
+    "puntuacion": null,
+    "importe": 2252.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B444",
+    "entidad": "ASOCIACION CANINA ASCAN ELDA.",
+    "cif": "G54875372",
+    "puntuacion": null,
+    "importe": 2229.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B357",
+    "entidad": "CALLEJEROS BARBANZA ASOCIACION BENEFICO SOCIAL.",
+    "cif": "G70491642",
+    "puntuacion": null,
+    "importe": 2229.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B485",
+    "entidad": "EL CUBIL DEL DESAMPARO.",
+    "cif": "G88407580",
+    "puntuacion": null,
+    "importe": 2220.84,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B734",
+    "entidad": "ASOCIACION ANIMALS HELP.",
+    "cif": "G16307936",
+    "puntuacion": null,
+    "importe": 2207.52,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B790",
+    "entidad": "APAVAL (ASOCIACIÓN PROTECTORA DE ANIMALES DE VALDEPIÉLAGOS).",
+    "cif": "G06801740",
+    "puntuacion": null,
+    "importe": 2193.35,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B165",
+    "entidad": "ASOC PROTECTORA DE ANIMALES AXARQUIA.",
+    "cif": "G13709472",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B666",
+    "entidad": "ASOC. POR LA DEFENSA DE LOS ANIMALES APROA SANTOMERA.",
+    "cif": "G01758408",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B331",
+    "entidad": "ASOCIACION GATOS ABANDONA2.",
+    "cif": "G05540992",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B570",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES ABNDONADOS DE CIEZA.",
+    "cif": "G30304539",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B712",
+    "entidad": "ASOCIACIÓN PROTECTORA DE GATOS DA RÚA MICHOS DE LUGO.",
+    "cif": "G27515931",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B374",
+    "entidad": "ASSOCIACIÓ PROTECTORA DE MOIXOS DE BUNYOLA:MOIXONS I MOIXONIES.",
+    "cif": "G16535833",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B134",
+    "entidad": "FUNDACION MAROPARQUE, FUNDACION CANARIA.",
+    "cif": "G02794337",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B152",
+    "entidad": "VIDAS FELINAS ARCHENA.",
+    "cif": "G19814243",
+    "puntuacion": null,
+    "importe": 2185.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B737",
+    "entidad": "CES CONTROL DE COLONIAS FELINAS DE XATIVA.",
+    "cif": "G01993054",
+    "puntuacion": null,
+    "importe": 2184.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B640",
+    "entidad": "ASOCIACION SOCUELLAMINA PARA LA PROTECCION ANIMAL.",
+    "cif": "G13377882",
+    "puntuacion": null,
+    "importe": 2176.6,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B874",
+    "entidad": "APA BRIGADA GUAU.",
+    "cif": "G45875911",
+    "puntuacion": null,
+    "importe": 2176.59,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B108",
+    "entidad": "LA CASITA DE MISHU IBIZA.",
+    "cif": "G72672157",
+    "puntuacion": null,
+    "importe": 2163.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B852",
+    "entidad": "PATITAS POR EL MUNDO ESPAÑA.",
+    "cif": "G21607932",
+    "puntuacion": null,
+    "importe": 2150.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B820",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES LA MANADA DE MOLLY.",
+    "cif": "G10631083",
+    "puntuacion": null,
+    "importe": 2141.56,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B673",
+    "entidad": "PLATAFORMA BALEAR PER A LA DEFENSA DELS ANIMALS.",
+    "cif": "G57382335",
+    "puntuacion": null,
+    "importe": 2141.56,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B441",
+    "entidad": "GUARDIANES FELINOS.",
+    "cif": "G16367765",
+    "puntuacion": null,
+    "importe": 2138.72,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B396",
+    "entidad": "SOS FELINA FELINAE.",
+    "cif": "G87267381",
+    "puntuacion": null,
+    "importe": 2119.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B345",
+    "entidad": "ASOCIACIÓN ENTRE HUELLAS Y BIGOTES.",
+    "cif": "G47701636",
+    "puntuacion": null,
+    "importe": 2111.15,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B280",
+    "entidad": "ALHAURÍN FELINA CES.",
+    "cif": "G10940385",
+    "puntuacion": null,
+    "importe": 2104.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B442",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES DE UTRLLAS (A.P.A.U).",
+    "cif": "G44269025",
+    "puntuacion": null,
+    "importe": 2099.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B554",
+    "entidad": "ASOC LUCHANDO POR LOS PPP.",
+    "cif": "G40267429",
+    "puntuacion": null,
+    "importe": 2098.2,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B266",
+    "entidad": "ASOCIACIÓN ANIMALISTA DE CANTILLANA VIDANIMALIS.",
+    "cif": "G90347121",
+    "puntuacion": null,
+    "importe": 2098.2,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B497",
+    "entidad": "ADOPTA SALVA UNA VIDA.",
+    "cif": "G98372691",
+    "puntuacion": null,
+    "importe": 2076.7,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B822",
+    "entidad": "EL HOGAR DE DULCE.",
+    "cif": "G09661190",
+    "puntuacion": null,
+    "importe": 2076.7,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B644",
+    "entidad": "SEGUNDA OPORTUNIDAD SANTAELLA.",
+    "cif": "G14928816",
+    "puntuacion": null,
+    "importe": 2076.7,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B258",
+    "entidad": "ASSOCIACIÓ PER AL REFUGI I CURA DELS ANIMALS.",
+    "cif": "G43649326",
+    "puntuacion": null,
+    "importe": 2074.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B827",
+    "entidad": "DINAMICAT CER.",
+    "cif": "G72585664",
+    "puntuacion": null,
+    "importe": 2068.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B832",
+    "entidad": "ASOCIACION ANIMALISTA DE MONCADA.",
+    "cif": "G67926824",
+    "puntuacion": null,
+    "importe": 2055.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B791",
+    "entidad": "ASOCIACIÓN GATORU PROTECCIÓN Y DEFENSA FELINA.",
+    "cif": "G02691863",
+    "puntuacion": null,
+    "importe": 2055.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B408",
+    "entidad": "RESCATE AMIGOS PELUDOS.",
+    "cif": "G30906663",
+    "puntuacion": null,
+    "importe": 2055.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B688",
+    "entidad": "ASSOCIACIÓ GIROGATS.",
+    "cif": "G55118889",
+    "puntuacion": null,
+    "importe": 2039.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B171",
+    "entidad": "ASSOCIACIÓ GATS DE LLANÇÀ.",
+    "cif": "G72544315",
+    "puntuacion": null,
+    "importe": 2038.32,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B340",
+    "entidad": "ASOCIACIÓN GATUTÉAME.",
+    "cif": "G16832685",
+    "puntuacion": null,
+    "importe": 2034.08,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B435",
+    "entidad": "SOY SU VOZ EN VALENCIA.",
+    "cif": "G13897368",
+    "puntuacion": null,
+    "importe": 2034.08,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B186",
+    "entidad": "ARAÑAZOS.",
+    "cif": "G13591029",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B377",
+    "entidad": "ARIEL POR LA DEFENSA ANIMAL Y PROTECCIÓN DEL MEDIO AMBIENTE.",
+    "cif": "G16422412",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B460",
+    "entidad": "ASOCIACION ORGULLO FELINO.",
+    "cif": "G02723898",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B757",
+    "entidad": "ASPA ASOCIACION PROTECTORA DE ANIMALES JARELA.",
+    "cif": "G18939181",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B711",
+    "entidad": "ASSOC. CATS CAMPO CÁLIG PEÑISCOLA.",
+    "cif": "G06890701",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B717",
+    "entidad": "ASSOCIACIÓ PROGAT CERDANYA.",
+    "cif": "G55136006",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B190",
+    "entidad": "DOG PLANET.",
+    "cif": "G72266109",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B473",
+    "entidad": "FUNDACIÓN PATAS ARRIBA BARCELONA.",
+    "cif": "G56230634",
+    "puntuacion": null,
+    "importe": 2012.95,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B557",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES HUELLAS DEL SELLA.",
+    "cif": "G52529732",
+    "puntuacion": null,
+    "importe": 2000.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B861",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES SANO Y A SALVO.",
+    "cif": "G76580174",
+    "puntuacion": null,
+    "importe": 1996.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B145",
+    "entidad": "PROGAT TORTOSA.",
+    "cif": "G43849371",
+    "puntuacion": null,
+    "importe": 1991.94,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B100",
+    "entidad": "THE ANIMAL COLLECTIVE.",
+    "cif": "G72370067",
+    "puntuacion": null,
+    "importe": 1977.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B529",
+    "entidad": "ASOCIACIÓN ADOPCIONES PATITAS HUESCA.",
+    "cif": "G22399489",
+    "puntuacion": null,
+    "importe": 1971.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B468",
+    "entidad": "ASOCIACION ZARPAS.",
+    "cif": "G16336612",
+    "puntuacion": null,
+    "importe": 1971.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B297",
+    "entidad": "MÁS QUE GATOS ASOCIACIÓN PROTECTORA DE ANIMALES.",
+    "cif": "G13885934",
+    "puntuacion": null,
+    "importe": 1971.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B132",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y PLANTAS DE LUGO.",
+    "cif": "G27020460",
+    "puntuacion": null,
+    "importe": 1971.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B653",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES VALVERDE ANIMAL.",
+    "cif": "G21475140",
+    "puntuacion": null,
+    "importe": 1954.44,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B085",
+    "entidad": "7I7 ASSOCIACIÓ PROTECTORA D'ANIMALS DE XIXONA.",
+    "cif": "G54796347",
+    "puntuacion": null,
+    "importe": 1950.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B470",
+    "entidad": "GATS DEL TALLADELL.",
+    "cif": "G16438400",
+    "puntuacion": null,
+    "importe": 1950.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B425",
+    "entidad": "ASOCIACIÓN COLONIAS FELINAS CER MOLINA DE SEGURA.",
+    "cif": "G56833288",
+    "puntuacion": null,
+    "importe": 1933.78,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B230",
+    "entidad": "APA PATITAS PERRIGATUNAS.",
+    "cif": "G88430871",
+    "puntuacion": null,
+    "importe": 1929.66,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B879",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES Y MEDIO AMBIENTE DE ALMUÑÉCAR.",
+    "cif": "G19582527",
+    "puntuacion": null,
+    "importe": 1929.66,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B117",
+    "entidad": "COCOGAT.",
+    "cif": "G55204499",
+    "puntuacion": null,
+    "importe": 1929.66,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B318",
+    "entidad": "PROYECTO ALEGRIA ANIMAL.",
+    "cif": "G01614726",
+    "puntuacion": null,
+    "importe": 1925.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B860",
+    "entidad": "ASOCIACIÓN GATOSOS CÁNTABROS.",
+    "cif": "G39859640",
+    "puntuacion": null,
+    "importe": 1917.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B809",
+    "entidad": "REUNION ALMERIENSE TUTELA ANIMAL «LA RATA».",
+    "cif": "G04670238",
+    "puntuacion": null,
+    "importe": 1917.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B164",
+    "entidad": "ASSOCIACIÖ VADAL(VIDA ANIMAL DIGNA A LINYOLA).",
+    "cif": "G56929664",
+    "puntuacion": null,
+    "importe": 1909.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B769",
+    "entidad": "COLONIES MOIXETS DE MARRATXI.",
+    "cif": "G57890139",
+    "puntuacion": null,
+    "importe": 1905.05,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B213",
+    "entidad": "CATSLOVERS POR 1 MUNDO MEJOR8888.",
+    "cif": "G44559664",
+    "puntuacion": null,
+    "importe": 1888.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B397",
+    "entidad": "FUNDACION CANYA S.O.S. CAMPO DE GIBRALTAR.",
+    "cif": "G72567084",
+    "puntuacion": null,
+    "importe": 1888.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B509",
+    "entidad": "ASOCIACIÓN BIENESTAR ANIMAL YCODEM (ABAY).",
+    "cif": "G72602360",
+    "puntuacion": null,
+    "importe": 1880.62,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B744",
+    "entidad": "ASOCIACIÓN GRUPO ANIMALISTA BENALMÁDENA.",
+    "cif": "G93559862",
+    "puntuacion": null,
+    "importe": 1868.48,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B245",
+    "entidad": "COINACPRAN.",
+    "cif": "G10868164",
+    "puntuacion": null,
+    "importe": 1868.48,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B192",
+    "entidad": "ASOCIACIÓN DE DEFENSA ANIMAL MAULLIDOS DE HOYOCASERO.",
+    "cif": "G44698660",
+    "puntuacion": null,
+    "importe": 1852.35,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B693",
+    "entidad": "ASOC. FINCA ARKADIA SANTUARIO ANIMAL.",
+    "cif": "G76812452",
+    "puntuacion": null,
+    "importe": 1848.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B095",
+    "entidad": "ASOCIACION NATURALEZA Y ANIMALES DE LA SERRANIA.",
+    "cif": "G98107386",
+    "puntuacion": null,
+    "importe": 1848.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B455",
+    "entidad": "ASSOCIACIO TORRECAT PROTEGIM ELS GATS DEL CARRER.",
+    "cif": "G55504864",
+    "puntuacion": null,
+    "importe": 1848.33,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B856",
+    "entidad": "CAT'S CLUB BENIDORM.",
+    "cif": "G05447842",
+    "puntuacion": null,
+    "importe": 1828.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B771",
+    "entidad": "MIRADA FELINA.",
+    "cif": "G02980589",
+    "puntuacion": null,
+    "importe": 1828.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B373",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES Y MEDIAMBIENTE FELINES Y AMIGOS.",
+    "cif": "G16429441",
+    "puntuacion": null,
+    "importe": 1824.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B512",
+    "entidad": "ASSOCIACIO PROFAUNA TERRES DE L'EBRE.",
+    "cif": "G55693410",
+    "puntuacion": null,
+    "importe": 1817.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B128",
+    "entidad": "ASOCIACIÓN VECINOS FELINOS.",
+    "cif": "G05520283",
+    "puntuacion": null,
+    "importe": 1808.4,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B071",
+    "entidad": "LOS OLVIDADOS DEL JALON.",
+    "cif": "G16693467",
+    "puntuacion": null,
+    "importe": 1808.4,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B103",
+    "entidad": "ASOCIACION FELINA ALJARAFEÑA.",
+    "cif": "G10997351",
+    "puntuacion": null,
+    "importe": 1800.47,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B511",
+    "entidad": "ASSOCIACIÓ GATS DE LA SEGARRA.",
+    "cif": "G67025924",
+    "puntuacion": null,
+    "importe": 1786.88,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B707",
+    "entidad": "MUSICOS DE BREMEN.",
+    "cif": "G02707743",
+    "puntuacion": null,
+    "importe": 1784.67,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B758",
+    "entidad": "ASOCIACIÓN PLATAFORMA ANIMALISTA VIOLETAS.",
+    "cif": "G67798355",
+    "puntuacion": null,
+    "importe": 1769.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B054",
+    "entidad": "ASOC VILLAMIXINOS.",
+    "cif": "G67877738",
+    "puntuacion": null,
+    "importe": 1768.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B768",
+    "entidad": "ASOCIACION CULTURAL COLONIA GATS RUSSAFA.",
+    "cif": "G40580235",
+    "puntuacion": null,
+    "importe": 1768.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B829",
+    "entidad": "ASOCIACIÓN PARA LA LIBERACION Y EL BIENESTAR ANIMAL.",
+    "cif": "G82017468",
+    "puntuacion": null,
+    "importe": 1768.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B617",
+    "entidad": "ASOCIACIÓN PROTECTORA DE GATOS CALANDA Y FOZ-CALANDA.",
+    "cif": "G13768858",
+    "puntuacion": null,
+    "importe": 1768.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B515",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES EL HOCICO.",
+    "cif": "G73955593",
+    "puntuacion": null,
+    "importe": 1761.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B804",
+    "entidad": "ESPERANZA CANINA DE CHIPIONA.",
+    "cif": "G72320385",
+    "puntuacion": null,
+    "importe": 1761.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B823",
+    "entidad": "ASOC ARIZA FELINA.",
+    "cif": "G44891315",
+    "puntuacion": null,
+    "importe": 1754.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B189",
+    "entidad": "AMORES PERROS CÁDIZ.",
+    "cif": "G01779131",
+    "puntuacion": null,
+    "importe": 1749.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B006",
+    "entidad": "ANIMALES ESPECIALES.",
+    "cif": "G13733845",
+    "puntuacion": null,
+    "importe": 1749.42,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B519",
+    "entidad": "AMIGOS DE LOS ANIMALES DE CASTELLÓN (ASPAC).",
+    "cif": "G12529319",
+    "puntuacion": null,
+    "importe": 1730.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B812",
+    "entidad": "ASOCIACION JUAN GANCEDO.",
+    "cif": "G10917565",
+    "puntuacion": null,
+    "importe": 1730.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B550",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMAIS MOURA.",
+    "cif": "G70194964",
+    "puntuacion": null,
+    "importe": 1730.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B181",
+    "entidad": "ASSOCIACIÓ PETITS PELUTS.",
+    "cif": "G02677292",
+    "puntuacion": null,
+    "importe": 1730.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B774",
+    "entidad": "GATOS EN LA COSTA.",
+    "cif": "G42633040",
+    "puntuacion": null,
+    "importe": 1730.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B144",
+    "entidad": "ASOCIACIÓN CULTURAL CONCIENCIA ANIMAL 3PATAS.",
+    "cif": "G13597968",
+    "puntuacion": null,
+    "importe": 1726.62,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B478",
+    "entidad": "ASOCIACION DOGANZO.",
+    "cif": "G86942695",
+    "puntuacion": null,
+    "importe": 1726.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B166",
+    "entidad": "ASOCION MICOS DO BARRIO.",
+    "cif": "G70529375",
+    "puntuacion": null,
+    "importe": 1726.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B480",
+    "entidad": "FELINISAVE GESTIÓN DE COLONIAS FELINAS.",
+    "cif": "G09604265",
+    "puntuacion": null,
+    "importe": 1713.79,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B064",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMAIS DO CAMIÑO.",
+    "cif": "G70459045",
+    "puntuacion": null,
+    "importe": 1710.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B801",
+    "entidad": "LA ESTACION DE LOS GATOS.",
+    "cif": "G47760616",
+    "puntuacion": null,
+    "importe": 1710.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B170",
+    "entidad": "CALZADA AL RESCATE.",
+    "cif": "G10511301",
+    "puntuacion": null,
+    "importe": 1703.03,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B630",
+    "entidad": "SONRISAS FELINAS PALENCIA.",
+    "cif": "G34286013",
+    "puntuacion": null,
+    "importe": 1695.37,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B385",
+    "entidad": "ASOCIACION CES FUENLABRADA.",
+    "cif": "G88223136",
+    "puntuacion": null,
+    "importe": 1693.84,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B476",
+    "entidad": "ASOCIACIÓN COLONIA FELINA OLIETE.",
+    "cif": "G56886260",
+    "puntuacion": null,
+    "importe": 1691.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B050",
+    "entidad": "LAS HUELLAS DE BOLBORETA.",
+    "cif": "G56504921",
+    "puntuacion": null,
+    "importe": 1691.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B887",
+    "entidad": "PROTECTORA DE ANIMALES GATOS SIN HOGAR GRAN CANARIA.",
+    "cif": "G76307933",
+    "puntuacion": null,
+    "importe": 1691.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B034",
+    "entidad": "LILICAT ASOCIACIÓN.",
+    "cif": "G01626779",
+    "puntuacion": null,
+    "importe": 1682.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B873",
+    "entidad": "ANIMAÑICAS RESCATE.",
+    "cif": "G99533697",
+    "puntuacion": null,
+    "importe": 1676.3,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B141",
+    "entidad": "ASOCIACIÓN URDULIZKO KATUEN LAGUNAK.",
+    "cif": "G13777883",
+    "puntuacion": null,
+    "importe": 1653.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B517",
+    "entidad": "ASOCIACION FELINA LA ELIANA FELIANA.",
+    "cif": "G40598963",
+    "puntuacion": null,
+    "importe": 1653.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B586",
+    "entidad": "ASOCIACIÓN FELINA RONRONEO.",
+    "cif": "G56961170",
+    "puntuacion": null,
+    "importe": 1653.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B541",
+    "entidad": "ASOCIACIÓN PROTECTORA ANIMALES OLIMPO.",
+    "cif": "G05548227",
+    "puntuacion": null,
+    "importe": 1653.57,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B551",
+    "entidad": "EL CLUB DE KAT (PARA ANIMALES DISCAPACITADOS Y ENFERMOS CRÓNICOS).",
+    "cif": "G17929886",
+    "puntuacion": null,
+    "importe": 1649.8,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B360",
+    "entidad": "ASOCIACIÓN GATOS DE LA CALLE SIERRA OESTE.",
+    "cif": "G72608276",
+    "puntuacion": null,
+    "importe": 1646.79,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B182",
+    "entidad": "ASOCIACIÓN PROYECTO GATO TERUEL.",
+    "cif": "G44250603",
+    "puntuacion": null,
+    "importe": 1646.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B593",
+    "entidad": "SECOND LIFE.",
+    "cif": "G45871894",
+    "puntuacion": null,
+    "importe": 1646.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B510",
+    "entidad": "HAPPY CAT SPAIN RESCUE.",
+    "cif": "G67910539",
+    "puntuacion": null,
+    "importe": 1634.77,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B126",
+    "entidad": "NUESTROS FELINOS.",
+    "cif": "G56306178",
+    "puntuacion": null,
+    "importe": 1617.58,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B238",
+    "entidad": "ALMANIMAL CASTALLA SOCIEDAD PROTECTORA DE ANIMALES.",
+    "cif": "G10676047",
+    "puntuacion": null,
+    "importe": 1616.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B194",
+    "entidad": "ASOCIACION PROTECTORA CER GATOS ELCHE.",
+    "cif": "G54934799",
+    "puntuacion": null,
+    "importe": 1616.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B585",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES Y MEDIOAMBIENTE DE SAN MATEO.",
+    "cif": "G06916035",
+    "puntuacion": null,
+    "importe": 1616.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B130",
+    "entidad": "ASOCIACION SALVA UN GATITO.",
+    "cif": "G01878776",
+    "puntuacion": null,
+    "importe": 1616.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B555",
+    "entidad": "ASSOCIACIÓ CES SANT FELIU DE LLOBREGAT.",
+    "cif": "G67453720",
+    "puntuacion": null,
+    "importe": 1616.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B576",
+    "entidad": "SOS VENCEJOS.",
+    "cif": "G72918691",
+    "puntuacion": null,
+    "importe": 1616.09,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B310",
+    "entidad": "SOS PPP LOS BARRIOS.",
+    "cif": "G72364979",
+    "puntuacion": null,
+    "importe": 1588.31,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B606",
+    "entidad": "SOCIETAT PROTECTORA D`ANIMALS BERNIA BENISSA.",
+    "cif": "G03945581",
+    "puntuacion": null,
+    "importe": 1586.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B212",
+    "entidad": "ASOC GATCELONI.",
+    "cif": "G70969118",
+    "puntuacion": null,
+    "importe": 1579.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B021",
+    "entidad": "ASOCIACION CATYDOG.",
+    "cif": "G87501425",
+    "puntuacion": null,
+    "importe": 1579.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B051",
+    "entidad": "ASOCIACIÓN FELINA AMIGOS DE POLVORANCA. AFAP.",
+    "cif": "G87158309",
+    "puntuacion": null,
+    "importe": 1579.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B878",
+    "entidad": "ASOCIACIÓN LA VOZ ANIMAL.",
+    "cif": "G80572852",
+    "puntuacion": null,
+    "importe": 1579.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B067",
+    "entidad": "RESCATE DE GATOS Y PERROS DE ILLORA.",
+    "cif": "G70822580",
+    "puntuacion": null,
+    "importe": 1579.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B405",
+    "entidad": "SOCIETAT PROTECTORA D'ANIMALS DE MATARÓ.",
+    "cif": "G58223785",
+    "puntuacion": null,
+    "importe": 1579.1,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B487",
+    "entidad": "ASOCIACION DE PROTECCION ANIMAL ABADIÑO KALEKATUAK.",
+    "cif": "G09644196",
+    "puntuacion": null,
+    "importe": 1579.03,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B800",
+    "entidad": "GATINES SIN ESTRELLA.",
+    "cif": "G44987477",
+    "puntuacion": null,
+    "importe": 1572.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B866",
+    "entidad": "ALTERNATIVA ECOLOGISTA D'ARTESA DE LLEIDA.",
+    "cif": "G25073917",
+    "puntuacion": null,
+    "importe": 1564.44,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B513",
+    "entidad": "ASOCIACION REFUGIO MUSKARIA.",
+    "cif": "G71308225",
+    "puntuacion": null,
+    "importe": 1542.6,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B849",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES LA HUELLA BLANCA.",
+    "cif": "G04809042",
+    "puntuacion": null,
+    "importe": 1542.6,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B854",
+    "entidad": "ASSOCIACIÓ AMICS ELS GATS COLOMENCS.",
+    "cif": "G55241707",
+    "puntuacion": null,
+    "importe": 1542.6,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B696",
+    "entidad": "ASSOCIACIO PROGAT L'AMPOLLA.",
+    "cif": "G55681464",
+    "puntuacion": null,
+    "importe": 1542.6,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B735",
+    "entidad": "LOS GATITOS DE NIA.",
+    "cif": "G90283425",
+    "puntuacion": null,
+    "importe": 1542.6,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B848",
+    "entidad": "ASSOCIACIÓ S.O.S MININUS DEL CARRER DE FIGUERES.",
+    "cif": "G55351597",
+    "puntuacion": null,
+    "importe": 1541.76,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B697",
+    "entidad": "ASOCIACIÓ FOREST HORSES.",
+    "cif": "G67908905",
+    "puntuacion": null,
+    "importe": 1528.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B316",
+    "entidad": "LOS GATOS DE LA FERIA.",
+    "cif": "G02765717",
+    "puntuacion": null,
+    "importe": 1528.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B816",
+    "entidad": "ASSOCIACIÓ PEL BENESTAR ANIMAL TRAMUSSETS.",
+    "cif": "G70630108",
+    "puntuacion": null,
+    "importe": 1524.54,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B161",
+    "entidad": "ASOCIACIÓN PROTECTORA DE EQUINOS AVENA Y CALOR.",
+    "cif": "G76763937",
+    "puntuacion": null,
+    "importe": 1523.2,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B430",
+    "entidad": "ASOC GALGOS SOLIDARIOS.",
+    "cif": "G01613975",
+    "puntuacion": null,
+    "importe": 1520.94,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B588",
+    "entidad": "ASSOCIACIÓ BENESTAR ANIMAL DE BELLREGUARD.",
+    "cif": "G40618688",
+    "puntuacion": null,
+    "importe": 1517.34,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B433",
+    "entidad": "ASSOCIACIO ANIMAL PER CULLERA.",
+    "cif": "G09644071",
+    "puntuacion": null,
+    "importe": 1513.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B359",
+    "entidad": "GUADAMEU FELINS.",
+    "cif": "G10948065",
+    "puntuacion": null,
+    "importe": 1510.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B685",
+    "entidad": "A.P.A. LOS GATICOS DE SUSANA, DEFENSA ANIMAL.",
+    "cif": "G16843609",
+    "puntuacion": null,
+    "importe": 1506.59,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B563",
+    "entidad": "ASOCIACION ANIMALISTA POR LA VIDA.",
+    "cif": "G10422947",
+    "puntuacion": null,
+    "importe": 1506.59,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B300",
+    "entidad": "EL REFUGIO DE RUBÍ.",
+    "cif": "G56365356",
+    "puntuacion": null,
+    "importe": 1506.59,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B615",
+    "entidad": "EL RINCÓN DE TECLA.",
+    "cif": "G85613834",
+    "puntuacion": null,
+    "importe": 1499.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B565",
+    "entidad": "ASSOCIACIÓ PROJECTE LOLA.",
+    "cif": "G55365449",
+    "puntuacion": null,
+    "importe": 1498.38,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B858",
+    "entidad": "PROGAT LLEIDA.",
+    "cif": "G25566647",
+    "puntuacion": null,
+    "importe": 1485.22,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B465",
+    "entidad": "PLATAFORMA CIUDADANA PRO-ANIMALES DE OVIEDO.",
+    "cif": "G74277559",
+    "puntuacion": null,
+    "importe": 1480.97,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B650",
+    "entidad": "ASOCIACIÓN ALCAT (ALMENDRALEJO EN DEFENSA FELINA).",
+    "cif": "G09803172",
+    "puntuacion": null,
+    "importe": 1471.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B595",
+    "entidad": "ASOCIACIÓN AMIGOS DE LOS ANIMALES DE TIERRA DE CAMPOS.",
+    "cif": "G24389793",
+    "puntuacion": null,
+    "importe": 1471.07,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B788",
+    "entidad": "ASOCIACIÓN POSADA ANIMAL EL VALLE ENCANTADO.",
+    "cif": "G86712833",
+    "puntuacion": null,
+    "importe": 1471.07,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B698",
+    "entidad": "LA MAR DE GATOS DEFENSA ANIMAL.",
+    "cif": "G30933600",
+    "puntuacion": null,
+    "importe": 1471.07,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B799",
+    "entidad": "SOS ANIMALES ABANDONADOS MIJAS.",
+    "cif": "G05493077",
+    "puntuacion": null,
+    "importe": 1469.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B010",
+    "entidad": "A.P.A. TARRACO PINSCHER, RATER Y BODEGUEROS EN ADOPCIÓN.",
+    "cif": "G55709091",
+    "puntuacion": null,
+    "importe": 1467.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B709",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES DE CORRALES.",
+    "cif": "G21572656",
+    "puntuacion": null,
+    "importe": 1467.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B703",
+    "entidad": "ASSOCIACIÓ MASNOUGATS.",
+    "cif": "G66285412",
+    "puntuacion": null,
+    "importe": 1467.55,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B877",
+    "entidad": "ASOCIACIÓN DE RESCATE ANIMAL OHANA.",
+    "cif": "G01671288",
+    "puntuacion": null,
+    "importe": 1458.75,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B271",
+    "entidad": "ASOCIACIÓN ESPOLONES ZARAGOZA.",
+    "cif": "G99415796",
+    "puntuacion": null,
+    "importe": 1453.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B578",
+    "entidad": "ZARPITAS.",
+    "cif": "G72317241",
+    "puntuacion": null,
+    "importe": 1453.49,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B111",
+    "entidad": "ASOCIACIÓN SANTUARIO EL CORTIJILLO DE LA LOLA.",
+    "cif": "G90187493",
+    "puntuacion": null,
+    "importe": 1443.01,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B069",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES SAN ANTÓN MORÓN.",
+    "cif": "G91041947",
+    "puntuacion": null,
+    "importe": 1436.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B841",
+    "entidad": "WEIMARANER RESCUE SPAIN.",
+    "cif": "G67418616",
+    "puntuacion": null,
+    "importe": 1418.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B248",
+    "entidad": "MAS QUE GATOS ASOCIACION PARA LA GESTION ETICA DE LAS COLONIAS FELINAS DE VILLALGORDO DEL JUCAR.",
+    "cif": "G72711724",
+    "puntuacion": null,
+    "importe": 1415.26,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B351",
+    "entidad": "ASSOCIACIÓ ADALL (AJUDA A LA DEFENSA D'ANIMALS A LLAVANERES).",
+    "cif": "G65257842",
+    "puntuacion": null,
+    "importe": 1404.93,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B207",
+    "entidad": "ASSOCIACIO MAS GATS.",
+    "cif": "G01695568",
+    "puntuacion": null,
+    "importe": 1404.93,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B867",
+    "entidad": "ASOC QUATRE GATS (ASOCIACIO DE DEFENSA ANIMAL).",
+    "cif": "G44535359",
+    "puntuacion": null,
+    "importe": 1401.5,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B760",
+    "entidad": "ASOCIACIÓN PROTECTORA CABALLOS REFUGIO LOS ABUELOS.",
+    "cif": "G13584305",
+    "puntuacion": null,
+    "importe": 1401.5,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B635",
+    "entidad": "ASOCIACION VOLUNTARIOS ITINERANTES.",
+    "cif": "G66851510",
+    "puntuacion": null,
+    "importe": 1401.5,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B308",
+    "entidad": "ASSOC. PELS GATS,PROJECTE CES BENICARLÓ.",
+    "cif": "G44513307",
+    "puntuacion": null,
+    "importe": 1401.5,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B042",
+    "entidad": "AYUDANDO A LOS ANIMALES HELP 3A.",
+    "cif": "G87230512",
+    "puntuacion": null,
+    "importe": 1401.5,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B792",
+    "entidad": "ASOCIACIÓN KATUSAREA RED COLABORATIVA DE COLONIAS FELINAS.",
+    "cif": "G56723612",
+    "puntuacion": null,
+    "importe": 1384.41,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B472",
+    "entidad": "ASOCIACIÓN COLONIAS CANGUESAS.",
+    "cif": "G94108453",
+    "puntuacion": null,
+    "importe": 1377.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B403",
+    "entidad": "ASOCIACIÓN FERALGOST.",
+    "cif": "G02987337",
+    "puntuacion": null,
+    "importe": 1376.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B241",
+    "entidad": "ASSOCIACIO ENTRE URPES I BIGOTIS.",
+    "cif": "G02728699",
+    "puntuacion": null,
+    "importe": 1370.83,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B542",
+    "entidad": "ASOCIACIÓN ANIMALISTAS BLANCA.",
+    "cif": "G73945388",
+    "puntuacion": null,
+    "importe": 1367.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B486",
+    "entidad": "ASOCIACIÓN COMUNIDAD RONRONEA.",
+    "cif": "G88612395",
+    "puntuacion": null,
+    "importe": 1367.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B074",
+    "entidad": "ASOCIACIÓN DEL MOVIMIENTO ANTIESPECISTA LLEÓ.",
+    "cif": "G26529594",
+    "puntuacion": null,
+    "importe": 1367.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B836",
+    "entidad": "ASOCIACIÓN GATOS DE LA COSTA.",
+    "cif": "G16374167",
+    "puntuacion": null,
+    "importe": 1367.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B833",
+    "entidad": "EL HOGAR DE MI COLONIA.",
+    "cif": "G44886315",
+    "puntuacion": null,
+    "importe": 1367.45,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B783",
+    "entidad": "CUATRO PATITAS.",
+    "cif": "G74467440",
+    "puntuacion": null,
+    "importe": 1353.96,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B131",
+    "entidad": "ASOCIACION DE AYUDA A ANIMALES ABANDONADOS DEJAN HUELLA.",
+    "cif": "G14858518",
+    "puntuacion": null,
+    "importe": 1350.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B162",
+    "entidad": "PROTECTORA VIRGEN DE LA PAZ.",
+    "cif": "G13625736",
+    "puntuacion": null,
+    "importe": 1333.89,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B508",
+    "entidad": "ASOCIACIÓN PROTECTORA ANIMAL «EL ARCA DE CUEVAS».",
+    "cif": "G93719730",
+    "puntuacion": null,
+    "importe": 1330.56,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B670",
+    "entidad": "ASOCIACIÓN PULGOSAS.",
+    "cif": "G72233026",
+    "puntuacion": null,
+    "importe": 1325.67,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B627",
+    "entidad": "ASSOCIACIÓ ESPAI DE GATS.",
+    "cif": "G66540469",
+    "puntuacion": null,
+    "importe": 1323.91,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B678",
+    "entidad": "ASOCIACIÓN FELINA DE ROMANGORDO.",
+    "cif": "G19842640",
+    "puntuacion": null,
+    "importe": 1317.29,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B494",
+    "entidad": "ASOCIACION SOMOS GALGOS RESCATE Y AYUDA.",
+    "cif": "G87672317",
+    "puntuacion": null,
+    "importe": 1315.64,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B371",
+    "entidad": "ASSOCIACIÓ GATS LA ROCA.",
+    "cif": "G66348426",
+    "puntuacion": null,
+    "importe": 1313.99,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B059",
+    "entidad": "ASOCIACIÓN PARA LA PROTECCIÓN DE LA COLONIA FELINA DE TORROX.",
+    "cif": "G11941929",
+    "puntuacion": null,
+    "importe": 1307.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B114",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES DE EL BURGO.",
+    "cif": "G93414399",
+    "puntuacion": null,
+    "importe": 1300.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B269",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES Y PLANTAS TULA.",
+    "cif": "G02574564",
+    "puntuacion": null,
+    "importe": 1284.46,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B295",
+    "entidad": "ASOCIACIÓN ARCA FELINA DE PASTRIZ.",
+    "cif": "G99534281",
+    "puntuacion": null,
+    "importe": 1274.71,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B303",
+    "entidad": "MANZANARES FELINA.",
+    "cif": "G88646831",
+    "puntuacion": null,
+    "importe": 1271.47,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B334",
+    "entidad": "ASOCIACIÓN PLATAFORMA ANIMALISTA DE LORCA.",
+    "cif": "G73975435",
+    "puntuacion": null,
+    "importe": 1268.88,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B825",
+    "entidad": "SOCIETAT PROTECTORA DE GATS DE MUSEROS.",
+    "cif": "G98939150",
+    "puntuacion": null,
+    "importe": 1268.23,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B680",
+    "entidad": "MIS AMIGAS LAS PALOMAS.",
+    "cif": "G86761889",
+    "puntuacion": null,
+    "importe": 1262.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B143",
+    "entidad": "ASSOCIACIÓ MÓN ANIMAL CABANABONA.",
+    "cif": "G44807097",
+    "puntuacion": null,
+    "importe": 1257.27,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B674",
+    "entidad": "PLANET-ANIMALS.",
+    "cif": "G30859102",
+    "puntuacion": null,
+    "importe": 1252.13,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B317",
+    "entidad": "ASSOCIACIÓ AMICS DELS ANIMALS DE CANYELLES HUELLAS FELICES.",
+    "cif": "G66665613",
+    "puntuacion": null,
+    "importe": 1247.64,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B459",
+    "entidad": "ASOCIACION IBIZA4PATAS.",
+    "cif": "G57517690",
+    "puntuacion": null,
+    "importe": 1242.52,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B015",
+    "entidad": "ALBERG D'ANIMALS DE LES TERRES DE L'EBRE.",
+    "cif": "G43766625",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B620",
+    "entidad": "AMICS ACOLLIDORS DELS ANIMALS.",
+    "cif": "G61156345",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B215",
+    "entidad": "ASOC. GATOS SIN HOGAR.",
+    "cif": "G67861195",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B185",
+    "entidad": "ASOCIACIÓN LA MUNTANYETA DELS GATS DE CULLERA.",
+    "cif": "G42935817",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B142",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES LINDA PULGOSA.",
+    "cif": "G19553510",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B483",
+    "entidad": "RONRONEOS AZULES.",
+    "cif": "G54940614",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B388",
+    "entidad": "ROSSGATS PROJECTE CER ROSSELL.",
+    "cif": "G13755251",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B558",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y PLANTAS K-PROJECT ANIMALIA RESCUE.",
+    "cif": "G13559414",
+    "puntuacion": null,
+    "importe": 1236.14,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B612",
+    "entidad": "SOS CAN&CAT.",
+    "cif": "G55660013",
+    "puntuacion": null,
+    "importe": 1231.37,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B199",
+    "entidad": "ASOCIACIÓN VELILLA GATUNA.",
+    "cif": "G86596715",
+    "puntuacion": null,
+    "importe": 1219.05,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B013",
+    "entidad": "ASOCIACION PARA EL RESCATE Y PROTECCIÓN DE FAUNA EQUINAC.",
+    "cif": "G04422028",
+    "puntuacion": null,
+    "importe": 1211.77,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B092",
+    "entidad": "JENARO RESCATE ANIMAL.",
+    "cif": "G16732000",
+    "puntuacion": null,
+    "importe": 1204.54,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B705",
+    "entidad": "LOS BIGOTES DE CLEOPATRA.",
+    "cif": "G56076581",
+    "puntuacion": null,
+    "importe": 1204.54,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B414",
+    "entidad": "LA GATA LLORONA.",
+    "cif": "G55452577",
+    "puntuacion": null,
+    "importe": 1198.28,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B851",
+    "entidad": "ASOCIACIÓN YO ADOPTÉ A NIKKA.",
+    "cif": "G16393993",
+    "puntuacion": null,
+    "importe": 1192.93,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B004",
+    "entidad": "COORDINADORA PROYECTO ESCAN.",
+    "cif": "G73947582",
+    "puntuacion": null,
+    "importe": 1192.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B748",
+    "entidad": "ASSOCIACIÓ GATS RIUMOSSENCS.",
+    "cif": "G56976772",
+    "puntuacion": null,
+    "importe": 1189.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B654",
+    "entidad": "A.P.A. GATOS DE LA MANCHUELA.",
+    "cif": "G02572303",
+    "puntuacion": null,
+    "importe": 1188.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B835",
+    "entidad": "ASOCIACION COLONIAS FELINAS ALBORAYA.",
+    "cif": "G98994734",
+    "puntuacion": null,
+    "importe": 1188.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B421",
+    "entidad": "ASOCIACIÓN EN DEFENSA DE LOS ANIMALES ADAB BENAMEJÍ.",
+    "cif": "G56116932",
+    "puntuacion": null,
+    "importe": 1188.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B720",
+    "entidad": "ASOCIACIÓN SOS GATS I GOSSOS SANT JUST DESVERN.",
+    "cif": "G65494825",
+    "puntuacion": null,
+    "importe": 1188.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B151",
+    "entidad": "ASSOCIACIÓ PROGAT ALT BERGUEDÀ.",
+    "cif": "G66638016",
+    "puntuacion": null,
+    "importe": 1188.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B118",
+    "entidad": "RESCATE ANIMAL MALLORCA.",
+    "cif": "G57902504",
+    "puntuacion": null,
+    "importe": 1188.92,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B815",
+    "entidad": "ASOCIACION LOS PERROS NEGROS.",
+    "cif": "G67916684",
+    "puntuacion": null,
+    "importe": 1185.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B869",
+    "entidad": "LES SET CABRETES.",
+    "cif": "G55699748",
+    "puntuacion": null,
+    "importe": 1185.82,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B392",
+    "entidad": "ASOCIACIÓN CORAZÓN BLANCO PARA LOS ANIMALES.",
+    "cif": "G93385862",
+    "puntuacion": null,
+    "importe": 1179.61,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B191",
+    "entidad": "101 HUELLAS.",
+    "cif": "G30928196",
+    "puntuacion": null,
+    "importe": 1173.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B782",
+    "entidad": "ASOCIACION CRISTINA`S FURBABIES.",
+    "cif": "G70566674",
+    "puntuacion": null,
+    "importe": 1173.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B828",
+    "entidad": "ASSOCIACIO CAT ODENA.",
+    "cif": "G56601891",
+    "puntuacion": null,
+    "importe": 1173.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B434",
+    "entidad": "CES PET MIAU.",
+    "cif": "G06795314",
+    "puntuacion": null,
+    "importe": 1173.43,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B646",
+    "entidad": "ESCATBACHOS.",
+    "cif": "G42756577",
+    "puntuacion": null,
+    "importe": 1165.11,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B503",
+    "entidad": "ASOC. MASSAMAGATS, AYUDANOS A AYUDARLES.",
+    "cif": "G05336698",
+    "puntuacion": null,
+    "importe": 1161.12,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B456",
+    "entidad": "SENDEROS FELINOS LA NUCIA.",
+    "cif": "G56548746",
+    "puntuacion": null,
+    "importe": 1161.12,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B560",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES MININOS MURCIA.",
+    "cif": "G01815992",
+    "puntuacion": null,
+    "importe": 1158.06,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B514",
+    "entidad": "SOS HOCICOS.",
+    "cif": "G02749851",
+    "puntuacion": null,
+    "importe": 1155.0,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B786",
+    "entidad": "ASOCIACION LITERANA DEFENSA ANIMAL.",
+    "cif": "G22393797",
+    "puntuacion": null,
+    "importe": 1154.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B427",
+    "entidad": "A.P.A. MI MEJOR AMIGO DE 4 PATAS.",
+    "cif": "G87370631",
+    "puntuacion": null,
+    "importe": 1151.94,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B621",
+    "entidad": "ALDEA ANIMAL. ASOCIACIÓN PROTECTORA DE ALDEA DEL FRESNO APAAF.",
+    "cif": "G87577029",
+    "puntuacion": null,
+    "importe": 1145.85,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B159",
+    "entidad": "ASOCIACION CULTURAL GATS DE PATRAIX.",
+    "cif": "G40576506",
+    "puntuacion": null,
+    "importe": 1142.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B778",
+    "entidad": "COLONIAS FELINAS DE PICASSENT.",
+    "cif": "G10514487",
+    "puntuacion": null,
+    "importe": 1142.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B598",
+    "entidad": "L'ALDEA: PROJECTE GAT.",
+    "cif": "G01708437",
+    "puntuacion": null,
+    "importe": 1142.81,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B370",
+    "entidad": "ASSOCIACIÓ MIXETS DE LLINARS.",
+    "cif": "G13694179",
+    "puntuacion": null,
+    "importe": 1141.37,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B798",
+    "entidad": "ASOCIACIÓN GATOS LIBRES.",
+    "cif": "G87376802",
+    "puntuacion": null,
+    "importe": 1136.74,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B206",
+    "entidad": "ASOCIACION MADRINAS ANIMALISTAS RESCATE.",
+    "cif": "G99517559",
+    "puntuacion": null,
+    "importe": 1134.93,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B272",
+    "entidad": "APA PICATSSOS GERNIKA.",
+    "cif": "G09832684",
+    "puntuacion": null,
+    "importe": 1133.72,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B780",
+    "entidad": "REFUGI ELS ANGELS.",
+    "cif": "G98983737",
+    "puntuacion": null,
+    "importe": 1130.7,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B623",
+    "entidad": "ASOCIACION BIRDS FRIENDS.",
+    "cif": "G66757782",
+    "puntuacion": null,
+    "importe": 1127.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B694",
+    "entidad": "PERRITOS DEL HIGUERON.",
+    "cif": "G93724136",
+    "puntuacion": null,
+    "importe": 1127.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B457",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES DE MONESTERIO.",
+    "cif": "G06659916",
+    "puntuacion": null,
+    "importe": 1124.67,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B710",
+    "entidad": "ASOCIACIÓN PROTECTORA DE GATOS DA RÚA MIQUIÑOS MELIDE.",
+    "cif": "G05358304",
+    "puntuacion": null,
+    "importe": 1123.17,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B763",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES EL REFUGIO.",
+    "cif": "G02383370",
+    "puntuacion": null,
+    "importe": 1121.19,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B797",
+    "entidad": "AL-BAYYASA.",
+    "cif": "G23350291",
+    "puntuacion": null,
+    "importe": 1112.68,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B184",
+    "entidad": "ASOCIACIÓN COLONIA PROCATS.",
+    "cif": "G87599890",
+    "puntuacion": null,
+    "importe": 1109.39,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B589",
+    "entidad": "ASOCIACIÓN GATERAS DE VENTANIELLES.",
+    "cif": "G56139827",
+    "puntuacion": null,
+    "importe": 1108.5,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B667",
+    "entidad": "ASOCIACIÓN FELINOS DE VILAMARXANT.",
+    "cif": "G56658198",
+    "puntuacion": null,
+    "importe": 1097.8,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B789",
+    "entidad": "PROTECCION DE ANIMALES EL BUNKER.",
+    "cif": "G13591755",
+    "puntuacion": null,
+    "importe": 1097.8,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B075",
+    "entidad": "ASOCIACION RESCATE MICHISYGUAUS.",
+    "cif": "G44706455",
+    "puntuacion": null,
+    "importe": 1094.83,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B079",
+    "entidad": "ASSOCIACIÓ EL CAU DE LA CENDRA.",
+    "cif": "G55178628",
+    "puntuacion": null,
+    "importe": 1087.87,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B265",
+    "entidad": "S.O.S. ALBERGUE DE PERROS VAGABUNDOS.",
+    "cif": "G04385274",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B432",
+    "entidad": "ASOCIACION BIGATOS.",
+    "cif": "G42607655",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B844",
+    "entidad": "ASOCIACION LOS AMIGOS DE VIKY.",
+    "cif": "G90337015",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B491",
+    "entidad": "ASSOCIACIÓ HUELLAS CALLEJERAS COSTA DAURADA.",
+    "cif": "G55693469",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B404",
+    "entidad": "LA GATERA.",
+    "cif": "G55750210",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B155",
+    "entidad": "RESCATE Y DEFENSA FELINA.",
+    "cif": "G90322991",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B855",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES FELICAN.",
+    "cif": "G23489909",
+    "puntuacion": null,
+    "importe": 1083.04,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": null,
+    "entidad": "1.968.611,20",
+    "cif": "Total",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "concedida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B016",
+    "entidad": "AMICS DELS ANIMALS DEL DELTA DEL EBRE.",
+    "cif": "G55505028",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B017",
+    "entidad": "ASOCIACIÓN MIAU LEMOS.",
+    "cif": "G42828137",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B020",
+    "entidad": "ANIMAL FRIENDS EL VENDRELL.",
+    "cif": "G55746143",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B025",
+    "entidad": "ASOCIACION GATOS REFUGIO VIDA CEUTA.",
+    "cif": "G51041895",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B027",
+    "entidad": "HUELLITAS LEONESAS.",
+    "cif": "G44671782",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B028",
+    "entidad": "ASOCIACION ANIMALISTA DE VALENCIA QUIERO ADOPTAR UN AMIGO.",
+    "cif": "G13752928",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B029",
+    "entidad": "DEJANDO HUELLA.",
+    "cif": "G86182235",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B033",
+    "entidad": "ASOCIACIÓN PARA LA PROTECCIÓN ANIMAL EL ALBERGUE.",
+    "cif": "G91892000",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B040",
+    "entidad": "ASOCIACION VICTOR MARTIN.",
+    "cif": "G09895319",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B046",
+    "entidad": "ASOCIACIÓN GATO AYUD.",
+    "cif": "G02867281",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B047",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES DE XIRIVELLA.",
+    "cif": "G98666464",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B048",
+    "entidad": "ASOCIACION GEOCAT CARTAGENA.",
+    "cif": "G30895866",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B052",
+    "entidad": "LA GATERA ADOPT A CAT.",
+    "cif": "G40249849",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B058",
+    "entidad": "GRUP D'ACCIO EN DEFENSA DELS ANIMALS DEL MONTSENY.",
+    "cif": "G66980566",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B060",
+    "entidad": "ADEA VD ASSOCIACIÓ DEFENSORA D'ANIMALS ABANDONATS VILASSAR DE DALT.",
+    "cif": "G62420674",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B061",
+    "entidad": "ASOCIACION DE ANIMALES DE ARAFO AARA.",
+    "cif": "G10640563",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B065",
+    "entidad": "UN MES DEL POBLE.",
+    "cif": "G25669052",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B070",
+    "entidad": "UNIDOS POR EL RESPETO ANIMAL UPRA.",
+    "cif": "G02968592",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B076",
+    "entidad": "ASSOCIACIO GATS 108.",
+    "cif": "G55290787",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B086",
+    "entidad": "ASSOCIACIÓ CONCABELLA GATS.",
+    "cif": "G16360240",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B087",
+    "entidad": "INTOCATBLES. GATOPOLIS.",
+    "cif": "G67873083",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B089",
+    "entidad": "ASOCIACION GATA MAU.",
+    "cif": "G16490286",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B090",
+    "entidad": "SANTUARIO ANIMAL PETRICOR.",
+    "cif": "G72592199",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B093",
+    "entidad": "WHITINA¿S CATS.",
+    "cif": "G01943216",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B096",
+    "entidad": "CUIGAT SANTPEDOR.",
+    "cif": "G67188235",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B097",
+    "entidad": "GACAMA (GATOS CALLEJEROS DE MAZUECOS).",
+    "cif": "G56957749",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B098",
+    "entidad": "ASOC PROTECTORA ANIMALES Y PLANTAS ARE ADOPTA Y RESCATA ESPAÑA.",
+    "cif": "G99479222",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B099",
+    "entidad": "ASOCIACIÓN HUELLITAS OLVIDADAS.",
+    "cif": "G72695950",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B101",
+    "entidad": "ASSOCIACIO DE LA VALL D'ÀGER PER A LA DEFENSA DELS ANIMALS I EL MEDI AMBIENT.",
+    "cif": "G25819087",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B104",
+    "entidad": "ASOCIACIÓN CAT.MIAU PARA EL BIENESTAR DE LOS GATOS.",
+    "cif": "G05310057",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B105",
+    "entidad": "ASSOCIACIÓ ALLÀ ON VIUEN ELS GATS (AOVEG).",
+    "cif": "G10624377",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B110",
+    "entidad": "CATMUR ASOCIACION PROTECTORA DE ANIMALES.",
+    "cif": "G10549673",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B115",
+    "entidad": "ADOPTA GATITO DE PUEBLO.",
+    "cif": "G72512965",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B120",
+    "entidad": "GATOS DE EL PUERTO (ASOCIACIÓN).",
+    "cif": "G72296254",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B121",
+    "entidad": "ASOCIACIÓN ADOPCIONES FELINAS DE VALENCIA.",
+    "cif": "G67810770",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B127",
+    "entidad": "ASOC. PARA PROTECCION DE ANIMALES DOMESTICOS DEJAN HUELLA CASTRO DEL RIO.",
+    "cif": "G01681881",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B136",
+    "entidad": "CESCAT TORRALBA.",
+    "cif": "G10953388",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B146",
+    "entidad": "GATS DE BARRI.",
+    "cif": "G12937660",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B153",
+    "entidad": "ANIMAL CLUB PROTECTORA.",
+    "cif": "G38985487",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B154",
+    "entidad": "AMICS DELS GATS DE LA FLORESTA.",
+    "cif": "G25655200",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B160",
+    "entidad": "NEW START RESCUE SPAIN.",
+    "cif": "G19662402",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B167",
+    "entidad": "ASSOCIACIÓ ECOANIMALISTA DE MANUEL.",
+    "cif": "G98953805",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B169",
+    "entidad": "ASSOCIACIÓ MARRAMEUS DE SANAÜJA.",
+    "cif": "G13860242",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B174",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES EL REFUGIO DE LOS SABIOS.",
+    "cif": "G67785683",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B179",
+    "entidad": "ASSOCIACIÓ PER AL BENESTAR ANIMAL DE CELRÀ.",
+    "cif": "G06957047",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B183",
+    "entidad": "ASOCIACIÓN SALMANTINA PROTECTORA DE ANIMALES Y PLANTAS.",
+    "cif": "G37061470",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B188",
+    "entidad": "CERVERA RIOJA.",
+    "cif": "G56894223",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B196",
+    "entidad": "GATISLONIA.",
+    "cif": "G56702566",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B200",
+    "entidad": "ASOCIACION SIGUIENDO TUS HUELLAS VALDES.",
+    "cif": "G74427261",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B203",
+    "entidad": "ACCION ANIMAL GRANATULA.",
+    "cif": "G67687012",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B204",
+    "entidad": "ASSOCIACIÓ GRUP DE SUPORT A PROTECTORES.",
+    "cif": "G65510943",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B210",
+    "entidad": "ASOCIACION SOS BDN.",
+    "cif": "G66607193",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B219",
+    "entidad": "ASSOCIACIÓ AMICS DELS GATS DE SANT GUIM DE LA PLANA.",
+    "cif": "G13936760",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B220",
+    "entidad": "ASSOCIACIÓ FLOREGATS.",
+    "cif": "G02754448",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B221",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES Y PLANTAS LOBI SIEMPRE FIEL.",
+    "cif": "G93429934",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B222",
+    "entidad": "MICHI-GUIL ASOCIACIÓN FELINA DE TORREGUIL.",
+    "cif": "G70804059",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B225",
+    "entidad": "ASOCIACIÓN DE AMIGOS BICHEROS AMIBICHOS.",
+    "cif": "G45844933",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B227",
+    "entidad": "APA PATAS UNIDAS DE UGENA.",
+    "cif": "G45903572",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B228",
+    "entidad": "ASOCIACIÓN PROGAT VILA-SECA.",
+    "cif": "G43971480",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B229",
+    "entidad": "ASSOCIACIÓ FRANCAS NATURA.",
+    "cif": "G55731103",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B231",
+    "entidad": "ASOCIACIÓN LA MOSCA Y LA GATA.",
+    "cif": "G56771157",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B233",
+    "entidad": "ASOCIACIÓN SOMOS MALA PATA.",
+    "cif": "G72378573",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B234",
+    "entidad": "LA LLAR DEL GAT COLÓNIES FELINES.",
+    "cif": "G09916867",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B243",
+    "entidad": "ASOCIACIÓN PARA LA GESTIÓN DEL MÉTODO CER EN LAS COLONIAS FELINAS DE DAIMIEL BCATS.",
+    "cif": "G67946921s",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B246",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES ROSA'S.",
+    "cif": "G09867508",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B249",
+    "entidad": "ASOCIACIÓN CACEREÑA PARA LA PROTECCIÓN Y DEFENSA DE LOS ANIMALES.",
+    "cif": "G10182442",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B250",
+    "entidad": "ASSOCIACIO PETJADES GATS I GOSSOS DE PUIG-REIG.",
+    "cif": "G66791922",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B251",
+    "entidad": "ASOC. PROTECTORA DE ANIMALES SENTIDO ANIMAL.",
+    "cif": "G04889614",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B254",
+    "entidad": "ASOCIACIÓN FELINA DE LLÍRIA-BENISSANÓ.",
+    "cif": "G44822906",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B255",
+    "entidad": "BIGOTITOS DE ANGEL.",
+    "cif": "G44750354",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B256",
+    "entidad": "ASOCACION MONGATS MONTBUI.",
+    "cif": "G67511311",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B260",
+    "entidad": "DOMEÑO POR EL BIENESTAR ANIMAL.",
+    "cif": "G72722515",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B263",
+    "entidad": "FUNDACION CANARIA FINCA ESQUINZO.",
+    "cif": "G76106863",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B270",
+    "entidad": "ASOCIACIÓN FELINA PANZARRIBA.",
+    "cif": "G02765766",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B273",
+    "entidad": "ASOC COLONIAS GATITOS DE MASSANASSA.",
+    "cif": "G98932924",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B278",
+    "entidad": "ASOCIACIÓN FELINA PROTEGIDOS DE JÓDAR.",
+    "cif": "G56744162",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B281",
+    "entidad": "MUNDO FELINO PINSEQUE.",
+    "cif": "G05414024",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B285",
+    "entidad": "CATLLEJEROS LODARES DE MEDINACELI.",
+    "cif": "G55445894",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B286",
+    "entidad": "ASSOCIACIÓ GATS I GOSSOS SANT FELIU.",
+    "cif": "G66549908",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B287",
+    "entidad": "ASOCIACION PROTECTORA FELINA LA GATERA.",
+    "cif": "G72472558",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B288",
+    "entidad": "ASSO RED SOLIDARIA PRO ANIMAL.",
+    "cif": "G67453621",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B289",
+    "entidad": "ASOCIACION APEGA.",
+    "cif": "G56452444",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B292",
+    "entidad": "LAS ALMAS DE COCOA.",
+    "cif": "G67811000",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B293",
+    "entidad": "LEMOIZKO KATU ELKARTEA-LKE.",
+    "cif": "G55453690",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B296",
+    "entidad": "ASOCIACION LADRIDOS VAGABUNDOS.",
+    "cif": "G18767947",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B304",
+    "entidad": "ASOCIACIÓN PROTECTORA FELINA «GATETES».",
+    "cif": "G23763535",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B306",
+    "entidad": "ASSOCIACIÓ GATS AMICS AIGUAMÙRCIA.",
+    "cif": "G72432883",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B307",
+    "entidad": "CATNIP TNR.",
+    "cif": "G05345798",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B309",
+    "entidad": "ASSOCIACIÓ COR GATS.",
+    "cif": "G13867957",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B311",
+    "entidad": "ASSOCIACIÓ DE CAPTURA, ESTERILITZACIÓ I SOLTA, C.E.S COLÒNIES FELINES DE CASTELLÓ-RIBERA ALTA.",
+    "cif": "G06930820",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B312",
+    "entidad": "COLONIA FELINA CRUZ CUBIERTA.",
+    "cif": "G98796980",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B315",
+    "entidad": "ASOCIACIÓN COLONIAS FELINAS DE CÓZAR.",
+    "cif": "G72978141",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B327",
+    "entidad": "ASOCIACION KATU KALEKO-GATO CALLEJERO.",
+    "cif": "G31981012",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B328",
+    "entidad": "ASOCIACION FELINA SAN MARTIN DE VALDEIGLESIAS.",
+    "cif": "G88576269",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B335",
+    "entidad": "ASSOCIACIÓ SANTA GATS.",
+    "cif": "G10699585",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B336",
+    "entidad": "GARRA FELINA.",
+    "cif": "G09643818",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B350",
+    "entidad": "ASOCIACION BIGOTIS DE PICA.",
+    "cif": "G56400757",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B352",
+    "entidad": "BADANIMALS.",
+    "cif": "G02668002",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B353",
+    "entidad": "ASOCIACIÓN PROTECTORA FELINA HOGAR FELIZ.",
+    "cif": "G97002166",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B354",
+    "entidad": "CAP COR I CÚA ELS PORTS.",
+    "cif": "G44534964",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B358",
+    "entidad": "ASOCIACION ARCA DEJANDO HUELLA.",
+    "cif": "G72655707",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B364",
+    "entidad": "ASOCIACIÓN POR LA PROTECCIÓN ANIMAL HUELLAS DE SARRIA.",
+    "cif": "G27484997",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B368",
+    "entidad": "ASOCIACIÓN PROTECTORA FELINA DE TRES CANTOS (FELINOS 3C).",
+    "cif": "G87846655",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B369",
+    "entidad": "ASOCIACIÓN 13 GATOS NEGROS.",
+    "cif": "G44638955",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B379",
+    "entidad": "HUELLAS DE ALDEAMAYOR COLONIAS FELINAS.",
+    "cif": "G06778047",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B380",
+    "entidad": "ASOCIACION ANGELA DORADO.",
+    "cif": "G55398184",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B391",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES LA RAMBLA ES SU VOZ.",
+    "cif": "G56037393",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B394",
+    "entidad": "ASSOCIACIÓ MUSSAGATS VILAPLANA.",
+    "cif": "G10751774",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B395",
+    "entidad": "APDA ALOZAINA.",
+    "cif": "G70707849",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B398",
+    "entidad": "ASOCIACIÓN ARRE KATAKUMEAK.",
+    "cif": "G71488209",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B399",
+    "entidad": "ACA ANIMALES CARBONERAS.",
+    "cif": "G09948324",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B406",
+    "entidad": "ASSOCIACIO PLAGATS.",
+    "cif": "G05473020",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B409",
+    "entidad": "ASSOCIACIÓ AMICS DELS GATS DE RIUDOMS.",
+    "cif": "G55660526",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B410",
+    "entidad": "PODER ANIMAL GRANATULA.",
+    "cif": "G70989363",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B415",
+    "entidad": "ASSOCIACIÓ ELS GATS DE L'ERA.",
+    "cif": "G55666788",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B417",
+    "entidad": "AMICS DELS GATS DE VILAFRANCA.",
+    "cif": "G72745375",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B418",
+    "entidad": "SOS GATOS AVILES.",
+    "cif": "G74351826",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B419",
+    "entidad": "ASOCIACIÓN RESERVA FÉNIX.",
+    "cif": "G02784668",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B423",
+    "entidad": "ASSOCIACIÓ 7 VIDES ANIMALS ÒDENA.",
+    "cif": "G67232611",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B428",
+    "entidad": "ANIMALES EN APUROS LANGREO.",
+    "cif": "G16841470",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B438",
+    "entidad": "KATUETXE HERNANIKO ELKARTEA PARA EL CONTROL Y PROTECCIÓN DE LOS GATOS CALLEJEROS.",
+    "cif": "G75229534",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B439",
+    "entidad": "ASOCIACIÓN DE ANIMALES ABANDONADOS SIETE VIDAS.",
+    "cif": "G54889191",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B440",
+    "entidad": "ASOCIACIÓN LA GATA PIRATA.",
+    "cif": "G56589781",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B445",
+    "entidad": "ASOC PARA EL BIENESTAR DE LOS ANIMALES DE CANTABRIA PATAS.",
+    "cif": "G39611587",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B447",
+    "entidad": "ASOCIACIÓN EN FAVOR DE LOS DERECHOS DE LOS ANIMALES ASOAYA ANIMALIEN ESKUBIDEEN ALDEKO ELKARTEA.",
+    "cif": "G95808838",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B449",
+    "entidad": "ASOCIACIÓN PARA LA DEFENSA DE LOS ANIMALES DE BADAJOZ.",
+    "cif": "G06295059",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B458",
+    "entidad": "CER GATOS ALCAZAR.",
+    "cif": "G44737328",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B462",
+    "entidad": "GATIÑOS DA RUA.",
+    "cif": "G27825033",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B463",
+    "entidad": "COLONIAS FELINAS DE CRIPTANA.",
+    "cif": "G16970204",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B475",
+    "entidad": "ASSOCIACIÓ PROGAT BONASTRE.",
+    "cif": "G43965524",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B481",
+    "entidad": "ASOCIACIÓN DE GESTORAS DE COLONIAS FELINAS DE ÚBEDA.",
+    "cif": "G72584501",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B484",
+    "entidad": "COLONIAS FELINAS ORIHUELA.",
+    "cif": "G10680916",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B488",
+    "entidad": "RESCATE ANIMAL EN SITUACIONES DE EMERGENCIA-RASE.",
+    "cif": "G16814733",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B489",
+    "entidad": "ASOCIACION RONRONEO PARK.",
+    "cif": "G19893841",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B493",
+    "entidad": "AURA FELINA STC.",
+    "cif": "G09813197",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B496",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES GATICOS ALCAÑIZANOS.",
+    "cif": "G10934115",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B500",
+    "entidad": "COLONIAS FELINAS VIVEROS.",
+    "cif": "G09968611",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B505",
+    "entidad": "ASSOCIACIÓ BENESGAT.",
+    "cif": "G09739194",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B506",
+    "entidad": "ASOC. GATS DEL JARDÍ DEL MOLÍ.",
+    "cif": "G06886857",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B507",
+    "entidad": "ASOCIACIÓN FELINA PEÑISCOLA.",
+    "cif": "G44533131",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B516",
+    "entidad": "ASOCIACIÓN GATOS GALLUR «AGG».",
+    "cif": "G88347786",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B518",
+    "entidad": "FELINOS FELICES BORMUJOS.",
+    "cif": "G67789255",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B524",
+    "entidad": "ASSOCIACIÓ LA PELUDETA.",
+    "cif": "G44547164",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B526",
+    "entidad": "ASOCIACIÓN SOCORRO ANIMAL AMIGOS DE MILORD.",
+    "cif": "G34229997",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B527",
+    "entidad": "ASSOCIACIÓ PROTECTORA D'ANIMALS PELUTS LLIÇÀ.",
+    "cif": "G67236398",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B528",
+    "entidad": "ASOC GATOS CALAGAT/FELINS DE CAPDEPERA.",
+    "cif": "G13648753",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B531",
+    "entidad": "ASOCIACION ANIMALISTAS VOLUNTARIOS TRUJILLANOS.",
+    "cif": "G72794886",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B537",
+    "entidad": "ASSOCIACIÓ MONTBLANC GAT I GOS.",
+    "cif": "G55689566",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B538",
+    "entidad": "ASOCIACIÓN LAS GATAS CAREY.",
+    "cif": "G67912014",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B540",
+    "entidad": "ASOC SOCIEDAD PROTECTORA DE MASSALFASSAR.",
+    "cif": "G98888688",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B546",
+    "entidad": "SOCIEDAD PROTECTORA DE ANIMALES Y AMBIENTAL DE IBI.",
+    "cif": "G03862018",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B547",
+    "entidad": "PACTO DE LEALTAD.",
+    "cif": "G37561917",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B549",
+    "entidad": "ASSOCIACIÓ ANIMALISTA D'ALÒS DE BALAGUER.",
+    "cif": "G02639227",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B553",
+    "entidad": "CES FERNAN CABALLERO.",
+    "cif": "G72890783",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B566",
+    "entidad": "SOS PELUDOS LEPEROS.",
+    "cif": "G56705338",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B568",
+    "entidad": "ASOCIACION COLONIAS FELINAS DE JUN EL GATO JUNERO.",
+    "cif": "G19778885",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B569",
+    "entidad": "ABRUFELINA ACTIVA.",
+    "cif": "G10597466",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B571",
+    "entidad": "FUNDACIÓN SOS ANIMAL.",
+    "cif": "G57290983",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B572",
+    "entidad": "HAKUNA MATATA FAMILIA ANIMALISTA.",
+    "cif": "G95817953",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B574",
+    "entidad": "LIBERANDO PATITAS.",
+    "cif": "G10701407",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B575",
+    "entidad": "PROYECTO CAÑADA.",
+    "cif": "G88031737",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B579",
+    "entidad": "ASOCIACIÓN MIAULLIDOS.",
+    "cif": "G56420136",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B581",
+    "entidad": "PLATAFORMA CIUDADANA PRO-ANIMAL MANZANARES.",
+    "cif": "G13582721",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B587",
+    "entidad": "DEJANDO HUELLAS PRADO DEL REY.",
+    "cif": "G09861238",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B590",
+    "entidad": "ASSOCIACIÓ PROTECTORA DE SANT QUINTÍ DE MEDIONA PER A LA DEFENSA I DRETS DELS ANIMALS.",
+    "cif": "G64968381",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B591",
+    "entidad": "ASOCIACIÓN ANIMALISTA POR UNA SEGUNDA OPORTUNIDAD.",
+    "cif": "G23812373",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B594",
+    "entidad": "DIBUJANDO HUELLAS VDR.",
+    "cif": "G44852085",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B596",
+    "entidad": "APUSLIBERA.",
+    "cif": "G16976037",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B599",
+    "entidad": "ACCIÓN Y REACCIÓN ANIMAL CANTABRIA.",
+    "cif": "G39820063",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B609",
+    "entidad": "ASOCIACION CATLAND JAVEA.",
+    "cif": "G42561464",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B613",
+    "entidad": "ASOCIACION DE PERMAAPICULTURA ANDALUZA.",
+    "cif": "G90395294",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B616",
+    "entidad": "ASSOCIACIO GATS DELS BERGANTES.",
+    "cif": "G56732860",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B618",
+    "entidad": "LA CASA ENGATUSADA.",
+    "cif": "G55389290",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B619",
+    "entidad": "ASSOCIACIO ANIMALISTA I CULTURAL PETJADES.",
+    "cif": "G05410832",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B626",
+    "entidad": "ASOCIACION VUELO LIBRE LA TERCIA.",
+    "cif": "G05556329",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B631",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES VIDA LA CARLOTA.",
+    "cif": "G56106487",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B632",
+    "entidad": "ASOCIACION PRODEFENSA ANIMAL GATETS SENSE LLAR DEL PINOS.",
+    "cif": "G54895057",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B636",
+    "entidad": "PRO ANIMALES VERÍN.",
+    "cif": "G32446734",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B639",
+    "entidad": "MARRAMIAU GATS DE BENASSAL.",
+    "cif": "G55386288",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B641",
+    "entidad": "COLONIA FELINA PARQUE CENTRAL DE VALENCIA.",
+    "cif": "G44990463",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B643",
+    "entidad": "BIHOTZETIK ANIMALIAK DEFENTSARAKO ELKARTEA.",
+    "cif": "G95990339",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B645",
+    "entidad": "ASSOCIACIÓ PRO-BENESTAR ANIMAL PELUTS DE SENAN.",
+    "cif": "G72761430",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B655",
+    "entidad": "PELUDITOS URBANOS.",
+    "cif": "G04954384",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B658",
+    "entidad": "CES RONRONEOS FELICES.",
+    "cif": "G19332253",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B659",
+    "entidad": "ASSOCIACIÓ SOS BIGOTIS.",
+    "cif": "G72900491",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B662",
+    "entidad": "LA PLATAFORMA DE PROTECCION FELINA.",
+    "cif": "G99498099",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B668",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES FUERZA ANIMAL.",
+    "cif": "G23705205",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B669",
+    "entidad": "EL PERRO VERDE.",
+    "cif": "G90333592",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B672",
+    "entidad": "ASOCIACIÓN COLONIA FELINA «LA GATERA DEEDER».",
+    "cif": "G10725547",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B682",
+    "entidad": "ASOCIACIÓN DIANA RESCATA.",
+    "cif": "G01940923",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B683",
+    "entidad": "FEDERACIÓN ESPAÑOLA DE SANTUARIOS DE ANIMALES.",
+    "cif": "G88594288",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B687",
+    "entidad": "ASSOCIACIÓ CAPIGATS.",
+    "cif": "G05325659",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B689",
+    "entidad": "ASOCIACIÓN FELINA NOSOTROS LO FRENAMOS.",
+    "cif": "G44547719",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B690",
+    "entidad": "ASSOCIACIÓ MILLORS AMICS MEDIONA.",
+    "cif": "G67569657",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B692",
+    "entidad": "AYUDANDO AL ABANDONADO.",
+    "cif": "G45895125",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B700",
+    "entidad": "CATS AND DOGS CHISPA.",
+    "cif": "G72364755",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B713",
+    "entidad": "ASOCIACIÓN DE DEFENSA ANIMAL EL CASAR.",
+    "cif": "G19332485",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B714",
+    "entidad": "SOS VIDA ANIMAL GC.",
+    "cif": "G76355692",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B727",
+    "entidad": "MOIXETS DE CAS CAPITÀ.",
+    "cif": "G10918464",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B732",
+    "entidad": "LA ISLA DE TALI.",
+    "cif": "G06933949",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B736",
+    "entidad": "ASOCIACIÓN PROTECTORA DE ANIMALES EL SENDERÍN DE NESS.",
+    "cif": "G56329881",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B741",
+    "entidad": "ASOCIACION SOS MIRADAS.",
+    "cif": "G39889738",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B742",
+    "entidad": "ASSOCIACIO GATS DEL PAPIOL.",
+    "cif": "G66762667",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B743",
+    "entidad": "ASOCIACIÓN BIGOTITOS FELINOS.",
+    "cif": "G72779721",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B746",
+    "entidad": "HUELLAS DE EL BOSQUE.",
+    "cif": "G16972226",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B750",
+    "entidad": "ASOCIACIÓN PARA LA PROMOCIÓN DE LA CULTURA SINERGIAS.",
+    "cif": "G19636125",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B754",
+    "entidad": "ASOCIACIÓN ES TU GATOPCIÓN.",
+    "cif": "G76258912",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B756",
+    "entidad": "POTES I ARRELS, ASSOCIACIÓ PROTECTORA D'ANIMALS I MEDI AMBIENT DE MURO D'ALCOI.",
+    "cif": "G54922125",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B759",
+    "entidad": "ASOCIACIÓN MOVIMIENTO GATO URBANO.",
+    "cif": "G44916161",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B773",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES SALVANDO HUELLAS MADRID.",
+    "cif": "G10575348",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B777",
+    "entidad": "ASOCIACIÓN POR LA SENSIBILIDAD ANIMAL.",
+    "cif": "G87415857",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B785",
+    "entidad": "ASOCIACION PROTECTORA FELINA COLONIA DE GATOS EL BOHIO DE CARTAGENA.",
+    "cif": "G09645144",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B787",
+    "entidad": "ASOCIACIÓN DE GATOS RIBA-ROJA DE TÚRIA.",
+    "cif": "G01965532",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B793",
+    "entidad": "ASOCIACIÓN AMIGOS DEL PERRO DESCALZO.",
+    "cif": "G96841291",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B794",
+    "entidad": "ASOCIACIÓN ANIMALISTA BIENESTAR ANIMAL CHICLANA.",
+    "cif": "G72609407",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B802",
+    "entidad": "ASOC COLUNGA GATUNA.",
+    "cif": "G72622335",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B803",
+    "entidad": "MÓSTOLES GATUNO.",
+    "cif": "G56336449",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B813",
+    "entidad": "PALMA PERRUNA ASOCIACION PROTECTORA DE ANIMALES.",
+    "cif": "G21562574",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B814",
+    "entidad": "FEDERACIÓN DE ASOCIACIONES UNIDAS POR LA DEFENSA ANIMAL DE LAS PALMAS.",
+    "cif": "G76317825",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B817",
+    "entidad": "ASOCIACION HÉROES DE 4 PATAS.",
+    "cif": "G21552930",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B818",
+    "entidad": "FUNDACION ANIMAL SHELTER STANDARDS.",
+    "cif": "G10564870",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B821",
+    "entidad": "ASOCIACION PROTECTORA DE ANIMALES SALVANDO A INDIA.",
+    "cif": "G72503659",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B830",
+    "entidad": "OBSERVATORIO PARA LA PROTECCION Y EL BIENESTAR ANIMAL DE LORCA.",
+    "cif": "G56219264",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B838",
+    "entidad": "ASSOCIACIÓ CERGATS LLEIDA.",
+    "cif": "G01779651",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B847",
+    "entidad": "ANIMALES ABANDONADOS GRANADA.",
+    "cif": "G19650936",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B864",
+    "entidad": "FEDERACIÓ XARXA GATERA DE GIRONA.",
+    "cif": "G01979038",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B868",
+    "entidad": "LA FAUNITA PICONERA.",
+    "cif": "G67861310",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B870",
+    "entidad": "DAMA ARCOS.",
+    "cif": "G19752153",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B872",
+    "entidad": "ASOCIACIÓN EL SEÑOR DE LAS MONTAÑAS.",
+    "cif": "G10785897",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B875",
+    "entidad": "SOS CAT'S.",
+    "cif": "G09985169",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "denegada"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B382",
+    "entidad": "ASOC. PROTECTORA DE ANIMALES Y PLANTAS DE MONFORTE DEL CID.",
+    "cif": "G54969894",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B448",
+    "entidad": "ASOCIACIÓN VOLVER A LATIR.",
+    "cif": "G02689404",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B850",
+    "entidad": "AYUDA Y DEFENSA ANIMAL CALIFATO.",
+    "cif": "G19880574",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B876",
+    "entidad": "ASSOCIACIO DURGA.",
+    "cif": "G66310616",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B883",
+    "entidad": "ASOC. RESCATE ANIMAL GRANADA.",
+    "cif": "G19580257",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B884",
+    "entidad": "FUNDACIÓN CABALLOS EN PELIGRO EN ESPAÑA.",
+    "cif": "G54769864",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B885",
+    "entidad": "PROGAT BADÍA DEL VALLÉS.",
+    "cif": "G67610634",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B886",
+    "entidad": "ASOCIACIÓN REFUGIO DE ANIMALES ABANDONADOS BARBATE.",
+    "cif": "G72290257",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B888",
+    "entidad": "AFA ASOCIACIÓN FELINOS DE ALDAIA.",
+    "cif": "G72774920",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B889",
+    "entidad": "ASOCIACION MADRID FELINA.",
+    "cif": "G84446236",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B890",
+    "entidad": "APAGUAS.",
+    "cif": "G93642866",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B608",
+    "entidad": "ASOCIACION DE GATOS SIN HOGAR Y MEDIO AMBIENTE DE ONIL.",
+    "cif": "G55430037",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B610",
+    "entidad": "APROSENVEU ASOCIACIO PROTECTORA DELS SENSE VEU.",
+    "cif": "G54932157",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B055",
+    "entidad": "PROGAT BIGUES I RIELLS.",
+    "cif": "G67549162",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "excluida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B022",
+    "entidad": "ASOCIACION AMIGOS FELINOS.",
+    "cif": "G02754653",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B035",
+    "entidad": "ASOCIACIÓN LOS RESCATADORES.",
+    "cif": "G56910987",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B037",
+    "entidad": "CENTRO ANDALUSI DE RESCATE DE CABALLOS.",
+    "cif": "G92984368",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B302",
+    "entidad": "ASOCIACION SANTUARIO ANIMAL LOBOS DE TENERIFE.",
+    "cif": "G56345952",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B386",
+    "entidad": "VIDAS FELINAS ATARFE.",
+    "cif": "G70976535",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B611",
+    "entidad": "TREBALUGER EQUINE RESCUE CENTRE.",
+    "cif": "G16592818",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B766",
+    "entidad": "ASOCIACION BIGOTES CES LAS PEDROÑERAS FELINOS.",
+    "cif": "G56443419",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B772",
+    "entidad": "BIGOTITOS DE CAMARENILLA.",
+    "cif": "G56841232",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  },
+  {
+    "anio": 2024,
+    "num_expediente": "2024B796",
+    "entidad": "ASOCIACION 4 PATAS Y UN CORAZÓN.",
+    "cif": "G02871713",
+    "puntuacion": null,
+    "importe": null,
+    "estado": "desistida"
+  }
+]

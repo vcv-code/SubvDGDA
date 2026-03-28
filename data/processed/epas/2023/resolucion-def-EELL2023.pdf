@@ -5,7 +5,6 @@
     "cif": "P3802200J",
     "puntos": 80.0,
     "importe": 97500.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -18,7 +17,6 @@
     "cif": "P3003000A",
     "puntos": 80.0,
     "importe": 97500.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -31,7 +29,6 @@
     "cif": "P0200300B",
     "puntos": 80.0,
     "importe": 97500.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -44,7 +41,6 @@
     "cif": "P1003800H",
     "puntos": 80.0,
     "importe": 93900.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -57,7 +53,6 @@
     "cif": "P4516900J",
     "puntos": 80.0,
     "importe": 71771.15,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -70,7 +65,6 @@
     "cif": "P4422900C",
     "puntos": 80.0,
     "importe": 66175.5,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -83,7 +77,6 @@
     "cif": "P4616700C",
     "puntos": 80.0,
     "importe": 56629.4,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -96,7 +89,6 @@
     "cif": "P0306600H",
     "puntos": 80.0,
     "importe": 44880.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -109,7 +101,6 @@
     "cif": "P3002500A",
     "puntos": 80.0,
     "importe": 43456.59,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -122,7 +113,6 @@
     "cif": "P0407400A",
     "puntos": 80.0,
     "importe": 42097.57,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -135,7 +125,6 @@
     "cif": "P3002200H",
     "puntos": 80.0,
     "importe": 42031.42,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -148,7 +137,6 @@
     "cif": "P1816500A",
     "puntos": 80.0,
     "importe": 37895.61,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -161,7 +149,6 @@
     "cif": "P2522500D",
     "puntos": 80.0,
     "importe": 37057.46,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -174,7 +161,6 @@
     "cif": "P2807500J",
     "puntos": 80.0,
     "importe": 36493.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -187,7 +173,6 @@
     "cif": "P1809100I",
     "puntos": 80.0,
     "importe": 36424.72,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -200,7 +185,6 @@
     "cif": "P1204300F",
     "puntos": 80.0,
     "importe": 35327.73,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -213,7 +197,6 @@
     "cif": "P4612000B",
     "puntos": 80.0,
     "importe": 33315.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -226,7 +209,6 @@
     "cif": "P0823700J",
     "puntos": 80.0,
     "importe": 32686.26,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -239,7 +221,6 @@
     "cif": "P4508800B",
     "puntos": 80.0,
     "importe": 31937.95,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -252,7 +233,6 @@
     "cif": "P3303100F",
     "puntos": 80.0,
     "importe": 30286.3,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -265,7 +245,6 @@
     "cif": "P3804100J",
     "puntos": 80.0,
     "importe": 30161.8,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -278,7 +257,6 @@
     "cif": "P0901800C",
     "puntos": 80.0,
     "importe": 29609.91,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -291,7 +269,6 @@
     "cif": "P1200500E",
     "puntos": 80.0,
     "importe": 29114.81,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -304,7 +281,6 @@
     "cif": "P2528500H",
     "puntos": 80.0,
     "importe": 27055.6,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -317,7 +293,6 @@
     "cif": "P4516600F",
     "puntos": 80.0,
     "importe": 26478.65,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -330,7 +305,6 @@
     "cif": "P1003100C",
     "puntos": 80.0,
     "importe": 24987.4,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -343,7 +317,6 @@
     "cif": "P1015100I",
     "puntos": 80.0,
     "importe": 23014.25,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -356,7 +329,6 @@
     "cif": "P1916900B",
     "puntos": 80.0,
     "importe": 21768.85,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -369,7 +341,6 @@
     "cif": "P2901000F",
     "puntos": 80.0,
     "importe": 20830.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -382,7 +353,6 @@
     "cif": "P3801000E",
     "puntos": 80.0,
     "importe": 19153.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 1,
@@ -395,7 +365,6 @@
     "cif": "P4617200C",
     "puntos": 80.0,
     "importe": 18854.22,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -408,7 +377,6 @@
     "cif": "P3303700C",
     "puntos": 80.0,
     "importe": 18435.2,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -421,7 +389,6 @@
     "cif": "P2504000G",
     "puntos": 80.0,
     "importe": 17582.51,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -434,7 +401,6 @@
     "cif": "P4604000B",
     "puntos": 80.0,
     "importe": 17135.86,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -447,7 +413,6 @@
     "cif": "P4612100J",
     "puntos": 80.0,
     "importe": 15890.3,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -460,7 +425,6 @@
     "cif": "P0608300J",
     "puntos": 80.0,
     "importe": 15800.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -473,7 +437,6 @@
     "cif": "P1507400H",
     "puntos": 80.0,
     "importe": 15505.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -486,7 +449,6 @@
     "cif": "P0812000H",
     "puntos": 80.0,
     "importe": 14811.69,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -499,7 +461,6 @@
     "cif": "P1808900C",
     "puntos": 80.0,
     "importe": 14471.6,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -512,7 +473,6 @@
     "cif": "P4600300J",
     "puntos": 80.0,
     "importe": 14368.64,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -525,7 +485,6 @@
     "cif": "P2100700J",
     "puntos": 80.0,
     "importe": 14142.8,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -538,7 +497,6 @@
     "cif": "P4626000F",
     "puntos": 80.0,
     "importe": 13493.38,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -551,7 +509,6 @@
     "cif": "P0812300B",
     "puntos": 80.0,
     "importe": 12221.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -564,7 +521,6 @@
     "cif": "P3109700I",
     "puntos": 80.0,
     "importe": 12110.45,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -577,7 +533,6 @@
     "cif": "P0830200B",
     "puntos": 80.0,
     "importe": 11888.25,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -590,7 +545,6 @@
     "cif": "P3602200B",
     "puntos": 80.0,
     "importe": 9842.8,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -603,7 +557,6 @@
     "cif": "P2517900C",
     "puntos": 80.0,
     "importe": 8934.64,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -616,7 +569,6 @@
     "cif": "P2526300E",
     "puntos": 80.0,
     "importe": 8635.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -629,7 +581,6 @@
     "cif": "P4411300I",
     "puntos": 80.0,
     "importe": 18204.74,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -642,7 +593,6 @@
     "cif": "P0405600H",
     "puntos": 80.0,
     "importe": 7760.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -655,7 +605,6 @@
     "cif": "P2002100B",
     "puntos": 80.0,
     "importe": 7220.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -668,7 +617,6 @@
     "cif": "P3724000I",
     "puntos": 80.0,
     "importe": 7182.93,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -681,7 +629,6 @@
     "cif": "P4425400A",
     "puntos": 80.0,
     "importe": 5083.2,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -694,7 +641,6 @@
     "cif": "P4612900C",
     "puntos": 80.0,
     "importe": 6477.6,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -707,7 +653,6 @@
     "cif": "P1600000B",
     "puntos": 77.0,
     "importe": 95900.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -720,7 +665,6 @@
     "cif": "P3500001G",
     "puntos": 77.0,
     "importe": 92900.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -733,7 +677,6 @@
     "cif": "P3001500B",
     "puntos": 77.0,
     "importe": 59416.0,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -746,7 +689,6 @@
     "cif": "P4801900D",
     "puntos": 77.0,
     "importe": 26219.82,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -759,7 +701,6 @@
     "cif": "P0703100H",
     "puntos": 77.0,
     "importe": 25191.68,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -772,7 +713,6 @@
     "cif": "P0808500C",
     "puntos": 77.0,
     "importe": 9893.61,
-    "causa_exclusion": null,
     "estado": "concedida",
     "_meta": {
       "pagina": 2,
@@ -785,8 +725,7 @@
     "cif": "P1213800D",
     "puntos": 77.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -798,8 +737,7 @@
     "cif": "P2905400D",
     "puntos": 77.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -811,8 +749,7 @@
     "cif": "P0200700C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -824,8 +761,7 @@
     "cif": "P2800800A",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -837,8 +773,7 @@
     "cif": "P3000700I",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -850,8 +785,7 @@
     "cif": "P0401300I",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -863,8 +797,7 @@
     "cif": "P4603400E",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -876,8 +809,7 @@
     "cif": "P2100400G",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -889,8 +821,7 @@
     "cif": "P1902900H",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -902,8 +833,7 @@
     "cif": "P4902300E",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -915,8 +845,7 @@
     "cif": "P4608700C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -928,8 +857,7 @@
     "cif": "P3301600G",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -941,8 +869,7 @@
     "cif": "P3902000C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -954,8 +881,7 @@
     "cif": "P4609600D",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -967,8 +893,7 @@
     "cif": "P3001800F",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -980,8 +905,7 @@
     "cif": "P4610900E",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -993,8 +917,7 @@
     "cif": "P1303400D",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1006,8 +929,7 @@
     "cif": "P4007200A",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1019,8 +941,7 @@
     "cif": "P0524100E",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1032,8 +953,7 @@
     "cif": "P4008700I",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1045,8 +965,7 @@
     "cif": "P1304000A",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1058,8 +977,7 @@
     "cif": "P4615700D",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1071,8 +989,7 @@
     "cif": "P4105900G",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1084,8 +1001,7 @@
     "cif": "P0811300C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1097,8 +1013,7 @@
     "cif": "P0811700D",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1110,8 +1025,7 @@
     "cif": "P1207900J",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1123,8 +1037,7 @@
     "cif": "P0205300G",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1136,8 +1049,7 @@
     "cif": "P2809300C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1149,8 +1061,7 @@
     "cif": "P0515600E",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1162,8 +1073,7 @@
     "cif": "P4514400C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1175,8 +1085,7 @@
     "cif": "P4312500D",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 3,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1188,8 +1097,7 @@
     "cif": "P1209500F",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1201,8 +1109,7 @@
     "cif": "P3003600H",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1214,8 +1121,7 @@
     "cif": "P4517400J",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1227,8 +1133,7 @@
     "cif": "P1212500A",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1240,8 +1145,7 @@
     "cif": "P2309500C",
     "puntos": 75.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1253,8 +1157,7 @@
     "cif": "P2100100C",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1266,8 +1169,7 @@
     "cif": "P4107300H",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1279,8 +1181,7 @@
     "cif": "P2221800B",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1292,8 +1193,7 @@
     "cif": "P2908200E",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1305,8 +1205,7 @@
     "cif": "P2308000E",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1318,8 +1217,7 @@
     "cif": "P4623000I",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1331,8 +1229,7 @@
     "cif": "P2232500E",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1344,8 +1241,7 @@
     "cif": "P2310000A",
     "puntos": 72.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1357,8 +1253,7 @@
     "cif": "P4601300I",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1370,8 +1265,7 @@
     "cif": "P2900800J",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1383,8 +1277,7 @@
     "cif": "P4101000J",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1396,8 +1289,7 @@
     "cif": "P2301000B",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1409,8 +1301,7 @@
     "cif": "P0906100C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1422,8 +1313,7 @@
     "cif": "P2802900G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1435,8 +1325,7 @@
     "cif": "P5006700H",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1448,8 +1337,7 @@
     "cif": "P1303100J",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1461,8 +1349,7 @@
     "cif": "P2509400D",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1474,8 +1361,7 @@
     "cif": "P5008900B",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1487,8 +1373,7 @@
     "cif": "P4610700I",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1500,8 +1385,7 @@
     "cif": "P0306300E",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1513,8 +1397,7 @@
     "cif": "P0502100A",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1526,8 +1409,7 @@
     "cif": "P2802000F",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1539,8 +1421,7 @@
     "cif": "P0507500G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1552,8 +1433,7 @@
     "cif": "P0307100H",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1565,8 +1445,7 @@
     "cif": "P3501100F",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1578,8 +1457,7 @@
     "cif": "P0510000C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 4,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1591,8 +1469,7 @@
     "cif": "P4318400A",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1604,8 +1481,7 @@
     "cif": "P2304000I",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1617,8 +1493,7 @@
     "cif": "P4011900J",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1630,8 +1505,7 @@
     "cif": "P4106900F",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1643,8 +1517,7 @@
     "cif": "P3002600I",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1656,8 +1529,7 @@
     "cif": "P3002700G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1669,8 +1541,7 @@
     "cif": "P1404200F",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1682,8 +1553,7 @@
     "cif": "P4309300D",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1695,8 +1565,7 @@
     "cif": "P5017600G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1708,8 +1577,7 @@
     "cif": "P1208200D",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1721,8 +1589,7 @@
     "cif": "P1814800G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1734,8 +1601,7 @@
     "cif": "P0609500D",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1747,8 +1613,7 @@
     "cif": "P1306100G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1760,8 +1625,7 @@
     "cif": "P0518700J",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1773,8 +1637,7 @@
     "cif": "P1929900G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1786,8 +1649,7 @@
     "cif": "P0819200G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1799,8 +1661,7 @@
     "cif": "P4622500I",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1812,8 +1673,7 @@
     "cif": "P0827400C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1825,8 +1685,7 @@
     "cif": "P2309200J",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1838,8 +1697,7 @@
     "cif": "P4425100G",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1851,8 +1709,7 @@
     "cif": "P0313900C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1864,8 +1721,7 @@
     "cif": "P2909700C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1877,8 +1733,7 @@
     "cif": "P2422600C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1890,8 +1745,7 @@
     "cif": "P3200900C",
     "puntos": 70.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1903,8 +1757,7 @@
     "cif": "P2901500E",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1916,8 +1769,7 @@
     "cif": "P0401700J",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1929,8 +1781,7 @@
     "cif": "P0825200I",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1942,8 +1793,7 @@
     "cif": "P1706400G",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1955,8 +1805,7 @@
     "cif": "P2805300G",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1968,8 +1817,7 @@
     "cif": "P1102000E",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1981,8 +1829,7 @@
     "cif": "P1205000A",
     "puntos": 67.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -1994,8 +1841,7 @@
     "cif": "P1900011F",
     "puntos": 66.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 5,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2007,8 +1853,7 @@
     "cif": "P4400900I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2020,8 +1865,7 @@
     "cif": "P1300500D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2033,8 +1877,7 @@
     "cif": "P4602000D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2046,8 +1889,7 @@
     "cif": "P3101200H",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2059,8 +1901,7 @@
     "cif": "P0601100A",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2072,8 +1913,7 @@
     "cif": "P0301800I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2085,8 +1925,7 @@
     "cif": "P4603900D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2098,8 +1937,7 @@
     "cif": "P2801300A",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2111,8 +1949,7 @@
     "cif": "P1302000C",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2124,8 +1961,7 @@
     "cif": "P0401800H",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2137,8 +1973,7 @@
     "cif": "P0501900E",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2150,8 +1985,7 @@
     "cif": "P2101000D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2163,8 +1997,7 @@
     "cif": "P4101200F",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2176,8 +2009,7 @@
     "cif": "P4600027I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2189,8 +2021,7 @@
     "cif": "P4607800B",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2202,8 +2033,7 @@
     "cif": "P2802800I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2215,8 +2045,7 @@
     "cif": "P0504700F",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2228,8 +2057,7 @@
     "cif": "P0505700E",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2241,8 +2069,7 @@
     "cif": "P1101600C",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2254,8 +2081,7 @@
     "cif": "P2804600A",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2267,8 +2093,7 @@
     "cif": "P4505400D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2280,8 +2105,7 @@
     "cif": "P3711700I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2293,8 +2117,7 @@
     "cif": "P4506400C",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2306,8 +2129,7 @@
     "cif": "P4410500E",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2319,8 +2141,7 @@
     "cif": "P0808800G",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2332,8 +2153,7 @@
     "cif": "P3802000D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2345,8 +2165,7 @@
     "cif": "P5002500F",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2358,8 +2177,7 @@
     "cif": "P1709300F",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2371,8 +2189,7 @@
     "cif": "P0516800J",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2384,8 +2201,7 @@
     "cif": "P4611800F",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2397,8 +2213,7 @@
     "cif": "P3004500I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2410,8 +2225,7 @@
     "cif": "P4617000G",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 6,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2423,8 +2237,7 @@
     "cif": "P1813300I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2436,8 +2249,7 @@
     "cif": "P1207700D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2449,8 +2261,7 @@
     "cif": "P3117400F",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2462,8 +2273,7 @@
     "cif": "P4618100D",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2475,8 +2285,7 @@
     "cif": "P2006800C",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2488,8 +2297,7 @@
     "cif": "P0814700A",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2501,8 +2309,7 @@
     "cif": "P0705500G",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2514,8 +2321,7 @@
     "cif": "P0522900J",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2527,8 +2333,7 @@
     "cif": "P0706100E",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2540,8 +2345,7 @@
     "cif": "P1211700H",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2553,8 +2357,7 @@
     "cif": "P2815200G",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2566,8 +2369,7 @@
     "cif": "P3125700I",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2579,8 +2381,7 @@
     "cif": "P2531600A",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2592,8 +2393,7 @@
     "cif": "P2702200C",
     "puntos": 65.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2605,8 +2405,7 @@
     "cif": "P1500002I",
     "puntos": 64.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2618,8 +2417,7 @@
     "cif": "P4601100C",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2631,8 +2429,7 @@
     "cif": "P1201200A",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2644,8 +2441,7 @@
     "cif": "P4406300F",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2657,8 +2453,7 @@
     "cif": "P2302800D",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2670,8 +2465,7 @@
     "cif": "P4621300E",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2683,8 +2477,7 @@
     "cif": "P0819500J",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2696,8 +2489,7 @@
     "cif": "P4809900F",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2709,8 +2501,7 @@
     "cif": "P1721200B",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2722,8 +2513,7 @@
     "cif": "P4625800J",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2735,8 +2525,7 @@
     "cif": "P3604800G",
     "puntos": 62.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2748,8 +2537,7 @@
     "cif": "P4400400J",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2761,8 +2549,7 @@
     "cif": "P0600600A",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2774,8 +2561,7 @@
     "cif": "P0201000G",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2787,8 +2573,7 @@
     "cif": "P0501400F",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2800,8 +2585,7 @@
     "cif": "P0802300D",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2813,8 +2597,7 @@
     "cif": "P4608300B",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 7,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2826,8 +2609,7 @@
     "cif": "P4608700C",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2839,8 +2621,7 @@
     "cif": "P1005000C",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2852,8 +2633,7 @@
     "cif": "P2805100A",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2865,8 +2645,7 @@
     "cif": "P4506100I",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2878,8 +2657,7 @@
     "cif": "P4612500A",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2891,8 +2669,7 @@
     "cif": "P0404400D",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2904,8 +2681,7 @@
     "cif": "P0203700J",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2917,8 +2693,7 @@
     "cif": "P2104200G",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2930,8 +2705,7 @@
     "cif": "P0808700I",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2943,8 +2717,7 @@
     "cif": "P3002400D",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2956,8 +2729,7 @@
     "cif": "P0511500A",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2969,8 +2741,7 @@
     "cif": "P0921400H",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2982,8 +2753,7 @@
     "cif": "P0513200F",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -2995,8 +2765,7 @@
     "cif": "P0813500F",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3008,8 +2777,7 @@
     "cif": "P1208000H",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3021,8 +2789,7 @@
     "cif": "P0516600D",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3034,8 +2801,7 @@
     "cif": "P0516700B",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3047,8 +2813,7 @@
     "cif": "P0814600C",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3060,8 +2825,7 @@
     "cif": "P2518700F",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3073,8 +2837,7 @@
     "cif": "P4618600C",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3086,8 +2849,7 @@
     "cif": "P3120000I",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3099,8 +2861,7 @@
     "cif": "P2107900I",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3112,8 +2873,7 @@
     "cif": "P0407600F",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3125,8 +2885,7 @@
     "cif": "P0818600I",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3138,8 +2897,7 @@
     "cif": "P0521200F",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3151,8 +2909,7 @@
     "cif": "P2416000D",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3164,8 +2921,7 @@
     "cif": "P2814400D",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3177,8 +2933,7 @@
     "cif": "P1210900E",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3190,8 +2945,7 @@
     "cif": "P4519600C",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3203,8 +2957,7 @@
     "cif": "P4614500I",
     "puntos": 60.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 8,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3216,8 +2969,7 @@
     "cif": "P2801800J",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3229,8 +2981,7 @@
     "cif": "P4404000D",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3242,8 +2993,7 @@
     "cif": "P4101600G",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3255,8 +3005,7 @@
     "cif": "P4614900A",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3268,8 +3017,7 @@
     "cif": "P4517700C",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3281,8 +3029,7 @@
     "cif": "P1212900C",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3294,8 +3041,7 @@
     "cif": "P3602300J",
     "puntos": 57.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3307,8 +3053,7 @@
     "cif": "P0800100J",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3320,8 +3065,7 @@
     "cif": "P1200300J",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3333,8 +3077,7 @@
     "cif": "P1801500H",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3346,8 +3089,7 @@
     "cif": "P0301400H",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3359,8 +3101,7 @@
     "cif": "P0306400C",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3372,8 +3113,7 @@
     "cif": "P3302300C",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3385,8 +3125,7 @@
     "cif": "P0306500J",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3398,8 +3137,7 @@
     "cif": "P1810300B",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3411,8 +3149,7 @@
     "cif": "P4507200F",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3424,8 +3161,7 @@
     "cif": "P1811700B",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3437,8 +3173,7 @@
     "cif": "P4615300C",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3450,8 +3185,7 @@
     "cif": "P1812800I",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3463,8 +3197,7 @@
     "cif": "P0205200I",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3476,8 +3209,7 @@
     "cif": "P0513800C",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3489,8 +3221,7 @@
     "cif": "P2306600D",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3502,8 +3233,7 @@
     "cif": "P2811000E",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3515,8 +3245,7 @@
     "cif": "P2521500E",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3528,8 +3257,7 @@
     "cif": "P2808100H",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3541,8 +3269,7 @@
     "cif": "P1209600D",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3554,8 +3281,7 @@
     "cif": "P2414200B",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3567,8 +3293,7 @@
     "cif": "P0312100A",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3580,8 +3305,7 @@
     "cif": "P2815300E",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3593,8 +3317,7 @@
     "cif": "P1938600B",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3606,8 +3329,7 @@
     "cif": "P1407200C",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3619,8 +3341,7 @@
     "cif": "P2818200D",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 9,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3632,8 +3353,7 @@
     "cif": "P4614700E",
     "puntos": 55.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3645,8 +3365,7 @@
     "cif": "P3000800G",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3658,8 +3377,7 @@
     "cif": "P4411200A",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3671,8 +3389,7 @@
     "cif": "P0405300E",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3684,8 +3401,7 @@
     "cif": "P2104300E",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3697,8 +3413,7 @@
     "cif": "P2910300I",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3710,8 +3425,7 @@
     "cif": "P3600600E",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3723,8 +3437,7 @@
     "cif": "P3602800I",
     "puntos": 52.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3736,8 +3449,7 @@
     "cif": "P1800400B",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3749,8 +3461,7 @@
     "cif": "P4602900E",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3762,8 +3473,7 @@
     "cif": "P1301900E",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3775,8 +3485,7 @@
     "cif": "P3500600F",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3788,8 +3497,7 @@
     "cif": "P2504900H",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3801,8 +3509,7 @@
     "cif": "P0201800J",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3814,8 +3521,7 @@
     "cif": "P4101800C",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3827,8 +3533,7 @@
     "cif": "P1906900D",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3840,8 +3545,7 @@
     "cif": "P4102300C",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3853,8 +3557,7 @@
     "cif": "P4318100G",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3866,8 +3569,7 @@
     "cif": "P0203900F",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3879,8 +3581,7 @@
     "cif": "P5018300C",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3892,8 +3593,7 @@
     "cif": "P1208400J",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3905,8 +3605,7 @@
     "cif": "P1925200F",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3918,8 +3617,7 @@
     "cif": "P0200010G",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3931,8 +3629,7 @@
     "cif": "P0408300B",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3944,8 +3641,7 @@
     "cif": "P4110100G",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3957,8 +3653,7 @@
     "cif": "P4500002C",
     "puntos": 50.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3970,8 +3665,7 @@
     "cif": "P2601800B",
     "puntos": 47.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3983,8 +3677,7 @@
     "cif": "P2803400G",
     "puntos": 47.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -3996,8 +3689,7 @@
     "cif": "P4618400H",
     "puntos": 47.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4009,8 +3701,7 @@
     "cif": "P0409600D",
     "puntos": 47.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4022,8 +3713,7 @@
     "cif": "P0401400G",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4035,8 +3725,7 @@
     "cif": "P4501300J",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4048,8 +3737,7 @@
     "cif": "P1607900F",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4061,8 +3749,7 @@
     "cif": "P1811800J",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4074,8 +3761,7 @@
     "cif": "P2906700F",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 10,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4087,8 +3773,7 @@
     "cif": "P4616100F",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4100,8 +3785,7 @@
     "cif": "P1405500H",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4113,8 +3797,7 @@
     "cif": "P2528600F",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4126,8 +3809,7 @@
     "cif": "P1935400J",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4139,8 +3821,7 @@
     "cif": "P0208100H",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4152,8 +3833,7 @@
     "cif": "P0106800F",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4165,8 +3845,7 @@
     "cif": "P0410300H",
     "puntos": 45.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4178,8 +3857,7 @@
     "cif": "P2007900J",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4191,8 +3869,7 @@
     "cif": "P0308800B",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4204,8 +3881,7 @@
     "cif": "P2519100H",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4217,8 +3893,7 @@
     "cif": "P1817800D",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4230,8 +3905,7 @@
     "cif": "P1936100E",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4243,8 +3917,7 @@
     "cif": "P1212400D",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4256,8 +3929,7 @@
     "cif": "P1802000H",
     "puntos": 42.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4269,8 +3941,7 @@
     "cif": "P2801900H",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4282,8 +3953,7 @@
     "cif": "P4802400D",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4295,8 +3965,7 @@
     "cif": "P1803700B",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4308,8 +3977,7 @@
     "cif": "P1303100J",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4321,8 +3989,7 @@
     "cif": "P2903000D",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4334,8 +4001,7 @@
     "cif": "P1908500J",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4347,8 +4013,7 @@
     "cif": "P1306400A",
     "puntos": 40.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4360,8 +4025,7 @@
     "cif": "P5029300J",
     "puntos": 37.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4373,8 +4037,7 @@
     "cif": "P1100600D",
     "puntos": 35.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4386,8 +4049,7 @@
     "cif": "P0704500H",
     "puntos": 35.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4399,8 +4061,7 @@
     "cif": "P4611500B",
     "puntos": 32.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4412,8 +4073,7 @@
     "cif": "P0702100I",
     "puntos": 32.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4425,8 +4085,7 @@
     "cif": "P2527400B",
     "puntos": 32.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4438,8 +4097,7 @@
     "cif": "P3001000C",
     "puntos": 30.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4451,8 +4109,7 @@
     "cif": "P4107900E",
     "puntos": 30.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4464,8 +4121,7 @@
     "cif": "P0314100I",
     "puntos": 30.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 11,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4477,8 +4133,7 @@
     "cif": "P0700700H",
     "puntos": 27.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4490,8 +4145,7 @@
     "cif": "P2523500C",
     "puntos": 27.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4503,8 +4157,7 @@
     "cif": "P2300900D",
     "puntos": 25.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4516,8 +4169,7 @@
     "cif": "P2802100D",
     "puntos": 25.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4529,8 +4181,7 @@
     "cif": "P1101500E",
     "puntos": 25.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4542,8 +4193,7 @@
     "cif": "P2522600B",
     "puntos": 25.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4555,8 +4205,7 @@
     "cif": "P0410000D",
     "puntos": 22.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4568,8 +4217,7 @@
     "cif": "P4200600G",
     "puntos": 20.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4581,8 +4229,7 @@
     "cif": "P2530300I",
     "puntos": 15.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4594,8 +4241,7 @@
     "cif": "P4607200E",
     "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4607,8 +4253,7 @@
     "cif": "P4005300A",
     "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4620,8 +4265,7 @@
     "cif": "P4620500A",
     "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4633,8 +4277,7 @@
     "cif": "P1506000G",
     "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "no_beneficiaria",
+    "estado": "concedida",
     "_meta": {
       "pagina": 12,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4646,8 +4289,7 @@
     "cif": "P3000300H",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "5;6",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4659,8 +4301,7 @@
     "cif": "P2800500G",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "10;11",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4670,10 +4311,9 @@
     "num_expediente": "EXP2023/008743",
     "entidad": "AYUNTAMIENTO DE ALDEACENTENERA",
     "cif": "P1001100E",
-    "puntos": null,
+    "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": "10",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4683,10 +4323,9 @@
     "num_expediente": "EXP2023/008699",
     "entidad": "AYUNTAMIENTO DE BENAFER",
     "cif": "P1202400F",
-    "puntos": null,
+    "puntos": 11.0,
     "importe": 0.0,
-    "causa_exclusion": "11",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4698,8 +4337,7 @@
     "cif": "P4102100G",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "2;8",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4709,10 +4347,9 @@
     "num_expediente": "EXP2023/009459",
     "entidad": "AYUNTAMIENTO DE ESCÚZAR",
     "cif": "P1807400E",
-    "puntos": null,
+    "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": "10",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4724,8 +4361,7 @@
     "cif": "P4909400F",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "12, 13, 14, 15, 16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4735,10 +4371,9 @@
     "num_expediente": "EXP2023/008917",
     "entidad": "AYUNTAMIENTO DE GRANATULA DE CALATRAVA",
     "cif": "P1304500J",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4748,10 +4383,9 @@
     "num_expediente": "EXP2023/009039",
     "entidad": "AYUNTAMIENTO DE ILLESCAS",
     "cif": "P4508200E",
-    "puntos": null,
+    "puntos": 2.0,
     "importe": 0.0,
-    "causa_exclusion": "2",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4761,10 +4395,9 @@
     "num_expediente": "EXP2023/008614",
     "entidad": "AYUNTAMIENTO DE LA FLORESTA",
     "cif": "P2511700C",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4774,10 +4407,9 @@
     "num_expediente": "EXP2023/008180",
     "entidad": "AYUNTAMIENTO DE LA GUARDIA DE JAÉN",
     "cif": "P2303800C",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4787,10 +4419,9 @@
     "num_expediente": "EXP2023/008711",
     "entidad": "AYUNTAMIENTO DE LAS TORRES DE COTILLAS",
     "cif": "P3003800D",
-    "puntos": null,
+    "puntos": 11.0,
     "importe": 0.0,
-    "causa_exclusion": "11",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4800,10 +4431,9 @@
     "num_expediente": "EXP2023/008861",
     "entidad": "AYUNTAMIENTO DE LEBRIJA",
     "cif": "P4105300J",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4813,10 +4443,9 @@
     "num_expediente": "EXP2023/010478",
     "entidad": "AYUNTAMIENTO DE LLANCA",
     "cif": "P1709900C",
-    "puntos": null,
+    "puntos": 5.0,
     "importe": 0.0,
-    "causa_exclusion": "5",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4828,8 +4457,7 @@
     "cif": "P4615200E",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "2;10;12;13;14;15;16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4839,10 +4467,9 @@
     "num_expediente": "EXP2023/008594",
     "entidad": "AYUNTAMIENTO DE LOBIOS",
     "cif": "P3204300B",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4852,10 +4479,9 @@
     "num_expediente": "EXP2023/008368",
     "entidad": "AYUNTAMIENTO DE MEDIONA",
     "cif": "P0812100F",
-    "puntos": null,
+    "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": "10",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4867,8 +4493,7 @@
     "cif": "P2907100H",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "8;13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4878,10 +4503,9 @@
     "num_expediente": "EXP2023/008525",
     "entidad": "AYUNTAMIENTO DE MORALEJA DE MATACABRAS",
     "cif": "P0513400B",
-    "puntos": null,
+    "puntos": 12.0,
     "importe": 0.0,
-    "causa_exclusion": "12",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4891,10 +4515,9 @@
     "num_expediente": "EXP2023/010722",
     "entidad": "AYUNTAMIENTO DE MUNIESA",
     "cif": "P4417000I",
-    "puntos": null,
+    "puntos": 5.0,
     "importe": 0.0,
-    "causa_exclusion": "5",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4906,8 +4529,7 @@
     "cif": "P4808300J",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "13,14,15,16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4917,10 +4539,9 @@
     "num_expediente": "EXP2023/008509",
     "entidad": "AYUNTAMIENTO DE ORDIZIA",
     "cif": "P2008200D",
-    "puntos": null,
+    "puntos": 2.14,
     "importe": 0.0,
-    "causa_exclusion": "2,14",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4932,8 +4553,7 @@
     "cif": "P0407000I",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "15;16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4943,10 +4563,9 @@
     "num_expediente": "EXP2023/008949",
     "entidad": "AYUNTAMIENTO DE ORIHUELA",
     "cif": "P0309900I",
-    "puntos": null,
+    "puntos": 16.0,
     "importe": 0.0,
-    "causa_exclusion": "16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4958,8 +4577,7 @@
     "cif": "P1815600J",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "13, 14, 15, 16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4971,8 +4589,7 @@
     "cif": "P4619700J",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "7, 10, 12, 13, 14, 15, 16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4982,10 +4599,9 @@
     "num_expediente": "EXP2023/008679",
     "entidad": "AYUNTAMIENTO DE PLENTZIA",
     "cif": "P4809000E",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -4995,10 +4611,9 @@
     "num_expediente": "EXP2023/008748",
     "entidad": "AYUNTAMIENTO DE SOTILLO DE LA ADRADA",
     "cif": "P0524000G",
-    "puntos": null,
+    "puntos": 2.0,
     "importe": 0.0,
-    "causa_exclusion": "2",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5008,10 +4623,9 @@
     "num_expediente": "EXP2023/009633",
     "entidad": "AYUNTAMIENTO DE TERRER",
     "cif": "P5025600G",
-    "puntos": null,
+    "puntos": 5.0,
     "importe": 0.0,
-    "causa_exclusion": "5",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5021,10 +4635,9 @@
     "num_expediente": "EXP2023/008937",
     "entidad": "AYUNTAMIENTO DE UTEBO",
     "cif": "P5027700C",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5034,10 +4647,9 @@
     "num_expediente": "EXP2023/008830",
     "entidad": "AYUNTAMIENTO DE VALDELACALZADA",
     "cif": "P0616900G",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5049,8 +4661,7 @@
     "cif": "P1308700B",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "10;16",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 13,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5060,10 +4671,9 @@
     "num_expediente": "EXP2023/008243",
     "entidad": "AYUNTAMIENTO DE VENTAS DE HUELMA",
     "cif": "P1818900A",
-    "puntos": null,
+    "puntos": 10.0,
     "importe": 0.0,
-    "causa_exclusion": "10",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5073,10 +4683,9 @@
     "num_expediente": "EXP2023/008889",
     "entidad": "AYUNTAMIENTO DE VILLANUEVA DEL ROSARIO",
     "cif": "P2909600E",
-    "puntos": null,
+    "puntos": 2.0,
     "importe": 0.0,
-    "causa_exclusion": "2",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5086,10 +4695,9 @@
     "num_expediente": "EXP2023/008833",
     "entidad": "AYUNTAMIENTO DE VINAIXA",
     "cif": "P2531900E",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5099,10 +4707,9 @@
     "num_expediente": "EXP2023/008774",
     "entidad": "AYUNTAMIENTO DE YECLA",
     "cif": "P3004300D",
-    "puntos": null,
+    "puntos": 13.0,
     "importe": 0.0,
-    "causa_exclusion": "13",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5114,8 +4721,7 @@
     "cif": "P3603300I",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": "7;8",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5125,10 +4731,9 @@
     "num_expediente": "EXP2023/008072",
     "entidad": "JESUS ACTIVITATS I SERVEIS SL",
     "cif": "B55505747",
-    "puntos": null,
+    "puntos": 1.0,
     "importe": 0.0,
-    "causa_exclusion": "1",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5138,10 +4743,9 @@
     "num_expediente": "EXP2023/008875",
     "entidad": "SANEAMIENTOS DE CORDOBA, S.A.",
     "cif": "A14087126",
-    "puntos": null,
+    "puntos": 1.0,
     "importe": 0.0,
-    "causa_exclusion": "1",
-    "estado": "excluida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 14,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5150,11 +4754,10 @@
   {
     "num_expediente": "EXP2023/009272",
     "entidad": "AYUNTAMIENTO DE ABANILLA",
-    "cif": "P3000100B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5163,11 +4766,10 @@
   {
     "num_expediente": "EXP2023/009288",
     "entidad": "AYUNTAMIENTO DE ABARAN",
-    "cif": "P3000200J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5176,11 +4778,10 @@
   {
     "num_expediente": "EXP2023/008647",
     "entidad": "AYUNTAMIENTO DE ABLITAS",
-    "cif": "P3100600J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5189,11 +4790,10 @@
   {
     "num_expediente": "EXP2023/008066",
     "entidad": "AYUNTAMIENTO DE ADANERO",
-    "cif": "P0500100C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5202,11 +4802,10 @@
   {
     "num_expediente": "EXP2023/009409",
     "entidad": "AYUNTAMIENTO DE ADEMUZ",
-    "cif": "P4600100D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5215,11 +4814,10 @@
   {
     "num_expediente": "EXP2023/009037",
     "entidad": "AYUNTAMIENTO DE ALBOX",
-    "cif": "P0400600C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5228,11 +4826,10 @@
   {
     "num_expediente": "EXP2023/008276",
     "entidad": "AYUNTAMIENTO DE ALCALA LA REAL",
-    "cif": "P2300200I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5241,11 +4838,10 @@
   {
     "num_expediente": "EXP2023/008585",
     "entidad": "AYUNTAMIENTO DE ALGODONALES",
-    "cif": "P1100500F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5254,11 +4850,10 @@
   {
     "num_expediente": "EXP2023/008878",
     "entidad": "AYUNTAMIENTO DE ALHAMA DE ALMERIA",
-    "cif": "P0401100C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5267,11 +4862,10 @@
   {
     "num_expediente": "EXP2023/008712",
     "entidad": "AYUNTAMIENTO DE ALMACELLES",
-    "cif": "P2501900A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5280,11 +4874,10 @@
   {
     "num_expediente": "EXP2023/009070",
     "entidad": "AYUNTAMIENTO DE ALMACHAR",
-    "cif": "P2900900H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5293,11 +4886,10 @@
   {
     "num_expediente": "EXP2023/008400",
     "entidad": "AYUNTAMIENTO DE ALMORADI",
-    "cif": "P0301500E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5306,11 +4898,10 @@
   {
     "num_expediente": "EXP2023/009032",
     "entidad": "AYUNTAMIENTO DE ALMUSSAFES",
-    "cif": "P4603500B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5319,11 +4910,10 @@
   {
     "num_expediente": "EXP2023/008569",
     "entidad": "AYUNTAMIENTO DE ANGUITA",
-    "cif": "P1903700A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5332,11 +4922,10 @@
   {
     "num_expediente": "EXP2023/008639",
     "entidad": "AYUNTAMIENTO DE ARANGUREN",
-    "cif": "P3102300E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5345,11 +4934,10 @@
   {
     "num_expediente": "EXP2023/008515",
     "entidad": "AYUNTAMIENTO DE ARES",
-    "cif": "P1500400E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5358,11 +4946,10 @@
   {
     "num_expediente": "EXP2023/008902",
     "entidad": "AYUNTAMIENTO DE AVILÉS",
-    "cif": "P3300400C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5371,11 +4958,10 @@
   {
     "num_expediente": "EXP2023/009000",
     "entidad": "AYUNTAMIENTO DE AYORA",
-    "cif": "P4604400D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5384,11 +4970,10 @@
   {
     "num_expediente": "EXP2023/009392",
     "entidad": "AYUNTAMIENTO DE BALSA DE VES",
-    "cif": "P0201300A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5397,11 +4982,10 @@
   {
     "num_expediente": "EXP2023/009396",
     "entidad": "AYUNTAMIENTO DE BARCELONA",
-    "cif": "P0801900B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5410,11 +4994,10 @@
   {
     "num_expediente": "EXP2023/008030",
     "entidad": "AYUNTAMIENTO DE BENALUP",
-    "cif": "P1104300G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5423,11 +5006,10 @@
   {
     "num_expediente": "EXP2023/009080",
     "entidad": "AYUNTAMIENTO DE BENIGANIM",
-    "cif": "P4606200F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5436,11 +5018,10 @@
   {
     "num_expediente": "EXP2023/008909",
     "entidad": "AYUNTAMIENTO DE BERBEGAL",
-    "cif": "P2207200C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5452,8 +5033,7 @@
     "cif": "P2101300H",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5462,11 +5042,10 @@
   {
     "num_expediente": "EXP2023/008500",
     "entidad": "AYUNTAMIENTO DE BOLTAÑA",
-    "cif": "P2208900G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5475,11 +5054,10 @@
   {
     "num_expediente": "EXP2023/008974",
     "entidad": "AYUNTAMIENTO DE BOLVIR",
-    "cif": "P1702700D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5488,11 +5066,10 @@
   {
     "num_expediente": "EXP2023/009043",
     "entidad": "AYUNTAMIENTO DE BONREPÓS Y MIRAMBELL",
-    "cif": "P4607600F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5501,11 +5078,10 @@
   {
     "num_expediente": "EXP2023/009004",
     "entidad": "AYUNTAMIENTO DE BORMUJOS",
-    "cif": "P4101700E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5514,11 +5090,10 @@
   {
     "num_expediente": "EXP2023/008863",
     "entidad": "AYUNTAMIENTO DE BORRASSA",
-    "cif": "P1702900J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5527,11 +5102,10 @@
   {
     "num_expediente": "EXP2023/008517",
     "entidad": "AYUNTAMIENTO DE BULLAS",
-    "cif": "P3001200I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5540,11 +5114,10 @@
   {
     "num_expediente": "EXP2023/008732",
     "entidad": "AYUNTAMIENTO DE CALAF",
-    "cif": "P0803100G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5553,11 +5126,10 @@
   {
     "num_expediente": "EXP2023/008799",
     "entidad": "AYUNTAMIENTO DE CALAFELL",
-    "cif": "P4303700A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5566,11 +5138,10 @@
   {
     "num_expediente": "EXP2023/008772",
     "entidad": "AYUNTAMIENTO DE CALDES DE MALAVELLA",
-    "cif": "P1703700C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5579,11 +5150,10 @@
   {
     "num_expediente": "EXP2023/008737",
     "entidad": "AYUNTAMIENTO DE CALELLA",
-    "cif": "P0803500H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5592,11 +5162,10 @@
   {
     "num_expediente": "EXP2023/009414",
     "entidad": "AYUNTAMIENTO DE CALERUEGA",
-    "cif": "P0906600B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5605,11 +5174,10 @@
   {
     "num_expediente": "EXP2023/008929",
     "entidad": "AYUNTAMIENTO DE CALLÚS",
-    "cif": "P0803700D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5618,11 +5186,10 @@
   {
     "num_expediente": "EXP2023/008472",
     "entidad": "AYUNTAMIENTO DE CAMPOS DEL PARAISO",
-    "cif": "P1606000F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5631,11 +5198,10 @@
   {
     "num_expediente": "EXP2023/008952",
     "entidad": "AYUNTAMIENTO DE CAPELLA",
-    "cif": "P2210700G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5644,11 +5210,10 @@
   {
     "num_expediente": "EXP2023/009094",
     "entidad": "AYUNTAMIENTO DE CARCABUEY",
-    "cif": "P1401500B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 15,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5657,11 +5222,10 @@
   {
     "num_expediente": "EXP2023/008866",
     "entidad": "AYUNTAMIENTO DE CARRASCOSA DE HARO",
-    "cif": "P1605900H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5673,8 +5237,7 @@
     "cif": "P4102500H",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5686,8 +5249,7 @@
     "cif": "P1606200B",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5699,8 +5261,7 @@
     "cif": "P1101300J",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5709,11 +5270,10 @@
   {
     "num_expediente": "EXP2023/008643",
     "entidad": "AYUNTAMIENTO DE CASTELLO D'EMPURIES",
-    "cif": "P1705200B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5722,11 +5282,10 @@
   {
     "num_expediente": "EXP2023/008943",
     "entidad": "AYUNTAMIENTO DE CASTELLVELL DEL CAMP",
-    "cif": "P4304300I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5735,11 +5294,10 @@
   {
     "num_expediente": "EXP2023/007864",
     "entidad": "AYUNTAMIENTO DE CEDILLO DEL CONDADO",
-    "cif": "P4504700H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5748,11 +5306,10 @@
   {
     "num_expediente": "EXP2023/008460",
     "entidad": "AYUNTAMIENTO DE CENDEA DE GALAR",
-    "cif": "P3110800D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5761,11 +5318,10 @@
   {
     "num_expediente": "EXP2023/008819",
     "entidad": "AYUNTAMIENTO DE CIEMPOZUELOS",
-    "cif": "P2804000D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5774,11 +5330,10 @@
   {
     "num_expediente": "EXP2023/009442",
     "entidad": "AYUNTAMIENTO DE CINTRUÉNIGO",
-    "cif": "P3107100D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5787,11 +5342,10 @@
   {
     "num_expediente": "EXP2023/008449",
     "entidad": "AYUNTAMIENTO DE CIUDAD RODRIGO",
-    "cif": "P3710700J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5800,11 +5354,10 @@
   {
     "num_expediente": "EXP2023/009443",
     "entidad": "AYUNTAMIENTO DE COLLADO VILLALBA",
-    "cif": "P2804700I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5813,11 +5366,10 @@
   {
     "num_expediente": "EXP2023/008716",
     "entidad": "AYUNTAMIENTO DE CORBERA DE LLOBREGAT",
-    "cif": "P0807100C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5826,11 +5378,10 @@
   {
     "num_expediente": "EXP2023/008518",
     "entidad": "AYUNTAMIENTO DE EL BOSQUE",
-    "cif": "P1101100D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5839,11 +5390,10 @@
   {
     "num_expediente": "EXP2023/008138",
     "entidad": "AYUNTAMIENTO DE EL PALOMAR",
-    "cif": "P4619100C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5852,11 +5402,10 @@
   {
     "num_expediente": "EXP2023/008839",
     "entidad": "AYUNTAMIENTO DE EL VELLON",
-    "cif": "P2816800C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5865,11 +5414,10 @@
   {
     "num_expediente": "EXP2023/008897",
     "entidad": "AYUNTAMIENTO DE EL VISO",
-    "cif": "P1407400I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5878,11 +5426,10 @@
   {
     "num_expediente": "EXP2023/009456",
     "entidad": "AYUNTAMIENTO DE ENCINAS REALES",
-    "cif": "P1402400D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5891,11 +5438,10 @@
   {
     "num_expediente": "EXP2023/009044",
     "entidad": "AYUNTAMIENTO DE ESPARTINAS",
-    "cif": "P4104000G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5904,11 +5450,10 @@
   {
     "num_expediente": "EXP2023/008619",
     "entidad": "AYUNTAMIENTO DE ESPIRDO",
-    "cif": "P4008800G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5917,11 +5462,10 @@
   {
     "num_expediente": "EXP2023/009064",
     "entidad": "AYUNTAMIENTO DE ESPORLES",
-    "cif": "P0702000A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5930,11 +5474,10 @@
   {
     "num_expediente": "EXP2023/007726",
     "entidad": "AYUNTAMIENTO DE ESTADILLA",
-    "cif": "P2214500G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5943,11 +5486,10 @@
   {
     "num_expediente": "EXP2023/008726",
     "entidad": "AYUNTAMIENTO DE FONTANALS DE CERDAÑA",
-    "cif": "P1703600E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5956,11 +5498,10 @@
   {
     "num_expediente": "EXP2023/009464",
     "entidad": "AYUNTAMIENTO DE FRESNO DE TOROTE",
-    "cif": "P2805700H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5969,11 +5510,10 @@
   {
     "num_expediente": "EXP2023/008506",
     "entidad": "AYUNTAMIENTO DE FUENTE EL SAZ",
-    "cif": "P2805900D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5982,11 +5522,10 @@
   {
     "num_expediente": "EXP2023/009033",
     "entidad": "AYUNTAMIENTO DE FUENTELESPINO DE HARO",
-    "cif": "P1609000C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -5998,8 +5537,7 @@
     "cif": "P2004200H",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6008,11 +5546,10 @@
   {
     "num_expediente": "EXP2023/008764",
     "entidad": "AYUNTAMIENTO DE GOJAR",
-    "cif": "P1808600I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6021,11 +5558,10 @@
   {
     "num_expediente": "EXP2023/009469",
     "entidad": "AYUNTAMIENTO DE GRANADILLA DE ABONA",
-    "cif": "P3801700J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6034,11 +5570,10 @@
   {
     "num_expediente": "EXP2023/009477",
     "entidad": "AYUNTAMIENTO DE GUADALCÁZAR",
-    "cif": "P1403300E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6047,11 +5582,10 @@
   {
     "num_expediente": "EXP2023/008358",
     "entidad": "AYUNTAMIENTO DE GUADAMUR",
-    "cif": "P4507100H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6060,11 +5594,10 @@
   {
     "num_expediente": "EXP2023/008821",
     "entidad": "AYUNTAMIENTO DE GUADARRAMA",
-    "cif": "P2806800E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6073,11 +5606,10 @@
   {
     "num_expediente": "EXP2023/007804",
     "entidad": "AYUNTAMIENTO DE GUESALAZ",
-    "cif": "P3111900A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6086,11 +5618,10 @@
   {
     "num_expediente": "EXP2023/008596",
     "entidad": "AYUNTAMIENTO DE HERNANSANCHO",
-    "cif": "P0509200B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6099,11 +5630,10 @@
   {
     "num_expediente": "EXP2023/008855",
     "entidad": "AYUNTAMIENTO DE HORMILLA",
-    "cif": "P2607500B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6112,11 +5642,10 @@
   {
     "num_expediente": "EXP2023/008876",
     "entidad": "AYUNTAMIENTO DE HOYOCASERO",
-    "cif": "P0510100A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6125,11 +5654,10 @@
   {
     "num_expediente": "EXP2023/008538",
     "entidad": "AYUNTAMIENTO DE HUELMA",
-    "cif": "P2304400A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6138,11 +5666,10 @@
   {
     "num_expediente": "EXP2023/008677",
     "entidad": "AYUNTAMIENTO DE HUERCAL DE ALMERIA",
-    "cif": "P0405200G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6151,11 +5678,10 @@
   {
     "num_expediente": "EXP2023/008448",
     "entidad": "AYUNTAMIENTO DE INCA",
-    "cif": "P0702700F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 16,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6164,11 +5690,10 @@
   {
     "num_expediente": "EXP2023/009050",
     "entidad": "AYUNTAMIENTO DE JIMENA DE LA FRONTERA",
-    "cif": "P1102100C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6177,11 +5702,10 @@
   {
     "num_expediente": "EXP2023/008829",
     "entidad": "AYUNTAMIENTO DE LA CABRERA",
-    "cif": "P2803000E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6190,11 +5714,10 @@
   {
     "num_expediente": "EXP2023/009509",
     "entidad": "AYUNTAMIENTO DE LA GUIJARROSA",
-    "cif": "P1400041H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6203,11 +5726,10 @@
   {
     "num_expediente": "EXP2023/008665",
     "entidad": "AYUNTAMIENTO DE LA HOZ DE LA VIEJA",
-    "cif": "P4413000C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6216,11 +5738,10 @@
   {
     "num_expediente": "EXP2023/008989",
     "entidad": "AYUNTAMIENTO DE LA IRUELA",
-    "cif": "P2304700D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6229,11 +5750,10 @@
   {
     "num_expediente": "EXP2023/007639",
     "entidad": "AYUNTAMIENTO DE LA LASTRILLA",
-    "cif": "P4013000G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6245,8 +5765,7 @@
     "cif": "P1102200A",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6255,11 +5774,10 @@
   {
     "num_expediente": "EXP2023/009506",
     "entidad": "AYUNTAMIENTO DE LA MIERLA",
-    "cif": "P1921300H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6268,11 +5786,10 @@
   {
     "num_expediente": "EXP2023/008854",
     "entidad": "AYUNTAMIENTO DE LA POBLA DE SEGUR",
-    "cif": "P2521300J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6281,11 +5798,10 @@
   {
     "num_expediente": "EXP2023/008777",
     "entidad": "AYUNTAMIENTO DE LA SELVA DEL CAMP",
-    "cif": "P4314700H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6294,11 +5810,10 @@
   {
     "num_expediente": "EXP2023/008455",
     "entidad": "AYUNTAMIENTO DE LA VELLES",
-    "cif": "P3735000F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6307,11 +5822,10 @@
   {
     "num_expediente": "EXP2023/008979",
     "entidad": "AYUNTAMIENTO DE LA VILLA DE MOYA",
-    "cif": "P3501400J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6320,11 +5834,10 @@
   {
     "num_expediente": "EXP2023/008583",
     "entidad": "AYUNTAMIENTO DE LAS BERLANAS",
-    "cif": "P0502700H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6336,8 +5849,7 @@
     "cif": "P4102000I",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6346,11 +5858,22 @@
   {
     "num_expediente": "EXP2023/008620",
     "entidad": "AYUNTAMIENTO DE LAS HERENCIAS",
-    "cif": "P4507300D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
+    "_meta": {
+      "pagina": 17,
+      "pdf": "resolucion-def-EELL2023.pdf"
+    }
+  },
+  {
+    "num_expediente": "EXP2023/008491",
+    "entidad": "AYUNTAMIENTO DE LLUTXENT",
+    "cif": "",
+    "puntos": null,
+    "importe": 0.0,
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6359,11 +5882,10 @@
   {
     "num_expediente": "EXP2023/009479",
     "entidad": "AYUNTAMIENTO DE LOS BARRIOS",
-    "cif": "P1100800J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6375,8 +5897,7 @@
     "cif": "P0612200F",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6388,8 +5909,7 @@
     "cif": "P2807700F",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6398,11 +5918,10 @@
   {
     "num_expediente": "EXP2023/009012",
     "entidad": "AYUNTAMIENTO DE MAIALS",
-    "cif": "P2516800F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6411,11 +5930,10 @@
   {
     "num_expediente": "EXP2023/009056",
     "entidad": "AYUNTAMIENTO DE MAIRENA DEL ALCOR",
-    "cif": "P4105800I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6424,11 +5942,10 @@
   {
     "num_expediente": "EXP2023/009011",
     "entidad": "AYUNTAMIENTO DE MANZANARES EL REAL",
-    "cif": "P2808200F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6437,11 +5954,10 @@
   {
     "num_expediente": "EXP2023/009026",
     "entidad": "AYUNTAMIENTO DE MARCHENA",
-    "cif": "P4106000E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6450,11 +5966,10 @@
   {
     "num_expediente": "EXP2023/008378",
     "entidad": "AYUNTAMIENTO DE MAS DE LAS MATAS",
-    "cif": "P4415200G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6463,11 +5978,10 @@
   {
     "num_expediente": "EXP2023/008837",
     "entidad": "AYUNTAMIENTO DE MASSANET DE CABRENYS",
-    "cif": "P1710800B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6476,11 +5990,10 @@
   {
     "num_expediente": "EXP2023/009471",
     "entidad": "AYUNTAMIENTO DE MAZUECOS",
-    "cif": "P1920700J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6489,11 +6002,10 @@
   {
     "num_expediente": "EXP2023/009048",
     "entidad": "AYUNTAMIENTO DE MENDAVIA",
-    "cif": "P3116500D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6505,8 +6017,7 @@
     "cif": "P2808500I",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6518,8 +6029,7 @@
     "cif": "P0922600B",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6528,11 +6038,10 @@
   {
     "num_expediente": "EXP2023/008697",
     "entidad": "AYUNTAMIENTO DE MOGUER",
-    "cif": "P2105000J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6541,11 +6050,10 @@
   {
     "num_expediente": "EXP2023/008654",
     "entidad": "AYUNTAMIENTO DE MOLINICOS",
-    "cif": "P0204900E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6554,11 +6062,10 @@
   {
     "num_expediente": "EXP2023/008773",
     "entidad": "AYUNTAMIENTO DE MONCADA",
-    "cif": "P4617300A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6567,11 +6074,10 @@
   {
     "num_expediente": "EXP2023/007980",
     "entidad": "AYUNTAMIENTO DE MONESTERIO",
-    "cif": "P0608500E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6580,11 +6086,10 @@
   {
     "num_expediente": "EXP2023/008001",
     "entidad": "AYUNTAMIENTO DE MONTCADA I REIXAC",
-    "cif": "P0812400J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6593,11 +6098,10 @@
   {
     "num_expediente": "EXP2023/008616",
     "entidad": "AYUNTAMIENTO DE MONTSERRAT",
-    "cif": "P4617400I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6606,11 +6110,10 @@
   {
     "num_expediente": "EXP2023/007988",
     "entidad": "AYUNTAMIENTO DE MORÓN DE LA FRONTERA",
-    "cif": "P4106500D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6619,11 +6122,10 @@
   {
     "num_expediente": "EXP2023/009444",
     "entidad": "AYUNTAMIENTO DE NAVALUENGA",
-    "cif": "P0516300A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6632,11 +6134,10 @@
   {
     "num_expediente": "EXP2023/009439",
     "entidad": "AYUNTAMIENTO DE NAVALVILAR DE PELA",
-    "cif": "P0609100C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 17,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6645,11 +6146,10 @@
   {
     "num_expediente": "EXP2023/009484",
     "entidad": "AYUNTAMIENTO DE NAVAS DE JADRAQUE",
-    "cif": "P1923300F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6658,11 +6158,10 @@
   {
     "num_expediente": "EXP2023/008436",
     "entidad": "AYUNTAMIENTO DE NAVIA",
-    "cif": "P3304100E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6671,11 +6170,10 @@
   {
     "num_expediente": "EXP2023/008197",
     "entidad": "AYUNTAMIENTO DE ONTIGOLA",
-    "cif": "P4512400E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6684,11 +6182,10 @@
   {
     "num_expediente": "EXP2023/008670",
     "entidad": "AYUNTAMIENTO DE OSSA DE MONTIEL",
-    "cif": "P0205700H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6697,11 +6194,10 @@
   {
     "num_expediente": "EXP2023/008914",
     "entidad": "AYUNTAMIENTO DE PALAMÓS",
-    "cif": "P1712500F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6710,11 +6206,10 @@
   {
     "num_expediente": "EXP2023/009421",
     "entidad": "AYUNTAMIENTO DE PARLA",
-    "cif": "P2810600C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6723,11 +6218,10 @@
   {
     "num_expediente": "EXP2023/009415",
     "entidad": "AYUNTAMIENTO DE PARTALOA",
-    "cif": "P0407200E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6736,11 +6230,10 @@
   {
     "num_expediente": "EXP2023/008752",
     "entidad": "AYUNTAMIENTO DE PAU",
-    "cif": "P1713600C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6749,11 +6242,10 @@
   {
     "num_expediente": "EXP2023/009405",
     "entidad": "AYUNTAMIENTO DE PEDRALBA",
-    "cif": "P4619300I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6762,11 +6254,10 @@
   {
     "num_expediente": "EXP2023/008736",
     "entidad": "AYUNTAMIENTO DE PEDRET Y MARZA",
-    "cif": "P1713700A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6775,11 +6266,10 @@
   {
     "num_expediente": "EXP2023/008869",
     "entidad": "AYUNTAMIENTO DE PEÑAFLOR",
-    "cif": "P4107400F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6791,8 +6281,7 @@
     "cif": "P4418900I",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6801,11 +6290,10 @@
   {
     "num_expediente": "EXP2023/008883",
     "entidad": "AYUNTAMIENTO DE PERDIGUERA",
-    "cif": "P5020700J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6814,11 +6302,10 @@
   {
     "num_expediente": "EXP2023/008452",
     "entidad": "AYUNTAMIENTO DE PIERA",
-    "cif": "P0816000D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6827,11 +6314,10 @@
   {
     "num_expediente": "EXP2023/008605",
     "entidad": "AYUNTAMIENTO DE PILOÑA",
-    "cif": "P3304900H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6840,11 +6326,10 @@
   {
     "num_expediente": "EXP2023/009071",
     "entidad": "AYUNTAMIENTO DE PINTO",
-    "cif": "P2811300I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6853,11 +6338,10 @@
   {
     "num_expediente": "EXP2023/008590",
     "entidad": "AYUNTAMIENTO DE POYALES DEL HOYO",
-    "cif": "P0518900F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6866,11 +6350,10 @@
   {
     "num_expediente": "EXP2023/008934",
     "entidad": "AYUNTAMIENTO DE REDUEÑA",
-    "cif": "P2812100B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6879,11 +6362,10 @@
   {
     "num_expediente": "EXP2023/008587",
     "entidad": "AYUNTAMIENTO DE RETAMOSO DE LA JARA",
-    "cif": "P4514700F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6892,11 +6374,10 @@
   {
     "num_expediente": "EXP2023/008984",
     "entidad": "AYUNTAMIENTO DE RIBERA DE ARRIBA",
-    "cif": "P3305700A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6905,11 +6386,10 @@
   {
     "num_expediente": "EXP2023/009388",
     "entidad": "AYUNTAMIENTO DE RIOFRIO",
-    "cif": "P0519500C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6918,11 +6398,10 @@
   {
     "num_expediente": "EXP2023/009387",
     "entidad": "AYUNTAMIENTO DE RIOLA",
-    "cif": "P4621700F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6931,11 +6410,10 @@
   {
     "num_expediente": "EXP2023/008706",
     "entidad": "AYUNTAMIENTO DE RODA DE BERÀ",
-    "cif": "P4313300H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6944,11 +6422,10 @@
   {
     "num_expediente": "EXP2023/009086",
     "entidad": "AYUNTAMIENTO DE ROSSELLO",
-    "cif": "P2523200J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6957,11 +6434,10 @@
   {
     "num_expediente": "EXP2023/009068",
     "entidad": "AYUNTAMIENTO DE ROTA",
-    "cif": "P1103000D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6970,11 +6446,10 @@
   {
     "num_expediente": "EXP2023/008828",
     "entidad": "AYUNTAMIENTO DE RUBI",
-    "cif": "P0818300F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6983,11 +6458,10 @@
   {
     "num_expediente": "EXP2023/008753",
     "entidad": "AYUNTAMIENTO DE RUBITE",
-    "cif": "P1817300E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -6996,11 +6470,10 @@
   {
     "num_expediente": "EXP2023/008684",
     "entidad": "AYUNTAMIENTO DE RUIDERA",
-    "cif": "P1310000C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7009,11 +6482,10 @@
   {
     "num_expediente": "EXP2023/008237",
     "entidad": "AYUNTAMIENTO DE SABIOTE",
-    "cif": "P2307500E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7022,11 +6494,10 @@
   {
     "num_expediente": "EXP2023/009087",
     "entidad": "AYUNTAMIENTO DE SALOBREÑA",
-    "cif": "P1817600H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7035,11 +6506,10 @@
   {
     "num_expediente": "EXP2023/008926",
     "entidad": "AYUNTAMIENTO DE SALOU",
-    "cif": "P4318500H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7051,8 +6521,7 @@
     "cif": "P2813000C",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7061,11 +6530,10 @@
   {
     "num_expediente": "EXP2023/008501",
     "entidad": "AYUNTAMIENTO DE SAN MARTIN DE LA VEGA",
-    "cif": "P2813200I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7077,8 +6545,7 @@
     "cif": "P1103200J",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7090,8 +6557,7 @@
     "cif": "P0704600F",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7103,8 +6569,7 @@
     "cif": "P0821000G",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7116,8 +6581,7 @@
     "cif": "P0824400F",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 18,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7129,8 +6593,7 @@
     "cif": "P0824500C",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7139,11 +6602,10 @@
   {
     "num_expediente": "EXP2023/008811",
     "entidad": "AYUNTAMIENTO DE SANTA CRISTINA DARO",
-    "cif": "P1719200F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7155,8 +6617,7 @@
     "cif": "P4515800C",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7168,8 +6629,7 @@
     "cif": "P0824800G",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7178,11 +6638,10 @@
   {
     "num_expediente": "EXP2023/008531",
     "entidad": "AYUNTAMIENTO DE SANTA MARIA DEL CAMI",
-    "cif": "P0705600E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7194,8 +6653,7 @@
     "cif": "P3729600A",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7204,11 +6662,10 @@
   {
     "num_expediente": "EXP2023/008967",
     "entidad": "AYUNTAMIENTO DE SANTA SUSANA",
-    "cif": "P0826100J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7217,11 +6674,10 @@
   {
     "num_expediente": "EXP2023/008978",
     "entidad": "AYUNTAMIENTO DE SANTIPONCE",
-    "cif": "P4108900D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7230,11 +6686,10 @@
   {
     "num_expediente": "EXP2023/008947",
     "entidad": "AYUNTAMIENTO DE SANTOÑA",
-    "cif": "P3907900I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7243,11 +6698,10 @@
   {
     "num_expediente": "EXP2023/008800",
     "entidad": "AYUNTAMIENTO DE SEGOVIA",
-    "cif": "P4022600C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7256,11 +6710,10 @@
   {
     "num_expediente": "EXP2023/009345",
     "entidad": "AYUNTAMIENTO DE SELVA",
-    "cif": "P0705800A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7269,11 +6722,10 @@
   {
     "num_expediente": "EXP2023/008969",
     "entidad": "AYUNTAMIENTO DE SENES",
-    "cif": "P0408200D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7282,11 +6734,10 @@
   {
     "num_expediente": "EXP2023/008603",
     "entidad": "AYUNTAMIENTO DE SIGÜENZA",
-    "cif": "P1931000B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7295,11 +6746,10 @@
   {
     "num_expediente": "EXP2023/008970",
     "entidad": "AYUNTAMIENTO DE SINEU",
-    "cif": "P0706000G",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7308,11 +6758,10 @@
   {
     "num_expediente": "EXP2023/008993",
     "entidad": "AYUNTAMIENTO DE SOLLANA",
-    "cif": "P4623500H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7321,11 +6770,10 @@
   {
     "num_expediente": "EXP2023/008714",
     "entidad": "AYUNTAMIENTO DE SORIGUERA",
-    "cif": "P2525900C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7334,11 +6782,10 @@
   {
     "num_expediente": "EXP2023/009006",
     "entidad": "AYUNTAMIENTO DE TAFALLA",
-    "cif": "P3122700B",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7347,11 +6794,10 @@
   {
     "num_expediente": "EXP2023/008674",
     "entidad": "AYUNTAMIENTO DE TARADELL",
-    "cif": "P0827800D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7360,11 +6806,10 @@
   {
     "num_expediente": "EXP2023/009023",
     "entidad": "AYUNTAMIENTO DE TEGUESTE",
-    "cif": "P3804600I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7373,11 +6818,10 @@
   {
     "num_expediente": "EXP2023/008642",
     "entidad": "AYUNTAMIENTO DE TORREJON DEL REY",
-    "cif": "P1933800C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7386,11 +6830,10 @@
   {
     "num_expediente": "EXP2023/009342",
     "entidad": "AYUNTAMIENTO DE UMBRETE",
-    "cif": "P4109400D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7402,8 +6845,7 @@
     "cif": "P2816300D",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7412,11 +6854,10 @@
   {
     "num_expediente": "EXP2023/008862",
     "entidad": "AYUNTAMIENTO DE VALDERREY",
-    "cif": "P2418500A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7425,11 +6866,10 @@
   {
     "num_expediente": "EXP2023/008896",
     "entidad": "AYUNTAMIENTO DE VALLES",
-    "cif": "P4625500F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7438,11 +6878,10 @@
   {
     "num_expediente": "EXP2023/008003",
     "entidad": "AYUNTAMIENTO DE VALVERDE DEL CAMINO",
-    "cif": "P2107100F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7451,11 +6890,10 @@
   {
     "num_expediente": "EXP2023/008775",
     "entidad": "AYUNTAMIENTO DE VIGO",
-    "cif": "P3605700H",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7464,11 +6902,10 @@
   {
     "num_expediente": "EXP2023/008930",
     "entidad": "AYUNTAMIENTO DE VILABLAREIX",
-    "cif": "P1722900F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7477,11 +6914,10 @@
   {
     "num_expediente": "EXP2023/009047",
     "entidad": "AYUNTAMIENTO DE VILALLER",
-    "cif": "P2530700J",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7490,11 +6926,10 @@
   {
     "num_expediente": "EXP2023/009063",
     "entidad": "AYUNTAMIENTO DE VILANOVA DEL VALLES",
-    "cif": "P0831000E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7503,11 +6938,10 @@
   {
     "num_expediente": "EXP2023/008306",
     "entidad": "AYUNTAMIENTO DE VILCHES",
-    "cif": "P2309400F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7516,11 +6950,10 @@
   {
     "num_expediente": "EXP2023/008295",
     "entidad": "AYUNTAMIENTO DE VILLALBILLA",
-    "cif": "P2817200E",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7529,11 +6962,10 @@
   {
     "num_expediente": "EXP2023/008633",
     "entidad": "AYUNTAMIENTO DE VILLALGORDO DEL JUCAR",
-    "cif": "P0207800D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7542,11 +6974,10 @@
   {
     "num_expediente": "EXP2023/009081",
     "entidad": "AYUNTAMIENTO DE VILLALPANDO",
-    "cif": "P4927900C",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7558,8 +6989,7 @@
     "cif": "P2616900C",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7568,11 +6998,10 @@
   {
     "num_expediente": "EXP2023/008599",
     "entidad": "AYUNTAMIENTO DE VILLANUEVA DE GUMIEL",
-    "cif": "P0946600D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7584,8 +7013,7 @@
     "cif": "P2817600F",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7597,8 +7025,7 @@
     "cif": "P0947300J",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7607,11 +7034,10 @@
   {
     "num_expediente": "EXP2023/009319",
     "entidad": "AYUNTAMIENTO DE VILLARES DE JADRAQUE",
-    "cif": "P1938900F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7620,11 +7046,10 @@
   {
     "num_expediente": "EXP2023/009077",
     "entidad": "AYUNTAMIENTO DE VILLAVICIOSA DE ODON",
-    "cif": "P2818100F",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7633,11 +7058,10 @@
   {
     "num_expediente": "EXP2023/008951",
     "entidad": "AYUNTAMIENTO DE ZUFRE",
-    "cif": "P2107800A",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7646,11 +7070,10 @@
   {
     "num_expediente": "EXP2023/008768",
     "entidad": "CONCELLO VILA DE CRUCES",
-    "cif": "P3605900D",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7662,8 +7085,7 @@
     "cif": "P1100007B",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7672,11 +7094,10 @@
   {
     "num_expediente": "EXP2023/009301",
     "entidad": "MANCOMUNIDAD DE SERVICIOS CIJARA",
-    "cif": "P5606301I",
+    "cif": "",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
       "pdf": "resolucion-def-EELL2023.pdf"
@@ -7688,23 +7109,9 @@
     "cif": "P1000002D",
     "puntos": null,
     "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
+    "estado": "concedida",
     "_meta": {
       "pagina": 20,
-      "pdf": "resolucion-def-EELL2023.pdf"
-    }
-  },
-  {
-    "num_expediente": "EXP2023/008827",
-    "entidad": "AYUNTAMIENTO DE TREBUJENA",
-    "cif": "P1103700I",
-    "puntos": null,
-    "importe": 0.0,
-    "causa_exclusion": null,
-    "estado": "desistida",
-    "_meta": {
-      "pagina": 19,
       "pdf": "resolucion-def-EELL2023.pdf"
     }
   }
