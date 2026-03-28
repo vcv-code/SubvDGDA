@@ -9,7 +9,8 @@
     "nivel1": "ESTADO",
     "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
     "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
-    "codigoInvente": null
+    "codigoInvente": null,
+    "anio_convocatoria": 2023
   },
   {
     "id": 966750,
@@ -21,7 +22,8 @@
     "nivel1": "ESTADO",
     "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
     "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
-    "codigoInvente": null
+    "codigoInvente": null,
+    "anio_convocatoria": 2024
   },
   {
     "id": 1024928,
@@ -33,18 +35,7 @@
     "nivel1": "ESTADO",
     "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
     "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
-    "codigoInvente": null
-  },
-  {
-    "id": 1031961,
-    "mrr": false,
-    "numeroConvocatoria": "830400",
-    "descripcion": "IV CERTAMEN ARTÍSTICO AMIGOS DE LOS ANIMALES. MODALIDAD FOTOGRAFÍA COLONIAS FELINAS",
-    "descripcionLeng": null,
-    "fechaRecepcion": "2025-05-05",
-    "nivel1": "ESTADO",
-    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
-    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
-    "codigoInvente": null
+    "codigoInvente": null,
+    "anio_convocatoria": 2025
   }
 ]

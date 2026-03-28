@@ -30,7 +30,7 @@ FECHA_HASTA = datetime.today().strftime("%d/%m/%Y")
 HOY = datetime.today().strftime("%Y-%m-%d")
 
 # Carpeta donde se guardarán los archivos descargados
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "../../data/raw")
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "../../data/raw", "convBDNS")
 
 
 # Búsquedas que queremos realizar en la API
@@ -183,16 +183,36 @@ def main():
 
         # Eliminamos duplicados
         resultados = eliminar_duplicados(resultados)
-
         print(f"  Tras eliminar duplicados: {len(resultados)}")
 
-        # Añadimos el año de la convocatoria
+        # FILTRADO (ANTES de añadir campos)
+        resultados = filtrar_convocatorias_validas(resultados)
+        print(f"  Tras filtrar: {len(resultados)}")
+
+        # Añadimos el año
         resultados = añadir_anio_convocatoria(resultados)
 
         guardar_json(resultados, nombre_archivo)
 
     print("\nDescarga completada.")
 
+def filtrar_convocatorias_validas(convocatorias):
+    resultados = []
 
+    for c in convocatorias:
+        nivel3 = (c.get("nivel3") or "").upper()
+        descripcion = (c.get("descripcion") or "").upper()
+
+        # ✔ solo DGDA
+        if "DERECHOS DE LOS ANIMALES" not in nivel3:
+            continue
+
+        # ✔ solo subvenciones reales (opcional pero recomendable)
+        if "SUBVENCIONES" not in descripcion:
+            continue
+
+        resultados.append(c)
+
+    return resultados
 if __name__ == "__main__":
     main()
