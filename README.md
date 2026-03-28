@@ -138,7 +138,7 @@ Endpoints:
 
 Las concesiones de la **DGDA no aparecen en la API pública**, aunque sí existen en resoluciones oficiales.
 
-👉 Esto obliga a usar PDFs como fuente principal.
+👉 Esto obliga a usar los documentos oficiales del BOE (XML y PDF) como fuente principal.
 
 ---
 
@@ -187,18 +187,18 @@ Nota:
 La API BDNS proporciona información de convocatorias, pero no incluye los beneficiarios reales de las subvenciones de la DGDA.  
 Por ello, se utiliza un pipeline adicional basado en PDFs oficiales para reconstruir los datos completos de concesiones.
 
-### Pipeline real implementado (EELL)
+### Pipeline real implementado
 
 ```
-XML / PDF (DGDA)
+XML / PDF BOE (DGDA)
 ↓
 Parsing (pdfplumber / BeautifulSoup)
 ↓
 JSON por año (data/processed/)
 ↓
-Correcciones manuales (Excel 2025)
+Correcciones manuales (Excel EELL 2025, beneficiarias en imagen)
 ↓
-Merge por número de expediente
+Unificación y normalización de estados
 ↓
 Dataset unificado (data/final/)
 ```
@@ -209,30 +209,29 @@ Dataset unificado (data/final/)
 
 ### Entidades Locales (EELL)
 
-- 2023 → PDF  
-- 2024 → PDF  
-- 2025 → XML BOE  
+- 2023 → PDF (pdfplumber, diseño en dos pasadas para celdas multilinea)
+- 2024 → PDF (pdfplumber, misma arquitectura)
+- 2025 → XML BOE + Excel manual (beneficiarias publicadas como imagen)
 
 Scripts:
 
-- `parser_eell_base.py`  
-- `parser_eell_2025.py`  
+- `parser_eell_PDF_base.py` → EELL 2023 y 2024
+- `parser_eell_BOE_2025.py` → EELL 2025
 
 ---
 
 ### Entidades de Protección Animal (EPA)
 
-- 2021  
-- 2022  
-- 2023 (caso especial)  
-- 2024  
-- 2025  
+- 2021 → XML BOE
+- 2022 → XML BOE
+- 2023 → XML BOE
+- 2024 → XML BOE
+- 2025 → XML BOE
 
-Arquitectura:
+Scripts:
 
-- `parser_epa_base.py` → lógica común  
-- `parser_epa_2021_22_24_25.py` → parser general  
-- `parser_epa_2023.py` → parser específico  
+- `parser_EPAs_BOE_base.py` → EPA 2021–2024 (lógica común)
+- `parser_EPAs_BOE_2025.py` → EPA 2025 (estructura diferente)
 
 ---
 
@@ -240,12 +239,14 @@ Arquitectura:
 
 Se utiliza:
 
-- `pdfplumber`
+- `pdfplumber` → extracción de tablas desde PDF
+- `BeautifulSoup` → parsing de XML del BOE
+- `openpyxl` → lectura de Excel (correcciones manuales EELL 2025)
 
-Alternativas evaluadas:
+Alternativas evaluadas para PDF:
 
-- `tabula-py`  
-- `camelot`  
+- `tabula-py`
+- `camelot`
 
 ---
 
@@ -335,10 +336,17 @@ Se han implementado controles automáticos:
 - detección de CIF faltantes  
 - eliminación de duplicados (año + expediente)  
 
-Ejemplo:
+Ejemplo (resultado actual):
 
-- Registros por año: `{2023: 592, 2024: 1138, 2025: 991}`  
-- Registros por estado: `{'concedida': 2721}`  
+| Año  | EPA  | EELL | Total |
+|------|------|------|-------|
+| 2021 | 328  | —    | 328   |
+| 2022 | 650  | —    | 650   |
+| 2023 | 652  | 593  | 1245  |
+| 2024 | 881  | 1137 | 2018  |
+| 2025 | 841  | 1294 | 2135  |
+
+Por estado: concedida=2623, no_beneficiaria=2097, desistida=576, excluida=550, denegada=530.
 
 Estos controles permiten garantizar la calidad del dataset antes de su integración en la base de datos y su uso en la aplicación.
 
@@ -348,21 +356,25 @@ Estos controles permiten garantizar la calidad del dataset antes de su integraci
 
 Campos:
 
-- año  
-- expediente  
-- CIF/NIF  
-- entidad  
-- puntuación  
-- importe  
+- `anio` → año de la resolución
+- `tipo` → `epa` o `eell`
+- `num_expediente` → número de expediente
+- `entidad` → nombre de la entidad
+- `cif` → CIF/NIF
+- `puntuacion` → puntuación obtenida
+- `importe` → importe concedido (0 si no aplica)
+- `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`, `denegada`
+- `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas)
+- `causa_exclusion` → código de causa (solo excluidas EELL)
 
 Características:
 
-- normalizado  
-- sin duplicados  
-- consistente  
-- trazable  
+- normalizado
+- sin duplicados (clave: tipo + num_expediente)
+- consistente entre fuentes heterogéneas
+- trazable por año y tipo
 
-Total de registros: 2721
+**Total de registros: 6376** (EPA: 3352 · EELL: 3024)
 
 ---
 
@@ -436,22 +448,19 @@ docker/
 
 ## Estado actual
 
-Fase: **procesamiento de datos EELL completado**
+Fase: **pipeline de extracción completado**
 
-✔ parsing PDF  
-✔ parsing XML  
-✔ limpieza  
-✔ dataset unificado  
-
-En progreso:
-
-- validación de EPAs  
+✔ parsing XML BOE (EPAs 2021–2025)
+✔ parsing PDF (EELL 2023–2024)
+✔ parsing XML BOE + Excel manual (EELL 2025)
+✔ limpieza y normalización de estados
+✔ dataset unificado (6376 registros)
 
 Pendiente:
 
-- base de datos  
-- API  
-- frontend  
+- diseño e implementación de base de datos
+- API backend
+- frontend de visualización
 
 ---
 
