@@ -12938,5 +12938,215 @@
     "tramo": null,
     "causa_exclusion": "4",
     "estado": "excluida"
+  },
+  {
+    "num_expediente": "EXP/99580",
+    "cif": "P1604200D",
+    "entidad": "AYUNTAMIENTO DE BUENDÍA.",
+    "puntos": 79.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/100067",
+    "cif": "P0204200J",
+    "entidad": "AYUNTAMIENTO DE LETUR.",
+    "puntos": 79.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99767",
+    "cif": "P4606200F",
+    "entidad": "AJUNTAMENT DE BENIGANIM.",
+    "puntos": 74.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/98789",
+    "cif": "P1715700I",
+    "entidad": "AJUNTAMENT DE RIUDARENES.",
+    "puntos": 69.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99611",
+    "cif": "P1104200I",
+    "entidad": "AYUNTAMIENTO DE ZAHARA DE LA SIERRA.",
+    "puntos": 69.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99768",
+    "cif": "P2521600C",
+    "entidad": "AJUNTAMENT DE PONT DE SUERT.",
+    "puntos": 69.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/100170",
+    "cif": "P1405300C",
+    "entidad": "AYUNTAMIENTO DE POSADAS.",
+    "puntos": 64.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99766",
+    "cif": "P0705800A",
+    "entidad": "AJUNTAMENT DE SELVA.",
+    "puntos": 59.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99769",
+    "cif": "P2803600B",
+    "entidad": "AYUNTAMIENTO CASARRUBUELOS.",
+    "puntos": 59.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99635",
+    "cif": "P1304900B",
+    "entidad": "AYUNTAMIENTO DE HORCAJO DE LOS MONTES.",
+    "puntos": 55.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/100064",
+    "cif": "P4405000C",
+    "entidad": "AYUNTAMIENTO DE CALAMOCHA.",
+    "puntos": 54.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/100106",
+    "cif": "P3736500D",
+    "entidad": "AYUNTAMIENTO DE VILLARES DE LA REINA.",
+    "puntos": 51.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99615",
+    "cif": "P0205700H",
+    "entidad": "AYUNTAMIENTO DE OSSA DE MONTIEL.",
+    "puntos": 49.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/100000",
+    "cif": "P1209400I",
+    "entidad": "AJUNTAMENT DE LA POBLA TORNESA.",
+    "puntos": 29.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99610",
+    "cif": "P0400600C",
+    "entidad": "AYUNTAMIENTO DE ALBOX.",
+    "puntos": 79.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP2025/012874",
+    "cif": "P4902300E",
+    "entidad": "AYUNTAMIENTO DE BENAVENTE.",
+    "puntos": 69.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP2025/010990",
+    "cif": "G79458618",
+    "entidad": "MANCOMUNIDAD DE SERVICIOS EL MOLAR, SAN AGUSTÍN DEL GUADALIX Y GUADALIX DE LA SIERRA.",
+    "puntos": 62.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99582",
+    "cif": "P0808700I",
+    "entidad": "AJUNTAMENT DE LA GARRIGA.",
+    "puntos": 59.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/100066",
+    "cif": "P4312500D",
+    "entidad": "AJUNTAMENT DE REUS.",
+    "puntos": 64.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99793",
+    "cif": "P0309900I",
+    "entidad": "AYUNTAMIENTO DE ORIHUELA.",
+    "puntos": 59.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
+  },
+  {
+    "num_expediente": "EXP/99605",
+    "cif": "P2411800B",
+    "entidad": "AYUNTAMIENTO DE PONFERRADA.",
+    "puntos": 59.0,
+    "importe": 0.0,
+    "tramo": null,
+    "causa_exclusion": null,
+    "estado": "no_beneficiaria"
   }
 ]

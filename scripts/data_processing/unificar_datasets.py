@@ -254,7 +254,7 @@ def validar_y_mostrar(final):
     print("\nComparación con Excel de referencia:")
     print("  EPAs esperadas (aprox): 2021=328, 2022=654, 2023=651, 2024=882, 2025=841")
     print("  Nota EPA 2025: 110 excluidas sin num_expediente → ID sintético SIN_EXP_2025_XXX")
-    print("  EELL esperadas (aprox): 2023=593, 2024=1137, 2025=1294")
+    print("  EELL esperadas (aprox): 2023=593, 2024=1137, 2025=1315")
 
     print("======================================\n")
 

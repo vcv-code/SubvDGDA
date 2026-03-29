@@ -141,7 +141,7 @@ def leer_expedientes_anexo(soup, num_anexo):
                     continue
                 # Expediente en columna 1 para ANEXO III, IV, V
                 exp = celdas[1].get_text(strip=True)
-                if exp.startswith("EXP2025"):
+                if exp.startswith("EXP"):   # acepta EXP2025/ y EXP/NNNNN
                     expedientes.add(exp)
 
     return expedientes
@@ -181,6 +181,43 @@ def leer_filas_anexo_iii(soup):
                         "entidad":        ent or None,
                         "causa_exclusion": causa or None,
                     }
+
+    return filas
+
+
+def _leer_tabla_anexo_v(soup):
+    """
+    Lee la tabla completa del ANEXO V (no beneficiarias) del XML.
+    Columnas: col0=NIF, col1=expediente, col2=entidad, col3=tramo,
+              col4=cofinanciación, col5=actuaciones, col6=puntos
+    Devuelve dict: expediente → {cif, entidad, puntos}
+    """
+    elementos = soup.find_all(["p", "table"])
+    en_anexo = False
+    filas = {}
+
+    for el in elementos:
+        if el.name == "p":
+            texto = el.get_text(" ", strip=True)
+            if re.match(r'^ANEXO\s+V\b', texto.strip(), re.IGNORECASE):
+                en_anexo = True
+            elif en_anexo and re.match(r'^ANEXO\s+[IVX]+\b', texto.strip(), re.IGNORECASE):
+                break
+
+        elif el.name == "table" and en_anexo:
+            for fila in el.find_all("tr"):
+                celdas = fila.find_all("td")
+                if len(celdas) < 3:
+                    continue
+                cif     = celdas[0].get_text(strip=True) or None
+                exp     = celdas[1].get_text(strip=True)
+                entidad = celdas[2].get_text(strip=True) or None
+                try:
+                    puntos = float(celdas[6].get_text(strip=True).replace(",", ".")) if len(celdas) > 6 else None
+                except ValueError:
+                    puntos = None
+                if exp.startswith("EXP"):
+                    filas[exp] = {"cif": cif, "entidad": entidad, "puntos": puntos}
 
     return filas
 
@@ -282,6 +319,28 @@ def parsear_eell_2025(ruta_xml):
             "causa_exclusion": excl["causa_exclusion"],
             "estado":          "excluida",
         })
+
+    # --- 6. Añadir no_beneficiarias del ANEXO V que no están en el xlsx base ---
+    # El BOE incluye entidades con formato EXP/NNNNN que no figuran en el xlsx
+    # de evaluación (991 registros). Se añaden directamente desde la tabla XML.
+    tabla_v = _leer_tabla_anexo_v(soup)
+    exps_ya_incluidos = {r["num_expediente"] for r in resultados}
+    extra_no_benef = 0
+    for exp, datos in tabla_v.items():
+        if exp not in exps_ya_incluidos:
+            resultados.append({
+                "num_expediente":  exp,
+                "cif":             datos["cif"],
+                "entidad":         datos["entidad"],
+                "puntos":          datos["puntos"],
+                "importe":         0.0,
+                "tramo":           None,
+                "causa_exclusion": None,
+                "estado":          "no_beneficiaria",
+            })
+            extra_no_benef += 1
+    if extra_no_benef:
+        print(f"  No benef. extra (fuera de xlsx base): {extra_no_benef}")
 
     print(f"[EELL BOE 2025] Registros totales: {len(resultados)}")
     print(f"  Estados: {dict(Counter(r['estado'] for r in resultados))}")
