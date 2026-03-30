@@ -9,6 +9,8 @@ El modelo de datos del sistema se ha diseñado a partir de la integración de do
 
 Tras el proceso de extracción, limpieza y unificación, se obtiene un **dataset final consolidado** que combina la información de convocatorias con los datos de concesiones publicados en los documentos oficiales.
 
+La implementación física de la base de datos utiliza **MariaDB 11**, desplegada mediante un contenedor Docker (ver sección 6.8).
+
 ---
 
 ## 2. Fuentes de datos utilizadas
@@ -54,7 +56,7 @@ Este proceso se ha desarrollado en tres pasos principales:
 
 A partir del análisis de los datos obtenidos de la API BDNS y de los documentos oficiales, se identificaron las principales entidades implicadas en el proceso de concesión de subvenciones.
 
-Las entidades del modelo implementado son:
+Las entidades del **modelo implementado** son:
 
 - Convocatorias
 - Beneficiarios
@@ -63,7 +65,7 @@ Las entidades del modelo implementado son:
 - Agrupaciones de entidades locales
 - Miembros de agrupación
 
-Adicionalmente, se contemplan como **entidades de fase futura** (no implementadas en el modelo físico actual):
+Adicionalmente, se contemplan como **entidades de fase futura** (presentes en el diagrama conceptual pero no implementadas en el modelo físico actual):
 
 - Causas de exclusión
 - Solicitud_causas (tabla intermedia)
@@ -88,9 +90,7 @@ Campos principales:
 - fecha_convocatoria
 - fecha_resolucion
 
-El campo `titulo_convoc` corresponde al campo **descripcion** devuelto por la API.
-
-El campo `anio_convocatoria` se añade de forma explícita para facilitar consultas estadísticas y la generación de gráficos de evolución temporal en el frontend.
+El campo `titulo_convoc` corresponde al campo **descripcion** devuelto por la API. El campo `anio_convocatoria` se añade de forma explícita para facilitar consultas estadísticas y la generación de gráficos de evolución temporal en el frontend.
 
 ---
 
@@ -110,9 +110,7 @@ Campos principales:
 - nombre
 - tipo_benef — ENUM: `asociacion`, `entidad_local`
 
-Un beneficiario puede presentar varias solicitudes en distintas convocatorias.
-
-En el caso de las entidades locales, estas pueden participar adicionalmente en agrupaciones de ayuntamientos, mientras que las asociaciones lo hacen únicamente como beneficiarios individuales.
+Un beneficiario puede presentar varias solicitudes en distintas convocatorias. En el caso de las entidades locales, estas pueden participar adicionalmente en agrupaciones de ayuntamientos, tanto como representante como en calidad de miembro.
 
 ---
 
@@ -155,15 +153,11 @@ Campos principales:
 - linea — ENUM: `colonias_felinas`, `proteccion_animal`, `eell`
 - tramo — TINYINT. Campo específico de EELL 2025 que indica el tramo de subvención asignado. NULL para convocatorias que no aplican.
 
-La línea de actuación se implementa como campo ENUM en lugar de tabla separada, dado que el número de valores es reducido y estable (ver decisión 6.4).
-
 ---
 
 ### 4.5 Agrupaciones de entidades locales
 
-En determinadas convocatorias EELL, las solicitudes pueden presentarse en forma de **agrupaciones de ayuntamientos**.
-
-Estas agrupaciones tienen una entidad representante y varios miembros.
+En determinadas convocatorias EELL, las solicitudes pueden presentarse en forma de **agrupaciones de ayuntamientos**. Estas agrupaciones tienen una entidad representante y varios miembros.
 
 Campos principales:
 
@@ -190,176 +184,213 @@ Campos principales:
 
 ### 4.7 Causas de exclusión *(fase futura)*
 
-Las solicitudes que no cumplen los requisitos establecidos pueden ser excluidas por distintos motivos, que aparecen codificados numéricamente en los documentos oficiales.
-
-Esta entidad y la tabla intermedia `solicitud_causas` están **contempladas en el modelo conceptual pero no implementadas en el modelo físico actual**, ya que su población requiere un proceso de extracción adicional todavía pendiente.
+Las solicitudes excluidas pueden haberlo sido por distintos motivos, codificados numéricamente en los documentos oficiales. Esta entidad y la tabla intermedia `solicitud_causas` están contempladas en el modelo conceptual pero **no implementadas en el modelo físico actual**.
 
 Campos previstos:
 
 - id_causa (PK)
 - descrip_exclu
 
-La relación prevista es muchos a muchos entre `solicitudes` y `causas_exclusion`, implementada mediante la tabla intermedia `solicitud_causas` con campos `id_soli` (FK) e `id_causa` (FK), con clave primaria compuesta.
+La relación prevista es muchos a muchos entre `solicitudes` y `causas_exclusion`, resuelta mediante la tabla intermedia `solicitud_causas` con campos `id_soli` (FK) e `id_causa` (FK).
 
 ---
 
 ## 5. Relaciones entre entidades
 
-### Convocatorias y solicitudes
+### CONVOCATORIAS — SOLICITUDES
 
 ```
-CONVOCATORIAS 1 ─── N SOLICITUDES
+CONVOCATORIAS (1) ── Generan ── (N) SOLICITUDES
 ```
 
 Una convocatoria puede recibir múltiples solicitudes. Cada solicitud pertenece únicamente a una convocatoria concreta.
 
 ---
 
-### Beneficiarios y solicitudes
+### BENEFICIARIOS — SOLICITUDES
 
 ```
-BENEFICIARIOS 1 ─── N SOLICITUDES
+BENEFICIARIOS (1) ── Son presentadas por ── (N) SOLICITUDES
 ```
 
-Una misma entidad puede presentar varias solicitudes en diferentes convocatorias. Cada solicitud pertenece a un único beneficiario.
+Un mismo beneficiario puede presentar solicitudes en distintas convocatorias. Cada solicitud la presenta un único beneficiario.
 
 ---
 
-### Solicitudes y concesiones
+### SOLICITUDES — CONCESIONES
 
 ```
-SOLICITUDES 1 ─── 0..1 CONCESIONES
+SOLICITUDES (1) ── Generan ── (0..1) CONCESIONES
 ```
 
-Una solicitud puede terminar en concesión o no. Solo se genera concesión cuando el estado es `concedida`.
+Solo se genera una concesión cuando el estado de la solicitud es `concedida`. Las solicitudes con otros estados (no_beneficiaria, excluida, desistida, denegada) no generan concesión.
 
 ---
 
-### Concesiones y agrupaciones
+### CONCESIONES — AGRUPACIONES
 
 ```
-CONCESIONES 1 ─── 0..1 AGRUPACIONES
+CONCESIONES (1) ── Tienen ── (0..1) AGRUPACIONES
 ```
 
-En determinadas subvenciones EELL, las concesiones pueden corresponder a agrupaciones de ayuntamientos.
+Solo las concesiones de convocatorias EELL pueden tener una agrupación asociada. Las concesiones EPA nunca generan agrupación.
 
 ---
 
-### Agrupaciones y miembros de agrupación
+### AGRUPACIONES — AGRUPACIÓN MIEMBROS
 
 ```
-AGRUPACIONES 1 ─── 1..N AGRUPACION_MIEMBROS
+AGRUPACIONES (1) ── (1..N) AGRUPACIÓN_MIEMBROS
 ```
 
-Cada agrupación está formada por varios ayuntamientos.
+Toda agrupación está formada por al menos un ayuntamiento miembro.
 
 ---
 
-### Beneficiarios y miembros de agrupación
+### BENEFICIARIOS — AGRUPACIONES (como representante)
 
 ```
-BENEFICIARIOS 1 ─── N AGRUPACION_MIEMBROS
+BENEFICIARIOS (0..1) ── Representados por ── (1) AGRUPACIONES
 ```
 
-Un mismo ayuntamiento puede participar en distintas agrupaciones en diferentes convocatorias.
+Cada agrupación tiene exactamente un ayuntamiento que actúa como representante. Un beneficiario puede serlo de como máximo una agrupación.
 
 ---
 
-### Solicitudes y causas de exclusión *(relación prevista — fase futura)*
+### BENEFICIARIOS — AGRUPACIÓN MIEMBROS
 
 ```
-SOLICITUDES N ─── N CAUSAS_EXCLUSION  (vía SOLICITUD_CAUSAS)
+BENEFICIARIOS (1) ── Integrados en ── (N) AGRUPACIÓN_MIEMBROS
 ```
 
-Una solicitud puede estar asociada a varias causas de exclusión, y una misma causa puede aplicarse a múltiples solicitudes. Esta relación se implementará en una fase futura del proyecto.
+Un mismo ayuntamiento puede figurar como miembro en distintas agrupaciones a lo largo de diferentes convocatorias.
+
+---
+
+### SOLICITUDES — SOLICITUD_CAUSAS — CAUSAS_EXCLUSIÓN *(fase futura)*
+
+```
+SOLICITUDES (1) ── Pueden tener ── (N) SOLICITUD_CAUSAS (N) ── (1) CAUSAS_EXCLUSIÓN
+```
+
+Una solicitud excluida puede tener varias causas, y una misma causa puede aplicarse a muchas solicitudes. Relación N:M resuelta mediante tabla puente. No implementada en el modelo físico actual.
 
 ---
 
 ## 6. Decisiones de diseño del modelo de datos
 
-Durante el proceso de diseño del modelo de datos se tomaron diversas decisiones para adaptar la estructura de la base de datos a las características reales de las fuentes de información.
+Durante el proceso de diseño se tomaron diversas decisiones para adaptar la estructura a las características reales de las fuentes de información, equilibrando normalización, facilidad de consulta y simplicidad de implementación.
 
 ---
 
 ### 6.1 Campo anio_convocatoria
 
-Inicialmente el modelo solo contemplaba el campo `fecha_convocatoria`. Sin embargo, para realizar análisis estadísticos y generar visualizaciones por año sería necesario utilizar funciones como `YEAR(fecha_convocatoria)`, lo que complica las consultas y puede afectar al rendimiento.
-
-Por este motivo se decidió añadir el campo `anio_convocatoria`, que permite realizar consultas más simples y facilita la generación de gráficos en el frontend mediante librerías como Chart.js.
+Inicialmente el modelo solo contemplaba el campo `fecha_convocatoria`. Para análisis estadísticos y visualizaciones por año sería necesario usar `YEAR(fecha_convocatoria)`, lo que complica las consultas. Por ello se añadió el campo `anio_convocatoria` explícito, que simplifica filtros y facilita la generación de gráficos en el frontend.
 
 ---
 
-### 6.2 Estados posibles de una solicitud
+### 6.2 Cinco estados posibles de una solicitud
 
-El modelo contempla cinco estados posibles para una solicitud, en lugar de los tres inicialmente previstos:
+El modelo contempla cinco estados en lugar de los tres inicialmente previstos:
 
-- `concedida` — aprobada
-- `no_beneficiaria` — admitida pero no seleccionada (añadida al analizar los datos reales)
-- `excluida` — rechazada por incumplimiento
-- `desistida` — renuncia de la entidad solicitante
-- `denegada` — denegación específica de convocatorias EPA
+- `concedida`, `no_beneficiaria`, `excluida`, `desistida`, `denegada`
 
-El estado `no_beneficiaria` no fue identificado en el diseño inicial y se añadió al verificar los datos reales del dataset unificado. Este estado es especialmente relevante en las convocatorias EELL, donde el número de solicitudes admitidas supera las plazas disponibles.
+El estado `no_beneficiaria` no fue identificado en el diseño inicial: se añadió al analizar los datos reales del dataset unificado. Es especialmente relevante en convocatorias EELL, donde el número de solicitudes admitidas supera las plazas disponibles. El estado `denegada` aparece exclusivamente en convocatorias EPA.
 
 ---
 
 ### 6.3 IDs sintéticos para registros EPA sin expediente
 
-Algunos registros EPA de convocatorias anteriores a 2024 no incluyen número de expediente en los documentos oficiales. Para no descartar estos registros y mantener la integridad del dataset, se generan identificadores sintéticos con el formato `SIN_EXP_YYYY_NNN` (donde YYYY es el año y NNN es un contador secuencial por año).
-
-Estos IDs permiten cargar todos los registros en la base de datos respetando la restricción UNIQUE del campo `num_expediente`.
+Algunos registros EPA anteriores a 2024 no incluyen número de expediente en los documentos oficiales. Para no descartarlos se generan identificadores sintéticos con el formato `SIN_EXP_YYYY_NNN`. Esto permite cargar todos los registros respetando la restricción UNIQUE del campo `num_expediente`.
 
 ---
 
-### 6.4 Representación de las líneas de actuación
+### 6.4 Simplificación de las líneas de actuación (ENUM en lugar de tabla)
 
-En el diseño conceptual inicial se incluyó una tabla específica para representar las líneas de actuación (colonias felinas, protección animal, etc.).
+En el diseño conceptual inicial se incluyó una tabla **LINEAS_ACTUACION** para representar las distintas líneas de subvención (colonias felinas, protección animal, EELL).
 
-No obstante, dado que el número de valores es reducido y estable, en la implementación final se optó por simplificar este diseño utilizando un campo `ENUM` dentro de la tabla de concesiones:
+Durante el desarrollo se tomó la decisión de **eliminar esta tabla** y sustituirla por un campo ENUM directamente en la tabla `concesiones`:
 
 ```sql
 linea ENUM('colonias_felinas', 'proteccion_animal', 'eell')
 ```
 
-Esta decisión simplifica el modelo sin perder información relevante.
+**Justificación:** el número de líneas es reducido (3 valores), estable en el tiempo, y no requiere atributos adicionales. Mantener una tabla separada añadiría JOINs innecesarios sin aportar flexibilidad real. Esta simplificación se refleja en el diagrama ER definitivo, donde LINEAS_ACTUACION ya no aparece como entidad.
 
 ---
 
 ### 6.5 Campo tramo en concesiones
 
-Las concesiones EELL 2025 incluyen un campo `tramo` que indica la banda de subvención asignada a cada entidad. Este campo es específico de esa convocatoria y no aplica a las demás.
-
-Se ha incorporado directamente en la tabla `concesiones` como campo `TINYINT` con valor `NULL` para los registros de otras convocatorias, en lugar de crear una tabla o subtipo adicional que complique el modelo.
+Las concesiones EELL 2025 incluyen un campo `tramo` que indica la banda de subvención asignada. Es específico de esa convocatoria y no aplica a las demás. Se incorpora directamente en `concesiones` como `TINYINT NULL`, en lugar de crear una subtabla o subtipo que complicase el modelo.
 
 ---
 
 ### 6.6 Causas de exclusión como fase futura
 
-En los documentos oficiales se indica que una solicitud puede estar excluida por varias causas, representadas mediante códigos numéricos. Una posible simplificación habría sido almacenar estas causas directamente como texto o como un campo JSON dentro de la tabla de solicitudes.
+Los documentos oficiales indican que una solicitud puede ser excluida por varias causas (códigos numéricos). Almacenarlas como texto o JSON en `solicitudes` dificultaría consultas analíticas (causas más frecuentes, distribución por tipo, etc.).
 
-Sin embargo, esta aproximación dificultaría las consultas analíticas (por ejemplo, identificar las causas más frecuentes). Por este motivo se mantiene la estructura normalizada mediante las tablas `causas_exclusion` y `solicitud_causas` en el modelo conceptual.
+Por ello se mantiene la estructura normalizada `causas_exclusion` + `solicitud_causas` en el **modelo conceptual**, representada en el diagrama con asterisco (*) y la nota "Tablas conceptuales. No se implementan en el modelo físico actual del proyecto por viabilidad técnica."
 
-La implementación de estas tablas se pospone a una **fase futura** del proyecto, ya que la extracción automática de causas de exclusión desde los documentos oficiales requiere un trabajo adicional de parsing todavía pendiente.
+La implementación se pospone a una fase futura, ya que la extracción automática de causas desde los documentos oficiales requiere un trabajo de parsing adicional.
 
 ---
 
-### 6.7 Separación EPA / EELL en una única tabla de solicitudes
+### 6.7 EPA y EELL unificadas en una única tabla de solicitudes
 
-Los datos de convocatorias EPA y EELL comparten la misma estructura principal (expediente, beneficiario, estado, convocatoria) y se han unificado en una única tabla `solicitudes`. La distinción entre tipos se realiza a través de la relación con `convocatorias`, que incluye el campo `tipo_convoc` con valores `epa` o `eell`.
+Los datos de convocatorias EPA y EELL comparten la misma estructura principal y se unifican en una única tabla `solicitudes`. La distinción se realiza a través de `convocatorias.tipo_convoc` (ENUM `epa` / `eell`). Esto simplifica las consultas transversales sin necesidad de JOINs adicionales.
 
-Esta decisión simplifica las consultas transversales (por ejemplo, comparar tasas de exclusión entre EPA y EELL) sin necesidad de JOINs adicionales.
+---
+
+### 6.8 Elección de MariaDB como sistema gestor de base de datos
+
+Para la implementación física de la base de datos se optó por **MariaDB 11** en lugar de MySQL, por los siguientes motivos:
+
+- Es el motor por defecto en distribuciones Linux (Ubuntu/Debian), lo que facilita el despliegue en entornos reales.
+- Es compatible al 100 % con MySQL en sintaxis SQL, por lo que el script `modelo-fisico.sql` funciona en ambos sistemas sin modificaciones.
+- Ofrece mejor rendimiento en operaciones de lectura intensiva y es de licencia totalmente libre.
+
+La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb:11`, expuesta en el puerto `3307` del host (para evitar conflictos con instalaciones locales de MySQL que usan el puerto 3306). El esquema se inicializa automáticamente al arrancar el contenedor a través del script `docs/modelo-fisico.sql`.
 
 ---
 
 ## 7. Diagrama entidad–relación del modelo
 
-A partir de las entidades identificadas y de las relaciones definidas entre ellas se elaboró un diagrama entidad–relación (ER) que representa la estructura general del modelo de datos del sistema.
+El diagrama ER ha evolucionado a lo largo del proyecto para reflejar las decisiones de diseño tomadas durante el análisis de los datos reales. A continuación se muestran las dos versiones con los cambios realizados.
 
-El diagrama incluye las entidades del modelo implementado (en trazo continuo) y las entidades conceptuales de fase futura (marcadas como "Tablas conceptuales. No se implementan en el modelo físico."):
+---
 
-![Diagrama entidad-relación del modelo de datos](img/modelo-datos-er.png)
+### 7.1 Diagrama inicial
 
-> **Nota sobre el diagrama:** las entidades `causas_exclusion` y `solicitud_causas` aparecen representadas en el diagrama con sus conexiones a `solicitudes` para reflejar el diseño conceptual previsto. La línea entre `solicitudes` y estas entidades indica una relación planificada para una fase futura del proyecto.
+El primer diagrama fue elaborado en la fase de análisis inicial, antes de procesar el dataset completo. Incluía todas las entidades identificadas conceptualmente, entre ellas LINEAS_ACTUACION como tabla independiente y las entidades de causas de exclusión conectadas al modelo principal.
+
+![Diagrama ER inicial](img/modelo-datos-er-v1.png)
+
+---
+
+### 7.2 Diagrama definitivo
+
+El diagrama definitivo refleja el modelo implementado realmente, con todas las simplificaciones y ajustes derivados del análisis de los datos.
+
+![Diagrama ER definitivo](img/Modelo-ER-Def.jpg)
+
+---
+
+### 7.3 Cambios entre versiones
+
+Los principales cambios entre el diagrama inicial y el definitivo son:
+
+**Entidades eliminadas o simplificadas:**
+- **LINEAS_ACTUACION** desaparece como entidad independiente. Pasa a ser un campo ENUM dentro de `concesiones` (ver decisión 6.4).
+
+**Entidades marcadas como fase futura:**
+- **CAUSAS_EXCLUSIÓN** y **SOLICITUD_CAUSAS** se mantienen en el diagrama con asterisco (*) y trazo diferenciado, indicando que forman parte del diseño conceptual pero no están implementadas en el modelo físico actual (ver decisión 6.6).
+
+**Relaciones añadidas o corregidas:**
+- Se añaden los rombos **"Representados por"** e **"Integrados en"** para las relaciones entre BENEFICIARIOS y las entidades de agrupaciones, que en el diagrama inicial no estaban etiquetadas.
+- Se corrigen cardinalidades en la relación BENEFICIARIOS–AGRUPACIONES: cada agrupación tiene exactamente **1** representante (no N).
+
+**Estados de solicitud:**
+- Se añade el estado **no_beneficiaria**, no contemplado en el diseño inicial pero presente en los datos reales.
 
 ---
 
@@ -367,12 +398,8 @@ El diagrama incluye las entidades del modelo implementado (en trazo continuo) y 
 
 ### diagrams.net (draw.io)
 
-Herramienta principal utilizada para el diseño conceptual del modelo. Permite crear diagramas ER de forma visual con entidades, relaciones y conectores. Entre sus ventajas destacan el uso gratuito, el funcionamiento online y la posibilidad de exportar en PNG o PDF.
+Herramienta principal utilizada para el diseño conceptual del modelo. Permite crear diagramas ER de forma visual con entidades, relaciones y conectores. Entre sus ventajas destacan el uso gratuito, el funcionamiento online y la posibilidad de exportar en PNG o JPG. Tanto el diagrama inicial como el definitivo han sido elaborados con esta herramienta.
 
 ### dbdiagram.io
 
-Herramienta útil para generar diagramas a partir de una definición textual de las tablas. Especialmente práctica cuando el modelo lógico ya está definido y se quiere visualizar rápidamente las relaciones.
-
-### MySQL Workbench / DBeaver
-
-Una vez implementada la base de datos, estas herramientas permiten generar automáticamente un diagrama ER a partir de las tablas existentes (*Reverse Engineering*), lo que facilita documentar la estructura real del sistema incluyendo tablas, claves primarias, claves foráneas y relaciones.
+Herramienta complementaria útil para generar diagramas a partir de una definición textual de las tablas. Permite visualizar rápidamente las relaciones entre tablas a partir del script SQL del modelo físico (`modelo-fisico.sql`), lo que facilita validar la estructura antes de implementarla.
