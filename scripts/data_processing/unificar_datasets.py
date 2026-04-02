@@ -14,7 +14,7 @@ Esquema final de cada registro:
     "cif":           str | None,
     "puntuacion":    float | None,
     "importe":       float,        # 0.0 si no consta
-    "estado":          str,          # concedida | denegada | excluida | desistida | no_beneficiaria
+    "estado":          str,          # concedida | no_beneficiaria | excluida | desistida
     "tramo":           int | None,  # 1, 2 o 3 solo para EELL 2025 concedidas; None en el resto
     "causa_exclusion": str | None   # código(s) de causa, solo en excluidas EELL; None en el resto
 }
@@ -94,6 +94,23 @@ def normalizar_estado_eell(estado, importe):
 
 
 # =========================
+# NORMALIZACIÓN DE ESTADO EPA
+# El BOE llama "denegadas" a dos realidades distintas según el año:
+#   - 2021-2023: son exclusiones formales con causa (→ 'excluida').
+#     En esos años todas las protectoras recibían algo; las que no,
+#     tenían una causa administrativa explícita.
+#   - 2024-2025: son no beneficiarias por puntuación insuficiente (→ 'no_beneficiaria').
+#     A partir de 2024 el cupo presupuestario no alcanza a todas.
+# Con esto 'denegada' desaparece del dataset final.
+# =========================
+
+def normalizar_estado_epa(estado, anio):
+    if estado == "denegada":
+        return "excluida" if anio <= 2023 else "no_beneficiaria"
+    return estado
+
+
+# =========================
 # CARGADORES POR TIPO
 # =========================
 
@@ -139,6 +156,8 @@ def cargar_epas(archivos):
             if (not anio_item or not isinstance(anio_item, int)
                     or not (anio_fallback - 1 <= anio_item <= anio_fallback + 1)):
                 anio_item = anio_fallback
+
+            estado = normalizar_estado_epa(estado, anio_item)
 
             registros.append({
                 "anio": anio_item,

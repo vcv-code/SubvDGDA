@@ -127,15 +127,14 @@ Campos principales:
 - id_benef (FK → beneficiarios)
 - num_expediente — UNIQUE. Para registros EPA sin número de expediente real se generan IDs sintéticos con formato `SIN_EXP_YYYY_NNN`.
 - puntuacion
-- estado — ENUM: `concedida`, `no_beneficiaria`, `excluida`, `desistida`, `denegada`
+- estado — ENUM: `concedida`, `no_beneficiaria`, `excluida`, `desistida`
 
-Los cinco valores posibles del campo `estado` cubren los distintos resultados del proceso administrativo:
+Los cuatro valores posibles del campo `estado` cubren los distintos resultados del proceso administrativo:
 
 - **concedida** — solicitud aprobada y subvención concedida
-- **no_beneficiaria** — solicitud admitida pero no seleccionada para subvención
-- **excluida** — solicitud rechazada por incumplimiento de requisitos
+- **no_beneficiaria** — admitida pero fuera del cupo presupuestario; en EELL todos los años, en EPA desde 2024
+- **excluida** — rechazada por incumplimiento de requisitos formales; en EELL todos los años, en EPA 2021–2023 (el BOE las denomina "denegadas" pero tienen causa de exclusión formal)
 - **desistida** — la entidad solicitante renunció al proceso
-- **denegada** — solicitud denegada en convocatorias EPA
 
 ---
 
@@ -223,7 +222,7 @@ Un mismo beneficiario puede presentar solicitudes en distintas convocatorias. Ca
 SOLICITUDES (1) ── Generan ── (0..1) CONCESIONES
 ```
 
-Solo se genera una concesión cuando el estado de la solicitud es `concedida`. Las solicitudes con otros estados (no_beneficiaria, excluida, desistida, denegada) no generan concesión.
+Solo se genera una concesión cuando el estado de la solicitud es `concedida`. Las solicitudes con otros estados (no_beneficiaria, excluida, desistida) no generan concesión.
 
 ---
 
@@ -291,11 +290,11 @@ Inicialmente el modelo solo contemplaba el campo `fecha_convocatoria`. Para aná
 
 ### 6.2 Cinco estados posibles de una solicitud
 
-El modelo contempla cinco estados en lugar de los tres inicialmente previstos:
+El modelo contempla cuatro estados en lugar de los tres inicialmente previstos:
 
-- `concedida`, `no_beneficiaria`, `excluida`, `desistida`, `denegada`
+- `concedida`, `no_beneficiaria`, `excluida`, `desistida`
 
-El estado `no_beneficiaria` no fue identificado en el diseño inicial: se añadió al analizar los datos reales del dataset unificado. Es especialmente relevante en convocatorias EELL, donde el número de solicitudes admitidas supera las plazas disponibles. El estado `denegada` aparece exclusivamente en convocatorias EPA.
+El estado `no_beneficiaria` no fue identificado en el diseño inicial: se añadió al analizar los datos reales del dataset unificado. Aplica a EELL en todos los años (admitidas pero fuera del cupo) y a EPA desde 2024 (no alcanzan la puntuación mínima). En EPA 2021–2023 el BOE denomina "denegadas" a solicitudes que en realidad tienen causa de exclusión formal, por lo que se reclasifican como `excluida` durante la unificación.
 
 ---
 
@@ -391,6 +390,7 @@ Los principales cambios entre el diagrama inicial y el definitivo son:
 
 **Estados de solicitud:**
 - Se añade el estado **no_beneficiaria**, no contemplado en el diseño inicial pero presente en los datos reales.
+- Se elimina **denegada** del modelo: en EPA 2021–2023 equivale a `excluida` (causa formal), en EPA 2024–2025 equivale a `no_beneficiaria` (puntuación insuficiente). La reclasificación se aplica en `unificar_datasets.py`.
 
 ---
 
