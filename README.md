@@ -346,7 +346,7 @@ Ejemplo (resultado actual):
 | 2024 | 880  | 1137 | 2017  |
 | 2025 | 841  | 1315 | 2156  |
 
-Por estado: concedida=2622, no_beneficiaria=2118, denegada=601, excluida=550, desistida=505.
+Por estado: concedida=2622, no_beneficiaria=2627, excluida=642, desistida=505.
 
 Estos controles permiten garantizar la calidad del dataset antes de su integración en la base de datos y su uso en la aplicación.
 
