@@ -76,7 +76,7 @@ Frontend
 | Base de datos | MySQL / MariaDB |
 | Infraestructura | Docker, Nginx |
 | Control de versiones | Git, GitHub |
-| Fuentes de datos | API BDNS, PDFs oficiales |
+| Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
 ---
 
@@ -340,13 +340,13 @@ Ejemplo (resultado actual):
 
 | Año  | EPA  | EELL | Total |
 |------|------|------|-------|
-| 2021 | 328  | —    | 328   |
-| 2022 | 650  | —    | 650   |
-| 2023 | 652  | 593  | 1245  |
-| 2024 | 881  | 1137 | 2018  |
-| 2025 | 841  | 1294 | 2135  |
+| 2021 | 327  | —    | 327   |
+| 2022 | 653  | —    | 653   |
+| 2023 | 650  | 593  | 1243  |
+| 2024 | 880  | 1137 | 2017  |
+| 2025 | 841  | 1315 | 2156  |
 
-Por estado: concedida=2623, no_beneficiaria=2097, desistida=576, excluida=550, denegada=530.
+Por estado: concedida=2622, no_beneficiaria=2118, denegada=601, excluida=550, desistida=505.
 
 Estos controles permiten garantizar la calidad del dataset antes de su integración en la base de datos y su uso en la aplicación.
 
@@ -374,7 +374,7 @@ Características:
 - consistente entre fuentes heterogéneas
 - trazable por año y tipo
 
-**Total de registros: 6376** (EPA: 3352 · EELL: 3024)
+**Total de registros: 6396** (EPA: 3351 · EELL: 3045)
 
 ---
 
@@ -454,7 +454,7 @@ Fase: **pipeline de extracción completado**
 ✔ parsing PDF (EELL 2023–2024)
 ✔ parsing XML BOE + Excel manual (EELL 2025)
 ✔ limpieza y normalización de estados
-✔ dataset unificado (6376 registros)
+✔ dataset unificado (6396 registros)
 
 Pendiente:
 
