@@ -16,8 +16,17 @@ Esquema final de cada registro:
     "importe":       float,        # 0.0 si no consta
     "estado":          str,          # concedida | no_beneficiaria | excluida | desistida
     "tramo":           int | None,  # 1, 2 o 3 solo para EELL 2025 concedidas; None en el resto
-    "causa_exclusion": str | None   # código(s) de causa, solo en excluidas EELL; None en el resto
+    "causa_exclusion": str | None,  # código(s) de causa, solo en excluidas EELL; None en el resto
+    "provincia":       str | None,  # derivada del CIF para EELL; None para EPA
+    "ccaa":            str | None,  # derivada del CIF para EELL; None para EPA
+    "periodo_meses":   int,         # duración del periodo subvencionable
+                                    # EPA: 6 (2023/2024) o 12 (resto); EELL: siempre 12
 }
+
+Notas sobre el periodo subvencionable en EPAs:
+  2021, 2022, 2025 → periodo anual   (12 meses)
+  2023, 2024       → periodo semestral (6 meses)
+  Tenerlo en cuenta al comparar importes entre años.
 
 Notas sobre EELL 2023/2024 (PDF):
   El parser PDF devuelve todos los registros con estado='concedida'.
@@ -30,6 +39,104 @@ Notas sobre EELL 2023/2024 (PDF):
 import json
 import os
 from collections import Counter
+
+
+# =========================
+# MAPEO PROVINCIA → CCAA
+# Basado en códigos INE de provincia (2 dígitos).
+# Se extrae de las posiciones 1-2 del CIF de entidades locales
+# (formato: letra_tipo + 2_dígitos_provincia + resto).
+# =========================
+
+# Entidades con CIF de código de provincia no estándar (mancomunidades supra-municipales,
+# consells comarcals, ciudades autónomas). Se identifican por CIF completo.
+# Mancomunidades que cruzan varias provincias llevan provincia=None y solo ccaa.
+_CIF_OVERRIDE = {
+    "P5606301I": (None,       "Extremadura"),               # Mancomunidad Cijara (Cáceres/Badajoz)
+    "P5612701B": ("Badajoz",  "Extremadura"),               # Mancomunidad Siberia
+    "P5390001E": ("Alicante", "Comunidad Valenciana"),      # Mancomunidad L'Alacantí
+    "P6400601H": ("Córdoba",  "Andalucía"),                 # Mancomunidad Los Pedroches
+    "P6700008C": ("Girona",   "Cataluña"),                  # Consell Comarcal Alt Empordà
+    "P6700010I": ("Girona",   "Cataluña"),                  # Consell Comarcal Pla de l'Estany
+    "S7900010E": ("Melilla",  "Ciudad Autónoma de Melilla"),# Ciudad Autónoma de Melilla
+    "G79458618": ("Madrid",   "Comunidad de Madrid"),       # Mancomunidad El Molar/S.Agustín/Guadalix
+}
+
+_PROVINCIA_CCAA = {
+    "01": ("Álava",                    "País Vasco"),
+    "02": ("Albacete",                 "Castilla-La Mancha"),
+    "03": ("Alicante",                 "Comunidad Valenciana"),
+    "04": ("Almería",                  "Andalucía"),
+    "05": ("Ávila",                    "Castilla y León"),
+    "06": ("Badajoz",                  "Extremadura"),
+    "07": ("Illes Balears",            "Illes Balears"),
+    "08": ("Barcelona",                "Cataluña"),
+    "09": ("Burgos",                   "Castilla y León"),
+    "10": ("Cáceres",                  "Extremadura"),
+    "11": ("Cádiz",                    "Andalucía"),
+    "12": ("Castellón",                "Comunidad Valenciana"),
+    "13": ("Ciudad Real",              "Castilla-La Mancha"),
+    "14": ("Córdoba",                  "Andalucía"),
+    "15": ("A Coruña",                 "Galicia"),
+    "16": ("Cuenca",                   "Castilla-La Mancha"),
+    "17": ("Girona",                   "Cataluña"),
+    "18": ("Granada",                  "Andalucía"),
+    "19": ("Guadalajara",              "Castilla-La Mancha"),
+    "20": ("Gipuzkoa",                 "País Vasco"),
+    "21": ("Huelva",                   "Andalucía"),
+    "22": ("Huesca",                   "Aragón"),
+    "23": ("Jaén",                     "Andalucía"),
+    "24": ("León",                     "Castilla y León"),
+    "25": ("Lleida",                   "Cataluña"),
+    "26": ("La Rioja",                 "La Rioja"),
+    "27": ("Lugo",                     "Galicia"),
+    "28": ("Madrid",                   "Comunidad de Madrid"),
+    "29": ("Málaga",                   "Andalucía"),
+    "30": ("Murcia",                   "Región de Murcia"),
+    "31": ("Navarra",                  "Comunidad Foral de Navarra"),
+    "32": ("Ourense",                  "Galicia"),
+    "33": ("Asturias",                 "Principado de Asturias"),
+    "34": ("Palencia",                 "Castilla y León"),
+    "35": ("Las Palmas",               "Canarias"),
+    "36": ("Pontevedra",               "Galicia"),
+    "37": ("Salamanca",                "Castilla y León"),
+    "38": ("Santa Cruz de Tenerife",   "Canarias"),
+    "39": ("Cantabria",                "Cantabria"),
+    "40": ("Segovia",                  "Castilla y León"),
+    "41": ("Sevilla",                  "Andalucía"),
+    "42": ("Soria",                    "Castilla y León"),
+    "43": ("Tarragona",                "Cataluña"),
+    "44": ("Teruel",                   "Aragón"),
+    "45": ("Toledo",                   "Castilla-La Mancha"),
+    "46": ("Valencia",                 "Comunidad Valenciana"),
+    "47": ("Valladolid",               "Castilla y León"),
+    "48": ("Bizkaia",                  "País Vasco"),
+    "49": ("Zamora",                   "Castilla y León"),
+    "50": ("Zaragoza",                 "Aragón"),
+    "51": ("Ceuta",                    "Ciudad Autónoma de Ceuta"),
+    "52": ("Melilla",                  "Ciudad Autónoma de Melilla"),
+}
+
+
+def provincia_ccaa_de_cif(cif):
+    """
+    Extrae provincia y CCAA del CIF de una entidad local.
+    El CIF de entidades locales tiene el formato:
+      letra_tipo (1 car) + código_provincia (2 dígitos) + resto
+    Primero comprueba el diccionario de overrides manuales (mancomunidades
+    supra-municipales, consells comarcals, ciudades autónomas).
+    Devuelve (provincia, ccaa) o (None, None) si no se puede derivar.
+    """
+    if not cif or len(cif) < 3:
+        return None, None
+    override = _CIF_OVERRIDE.get(cif)
+    if override:
+        return override[0], override[1]
+    codigo = cif[1:3]
+    entrada = _PROVINCIA_CCAA.get(codigo)
+    if entrada:
+        return entrada[0], entrada[1]
+    return None, None
 
 
 # =========================
@@ -131,6 +238,12 @@ def cargar_epas(archivos):
 
         sin_exp_en_archivo = 0
         for item in data:
+            # Saltar filas de totales parseadas como entidades
+            # (ej: la fila "TOTAL" de la tabla de importes en EPA 2024 y 2025)
+            cif_check = str(item.get("cif", "") or "").strip().lower().rstrip(".")
+            if cif_check in ("total", "totales"):
+                continue
+
             expediente_raw = item.get("num_expediente")
 
             # Registros sin num_expediente (ej: excluidas EPA 2025 que el BOE no numera):
@@ -148,14 +261,13 @@ def cargar_epas(archivos):
                 item.get("puntuacion") or item.get("puntos")
             )
 
-            # Validar año: aceptar solo si es el año del archivo ±1
-            # (el ±1 cubre el caso real del expediente 2023B628 en el fichero 2024).
-            # Esto corrige el bug de EPAs 2022 donde el parser antiguo tomaba los
-            # últimos 4 dígitos del número de expediente como año (ej: SUBV2022018 → 2018).
-            anio_item = item.get("anio")
-            if (not anio_item or not isinstance(anio_item, int)
-                    or not (anio_fallback - 1 <= anio_item <= anio_fallback + 1)):
-                anio_item = anio_fallback
+            # El año del registro es siempre el año del fichero (convocatoria).
+            # El campo 'anio' del JSON refleja el año codificado en el número de
+            # expediente (ej: SUBV2022659 → 2022), que en registros cross-year
+            # no coincide con el año de la convocatoria en que realmente participaron.
+            # Usar anio_fallback garantiza que el mismo expediente en distintos
+            # ficheros tenga años diferentes y no se duplique.
+            anio_item = anio_fallback
 
             estado = normalizar_estado_epa(estado, anio_item)
 
@@ -169,7 +281,11 @@ def cargar_epas(archivos):
                 "importe": importe,
                 "estado": estado,
                 "tramo": None,           # las EPAs no tienen tramo
-                "causa_exclusion": None, # las EPAs no tienen causa de exclusión
+                "causa_exclusion": None, # las EPAs sí tienen causas de exclusión en el BOE,
+                                         # pero no se capturan aún (mejora futura)
+                "provincia": None,       # no derivable de CIF de asociación (mejora futura)
+                "ccaa": None,            # idem
+                "periodo_meses": 6 if anio_fallback in (2023, 2024) else 12,
             })
 
         aviso_sin_exp = f" ({sin_exp_en_archivo} sin expediente → ID sintético)" if sin_exp_en_archivo else ""
@@ -214,17 +330,23 @@ def cargar_eell(archivos):
             causa_raw = item.get("causa_exclusion")
             causa = str(causa_raw).strip() if causa_raw else None
 
+            cif_limpio = limpiar_cif(item.get("cif"))
+            provincia, ccaa = provincia_ccaa_de_cif(cif_limpio)
+
             registros.append({
                 "anio": anio,
                 "tipo": "eell",
                 "num_expediente": str(item["num_expediente"]).strip(),
                 "entidad": limpiar_entidad(item.get("entidad")),
-                "cif": limpiar_cif(item.get("cif")),
+                "cif": cif_limpio,
                 "puntuacion": puntuacion,
                 "importe": importe,
                 "estado": estado,
                 "tramo": tramo,
                 "causa_exclusion": causa,
+                "provincia": provincia,
+                "ccaa": ccaa,
+                "periodo_meses": 12,     # las EELL siempre tienen periodo anual
                 # _meta se descarta intencionalmente
             })
 
@@ -264,17 +386,22 @@ def validar_y_mostrar(final):
     sin_importe = sum(1 for r in final if r["importe"] == 0.0)
     sin_estado = sum(1 for r in final if r["estado"] is None)
     sin_puntuacion = sum(1 for r in final if r["puntuacion"] is None)
-    print(f"  Sin CIF:        {sin_cif}")
-    print(f"  Sin entidad:    {sin_entidad}")
-    print(f"  Importe = 0:    {sin_importe}")
-    print(f"  Sin estado:     {sin_estado}")
-    print(f"  Sin puntuación: {sin_puntuacion}")
+    eell_sin_provincia = sum(1 for r in final if r["tipo"] == "eell" and r["provincia"] is None)
+    print(f"  Sin CIF:               {sin_cif}")
+    print(f"  Sin entidad:           {sin_entidad}")
+    print(f"  Importe = 0:           {sin_importe}")
+    print(f"  Sin estado:            {sin_estado}")
+    print(f"  Sin puntuación:        {sin_puntuacion}")
+    print(f"  EELL sin provincia:    {eell_sin_provincia}")
 
     print("\nComparación con Excel de referencia (JSON procesados, antes de deduplicación):")
-    print("  EPAs: 2021=328, 2022=654, 2023=651, 2024=881, 2025=841")
+    print("  EPAs: 2021=328, 2022=654, 2023=651, 2024=881, 2025=840")
     print("  Nota EPA 2025: 110 excluidas sin num_expediente → ID sintético SIN_EXP_2025_XXX")
     print("  EELL: 2023=593, 2024=1137, 2025=1315")
-    print("  Totales unificados esperados (tras dedup): EPA=3351, EELL=3045, Total=6396")
+    print("  Totales unificados esperados (tras dedup por tipo+expediente+anio):")
+    print("    EPA=3353 (solo SUBV2022271 Peludosos dedup intra-año), EELL=3045, Total=6398")
+    print("  Periodos subvencionables EPA: 2021/2022/2025=anual(12m), 2023/2024=semestral(6m)")
+    print("  → Al comparar importes entre años tener en cuenta la diferencia de periodo.")
 
     print("======================================\n")
 
@@ -307,11 +434,15 @@ def main():
 
     todos = registros_epa + registros_eell
 
-    # Eliminar duplicados por (tipo, num_expediente)
-    # En caso de duplicado, prevalece el último (más reciente)
+    # Eliminar duplicados por (tipo, num_expediente, anio).
+    # Incluir anio permite conservar el mismo número de expediente en años distintos
+    # (ej: entidad que desistió en 2022 y consiguió la subvención en 2023).
+    # Solo se colapsan duplicados dentro del mismo año (ej: SUBV2022271, Peludosos,
+    # que aparece dos veces en el JSON 2022 como concedida y desistida).
+    # En caso de duplicado intra-año, prevalece el último registro procesado.
     unique = {}
     for r in todos:
-        key = (r["tipo"], r["num_expediente"])
+        key = (r["tipo"], r["num_expediente"], r["anio"])
         unique[key] = r
 
     final = list(unique.values())

@@ -1,1 +1,5 @@
 pdfplumber
+beautifulsoup4
+lxml
+pandas
+openpyxl

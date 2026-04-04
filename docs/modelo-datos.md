@@ -112,6 +112,8 @@ Campos principales:
 
 Un beneficiario puede presentar varias solicitudes en distintas convocatorias. En el caso de las entidades locales, estas pueden participar adicionalmente en agrupaciones de ayuntamientos, tanto como representante como en calidad de miembro.
 
+> **Nota (mejora futura):** Para las entidades locales (EELL), los campos `provincia` y `ccaa` son derivables del CIF a través del código de provincia estándar INE (posiciones 1–2). En el dataset unificado JSON estos campos ya se generan automáticamente; su incorporación al modelo relacional (tabla `beneficiarios`) está prevista como mejora futura.
+
 ---
 
 ### 4.3 Solicitudes
@@ -191,6 +193,8 @@ Campos previstos:
 - descrip_exclu
 
 La relación prevista es muchos a muchos entre `solicitudes` y `causas_exclusion`, resuelta mediante la tabla intermedia `solicitud_causas` con campos `id_soli` (FK) e `id_causa` (FK).
+
+> **Nota:** Las causas de exclusión también están presentes en las resoluciones EPA del BOE, aunque con un formato diferente al de las EELL. Su extracción e incorporación al modelo para las EPA está contemplada como mejora futura adicional.
 
 ---
 
@@ -349,6 +353,30 @@ Para la implementación física de la base de datos se optó por **MariaDB 11** 
 - Ofrece mejor rendimiento en operaciones de lectura intensiva y es de licencia totalmente libre.
 
 La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb:11`, expuesta en el puerto `3307` del host (para evitar conflictos con instalaciones locales de MySQL que usan el puerto 3306). El esquema se inicializa automáticamente al arrancar el contenedor a través del script `docs/modelo-fisico.sql`.
+
+---
+
+### 6.9 Campo periodo_meses en convocatorias
+
+Las convocatorias EPA de 2023 y 2024 cubrieron un **periodo subvencionable semestral (6 meses)** en lugar del anual habitual (12 meses). Las convocatorias EELL tienen siempre periodo anual.
+
+Esta diferencia es relevante para el análisis comparativo de importes: los importes concedidos en 2023 y 2024 (EPA) corresponden a 6 meses de actividad, por lo que no son directamente comparables con los de otros años sin normalizar.
+
+En el dataset JSON unificado se añade el campo `periodo_meses` (entero: 6 o 12) a todos los registros. En el modelo relacional, este campo se prevé incorporar a la tabla `convocatorias` como `TINYINT NOT NULL DEFAULT 12`, lo que permite filtrarlo en consultas analíticas sin necesidad de lógica en el frontend.
+
+Contexto normativo: el 17 de mayo de 2024 se modifica la Orden sobre las Bases reguladoras de las subvenciones EPA (publicada en BOE el 29 de mayo 2024). Entre otros cambios, se crean dos líneas diferenciadas: animales abandonados y gestión de colonias felinas. Estas líneas aparecen por primera vez en la resolución de 2025.
+
+---
+
+### 6.10 Deduplicación por (tipo, num_expediente, anio)
+
+Durante la unificación del dataset se detectaron casos en que el mismo número de expediente aparecía en más de un año:
+
+- Entidades que desistieron en una convocatoria y volvieron a solicitar al año siguiente (ej: SUBV2022659 excluida en 2022, concedida en 2023).
+- Un número de expediente reutilizado por error en el BOE en dos años distintos (SUBV2022021).
+- Un mismo expediente publicado dos veces dentro del mismo año en distintos anexos (SUBV2022271).
+
+La clave de deduplicación se cambió de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`, donde `anio` es siempre el año del fichero fuente (año de la convocatoria), no el que codifica el número de expediente. Esto permite conservar los registros legítimamente distintos (misma entidad en años distintos) y eliminar solo los duplicados reales (misma entidad, mismo expediente, mismo año).
 
 ---
 
