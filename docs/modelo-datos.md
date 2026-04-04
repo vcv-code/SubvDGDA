@@ -374,9 +374,11 @@ Durante la unificación del dataset se detectaron casos en que el mismo número 
 
 - Entidades que desistieron en una convocatoria y volvieron a solicitar al año siguiente (ej: SUBV2022659 excluida en 2022, concedida en 2023).
 - Un número de expediente reutilizado por error en el BOE en dos años distintos (SUBV2022021).
-- Un mismo expediente publicado dos veces dentro del mismo año en distintos anexos (SUBV2022271).
+- Un mismo expediente publicado dos veces dentro del mismo año en distintos anexos (SUBV2022271, Peludosos: concedida con importe en un anexo y denegada sin importe en otro).
 
 La clave de deduplicación se cambió de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`, donde `anio` es siempre el año del fichero fuente (año de la convocatoria), no el que codifica el número de expediente. Esto permite conservar los registros legítimamente distintos (misma entidad en años distintos) y eliminar solo los duplicados reales (misma entidad, mismo expediente, mismo año).
+
+Adicionalmente, para los duplicados intra-año se aplica una regla de prioridad: si uno de los registros tiene importe > 0 y el otro tiene importe = 0, se conserva el que tiene importe (la concedida real). Esto resuelve el caso de SUBV2022271, donde el registro correcto es el concedida con importe 2.560,77 €.
 
 ---
 

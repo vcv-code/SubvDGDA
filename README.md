@@ -334,7 +334,7 @@ Solución:
 Situación detectada: cuatro expedientes aparecían en más de un año del dataset.
 
 - **SUBV2022021** — mismo código de expediente en el BOE de 2021 (Amores Perros Cádiz) y 2022 (Can Terrassa). Probablemente error del BOE al reutilizar el número.
-- **SUBV2022271** — la protectora Peludosos aparece dos veces dentro del JSON de 2022 (concedida y denegada). Posiblemente publicada en dos anexos distintos del BOE.
+- **SUBV2022271** — la protectora Peludosos aparece dos veces dentro del JSON de 2022 (concedida con importe y denegada sin importe). Publicada en dos anexos distintos del BOE. Se conserva la concedida (prioridad al registro con importe > 0).
 - **SUBV2022659** — La Sexta Huella aparece en 2022 como excluida y en 2023 como concedida. Desistió en 2022 y volvió a solicitar en 2023.
 - **2023B628** — Amibichos aparece en 2023 como excluida y en 2024 como concedida. Mismo caso.
 
@@ -343,7 +343,8 @@ Situación detectada: cuatro expedientes aparecían en más de un año del datas
 Solución implementada:
 - Se cambia la clave de deduplicación de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`.
 - El campo `anio` del registro se fija siempre al año del fichero fuente (`anio_fallback`), no al que trae el JSON. Esto garantiza que el mismo expediente en distintas convocatorias tenga años diferentes.
-- Resultado: SUBV2022271 (intra-año 2022) sigue deduplicándose; los otros tres conservan ambos registros.
+- Resultado: SUBV2022271 (intra-año 2022) se deduplica conservando la concedida; los otros tres conservan ambos registros en años distintos.
+- Regla de prioridad intra-año: cuando dos registros compiten por la misma clave, se prefiere el que tiene importe > 0 sobre el que tiene importe = 0. Si ambos tienen o ambos no tienen importe, prevalece el último procesado.
 
 #### Periodo subvencionable semestral en EPAs 2023 y 2024
 
@@ -392,7 +393,7 @@ Ejemplo (resultado actual):
 | 2024 | 881  | 1137 | 2018  |
 | 2025 | 840  | 1315 | 2155  |
 
-Por estado: concedida=2622, no_beneficiaria=2627, excluida=644, desistida=505.
+Por estado: concedida=2623, no_beneficiaria=2627, excluida=643, desistida=505.
 
 Estos controles permiten garantizar la calidad del dataset antes de su integración en la base de datos y su uso en la aplicación.
 
