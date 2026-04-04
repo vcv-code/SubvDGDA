@@ -21,6 +21,12 @@ Esquema final de cada registro:
     "ccaa":            str | None,  # derivada del CIF para EELL; None para EPA
     "periodo_meses":   int,         # duración del periodo subvencionable
                                     # EPA: 6 (2023/2024) o 12 (resto); EELL: siempre 12
+    "es_agrupacion":   bool,        # True solo en EELL 2025 concedidas como agrupación; False en el resto
+    "municipios_agrupacion": list | None,
+                             # Solo cuando es_agrupacion=True.
+                             # Lista de {cif, nombre, importe_asignado} con todos los
+                             # municipios miembro, incluido el representante.
+                             # None en el resto de registros.
 }
 
 Notas sobre el periodo subvencionable en EPAs:
@@ -286,6 +292,8 @@ def cargar_epas(archivos):
                 "provincia": None,       # no derivable de CIF de asociación (mejora futura)
                 "ccaa": None,            # idem
                 "periodo_meses": 6 if anio_fallback in (2023, 2024) else 12,
+                "es_agrupacion": False,
+                "municipios_agrupacion": None,
             })
 
         aviso_sin_exp = f" ({sin_exp_en_archivo} sin expediente → ID sintético)" if sin_exp_en_archivo else ""
@@ -347,6 +355,8 @@ def cargar_eell(archivos):
                 "provincia": provincia,
                 "ccaa": ccaa,
                 "periodo_meses": 12,     # las EELL siempre tienen periodo anual
+                "es_agrupacion": bool(item.get("es_agrupacion", False)),
+                "municipios_agrupacion": item.get("municipios_agrupacion"),
                 # _meta se descarta intencionalmente
             })
 
@@ -393,6 +403,16 @@ def validar_y_mostrar(final):
     print(f"  Sin estado:            {sin_estado}")
     print(f"  Sin puntuación:        {sin_puntuacion}")
     print(f"  EELL sin provincia:    {eell_sin_provincia}")
+
+    agrupaciones = [r for r in final if r.get("es_agrupacion")]
+    if agrupaciones:
+        total_muns = sum(len(r["municipios_agrupacion"]) for r in agrupaciones if r["municipios_agrupacion"])
+        print(f"\nAgrupaciones EELL 2025:")
+        print(f"  Nº agrupaciones:       {len(agrupaciones)}")
+        print(f"  Nº municipios miembro: {total_muns}")
+        for r in sorted(agrupaciones, key=lambda x: x.get("tramo", 0)):
+            n = len(r["municipios_agrupacion"]) if r["municipios_agrupacion"] else 0
+            print(f"    Tramo {r['tramo']} | {r['entidad'][:55]:55s} | {n} municipios")
 
     print("\nComparación con Excel de referencia (JSON procesados, antes de deduplicación):")
     print("  EPAs: 2021=328, 2022=654, 2023=651, 2024=881, 2025=840")
