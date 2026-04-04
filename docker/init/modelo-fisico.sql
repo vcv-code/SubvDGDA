@@ -85,10 +85,9 @@ CREATE TABLE IF NOT EXISTS concesiones (
     id_solic   INT              NOT NULL,
     importe    DECIMAL(12,2)    NOT NULL DEFAULT 0.00      COMMENT 'Importe concedido en euros',
     linea      ENUM(
-                 'colonias_felinas',
-                 'proteccion_animal',
-                 'eell'
-               ) NULL                                      COMMENT 'Línea de actuación. NULL si no consta',
+                 'animales_abandonados',
+                 'colonias_felinas'
+               ) NULL                                      COMMENT 'Línea EPA. Solo desde resolución 2025. NULL en años anteriores y en EELL (que ya tienen tipo_convoc=eell)',
     tramo      TINYINT          NULL                       COMMENT '1, 2 o 3. Solo EELL 2025 según tamaño de municipio',
     PRIMARY KEY (id_conces),
     UNIQUE KEY uq_solic (id_solic),
