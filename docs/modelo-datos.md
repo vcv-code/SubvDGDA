@@ -334,7 +334,7 @@ Los documentos oficiales indican que una solicitud puede ser excluida por varias
 
 Por ello se mantiene la estructura normalizada `causas_exclusion` + `solicitud_causas` en el **modelo conceptual**, representada en el diagrama con asterisco (*) y la nota "Tablas conceptuales. No se implementan en el modelo físico actual del proyecto por viabilidad técnica."
 
-La implementación se pospone a una fase futura, ya que la extracción automática de causas desde los documentos oficiales requiere un trabajo de parsing adicional.
+La implementación se pospone a una fase futura, ya que la extracción automática de causas desde los documentos oficiales requiere un trabajo de parsing adicional. **Estas tablas no están incluidas en `docker/init/modelo-fisico.sql`**: se añadirán en su momento junto con el script de carga de datos correspondiente.
 
 ---
 
@@ -352,7 +352,7 @@ Para la implementación física de la base de datos se optó por **MariaDB 11** 
 - Es compatible al 100 % con MySQL en sintaxis SQL, por lo que el script `modelo-fisico.sql` funciona en ambos sistemas sin modificaciones.
 - Ofrece mejor rendimiento en operaciones de lectura intensiva y es de licencia totalmente libre.
 
-La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb:11`, expuesta en el puerto `3307` del host (para evitar conflictos con instalaciones locales de MySQL que usan el puerto 3306). El esquema se inicializa automáticamente al arrancar el contenedor a través del script `docs/modelo-fisico.sql`.
+La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb:11`, expuesta en el puerto `3307` del host (para evitar conflictos con instalaciones locales de MySQL que usan el puerto 3306). El esquema se inicializa automáticamente al arrancar el contenedor a través del script `docker/init/modelo-fisico.sql`.
 
 ---
 
@@ -362,7 +362,7 @@ Las convocatorias EPA de 2023 y 2024 cubrieron un **periodo subvencionable semes
 
 Esta diferencia es relevante para el análisis comparativo de importes: los importes concedidos en 2023 y 2024 (EPA) corresponden a 6 meses de actividad, por lo que no son directamente comparables con los de otros años sin normalizar.
 
-En el dataset JSON unificado se añade el campo `periodo_meses` (entero: 6 o 12) a todos los registros. En el modelo relacional, este campo se prevé incorporar a la tabla `convocatorias` como `TINYINT NOT NULL DEFAULT 12`, lo que permite filtrarlo en consultas analíticas sin necesidad de lógica en el frontend.
+En el dataset JSON unificado se añade el campo `periodo_meses` (entero: 6 o 12) a todos los registros. En el modelo relacional, este campo está implementado en la tabla `convocatorias` como `TINYINT NOT NULL DEFAULT 12`, lo que permite filtrarlo en consultas analíticas sin necesidad de lógica en el frontend.
 
 Contexto normativo: el 17 de mayo de 2024 se modifica la Orden sobre las Bases reguladoras de las subvenciones EPA (publicada en BOE el 29 de mayo 2024). Entre otros cambios, se crean dos líneas diferenciadas: animales abandonados y gestión de colonias felinas. Estas líneas aparecen por primera vez en la resolución de 2025.
 

@@ -498,7 +498,7 @@ docker/
 
 ## Estado actual
 
-Fase: **pipeline de extracción completado**
+Fase: **backend en desarrollo**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -508,11 +508,14 @@ Fase: **pipeline de extracción completado**
 ✔ fix deduplicación cross-year (clave tipo + expediente + anio)
 ✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
 ✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
+✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
+✔ entorno Docker (docker-compose con MariaDB + FastAPI)
+✔ estructura inicial del backend (FastAPI + SQLAlchemy)
 
 Pendiente:
 
-- diseño e implementación de base de datos
-- API backend
+- script de carga del dataset a la base de datos
+- endpoints de la API
 - frontend de visualización
 
 ---
