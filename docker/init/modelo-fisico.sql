@@ -1,6 +1,9 @@
 -- ============================================================
 -- Modelo físico: Análisis de subvenciones DGDA
 -- Base de datos: bdns_dgda
+-- Tablas implementadas: convocatorias, beneficiarios, solicitudes,
+--   concesiones, agrupaciones, agrupacion_miembros, usuarios
+-- Tablas fase futura: causas_exclusion, solicitud_causas
 -- ============================================================
 -- Notas:
 --   - Se usa CREATE TABLE IF NOT EXISTS para evitar errores si el
@@ -119,4 +122,23 @@ CREATE TABLE IF NOT EXISTS agrupacion_miembros (
     PRIMARY KEY (id_agrupM),
     CONSTRAINT fk_miembro_agrup FOREIGN KEY (id_agrup) REFERENCES agrupaciones  (id_agrup),
     CONSTRAINT fk_miembro_benef FOREIGN KEY (id_benef) REFERENCES beneficiarios (id_benef)
+);
+
+-- ------------------------------------------------------------
+-- USUARIOS
+-- Gestión de acceso a la plataforma web.
+-- Tres roles: admin (gestión), registrado (contenido exclusivo),
+-- el acceso público no requiere usuario en BD.
+-- Contraseñas siempre hasheadas (bcrypt), nunca en texto plano.
+-- Autenticación mediante JWT (implementación fase siguiente).
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS usuarios (
+    id_usuario  INT          NOT NULL AUTO_INCREMENT,
+    email       VARCHAR(255) NOT NULL,
+    password    VARCHAR(255) NOT NULL                      COMMENT 'Hash bcrypt de la contraseña',
+    rol         ENUM('admin','registrado') NOT NULL DEFAULT 'registrado',
+    activo      TINYINT(1)   NOT NULL DEFAULT 1            COMMENT '0 = cuenta desactivada',
+    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_usuario),
+    UNIQUE KEY uq_email (email)
 );
