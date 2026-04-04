@@ -4,10 +4,10 @@ services:
     container_name: bdns_dgda_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: bdns_dgda
-      MYSQL_USER: bdns_user
-      MYSQL_PASSWORD: bdns_pass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
@@ -27,6 +27,12 @@ services:
     container_name: bdns_api
     ports:
       - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
     depends_on:
       db:
         condition: service_healthy
