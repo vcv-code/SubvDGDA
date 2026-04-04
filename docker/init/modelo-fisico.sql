@@ -2,6 +2,15 @@
 -- Modelo físico: Análisis de subvenciones DGDA
 -- Base de datos: bdns_dgda
 -- ============================================================
+-- Notas:
+--   - Se usa CREATE TABLE IF NOT EXISTS para evitar errores si el
+--     script se ejecuta sobre una BD ya inicializada.
+--   - No se incluyen DROP TABLE: el reset se hace a nivel de volumen
+--     Docker (docker-compose down -v) para evitar pérdidas accidentales.
+--   - Las tablas causas_exclusion y solicitud_causas están diseñadas
+--     en el modelo conceptual pero no se implementan aquí todavía:
+--     los datos de causas no están preparados (mejora futura).
+-- ============================================================
 
 CREATE DATABASE IF NOT EXISTS bdns_dgda
   CHARACTER SET utf8mb4
@@ -13,7 +22,7 @@ USE bdns_dgda;
 -- CONVOCATORIAS
 -- Una fila por convocatoria anual (EPA y EELL son separadas)
 -- ------------------------------------------------------------
-CREATE TABLE convocatorias (
+CREATE TABLE IF NOT EXISTS convocatorias (
     id_convoc          INT          NOT NULL AUTO_INCREMENT,
     num_convoc         VARCHAR(50)  NULL                    COMMENT 'Número oficial de convocatoria BDNS',
     titulo_convoc      VARCHAR(255) NOT NULL                COMMENT 'Descripción/título de la convocatoria',
@@ -29,7 +38,7 @@ CREATE TABLE convocatorias (
 -- BENEFICIARIOS
 -- Entidades que presentan solicitudes (asociaciones o ayuntamientos)
 -- ------------------------------------------------------------
-CREATE TABLE beneficiarios (
+CREATE TABLE IF NOT EXISTS beneficiarios (
     id_benef    INT          NOT NULL AUTO_INCREMENT,
     cif         VARCHAR(20)  NULL                          COMMENT 'CIF o NIF de la entidad',
     nombre      VARCHAR(255) NOT NULL                      COMMENT 'Nombre completo de la entidad',
@@ -43,7 +52,7 @@ CREATE TABLE beneficiarios (
 -- Una fila por solicitud presentada en una convocatoria
 -- Incluye TODOS los estados, tanto aprobadas como no
 -- ------------------------------------------------------------
-CREATE TABLE solicitudes (
+CREATE TABLE IF NOT EXISTS solicitudes (
     id_solic       INT              NOT NULL AUTO_INCREMENT,
     id_convoc      INT              NOT NULL,
     id_benef       INT              NOT NULL,
@@ -68,7 +77,7 @@ CREATE TABLE solicitudes (
 -- Solo existen cuando estado = 'concedida' e importe > 0
 -- Las no_beneficiaria, excluidas y desistidas NO generan fila aquí
 -- ------------------------------------------------------------
-CREATE TABLE concesiones (
+CREATE TABLE IF NOT EXISTS concesiones (
     id_conces  INT              NOT NULL AUTO_INCREMENT,
     id_solic   INT              NOT NULL,
     importe    DECIMAL(12,2)    NOT NULL DEFAULT 0.00      COMMENT 'Importe concedido en euros',
@@ -87,7 +96,7 @@ CREATE TABLE concesiones (
 -- AGRUPACIONES
 -- Solo para EELL: concesiones presentadas como agrupación de ayuntamientos
 -- ------------------------------------------------------------
-CREATE TABLE agrupaciones (
+CREATE TABLE IF NOT EXISTS agrupaciones (
     id_agrup       INT  NOT NULL AUTO_INCREMENT,
     id_conces      INT  NOT NULL,
     id_represent   INT  NOT NULL                           COMMENT 'Beneficiario que actúa como entidad representante',
@@ -102,7 +111,7 @@ CREATE TABLE agrupaciones (
 -- AGRUPACION_MIEMBROS
 -- Cada fila es un municipio miembro de una agrupación EELL
 -- ------------------------------------------------------------
-CREATE TABLE agrupacion_miembros (
+CREATE TABLE IF NOT EXISTS agrupacion_miembros (
     id_agrupM        INT           NOT NULL AUTO_INCREMENT,
     id_agrup         INT           NOT NULL,
     id_benef         INT           NOT NULL,
@@ -110,31 +119,4 @@ CREATE TABLE agrupacion_miembros (
     PRIMARY KEY (id_agrupM),
     CONSTRAINT fk_miembro_agrup FOREIGN KEY (id_agrup) REFERENCES agrupaciones  (id_agrup),
     CONSTRAINT fk_miembro_benef FOREIGN KEY (id_benef) REFERENCES beneficiarios (id_benef)
-);
-
--- ------------------------------------------------------------
--- CAUSAS_EXCLUSION  [FASE FUTURA]
--- Catálogo de causas por año y tipo (los códigos cambian cada año)
--- ------------------------------------------------------------
-CREATE TABLE causas_exclusion (
-    id_causa          INT         NOT NULL AUTO_INCREMENT,
-    anio              INT         NOT NULL                 COMMENT 'Año de la convocatoria a la que aplica la causa',
-    tipo_convoc       ENUM('epa','eell') NOT NULL,
-    codigo_causa      VARCHAR(10) NOT NULL                 COMMENT 'Código oficial: 1, 6.a, A, 3.1...',
-    descrip_exclusion TEXT        NOT NULL,
-    articulo_conv     VARCHAR(20) NULL                     COMMENT 'Artículo de la convocatoria. Solo algunos años lo publican',
-    PRIMARY KEY (id_causa),
-    UNIQUE KEY uq_causa (anio, tipo_convoc, codigo_causa)
-);
-
--- ------------------------------------------------------------
--- SOLICITUD_CAUSAS  [FASE FUTURA]
--- Tabla intermedia: una solicitud puede tener varias causas de exclusión
--- ------------------------------------------------------------
-CREATE TABLE solicitud_causas (
-    id_solic  INT NOT NULL,
-    id_causa  INT NOT NULL,
-    PRIMARY KEY (id_solic, id_causa),
-    CONSTRAINT fk_sc_solic FOREIGN KEY (id_solic) REFERENCES solicitudes      (id_solic),
-    CONSTRAINT fk_sc_causa FOREIGN KEY (id_causa) REFERENCES causas_exclusion (id_causa)
 );
