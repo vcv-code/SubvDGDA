@@ -327,6 +327,52 @@ Solución:
 
 ---
 
+### Problemas del proceso de unificación (unificar_datasets.py)
+
+#### Duplicados cross-year (mismo número de expediente en años distintos)
+
+Situación detectada: cuatro expedientes aparecían en más de un año del dataset.
+
+- **SUBV2022021** — mismo código de expediente en el BOE de 2021 (Amores Perros Cádiz) y 2022 (Can Terrassa). Probablemente error del BOE al reutilizar el número.
+- **SUBV2022271** — la protectora Peludosos aparece dos veces dentro del JSON de 2022 (concedida y denegada). Posiblemente publicada en dos anexos distintos del BOE.
+- **SUBV2022659** — La Sexta Huella aparece en 2022 como excluida y en 2023 como concedida. Desistió en 2022 y volvió a solicitar en 2023.
+- **2023B628** — Amibichos aparece en 2023 como excluida y en 2024 como concedida. Mismo caso.
+
+**Problema adicional detectado:** el campo `anio` en los JSON de origen refleja el año del número de expediente (ej: SUBV2022659 → anio=2022), no el año de la convocatoria. Con la tolerancia ±1 original, los registros cross-year colapsaban bajo el mismo año aunque estuvieran en ficheros distintos.
+
+Solución implementada:
+- Se cambia la clave de deduplicación de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`.
+- El campo `anio` del registro se fija siempre al año del fichero fuente (`anio_fallback`), no al que trae el JSON. Esto garantiza que el mismo expediente en distintas convocatorias tenga años diferentes.
+- Resultado: SUBV2022271 (intra-año 2022) sigue deduplicándose; los otros tres conservan ambos registros.
+
+#### Periodo subvencionable semestral en EPAs 2023 y 2024
+
+Las convocatorias EPA de 2023 y 2024 cubrieron un periodo semestral (6 meses) en lugar del anual habitual. Esto no afecta a la estructura del dataset pero sí al análisis comparativo de importes entre años.
+
+Solución: se añade el campo `periodo_meses` a todos los registros (6 para EPA 2023/2024, 12 para el resto de EPA y para todos los EELL).
+
+Contexto normativo relevante: el 17 de mayo de 2024 se modifica la Orden sobre las Bases de las subvenciones para EPAs (publicada en BOE el 29 de mayo 2024). Entre otros cambios, se crean dos líneas diferenciadas: animales abandonados y gestión de colonias felinas. Estas líneas aparecen por primera vez en la resolución de 2025.
+
+#### Derivación de provincia y CCAA para EELL desde el CIF
+
+El CIF de las entidades locales españolas codifica la provincia en sus posiciones 1–2 (ej: `P3802200J` → código `38` → Santa Cruz de Tenerife). Se implementó una función de extracción que permite añadir los campos `provincia` y `ccaa` a todos los registros EELL.
+
+Casos especiales gestionados:
+- **Mancomunidades y Consells Comarcals** con códigos de provincia no estándar (56, 64, 67, 53, 79): se resuelven mediante un diccionario de overrides manuales por CIF completo. Ejemplos:
+  - P5606301I (Mancomunidad Cijara, Extremadura)
+  - P6400601H (Mancomunidad Los Pedroches, Córdoba/Andalucía)
+  - P6700008C (Consell Comarcal Alt Empordà, Girona/Cataluña)
+  - S7900010E (Ciudad Autónoma de Melilla)
+  - G79458618 (Mancomunidad El Molar, Madrid)
+- **Asociaciones (G-type CIF)** en el dataset EELL: corresponden a entidades que desistieron o fueron excluidas. Se dejan con `provincia=null` y `ccaa=null`.
+- **Mancomunidades que cruzan varias provincias**: `provincia=null` pero `ccaa` asignada.
+
+Para las EPAs (asociaciones con CIF tipo G), la provincia no es derivable del CIF de forma estándar. Se deja como mejora futura (`null`).
+
+11 registros EELL permanecen sin provincia (0,4% del total EELL): 7 asociaciones desistidas/excluidas + 1 empresa + 1 asociación excluida + 2 más con CIF no resoluble.
+
+---
+
 ## Validación de datos
 
 Se han implementado controles automáticos:
@@ -334,19 +380,19 @@ Se han implementado controles automáticos:
 - conteo por año  
 - conteo por estado  
 - detección de CIF faltantes  
-- eliminación de duplicados (año + expediente)  
+- eliminación de duplicados por clave (tipo + num_expediente + anio)  
 
 Ejemplo (resultado actual):
 
 | Año  | EPA  | EELL | Total |
 |------|------|------|-------|
-| 2021 | 327  | —    | 327   |
+| 2021 | 328  | —    | 328   |
 | 2022 | 653  | —    | 653   |
-| 2023 | 650  | 593  | 1243  |
-| 2024 | 880  | 1137 | 2017  |
-| 2025 | 841  | 1315 | 2156  |
+| 2023 | 651  | 593  | 1244  |
+| 2024 | 881  | 1137 | 2018  |
+| 2025 | 840  | 1315 | 2155  |
 
-Por estado: concedida=2622, no_beneficiaria=2627, excluida=642, desistida=505.
+Por estado: concedida=2622, no_beneficiaria=2627, excluida=644, desistida=505.
 
 Estos controles permiten garantizar la calidad del dataset antes de su integración en la base de datos y su uso en la aplicación.
 
@@ -363,18 +409,21 @@ Campos:
 - `cif` → CIF/NIF
 - `puntuacion` → puntuación obtenida
 - `importe` → importe concedido (0 si no aplica)
-- `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`, `denegada`
+- `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`
 - `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas)
 - `causa_exclusion` → código de causa (solo excluidas EELL)
+- `provincia` → provincia de la entidad, derivada del CIF (solo EELL; `null` para EPA)
+- `ccaa` → comunidad autónoma, derivada del CIF (solo EELL; `null` para EPA)
+- `periodo_meses` → duración del periodo subvencionable: `6` (EPA 2023 y 2024) o `12` (resto)
 
 Características:
 
 - normalizado
-- sin duplicados (clave: tipo + num_expediente)
+- sin duplicados (clave: tipo + num_expediente + anio)
 - consistente entre fuentes heterogéneas
 - trazable por año y tipo
 
-**Total de registros: 6396** (EPA: 3351 · EELL: 3045)
+**Total de registros: 6398** (EPA: 3353 · EELL: 3045)
 
 ---
 
@@ -454,7 +503,10 @@ Fase: **pipeline de extracción completado**
 ✔ parsing PDF (EELL 2023–2024)
 ✔ parsing XML BOE + Excel manual (EELL 2025)
 ✔ limpieza y normalización de estados
-✔ dataset unificado (6396 registros)
+✔ dataset unificado (6398 registros)
+✔ fix deduplicación cross-year (clave tipo + expediente + anio)
+✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
+✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
 
 Pendiente:
 

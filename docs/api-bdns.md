@@ -97,4 +97,4 @@ Para obtener la información completa del proyecto se combinan tres fuentes:
 - **XML del BOE** — resoluciones de concesiones EPA (2021–2025) y EELL 2025, fuente principal por su estructura fiable
 - **PDF de resoluciones** — resoluciones EELL 2023 y 2024, donde no existe XML disponible
 
-Esta combinación permite construir el dataset unificado con los 6397 registros del proyecto.
+Esta combinación permite construir el dataset unificado con los 6398 registros del proyecto.
