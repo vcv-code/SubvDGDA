@@ -399,7 +399,7 @@ def validar_y_mostrar(final):
     print("  Nota EPA 2025: 110 excluidas sin num_expediente → ID sintético SIN_EXP_2025_XXX")
     print("  EELL: 2023=593, 2024=1137, 2025=1315")
     print("  Totales unificados esperados (tras dedup por tipo+expediente+anio):")
-    print("    EPA=3353 (solo SUBV2022271 Peludosos dedup intra-año), EELL=3045, Total=6398")
+    print("    EPA=3353 (SUBV2022271 Peludosos dedup intra-año: se conserva la concedida), EELL=3045, Total=6398")
     print("  Periodos subvencionables EPA: 2021/2022/2025=anual(12m), 2023/2024=semestral(6m)")
     print("  → Al comparar importes entre años tener en cuenta la diferencia de periodo.")
 
@@ -438,11 +438,19 @@ def main():
     # Incluir anio permite conservar el mismo número de expediente en años distintos
     # (ej: entidad que desistió en 2022 y consiguió la subvención en 2023).
     # Solo se colapsan duplicados dentro del mismo año (ej: SUBV2022271, Peludosos,
-    # que aparece dos veces en el JSON 2022 como concedida y desistida).
-    # En caso de duplicado intra-año, prevalece el último registro procesado.
+    # que aparece dos veces en el JSON 2022: una como concedida con importe y otra
+    # como denegada sin importe, por estar en dos anexos distintos del BOE).
+    # Regla de prioridad intra-año: se prefiere el registro con importe > 0
+    # (concedida real) sobre cualquier otro. Si ambos tienen importe o ambos no
+    # tienen, prevalece el último procesado.
     unique = {}
     for r in todos:
         key = (r["tipo"], r["num_expediente"], r["anio"])
+        if key in unique:
+            existente = unique[key]
+            # Mantener el existente si tiene importe y el nuevo no
+            if existente["importe"] > 0 and r["importe"] == 0.0:
+                continue
         unique[key] = r
 
     final = list(unique.values())
