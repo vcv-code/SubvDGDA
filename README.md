@@ -190,17 +190,23 @@ Por ello, se utiliza un pipeline adicional basado en PDFs oficiales para reconst
 ### Pipeline real implementado
 
 ```
-XML / PDF BOE (DGDA)
+XML / PDF BOE (DGDA) + Excel manual (EELL 2025)
 ↓
-Parsing (pdfplumber / BeautifulSoup)
+Parsing (pdfplumber / BeautifulSoup / openpyxl)
 ↓
 JSON por año (data/processed/)
+  · EELL 2025: incluye es_agrupacion y municipios_agrupacion
+    (leído de las hojas Entidades_beneficiarias y Municipios del xlsx)
 ↓
-Correcciones manuales (Excel EELL 2025, beneficiarias en imagen)
+Unificación y normalización de estados (unificar_datasets.py)
 ↓
-Unificación y normalización de estados
+Dataset unificado (data/final/dataset_unificado.json)
 ↓
-Dataset unificado (data/final/)
+Carga en base de datos (cargar_dataset.py)
+  · 6 pasos: convocatorias → beneficiarios → solicitudes
+             → concesiones → agrupaciones → agrupacion_miembros
+  · Los municipios miembro sin registro propio en el dataset
+    se insertan en beneficiarios en el paso 2
 ```
 
 ---
@@ -411,11 +417,13 @@ Campos:
 - `puntuacion` → puntuación obtenida
 - `importe` → importe concedido (0 si no aplica)
 - `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`
-- `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas)
-- `causa_exclusion` → código de causa (solo excluidas EELL)
+- `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas; `null` en el resto)
+- `causa_exclusion` → código de causa (solo excluidas EELL; `null` en el resto)
 - `provincia` → provincia de la entidad, derivada del CIF (solo EELL; `null` para EPA)
 - `ccaa` → comunidad autónoma, derivada del CIF (solo EELL; `null` para EPA)
 - `periodo_meses` → duración del periodo subvencionable: `6` (EPA 2023 y 2024) o `12` (resto)
+- `es_agrupacion` → `true` si la concesión es una agrupación de ayuntamientos (solo EELL 2025 concedidas); `false` en el resto
+- `municipios_agrupacion` → lista de `{cif, nombre, importe_asignado}` con todos los municipios miembro, incluido el representante (solo cuando `es_agrupacion=true`); `null` en el resto
 
 Características:
 
@@ -469,7 +477,7 @@ data/
 
 scripts/
     ingestion/
-    pdf_extraction/
+    data_extractor/
     data_processing/
 
 backend/
@@ -486,9 +494,9 @@ docker/
 
 `scripts/ingestion/bdns_client.py`
 
-### PDF extracción
+### Extracción de datos
 
-`scripts/pdf_extraction/`
+`scripts/data_extractor/`
 
 ### Procesamiento
 
@@ -504,17 +512,19 @@ Fase: **backend en desarrollo**
 ✔ parsing PDF (EELL 2023–2024)
 ✔ parsing XML BOE + Excel manual (EELL 2025)
 ✔ limpieza y normalización de estados
-✔ dataset unificado (6398 registros)
+✔ dataset unificado (6398 registros · EPA: 3353 · EELL: 3045)
 ✔ fix deduplicación cross-year (clave tipo + expediente + anio)
 ✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
 ✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
+✔ agrupaciones EELL 2025: campos es_agrupacion y municipios_agrupacion en todo el pipeline
 ✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
 ✔ entorno Docker (docker-compose con MariaDB + FastAPI)
 ✔ estructura inicial del backend (FastAPI + SQLAlchemy)
+✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
+✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 
 Pendiente:
 
-- script de carga del dataset a la base de datos
 - endpoints de la API
 - frontend de visualización
 
@@ -549,6 +559,39 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+---
+
+## Base de datos
+
+Arranque del contenedor y carga inicial (ejecutar desde el bash de VSCode):
+
+```bash
+# Arrancar el contenedor de BD (desde docker/)
+cd docker
+docker compose up -d db
+
+# Verificar que está healthy
+docker compose ps
+
+# Aplicar el schema (solo si el volumen es nuevo o fue eliminado)
+docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
+
+# Cargar el dataset (desde la raíz del proyecto)
+cd ..
+python -m scripts.data_processing.cargar_dataset
+
+# Verificar recuentos
+docker exec bdns_dgda_db mariadb -uroot -proot bdns_dgda -e "
+SELECT 'convocatorias'        AS tabla, COUNT(*) AS filas FROM convocatorias
+UNION ALL SELECT 'beneficiarios',       COUNT(*) FROM beneficiarios
+UNION ALL SELECT 'solicitudes',         COUNT(*) FROM solicitudes
+UNION ALL SELECT 'concesiones',         COUNT(*) FROM concesiones
+UNION ALL SELECT 'agrupaciones',        COUNT(*) FROM agrupaciones
+UNION ALL SELECT 'agrupacion_miembros', COUNT(*) FROM agrupacion_miembros;"
+```
+
+> El script `docker-entrypoint-initdb.d` solo ejecuta el schema cuando el volumen Docker está vacío (primera creación). Si el volumen existe pero está vacío, aplicar el schema manualmente con el paso 3.
 
 ---
 

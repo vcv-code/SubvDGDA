@@ -151,7 +151,7 @@ Campos principales:
 - id_conces (PK)
 - id_solic (FK → solicitudes) — UNIQUE (relación 1:1 con solicitudes)
 - importe — DECIMAL(12,2)
-- linea — ENUM: `colonias_felinas`, `proteccion_animal`, `eell`
+- linea — ENUM: `animales_abandonados`, `colonias_felinas`. NULL para años anteriores a 2025 y para todas las EELL (ver decisión 6.4)
 - tramo — TINYINT. Campo específico de EELL 2025 que indica el tramo de subvención asignado. NULL para convocatorias que no aplican.
 
 ---
@@ -163,10 +163,13 @@ En determinadas convocatorias EELL, las solicitudes pueden presentarse en forma 
 Campos principales:
 
 - id_agrup (PK)
-- id_conces (FK → concesiones)
-- id_represent (FK → beneficiarios)
-- cofinanciacion
-- num_actuaciones
+- id_conces (FK → concesiones) — UNIQUE: una agrupación por concesión
+- id_represent (FK → beneficiarios) — ayuntamiento que actúa como representante
+- num_municipios — número total de municipios que forman la agrupación
+
+El ayuntamiento representante aparece también como miembro en `agrupacion_miembros`, con su importe individual asignado.
+
+> **Mejora futura:** el BOE incluye un campo de cofinanciación por parte del propio ayuntamiento. Aporta puntos extra en la evaluación pero no modifica el importe concedido. Solo está disponible en el ANEXO V del XML 2025 (no beneficiarias) y no existe en los PDF de 2023/2024, por lo que su incorporación al modelo se pospone a una fase futura.
 
 ---
 
@@ -178,8 +181,8 @@ Campos principales:
 
 - id_agrupM (PK)
 - id_agrup (FK → agrupaciones)
-- id_benefic (FK → beneficiarios)
-- importe_conced
+- id_benef (FK → beneficiarios)
+- importe_asignado — importe individual asignado a este municipio dentro de la agrupación
 
 ---
 
@@ -312,13 +315,24 @@ Algunos registros EPA anteriores a 2024 no incluyen número de expediente en los
 
 En el diseño conceptual inicial se incluyó una tabla **LINEAS_ACTUACION** para representar las distintas líneas de subvención (colonias felinas, protección animal, EELL).
 
-Durante el desarrollo se tomó la decisión de **eliminar esta tabla** y sustituirla por un campo ENUM directamente en la tabla `concesiones`:
+Durante el desarrollo se tomó la decisión de **eliminar esta tabla** y sustituirla por un campo ENUM directamente en la tabla `concesiones`. El ENUM ha evolucionado en dos pasos:
+
+**Versión inicial (diseño conceptual):** tres valores `colonias_felinas`, `proteccion_animal`, `eell`.
+
+**Versión implementada (modelo físico actual):** dos valores:
 
 ```sql
-linea ENUM('colonias_felinas', 'proteccion_animal', 'eell')
+linea ENUM('animales_abandonados', 'colonias_felinas') NULL
 ```
 
-**Justificación:** el número de líneas es reducido (3 valores), estable en el tiempo, y no requiere atributos adicionales. Mantener una tabla separada añadiría JOINs innecesarios sin aportar flexibilidad real. Esta simplificación se refleja en el diagrama ER definitivo, donde LINEAS_ACTUACION ya no aparece como entidad.
+Los cambios respecto al diseño inicial son:
+- `proteccion_animal` → renombrado a `animales_abandonados`, para reflejar la denominación exacta de la Orden modificada del 17 de mayo de 2024 (publicada en BOE el 29 de mayo de 2024), que crea dos líneas diferenciadas: *animales abandonados* y *gestión de colonias felinas*. Estas líneas aparecen por primera vez en la resolución EPA 2025.
+- `eell` → eliminado. Las concesiones de entidades locales ya se identifican por `convocatorias.tipo_convoc = 'eell'`, por lo que añadir este valor al ENUM sería redundante.
+- El campo es `NULL` para convocatorias anteriores a 2025 (EPA y todas las EELL), donde el BOE no desglosa por línea.
+
+> **Mejora futura:** la resolución EPA 2024 (semestral, BOE-A-2024-23749) se publica tras la entrada en vigor de la Orden modificada del 29 de mayo de 2024, por lo que en teoría ya distingue entre las dos líneas. Sin embargo, el BOE de 2024 no desglosa la línea por entidad de forma directa en las tablas parseadas. Si en el futuro se revisa el parser de 2024 para extraer ese dato, el campo `linea` ya está preparado en el modelo para recibirlo.
+
+**Justificación:** el número de líneas es reducido (2 valores), estable en el tiempo, y no requiere atributos adicionales. Mantener una tabla separada añadiría JOINs innecesarios sin aportar flexibilidad real. Esta simplificación se refleja en el diagrama ER definitivo, donde LINEAS_ACTUACION ya no aparece como entidad.
 
 ---
 
@@ -356,7 +370,81 @@ La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb
 
 ---
 
-### 6.9 Campo periodo_meses en convocatorias
+### 6.9 Arranque de la base de datos
+
+La base de datos se despliega con Docker Compose desde la carpeta `docker/`. Los comandos imprescindibles, ejecutados desde el bash del proyecto, son:
+
+```bash
+# 1. Arrancar solo el contenedor de BD (el backend requiere imagen Python,
+#    que puede fallar en entornos sin acceso a Docker Hub)
+cd docker
+docker compose up -d db
+
+# 2. Verificar que el contenedor está en marcha y healthy
+docker compose ps
+
+# 3. Aplicar el schema (solo necesario si el volumen es nuevo o fue eliminado;
+#    si el volumen ya existía con datos, omitir este paso)
+docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
+
+# 4. Cargar el dataset unificado en la BD (desde la raíz del proyecto)
+cd ..
+python -m scripts.data_processing.cargar_dataset
+
+# 5. Verificar los recuentos de la carga
+docker exec bdns_dgda_db mariadb -uroot -proot bdns_dgda -e "
+SELECT 'convocatorias'       AS tabla, COUNT(*) AS filas FROM convocatorias
+UNION ALL SELECT 'beneficiarios',      COUNT(*) FROM beneficiarios
+UNION ALL SELECT 'solicitudes',        COUNT(*) FROM solicitudes
+UNION ALL SELECT 'concesiones',        COUNT(*) FROM concesiones
+UNION ALL SELECT 'agrupaciones',       COUNT(*) FROM agrupaciones
+UNION ALL SELECT 'agrupacion_miembros',COUNT(*) FROM agrupacion_miembros;"
+```
+
+Recuentos esperados tras la primera carga completa:
+
+| Tabla | Filas |
+|---|---|
+| convocatorias | 8 |
+| beneficiarios | 3103 |
+| solicitudes | 6398 |
+| concesiones | 2623 |
+| agrupaciones | 13 |
+| agrupacion_miembros | 72 |
+
+> **Nota sobre el schema:** el script `docker-entrypoint-initdb.d` solo se ejecuta cuando el volumen Docker está vacío (primera creación). Si el contenedor se recrea con un volumen existente vacío, hay que aplicar el schema manualmente con el paso 3.
+
+---
+
+### 6.10 Pipeline de agrupaciones EELL 2025
+
+Las agrupaciones de ayuntamientos de EELL 2025 requieren un tratamiento especial en todo el pipeline, ya que un único expediente agrupa varios municipios con importes individuales.
+
+**Fuente de datos:** el archivo `data/raw/eell/2025/eell_2025_beneficiarias.xlsx` contiene dos hojas:
+
+- **`Entidades_beneficiarias`** (40 filas): una por entidad beneficiaria. Incluye las columnas `¿Agrupación?` (Sí/No) y `Nº municipios`. Esta hoja es la única fuente para saber si una concesión es una agrupación.
+- **`Municipios`** (99 filas): una por municipio miembro. Incluye NIF individual, nombre, expediente del representante e importe asignado a ese municipio. El ayuntamiento representante aparece como primera fila de su grupo.
+
+**Por qué el representante aparece también como miembro:** el importe total de la concesión se divide entre todos los municipios de la agrupación, incluido el representante. Para que los importes individuales sumen el total de la concesión (diff=0.00 verificado en los 13 casos), el representante debe estar en `agrupacion_miembros` con su importe asignado propio.
+
+**Propagación por el pipeline:**
+
+1. `parser_eell_BOE_2025.py` — lee ambas hojas del xlsx y añade a cada registro concedido los campos `es_agrupacion` (bool) y `municipios_agrupacion` (lista de `{cif, nombre, importe_asignado}`).
+2. `unificar_datasets.py` — propaga `es_agrupacion` y `municipios_agrupacion` al dataset unificado. Para todos los demás registros (EPA, EELL 2023/2024, no concedidas) estos campos son `False` / `null`.
+3. `cargar_dataset.py` — paso 2 (beneficiarios) recorre también los `municipios_agrupacion` para insertar en `beneficiarios` los 36 municipios miembro que no tienen registro propio en el dataset. Sin este paso, las FK de `agrupacion_miembros` fallarían. Los pasos 5 y 6 insertan en `agrupaciones` y `agrupacion_miembros`.
+
+**Cifras EELL 2025:**
+
+| Tramo | Aytos. individuales | Agrupaciones | Municipios en agrup. | Total municipios |
+|---|---|---|---|---|
+| 1 | 16 | 6 | 22 | 38 |
+| 2 | 3 | 6 | 39 | 42 |
+| 3 | 8 | 1 | 11 | 19 |
+| **Total** | **27** | **13** | **72** | **99** |
+
+---
+
+### 6.11 Campo periodo_meses en convocatorias
 
 Las convocatorias EPA de 2023 y 2024 cubrieron un **periodo subvencionable semestral (6 meses)** en lugar del anual habitual (12 meses). Las convocatorias EELL tienen siempre periodo anual.
 
@@ -368,7 +456,7 @@ Contexto normativo: el 17 de mayo de 2024 se modifica la Orden sobre las Bases r
 
 ---
 
-### 6.10 Deduplicación por (tipo, num_expediente, anio)
+### 6.12 Deduplicación por (tipo, num_expediente, anio)
 
 Durante la unificación del dataset se detectaron casos en que el mismo número de expediente aparecía en más de un año:
 
