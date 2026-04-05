@@ -76,7 +76,7 @@ Frontend
 | Base de datos | MySQL / MariaDB |
 | Infraestructura | Docker, Nginx |
 | Control de versiones | Git, GitHub |
-| Fuentes de datos | API BDNS, PDFs oficiales |
+| Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
 ---
 
@@ -190,17 +190,23 @@ Por ello, se utiliza un pipeline adicional basado en PDFs oficiales para reconst
 ### Pipeline real implementado
 
 ```
-XML / PDF BOE (DGDA)
+XML / PDF BOE (DGDA) + Excel manual (EELL 2025)
 ↓
-Parsing (pdfplumber / BeautifulSoup)
+Parsing (pdfplumber / BeautifulSoup / openpyxl)
 ↓
 JSON por año (data/processed/)
+  · EELL 2025: incluye es_agrupacion y municipios_agrupacion
+    (leído de las hojas Entidades_beneficiarias y Municipios del xlsx)
 ↓
-Correcciones manuales (Excel EELL 2025, beneficiarias en imagen)
+Unificación y normalización de estados (unificar_datasets.py)
 ↓
-Unificación y normalización de estados
+Dataset unificado (data/final/dataset_unificado.json)
 ↓
-Dataset unificado (data/final/)
+Carga en base de datos (cargar_dataset.py)
+  · 6 pasos: convocatorias → beneficiarios → solicitudes
+             → concesiones → agrupaciones → agrupacion_miembros
+  · Los municipios miembro sin registro propio en el dataset
+    se insertan en beneficiarios en el paso 2
 ```
 
 ---
@@ -218,6 +224,8 @@ Scripts:
 - `parser_eell_PDF_base.py` → EELL 2023 y 2024
 - `parser_eell_BOE_2025.py` → EELL 2025
 
+> La resolución EELL 2025 publica las tablas de entidades beneficiarias como imágenes incrustadas en el BOE, lo que impide extraerlas directamente del XML. Los datos se obtuvieron de un Excel complementario (`eell_2025_beneficiarias.xlsx`) leído con `openpyxl`.
+
 ---
 
 ### Entidades de Protección Animal (EPA)
@@ -232,6 +240,8 @@ Scripts:
 
 - `parser_EPAs_BOE_base.py` → EPA 2021–2024 (lógica común)
 - `parser_EPAs_BOE_2025.py` → EPA 2025 (estructura diferente)
+
+> En la resolución EPA 2025 las cabeceras de las columnas cambian respecto a años anteriores: aparece "Cuantía concedida a la entidad" (que contiene la palabra *entidad*) y la cabecera de puntuación varía entre anexos. Esto rompe el mapeo por palabras clave del parser base. El parser 2025 usa extracción heurística por contenido de celda: importes > 100 para el campo importe, valores entre 0 y 100 para puntuación.
 
 ---
 
@@ -327,6 +337,53 @@ Solución:
 
 ---
 
+### Problemas del proceso de unificación (unificar_datasets.py)
+
+#### Duplicados cross-year (mismo número de expediente en años distintos)
+
+Situación detectada: cuatro expedientes aparecían en más de un año del dataset.
+
+- **SUBV2022021** — mismo código de expediente en el BOE de 2021 (Amores Perros Cádiz) y 2022 (Can Terrassa). Probablemente error del BOE al reutilizar el número.
+- **SUBV2022271** — la protectora Peludosos aparece dos veces dentro del JSON de 2022 (concedida con importe y denegada sin importe). Publicada en dos anexos distintos del BOE. Se conserva la concedida (prioridad al registro con importe > 0).
+- **SUBV2022659** — La Sexta Huella aparece en 2022 como excluida y en 2023 como concedida. Desistió en 2022 y volvió a solicitar en 2023.
+- **2023B628** — Amibichos aparece en 2023 como excluida y en 2024 como concedida. Mismo caso.
+
+**Problema adicional detectado:** el campo `anio` en los JSON de origen refleja el año del número de expediente (ej: SUBV2022659 → anio=2022), no el año de la convocatoria. Con la tolerancia ±1 original, los registros cross-year colapsaban bajo el mismo año aunque estuvieran en ficheros distintos.
+
+Solución implementada:
+- Se cambia la clave de deduplicación de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`.
+- El campo `anio` del registro se fija siempre al año del fichero fuente (`anio_fallback`), no al que trae el JSON. Esto garantiza que el mismo expediente en distintas convocatorias tenga años diferentes.
+- Resultado: SUBV2022271 (intra-año 2022) se deduplica conservando la concedida; los otros tres conservan ambos registros en años distintos.
+- Regla de prioridad intra-año: cuando dos registros compiten por la misma clave, se prefiere el que tiene importe > 0 sobre el que tiene importe = 0. Si ambos tienen o ambos no tienen importe, prevalece el último procesado.
+
+#### Periodo subvencionable semestral en EPAs 2023 y 2024
+
+Las convocatorias EPA de 2023 y 2024 cubrieron un periodo semestral (6 meses) en lugar del anual habitual. Esto no afecta a la estructura del dataset pero sí al análisis comparativo de importes entre años.
+
+Solución: se añade el campo `periodo_meses` a todos los registros (6 para EPA 2023/2024, 12 para el resto de EPA y para todos los EELL).
+
+Contexto normativo relevante: el 17 de mayo de 2024 se modifica la Orden sobre las Bases de las subvenciones para EPAs (publicada en BOE el 29 de mayo 2024). Entre otros cambios, se crean dos líneas diferenciadas: animales abandonados y gestión de colonias felinas. Estas líneas aparecen por primera vez en la resolución de 2025.
+
+#### Derivación de provincia y CCAA para EELL desde el CIF
+
+El CIF de las entidades locales españolas codifica la provincia en sus posiciones 1–2 (ej: `P3802200J` → código `38` → Santa Cruz de Tenerife). Se implementó una función de extracción que permite añadir los campos `provincia` y `ccaa` a todos los registros EELL.
+
+Casos especiales gestionados:
+- **Mancomunidades y Consells Comarcals** con códigos de provincia no estándar (56, 64, 67, 53, 79): se resuelven mediante un diccionario de overrides manuales por CIF completo. Ejemplos:
+  - P5606301I (Mancomunidad Cijara, Extremadura)
+  - P6400601H (Mancomunidad Los Pedroches, Córdoba/Andalucía)
+  - P6700008C (Consell Comarcal Alt Empordà, Girona/Cataluña)
+  - S7900010E (Ciudad Autónoma de Melilla)
+  - G79458618 (Mancomunidad El Molar, Madrid)
+- **Asociaciones (G-type CIF)** en el dataset EELL: corresponden a entidades que desistieron o fueron excluidas. Se dejan con `provincia=null` y `ccaa=null`.
+- **Mancomunidades que cruzan varias provincias**: `provincia=null` pero `ccaa` asignada.
+
+Para las EPAs (asociaciones con CIF tipo G), la provincia no es derivable del CIF de forma estándar. Se deja como mejora futura (`null`).
+
+11 registros EELL permanecen sin provincia (0,4% del total EELL): 7 asociaciones desistidas/excluidas + 1 empresa + 1 asociación excluida + 2 más con CIF no resoluble.
+
+---
+
 ## Validación de datos
 
 Se han implementado controles automáticos:
@@ -334,19 +391,19 @@ Se han implementado controles automáticos:
 - conteo por año  
 - conteo por estado  
 - detección de CIF faltantes  
-- eliminación de duplicados (año + expediente)  
+- eliminación de duplicados por clave (tipo + num_expediente + anio)  
 
 Ejemplo (resultado actual):
 
 | Año  | EPA  | EELL | Total |
 |------|------|------|-------|
 | 2021 | 328  | —    | 328   |
-| 2022 | 650  | —    | 650   |
-| 2023 | 652  | 593  | 1245  |
+| 2022 | 653  | —    | 653   |
+| 2023 | 651  | 593  | 1244  |
 | 2024 | 881  | 1137 | 2018  |
-| 2025 | 841  | 1294 | 2135  |
+| 2025 | 840  | 1315 | 2155  |
 
-Por estado: concedida=2623, no_beneficiaria=2097, desistida=576, excluida=550, denegada=530.
+Por estado: concedida=2623, no_beneficiaria=2627, excluida=643, desistida=505.
 
 Estos controles permiten garantizar la calidad del dataset antes de su integración en la base de datos y su uso en la aplicación.
 
@@ -363,18 +420,23 @@ Campos:
 - `cif` → CIF/NIF
 - `puntuacion` → puntuación obtenida
 - `importe` → importe concedido (0 si no aplica)
-- `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`, `denegada`
-- `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas)
-- `causa_exclusion` → código de causa (solo excluidas EELL)
+- `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`
+- `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas; `null` en el resto)
+- `causa_exclusion` → código de causa (solo excluidas EELL; `null` en el resto)
+- `provincia` → provincia de la entidad, derivada del CIF (solo EELL; `null` para EPA)
+- `ccaa` → comunidad autónoma, derivada del CIF (solo EELL; `null` para EPA)
+- `periodo_meses` → duración del periodo subvencionable: `6` (EPA 2023 y 2024) o `12` (resto)
+- `es_agrupacion` → `true` si la concesión es una agrupación de ayuntamientos (solo EELL 2025 concedidas); `false` en el resto
+- `municipios_agrupacion` → lista de `{cif, nombre, importe_asignado}` con todos los municipios miembro, incluido el representante (solo cuando `es_agrupacion=true`); `null` en el resto
 
 Características:
 
 - normalizado
-- sin duplicados (clave: tipo + num_expediente)
+- sin duplicados (clave: tipo + num_expediente + anio)
 - consistente entre fuentes heterogéneas
 - trazable por año y tipo
 
-**Total de registros: 6376** (EPA: 3352 · EELL: 3024)
+**Total de registros: 6398** (EPA: 3353 · EELL: 3045)
 
 ---
 
@@ -419,7 +481,7 @@ data/
 
 scripts/
     ingestion/
-    pdf_extraction/
+    data_extractor/
     data_processing/
 
 backend/
@@ -436,30 +498,58 @@ docker/
 
 `scripts/ingestion/bdns_client.py`
 
-### PDF extracción
+### Extracción de datos
 
-`scripts/pdf_extraction/`
+`scripts/data_extractor/`
 
 ### Procesamiento
 
 `scripts/data_processing/`
 
+### Backend (API)
+
+```
+backend/app/
+  db.py              → conexión SQLAlchemy: motor, sesiones y get_db
+  models.py          → tablas de la BD como clases Python (ORM)
+  schemas.py         → forma de los datos que devuelve la API (Pydantic)
+  main.py            → aplicación FastAPI con los routers registrados
+  routers/
+    convocatorias.py → GET /convocatorias/
+    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, paginación)
+    estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
+```
+
+La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
+
 ---
 
 ## Estado actual
 
-Fase: **pipeline de extracción completado**
+Fase: **backend en desarrollo**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
 ✔ parsing XML BOE + Excel manual (EELL 2025)
 ✔ limpieza y normalización de estados
-✔ dataset unificado (6376 registros)
+✔ dataset unificado (6398 registros · EPA: 3353 · EELL: 3045)
+✔ fix deduplicación cross-year (clave tipo + expediente + anio)
+✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
+✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
+✔ agrupaciones EELL 2025: campos es_agrupacion y municipios_agrupacion en todo el pipeline
+✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
+✔ entorno Docker (docker-compose con MariaDB + FastAPI)
+✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
+✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
+✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
+  · GET /convocatorias/ → lista las 8 convocatorias
+  · GET /solicitudes/   → filtros por año, tipo y estado con paginación
+  · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
 
 Pendiente:
 
-- diseño e implementación de base de datos
-- API backend
+- tests con pytest
+- autenticación (JWT + roles: público, registrado, admin)
 - frontend de visualización
 
 ---
@@ -491,8 +581,84 @@ git pull
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r requeriments.txt
 ```
+
+### Archivos de dependencias
+
+El proyecto tiene dos archivos de requisitos con propósitos distintos:
+
+- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Incluye tanto las herramientas de procesamiento de datos (pdfplumber, beautifulsoup, pandas…) como las del backend (fastapi, sqlalchemy…). Es lo que se instala en el `venv` de la máquina de desarrollo.
+- **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (fastapi, uvicorn, sqlalchemy, pymysql y las de autenticación). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API.
+
+---
+
+## Docker — desarrollo vs despliegue completo
+
+El proyecto usa Docker Compose con dos servicios definidos en `docker/docker-compose.yml`:
+
+- **`db`** — contenedor MariaDB con la base de datos. Siempre corre en Docker porque necesita persistencia (volumen), credenciales y un schema fijo.
+- **`backend`** — contenedor con la aplicación FastAPI. Está definido pero no se arranca durante el desarrollo activo.
+
+### Durante el desarrollo (situación actual)
+
+Solo se arranca el contenedor de la base de datos. El backend se ejecuta directamente en el `venv` local con uvicorn:
+
+```bash
+# En una terminal: arrancar solo la BD
+cd docker
+docker compose up -d db
+
+# En otra terminal: arrancar el backend local (desde la raíz del proyecto)
+uvicorn backend.app.main:app --reload --port 8000
+```
+
+El flag `--reload` hace que el servidor se reinicie automáticamente cada vez que se guarda un archivo Python. Así no hay que reconstruir ninguna imagen Docker con cada cambio.
+
+### Despliegue completo (cuando el backend esté terminado)
+
+Se levantan los dos contenedores juntos. El backend corre dentro de su propio contenedor, igual que en producción:
+
+```bash
+cd docker
+docker compose up --build    # primera vez (construye la imagen del backend)
+docker compose up -d         # arranques posteriores (sin reconstruir)
+docker compose down          # parar (conserva los datos)
+docker compose down -v       # parar y borrar la BD completa (reset total)
+```
+
+---
+
+## Base de datos
+
+Arranque del contenedor y carga inicial (ejecutar desde el bash de VSCode):
+
+```bash
+# Arrancar el contenedor de BD (desde docker/)
+cd docker
+docker compose up -d db
+
+# Verificar que está healthy
+docker compose ps
+
+# Aplicar el schema (solo si el volumen es nuevo o fue eliminado)
+docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
+
+# Cargar el dataset (desde la raíz del proyecto)
+cd ..
+python -m scripts.data_processing.cargar_dataset
+
+# Verificar recuentos
+docker exec bdns_dgda_db mariadb -uroot -proot bdns_dgda -e "
+SELECT 'convocatorias'        AS tabla, COUNT(*) AS filas FROM convocatorias
+UNION ALL SELECT 'beneficiarios',       COUNT(*) FROM beneficiarios
+UNION ALL SELECT 'solicitudes',         COUNT(*) FROM solicitudes
+UNION ALL SELECT 'concesiones',         COUNT(*) FROM concesiones
+UNION ALL SELECT 'agrupaciones',        COUNT(*) FROM agrupaciones
+UNION ALL SELECT 'agrupacion_miembros', COUNT(*) FROM agrupacion_miembros;"
+```
+
+> El script `docker-entrypoint-initdb.d` solo ejecuta el schema cuando el volumen Docker está vacío (primera creación). Si el volumen existe pero está vacío, aplicar el schema manualmente con el paso 3.
 
 ---
 
