@@ -224,6 +224,8 @@ Scripts:
 - `parser_eell_PDF_base.py` → EELL 2023 y 2024
 - `parser_eell_BOE_2025.py` → EELL 2025
 
+> La resolución EELL 2025 publica las tablas de entidades beneficiarias como imágenes incrustadas en el BOE, lo que impide extraerlas directamente del XML. Los datos se obtuvieron de un Excel complementario (`eell_2025_beneficiarias.xlsx`) leído con `openpyxl`.
+
 ---
 
 ### Entidades de Protección Animal (EPA)
@@ -238,6 +240,8 @@ Scripts:
 
 - `parser_EPAs_BOE_base.py` → EPA 2021–2024 (lógica común)
 - `parser_EPAs_BOE_2025.py` → EPA 2025 (estructura diferente)
+
+> En la resolución EPA 2025 las cabeceras de las columnas cambian respecto a años anteriores: aparece "Cuantía concedida a la entidad" (que contiene la palabra *entidad*) y la cabecera de puntuación varía entre anexos. Esto rompe el mapeo por palabras clave del parser base. El parser 2025 usa extracción heurística por contenido de celda: importes > 100 para el campo importe, valores entre 0 y 100 para puntuación.
 
 ---
 
@@ -502,6 +506,22 @@ docker/
 
 `scripts/data_processing/`
 
+### Backend (API)
+
+```
+backend/app/
+  db.py              → conexión SQLAlchemy: motor, sesiones y get_db
+  models.py          → tablas de la BD como clases Python (ORM)
+  schemas.py         → forma de los datos que devuelve la API (Pydantic)
+  main.py            → aplicación FastAPI con los routers registrados
+  routers/
+    convocatorias.py → GET /convocatorias/
+    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, paginación)
+    estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
+```
+
+La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
+
 ---
 
 ## Estado actual
@@ -519,13 +539,17 @@ Fase: **backend en desarrollo**
 ✔ agrupaciones EELL 2025: campos es_agrupacion y municipios_agrupacion en todo el pipeline
 ✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
 ✔ entorno Docker (docker-compose con MariaDB + FastAPI)
-✔ estructura inicial del backend (FastAPI + SQLAlchemy)
 ✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
+✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
+  · GET /convocatorias/ → lista las 8 convocatorias
+  · GET /solicitudes/   → filtros por año, tipo y estado con paginación
+  · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
 
 Pendiente:
 
-- endpoints de la API
+- tests con pytest
+- autenticación (JWT + roles: público, registrado, admin)
 - frontend de visualización
 
 ---
@@ -557,7 +581,50 @@ git pull
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r requeriments.txt
+```
+
+### Archivos de dependencias
+
+El proyecto tiene dos archivos de requisitos con propósitos distintos:
+
+- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Incluye tanto las herramientas de procesamiento de datos (pdfplumber, beautifulsoup, pandas…) como las del backend (fastapi, sqlalchemy…). Es lo que se instala en el `venv` de la máquina de desarrollo.
+- **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (fastapi, uvicorn, sqlalchemy, pymysql y las de autenticación). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API.
+
+---
+
+## Docker — desarrollo vs despliegue completo
+
+El proyecto usa Docker Compose con dos servicios definidos en `docker/docker-compose.yml`:
+
+- **`db`** — contenedor MariaDB con la base de datos. Siempre corre en Docker porque necesita persistencia (volumen), credenciales y un schema fijo.
+- **`backend`** — contenedor con la aplicación FastAPI. Está definido pero no se arranca durante el desarrollo activo.
+
+### Durante el desarrollo (situación actual)
+
+Solo se arranca el contenedor de la base de datos. El backend se ejecuta directamente en el `venv` local con uvicorn:
+
+```bash
+# En una terminal: arrancar solo la BD
+cd docker
+docker compose up -d db
+
+# En otra terminal: arrancar el backend local (desde la raíz del proyecto)
+uvicorn backend.app.main:app --reload --port 8000
+```
+
+El flag `--reload` hace que el servidor se reinicie automáticamente cada vez que se guarda un archivo Python. Así no hay que reconstruir ninguna imagen Docker con cada cambio.
+
+### Despliegue completo (cuando el backend esté terminado)
+
+Se levantan los dos contenedores juntos. El backend corre dentro de su propio contenedor, igual que en producción:
+
+```bash
+cd docker
+docker compose up --build    # primera vez (construye la imagen del backend)
+docker compose up -d         # arranques posteriores (sin reconstruir)
+docker compose down          # parar (conserva los datos)
+docker compose down -v       # parar y borrar la BD completa (reset total)
 ```
 
 ---
