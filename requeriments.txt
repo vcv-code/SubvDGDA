@@ -3,3 +3,11 @@ beautifulsoup4
 lxml
 pandas
 openpyxl
+requests
+pymysql
+fastapi
+uvicorn[standard]
+sqlalchemy
+cryptography
+passlib[bcrypt]
+python-jose[cryptography]
