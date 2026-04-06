@@ -57,13 +57,18 @@ Frontend
 
 ---
 
-## Modelo de datos (diagrama ER)
+## Modelo de datos (comparativa diagramas ER)
 
-<p align="center">
-  <a href="docs/img/modelo-datos-er.png">
-    <img src="docs/img/modelo-datos-er.png" width="750">
-  </a>
-</p>
+<table align="center">
+  <tr>
+    <th>Original</th>
+    <th>Revisado</th>
+  </tr>
+  <tr>
+    <td><img src="docs/img/modelo-datos-er-v1.png" width="400"></td>
+    <td><img src="docs/img/Modelo-ER-Def.jpg" width="400"></td>
+  </tr>
+</table>
 
 ---
 
