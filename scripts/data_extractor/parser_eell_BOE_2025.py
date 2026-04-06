@@ -78,14 +78,20 @@ def cargar_xlsx(ruta_xlsx):
 
 def cargar_beneficiarias_xlsx(ruta_xlsx):
     """
-    Carga los 40 beneficiarios definitivos desde eell_2025_beneficiarias.xlsx
-    (hoja 'Entidades_beneficiarias').
+    Carga los 40 beneficiarios definitivos desde eell_2025_beneficiarias.xlsx.
 
-    Columnas: tramo, NIF, expediente, entidad, importe, ¿agrupación?, nº municipios
+    Lee dos hojas:
+      - 'Entidades_beneficiarias': tramo, NIF, expediente, entidad, importe,
+        ¿agrupación?, nº municipios
+      - 'Municipios': tramo, NIF municipio, nombre municipio, expediente
+        representante, nombre representante, importe asignado
 
-    Devuelve un dict: expediente → {tramo, importe}
-    Estos valores sobreescriben los del xlsx base, corrigiendo casos como
-    agrupaciones que aparecían con importe=0 en el xlsx base.
+    Devuelve un dict: expediente → {tramo, importe, es_agrupacion,
+                                     municipios_agrupacion}
+      - es_agrupacion: bool
+      - municipios_agrupacion: lista de {cif, nombre, importe_asignado}
+        Solo se rellena cuando es_agrupacion=True; None en caso contrario.
+        Incluye el ayuntamiento representante como primer miembro.
     """
     try:
         import openpyxl
@@ -93,19 +99,49 @@ def cargar_beneficiarias_xlsx(ruta_xlsx):
         raise ImportError("openpyxl es necesario: pip install openpyxl --break-system-packages")
 
     wb = openpyxl.load_workbook(ruta_xlsx)
-    ws = wb["Entidades_beneficiarias"]
 
+    # --- Hoja Entidades_beneficiarias ---
     # Fila 1: título; fila 2: cabeceras; datos desde fila 3
+    ws_benef = wb["Entidades_beneficiarias"]
     beneficiarias = {}
-    for fila in ws.iter_rows(min_row=3, values_only=True):
-        tramo, nif, exp, entidad, importe = fila[0], fila[1], fila[2], fila[3], fila[4]
-        if not exp:
+    for fila in ws_benef.iter_rows(min_row=3, values_only=True):
+        tramo, nif, exp, entidad, importe, agrupacion, num_mun = (
+            fila[0], fila[1], fila[2], fila[3], fila[4], fila[5], fila[6]
+        )
+        if not exp or not isinstance(tramo, int):
             continue
         exp_str = str(exp).strip()
+        es_agrup = str(agrupacion).strip().lower() in ("sí", "si", "yes", "true") if agrupacion else False
         beneficiarias[exp_str] = {
-            "tramo":   int(tramo) if tramo is not None else None,
-            "importe": float(importe) if importe else 0.0,
+            "tramo":               int(tramo),
+            "importe":             float(importe) if importe else 0.0,
+            "es_agrupacion":       es_agrup,
+            "municipios_agrupacion": None,  # se rellena abajo desde hoja Municipios
         }
+
+    # --- Hoja Municipios ---
+    # Fila 1: título; fila 2: cabeceras; datos desde fila 3
+    # Columnas: tramo, NIF municipio, nombre municipio, exp representante,
+    #           nombre representante, importe asignado
+    ws_mun = wb["Municipios"]
+    muns_por_exp = {}
+    for fila in ws_mun.iter_rows(min_row=3, values_only=True):
+        tramo, nif_mun, nombre_mun, exp_rep, nombre_rep, imp_mun = (
+            fila[0], fila[1], fila[2], fila[3], fila[4], fila[5]
+        )
+        if not exp_rep or not isinstance(tramo, int):
+            continue
+        exp_str = str(exp_rep).strip()
+        muns_por_exp.setdefault(exp_str, []).append({
+            "cif":             str(nif_mun).strip() if nif_mun else None,
+            "nombre":          str(nombre_mun).strip() if nombre_mun else None,
+            "importe_asignado": float(imp_mun) if imp_mun else 0.0,
+        })
+
+    # Adjuntar municipios solo a las agrupaciones
+    for exp_str, benef in beneficiarias.items():
+        if benef["es_agrupacion"]:
+            benef["municipios_agrupacion"] = muns_por_exp.get(exp_str)
 
     return beneficiarias
 
@@ -249,11 +285,13 @@ def parsear_eell_2025(ruta_xml):
     base = cargar_xlsx(ruta_xlsx)
     print(f"[EELL BOE 2025] Xlsx base cargado: {len(base)} expedientes")
 
-    # --- 2. Cargar importes y tramos definitivos desde beneficiarias xlsx ---
+    # --- 2. Cargar importes, tramos, agrupaciones y municipios desde beneficiarias xlsx ---
     beneficiarias = {}
     if os.path.exists(ruta_benef):
         beneficiarias = cargar_beneficiarias_xlsx(ruta_benef)
-        print(f"[EELL BOE 2025] Xlsx beneficiarias cargado: {len(beneficiarias)} entidades")
+        n_agrup = sum(1 for b in beneficiarias.values() if b["es_agrupacion"])
+        print(f"[EELL BOE 2025] Xlsx beneficiarias cargado: {len(beneficiarias)} entidades "
+              f"({n_agrup} agrupaciones)")
         # Aplicar sobreescritura de importes en la base
         sobreescritos = 0
         for exp, benef_datos in beneficiarias.items():
@@ -291,33 +329,42 @@ def parsear_eell_2025(ruta_xml):
         else:
             estado = "concedida"
 
-        # Tramo: solo para beneficiarias (concedidas)
+        # Tramo, agrupacion y municipios: solo para beneficiarias (concedidas)
         tramo = None
+        es_agrupacion = False
+        municipios_agrupacion = None
         if estado == "concedida" and exp in beneficiarias:
-            tramo = beneficiarias[exp]["tramo"]
+            benef = beneficiarias[exp]
+            tramo             = benef["tramo"]
+            es_agrupacion     = benef["es_agrupacion"]
+            municipios_agrupacion = benef["municipios_agrupacion"]
 
         resultados.append({
-            "num_expediente":  exp,
-            "cif":             datos["cif"],
-            "entidad":         datos["entidad"],
-            "puntos":          datos["puntos"],
-            "importe":         datos["importe"],
-            "tramo":           tramo,
-            "causa_exclusion": None,
-            "estado":          estado,
+            "num_expediente":       exp,
+            "cif":                  datos["cif"],
+            "entidad":              datos["entidad"],
+            "puntos":               datos["puntos"],
+            "importe":              datos["importe"],
+            "tramo":                tramo,
+            "causa_exclusion":      None,
+            "estado":               estado,
+            "es_agrupacion":        es_agrupacion,
+            "municipios_agrupacion": municipios_agrupacion,
         })
 
     # --- 5. Añadir las excluidas del ANEXO III (no están en la base xlsx) ---
     for exp, excl in excluidas_xml.items():
         resultados.append({
-            "num_expediente":  exp,
-            "cif":             excl["cif"],
-            "entidad":         excl["entidad"],
-            "puntos":          None,
-            "importe":         0.0,
-            "tramo":           None,
-            "causa_exclusion": excl["causa_exclusion"],
-            "estado":          "excluida",
+            "num_expediente":        exp,
+            "cif":                   excl["cif"],
+            "entidad":               excl["entidad"],
+            "puntos":                None,
+            "importe":               0.0,
+            "tramo":                 None,
+            "causa_exclusion":       excl["causa_exclusion"],
+            "estado":                "excluida",
+            "es_agrupacion":         False,
+            "municipios_agrupacion": None,
         })
 
     # --- 6. Añadir no_beneficiarias del ANEXO V que no están en el xlsx base ---
@@ -329,14 +376,16 @@ def parsear_eell_2025(ruta_xml):
     for exp, datos in tabla_v.items():
         if exp not in exps_ya_incluidos:
             resultados.append({
-                "num_expediente":  exp,
-                "cif":             datos["cif"],
-                "entidad":         datos["entidad"],
-                "puntos":          datos["puntos"],
-                "importe":         0.0,
-                "tramo":           None,
-                "causa_exclusion": None,
-                "estado":          "no_beneficiaria",
+                "num_expediente":        exp,
+                "cif":                   datos["cif"],
+                "entidad":               datos["entidad"],
+                "puntos":                datos["puntos"],
+                "importe":               0.0,
+                "tramo":                 None,
+                "causa_exclusion":       None,
+                "estado":                "no_beneficiaria",
+                "es_agrupacion":         False,
+                "municipios_agrupacion": None,
             })
             extra_no_benef += 1
     if extra_no_benef:

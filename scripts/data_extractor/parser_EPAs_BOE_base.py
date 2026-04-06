@@ -68,7 +68,7 @@ def mapear_indices(headers):
             mapa["entidad"] = i
         elif "cif" in h or "nif" in h:
             mapa["cif"] = i
-        elif "puntu" in h or "ptos" in h or "valoraci" in h:
+        elif "punt" in h or "ptos" in h or "valoraci" in h:
             mapa["puntuacion"] = i
     return mapa
 
