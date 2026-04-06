@@ -3,12 +3,12 @@ import json
 from collections import Counter
 
 # EELL
-from scripts.pdf_extraction.parser_eell_PDF_base import parsear_eell_base
-from scripts.pdf_extraction.parser_eell_BOE_2025 import parsear_eell_2025
+from scripts.data_extractor.parser_eell_PDF_base import parsear_eell_base
+from scripts.data_extractor.parser_eell_BOE_2025 import parsear_eell_2025
 
 # EPAs
-from scripts.pdf_extraction.parser_EPAs_BOE_base import parsear_boe_epa_base
-from scripts.pdf_extraction.parser_EPAs_BOE_2025 import parsear_boe_epa_2025
+from scripts.data_extractor.parser_EPAs_BOE_base import parsear_boe_epa_base
+from scripts.data_extractor.parser_EPAs_BOE_2025 import parsear_boe_epa_2025
 
 
 BASE_DIR = os.path.dirname(__file__)
