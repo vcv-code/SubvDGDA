@@ -520,14 +520,32 @@ backend/app/
   db.py              → conexión SQLAlchemy: motor, sesiones y get_db
   models.py          → tablas de la BD como clases Python (ORM)
   schemas.py         → forma de los datos que devuelve la API (Pydantic)
+  auth.py            → hashing de contraseñas (bcrypt) y generación/validación de tokens JWT
+  dependencies.py    → dependencias FastAPI: get_current_user y require_rol
   main.py            → aplicación FastAPI con los routers registrados
   routers/
     convocatorias.py → GET /convocatorias/
     solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, paginación)
     estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
+    auth.py          → POST /auth/registro  y  POST /auth/login
+    privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
 ```
 
 La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
+
+#### Autenticación
+
+El sistema usa JWT (JSON Web Tokens) con tres niveles de acceso:
+
+| Nivel | Rutas accesibles |
+|-------|-----------------|
+| Sin token | `/convocatorias/`, `/solicitudes/`, `/estadisticas/` |
+| `registrado` | Todo lo anterior + `/privado/*` |
+| `admin` | Todo lo anterior + gestión de usuarios |
+
+Flujo: el cliente hace POST a `/auth/login` → recibe un token → lo envía en la cabecera `Authorization: Bearer <token>` en cada petición protegida.
+
+Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene problemas de compatibilidad con versiones recientes de bcrypt). El registro valida que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número.
 
 ---
 
@@ -556,10 +574,15 @@ Fase: **backend en desarrollo**
   · escucha en el puerto 80
   · redirige el tráfico al backend (puerto 8000 interno, no expuesto al exterior)
   · acceso a la API y a `/docs` a través de `http://localhost/`
+✔ autenticación JWT con tres niveles de acceso
+  · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
+  · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
+  · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
+  · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
+  · roles: registrado (por defecto) y admin
 
 Pendiente:
 
-- autenticación (JWT + roles: público, registrado, admin)
 - tests con pytest
 - frontend de visualización
 
@@ -706,6 +729,17 @@ Las funcionalidades y tareas de desarrollo se registran como **Issues**, que pos
 - Done 
 
 Cada funcionalidad o investigación se desarrolla en una rama feature/* y posteriormente se integra en la rama dev mediante Pull Requests.
+
+---
+
+## Mejoras futuras anotadas (no implementadas)
+
+- **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Requiere integración con un servicio de envío de emails (SMTP propio o servicio externo como SendGrid).
+- **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
+- Cofinanciación EELL: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
+- Campo `linea` para EPA 2024: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
+- Causas de exclusión EPA: el BOE las incluye pero con formato diferente al de EELL.
+- Provincia/CCAA para EPA (asociaciones): no derivable del CIF tipo G de forma estándar.
 
 ---
 
