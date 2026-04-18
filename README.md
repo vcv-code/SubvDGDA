@@ -50,7 +50,9 @@ Backend Python
       ↓
 Base de datos MySQL / MariaDB
       ↓
-API propia
+API propia (FastAPI)
+      ↓
+Nginx (proxy inverso, puerto 80)
       ↓
 Frontend
 ```
@@ -550,11 +552,15 @@ Fase: **backend en desarrollo**
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo y estado con paginación
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
+✔ Nginx como proxy inverso (`docker/nginx/nginx.conf`)
+  · escucha en el puerto 80
+  · redirige el tráfico al backend (puerto 8000 interno, no expuesto al exterior)
+  · acceso a la API y a `/docs` a través de `http://localhost/`
 
 Pendiente:
 
-- tests con pytest
 - autenticación (JWT + roles: público, registrado, admin)
+- tests con pytest
 - frontend de visualización
 
 ---
@@ -598,62 +604,52 @@ El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
 ---
 
-## Docker — desarrollo vs despliegue completo
+## Docker — arrancar el sistema
 
-El proyecto usa Docker Compose con dos servicios definidos en `docker/docker-compose.yml`:
+El proyecto usa Docker Compose con tres servicios definidos en `docker/docker-compose.yml`:
 
-- **`db`** — contenedor MariaDB con la base de datos. Siempre corre en Docker porque necesita persistencia (volumen), credenciales y un schema fijo.
-- **`backend`** — contenedor con la aplicación FastAPI. Está definido pero no se arranca durante el desarrollo activo.
+| Servicio  | Imagen          | Función                                      | Puerto externo |
+|-----------|-----------------|----------------------------------------------|----------------|
+| `db`      | mariadb:11      | Base de datos MariaDB con el dataset cargado | 3307           |
+| `backend` | Python (build)  | API FastAPI                                  | ninguno (interno) |
+| `nginx`   | nginx:alpine    | Proxy inverso, punto de entrada              | 80             |
 
-### Durante el desarrollo (situación actual)
+El backend no expone su puerto al exterior — solo Nginx puede acceder a él dentro de la red Docker.
 
-Solo se arranca el contenedor de la base de datos. El backend se ejecuta directamente en el `venv` local con uvicorn:
+### Modo desarrollo (día a día)
+
+Solo la BD corre en Docker. El backend se ejecuta localmente con uvicorn, lo que permite ver cambios al guardar sin reconstruir imágenes.
 
 ```bash
-# En una terminal: arrancar solo la BD
+# Terminal 1 — arrancar la BD
 cd docker
 docker compose up -d db
 
-# En otra terminal: arrancar el backend local (desde la raíz del proyecto)
+# Terminal 2 — arrancar el backend (desde la raíz del proyecto)
+source venv/bin/activate
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
-El flag `--reload` hace que el servidor se reinicie automáticamente cada vez que se guarda un archivo Python. Así no hay que reconstruir ninguna imagen Docker con cada cambio.
+API disponible en `http://localhost:8000/docs`
 
-### Despliegue completo (cuando el backend esté terminado)
+### Despliegue completo (3 contenedores con Nginx)
 
-Se levantan los dos contenedores juntos. El backend corre dentro de su propio contenedor, igual que en producción:
-
-```bash
-cd docker
-docker compose up --build    # primera vez (construye la imagen del backend)
-docker compose up -d         # arranques posteriores (sin reconstruir)
-docker compose down          # parar (conserva los datos)
-docker compose down -v       # parar y borrar la BD completa (reset total)
-```
-
----
-
-## Base de datos
-
-Arranque del contenedor y carga inicial (ejecutar desde el bash de VSCode):
+#### Primera vez (volumen vacío o tras `down -v`)
 
 ```bash
-# Arrancar el contenedor de BD (desde docker/)
+# 1. Arrancar todos los servicios y construir la imagen del backend
 cd docker
-docker compose up -d db
+docker compose up --build -d
 
-# Verificar que está healthy
+# 2. Verificar que los tres contenedores están en marcha
 docker compose ps
 
-# Aplicar el schema (solo si el volumen es nuevo o fue eliminado)
-docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
-
-# Cargar el dataset (desde la raíz del proyecto)
+# 3. Cargar el dataset en la BD (solo una vez)
 cd ..
+source venv/bin/activate
 python -m scripts.data_processing.cargar_dataset
 
-# Verificar recuentos
+# 4. Verificar recuentos esperados
 docker exec bdns_dgda_db mariadb -uroot -proot bdns_dgda -e "
 SELECT 'convocatorias'        AS tabla, COUNT(*) AS filas FROM convocatorias
 UNION ALL SELECT 'beneficiarios',       COUNT(*) FROM beneficiarios
@@ -663,7 +659,27 @@ UNION ALL SELECT 'agrupaciones',        COUNT(*) FROM agrupaciones
 UNION ALL SELECT 'agrupacion_miembros', COUNT(*) FROM agrupacion_miembros;"
 ```
 
-> El script `docker-entrypoint-initdb.d` solo ejecuta el schema cuando el volumen Docker está vacío (primera creación). Si el volumen existe pero está vacío, aplicar el schema manualmente con el paso 3.
+Resultado esperado: 8 · 3103 · 6398 · 2623 · 13 · 72
+
+#### Arranques posteriores (volumen con datos)
+
+```bash
+cd docker
+docker compose up -d        # arranca los tres contenedores sin reconstruir
+```
+
+#### Parar el sistema
+
+```bash
+docker compose down          # para los contenedores, conserva los datos
+docker compose down -v       # para y borra el volumen (reset total de la BD)
+```
+
+> El schema SQL se aplica automáticamente la primera vez que el volumen está vacío (via `docker-entrypoint-initdb.d`). Si el volumen existe pero la BD está vacía, aplicarlo manualmente:
+
+```bash
+docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
+```
 
 ---
 
