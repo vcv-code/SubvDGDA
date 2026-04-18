@@ -3,6 +3,6 @@ uvicorn[standard]
 pymysql
 cryptography
 sqlalchemy
-# autenticación (fase siguiente)
-passlib[bcrypt]
+bcrypt
 python-jose[cryptography]
+email-validator
