@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import convocatorias, solicitudes, estadisticas
+from .routers import convocatorias, solicitudes, estadisticas, auth, privado
 
 app = FastAPI(
     title="API Subvenciones Bienestar Animal",
@@ -10,6 +10,8 @@ app = FastAPI(
 app.include_router(convocatorias.router)
 app.include_router(solicitudes.router)
 app.include_router(estadisticas.router)
+app.include_router(auth.router)
+app.include_router(privado.router)
 
 
 @app.get("/")
