@@ -36,6 +36,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 
 - [Análisis de la API BDNS](docs/api-bdns.md)  
 - [Modelo de datos del sistema](docs/modelo-datos.md)  
+- [Tests automáticos](docs/tests.md)  
 
 ---
 
@@ -79,8 +80,9 @@ Frontend
 | Área | Tecnologías |
 |-----|-------------|
 | Frontend | HTML, CSS, JavaScript, Chart.js |
-| Backend | Python |
+| Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
 | Base de datos | MySQL / MariaDB |
+| Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx |
 | Control de versiones | Git, GitHub |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
@@ -551,7 +553,7 @@ Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene 
 
 ## Estado actual
 
-Fase: **backend en desarrollo**
+Fase: **backend completado · pendiente frontend**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -580,10 +582,14 @@ Fase: **backend en desarrollo**
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
+✔ tests automáticos con pytest (23 tests — smoke, funcionales, seguridad)
+  · endpoints públicos: /convocatorias/, /solicitudes/, /estadisticas/
+  · filtros, paginación y estructura de respuestas
+  · autenticación: registro, login, acceso con/sin token
+  · BD de prueba SQLite en memoria (no requiere Docker)
 
 Pendiente:
 
-- tests con pytest
 - frontend de visualización
 
 ---
@@ -703,6 +709,37 @@ docker compose down -v       # para y borra el volumen (reset total de la BD)
 ```bash
 docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
 ```
+
+---
+
+## Tests
+
+Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
+
+### Ejecutar todos los tests
+
+```bash
+source venv/bin/activate
+pytest -v
+```
+
+### Ejecutar por módulo
+
+```bash
+pytest tests/test_smoke.py        # arranque de la API
+pytest tests/test_convocatorias.py
+pytest tests/test_solicitudes.py
+pytest tests/test_estadisticas.py
+pytest tests/test_auth.py         # registro, login y zona privada
+```
+
+### Resultado esperado
+
+```
+23 passed
+```
+
+Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
 
 ---
 
