@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from datetime import date, datetime
 from typing import Optional
 
@@ -74,8 +74,25 @@ class EstadisticasOut(BaseModel):
 # AUTENTICACIÓN
 # ──────────────────────────────────────────────
 
+class RegistroIn(BaseModel):
+    email:    EmailStr
+    password: str
+
+    @field_validator("password")
+    @classmethod
+    def password_seguro(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError("La contraseña debe tener al menos 8 caracteres")
+        if not any(c.isupper() for c in v):
+            raise ValueError("La contraseña debe contener al menos una mayúscula")
+        if not any(c.islower() for c in v):
+            raise ValueError("La contraseña debe contener al menos una minúscula")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("La contraseña debe contener al menos un número")
+        return v
+
 class LoginIn(BaseModel):
-    email:    str
+    email:    EmailStr
     password: str
 
 class TokenOut(BaseModel):
