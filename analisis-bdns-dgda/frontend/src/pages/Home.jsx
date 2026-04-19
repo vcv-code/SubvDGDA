@@ -1,26 +1,57 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import "./Home.css";
 
 Chart.register(...registerables);
 
-const STATS = [
-  { label: "Registros totales", value: "6.398", icon: "📋" },
-  { label: "Importe Concedido", value: "14,8 M€", icon: "💶" },
-  { label: "Entidades únicas", value: "3.103", icon: "🏛️" },
-];
-
 const DISTRIBUCION = {
   labels: ["Concedida", "No beneficiaria", "Excluida", "Desistida"],
-  data: [2623, 2330, 644, 801],
-  colors: ["#2d5a27", "#a8d5a2", "#e07b1a", "#c0392b"],
+  data: [2623, 2427, 643, 705],
+  colors: ["#2d6a2d", "#a8e6a8", "#e07b39", "#c0392b"],
 };
 
 const IMPORTE_POR_ANIO = {
   labels: ["2021", "2022", "2023", "2024", "2025"],
   data: [1.07, 1.99, 3.92, 3.90, 3.95],
 };
+
+const CONVOCATORIAS = [
+  { anio: "2025", epa: 1995880, eell: 1950000 },
+  { anio: "2024", epa: 1968611, eell: 1934433 },
+  { anio: "2023", epa: 1990059, eell: 1932612 },
+];
+
+function useCounter(target, duration = 1200) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!target) return;
+    let start = null;
+    const num = parseFloat(target.toString().replace(/[^0-9.]/g, ""));
+    const step = (ts) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.floor(eased * num));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration]);
+  return value;
+}
+
+function StatCard({ icon, label, rawValue, suffix = "" }) {
+  const count = useCounter(rawValue);
+  return (
+    <div className="home__card">
+      <span className="home__card-icon">{icon}</span>
+      <span className="home__card-label">{label}</span>
+      <span className="home__card-value">
+        {count.toLocaleString("es-ES")}{suffix}
+      </span>
+    </div>
+  );
+}
 
 export default function Home() {
   const pieRef = useRef(null);
@@ -31,7 +62,7 @@ export default function Home() {
 
   useEffect(() => {
     if (pieRef.current) {
-      if (pieChart.current) pieChart.current.destroy();
+      pieChart.current?.destroy();
       pieChart.current = new Chart(pieRef.current, {
         type: "pie",
         data: {
@@ -54,7 +85,7 @@ export default function Home() {
     }
 
     if (barRef.current) {
-      if (barChart.current) barChart.current.destroy();
+      barChart.current?.destroy();
       barChart.current = new Chart(barRef.current, {
         type: "bar",
         data: {
@@ -62,7 +93,7 @@ export default function Home() {
           datasets: [{
             label: "Millones €",
             data: IMPORTE_POR_ANIO.data,
-            backgroundColor: "#2d5a27",
+            backgroundColor: "#2d6a2d",
             borderRadius: 6,
             borderSkipped: false,
           }],
@@ -72,11 +103,7 @@ export default function Home() {
           maintainAspectRatio: true,
           plugins: { legend: { display: false } },
           scales: {
-            y: {
-              beginAtZero: true,
-              grid: { color: "#f0f0f0" },
-              ticks: { callback: (v) => v + " M" },
-            },
+            y: { beginAtZero: true, grid: { color: "#f0f0f0" }, ticks: { callback: (v) => v + " M" } },
             x: { grid: { display: false } },
           },
         },
@@ -93,47 +120,61 @@ export default function Home() {
     <main className="home">
 
       {/* ── HERO ── */}
-      <section className="home__hero">
-        <div className="home__hero-content">
-          <span className="home__hero-badge">📊 Datos oficiales 2021–2025</span>
-          <h1>Sobre el proyecto</h1>
-          <p>
-            Este proyecto reúne y organiza información sobre subvenciones relacionadas con el bienestar animal
-            procedentes de la Base de Datos Nacional de Subvenciones (BDNS) y de la Dirección General de Derechos
-            de los Animales (DGDA). El objetivo principal es ofrecer una visión clara, estructurada y accesible de las
-            ayudas concedidas, denegadas o en trámite, facilitando tanto la consulta pública como el análisis técnico.
-          </p>
-          <div className="home__hero-actions">
-            <Link to="/buscar" className="home__btn home__btn--primary">🔍 Explorar buscador</Link>
-            <Link to="/stats" className="home__btn home__btn--outline">Ver estadísticas</Link>
+      <section className="hero">
+        <div className="hero-image-side">
+          <div className="hero-circle" />
+          <img
+            className="hero-animals"
+            src="/hero.png"
+            alt="Perro y gato"
+            onError={(e) => (e.target.style.display = "none")}
+          />
+          <div className="hero-card hero-card-1">
+            <span className="hero-card-icon">🐾</span>
+            <div>
+              <strong>EPA – Protectoras</strong>
+              <span>446 entidades concedidas en 2025</span>
+            </div>
+          </div>
+          <div className="hero-card hero-card-2">
+            <span className="hero-card-icon">🏛️</span>
+            <div>
+              <strong>EELL – Ayuntamientos</strong>
+              <span>40 municipios beneficiarios en 2025</span>
+            </div>
           </div>
         </div>
-        <div className="home__hero-img">
-          <img src="/hero.png" alt="Perro y gato"
-            onError={(e) => e.target.style.display = "none"} />
+
+        <div className="hero-text-side">
+          <span className="hero-badge">📊 Datos oficiales 2021–2025</span>
+          <h1>
+            Subvenciones de<br />
+            <span className="hero-highlight">Bienestar Animal</span>
+          </h1>
+          <p>
+            Consulta, filtra y analiza más de 6.398 registros de subvenciones públicas
+            procedentes del BOE, BDNS y DGDA.
+          </p>
+          <div className="hero-buttons">
+            <Link to="/buscar" className="btn-primary">🔍 Explorar buscador</Link>
+            <Link to="/stats" className="btn-outline">📈 Ver estadísticas</Link>
+          </div>
         </div>
       </section>
 
-      {/* ── DATA SECTION ── */}
+      {/* ── CIFRAS CLAVE ── */}
       <section className="home__data">
         <div className="home__section-header">
-          <h2>Subvenciones de Bienestar Animal (2021–2025)</h2>
-          <p>Consulta, filtra y analiza más de 6.398 registros de entidades, importes y líneas de ayuda.<br />
-            Datos procedentes de BDNS y DGDA.</p>
+          <h2>Cifras clave</h2>
+          <p>Datos agregados de todas las convocatorias de bienestar animal (2021–2025)</p>
         </div>
 
-        {/* STAT CARDS */}
         <div className="home__cards">
-          {STATS.map((s) => (
-            <div key={s.label} className="home__card">
-              <span className="home__card-icon">{s.icon}</span>
-              <span className="home__card-label">{s.label}</span>
-              <span className="home__card-value">{s.value}</span>
-            </div>
-          ))}
+          <StatCard icon="📋" label="Registros totales" rawValue={6398} />
+          <StatCard icon="💶" label="Importe concedido" rawValue={14} suffix=",8 M€" />
+          <StatCard icon="🏛️" label="Entidades únicas" rawValue={3103} />
         </div>
 
-        {/* CHARTS */}
         <div className="home__charts">
           <div className="home__chart-box">
             <h3>Distribución por estado</h3>
@@ -142,43 +183,98 @@ export default function Home() {
             </div>
           </div>
           <div className="home__chart-box">
-            <h3>Importe por año</h3>
+            <h3>Importe por año (M€)</h3>
             <div className="home__chart-wrap">
               <canvas ref={barRef}></canvas>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* CTA */}
-        <div className="home__cta">
-          <button className="home__btn home__btn--primary home__btn--lg" onClick={() => navigate("/buscar")}>
-            🔍 Explorar el buscador
-          </button>
-          <button className="home__btn home__btn--outline home__btn--lg" onClick={() => navigate("/stats")}>
-            📈 Ver estadísticas completas
-          </button>
+      {/* ── CÓMO FUNCIONA ── */}
+      <section className="home__how">
+        <div className="home__section-header">
+          <h2>¿Cómo funciona?</h2>
+          <p>En tres pasos puedes acceder a toda la información</p>
+        </div>
+        <div className="home__steps">
+          <div className="home__step">
+            <div className="home__step-icon">🔍</div>
+            <h3>Consulta</h3>
+            <p>Accede al buscador con más de 6.398 registros de subvenciones públicas</p>
+          </div>
+          <div className="home__step-connector" />
+          <div className="home__step">
+            <div className="home__step-icon">⚙️</div>
+            <h3>Filtra</h3>
+            <p>Por año, tipo, estado, CCAA o nombre de entidad</p>
+          </div>
+          <div className="home__step-connector" />
+          <div className="home__step">
+            <div className="home__step-icon">📊</div>
+            <h3>Analiza</h3>
+            <p>Visualiza gráficos y estadísticas detalladas por año y convocatoria</p>
+          </div>
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="home__footer">
-        <div className="home__footer-inner">
-          <div className="home__footer-left">
-            <img src="/logo.png" alt="Logo" className="home__footer-logo"
-              onError={(e) => e.target.style.display = "none"} />
-            <span>Proyecto BDNS/DGDA – FP DAW 2026</span>
+      {/* ── ÚLTIMAS CONVOCATORIAS ── */}
+      <section className="home__convocatorias">
+        <div className="home__section-header">
+          <h2>Convocatorias recientes</h2>
+          <p>Importes concedidos por tipo en las últimas tres convocatorias</p>
+        </div>
+        <div className="home__conv-grid">
+          {CONVOCATORIAS.map((c) => (
+            <div
+              key={c.anio}
+              className="home__conv-card"
+              onClick={() => navigate(`/buscar?anio=${c.anio}`)}
+            >
+              <div className="home__conv-anio">{c.anio}</div>
+              <span className="home__conv-badge">Cerrada</span>
+              <div className="home__conv-row">
+                <span className="home__conv-tipo">🐾 EPA</span>
+                <span className="home__conv-importe">{c.epa.toLocaleString("es-ES")} €</span>
+              </div>
+              <div className="home__conv-row">
+                <span className="home__conv-tipo">🏛️ EELL</span>
+                <span className="home__conv-importe">{c.eell.toLocaleString("es-ES")} €</span>
+              </div>
+              <span className="home__conv-link">Ver resultados →</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ── */}
+      <section className="cta-section">
+        <div className="cta-inner">
+          <div className="cta-left">
+            <span className="cta-tag">🐾 Para entidades y ciudadanos</span>
+            <h2>Transparencia en las<br />ayudas al bienestar animal</h2>
+            <p>Todos los datos del BOE 2021–2025, organizados y accesibles sin necesidad de registro.</p>
+            <div className="cta-buttons">
+              <button className="cta-btn-white" onClick={() => navigate("/buscar")}>🔍 Buscar mi entidad</button>
+              <button className="cta-btn-outline" onClick={() => navigate("/stats")}>📊 Ver estadísticas</button>
+            </div>
           </div>
-          <div className="home__footer-links">
-            <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noreferrer">GitHub</a>
-            <span className="home__footer-sep">|</span>
-            <Link to="/stats">Estadísticas</Link>
-            <span className="home__footer-sep">|</span>
-            <Link to="/buscar">Buscador</Link>
-            <span className="home__footer-sep">|</span>
-            <Link to="/login">Acceder</Link>
+          <div className="cta-right">
+            <div className="cta-stat">
+              <span className="cta-stat-num">6.398</span>
+              <span className="cta-stat-label">registros públicos</span>
+            </div>
+            <div className="cta-stat">
+              <span className="cta-stat-num">14,8M€</span>
+              <span className="cta-stat-label">concedidos en total</span>
+            </div>
+            <div className="cta-stat">
+              <span className="cta-stat-num">5</span>
+              <span className="cta-stat-label">años de datos</span>
+            </div>
           </div>
         </div>
-      </footer>
+      </section>
 
     </main>
   );
