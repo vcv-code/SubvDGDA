@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Buscador from "./pages/Buscador";
 import Stats from "./pages/Stats";
@@ -21,6 +22,7 @@ function App() {
         <Route path="/registro" element={<Registro />} />
         <Route path="/zona-privada" element={<ZonaPrivada />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

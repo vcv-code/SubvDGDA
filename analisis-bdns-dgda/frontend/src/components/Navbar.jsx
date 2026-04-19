@@ -1,15 +1,47 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 
 export default function Navbar() {
   const [query, setQuery] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  /* leer auth state */
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const name  = localStorage.getItem("user_name");
+    setUserName(token ? (name || "U") : null);
+  }, []);
+
+  /* cerrar dropdown al hacer clic fuera */
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handleClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [dropdownOpen]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     navigate(query.trim() ? `/buscar?q=${encodeURIComponent(query.trim())}` : "/buscar");
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_name");
+    setUserName(null);
+    setDropdownOpen(false);
+    navigate("/");
+  };
+
+  const initial = userName ? userName.charAt(0).toUpperCase() : "";
 
   return (
     <header className="navbar">
@@ -43,6 +75,7 @@ export default function Navbar() {
 
       {/* ICONOS derecha */}
       <div className="navbar__actions">
+
         {/* Notificaciones */}
         <Link to="/" className="navbar__icon-btn" title="Notificaciones">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -51,23 +84,45 @@ export default function Navbar() {
           </svg>
         </Link>
 
-        {/* Ajustes */}
-        <Link to="/zona-privada" className="navbar__icon-btn" title="Ajustes">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-        </Link>
+        {/* Avatar / Acceder */}
+        {!userName ? (
+          <Link to="/login" className="navbar__acceder" title="Iniciar sesión">
+            Acceder
+          </Link>
+        ) : (
+          <div className="navbar__user-wrap" ref={dropdownRef}>
+            <button
+              className="navbar__avatar-btn"
+              onClick={() => setDropdownOpen((o) => !o)}
+              title={userName}
+              aria-expanded={dropdownOpen}
+            >
+              {initial}
+            </button>
 
-        {/* Avatar */}
-        <Link to="/login" className="navbar__avatar" title="Acceder">
-          <img
-            src="https://api.dicebear.com/7.x/thumbs/svg?seed=bdns&backgroundColor=47C079"
-            alt="Usuario"
-          />
-        </Link>
+            {dropdownOpen && (
+              <div className="navbar__dropdown">
+                <div className="navbar__dropdown-user">
+                  <span className="navbar__dropdown-initial">{initial}</span>
+                  <span className="navbar__dropdown-name">{userName}</span>
+                </div>
+                <div className="navbar__dropdown-sep" />
+                <button className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
+                  Mi perfil
+                </button>
+                <Link to="/zona-privada" className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
+                  Zona privada
+                </Link>
+                <div className="navbar__dropdown-sep" />
+                <button className="navbar__dropdown-item navbar__dropdown-item--danger" onClick={handleLogout}>
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
-
     </header>
   );
 }
