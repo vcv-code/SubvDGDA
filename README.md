@@ -529,7 +529,7 @@ backend/app/
   main.py            → aplicación FastAPI con los routers registrados y manejadores de error personalizados
   routers/
     convocatorias.py → GET /convocatorias/
-    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, paginación)
+    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, buscar, paginación)
     estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
     auth.py          → POST /auth/registro  y  POST /auth/login
     privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
@@ -592,7 +592,7 @@ Fase: **backend completado · pendiente frontend**
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo y estado con paginación
+  · GET /solicitudes/   → filtros por año, tipo, estado y búsqueda parcial por nombre de entidad con paginación
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
 ✔ Nginx como proxy inverso (`docker/nginx/nginx.conf`)
   · escucha en el puerto 80
@@ -604,9 +604,9 @@ Fase: **backend completado · pendiente frontend**
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (23 tests — smoke, funcionales, seguridad)
+✔ tests automáticos con pytest (26 tests — smoke, funcionales, seguridad)
   · endpoints públicos: /convocatorias/, /solicitudes/, /estadisticas/
-  · filtros, paginación y estructura de respuestas
+  · filtros, paginación, búsqueda parcial y estructura de respuestas
   · autenticación: registro, login, acceso con/sin token
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
@@ -764,7 +764,7 @@ pytest tests/test_auth.py         # registro, login y zona privada
 ### Resultado esperado
 
 ```text
-23 passed
+26 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -803,7 +803,8 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Mejoras futuras anotadas (no implementadas)
 
-- **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Requiere integración con un servicio de envío de emails (SMTP propio o servicio externo como SendGrid).
+- **Recuperación de contraseña ("¿Olvidaste tu contraseña?")** — flujo de reset por email: token de un solo uso, enlace de reset y expiración. Requiere integración con un servicio de envío de emails (SMTP o SendGrid) y una tabla adicional de tokens en la BD.
+- **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
 - **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
 - **Páginas de error HTML en el frontend** — los manejadores de error del backend ya devuelven JSON estructurado con `error`, `mensaje` y `sugerencia`. Cuando exista el frontend, esos campos se usarán para mostrar páginas visuales con un mensaje claro y un botón "Volver al inicio" en lugar del JSON en bruto.
 - Cofinanciación EELL: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.

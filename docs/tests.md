@@ -1,6 +1,6 @@
 # Tests automáticos — pytest
 
-El proyecto incluye 23 tests automáticos que verifican los endpoints de la API REST y el sistema de autenticación.
+El proyecto incluye 26 tests automáticos que verifican los endpoints de la API REST y el sistema de autenticación.
 
 ## Cómo funcionan
 
@@ -34,6 +34,9 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 7 | `test_solicitudes.py` | Funcional | Blanca | Filtro `?tipo=epa` devuelve solo las solicitudes EPA |
 | 8 | `test_solicitudes.py` | Funcional | Blanca | Filtro `?estado=concedida` devuelve solo las concedidas |
 | 9 | `test_solicitudes.py` | Funcional | Blanca | Paginación: `limite=2` da 2 en pág. 1 y 1 en pág. 2 |
+| 24 | `test_solicitudes.py` | Funcional | Blanca | `?buscar=Protectora` devuelve solo solicitudes cuya entidad contiene "Protectora" |
+| 25 | `test_solicitudes.py` | Funcional | Blanca | Stopwords ignoradas: `buscar=Ayuntamiento de Burgos` equivale a `buscar=Burgos` |
+| 26 | `test_solicitudes.py` | Funcional | Blanca | Búsqueda sin coincidencias devuelve `[]` sin error |
 | 10 | `test_estadisticas.py` | Funcional | Negra | `GET /estadisticas/` responde 200 |
 | 11 | `test_estadisticas.py` | Funcional | Negra | El JSON tiene las 4 claves esperadas |
 | 12 | `test_estadisticas.py` | Funcional | Blanca | Totales calculados correctos con datos reales |
@@ -61,7 +64,7 @@ Verifica que `/convocatorias/` responde correctamente, que devuelve una lista JS
 
 ### test_solicitudes.py
 
-Inserta 3 solicitudes de prueba (2 EPA y 1 EELL, 2 concedidas y 1 excluida) y comprueba que los filtros por tipo y estado funcionan correctamente. También prueba la paginación con `limite` y `pagina`.
+Inserta 3 solicitudes de prueba con dos beneficiarios distintos (EPA/asociación y EELL/entidad local) y comprueba que los filtros por tipo, estado y paginación funcionan correctamente. Incluye también tres tests para el parámetro `buscar`: búsqueda parcial por nombre de entidad, verificación de que las stopwords del español se ignoran, y respuesta vacía sin error cuando no hay coincidencias.
 
 ### test_estadisticas.py
 
