@@ -10,14 +10,15 @@ def db_con_datos(db):
     db.add_all([conv_epa, conv_eell])
     db.flush()
 
-    benef = Beneficiario(cif="G00000001", nombre="Asociación Test", tipo_benef="asociacion")
-    db.add(benef)
+    benef_a = Beneficiario(cif="G00000001", nombre="Asociación Protectora Gatos Madrid", tipo_benef="asociacion")
+    benef_b = Beneficiario(cif="P00000001", nombre="Ayuntamiento de Burgos",              tipo_benef="entidad_local")
+    db.add_all([benef_a, benef_b])
     db.flush()
 
     db.add_all([
-        Solicitud(id_convoc=conv_epa.id_convoc,  id_benef=benef.id_benef, num_expediente="EXP001", estado="concedida"),
-        Solicitud(id_convoc=conv_epa.id_convoc,  id_benef=benef.id_benef, num_expediente="EXP002", estado="excluida"),
-        Solicitud(id_convoc=conv_eell.id_convoc, id_benef=benef.id_benef, num_expediente="EXP003", estado="concedida"),
+        Solicitud(id_convoc=conv_epa.id_convoc,  id_benef=benef_a.id_benef, num_expediente="EXP001", estado="concedida"),
+        Solicitud(id_convoc=conv_epa.id_convoc,  id_benef=benef_a.id_benef, num_expediente="EXP002", estado="excluida"),
+        Solicitud(id_convoc=conv_eell.id_convoc, id_benef=benef_b.id_benef, num_expediente="EXP003", estado="concedida"),
     ])
     db.commit()
 
@@ -49,12 +50,31 @@ def test_solicitudes_filtro_estado(db_con_datos, client):
 
 
 def test_solicitudes_paginacion(db_con_datos, client):
-    # Con limite=2 solo deben volver 2 resultados aunque haya 3
     response = client.get("/solicitudes/?limite=2&pagina=1")
     assert response.status_code == 200
     assert len(response.json()) == 2
 
-    # La segunda página tiene 1 resultado
     response2 = client.get("/solicitudes/?limite=2&pagina=2")
     assert response2.status_code == 200
     assert len(response2.json()) == 1
+
+
+def test_solicitudes_buscar_parcial(db_con_datos, client):
+    response = client.get("/solicitudes/?buscar=Protectora")
+    assert response.status_code == 200
+    resultados = response.json()
+    assert len(resultados) == 2
+    assert all("Protectora" in r["beneficiario"]["nombre"] for r in resultados)
+
+
+def test_solicitudes_buscar_stopword_ignorada(db_con_datos, client):
+    # "de" es stopword, busca igual que buscar=Burgos
+    response_con = client.get("/solicitudes/?buscar=Ayuntamiento de Burgos")
+    response_sin = client.get("/solicitudes/?buscar=Burgos")
+    assert response_con.json() == response_sin.json()
+
+
+def test_solicitudes_buscar_sin_resultados(db_con_datos, client):
+    response = client.get("/solicitudes/?buscar=Inexistente")
+    assert response.status_code == 200
+    assert response.json() == []
