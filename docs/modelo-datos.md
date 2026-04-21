@@ -35,7 +35,7 @@ Los documentos oficiales publicados por la DGDA contienen:
 - importes concedidos
 - puntuaciones
 - entidades beneficiarias
-- causas de exclusión (solo en EELL 2025)
+- causas de exclusión (solo en EELL: 2023, 2024 y 2025)
 - tramos (solo en EELL 2025)
 
 ---
@@ -349,6 +349,8 @@ Los documentos oficiales indican que una solicitud puede ser excluida por varias
 Por ello se mantiene la estructura normalizada `causas_exclusion` + `solicitud_causas` en el **modelo conceptual**, representada en el diagrama con asterisco (*) y la nota "Tablas conceptuales. No se implementan en el modelo físico actual del proyecto por viabilidad técnica."
 
 La implementación se pospone a una fase futura, ya que la extracción automática de causas desde los documentos oficiales requiere un trabajo de parsing adicional. **Estas tablas no están incluidas en `docker/init/modelo-fisico.sql`**: se añadirán en su momento junto con el script de carga de datos correspondiente.
+
+> **Pendiente de validación:** el campo `causa_exclusion` del dataset JSON contiene los códigos capturados para las EELL (2023, 2024 y 2025), pero no han sido verificados sistemáticamente contra la fuente original (Excel de resoluciones). Esta validación se realizará cuando se implemente la carga de causas en la base de datos.
 
 ---
 
