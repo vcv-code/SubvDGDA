@@ -225,6 +225,8 @@ Elementos clave:
 ![Login](./assets/login.png)
 ![Registro](./assets/registro.png)
 
+> **Nota:** Los wireframes incluyen botones de acceso con Google y GitHub. Esta funcionalidad (OAuth) no está implementada en el backend actual y se reserva como **mejora futura**. La implementación real usa únicamente email y contraseña.
+
 ---
 
 ## 6.5 Perfil de usuario
@@ -248,7 +250,19 @@ Elementos clave:
 
 ---
 
-##  6.7 Referencia visual
+## 6.7 Zona privada
+
+Accesible solo con sesión iniciada (token JWT válido). Corresponde a las rutas `/privado/perfil` y `/privado/resumen-exclusivo` del backend.
+
+Elementos clave:
+- Datos del usuario autenticado (email, rol).  
+- Resumen exclusivo: KPIs restringidos (importe total concedido, nº de beneficiarios únicos, convocatorias activas).  
+- Botón "Cerrar sesión".  
+- Redirección automática a login si el token es inválido o ha expirado.
+
+---
+
+##  6.8 Referencia visual
 
 Los wireframes completos se encuentran en el documento PDF original:
 
@@ -323,6 +337,7 @@ frontend/
 ├── estadisticas.html
 ├── solicitudes.html
 ├── login.html
+├── privado.html
 └── diseño.md
 
 ---
