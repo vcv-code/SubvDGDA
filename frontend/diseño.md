@@ -2,8 +2,8 @@
 ## Proyecto BDNS / DGDA – Subvenciones Bienestar Animal
 
 Este documento recoge la guía visual, los wireframes, los componentes y la
-estructura base del frontend del proyecto. Sirve como referencia para el diseño
-en Figma y para la implementación en HTML, CSS y JS.
+estructura base del frontend del proyecto. Sirve como referencia para la
+implementación en HTML, CSS y JS.
 
 ---
 
@@ -23,6 +23,8 @@ en Figma y para la implementación en HTML, CSS y JS.
 ---
 
 # 1. Paleta de colores
+
+> **Nota:** La paleta actual es provisional y puede revisarse durante la maquetación.
 
 ![Paleta de colores](./assets/colores.png)
 
@@ -51,7 +53,7 @@ en Figma y para la implementación en HTML, CSS y JS.
 
 # 2. Tipografía
 
-**Segoe UI** y **Inter** (Google Fonts), ideal para dashboards y tablas.
+**Inter** (Google Fonts) como fuente principal, con **Segoe UI** como fallback en Windows. Ideal para dashboards y tablas.
 ![Tipografía](./assets/tipografia.png)
 
 ### Jerarquía tipográfica
@@ -64,39 +66,40 @@ en Figma y para la implementación en HTML, CSS y JS.
 
 #  3. Logo del proyecto
 
-A continuación se presenta el logotipo inicial utilizado para el proyecto
-“Subvenciones Animal y Colonias Felinas”. Este logotipo representa visualmente la
-misión del sistema: la protección animal, la gestión responsable de colonias
-felinas y la transparencia en la información pública.
+A continuación se presenta el logotipo provisional utilizado para el proyecto
+de análisis de subvenciones para protección animal y gestión de colonias felinas.
+Representa visualmente la misión del sistema: la transparencia institucional y
+el bienestar animal.
 
-El diseño combina elementos reconocibles (gato, perro y entorno natural) con una
-composición circular que transmite unidad, cuidado y enfoque comunitario.
+El diseño combina un escudo dividido en dos mitades: la izquierda con un edificio
+institucional (referencia a la administración pública) y la derecha con las
+siluetas de un perro y un gato (referencia al bienestar animal). La composición
+en blanco y negro transmite seriedad y carácter oficial.
 
 ![Logo del proyecto](./assets/logo.png)
 
 ## Variantes previstas
-Aunque este logotipo puede evolucionar durante el desarrollo del diseño final en
-Figma, se contemplan las siguientes variantes:
+Aunque este logotipo puede evolucionar durante el desarrollo, se contemplan las
+siguientes variantes:
 
-- Versión a color (principal)  
-- Versión monocromática (negro)  
+- Versión monocromática en negro (principal, la actual)  
 - Versión invertida (blanco sobre fondo oscuro)  
+- Versión a color (posible mejora futura, con la paleta verde del proyecto)  
 
 ## Usos recomendados
 - Encabezado (header) de la aplicación web  
 - Documentación del proyecto  
-- Portada del TFG  
 - Material de presentación  
 
 ## Usos no recomendados
 - Reducir el logotipo por debajo de 32px  
 - Colocarlo sobre fondos con poco contraste  
-- Alterar colores, proporciones o disposición  
+- Alterar proporciones o disposición  
 - Añadir sombras o efectos no contemplados en el diseño original  
 
 ## Área de seguridad
-Se recomienda mantener un margen mínimo equivalente al 20% del diámetro del
-círculo alrededor del logotipo para asegurar su correcta legibilidad en
+Se recomienda mantener un margen mínimo equivalente al 20% del ancho del
+escudo alrededor del logotipo para asegurar su correcta legibilidad en
 cualquier contexto.
 
 ---
@@ -111,8 +114,7 @@ Escala basada en múltiplos de 8:
 - 32 px  
 - 48 px  
 
-En Figma:  
-**Spacing Scale — 8/16/24/32/48**
+Escala de referencia: **8 / 16 / 24 / 32 / 48 px**
 
 ---
 
@@ -231,15 +233,19 @@ Elementos clave:
 
 ## 6.5 Perfil de usuario
 
+Parte de `privado.html` (requiere sesión iniciada). Ver también sección 6.7 para el contenido exclusivo de la zona privada.
+
 Elementos clave:
-- Datos básicos del usuario.  
+- Datos básicos del usuario (email, rol).  
 - Botones:
-  - Cambiar contraseña  
+  - Cambiar contraseña *(pendiente de implementar en el backend)*  
   - Cerrar sesión  
 
 ---
 
-## 6.6 Páginas de error (404 / 500)
+## 6.6 Páginas de error
+
+Páginas visuales para los errores HTTP que el backend ya gestiona: 401 (no autenticado), 403 (sin permisos), 404 (no encontrado), 422 (datos inválidos) y 500 (error interno). El backend devuelve JSON estructurado con `error`, `mensaje` y `sugerencia`; el frontend mostrará esos campos de forma visual.
 
 Elementos clave:
 - Mensaje claro y centrado.  
@@ -252,7 +258,7 @@ Elementos clave:
 
 ## 6.7 Zona privada
 
-Accesible solo con sesión iniciada (token JWT válido). Corresponde a las rutas `/privado/perfil` y `/privado/resumen-exclusivo` del backend.
+Página `privado.html`, accesible solo con sesión iniciada (token JWT válido). Agrupa el perfil de usuario (6.5) y el resumen exclusivo. Corresponde a las rutas `/privado/perfil` y `/privado/resumen-exclusivo` del backend.
 
 Elementos clave:
 - Datos del usuario autenticado (email, rol).  
