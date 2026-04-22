@@ -37,6 +37,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 - [Análisis de la API BDNS](docs/api-bdns.md)  
 - [Modelo de datos del sistema](docs/modelo-datos.md)  
 - [Tests automáticos](docs/tests.md)  
+- [Diseño del frontend](frontend/diseño.md)  
 
 ---
 
@@ -100,7 +101,14 @@ Frontend
 
 ### Frontend
 
-Permitirá explorar los datos mediante filtros y visualizaciones.
+Interfaz web para explorar los datos mediante filtros y visualizaciones. La carpeta `frontend/` contiene:
+
+- `diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
+- `assets/logo.png` — logotipo provisional del proyecto
+- `assets/wireframes_subvenciones_bienestar_animal.pdf` — wireframes de todas las páginas
+- `assets/*.png` — capturas de los wireframes por página
+
+Páginas previstas: `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `privado.html`.
 
 ### Backend
 
@@ -575,7 +583,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · pendiente frontend**
+Fase: **backend completado · diseño frontend completado · pendiente maquetación**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -613,9 +621,12 @@ Fase: **backend completado · pendiente frontend**
   · JSON estructurado con campos error, mensaje y sugerencia
   · sin exponer internos del servidor en errores 500
 
+✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
+
 Pendiente:
 
-- frontend de visualización
+- maquetación HTML + CSS + JS
+- integración con la API (Chart.js para gráficos, filtros interactivos, zona privada)
 
 ---
 
@@ -807,6 +818,8 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
 - **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
 - **Páginas de error HTML en el frontend** — los manejadores de error del backend ya devuelven JSON estructurado con `error`, `mensaje` y `sugerencia`. Cuando exista el frontend, esos campos se usarán para mostrar páginas visuales con un mensaje claro y un botón "Volver al inicio" en lugar del JSON en bruto.
+- **Login con Google / GitHub (OAuth)** — los wireframes contemplan botones de acceso social. No implementado en el backend actual; requeriría integración con un proveedor OAuth2 externo.
+- **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
 - Cofinanciación EELL: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
 - Campo `linea` para EPA 2024: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
 - Causas de exclusión EPA: el BOE las incluye pero con formato diferente al de EELL.
