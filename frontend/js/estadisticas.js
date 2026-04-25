@@ -489,7 +489,7 @@ function mostrarErrorGlobal() {
     const mensaje = `
         <div class="estado-error" style="margin-bottom: var(--espacio-md);">
             No se pudo conectar con el servidor.
-            Comprueba que el backend está activo en ${API_URL}
+            Comprueba que el backend está activo (Docker o uvicorn)
         </div>
     `;
     document.querySelector('.contenedor').insertAdjacentHTML('afterbegin', mensaje);

@@ -178,7 +178,7 @@ function mostrarErrores() {
     const mensajeError = `
         <div class="estado-error">
             No se pudieron cargar los datos.<br>
-            Comprueba que el backend está activo en ${API_URL}
+            Comprueba que el backend está activo (Docker o uvicorn)
         </div>
     `;
 
