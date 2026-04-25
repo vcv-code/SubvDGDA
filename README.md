@@ -760,6 +760,18 @@ docker compose down -v       # para y borra el volumen (reset total de la BD)
 docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
 ```
 
+#### Solución de problemas en WSL2 (Windows)
+
+Si el contenedor `bdns_nginx` no arranca con el error `failed to create shim task` o `no such file or directory` al montar volúmenes, es un problema conocido de Docker Desktop + WSL2 con bind mounts de archivos individuales. La solución es recrear los contenedores desde cero:
+
+```bash
+cd docker
+docker compose down
+docker compose up -d
+```
+
+Si el error persiste, asegúrate de que el volumen de Nginx monta el **directorio** `./nginx` y no el archivo individual `./nginx/nginx.conf`. El archivo de configuración debe llamarse `default.conf` dentro de esa carpeta.
+
 ---
 
 ## Tests
