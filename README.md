@@ -627,6 +627,7 @@ Pendiente:
 
 - maquetación HTML + CSS + JS
 - integración con la API (Chart.js para gráficos, filtros interactivos, zona privada)
+- páginas de error personalizadas: los manejadores de error del backend ya devuelven JSON estructurado con `error`, `mensaje` y `sugerencia`; en el fronted esos campos se usarán para mostrar páginas visuales con un mensaje claro y un botón "Volver al inicio" en lugar del JSON en bruto.
 
 ---
 
@@ -788,11 +789,30 @@ Complementan a los tests automáticos verificando el stack completo: Nginx → F
 
 ## Flujo de trabajo
 
-```text
-main → estable
-dev → desarrollo
-feature/* → funcionalidades
-```
+El proyecto sigue un flujo basado en main + dev + feature/*, un modelo híbrido entre Git Flow y GitHub Flow, adaptado a equipos pequeños.
+
+### Estructura
+
+main (producción, estable)
+ │
+ └── dev (desarrollo)
+       │
+       ├── feature/*(funcionalidad)
+       └── feature/*(funcionalidad)
+
+### Orden
+
+1. Cada funcionalidad se desarrolla en una rama feature/*
+2. Se hacen commits sobre esa rama
+3. Se integra en dev mediante Pull Request (preferiblemente con squash)
+4. dev actúa como entorno de integración
+5. Cuando es estable, se fusiona en main
+
+### Motivos
+
+Hemos elegido este tipo de flujo porque lo hemos utilizado ambas en las prácticas de empresa y porque separa desarrollo (dev) de producción (main), reduciendo errores y permitiendonos trabajar en paralelo de forma segura, manteniendo un flujo claro y sencillo, adecuado para equipos pequeños y proyectos pequeños o medianos con desarrollo activo, como es el caso.
+
+Otros flujos más simples (todo en main) son arriesgados, y los más complejos (Git Flow completo) añaden complejidad innecesaria.
 
 ---
 
@@ -812,18 +832,28 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ---
 
-## Mejoras futuras anotadas (no implementadas)
+## Mejoras futuras
+
+### Respecto al modelo de datos
+
+- **Cofinanciación EELL**: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
+- **Campo `linea` para EPA 2024**: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
+- **Causas de exclusión EPA**: el BOE las incluye pero con formato diferente al de EELL.
+- **Provincia/CCAA para EPA (asociaciones)**: no derivable del CIF tipo G de forma estándar.
+
+### Respecto al backend
+
+- **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
+
+### Respecto al registro de usuarios
 
 - **Recuperación de contraseña ("¿Olvidaste tu contraseña?")** — flujo de reset por email: token de un solo uso, enlace de reset y expiración. Requiere integración con un servicio de envío de emails (SMTP o SendGrid) y una tabla adicional de tokens en la BD.
 - **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
-- **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
-- **Páginas de error HTML en el frontend** — los manejadores de error del backend ya devuelven JSON estructurado con `error`, `mensaje` y `sugerencia`. Cuando exista el frontend, esos campos se usarán para mostrar páginas visuales con un mensaje claro y un botón "Volver al inicio" en lugar del JSON en bruto.
 - **Login con Google / GitHub (OAuth)** — los wireframes contemplan botones de acceso social. No implementado en el backend actual; requeriría integración con un proveedor OAuth2 externo.
+
+### Respecto al fronted
+
 - **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
-- Cofinanciación EELL: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
-- Campo `linea` para EPA 2024: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
-- Causas de exclusión EPA: el BOE las incluye pero con formato diferente al de EELL.
-- Provincia/CCAA para EPA (asociaciones): no derivable del CIF tipo G de forma estándar.
 
 ---
 
