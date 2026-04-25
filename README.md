@@ -104,11 +104,11 @@ Frontend
 Interfaz web para explorar los datos mediante filtros y visualizaciones. La carpeta `frontend/` contiene:
 
 - `diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
-- `assets/logo.png` — logotipo provisional del proyecto
-- `assets/wireframes_subvenciones_bienestar_animal.pdf` — wireframes de todas las páginas
-- `assets/*.png` — capturas de los wireframes por página
-
-Páginas previstas: `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `privado.html`.
+- `especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
+- `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `auth.js`, `privado.js`)
+- `assets/` — logotipo, imágenes y wireframes en PDF
+- `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
 
 ### Backend
 
@@ -583,7 +583,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · diseño frontend completado · pendiente maquetación**
+Fase: **backend completado · maquetación frontend completada · pendiente integración JS con API**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -602,10 +602,11 @@ Fase: **backend completado · diseño frontend completado · pendiente maquetaci
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo, estado y búsqueda parcial por nombre de entidad con paginación
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
-✔ Nginx como proxy inverso (`docker/nginx/nginx.conf`)
+✔ Nginx como servidor web y proxy inverso (`docker/nginx/nginx.conf`)
   · escucha en el puerto 80
-  · redirige el tráfico al backend (puerto 8000 interno, no expuesto al exterior)
-  · acceso a la API y a `/docs` a través de `http://localhost/`
+  · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
+  · redirige las rutas de la API al backend (puerto 8000 interno, no expuesto al exterior)
+  · acceso a la app en `http://localhost/` y a la API en `http://localhost/docs`
 ✔ autenticación JWT con tres niveles de acceso
   · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
   · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
@@ -622,12 +623,21 @@ Fase: **backend completado · diseño frontend completado · pendiente maquetaci
   · sin exponer internos del servidor en errores 500
 
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
+✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
+  · `index.html` — portada con métricas dinámicas y placeholders de gráficos
+  · `solicitudes.html` — buscador con filtros, tabla paginada y filtros condicionales (CCAA, línea)
+  · `estadisticas.html` — dashboard con 4 KPIs y 3 gráficos Chart.js (línea, donut, barras)
+  · `login.html` / `registro.html` — autenticación con validación client-side y diseño GOV.UK
+  · `privado.html` — zona exclusiva con control de acceso JWT
+✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
+✔ CORS habilitado en el backend para desarrollo local
+✔ clave JWT segura configurada en variables de entorno (`.env`)
 
 Pendiente:
 
-- maquetación HTML + CSS + JS
-- integración con la API (Chart.js para gráficos, filtros interactivos, zona privada)
-- páginas de error personalizadas: los manejadores de error del backend ya devuelven JSON estructurado con `error`, `mensaje` y `sugerencia`; en el fronted esos campos se usarán para mostrar páginas visuales con un mensaje claro y un botón "Volver al inicio" en lugar del JSON en bruto.
+- integración completa de filtros avanzados (CCAA, provincia, línea) cuando el backend los exponga
+- ficha de entidad (`entidad.html`) con historial por CIF — pendiente issue 7C
+- páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
 
 ---
 

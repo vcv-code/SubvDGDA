@@ -249,7 +249,7 @@ function iniciarLogin() {
         } catch (error) {
             // Error de red (backend apagado, sin conexión, etc.)
             console.error('Error en login:', error);
-            mostrarAlerta('login-alerta', true, `No se pudo conectar con el servidor. Comprueba que el backend está activo en ${API_URL}`);
+            mostrarAlerta('login-alerta', true, 'No se pudo conectar con el servidor. Comprueba que el backend está activo.');
 
         } finally {
             // finally siempre se ejecuta, haya error o no.
@@ -383,7 +383,7 @@ function iniciarRegistro() {
 
         } catch (error) {
             console.error('Error en registro:', error);
-            mostrarAlerta('registro-alerta', true, `No se pudo conectar con el servidor. Comprueba que el backend está activo en ${API_URL}`);
+            mostrarAlerta('registro-alerta', true, 'No se pudo conectar con el servidor. Comprueba que el backend está activo.');
 
         } finally {
             setBtnCargando('btn-submit-registro', false);
