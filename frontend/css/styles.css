@@ -1,0 +1,1873 @@
+/* ============================================================
+   styles.css — Hoja de estilos compartida
+   Proyecto: Subvenciones Bienestar Animal (BDNS / DGDA)
+
+   Este archivo se importa en TODAS las páginas del frontend.
+   Contiene los estilos base, variables de color, navbar,
+   footer, tarjetas, botones, tablas e inputs.
+
+   ÍNDICE DE SECCIONES:
+   1.  Variables globales (Custom Properties)
+   2.  Reset y base (incluye sticky footer)
+   3.  Navbar
+   4.  Contenedor principal
+   5.  Botones
+   6.  Tarjetas (Cards)
+   7.  Formularios (Inputs y Selects)
+   8.  Tabla
+   9.  Badges de estado
+   10. Portada centrada
+   11. Portada partida (texto izquierda + imagen derecha)
+   12. Secciones genéricas
+   13. Grids
+   14. Tarjetas de métricas (versión verde)
+   15. Tarjetas de convocatorias por año
+   16. Sección Transparencia
+   17. Footer
+   18. Estados de carga y error
+   19. Paginación
+   20. Filtros (Buscador)
+   21. Botones adicionales (btn-verde, btn-auth)
+   22. Páginas de autenticación (login / registro)
+   23. Estadísticas (KPIs, gráficos, ranking)
+   24. Zona privada (privado.html)
+   ============================================================ */
+
+
+/* ============================================================
+   1. VARIABLES GLOBALES (Custom Properties)
+   Las variables CSS empiezan con -- y se usan con var()
+   Están definidas en :root para que estén disponibles en toda
+   la página.
+   ============================================================ */
+:root {
+    /* --- Colores principales --- */
+    --color-primario:    #47C079;   /* Verde naturaleza */
+    --color-hover:       #52E38E;   /* Verde claro (hover / acentos) */
+    --color-fondo-verde: #E8F5E9;   /* Verde suave para fondos */
+    --color-verde-btn:   #2E7D32;   /* Verde oscuro para botones */
+
+    /* --- Colores institucionales --- */
+    --color-azul:        #1565C0;   /* Azul institucional */
+    --color-azul-claro:  #42A5F5;   /* Azul claro */
+
+    /* --- Grises y neutros --- */
+    --color-gris-claro:  #F5F5F5;   /* Fondos de tabla */
+    --color-gris-medio:  #E0E0E0;   /* Bordes */
+    --color-gris-texto:  #616161;   /* Texto secundario */
+    --color-negro:       #212121;   /* Texto principal */
+    --color-blanco:      #FFFFFF;
+
+    /* --- Colores de estado (para badges de solicitudes) --- */
+    --estado-concedida:       #2E7D32;
+    --estado-no-beneficiaria: #C62828;
+    --estado-excluida:        #EF6C00;
+    --estado-desistida:       #6A1B9A;
+
+    /* --- Tipografía --- */
+    --fuente-principal: 'Inter', sans-serif;
+
+    /* --- Espaciado (múltiplos de 8px) --- */
+    --espacio-xs:  8px;
+    --espacio-sm:  16px;
+    --espacio-md:  24px;
+    --espacio-lg:  32px;
+    --espacio-xl:  48px;
+
+    /* --- Bordes y sombras --- */
+    --radio-btn:   8px;
+    --radio-card:  12px;
+    --radio-input: 6px;
+    --sombra-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --sombra-nav:  0 2px 6px rgba(0, 0, 0, 0.1);
+
+    /* --- Altura del navbar --- */
+    --altura-nav: 80px;
+}
+
+
+/* ============================================================
+   2. RESET Y BASE
+   Eliminamos márgenes y paddings por defecto del navegador,
+   y establecemos box-sizing: border-box (para que el padding
+   no desborde el ancho del elemento).
+
+   STICKY FOOTER:
+   Usando Flexbox en html/body con min-height: 100vh conseguimos
+   que el footer siempre esté al pie de la pantalla, incluso
+   cuando el contenido es corto (ej: páginas con pocos resultados
+   o mensajes de error). El <main> recibe flex: 1 para ocupar
+   todo el espacio restante entre navbar y footer.
+   ============================================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    height: 100%;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    font-size: 16px;
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    line-height: 1.6;
+
+    /* Sticky footer: el body ocupa al menos toda la ventana */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+/* ============================================================
+   3. NAVBAR
+   Barra de navegación fija en la parte superior.
+   Contiene el logo a la izquierda y los enlaces a la derecha.
+   ============================================================ */
+.navbar {
+    position: fixed;           /* Se queda fija al hacer scroll */
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--altura-nav);
+    background-color: var(--color-blanco);
+    box-shadow: var(--sombra-nav);
+    z-index: 1000;             /* Siempre encima del resto del contenido */
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--espacio-lg);
+}
+
+/* Logo + nombre del proyecto */
+.navbar__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-verde-btn);
+}
+
+.navbar__logo img {
+    height: 54px;
+    width: auto;
+}
+
+/* Contenedor de los enlaces de navegación */
+.navbar__links {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-lg);
+}
+
+/* Cada enlace del navbar */
+.navbar__links a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-gris-texto);
+    transition: color 0.2s ease;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent; /* Línea invisible por defecto */
+}
+
+.navbar__links a:hover,
+.navbar__links a.activo {
+    color: var(--color-verde-btn);
+    border-bottom-color: var(--color-primario);
+}
+
+/* Botón de Login en el navbar (tiene estilo diferente) */
+.navbar__links .btn-login {
+    background-color: var(--color-verde-btn);
+    color: var(--color-blanco);
+    padding: 8px var(--espacio-sm);
+    border-radius: var(--radio-btn);
+    border-bottom: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.navbar__links .btn-login:hover {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+}
+
+
+/* ============================================================
+   4. CONTENEDOR PRINCIPAL
+   margin-top: empuja el contenido para que no quede tapado
+   por el navbar fijo (position: fixed).
+   flex: 1: hace que <main> crezca y ocupe todo el espacio
+   disponible entre el navbar y el footer (sticky footer).
+   ============================================================ */
+main {
+    margin-top: var(--altura-nav);
+    flex: 1;  /* Clave para el sticky footer: ocupa el espacio sobrante */
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-lg);
+}
+
+
+/* ============================================================
+   5. BOTONES
+   Dos variantes: primario (relleno) y secundario (outline).
+   ============================================================ */
+.btn {
+    display: inline-block;
+    padding: var(--espacio-sm) var(--espacio-md);
+    border-radius: var(--radio-btn);
+    font-family: var(--fuente-principal);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-align: center;
+}
+
+/* Botón principal: verde relleno */
+.btn-primario {
+    background-color: var(--color-verde-btn);
+    color: var(--color-blanco);
+}
+
+.btn-primario:hover {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+}
+
+/* Botón secundario: outline verde */
+.btn-secundario {
+    background-color: transparent;
+    color: var(--color-verde-btn);
+    border: 2px solid var(--color-verde-btn);
+}
+
+.btn-secundario:hover {
+    background-color: var(--color-fondo-verde);
+}
+
+
+/* ============================================================
+   6. TARJETAS (Cards)
+   Contenedor con fondo blanco, sombra y bordes redondeados.
+   Se usan para métricas, accesos rápidos, etc.
+   ============================================================ */
+.card {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+}
+
+/* Tarjeta de métrica (Home): número grande + etiqueta */
+.card-metrica {
+    text-align: center;
+    border-top: 4px solid var(--color-primario);
+}
+
+.card-metrica__numero {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    line-height: 1.2;
+}
+
+.card-metrica__label {
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+    margin-top: var(--espacio-xs);
+}
+
+/* Tarjeta de acceso rápido */
+.card-acceso {
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border: 1px solid var(--color-gris-medio);
+}
+
+.card-acceso:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-acceso__icono {
+    font-size: 2.5rem;
+    margin-bottom: var(--espacio-sm);
+}
+
+.card-acceso__titulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin-bottom: var(--espacio-xs);
+}
+
+.card-acceso__descripcion {
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+    margin-bottom: var(--espacio-sm);
+}
+
+
+/* ============================================================
+   7. FORMULARIOS (Inputs y Selects)
+   Estilos para campos de texto, email, password y <select>.
+   ============================================================ */
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: var(--espacio-sm);
+}
+
+.form-grupo label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-negro);
+}
+
+.form-control {
+    height: 44px;
+    padding: 0 var(--espacio-sm);
+    border: 1.5px solid var(--color-gris-medio);
+    border-radius: var(--radio-input);
+    font-family: var(--fuente-principal);
+    font-size: 0.95rem;
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    transition: border-color 0.2s ease;
+    width: 100%;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px rgba(71, 192, 121, 0.2);
+}
+
+/* Mensaje de error bajo un campo */
+.form-error {
+    font-size: 0.82rem;
+    color: var(--estado-no-beneficiaria);
+    display: none; /* Se muestra con JS cuando hay error */
+}
+
+.form-error.visible {
+    display: block;
+}
+
+
+/* ============================================================
+   8. TABLA
+   Estilos para tablas de datos (solicitudes, convocatorias).
+   ============================================================ */
+.tabla-wrapper {
+    overflow-x: auto;  /* En pantallas pequeñas, la tabla hace scroll horizontal */
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+table thead {
+    background-color: var(--color-gris-claro);
+}
+
+table th {
+    padding: var(--espacio-sm);
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    border-bottom: 2px solid var(--color-gris-medio);
+}
+
+table td {
+    padding: var(--espacio-sm);
+    border-bottom: 1px solid var(--color-gris-medio);
+    color: var(--color-negro);
+    vertical-align: middle;
+}
+
+/* Filas alternas con fondo muy suave */
+table tbody tr:nth-child(even) {
+    background-color: var(--color-gris-claro);
+}
+
+table tbody tr:hover {
+    background-color: var(--color-fondo-verde);
+}
+
+
+/* ============================================================
+   9. BADGES DE ESTADO
+   Pequeñas etiquetas de colores según el estado de la solicitud.
+   ============================================================ */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--color-blanco);
+}
+
+.badge-concedida       { background-color: var(--estado-concedida); }
+.badge-no-beneficiaria { background-color: var(--estado-no-beneficiaria); }
+.badge-excluida        { background-color: var(--estado-excluida); }
+.badge-desistida       { background-color: var(--estado-desistida); }
+
+
+/* ============================================================
+   10. SECCIÓN HERO
+   Bloque principal de la página de inicio: fondo verde suave,
+   título grande y botones de acción.
+   ============================================================ */
+.hero {
+    background: linear-gradient(135deg, var(--color-fondo-verde) 0%, #c8f0d8 100%);
+    padding: var(--espacio-xl) var(--espacio-lg);
+    text-align: center;
+}
+
+.hero__titulo {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    margin-bottom: var(--espacio-sm);
+    line-height: 1.2;
+}
+
+.hero__subtitulo {
+    font-size: 1.15rem;
+    color: var(--color-gris-texto);
+    max-width: 640px;
+    margin: 0 auto var(--espacio-lg);
+}
+
+.hero__acciones {
+    display: flex;
+    gap: var(--espacio-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   11. SECCIONES GENÉRICAS
+   Padding y encabezados para cada bloque de contenido.
+   ============================================================ */
+.seccion {
+    padding: var(--espacio-xl) 0;
+}
+
+.seccion--gris {
+    background-color: var(--color-gris-claro);
+}
+
+.seccion__cabecera {
+    text-align: center;
+    margin-bottom: var(--espacio-lg);
+}
+
+.seccion__titulo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin-bottom: var(--espacio-xs);
+}
+
+.seccion__subtitulo {
+    font-size: 1rem;
+    color: var(--color-gris-texto);
+}
+
+
+/* ============================================================
+   12. GRIDS
+   Disposición en cuadrícula para tarjetas.
+   ============================================================ */
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--espacio-md);
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--espacio-md);
+}
+
+/* En pantallas medianas, el grid de 3 pasa a 2 columnas */
+@media (max-width: 900px) {
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* En pantallas pequeñas, todo pasa a 1 columna */
+@media (max-width: 600px) {
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .hero__titulo {
+        font-size: 2rem;
+    }
+
+    .navbar {
+        padding: 0 var(--espacio-sm);
+    }
+
+    .navbar__links {
+        gap: var(--espacio-sm);
+    }
+}
+
+
+/* ============================================================
+   13. FOOTER
+   Pie de página con texto centrado y fondo oscuro.
+   ============================================================ */
+.footer {
+    background-color: var(--color-negro);
+    color: #aaaaaa;
+    padding: var(--espacio-lg);
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+.footer a {
+    color: var(--color-primario);
+    text-decoration: underline;
+}
+
+.footer a:hover {
+    color: var(--color-hover);
+}
+
+.footer__titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-blanco);
+    margin-bottom: var(--espacio-xs);
+}
+
+
+/* ============================================================
+   14. ESTADOS DE CARGA Y ERROR
+   Mensajes que se muestran mientras se cargan datos de la API
+   o cuando hay un error de red.
+   ============================================================ */
+.estado-carga {
+    text-align: center;
+    padding: var(--espacio-xl);
+    color: var(--color-gris-texto);
+    font-size: 1rem;
+}
+
+.estado-error {
+    text-align: center;
+    padding: var(--espacio-lg);
+    color: var(--estado-no-beneficiaria);
+    font-size: 0.95rem;
+    background-color: #ffeaea;
+    border-radius: var(--radio-card);
+    border: 1px solid #f5c6c6;
+}
+
+
+/* ============================================================
+   15. PAGINACIÓN
+   Controles de siguiente / anterior para la tabla de solicitudes.
+   ============================================================ */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--espacio-sm);
+    margin-top: var(--espacio-md);
+}
+
+.paginacion span {
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+}
+
+
+/* ── Barra de control sobre la tabla (info + orden) ── */
+.tabla-controles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--espacio-sm);
+    margin: var(--espacio-sm) 0;
+    flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   16. FILTROS (Buscador)
+   Barra de filtros para la página de solicitudes.
+   ============================================================ */
+.filtros {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    margin-bottom: var(--espacio-md);
+}
+
+.filtros__fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-sm);
+    align-items: flex-end;
+}
+
+.filtros__fila .form-grupo {
+    flex: 1;
+    min-width: 140px;
+    margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    .filtros__fila {
+        flex-direction: column;
+    }
+}
+
+
+/* ============================================================
+   11. HERO PARTIDO (texto izquierda + imagen derecha)
+
+   ¿Por qué este layout?
+   El diseño original del proyecto usaba un bloque "Sobre el
+   proyecto" con texto a la izquierda y una imagen de animales
+   a la derecha. Esto mejora la jerarquía visual y hace la
+   página más dinámica que un hero centrado. Usamos CSS Grid
+   de dos columnas iguales (1fr 1fr) para que se adapte bien
+   en móvil colapsando a una sola columna.
+   ============================================================ */
+.portada-split {
+    background: linear-gradient(160deg, var(--color-fondo-verde) 0%, #d4f5e2 100%);
+    padding: var(--espacio-xl) 0;
+}
+
+.portada-split__contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Dos columnas iguales */
+    align-items: center;
+    gap: var(--espacio-xl);
+}
+
+.portada-split__texto {
+    /* El texto ocupa la columna izquierda */
+}
+
+.portada-split__titulo {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    margin-bottom: var(--espacio-sm);
+    line-height: 1.2;
+}
+
+.portada-split__descripcion {
+    font-size: 1rem;
+    color: var(--color-gris-texto);
+    line-height: 1.7;
+    margin-bottom: var(--espacio-lg);
+    max-width: 520px;
+}
+
+.portada-split__imagen {
+    /* La imagen ocupa la columna derecha */
+    border-radius: var(--radio-card);
+    overflow: hidden;
+    box-shadow: var(--sombra-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    background-color: #c8efd8;  /* Fondo de respaldo si la imagen no carga */
+}
+
+.portada-split__imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* La imagen cubre el contenedor sin deformarse */
+    border-radius: var(--radio-card);
+    display: block;
+}
+
+/* Fallback si no hay imagen: placeholder verde con emoji */
+.portada-split__imagen-placeholder {
+    font-size: 5rem;
+    text-align: center;
+    padding: var(--espacio-xl);
+}
+
+@media (max-width: 768px) {
+    .portada-split__contenedor {
+        grid-template-columns: 1fr; /* En móvil, apilamos texto e imagen */
+    }
+
+    .portada-split__imagen {
+        order: -1; /* En móvil, la imagen va arriba */
+    }
+
+    .portada-split__titulo {
+        font-size: 1.9rem;
+    }
+}
+
+
+/* ============================================================
+   12b. SECCIÓN PRINCIPAL CON MÉTRICAS
+   Bloque blanco con título centrado y tres tarjetas verdes.
+   ============================================================ */
+.seccion-datos {
+    padding: var(--espacio-xl) 0;
+    background-color: var(--color-blanco);
+}
+
+.seccion-datos__titulo {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    text-align: center;
+    margin-bottom: var(--espacio-xs);
+}
+
+.seccion-datos__subtitulo {
+    font-size: 1rem;
+    color: var(--color-gris-texto);
+    text-align: center;
+    margin-bottom: var(--espacio-lg);
+}
+
+
+/* ============================================================
+   14b. TARJETAS DE MÉTRICAS — VERSIÓN VERDE
+   Estilo acorde al diseño anterior: fondo verde suave,
+   número grande y etiqueta pequeña debajo.
+
+   ¿Por qué dos estilos de card-metrica?
+   El original usaba tarjetas con fondo verde y número grande
+   abajo. Se mantiene para no romper con la estética definida
+   en la memoria del proyecto (issue 7A).
+   ============================================================ */
+.card-metrica-verde {
+    background-color: var(--color-fondo-verde);
+    border-radius: var(--radio-card);
+    padding: var(--espacio-md) var(--espacio-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.card-metrica-verde__label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-metrica-verde__numero {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    line-height: 1.1;
+}
+
+
+/* ============================================================
+   15b. TARJETAS DE CONVOCATORIAS POR AÑO
+   Tres tarjetas (2025, 2024, 2023), cada una con el año
+   en grande, estado "Cerrada", y las líneas EPA y EELL
+   con su importe.
+
+   ¿Por qué tarjetas en lugar de tabla?
+   Las tarjetas por año facilitan la comparación visual
+   de convocatorias a golpe de vista, como hacen plataformas
+   de referencia como datos.gob.es.
+   ============================================================ */
+.card-anio {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    border: 1px solid var(--color-gris-medio);
+    padding: var(--espacio-md);
+}
+
+.card-anio__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--espacio-sm);
+}
+
+.card-anio__year {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+}
+
+.card-anio__estado {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    background-color: var(--color-gris-claro);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--color-gris-medio);
+}
+
+.card-anio__lineas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-xs);
+    border-top: 1px solid var(--color-gris-medio);
+    padding-top: var(--espacio-sm);
+    margin-bottom: var(--espacio-sm);
+}
+
+.card-anio__linea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.card-anio__linea-tipo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-gris-texto);
+    font-weight: 500;
+}
+
+.card-anio__linea-importe {
+    font-weight: 700;
+    color: var(--color-negro);
+}
+
+.card-anio__enlace {
+    font-size: 0.85rem;
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    display: block;
+    padding-top: var(--espacio-xs);
+    border-top: 1px solid var(--color-gris-medio);
+}
+
+.card-anio__enlace:hover {
+    text-decoration: underline;
+}
+
+
+/* ============================================================
+   16b. SECCIÓN TRANSPARENCIA
+   Bloque con fondo verde degradado, texto a la izquierda
+   con CTA y KPIs flotantes a la derecha.
+
+   ¿Por qué esta sección?
+   Refuerza el mensaje de transparencia que justifica el
+   proyecto. Visualmente rompe la monotonía y actúa como
+   llamada a la acción secundaria (buscar entidad, ver stats).
+   ============================================================ */
+.seccion-transparencia {
+    background: linear-gradient(135deg, #b8f0cc 0%, var(--color-fondo-verde) 60%, #e0f5e9 100%);
+    padding: var(--espacio-xl) 0;
+}
+
+.transparencia__contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--espacio-xl);
+}
+
+.transparencia__chip {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-verde-btn);
+    background-color: rgba(46, 125, 50, 0.1);
+    border: 1px solid rgba(46, 125, 50, 0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: var(--espacio-sm);
+}
+
+.transparencia__titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin-bottom: var(--espacio-sm);
+    line-height: 1.25;
+}
+
+.transparencia__descripcion {
+    font-size: 0.95rem;
+    color: var(--color-gris-texto);
+    margin-bottom: var(--espacio-md);
+    max-width: 460px;
+    line-height: 1.7;
+}
+
+.transparencia__botones {
+    display: flex;
+    gap: var(--espacio-sm);
+    flex-wrap: wrap;
+}
+
+/* KPIs flotantes en la columna derecha */
+.transparencia__kpis {
+    display: flex;
+    gap: var(--espacio-md);
+    justify-content: center;
+}
+
+.transparencia__kpi {
+    text-align: center;
+}
+
+.transparencia__kpi-numero {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    line-height: 1;
+}
+
+.transparencia__kpi-label {
+    font-size: 0.78rem;
+    color: var(--color-gris-texto);
+    margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+    .transparencia__contenedor {
+        grid-template-columns: 1fr;
+    }
+
+    .transparencia__kpis {
+        justify-content: flex-start;
+    }
+}
+
+
+/* ============================================================
+   17b. FOOTER
+   Diseño en dos zonas:
+   · Zona principal (verde oscuro): logo a la izquierda,
+     enlaces de navegación a la derecha.
+   · Zona inferior (verde muy oscuro): créditos de datos
+     y aviso de proyecto educativo.
+
+   ¿Por qué verde oscuro (#163a25) y no negro?
+   El verde oscuro pertenece a la misma paleta del proyecto y
+   transmite más coherencia temática que un gris neutro.
+   Además diferencia claramente el pie de página del cuerpo
+   de la web sin resultar tan severo como el negro puro.
+
+   Sticky footer: el <footer> se queda siempre al pie gracias
+   al flexbox definido en body (sección 2 de este CSS).
+   ============================================================ */
+
+/* Color del footer como variable local para reutilizarlo */
+.footer-principal {
+    --footer-bg:       #E1FEE5;   /* Verde claro */
+    --footer-bg-sub:   #bbfdc3;   /* Verde más oscuro para la franja inferior */
+    --footer-texto:    #1d221f;   /* Verde aún más oscuro desaturado — buena legibilidad */
+    --footer-texto-dim: #486e53;  /* Texto secundario */
+    --footer-borde:    #78b78a;   /* Separador interno */
+
+    background-color: var(--footer-bg);
+    color: var(--footer-texto);
+}
+
+/* ── Zona principal: logo + enlaces ── */
+.footer-principal__zona {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--espacio-md) var(--espacio-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-sm);
+    flex-wrap: wrap;
+}
+
+/* Logo + nombre del proyecto */
+.footer-principal__marca {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-xs);
+    font-size: 0.92rem;
+    color: var(--footer-texto);
+}
+
+.footer-principal__marca img {
+    height: 36px;
+    width: auto;
+    /* Filtro para que el logo (si tiene colores) se vea bien sobre fondo oscuro */
+    filter: brightness(1.1);
+}
+
+.footer-principal__marca strong {
+    color: #223a2a;   /* El nombre del proyecto en blanco puro para destacar */
+    font-weight: 700;
+}
+
+/* Columna derecha: enlaces de navegación */
+.footer-principal__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    font-size: 0.88rem;
+}
+
+.footer-principal__nav a {
+    color: var(--footer-texto);
+    transition: color 0.2s ease;
+}
+
+.footer-principal__nav a:hover {
+    color: var(--color-primario);   /* Verde brillante en hover */
+}
+
+/* Separadores | */
+.footer-principal__sep {
+    color: var(--footer-borde);
+}
+
+/* ── Zona inferior: créditos ── */
+.footer-principal__creditos {
+    background-color: var(--footer-bg-sub);
+    border-top: 1px solid var(--footer-borde);
+    padding: 10px var(--espacio-lg);
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--footer-texto-dim);
+}
+
+.footer-principal__creditos a {
+    color: var(--footer-texto);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+
+.footer-principal__creditos a:hover {
+    color: var(--color-primario);
+}
+
+@media (max-width: 600px) {
+    .footer-principal__zona {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--espacio-sm);
+    }
+
+    .footer-principal__nav {
+        flex-wrap: wrap;
+        gap: var(--espacio-xs);
+    }
+}
+
+
+/* ============================================================
+   PLACEHOLDER DE GRÁFICO
+   Caja de marcador de posición para los gráficos de Chart.js
+   que se implementarán en la issue 7C.
+   ============================================================ */
+.grafico-placeholder {
+    background-color: var(--color-gris-claro);
+    border: 2px dashed var(--color-gris-medio);
+    border-radius: var(--radio-card);
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gris-texto);
+    font-size: 0.9rem;
+    gap: var(--espacio-xs);
+}
+
+.grafico-placeholder__icono {
+    font-size: 2.5rem;
+    opacity: 0.4;
+}
+
+.grafico-placeholder__titulo {
+    font-weight: 600;
+    color: var(--color-negro);
+}
+
+/* Canvas de Chart.js (oculto hasta 7C) */
+canvas {
+    display: block;
+    max-width: 100%;
+}
+
+
+/* ============================================================
+   21. BOTONES ADICIONALES
+   · btn-verde : variante verde oscuro para formularios de auth
+   · btn-auth  : modificador de ancho completo para botones
+                 dentro de tarjetas de autenticación
+   ============================================================ */
+.btn-verde {
+    background-color: var(--color-verde-btn);
+    color: var(--color-blanco);
+    border: 2px solid var(--color-verde-btn);
+}
+
+.btn-verde:hover,
+.btn-verde:focus-visible {
+    background-color: #245c27;
+    border-color: #245c27;
+}
+
+/* Ancho completo — para el botón de submit en login / registro */
+.btn-auth {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--espacio-sm);
+    font-size: 1rem;
+    padding: 14px var(--espacio-md);
+}
+
+.btn-auth:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   22. PÁGINAS DE AUTENTICACIÓN (login.html / registro.html)
+   Diseño: split card (imagen izquierda + formulario derecha)
+   con calidad de formulario GOV.UK.
+   ============================================================ */
+
+/* ── Fondo de la página de autenticación ── */
+.auth-fondo {
+    background-color: var(--color-fondo-verde);
+    min-height: calc(100vh - var(--altura-nav));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--espacio-xl) var(--espacio-lg);
+}
+
+/* Wrapper centrado con ancho máximo */
+.auth-page {
+    width: 100%;
+    max-width: 920px;
+}
+
+/* Enlace de contexto encima de la card — ancla institucional */
+.auth-page__servicio {
+    font-size: 0.9rem;
+    margin-bottom: var(--espacio-md);
+}
+
+.auth-page__servicio a {
+    color: var(--color-verde-btn);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+}
+
+.auth-page__servicio a:hover {
+    text-decoration: underline;
+    gap: 10px;
+}
+
+/* ── Card principal: grid 2 columnas ── */
+.auth-card {
+    background-color: var(--color-blanco);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    display: grid;
+    grid-template-columns: 45% 55%;
+    overflow: hidden;
+    min-height: 580px;
+}
+
+/* ── Columna izquierda: panel decorativo con círculo geométrico ──
+   Fondo claro (#f0f5f1) con un gran círculo verde centrado y un
+   blob secundario en la esquina inferior-derecha. La foto se centra
+   sobre el círculo para crear profundidad visual.
+   ─────────────────────────────────────────────────────────────────── */
+.auth-card__imagen {
+    background-color: #f0f5f1;        /* verde muy suave casi blanco */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;              /* imagen centrada verticalmente */
+    justify-content: center;
+}
+
+/* Blob 1: gran mancha verde oscura en la zona superior-derecha.
+   Reemplaza el círculo geométrico por una forma orgánica fluida. */
+.auth-card__circulo {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: var(--color-verde-btn);   /* #2E7D32 */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    z-index: 0;
+}
+
+/* Blob 2: acento redondeado en la esquina inferior-derecha */
+.auth-card__blob {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    background-color: var(--color-primario);    /* #47C079 */
+    opacity: 0.55;
+    border-radius: 62% 38% 70% 30% / 45% 65% 35% 55%;
+    bottom: -20px;
+    right: -20px;
+    z-index: 0;
+}
+
+/* Foto del animal: centrada sobre el círculo.
+   object-fit: contain muestra la imagen entera sin recortarla.
+   drop-shadow da profundidad respecto al círculo de fondo. */
+.auth-card__foto {
+    position: relative;
+    z-index: 1;
+    width: 88%;
+    max-height: 88%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.20));
+}
+
+.auth-card__foto-placeholder {
+    position: relative;
+    z-index: 1;
+    color: var(--color-verde-btn);
+    font-size: 0.9rem;
+}
+
+/* ── Columna derecha: formulario ── */
+.auth-card__formulario {
+    padding: var(--espacio-xl) var(--espacio-xl) var(--espacio-xl) var(--espacio-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;    /* sin gap extra — el espaciado lo dan los márgenes de cada elemento */
+}
+
+/* Título principal del formulario */
+.auth-card__titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin-bottom: 6px;
+    line-height: 1.2;
+}
+
+/* Subtítulo descriptivo (añadido en fase wireframe v2) */
+.auth-card__subtitulo {
+    font-size: 0.93rem;
+    color: var(--color-gris-texto);
+    margin-bottom: var(--espacio-md);
+    line-height: 1.5;
+}
+
+/* Enlace "¿No tienes cuenta?" */
+.auth-card__enlace {
+    margin-top: var(--espacio-sm);
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+}
+
+.auth-card__enlace a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-card__enlace a:hover {
+    text-decoration: underline;
+}
+
+/* ── Alerta de error / éxito ── */
+.auth-alerta {
+    border-left: 4px solid var(--estado-no-beneficiaria);
+    background-color: #fdf2f2;
+    color: #9b1c1c;
+    padding: 11px var(--espacio-sm);
+    border-radius: 0 var(--radio-input) var(--radio-input) 0;
+    font-size: 0.9rem;
+    margin-bottom: var(--espacio-sm);
+    display: none;
+}
+
+.auth-alerta.visible {
+    display: block;
+}
+
+/* Variante de éxito (registro correcto) */
+.auth-alerta--ok {
+    border-left-color: var(--estado-concedida);
+    background-color: #f0fdf4;
+    color: #14532d;
+}
+
+/* ── Separador "o continúa con" (si se usa en el futuro) ── */
+.auth-separador {
+    text-align: center;
+    margin: var(--espacio-sm) 0;
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    position: relative;
+}
+
+.auth-separador::before,
+.auth-separador::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 35%;
+    height: 1px;
+    background-color: var(--color-gris-medio);
+}
+
+.auth-separador::before { left: 0; }
+.auth-separador::after  { right: 0; }
+
+/* ── Botones sociales (OAuth futuro) ── */
+.auth-social {
+    display: flex;
+    gap: var(--espacio-sm);
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px var(--espacio-sm);
+    border: 1.5px solid var(--color-gris-medio);
+    border-radius: var(--radio-btn);
+    background-color: var(--color-blanco);
+    font-size: 0.88rem;
+    font-family: var(--fuente-principal);
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.btn-social:not(:disabled):hover {
+    border-color: #aaa;
+    background-color: var(--color-gris-claro);
+}
+
+.btn-social:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.btn-social__icono {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ── Grupos de campo (GOV.UK style) ── */
+.grupo-campo {
+    margin-bottom: var(--espacio-sm);
+}
+
+/* Etiqueta del campo */
+.etiqueta-campo {
+    display: block;
+    font-weight: 600;
+    font-size: 0.93rem;
+    color: var(--color-negro);
+    margin-bottom: 6px;
+}
+
+/* Input principal (calidad institucional) */
+.input-campo {
+    display: block;
+    width: 100%;
+    height: 46px;
+    padding: 0 var(--espacio-sm);
+    border: 2px solid var(--color-negro);
+    border-radius: var(--radio-input);
+    font-size: 0.97rem;
+    font-family: var(--fuente-principal);
+    color: var(--color-negro);
+    background-color: var(--color-blanco);
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+}
+
+.input-campo:focus {
+    outline: 3px solid var(--color-primario);
+    outline-offset: 2px;
+    border-color: var(--color-primario);
+}
+
+/* Estado de error: borde izquierdo rojo */
+.input-campo.campo-invalido {
+    border-left: 4px solid var(--estado-no-beneficiaria);
+}
+
+/* Mensaje de error bajo el campo */
+.campo-error {
+    display: none;
+    font-size: 0.83rem;
+    color: var(--estado-no-beneficiaria);
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.campo-error.visible {
+    display: block;
+}
+
+/* ── Requisitos de contraseña (registro) ── */
+.password-requisitos {
+    margin-top: var(--espacio-xs);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Cada línea de requisito */
+.password-req {
+    font-size: 0.83rem;
+    color: var(--color-gris-texto);
+    padding-left: 16px;
+    position: relative;
+}
+
+/* Punto por defecto (no cumplido) */
+.password-req::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    font-weight: 700;
+    color: var(--color-gris-texto);
+}
+
+/* Tick verde cuando se cumple el requisito (JS añade clase .ok) */
+.password-req.ok {
+    color: var(--estado-concedida);
+    font-weight: 600;
+}
+
+.password-req.ok::before {
+    content: '✓';
+    color: var(--estado-concedida);
+}
+
+/* ── Responsive: en móvil se oculta la columna de imagen ── */
+@media (max-width: 680px) {
+    .auth-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .auth-card__imagen {
+        display: none;
+    }
+
+    .auth-card__formulario {
+        padding: var(--espacio-lg) var(--espacio-md);
+    }
+}
+
+
+/* ============================================================
+   23. ESTADÍSTICAS (estadisticas.html)
+   Dashboard con 4 KPIs + 4 gráficos (Chart.js).
+   ============================================================ */
+
+/* Fondo verde suave para toda la página de estadísticas */
+.fondo-stats {
+    background-color: var(--color-fondo-verde);
+    min-height: calc(100vh - var(--altura-nav));
+    padding-bottom: var(--espacio-xl);
+}
+
+/* Grid de 4 columnas para KPIs */
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--espacio-md);
+}
+
+@media (max-width: 900px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tarjeta KPI */
+.card-kpi {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-xs);
+}
+
+.card-kpi__label {
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.card-kpi__numero {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    line-height: 1;
+}
+
+.card-kpi__tag {
+    font-size: 0.78rem;
+    color: var(--color-gris-texto);
+    background-color: var(--color-gris-claro);
+    border-radius: 20px;
+    padding: 2px 10px;
+    align-self: flex-start;
+}
+
+/* Tarjeta de gráfico */
+.card-grafico {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-sm);
+}
+
+.card-grafico__cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--espacio-sm);
+    flex-wrap: wrap;
+}
+
+.card-grafico__titulo {
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+.card-grafico__subtitulo {
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    margin: 2px 0 0;
+}
+
+.card-grafico__badge {
+    font-size: 0.75rem;
+    color: var(--color-verde-btn);
+    background-color: rgba(46, 125, 50, 0.1);
+    border: 1px solid rgba(46, 125, 50, 0.25);
+    border-radius: 20px;
+    padding: 2px 10px;
+    white-space: nowrap;
+    align-self: flex-start;
+}
+
+/* Contenedor del canvas de Chart.js */
+.chart-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+}
+
+/* Variante para donut: altura menor y centrado */
+.chart-container--donut {
+    height: 200px;
+}
+
+/* Leyenda personalizada del donut */
+.leyenda-estados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio-xs);
+    justify-content: center;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+}
+
+.leyenda-item__color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Lista del ranking Top 5 */
+.ranking-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-xs);
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--espacio-xs) var(--espacio-sm);
+    background-color: var(--color-gris-claro);
+    border-radius: var(--radio-input);
+    font-size: 0.88rem;
+}
+
+.ranking-item__posicion {
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    min-width: 24px;
+}
+
+.ranking-item__nombre {
+    flex: 1;
+    padding: 0 var(--espacio-xs);
+    color: var(--color-negro);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ranking-item__importe {
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    white-space: nowrap;
+}
+
+/* Aviso de pendiente cuando el endpoint no está listo */
+.ranking-pendiente {
+    font-size: 0.83rem;
+    color: var(--color-gris-texto);
+    background-color: var(--color-gris-claro);
+    border-left: 3px solid var(--color-gris-medio);
+    padding: var(--espacio-xs) var(--espacio-sm);
+    border-radius: 0 var(--radio-input) var(--radio-input) 0;
+}
+
+.ranking-pendiente code {
+    font-family: monospace;
+    background-color: var(--color-gris-medio);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+
+/* ============================================================
+   24. ZONA PRIVADA (privado.html)
+   Estructura de dos zonas: banner de saludo (verde oscuro)
+   y cuerpo de contenido (gris neutro).
+   ============================================================ */
+
+/* Banner superior: saludo + badge de rol + datos de perfil */
+.privado-banner {
+    background-color: var(--color-verde-btn);
+    color: var(--color-blanco);
+    padding: var(--espacio-xl) 0 var(--espacio-lg);
+}
+
+.privado-banner h1,
+.privado-banner h2,
+.privado-banner h3 {
+    color: var(--color-blanco);
+}
+
+.privado-banner__badge {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: var(--color-blanco);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: var(--espacio-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Cuerpo: gris suave para que las cards blancas resalten */
+.privado-cuerpo {
+    background-color: #F3F2F1;
+    padding: var(--espacio-xl) 0;
+    min-height: 50vh;
+}
+
+/* Grid de 2 columnas para el contenido exclusivo */
+.privado-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--espacio-md);
+}
+
+@media (max-width: 640px) {
+    .privado-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cada ítem del contenido exclusivo */
+.privado-item {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    border-left: 4px solid var(--color-verde-btn);
+    padding: var(--espacio-md);
+    display: flex;
+    gap: var(--espacio-sm);
+    align-items: flex-start;
+}
+
+/* Estado de carga — sin borde izquierdo de color */
+.privado-item--cargando {
+    border-left-color: var(--color-gris-medio);
+}
+
+/* Icono dentro del ítem */
+.privado-item__icono {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.privado-item__label {
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.privado-item__valor {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    line-height: 1.1;
+}
+
+.privado-item__detalle {
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    margin-top: 4px;
+}
+
+/* Bloque de cierre de sesión */
+.privado-sesion {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md) var(--espacio-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--espacio-md);
+    flex-wrap: wrap;
+    margin-top: var(--espacio-lg);
+}
+
+.privado-sesion__titulo {
+    font-weight: 700;
+    color: var(--color-negro);
+    margin-bottom: 4px;
+}
+
+.privado-sesion__descripcion {
+    font-size: 0.88rem;
+    color: var(--color-gris-texto);
+}
+
+/* Animación shimmer para estados de carga */
+@keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+}
+
+.privado-item--cargando .privado-item__valor {
+    animation: shimmer 1.4s ease-in-out infinite;
+    color: var(--color-gris-texto);
+}
