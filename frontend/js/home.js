@@ -29,7 +29,7 @@
  * Si el puerto o la dirección del backend cambia, solo hay que
  * modificarlo aquí. Principio DRY (Don't Repeat Yourself).
  */
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 
 // ─────────────────────────────────────────────────────────────

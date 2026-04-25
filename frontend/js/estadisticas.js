@@ -35,7 +35,7 @@
 // CONFIGURACIÓN
 // ─────────────────────────────────────────────────────────────
 
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 /** Años del sistema, usados como etiquetas en los gráficos */
 const ANIOS = [2021, 2022, 2023, 2024, 2025];
