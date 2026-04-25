@@ -35,7 +35,7 @@
  * Mismo valor que en home.js, solicitudes.js y estadisticas.js.
  * Si el backend cambia de puerto, se cambia aquí una sola vez.
  */
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 
 // ─────────────────────────────────────────────────────────────
