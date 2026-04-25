@@ -855,6 +855,13 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 - **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
 
+### Respecto al despliegue en producción pública
+
+- **HTTPS / SSL** — imprescindible antes de exponer la aplicación a internet. Nginx gestionaría el certificado (Let's Encrypt) y terminaría el cifrado; sin ello los tokens JWT viajan en texto plano. Requiere un dominio público.
+- **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de salir al exterior.
+- **CORS con dominio específico** — sustituir `allow_origins=["*"]` en `main.py` por la URL del dominio real para evitar que otras webs puedan llamar a la API.
+- **Rate limiting en Nginx** — limitar el número de peticiones por IP al endpoint `/auth/login` para prevenir ataques de fuerza bruta sobre las contraseñas.
+
 ---
 
 ## Notas técnicas
