@@ -286,6 +286,7 @@ def cargar_epas(archivos):
                 "puntuacion": puntuacion,
                 "importe": importe,
                 "estado": estado,
+                "linea": item.get("linea") or None,
                 "tramo": None,           # las EPAs no tienen tramo
                 "causa_exclusion": None, # las EPAs sí tienen causas de exclusión en el BOE,
                                          # pero no se capturan aún (mejora futura)

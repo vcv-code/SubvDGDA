@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session, joinedload
 from typing import Optional
 from ..db import get_db
-from ..models import Solicitud, Convocatoria, Beneficiario
+from ..models import Solicitud, Convocatoria, Beneficiario, Concesion
 from ..schemas import SolicitudOut
 
 router = APIRouter(prefix="/solicitudes", tags=["solicitudes"])
@@ -23,7 +23,10 @@ def listar_solicitudes(
     anio:   Optional[int] = Query(None, description="Año de la convocatoria (2021–2025)"),
     tipo:   Optional[str] = Query(None, description="Tipo: epa o eell"),
     estado: Optional[str] = Query(None, description="Estado: concedida, no_beneficiaria, excluida, desistida"),
-    buscar: Optional[str] = Query(None, description="Búsqueda parcial por nombre de entidad (stopwords ignoradas)"),
+    linea:    Optional[str] = Query(None, description="Línea de actuación: animales_abandonados o colonias_felinas (solo EPA 2025)"),
+    provincia: Optional[str] = Query(None, description="Provincia (solo EELL)"),
+    ccaa:     Optional[str] = Query(None, description="Comunidad autónoma (solo EELL)"),
+    buscar:   Optional[str] = Query(None, description="Búsqueda parcial por nombre de entidad (stopwords ignoradas)"),
     limite: int           = Query(100,  description="Máximo de resultados por página"),
     pagina: int           = Query(1,    description="Número de página (empieza en 1)"),
     db: Session = Depends(get_db),
@@ -49,6 +52,12 @@ def listar_solicitudes(
         consulta = consulta.filter(Convocatoria.tipo_convoc == tipo)
     if estado:
         consulta = consulta.filter(Solicitud.estado == estado)
+    if linea:
+        consulta = consulta.filter(Solicitud.concesion.has(Concesion.linea == linea))
+    if provincia:
+        consulta = consulta.filter(Solicitud.provincia == provincia)
+    if ccaa:
+        consulta = consulta.filter(Solicitud.ccaa == ccaa)
     if buscar:
         for palabra in _palabras_clave(buscar):
             consulta = consulta.filter(Beneficiario.nombre.ilike(f"%{palabra}%"))
@@ -68,6 +77,9 @@ def listar_solicitudes(
             convocatoria   = s.convocatoria,
             beneficiario   = s.beneficiario,
             importe        = float(s.concesion.importe) if s.concesion else None,
+            linea          = s.concesion.linea if s.concesion else None,
+            provincia      = s.provincia,
+            ccaa           = s.ccaa,
         ))
 
     return resultado

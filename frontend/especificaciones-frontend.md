@@ -286,9 +286,9 @@ El backend implementa el parámetro ?buscar=, por lo que el filtrado se hace aho
 | Año | Select (2021–2025) | Sí | Siempre visible |
 | Tipo | Select (EPA / EELL) | Sí | Siempre visible |
 | Estado | Select (4 valores) | Sí | Siempre visible |
-| CCAA | Select (17 CCAA) | Pendiente backend | Solo si Tipo = EELL |
-| Provincia | Texto libre | Pendiente backend | Solo si Tipo = EELL |
-| Línea de actuación | Select (2 valores) | Pendiente backend | Solo si Tipo = EPA y Año = 2025 |
+| CCAA | Select (17 CCAA) | Sí (?ccaa=) | Solo si Tipo = EELL |
+| Provincia | Texto libre | Sí (?provincia=) | Solo si Tipo = EELL |
+| Línea de actuación | Select (2 valores) | Sí (?linea=) | Solo si Tipo = EPA y Año = 2025 |
 
 **Tabla de resultados — columnas:**
 
@@ -427,17 +427,15 @@ Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el t
 | `/privado/perfil` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
 | `/privado/resumen-exclusivo` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
 
-### Pendientes de implementación (backend)
+### Estado de implementación de filtros
 
-Los siguientes filtros están diseñados en el frontend pero requieren cambios en el backend:
-
-| Filtro | Cambio necesario en backend |
-|---|---|
-| Búsqueda por nombre de entidad | Completado — parámetro ?buscar= implementado |
-| Filtro por CCAA | Añadir campo CCAA a `Beneficiario` y al endpoint |
-| Filtro por Provincia | Ídem que CCAA |
-| Filtro por Línea | Exponer campo `linea` de `Concesion` en `SolicitudOut` |
-| Historial de entidad por CIF | Nuevo endpoint o parámetro `?cif=` en `/solicitudes/` |
+| Filtro | Backend | Notas |
+|---|---|---|
+| Búsqueda por nombre de entidad | ✔ ?buscar= | |
+| Filtro por CCAA | ✔ ?ccaa= | Campo `ccaa` en tabla `solicitudes`; solo EELL |
+| Filtro por Provincia | ✔ ?provincia= | Campo `provincia` en tabla `solicitudes`; solo EELL |
+| Filtro por Línea | ✔ ?linea= | Campo `linea` en tabla `concesiones`; solo EPA 2025 |
+| Historial de entidad por CIF | Pendiente | Nuevo endpoint o parámetro `?cif=` en `/solicitudes/` |
 
 ### Patrón de llamada a la API
 

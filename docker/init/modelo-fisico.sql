@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS solicitudes (
                      'excluida',
                      'desistida'
                    ) NOT NULL                             COMMENT 'no_beneficiaria = admitida pero fuera del cupo (EELL todos los años; EPA desde 2024)',
+    provincia      VARCHAR(100)     NULL                   COMMENT 'Provincia derivada del CIF. Solo disponible para EELL; NULL para EPA',
+    ccaa           VARCHAR(100)     NULL                   COMMENT 'Comunidad autónoma derivada del CIF. Solo disponible para EELL; NULL para EPA',
     PRIMARY KEY (id_solic),
     -- Clave compuesta: el mismo num_expediente puede aparecer en convocatorias distintas
     -- (entidades que desistieron un año y volvieron al siguiente).
