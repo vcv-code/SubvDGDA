@@ -42,7 +42,7 @@ def mapear_indices(headers):
     for i, h in enumerate(headers):
         if "expediente" in h:
             mapa["expediente"] = i
-        elif "cuantía" in h or ("importe" in h and "entidad" not in h):
+        elif "cuantía" in h or "concedido" in h or "euros" in h or ("importe" in h and "entidad" not in h):
             mapa["importe_idx"] = i
         elif "entidad" in h:
             mapa["entidad"] = i
