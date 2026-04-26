@@ -149,14 +149,14 @@ def parsear_boe_epa_2025(url):
         if el.name == "p":
             texto = el.get_text(" ", strip=True).lower()
 
-            if "beneficiarias" in texto:
-                estado_actual = "concedida"
-            elif "exclu" in texto:
-                estado_actual = "excluida"
-            elif "no adquieren" in texto or "desestimad" in texto or "deneg" in texto:
+            if "no adquieren" in texto or "desestimad" in texto or "deneg" in texto:
                 estado_actual = "denegada"
             elif "desistidas" in texto or "renunci" in texto:
                 estado_actual = "desistida"
+            elif "exclu" in texto:
+                estado_actual = "excluida"
+            elif "beneficiarias" in texto:
+                estado_actual = "concedida"
 
         # -------- TABLAS --------
         elif el.name == "table":
