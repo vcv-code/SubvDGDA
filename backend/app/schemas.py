@@ -44,6 +44,9 @@ class SolicitudOut(BaseModel):
     convocatoria:   ConvocatoriaOut
     beneficiario:   BeneficiarioOut
     importe:        Optional[float]   # viene de concesiones, None si no fue concedida
+    linea:          Optional[str]     # animales_abandonados | colonias_felinas | None
+    provincia:      Optional[str]     # solo EELL; None para EPA
+    ccaa:           Optional[str]     # solo EELL; None para EPA
 
     model_config = ConfigDict(from_attributes=True)
 

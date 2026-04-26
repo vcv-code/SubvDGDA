@@ -600,7 +600,7 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo, estado y búsqueda parcial por nombre de entidad con paginación
+  · GET /solicitudes/   → filtros por año, tipo, estado, búsqueda parcial por nombre, CCAA, provincia y línea de actuación con paginación
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
 ✔ Nginx como servidor web y proxy inverso (`docker/nginx/nginx.conf`)
   · escucha en el puerto 80
@@ -635,7 +635,7 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
 
 Pendiente:
 
-- integración completa de filtros avanzados (CCAA, provincia, línea) cuando el backend los exponga
+- integración completa de filtros avanzados (CCAA, provincia, línea) en el frontend (el backend ya los expone)
 - ficha de entidad (`entidad.html`) con historial por CIF — pendiente issue 7C
 - páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
 
