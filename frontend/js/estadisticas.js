@@ -35,7 +35,7 @@
 // CONFIGURACIÓN
 // ─────────────────────────────────────────────────────────────
 
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 /** Años del sistema, usados como etiquetas en los gráficos */
 const ANIOS = [2021, 2022, 2023, 2024, 2025];
@@ -489,7 +489,7 @@ function mostrarErrorGlobal() {
     const mensaje = `
         <div class="estado-error" style="margin-bottom: var(--espacio-md);">
             No se pudo conectar con el servidor.
-            Comprueba que el backend está activo en ${API_URL}
+            Comprueba que el backend está activo (Docker o uvicorn)
         </div>
     `;
     document.querySelector('.contenedor').insertAdjacentHTML('afterbegin', mensaje);

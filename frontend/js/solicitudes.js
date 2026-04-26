@@ -39,7 +39,7 @@
 // CONFIGURACIÓN
 // ─────────────────────────────────────────────────────────────
 
-const API_URL   = 'http://localhost:8000';
+const API_URL   = '';
 const LIMITE    = 50;   // Resultados por página. 50 es un buen equilibrio
                         // entre velocidad de carga y usabilidad.
 
@@ -207,7 +207,7 @@ async function buscarSolicitudes(pagina = 1) {
 
     } catch (error) {
         console.error('Error al buscar solicitudes:', error);
-        mostrarError(`No se pudo conectar con el servidor. Comprueba que el backend está activo en ${API_URL}`);
+        mostrarError('No se pudo conectar con el servidor. Comprueba que el backend está activo.');
     }
 }
 

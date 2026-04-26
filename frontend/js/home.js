@@ -29,7 +29,7 @@
  * Si el puerto o la dirección del backend cambia, solo hay que
  * modificarlo aquí. Principio DRY (Don't Repeat Yourself).
  */
-const API_URL = 'http://localhost:8000';
+const API_URL = '';
 
 
 // ─────────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ function mostrarErrores() {
     const mensajeError = `
         <div class="estado-error">
             No se pudieron cargar los datos.<br>
-            Comprueba que el backend está activo en ${API_URL}
+            Comprueba que el backend está activo (Docker o uvicorn)
         </div>
     `;
 
