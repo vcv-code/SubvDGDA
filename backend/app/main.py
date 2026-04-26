@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from jose import JWTError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -10,6 +11,15 @@ app = FastAPI(
     title="API Subvenciones Bienestar Animal",
     description="Datos de convocatorias EPA y EELL de la DGDA (2021–2025)",
     version="0.1.0",
+)
+
+# En desarrollo permite llamadas desde cualquier origen (Live Server, file://, etc.).
+# En producción con dominio propio, sustituir "*" por la URL del dominio.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(convocatorias.router)
