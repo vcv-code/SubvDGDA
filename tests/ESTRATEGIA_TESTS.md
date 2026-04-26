@@ -54,6 +54,30 @@ Los parsers EPA 2021–2024 y EELL (PDF y BOE) no tienen tests unitarios. Sus fu
 
 ---
 
+## SQLite vs MariaDB: diferencias conocidas y límite de los tests
+
+Los tests de endpoints usan SQLite en memoria como sustituto de MariaDB. SQLite acepta los mismos modelos SQLAlchemy y funciona bien para probar lógica de aplicación, pero no replica el comportamiento de MariaDB en tres puntos concretos que este proyecto usa:
+
+| Característica | MariaDB (producción) | SQLite (tests) |
+|---|---|---|
+| `ENUM` en columnas | Rechaza valores fuera del enum a nivel de BD | Lo acepta como texto cualquiera |
+| `DECIMAL(12,2)` | Precisión fija, redondea al guardar | Se trata como float de Python |
+| `ON DUPLICATE KEY UPDATE` | Sintaxis nativa para upserts | No existe, hay que reescribirlo |
+
+**Por qué no es un problema para los tests actuales:** los tests de endpoints no comprueban que la BD rechace un valor de `ENUM` inválido — esa validación la hace SQLAlchemy y FastAPI antes de llegar a la BD. Tampoco dependen de la precisión exacta de `DECIMAL`. Y ningún test usa `ON DUPLICATE KEY` directamente (eso solo lo usa `cargar_dataset.py`).
+
+En la práctica los tests prueban **lógica de la aplicación** (filtros, respuestas HTTP, autenticación), no **integridad de la BD**. Para lo primero, SQLite es suficiente.
+
+**Si en el futuro se quisiera testear algo que dependa de estas diferencias** (por ejemplo, que la API rechaza un estado inválido a nivel de BD, o que `cargar_dataset` hace el upsert correctamente), habría que:
+
+1. Añadir un servicio MariaDB al entorno de tests, ya sea levantando un contenedor Docker específico para tests o usando GitHub Actions con un `service` de MariaDB en el pipeline de CI.
+2. Crear un segundo `conftest.py` o una fixture separada que apunte a esa MariaDB de test en lugar de a SQLite.
+3. Marcar esos tests con `@pytest.mark.integration` para poder ejecutarlos por separado de los tests rápidos que no necesitan Docker.
+
+Ese patrón (tests unitarios rápidos con SQLite + tests de integración con MariaDB real en CI) es el estándar en proyectos profesionales con FastAPI y bases de datos relacionales.
+
+---
+
 ## Cómo ejecutar los tests
 
 ```bash
