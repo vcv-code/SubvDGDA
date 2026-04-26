@@ -48,7 +48,20 @@ def mapear_indices(headers):
             mapa["entidad"] = i
         elif "cif" in h or "nif" in h:
             mapa["cif"] = i
+        elif "actuación" in h or "actuacion" in h or "línea" in h or "linea" in h:
+            mapa["linea"] = i
     return mapa
+
+
+def normalizar_linea(texto):
+    if not texto:
+        return None
+    t = texto.lower()
+    if "abandon" in t:
+        return "animales_abandonados"
+    if "felin" in t or "colonia" in t:
+        return "colonias_felinas"
+    return None
 
 
 # =========================
@@ -186,7 +199,8 @@ def parsear_boe_epa_2025(url):
                     "cif": limpiar_cif(safe_get(celdas, mapa.get("cif"))),
                     "puntuacion": extraer_puntos_2025(celdas),
                     "importe": extraer_importe_2025(celdas),
-                    "estado": estado_actual
+                    "estado": estado_actual,
+                    "linea": normalizar_linea(safe_get(celdas, mapa.get("linea"))),
                 }
 
                 # Regla clave: si hay importe → concedida
