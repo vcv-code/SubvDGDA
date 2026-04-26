@@ -36,6 +36,8 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 
 - [Análisis de la API BDNS](docs/api-bdns.md)  
 - [Modelo de datos del sistema](docs/modelo-datos.md)  
+- [Tests automáticos](docs/tests.md)  
+- [Diseño del frontend](frontend/diseño.md)  
 
 ---
 
@@ -43,7 +45,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 
 El sistema sigue una arquitectura cliente–servidor basada en una API REST:
 
-```
+```text
 API externa BDNS + PDFs oficiales
       ↓
 Backend Python
@@ -67,20 +69,21 @@ Frontend
     <th>Revisado</th>
   </tr>
   <tr>
-    <td><img src="docs/img/modelo-datos-er-v1.png" width="400"></td>
-    <td><img src="docs/img/Modelo-ER-Def.jpg" width="400"></td>
+    <td><img src="docs/img/modelo-datos-er-v1.png" width="400" alt="Diagrama ER original"></td>
+    <td><img src="docs/img/Modelo-ER-Def.jpg" width="400" alt="Diagrama ER definitivo"></td>
   </tr>
 </table>
 
 ---
 
-## Tecnologías 
+## Tecnologías
 
 | Área | Tecnologías |
 |-----|-------------|
 | Frontend | HTML, CSS, JavaScript, Chart.js |
-| Backend | Python |
+| Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
 | Base de datos | MySQL / MariaDB |
+| Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx |
 | Control de versiones | Git, GitHub |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
@@ -98,7 +101,14 @@ Frontend
 
 ### Frontend
 
-Permitirá explorar los datos mediante filtros y visualizaciones.
+Interfaz web para explorar los datos mediante filtros y visualizaciones. La carpeta `frontend/` contiene:
+
+- `diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
+- `especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
+- `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `auth.js`, `privado.js`)
+- `assets/` — logotipo, imágenes y wireframes en PDF
+- `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
 
 ### Backend
 
@@ -125,7 +135,7 @@ Almacenará:
 
 ### API BDNS
 
-https://www.infosubvenciones.es/bdnstrans/doc  
+<https://www.infosubvenciones.es/bdnstrans/doc>
 
 Endpoints:
 
@@ -180,7 +190,7 @@ Existen agrupaciones de entidades sin desglose individual de importe.
 
 ## Estrategia técnica
 
-```
+```text
 API BDNS
 ↓
 Convocatorias
@@ -196,7 +206,7 @@ Por ello, se utiliza un pipeline adicional basado en PDFs oficiales para reconst
 
 ### Pipeline real implementado
 
-```
+```text
 XML / PDF BOE (DGDA) + Excel manual (EELL 2025)
 ↓
 Parsing (pdfplumber / BeautifulSoup / openpyxl)
@@ -358,6 +368,7 @@ Situación detectada: cuatro expedientes aparecían en más de un año del datas
 **Problema adicional detectado:** el campo `anio` en los JSON de origen refleja el año del número de expediente (ej: SUBV2022659 → anio=2022), no el año de la convocatoria. Con la tolerancia ±1 original, los registros cross-year colapsaban bajo el mismo año aunque estuvieran en ficheros distintos.
 
 Solución implementada:
+
 - Se cambia la clave de deduplicación de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`.
 - El campo `anio` del registro se fija siempre al año del fichero fuente (`anio_fallback`), no al que trae el JSON. Esto garantiza que el mismo expediente en distintas convocatorias tenga años diferentes.
 - Resultado: SUBV2022271 (intra-año 2022) se deduplica conservando la concedida; los otros tres conservan ambos registros en años distintos.
@@ -376,6 +387,7 @@ Contexto normativo relevante: el 17 de mayo de 2024 se modifica la Orden sobre l
 El CIF de las entidades locales españolas codifica la provincia en sus posiciones 1–2 (ej: `P3802200J` → código `38` → Santa Cruz de Tenerife). Se implementó una función de extracción que permite añadir los campos `provincia` y `ccaa` a todos los registros EELL.
 
 Casos especiales gestionados:
+
 - **Mancomunidades y Consells Comarcals** con códigos de provincia no estándar (56, 64, 67, 53, 79): se resuelven mediante un diccionario de overrides manuales por CIF completo. Ejemplos:
   - P5606301I (Mancomunidad Cijara, Extremadura)
   - P6400601H (Mancomunidad Los Pedroches, Córdoba/Andalucía)
@@ -451,7 +463,7 @@ Características:
 
 Se ha reorganizado el proyecto siguiendo una arquitectura típica de ingeniería de datos:
 
-```
+```text
 data/
   raw/        → datos originales
   processed/  → datos transformados
@@ -474,7 +486,7 @@ Esto permite:
 
 ## Estructura del proyecto
 
-```
+```text
 data/
   raw/
     eell/
@@ -515,17 +527,17 @@ docker/
 
 ### Backend (API)
 
-```
+```text
 backend/app/
   db.py              → conexión SQLAlchemy: motor, sesiones y get_db
   models.py          → tablas de la BD como clases Python (ORM)
   schemas.py         → forma de los datos que devuelve la API (Pydantic)
   auth.py            → hashing de contraseñas (bcrypt) y generación/validación de tokens JWT
   dependencies.py    → dependencias FastAPI: get_current_user y require_rol
-  main.py            → aplicación FastAPI con los routers registrados
+  main.py            → aplicación FastAPI con los routers registrados y manejadores de error personalizados
   routers/
     convocatorias.py → GET /convocatorias/
-    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, paginación)
+    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, buscar, paginación)
     estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
     auth.py          → POST /auth/registro  y  POST /auth/login
     privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
@@ -547,11 +559,31 @@ Flujo: el cliente hace POST a `/auth/login` → recibe un token → lo envía en
 
 Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene problemas de compatibilidad con versiones recientes de bcrypt). El registro valida que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número.
 
+#### Manejadores de error personalizados
+
+Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar del detalle genérico de FastAPI:
+
+```json
+{
+  "error": 404,
+  "mensaje": "Recurso no encontrado",
+  "sugerencia": "Comprueba la URL o los parámetros de la petición"
+}
+```
+
+| Código | Cuándo ocurre |
+|--------|--------------|
+| 401 | Petición a ruta protegida sin token o con token inválido |
+| 403 | Token válido pero sin permisos suficientes |
+| 404 | Ruta o recurso inexistente |
+| 422 | Datos de entrada que no superan la validación Pydantic |
+| 500 | Error interno no controlado |
+
 ---
 
 ## Estado actual
 
-Fase: **backend en desarrollo**
+Fase: **backend completado · maquetación frontend completada · pendiente integración JS con API**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -568,41 +600,65 @@ Fase: **backend en desarrollo**
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo y estado con paginación
+  · GET /solicitudes/   → filtros por año, tipo, estado, búsqueda parcial por nombre, CCAA, provincia y línea de actuación con paginación
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
-✔ Nginx como proxy inverso (`docker/nginx/nginx.conf`)
+✔ Nginx como servidor web y proxy inverso (`docker/nginx/nginx.conf`)
   · escucha en el puerto 80
-  · redirige el tráfico al backend (puerto 8000 interno, no expuesto al exterior)
-  · acceso a la API y a `/docs` a través de `http://localhost/`
+  · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
+  · redirige las rutas de la API al backend (puerto 8000 interno, no expuesto al exterior)
+  · acceso a la app en `http://localhost/` y a la API en `http://localhost/docs`
 ✔ autenticación JWT con tres niveles de acceso
   · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
   · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
+✔ tests automáticos con pytest (26 tests — smoke, funcionales, seguridad)
+  · endpoints públicos: /convocatorias/, /solicitudes/, /estadisticas/
+  · filtros, paginación, búsqueda parcial y estructura de respuestas
+  · autenticación: registro, login, acceso con/sin token
+  · BD de prueba SQLite en memoria (no requiere Docker)
+✔ manejadores de error personalizados (401, 403, 404, 422, 500)
+  · JSON estructurado con campos error, mensaje y sugerencia
+  · sin exponer internos del servidor en errores 500
+
+✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
+✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
+  · `index.html` — portada con métricas dinámicas y placeholders de gráficos
+  · `solicitudes.html` — buscador con filtros, tabla paginada y filtros condicionales (CCAA, línea)
+  · `estadisticas.html` — dashboard con 4 KPIs y 3 gráficos Chart.js (línea, donut, barras)
+  · `login.html` / `registro.html` — autenticación con validación client-side y diseño GOV.UK
+  · `privado.html` — zona exclusiva con control de acceso JWT
+✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
+✔ CORS habilitado en el backend para desarrollo local
+✔ clave JWT segura configurada en variables de entorno (`.env`)
 
 Pendiente:
 
-- tests con pytest
-- frontend de visualización
+- integración completa de filtros avanzados (CCAA, provincia, línea) en el frontend (el backend ya los expone)
+- ficha de entidad (`entidad.html`) con historial por CIF — pendiente issue 7C
+- páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
 
 ---
 
 ## Desarrollo
 
 Clonar el repositorio:
+
 ```bash
 git clone git@github.com:vcv-code/analisis-bdns-dgda.git
 cd analisis-bdns-dgda
 ```
 
 Crear rama de desarrollo:
+
 ```bash
 git checkout -b dev
 git push -u origin dev
 ```
 
 Sincronizar repositorio:
+
 ```bash
 git checkout dev
 git pull
@@ -704,42 +760,129 @@ docker compose down -v       # para y borra el volumen (reset total de la BD)
 docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
 ```
 
+#### Solución de problemas en WSL2 (Windows)
+
+Si el contenedor `bdns_nginx` no arranca con el error `failed to create shim task` o `no such file or directory` al montar volúmenes, es un problema conocido de Docker Desktop + WSL2 con bind mounts de archivos individuales. La solución es recrear los contenedores desde cero:
+
+```bash
+cd docker
+docker compose down
+docker compose up -d
+```
+
+Si el error persiste, asegúrate de que el volumen de Nginx monta el **directorio** `./nginx` y no el archivo individual `./nginx/nginx.conf`. El archivo de configuración debe llamarse `default.conf` dentro de esa carpeta.
+
+---
+
+## Tests
+
+Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
+
+### Ejecutar todos los tests
+
+```bash
+source venv/bin/activate
+pytest -v
+```
+
+### Ejecutar por módulo
+
+```bash
+pytest tests/test_smoke.py        # arranque de la API
+pytest tests/test_convocatorias.py
+pytest tests/test_solicitudes.py
+pytest tests/test_estadisticas.py
+pytest tests/test_auth.py         # registro, login y zona privada
+```
+
+### Resultado esperado
+
+```text
+26 passed
+```
+
+Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
+
+### Pruebas de integración end-to-end (manuales)
+
+Complementan a los tests automáticos verificando el stack completo: Nginx → FastAPI → MariaDB real. Se realizan desde `http://localhost/docs` con Docker levantado y cubren filtros con datos reales, paginación, flujo de registro y login, acceso con y sin token, y la respuesta de los manejadores de error. Ver la sección "Prueba manual rápida" en [`docs/tests.md`](docs/tests.md).
+
 ---
 
 ## Flujo de trabajo
 
-```
-main → estable  
-dev → desarrollo  
-feature/* → funcionalidades  
-```
+El proyecto sigue un flujo basado en main + dev + feature/*, un modelo híbrido entre Git Flow y GitHub Flow, adaptado a equipos pequeños.
+
+### Estructura
+
+main (producción, estable)
+ │
+ └── dev (desarrollo)
+       │
+       ├── feature/*(funcionalidad)
+       └── feature/*(funcionalidad)
+
+### Orden
+
+1. Cada funcionalidad se desarrolla en una rama feature/*
+2. Se hacen commits sobre esa rama
+3. Se integra en dev mediante Pull Request (preferiblemente con squash)
+4. dev actúa como entorno de integración
+5. Cuando es estable, se fusiona en main
+
+### Motivos
+
+Hemos elegido este tipo de flujo porque lo hemos utilizado ambas en las prácticas de empresa y porque separa desarrollo (dev) de producción (main), reduciendo errores y permitiendonos trabajar en paralelo de forma segura, manteniendo un flujo claro y sencillo, adecuado para equipos pequeños y proyectos pequeños o medianos con desarrollo activo, como es el caso.
+
+Otros flujos más simples (todo en main) son arriesgados, y los más complejos (Git Flow completo) añaden complejidad innecesaria.
 
 ---
 
 ## Gestión del proyecto
 
-La planificación y seguimiento de tareas se realiza mediante **GitHub Projects** con metodología Kanban. 
+La planificación y seguimiento de tareas se realiza mediante **GitHub Projects** con metodología Kanban.
 
-Las funcionalidades y tareas de desarrollo se registran como **Issues**, que posteriormente se organizan en un tablero tipo Kanban con columnas como: 
+Las funcionalidades y tareas de desarrollo se registran como **Issues**, que posteriormente se organizan en un tablero tipo Kanban con columnas como:
 
-- Backlog 
-- To do 
-- In progress 
-- Review 
-- Done 
+- Backlog
+- To do
+- In progress
+- Review
+- Done
 
 Cada funcionalidad o investigación se desarrolla en una rama feature/* y posteriormente se integra en la rama dev mediante Pull Requests.
 
 ---
 
-## Mejoras futuras anotadas (no implementadas)
+## Mejoras futuras
 
-- **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Requiere integración con un servicio de envío de emails (SMTP propio o servicio externo como SendGrid).
+### Respecto al modelo de datos
+
+- **Cofinanciación EELL**: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
+- **Campo `linea` para EPA 2024**: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
+- **Causas de exclusión EPA**: el BOE las incluye pero con formato diferente al de EELL.
+- **Provincia/CCAA para EPA (asociaciones)**: no derivable del CIF tipo G de forma estándar.
+
+### Respecto al backend
+
 - **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
-- Cofinanciación EELL: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
-- Campo `linea` para EPA 2024: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
-- Causas de exclusión EPA: el BOE las incluye pero con formato diferente al de EELL.
-- Provincia/CCAA para EPA (asociaciones): no derivable del CIF tipo G de forma estándar.
+
+### Respecto al registro de usuarios
+
+- **Recuperación de contraseña ("¿Olvidaste tu contraseña?")** — flujo de reset por email: token de un solo uso, enlace de reset y expiración. Requiere integración con un servicio de envío de emails (SMTP o SendGrid) y una tabla adicional de tokens en la BD.
+- **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
+- **Login con Google / GitHub (OAuth)** — los wireframes contemplan botones de acceso social. No implementado en el backend actual; requeriría integración con un proveedor OAuth2 externo.
+
+### Respecto al fronted
+
+- **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
+
+### Respecto al despliegue en producción pública
+
+- **HTTPS / SSL** — imprescindible antes de exponer la aplicación a internet. Nginx gestionaría el certificado (Let's Encrypt) y terminaría el cifrado; sin ello los tokens JWT viajan en texto plano. Requiere un dominio público.
+- **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de salir al exterior.
+- **CORS con dominio específico** — sustituir `allow_origins=["*"]` en `main.py` por la URL del dominio real para evitar que otras webs puedan llamar a la API.
+- **Rate limiting en Nginx** — limitar el número de peticiones por IP al endpoint `/auth/login` para prevenir ataques de fuerza bruta sobre las contraseñas.
 
 ---
 
