@@ -33,12 +33,13 @@
     Respuesta: { total_registros, total_concedidas, importe_global, por_anio[] }
 -->
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas — Subvenciones Bienestar Animal</title>
     <meta name="description"
-          content="Dashboard de estadísticas de subvenciones de bienestar animal 2021–2025. Gráficos de evolución, distribución y comparativa.">
+        content="Dashboard de estadísticas de subvenciones de bienestar animal 2021–2025. Gráficos de evolución, distribución y comparativa.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,8 +83,7 @@
 
                 <!-- Cabecera de la sección -->
                 <div style="margin-bottom: var(--espacio-lg);">
-                    <h1 style="font-size:2rem; font-weight:700; color:var(--color-negro);"
-                        id="stats-titulo">
+                    <h1 style="font-size:2rem; font-weight:700; color:var(--color-negro);" id="stats-titulo">
                         Estadísticas
                     </h1>
                     <p style="color:var(--color-gris-texto); margin-top:4px;">
@@ -178,7 +178,8 @@
                             correctamente.
                         -->
                         <div class="chart-container">
-                            <canvas id="grafico-linea" aria-label="Gráfico de línea: evolución del importe por año"></canvas>
+                            <canvas id="grafico-linea"
+                                aria-label="Gráfico de línea: evolución del importe por año"></canvas>
                         </div>
                     </div>
 
@@ -191,7 +192,8 @@
                         </div>
 
                         <div class="chart-container chart-container--donut">
-                            <canvas id="grafico-donut" aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
+                            <canvas id="grafico-donut"
+                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
                         </div>
 
                         <!--
@@ -202,23 +204,19 @@
                         -->
                         <div class="leyenda-estados" id="leyenda-donut">
                             <div class="leyenda-item">
-                                <span class="leyenda-item__color"
-                                      style="background-color:#2E7D32;"></span>
+                                <span class="leyenda-item__color" style="background-color:#2E7D32;"></span>
                                 Concedida
                             </div>
                             <div class="leyenda-item">
-                                <span class="leyenda-item__color"
-                                      style="background-color:#A5D6A7;"></span>
+                                <span class="leyenda-item__color" style="background-color:#A5D6A7;"></span>
                                 No beneficiaria
                             </div>
                             <div class="leyenda-item">
-                                <span class="leyenda-item__color"
-                                      style="background-color:#EF6C00;"></span>
+                                <span class="leyenda-item__color" style="background-color:#EF6C00;"></span>
                                 Excluida
                             </div>
                             <div class="leyenda-item">
-                                <span class="leyenda-item__color"
-                                      style="background-color:#C62828;"></span>
+                                <span class="leyenda-item__color" style="background-color:#C62828;"></span>
                                 Desistida
                             </div>
                         </div>
@@ -255,7 +253,8 @@
                         </div>
 
                         <div class="chart-container">
-                            <canvas id="grafico-barras" aria-label="Gráfico de barras: comparativa EPA vs EELL por año"></canvas>
+                            <canvas id="grafico-barras"
+                                aria-label="Gráfico de barras: comparativa EPA vs EELL por año"></canvas>
                         </div>
                     </div>
 
@@ -281,7 +280,8 @@
                             id="ranking-lista": el JS insertará aquí los elementos
                             del ranking cuando el backend exponga el endpoint.
                         -->
-                        <ul class="ranking-lista" id="ranking-lista" aria-label="Ranking de entidades por importe concedido">
+                        <ul class="ranking-lista" id="ranking-lista"
+                            aria-label="Ranking de entidades por importe concedido">
                             <!-- Se rellena desde estadisticas.js -->
                         </ul>
 
@@ -320,12 +320,17 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <!-- NUEVO ENLACE DGDA -->
+                <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+                    target="_blank" rel="noopener noreferrer">
+                    DGDA
+                </a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
             Datos procedentes de la
-            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
-               target="_blank" rel="noopener noreferrer">
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index" target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
             y la Dirección General de Derechos de los Animales (DGDA).
@@ -349,4 +354,5 @@
     <script src="js/estadisticas.js"></script>
 
 </body>
+
 </html>

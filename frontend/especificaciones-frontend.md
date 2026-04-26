@@ -69,7 +69,7 @@ frontend/
 │   ├── estadisticas.js     → Lógica del dashboard con Chart.js
 │   ├── auth.js             → Lógica de login y registro (JWT)
 │   ├── privado.js          → Control de acceso y contenido de zona privada
-│   └── entidad.js          → Lógica de la ficha de entidad (pendiente 7C)
+│   └── entidad.js          → Lógica de la ficha de entidad (implementado en 7C)
 │
 ├── assets/
 │   ├── logo.png                → Logotipo del proyecto
@@ -282,13 +282,13 @@ El backend implementa el parámetro ?buscar=, por lo que el filtrado se hace aho
 
 | Filtro | Tipo | Soportado por API | Condición de visibilidad |
 |---|---|---|---|
-| Nombre de entidad | Texto libre | Sí (?buscar=) | Siempre visible |
-| Año | Select (2021–2025) | Sí | Siempre visible |
-| Tipo | Select (EPA / EELL) | Sí | Siempre visible |
-| Estado | Select (4 valores) | Sí | Siempre visible |
-| CCAA | Select (17 CCAA) | Sí (?ccaa=) | Solo si Tipo = EELL |
-| Provincia | Texto libre | Sí (?provincia=) | Solo si Tipo = EELL |
-| Línea de actuación | Select (2 valores) | Sí (?linea=) | Solo si Tipo = EPA y Año = 2025 |
+| Nombre de entidad | Texto libre | ✔ `?buscar=` | Siempre visible |
+| Año | Select (2021–2025) | ✔ | Siempre visible |
+| Tipo | Select (EPA / EELL) | ✔ | Siempre visible |
+| Estado | Select (4 valores) | ✔ | Siempre visible |
+| CCAA | Select (17 CCAA) | ✔ `?ccaa=` | Solo si Tipo = EELL |
+| Provincia | Texto libre | ✔ `?provincia=` | Solo si Tipo = EELL |
+| Línea de actuación | Select (2 valores) | ✔ `?linea=` | Solo si Tipo = EPA y Año = 2025 |
 
 **Tabla de resultados — columnas:**
 
@@ -328,18 +328,37 @@ Entidad, Expediente, Tipo, Estado (badge de color), Importe (€). Se simplific�
 
 **Librería:** Chart.js 4.4.0 importada desde CDN jsDelivr. Se usa `new Chart()` con tipos `line`, `doughnut` y `bar`.
 
-### 5.4 Ficha de entidad — `entidad.html` *(pendiente issue 7C)*
+### 5.4 Ficha de entidad — `entidad.html` + `js/entidad.js`
+
+**Estado:** Implementada en Issue 7C (frontend completo).  
+**Backend:** pendiente de añadir soporte a `?cif=`.
 
 **Propósito:** Mostrar el historial completo de participación de una entidad en todas las convocatorias.
 
-**Contenido:**
-- Nombre, CIF y tipo de entidad.
-- Tabla de historial: una fila por convocatoria en la que ha participado (año, tipo, estado, importe, puntuación).
-- Si la entidad es una **agrupación EELL**, se muestra la lista de municipios miembro con su importe individual asignado.
+**Contenido de la página:**
+- Nombre de la entidad  
+- CIF  
+- Tabla de historial con:
+  - Año de convocatoria  
+  - Tipo (EPA / EELL)  
+  - Estado (badge de color)  
+  - Importe concedido (formateado con separadores de miles)  
+  - Número de expediente  
 
-**Navegación:** Se accede desde el buscador haciendo clic en una fila. El CIF se pasa como parámetro en la URL (`entidad.html?cif=G12345678`). El JS de la página lee el parámetro y llama a la API.
+**Flujo de navegación:**
+1. El usuario hace clic en una fila de `solicitudes.html`.  
+2. El JS redirige a `entidad.html?cif=XXXXXXXXX`.  
+3. `entidad.js` lee el parámetro `cif` y llama a `GET /solicitudes/?cif=`.  
+4. Se pinta la tabla con todas las solicitudes de esa entidad.
 
-**Endpoint necesario:** `GET /solicitudes/?cif=G12345678` o un endpoint específico de entidad (pendiente de backend).
+**Estados visuales implementados:**
+- Cargando…  
+- Error al cargar datos  
+- Entidad sin solicitudes  
+- Tabla con historial  
+
+**Pendiente de backend:**  
+El endpoint `/solicitudes/` debe aceptar el parámetro `?cif=` para devolver todas las solicitudes de una entidad. 
 
 ### 5.5 Login y Registro — `login.html` / `registro.html`
 
@@ -422,10 +441,12 @@ Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el t
 |---|---|---|---|
 | `/estadisticas/` | GET | — | Home (métricas, KPIs, tarjetas de año), Estadísticas |
 | `/solicitudes/` | GET | `anio`, `tipo`, `estado`, `limite`, `pagina` | Buscador |
+| `/solicitudes/?cif=` | GET | `cif` | Ficha de entidad (pendiente backend) |
 | `/auth/login` | POST | JSON `{ email, password }` | Login |
 | `/auth/registro` | POST | JSON `{ email, password }` | Registro |
 | `/privado/perfil` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
 | `/privado/resumen-exclusivo` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
+
 
 ### Estado de implementación de filtros
 
@@ -565,21 +586,26 @@ Si el script se cargara en el `<head>`, se ejecutaría antes de que el navegador
 
 ### Issue 7C — Pendientes del frontend
 
-| Tarea | Archivo | Descripción |
+### Issue 7C — Pendientes del frontend
+
+| Tarea | Estado | Notas |
 |---|---|---|
-| Implementar ficha de entidad | `entidad.html` + `js/entidad.js` | Historial de convocatorias por CIF, agrupaciones EELL |
+| Ficha de entidad | ✔ Completado | `entidad.html` + `entidad.js` implementados |
+| Conexión de filtros nuevos | ✔ Completado | CCAA, Provincia, Línea, buscar |
+| Reordenación de filtros | ✔ Completado | Entidad → Tipo → Año → Estado |
+| Separadores de miles | ✔ Completado | `parseFloat()` + `Intl.NumberFormat` |
+| Ajustes CSS de paginación | ✔ Completado | Botones más compactos |
+| Enlace DGDA en footer | ✔ Completado | Añadido en las 6 páginas |
 
-### Pendientes de backend (a coordinar con compañera)
+### Pendientes de backend (Vero)
 
-| Funcionalidad | Cambio en backend |
+| Funcionalidad | Cambio necesario |
 |---|---|
-| Búsqueda por nombre | Parámetro `?nombre=` en `/solicitudes/` |
-| Filtro por CCAA | Campo CCAA en `Beneficiario` + schema + endpoint |
-| Filtro por Provincia | Campo Provincia en `Beneficiario` + schema + endpoint |
-| Campo Línea en tabla | Exponer `concesion.linea` en `SolicitudOut` |
-| Historial por CIF | `GET /solicitudes/?cif=` o nuevo endpoint `/entidades/{cif}` |
+| Historial por CIF | Añadir `?cif=` en `/solicitudes/` |
+| Exponer campo `linea` | Confirmar que el backend lo devuelve correctamente |
 | Ranking de entidades | Nuevo endpoint `/estadisticas/ranking` |
 | Desglose por CCAA | Nuevo endpoint `/estadisticas/por-ccaa` |
+
 
 ---
 
