@@ -275,10 +275,14 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 **Propósito:** Filtrar y consultar las solicitudes de subvención de la base de datos.
 
 **Filtros disponibles:**
+Actualización (Issue 7B):  
+La búsqueda por nombre ya no se realiza en el cliente.
+El backend implementa el parámetro ?buscar=, por lo que el filtrado se hace ahora server‑side. Se ha eliminado el .filter() en solicitudes.js.
+
 
 | Filtro | Tipo | Soportado por API | Condición de visibilidad |
 |---|---|---|---|
-| Nombre de entidad | Texto libre | No (client-side) | Siempre visible |
+| Nombre de entidad | Texto libre | Sí (?buscar=) | Siempre visible |
 | Año | Select (2021–2025) | Sí | Siempre visible |
 | Tipo | Select (EPA / EELL) | Sí | Siempre visible |
 | Estado | Select (4 valores) | Sí | Siempre visible |
@@ -429,7 +433,7 @@ Los siguientes filtros están diseñados en el frontend pero requieren cambios e
 
 | Filtro | Cambio necesario en backend |
 |---|---|
-| Búsqueda por nombre de entidad | Añadir `?nombre=` al endpoint `/solicitudes/` |
+| Búsqueda por nombre de entidad | Completado — parámetro ?buscar= implementado |
 | Filtro por CCAA | Añadir campo CCAA a `Beneficiario` y al endpoint |
 | Filtro por Provincia | Ídem que CCAA |
 | Filtro por Línea | Exponer campo `linea` de `Concesion` en `SolicitudOut` |
@@ -566,7 +570,6 @@ Si el script se cargara en el `<head>`, se ejecutaría antes de que el navegador
 | Tarea | Archivo | Descripción |
 |---|---|---|
 | Implementar ficha de entidad | `entidad.html` + `js/entidad.js` | Historial de convocatorias por CIF, agrupaciones EELL |
-| Búsqueda por nombre en buscador | `js/solicitudes.js` | Conectar con `?nombre=` cuando el backend lo soporte |
 
 ### Pendientes de backend (a coordinar con compañera)
 
