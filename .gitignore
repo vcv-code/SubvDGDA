@@ -208,3 +208,6 @@ __marimo__/
 
 # XMLs de EPA descargados manualmente (el pipeline los obtiene por URL)
 data/raw/epas/
+
+# Archivo de contexto local (no se versiona)
+contexto.txt

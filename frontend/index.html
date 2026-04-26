@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--
+    index.html — Página de inicio (Home)
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    ¿Por qué HTML puro y no React o Vue?
+    ─────────────────────────────────────
+    El equipo tomó la decisión técnica de usar HTML + CSS + JS
+    vanilla por tres razones:
+      1. Es coherente con el nivel del ciclo y fácilmente
+         defendible en la exposición oral del TFG.
+      2. No requiere compilador, bundler ni Node.js para
+         funcionar: el frontend se sirve directamente con Nginx.
+      3. Simplifica el flujo de ramas (feature → dev → main)
+         al no necesitar pasos de build intermedios.
+
+    Estructura de este archivo:
+    ─────────────────────────────
+    1. <head>        → Metadatos SEO, fuentes y CSS
+    2. <header>      → Navbar fijo (compartido en todas las páginas)
+    3. <main>
+       · Sección "Sobre el proyecto"  → Hero partido: texto + imagen
+       · Sección "Datos"              → Título + métricas verdes
+       · Sección "Gráficos"           → Placeholders para Chart.js (issue 7C)
+       · Sección "Convocatorias"      → Tarjetas por año (2025, 2024, 2023)
+       · Sección "Transparencia"      → CTA + KPIs secundarios
+    4. <footer>      → Pie de página dos columnas
+    5. <script>      → Lógica de esta página (home.js)
+-->
+<html lang="es">
+
+<head>
+    <!--
+        charset="UTF-8": permite mostrar caracteres especiales del español
+        (tildes, ñ, €, etc.) sin errores de codificación.
+    -->
+    <meta charset="UTF-8">
+
+    <!--
+        viewport: hace que la página sea RESPONSIVE (adaptable a móvil).
+        Sin esta etiqueta, los móviles escalarían la página como si fuera
+        de escritorio y resultaría ilegible.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Título que aparece en la pestaña del navegador -->
+    <title>Inicio — Subvenciones Bienestar Animal</title>
+
+    <!--
+        Meta descripción: texto que usan los buscadores (Google, Bing)
+        para describir la página en los resultados de búsqueda.
+    -->
+    <meta name="description"
+        content="Consulta y analiza subvenciones de bienestar animal y colonias felinas (BDNS/DGDA 2021–2025).">
+
+    <!--
+        Google Fonts — Fuente Inter
+        ¿Por qué Inter?
+        Es una fuente de código abierto diseñada específicamente para
+        pantallas y dashboards. Es legible a tamaños pequeños (ideal para
+        tablas) y tiene pesos 400, 600 y 700 que cubren todas nuestras
+        necesidades tipográficas.
+        preconnect: abre la conexión con Google Fonts antes de que el
+        navegador la necesite, acelerando la carga.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!--
+        Hoja de estilos del proyecto.
+        Un único archivo CSS para todas las páginas garantiza
+        coherencia visual y evita duplicar código.
+    -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR — Barra de navegación fija
+         ─────────────────────────────────────────────────────
+         ¿Por qué position: fixed?
+         Para que la barra siempre sea accesible mientras el
+         usuario hace scroll. Mejora la usabilidad en páginas
+         largas como esta.
+
+         role="navigation" y aria-label:
+         Atributos de accesibilidad (ARIA) que ayudan a los
+         lectores de pantalla (usados por personas con
+         discapacidad visual) a identificar la zona de navegación.
+         ===================================================== -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+
+            <!-- Logo + nombre del proyecto -->
+            <a class="navbar__logo" href="index.html" aria-label="Ir a la página de inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span>Bienestar Animal</span>
+            </a>
+
+            <!--
+                Menú principal.
+                Usamos <ul> + <li> + <a> en lugar de divs porque
+                es la estructura semántica correcta para una lista
+                de enlaces de navegación (mejor para SEO y accesibilidad).
+            -->
+            <ul class="navbar__links">
+                <!-- class="activo" marca visualmente la página actual -->
+                <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
+                <li><a href="solicitudes.html">Solicitudes</a></li>
+                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <!-- btn-login: estilo diferente para destacar la acción de autenticación -->
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+
+    <!-- =====================================================
+         MAIN — Contenido principal
+
+         <main> es una etiqueta semántica HTML5 que indica al
+         navegador y a los motores de búsqueda cuál es el
+         contenido central de la página (distinto del nav y
+         del footer). Solo debe haber un <main> por página.
+         ===================================================== -->
+    <main>
+
+        <!-- ─────────────────────────────────────────────────
+             SECCIÓN 1: "SOBRE EL PROYECTO"
+             Hero partido: texto a la izquierda + imagen a la derecha.
+
+             ¿Por qué este layout y no el hero centrado?
+             El diseño anterior del proyecto utilizaba esta
+             disposición porque comunica mejor la identidad del
+             proyecto (bienestar animal) combinando información
+             y una imagen emotiva. CSS Grid de dos columnas (1fr 1fr)
+             permite que en pantallas grandes queden lado a lado,
+             y que en móvil se apilen verticalmente (responsive).
+             ───────────────────────────────────────────────── -->
+        <section class="portada-split" aria-labelledby="hero-titulo">
+
+            <div class="portada-split__contenedor">
+
+                <!-- Columna izquierda: texto -->
+                <div class="portada-split__texto">
+                    <h1 class="portada-split__titulo" id="hero-titulo">
+                        Sobre el proyecto
+                    </h1>
+                    <p class="portada-split__descripcion">
+                        Este proyecto reúne y organiza información sobre subvenciones
+                        relacionadas con el bienestar animal procedentes de la Base de
+                        Datos Nacional de Subvenciones (BDNS) y de la Dirección General
+                        de Derechos de los Animales (DGDA). El objetivo principal es
+                        ofrecer una visión clara, estructurada y accesible de las ayudas
+                        concedidas, denegadas o en trámite, facilitando tanto la consulta
+                        pública como el análisis técnico.
+                    </p>
+                    <!--
+                        Botón con clase "btn btn-primario" (definida en styles.css).
+                        El uso de clases reutilizables evita repetir estilos en cada
+                        botón de todas las páginas.
+                    -->
+                    <a href="solicitudes.html" class="btn btn-primario">
+                        Conócenos
+                    </a>
+                </div>
+
+                <!-- Columna derecha: imagen de animales -->
+                <div class="portada-split__imagen">
+                    <img src="assets/perro-gato.png" alt="Perro y gato representando el bienestar animal"
+                        class="portada-split__imagen-real">
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ─────────────────────────────────────────────────
+             SECCIÓN 2: DATOS Y MÉTRICAS
+             Título centrado + tres tarjetas con los totales
+             del sistema, cargados desde la API.
+             ───────────────────────────────────────────────── -->
+        <section class="seccion-datos" aria-labelledby="datos-titulo">
+            <div class="contenedor">
+
+                <h2 class="seccion-datos__titulo" id="datos-titulo">
+                    Subvenciones de Bienestar Animal (2021–2025)
+                </h2>
+                <p class="seccion-datos__subtitulo">
+                    Consulta, filtra y analiza más de 6.000 registros de entidades,
+                    importes y líneas de ayuda. Datos procedentes de BDNS y DGDA.
+                </p>
+
+                <!--
+                    Grid de 3 columnas para las métricas.
+                    Los valores se rellenan con JS (home.js) mediante
+                    fetch() al endpoint GET /estadisticas/.
+                    Mientras cargan, se muestra el párrafo "metricas-carga".
+                -->
+                <div class="grid-3" id="metricas-grid">
+
+                    <!-- Spinner de carga inicial -->
+                    <p class="estado-carga" style="grid-column: 1 / -1;" id="metricas-carga">
+                        Cargando datos…
+                    </p>
+
+                    <!--
+                        Las tres tarjetas empiezan ocultas (display:none).
+                        home.js las muestra una vez que la API responde.
+                        Esto evita que aparezcan vacías durante la carga.
+                    -->
+                    <div class="card-metrica-verde" id="card-total" style="display:none;">
+                        <span class="card-metrica-verde__label">Registros totales</span>
+                        <span class="card-metrica-verde__numero" id="total-solicitudes">—</span>
+                    </div>
+
+                    <div class="card-metrica-verde" id="card-importe" style="display:none;">
+                        <span class="card-metrica-verde__label">Importe Concedido</span>
+                        <span class="card-metrica-verde__numero" id="importe-total">—</span>
+                    </div>
+
+                    <div class="card-metrica-verde" id="card-entidades" style="display:none;">
+                        <span class="card-metrica-verde__label">Entidades únicas</span>
+                        <span class="card-metrica-verde__numero" id="total-entidades">—</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ─────────────────────────────────────────────────
+             SECCIÓN 3: PLACEHOLDERS DE GRÁFICOS
+             En la issue 7B solo se reserva el espacio.
+             En la issue 7C se integra Chart.js y se sustituye
+             cada .grafico-placeholder por un <canvas>.
+
+             ¿Por qué prepararlo ahora?
+             Reservar los contenedores facilita el trabajo en 7C:
+             el HTML ya estará listo y solo habrá que añadir el
+             canvas y el código JavaScript de los gráficos.
+             ───────────────────────────────────────────────── -->
+        <section class="seccion seccion--gris" aria-labelledby="graficos-titulo">
+            <div class="contenedor">
+
+                <div class="seccion__cabecera">
+                    <h2 class="seccion__titulo" id="graficos-titulo">
+                        Análisis visual
+                    </h2>
+                    <p class="seccion__subtitulo">
+                        Distribución de solicitudes e importes concedidos por año.
+                    </p>
+                </div>
+
+                <div class="grid-2">
+
+                    <!--
+                        Cada placeholder tiene un id que home.js (en 7C)
+                        usará para inyectar el <canvas> de Chart.js.
+                    -->
+                    <div class="card">
+                        <h3 style="font-size:1rem; margin-bottom:var(--espacio-sm); color:var(--color-negro);">
+                            Distribución por estado
+                        </h3>
+                        <!-- En 7C: reemplazar este div por <canvas id="grafico-estados"></canvas> -->
+                        <div class="grafico-placeholder" id="contenedor-grafico-estados">
+                            <span class="grafico-placeholder__titulo">Gráfico de tarta</span>
+                            <span>Se implementará en la issue 7C con Chart.js</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size:1rem; margin-bottom:var(--espacio-sm); color:var(--color-negro);">
+                            Importe por año
+                        </h3>
+                        <!-- En 7C: reemplazar este div por <canvas id="grafico-importe"></canvas> -->
+                        <div class="grafico-placeholder" id="contenedor-grafico-importe">
+                            <span class="grafico-placeholder__titulo">Gráfico de barras</span>
+                            <span>Se implementará en la issue 7C con Chart.js</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER — Pie de página dos columnas
+
+         ¿Por qué footer semántico?
+         La etiqueta <footer> indica a motores de búsqueda y
+         lectores de pantalla que este bloque es el pie de
+         página. Dentro puede haber enlaces, información legal
+         y contacto.
+         ===================================================== -->
+    <footer class="footer-principal">
+
+        <!-- Fila principal: logo a la izquierda, enlaces a la derecha -->
+        <div class="footer-principal__zona">
+
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span>
+                    <strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026
+                </span>
+            </div>
+
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+            </nav>
+
+        </div>
+
+        <!-- Franja inferior: créditos y copyright -->
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la Dirección General de Derechos de los Animales (DGDA).
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         SCRIPT — Cargado al final del <body>
+
+         ¿Por qué al final del <body> y no en el <head>?
+         Si lo pusiéramos en el <head>, el JS se ejecutaría
+         antes de que el navegador haya creado los elementos
+         del HTML, y document.getElementById() no encontraría
+         nada. Al colocarlo al final, el HTML ya está en
+         memoria cuando el script se ejecuta.
+         ===================================================== -->
+    <script src="js/home.js"></script>
+
+</body>
+
+</html>                
