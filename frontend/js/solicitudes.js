@@ -143,6 +143,9 @@ function construirUrl(filtros, pagina) {
     if (filtros.tipo)   params.set('tipo',   filtros.tipo);
     if (filtros.estado) params.set('estado', filtros.estado);
 
+    // búsqueda por nombre (server-side) - modificación
+    if (filtros.nombre) params.set('buscar', filtros.nombre);
+
     // Paginación: siempre se envían
     params.set('limite', LIMITE);
     params.set('pagina', pagina);
@@ -186,11 +189,11 @@ async function buscarSolicitudes(pagina = 1) {
          * actual (50 registros). El filtro server-side lo implementará
          * el backend en una futura issue.
          */
-        if (filtros.nombre) {
+        /*if (filtros.nombre) {
             solicitudes = solicitudes.filter(s =>
                 s.beneficiario.nombre.toLowerCase().includes(filtros.nombre)
             );
-        }
+        } Comentado porque ya no se utiliza, porque el backend ya hace la búsqueda*/
 
         // ── Actualizar estado de paginación ───────────────────────────
         // Si el servidor devuelve menos de LIMITE, ya no hay más páginas

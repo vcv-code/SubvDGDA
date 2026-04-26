@@ -222,9 +222,9 @@ function iniciarLogin() {
                 // El servidor devolvió un error (401 credenciales incorrectas,
                 // 403 cuenta desactivada, etc.)
                 const errorData = await respuesta.json().catch(() => ({}));
-                const mensaje = errorData.detail || 'Email o contraseña incorrectos.';
+                const mensaje = errorData.mensaje || 'Email o contraseña incorrectos.';
                 mostrarAlerta('login-alerta', true, mensaje);
-                return;
+                return; // cambio de detail por mensaje
             }
 
             // ── Paso 5: Guardar el token ──────────────────────────────────
@@ -362,9 +362,9 @@ function iniciarRegistro() {
 
             if (!respuesta.ok) {
                 const errorData = await respuesta.json().catch(() => ({}));
-                const mensaje = errorData.detail || 'No se pudo crear la cuenta. Inténtalo de nuevo.';
+                const mensaje = errorData.mensaje || 'No se pudo crear la cuenta. Inténtalo de nuevo.';
                 mostrarAlerta('registro-alerta', true, mensaje);
-                return;
+                return; // detail por mensaje
             }
 
             // ── Paso 5: Mostrar éxito y redirigir ─────────────────────────
