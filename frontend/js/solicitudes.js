@@ -115,6 +115,9 @@ function leerFiltros() {
         anio:     filtroAnio.value,
         tipo:     filtroTipo.value,
         estado:   filtroEstado.value,
+        ccaa:       filtroCcaa.value,
+        provincia:  document.getElementById('filtro-provincia').value,
+        linea:      filtroLinea.value,
     };
     // Nota: CCAA, Provincia y Línea no se envían a la API todavía
     // porque el endpoint no los soporta. Se añadirán aquí cuando
@@ -142,9 +145,12 @@ function construirUrl(filtros, pagina) {
     if (filtros.anio)   params.set('anio',   filtros.anio);
     if (filtros.tipo)   params.set('tipo',   filtros.tipo);
     if (filtros.estado) params.set('estado', filtros.estado);
-
     // búsqueda por nombre (server-side) - modificación
     if (filtros.nombre) params.set('buscar', filtros.nombre);
+    // NUEVO
+    if (filtros.ccaa)      params.set('ccaa', filtros.ccaa);
+    if (filtros.provincia) params.set('provincia', filtros.provincia);
+    if (filtros.linea)     params.set('linea', filtros.linea);
 
     // Paginación: siempre se envían
     params.set('limite', LIMITE);
@@ -297,8 +303,9 @@ function crearFila(s) {
 
     // Importe: null si la solicitud no fue concedida
     const importe = s.importe !== null
-        ? new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(s.importe) + ' €'
-        : '—';
+    ? new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 })
+        .format(parseFloat(s.importe)) + ' €'
+    : '—';
 
     // ── Construir HTML de la fila ──────────────────────────────────
     tr.innerHTML = `
