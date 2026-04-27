@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--
+    privado.html — Zona exclusiva para usuarios registrados
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    ¿Qué hace esta página?
+    ──────────────────────
+    Muestra contenido reservado a usuarios con cuenta activa.
+    Si no hay token en localStorage → redirige a login.html.
+    Si el token ha expirado o es inválido → el servidor devuelve 401
+    → privado.js borra el token y redirige a login.html.
+
+    Diseño:
+    ───────
+    Misma línea institucional que login/registro (GOV.UK-inspired).
+    · Fondo gris neutro (#F3F2F1).
+    · Banner de cabecera verde oscuro con saludo personalizado.
+    · Tarjetas blancas para cada contenido exclusivo.
+    · Botón de cerrar sesión destacado.
+
+    Endpoints que usa:
+    ──────────────────
+    GET /privado/perfil
+      Headers: Authorization: Bearer <token>
+      → { email, rol, miembro_desde }
+
+    GET /privado/resumen-exclusivo
+      Headers: Authorization: Bearer <token>
+      → { mensaje: string, contenido: string[] }
+
+    Archivo JS: js/privado.js
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zona Privada — Subvenciones Bienestar Animal</title>
+    <meta name="description"
+          content="Área exclusiva para usuarios registrados con análisis avanzados de subvenciones.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR
+         ===================================================== -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span>Bienestar Animal</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Solicitudes</a></li>
+                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <!--
+                    En la zona privada el botón del navbar pasa a ser
+                    "Cerrar sesión". privado.js conecta este botón con
+                    la función cerrarSesion().
+                -->
+                <li>
+                    <button
+                        type="button"
+                        id="btn-cerrar-sesion"
+                        class="btn-login"
+                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;"
+                    >
+                        Cerrar sesión
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <!--
+        La página tiene tres zonas:
+        1. Banner de cabecera (verde oscuro) con saludo y perfil
+        2. Cuerpo principal (gris neutro) con tarjetas de contenido
+        3. Footer
+    -->
+    <main>
+
+        <!-- ─────────────────────────────────────────────────
+             ZONA 1: BANNER DE CABECERA
+             Fondo verde oscuro del proyecto.
+             Muestra: badge "Zona Privada" + saludo personalizado
+             + datos del perfil (email, rol, fecha de registro).
+             ───────────────────────────────────────────────── -->
+        <div class="privado-banner" aria-labelledby="privado-titulo">
+
+            <div class="contenedor">
+
+                <!--
+                    Badge "Zona Privada": etiqueta pequeña en mayúsculas
+                    que indica al usuario que está en un área restringida.
+                    Mismo patrón que el badge de estado "activo/inactivo".
+                -->
+                <span class="privado-banner__badge">Zona Privada</span>
+
+                <!--
+                    id="privado-saludo": privado.js inserta aquí el mensaje
+                    del backend. Ej: "Bienvenida, usuario@email.com"
+                    Empieza con "..." hasta que llega la respuesta.
+                -->
+                <h1 class="privado-banner__titulo" id="privado-titulo">
+                    <span id="privado-saludo">Cargando...</span>
+                </h1>
+
+                <!--
+                    id="privado-perfil": muestra email, rol y fecha de registro.
+                    Se rellena desde /privado/perfil vía privado.js.
+                -->
+                <p class="privado-banner__meta" id="privado-perfil"></p>
+
+            </div>
+        </div>
+
+
+        <!-- ─────────────────────────────────────────────────
+             ZONA 2: CUERPO PRINCIPAL
+             Fondo gris neutro, misma paleta que login/registro.
+             ───────────────────────────────────────────────── -->
+        <div class="privado-cuerpo">
+            <div class="contenedor">
+
+                <!--
+                    Alerta de error: visible si falla la carga de datos.
+                    privado.js la activa añadiendo la clase "visible".
+                -->
+                <div class="auth-alerta" id="privado-alerta" role="alert" aria-live="polite">
+                    No se pudieron cargar los datos. Comprueba tu conexión e inténtalo de nuevo.
+                </div>
+
+                <!-- Título de la sección de contenidos -->
+                <h2 class="privado-seccion__titulo">Contenido exclusivo</h2>
+                <p class="privado-seccion__subtitulo">
+                    Análisis y datos disponibles solo para usuarios registrados.
+                </p>
+
+                <!--
+                    id="privado-contenido": privado.js inserta aquí las tarjetas
+                    generadas dinámicamente con los items del array "contenido"
+                    que devuelve /privado/resumen-exclusivo.
+                    Empieza con un placeholder de carga.
+                -->
+                <div
+                    class="privado-grid"
+                    id="privado-contenido"
+                    aria-label="Contenidos exclusivos disponibles"
+                >
+                    <!--
+                        Tarjetas de carga (skeleton visual).
+                        privado.js las reemplaza cuando llegan los datos reales.
+                    -->
+                    <div class="privado-item privado-item--cargando" aria-hidden="true">
+                        <div class="privado-item__icono"></div>
+                        <div class="privado-item__texto">
+                            <div class="privado-item__linea"></div>
+                            <div class="privado-item__linea privado-item__linea--corta"></div>
+                        </div>
+                    </div>
+                    <div class="privado-item privado-item--cargando" aria-hidden="true">
+                        <div class="privado-item__icono"></div>
+                        <div class="privado-item__texto">
+                            <div class="privado-item__linea"></div>
+                            <div class="privado-item__linea privado-item__linea--corta"></div>
+                        </div>
+                    </div>
+                    <div class="privado-item privado-item--cargando" aria-hidden="true">
+                        <div class="privado-item__icono"></div>
+                        <div class="privado-item__texto">
+                            <div class="privado-item__linea"></div>
+                            <div class="privado-item__linea privado-item__linea--corta"></div>
+                        </div>
+                    </div>
+                    <div class="privado-item privado-item--cargando" aria-hidden="true">
+                        <div class="privado-item__icono"></div>
+                        <div class="privado-item__texto">
+                            <div class="privado-item__linea"></div>
+                            <div class="privado-item__linea privado-item__linea--corta"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Separador -->
+                <hr class="privado-divisor">
+
+                <!-- Sección de cierre de sesión -->
+                <div class="privado-sesion">
+                    <div class="privado-sesion__info">
+                        <p class="privado-sesion__titulo">Cerrar sesión</p>
+                        <p class="privado-sesion__desc">
+                            Al cerrar sesión se eliminará tu token de acceso.
+                            Tendrás que volver a identificarte para entrar.
+                        </p>
+                    </div>
+                    <!--
+                        id="btn-cerrar-sesion-principal": segundo punto de cierre
+                        de sesión en el cuerpo de la página.
+                        privado.js conecta ambos botones (navbar + este) con
+                        la misma función cerrarSesion().
+                    -->
+                    <button
+                        type="button"
+                        class="btn btn-verde"
+                        id="btn-cerrar-sesion-principal"
+                        style="white-space:nowrap;"
+                    >
+                        Cerrar sesión
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER — mismo en todas las páginas
+         ===================================================== -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <!-- NUEVO ENLACE DGDA -->
+                <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+                    target="_blank" rel="noopener noreferrer">
+                    DGDA
+                </a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la Dirección General de Derechos de los Animales (DGDA).
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+
+    <script src="js/privado.js"></script>
+
+</body>
+</html>

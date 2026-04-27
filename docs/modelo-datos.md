@@ -112,7 +112,7 @@ Campos principales:
 
 Un beneficiario puede presentar varias solicitudes en distintas convocatorias. En el caso de las entidades locales, estas pueden participar adicionalmente en agrupaciones de ayuntamientos, tanto como representante como en calidad de miembro.
 
-> **Nota (mejora futura):** Para las entidades locales (EELL), los campos `provincia` y `ccaa` son derivables del CIF a través del código de provincia estándar INE (posiciones 1–2). En el dataset unificado JSON estos campos ya se generan automáticamente; su incorporación al modelo relacional (tabla `beneficiarios`) está prevista como mejora futura.
+> Para las entidades locales (EELL), los campos `provincia` y `ccaa` se derivan del CIF a través del código de provincia estándar INE (posiciones 1–2). Se generan en el dataset unificado y se almacenan en la tabla `solicitudes` (no en `beneficiarios`, ya que para EPA estos campos son siempre `null`). El endpoint `GET /solicitudes/` los expone y permite filtrar por ellos con los parámetros `?provincia=` y `?ccaa=`.
 
 ---
 

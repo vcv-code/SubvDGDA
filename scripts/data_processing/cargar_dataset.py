@@ -204,9 +204,10 @@ def cargar_solicitudes(cursor, registros, mapa_convoc, mapa_benef):
                 continue
 
         cursor.execute(
-            "INSERT INTO solicitudes (id_convoc, id_benef, num_expediente, puntuacion, estado) "
-            "VALUES (%s, %s, %s, %s, %s)",
-            (id_convoc, id_benef, num_exp, puntuacion, estado),
+            "INSERT INTO solicitudes (id_convoc, id_benef, num_expediente, puntuacion, estado, provincia, ccaa) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            (id_convoc, id_benef, num_exp, puntuacion, estado,
+             r.get("provincia") or None, r.get("ccaa") or None),
         )
         mapa_solic[i] = cursor.lastrowid
         insertadas += 1
