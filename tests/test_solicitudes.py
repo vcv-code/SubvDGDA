@@ -28,43 +28,57 @@ def test_solicitudes_responde(client):
     assert response.status_code == 200
 
 
-def test_solicitudes_devuelve_lista(client):
-    response = client.get("/solicitudes/")
-    assert isinstance(response.json(), list)
+def test_solicitudes_estructura_paginada(client):
+    data = client.get("/solicitudes/").json()
+    assert "total" in data
+    assert "resultados" in data
+    assert isinstance(data["resultados"], list)
 
 
 def test_solicitudes_filtro_tipo(db_con_datos, client):
     response = client.get("/solicitudes/?tipo=epa")
     assert response.status_code == 200
-    resultados = response.json()
-    assert len(resultados) == 2
-    assert all(r["convocatoria"]["tipo_convoc"] == "epa" for r in resultados)
+    data = response.json()
+    assert data["total"] == 2
+    assert all(r["convocatoria"]["tipo_convoc"] == "epa" for r in data["resultados"])
 
 
 def test_solicitudes_filtro_estado(db_con_datos, client):
     response = client.get("/solicitudes/?estado=concedida")
     assert response.status_code == 200
-    resultados = response.json()
-    assert len(resultados) == 2
-    assert all(r["estado"] == "concedida" for r in resultados)
+    data = response.json()
+    assert data["total"] == 2
+    assert all(r["estado"] == "concedida" for r in data["resultados"])
 
 
 def test_solicitudes_paginacion(db_con_datos, client):
     response = client.get("/solicitudes/?limite=2&pagina=1")
     assert response.status_code == 200
-    assert len(response.json()) == 2
+    data = response.json()
+    assert data["total"] == 3
+    assert len(data["resultados"]) == 2
 
     response2 = client.get("/solicitudes/?limite=2&pagina=2")
     assert response2.status_code == 200
-    assert len(response2.json()) == 1
+    data2 = response2.json()
+    assert data2["total"] == 3
+    assert len(data2["resultados"]) == 1
+
+
+def test_solicitudes_filtro_cif(db_con_datos, client):
+    response = client.get("/solicitudes/?cif=G00000001")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 2
+    assert all(r["beneficiario"]["cif"] == "G00000001" for r in data["resultados"])
 
 
 def test_solicitudes_buscar_parcial(db_con_datos, client):
     response = client.get("/solicitudes/?buscar=Protectora")
     assert response.status_code == 200
-    resultados = response.json()
-    assert len(resultados) == 2
-    assert all("Protectora" in r["beneficiario"]["nombre"] for r in resultados)
+    data = response.json()
+    assert data["total"] == 2
+    assert all("Protectora" in r["beneficiario"]["nombre"] for r in data["resultados"])
 
 
 def test_solicitudes_buscar_stopword_ignorada(db_con_datos, client):
@@ -77,4 +91,6 @@ def test_solicitudes_buscar_stopword_ignorada(db_con_datos, client):
 def test_solicitudes_buscar_sin_resultados(db_con_datos, client):
     response = client.get("/solicitudes/?buscar=Inexistente")
     assert response.status_code == 200
-    assert response.json() == []
+    data = response.json()
+    assert data["total"] == 0
+    assert data["resultados"] == []

@@ -50,6 +50,10 @@ class SolicitudOut(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class SolicitudesPageOut(BaseModel):
+    total:      int
+    resultados: list[SolicitudOut]
+
 
 # ──────────────────────────────────────────────
 # ESTADÍSTICAS
