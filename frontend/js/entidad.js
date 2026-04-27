@@ -38,7 +38,7 @@ async function cargarHistorial(cif) {
             throw new Error("Error del servidor");
         }
 
-        const solicitudes = await resp.json();
+        const { resultados: solicitudes } = await resp.json();
 
         cargando.style.display = "none";
 
