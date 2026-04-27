@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import func, case
+from sqlalchemy import func, case, distinct
 from ..db import get_db
-from ..models import Solicitud, Convocatoria, Concesion
+from ..models import Solicitud, Convocatoria, Concesion, Beneficiario
 from ..schemas import EstadisticasOut, EstadisticaAnio
 
 router = APIRouter(prefix="/estadisticas", tags=["estadisticas"])
@@ -46,9 +46,12 @@ def get_estadisticas(db: Session = Depends(get_db)):
         for f in filas
     ]
 
+    entidades_unicas = db.query(func.count(distinct(Solicitud.id_benef))).scalar()
+
     return EstadisticasOut(
         por_anio         = por_anio,
         total_registros  = sum(f.total for f in filas),
         total_concedidas = sum(f.concedidas for f in filas),
         importe_global   = sum(float(f.importe_total) for f in filas),
+        entidades_unicas = entidades_unicas,
     )

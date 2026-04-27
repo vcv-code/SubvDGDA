@@ -800,6 +800,8 @@ table tbody tr:hover {
     padding: var(--espacio-md) var(--espacio-lg);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 4px;
 }
 

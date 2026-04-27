@@ -246,6 +246,7 @@ function pintarTabla(solicitudes) {
     tablaWrapper.style.display   = '';
     paginacion.style.display     = '';
     if (tablaControles) tablaControles.style.display = '';
+    if (infoResultados && infoResultados.textContent) infoResultados.style.display = '';
 }
 
 
@@ -401,8 +402,9 @@ function actualizarInfoResultados(cantidad, pagina) {
     if (!infoResultados) return;
     const inicio = (pagina - 1) * LIMITE + 1;
     const fin    = inicio + cantidad - 1;
+    infoResultados.style.display = '';
     infoResultados.textContent =
-        `Mostrando del ${inicio} al ${fin} · ${estado.totalResultados} resultados en total`;
+        `${estado.totalResultados} resultados · Mostrando del ${inicio} al ${fin}`;
 }
 
 
