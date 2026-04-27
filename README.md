@@ -636,10 +636,19 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
 ✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF con filtro `?cif=` en el backend
 ✔ filtro `?cif=` en `GET /solicitudes/`: permite recuperar todas las solicitudes de un beneficiario concreto
 ✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y" en el frontend
+✔ tarjeta "Entidades únicas" en el dashboard: `GET /estadisticas/` expone `entidades_unicas` (3.067 beneficiarios distintos)
+✔ nav renombrado de "Solicitudes" a "Buscador" en todas las páginas
+✔ enlace DGDA en los créditos del footer de todas las páginas (junto al enlace BDNS existente)
+✔ contador de resultados en el buscador: "N resultados · Mostrando del X al Y"
 
 Pendiente:
 
 - páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
+- gráficos de `estadisticas.html`: los placeholders de Chart.js están maquetados pero pendientes de conectar con datos reales de la API
+
+### Funcionalidad pendiente: gráficos de estadísticas
+
+`estadisticas.html` tiene los contenedores maquetados con Chart.js para tres gráficos (distribución por estado, importe por año, comparativa EPA/EELL). Los datos están disponibles en `GET /estadisticas/` pero `estadisticas.js` aún no los conecta con los gráficos.
 
 ### Funcionalidad pendiente: agrupaciones de municipios EELL 2025
 
