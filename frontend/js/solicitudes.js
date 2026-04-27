@@ -56,9 +56,8 @@ const LIMITE    = 50;   // Resultados por página. 50 es un buen equilibrio
  * desde la consola del navegador (F12 → Console → estado).
  */
 const estado = {
-    paginaActual: 1,       // Página que se está mostrando ahora
-    hayMasResultados: true // true si el servidor devolvió LIMITE resultados
-                           // (podría haber más). false si devolvió menos.
+    paginaActual: 1,
+    totalResultados: 0,
 };
 
 // Último array de solicitudes recibidas de la API.
@@ -119,9 +118,6 @@ function leerFiltros() {
         provincia:  document.getElementById('filtro-provincia').value,
         linea:      filtroLinea.value,
     };
-    // Nota: CCAA, Provincia y Línea no se envían a la API todavía
-    // porque el endpoint no los soporta. Se añadirán aquí cuando
-    // el backend los implemente.
 }
 
 
@@ -182,28 +178,8 @@ async function buscarSolicitudes(pagina = 1) {
         }
 
         // ── Parsear JSON ──────────────────────────────────────────────
-        let solicitudes = await respuesta.json();
-        // La API devuelve un array de objetos SolicitudOut
-
-        // ── Filtrado por nombre en el cliente ─────────────────────────
-        /**
-         * Como el endpoint actual no soporta búsqueda por texto,
-         * filtramos el array recibido con .filter() si el usuario
-         * escribió algo en el campo de nombre.
-         *
-         * Limitación: solo filtra entre los resultados de la página
-         * actual (50 registros). El filtro server-side lo implementará
-         * el backend en una futura issue.
-         */
-        /*if (filtros.nombre) {
-            solicitudes = solicitudes.filter(s =>
-                s.beneficiario.nombre.toLowerCase().includes(filtros.nombre)
-            );
-        } Comentado porque ya no se utiliza, porque el backend ya hace la búsqueda*/
-
-        // ── Actualizar estado de paginación ───────────────────────────
-        // Si el servidor devuelve menos de LIMITE, ya no hay más páginas
-        estado.hayMasResultados = solicitudes.length === LIMITE;
+        const { total, resultados: solicitudes } = await respuesta.json();
+        estado.totalResultados = total;
 
         // ── Pintar resultados ─────────────────────────────────────────
         if (solicitudes.length === 0) {
@@ -371,10 +347,28 @@ function crearBadge(estado) {
  */
 function actualizarFiltrosCondicionales() {
     const tipo = filtroTipo.value;
-    const anio = filtroAnio.value;
 
-    const esEell = tipo === 'eell';
-    const esEpa2025 = tipo === 'epa' && anio === '2025';
+    const esEell    = tipo === 'eell';
+    const esEpa     = tipo === 'epa';
+    const todosTipos = tipo === '';
+
+    // Años disponibles según tipo
+    const aniosEell = ['2023', '2024', '2025'];
+    const aniosEpa  = ['2021', '2022', '2023', '2024', '2025'];
+    const aniosPermitidos = esEell ? aniosEell : aniosEpa;
+
+    // Actualizar visibilidad de cada <option> del selector de año
+    Array.from(filtroAnio.options).forEach(opt => {
+        if (opt.value === '') return; // "Todos" siempre visible
+        opt.hidden = esEell && !aniosEell.includes(opt.value);
+    });
+
+    // Si el año seleccionado ya no está permitido, resetearlo
+    if (filtroAnio.value && !todosTipos && !aniosPermitidos.includes(filtroAnio.value)) {
+        filtroAnio.value = '';
+    }
+
+    const esEpa2025 = esEpa && filtroAnio.value === '2025';
 
     // CCAA y Provincia: visibles solo para EELL
     grupoCcaa.style.display     = esEell ? '' : 'none';
@@ -383,8 +377,6 @@ function actualizarFiltrosCondicionales() {
     // Línea de actuación: visible solo para EPA 2025
     grupoLinea.style.display    = esEpa2025 ? '' : 'none';
 
-    // Si ocultamos un filtro condicional, limpiamos su valor
-    // para que no afecte a la próxima búsqueda.
     if (!esEell) {
         filtroCcaa.value = '';
         document.getElementById('filtro-provincia').value = '';
@@ -399,14 +391,10 @@ function actualizarFiltrosCondicionales() {
 // PAGINACIÓN
 // ─────────────────────────────────────────────────────────────
 function actualizarPaginacion(pagina) {
-    // Actualiza el texto "Página N"
-    paginaInfo.textContent = `Página ${pagina}`;
-
-    // Botón anterior: desactivado en la página 1
-    btnAnterior.disabled = pagina === 1;
-
-    // Botón siguiente: desactivado si el servidor devolvió menos de LIMITE registros
-    btnSiguiente.disabled = !estado.hayMasResultados;
+    const totalPaginas = Math.ceil(estado.totalResultados / LIMITE);
+    paginaInfo.textContent = `Página ${pagina} de ${totalPaginas}`;
+    btnAnterior.disabled  = pagina === 1;
+    btnSiguiente.disabled = pagina >= totalPaginas;
 }
 
 function actualizarInfoResultados(cantidad, pagina) {
@@ -414,7 +402,7 @@ function actualizarInfoResultados(cantidad, pagina) {
     const inicio = (pagina - 1) * LIMITE + 1;
     const fin    = inicio + cantidad - 1;
     infoResultados.textContent =
-        `Mostrando del ${inicio} al ${fin} · Página ${pagina}`;
+        `Mostrando del ${inicio} al ${fin} · ${estado.totalResultados} resultados en total`;
 }
 
 
@@ -496,7 +484,7 @@ btnAnterior.addEventListener('click', () => {
 
 // Paginación: página siguiente
 btnSiguiente.addEventListener('click', () => {
-    if (estado.hayMasResultados) {
+    if (estado.paginaActual < Math.ceil(estado.totalResultados / LIMITE)) {
         buscarSolicitudes(estado.paginaActual + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
