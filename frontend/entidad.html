@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de entidad — Subvenciones Bienestar Animal</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <a class="navbar__logo" href="index.html">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span>Bienestar Animal</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Solicitudes</a></li>
+                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="seccion">
+            <div class="contenedor">
+
+                <h1 class="seccion__titulo">Ficha de entidad</h1>
+                <p class="seccion__subtitulo">
+                    Historial completo de solicitudes de la entidad seleccionada.
+                </p>
+
+                <!-- Datos principales -->
+                <div id="entidad-info" class="tarjeta" style="margin-bottom: 2rem;">
+                    <h2 id="entidad-nombre">Entidad</h2>
+                    <p><strong>CIF:</strong> <span id="entidad-cif"></span></p>
+                </div>
+
+                <!-- Estado de carga -->
+                <p id="entidad-cargando" class="estado-carga">Cargando datos…</p>
+
+                <!-- Error -->
+                <p id="entidad-error" class="estado-error" style="display:none;"></p>
+
+                <!-- Tabla -->
+                <div id="entidad-tabla-wrapper" class="tabla-wrapper" style="display:none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Año</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                                <th>Importe (€)</th>
+                                <th>Expediente</th>
+                            </tr>
+                        </thead>
+                        <tbody id="entidad-tabla-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Sin resultados -->
+                <p id="entidad-vacia" class="estado-carga" style="display:none;">
+                    Esta entidad no tiene solicitudes registradas.
+                </p>
+
+                <a href="solicitudes.html" class="btn btn-secundario" style="margin-top:2rem;">
+                    ← Volver al buscador
+                </a>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav">
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <span class="footer-principal__sep">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep">|</span>
+                <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep">|</span>
+                <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+                   target="_blank">DGDA</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la BDNS y la DGDA · © 2026
+        </div>
+    </footer>
+
+    <script src="js/entidad.js"></script>
+</body>
+</html>
