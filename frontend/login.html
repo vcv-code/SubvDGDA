@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--
+    login.html — Página de inicio de sesión
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    Diseño:
+    ───────
+    Card partida en dos columnas (CSS Grid 1fr 1fr):
+    · Izquierda: foto de animales sobre círculo verde oscuro + blob verde.
+      La decoración refuerza la identidad visual del proyecto.
+    · Derecha: formulario de calidad institucional (GOV.UK-inspired):
+      labels en negrita, inputs con borde 2px, foco con outline verde,
+      errores con borde izquierdo rojo.
+    Fondo: verde suave del proyecto (#E8F5E9).
+
+    En móvil (< 680px) la columna de imagen se oculta y queda
+    solo el formulario para no sobrecargar pantallas pequeñas.
+
+    Flujo:
+    ──────
+    POST /auth/login → { access_token } → localStorage → privado.html
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar — Subvenciones Bienestar Animal</title>
+    <meta name="description"
+          content="Accede a tu cuenta para consultar el área privada de subvenciones de bienestar animal.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span>Bienestar Animal</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Solicitudes</a></li>
+                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main class="auth-fondo">
+        <div class="auth-page">
+
+            <!-- Enlace de contexto: sitúa al usuario dentro de la web -->
+            <p class="auth-page__servicio">
+                <a href="index.html">← Subvenciones Bienestar Animal</a>
+            </p>
+
+            <!-- Card partida: imagen izquierda + formulario derecha -->
+            <div class="auth-card" aria-labelledby="login-titulo">
+
+                <!-- ── Columna izquierda: decoración visual ── -->
+                <div class="auth-card__imagen" aria-hidden="true">
+                    <!--
+                        Tres capas superpuestas con position:absolute / relative:
+                        1. Círculo verde oscuro (z-index:0) — fondo principal
+                        2. Blob verde claro (z-index:0) — esquina inferior
+                        3. Foto de animales (z-index:1) — encima del círculo
+                    -->
+                    <div class="auth-card__circulo"></div>
+                    <div class="auth-card__blob"></div>
+                    <img
+                        src="assets/perro-gato.png"
+                        alt=""
+                        class="auth-card__foto"
+                        onerror="this.style.display='none'; document.getElementById('ph-login').style.display='block';"
+                    >
+                    <span id="ph-login" class="auth-card__foto-placeholder" style="display:none;">
+                        Imagen de animales
+                    </span>
+                </div>
+
+                <!-- ── Columna derecha: formulario ── -->
+                <div class="auth-card__formulario">
+
+                    <h1 class="auth-card__titulo" id="login-titulo">
+                        Inicia sesión
+                    </h1>
+                    <p class="auth-card__subtitulo">
+                        Accede a tu cuenta para ver contenido exclusivo.
+                    </p>
+
+                    <!--
+                        Alerta de error: oculta por defecto.
+                        auth.js añade clase "visible" si el servidor
+                        devuelve 401 (credenciales incorrectas) o hay error de red.
+                        role="alert": lectores de pantalla lo anuncian al aparecer.
+                    -->
+                    <div class="auth-alerta" id="login-alerta" role="alert" aria-live="polite">
+                        Correo o contraseña incorrectos. Inténtalo de nuevo.
+                    </div>
+
+                    <!--
+                        novalidate: desactiva la validación nativa del navegador.
+                        auth.js gestiona toda la validación con mensajes propios.
+                    -->
+                    <form id="form-login" novalidate>
+
+                        <!-- Campo: Correo electrónico -->
+                        <div class="grupo-campo">
+                            <label for="login-email" class="etiqueta-campo">
+                                Correo electrónico
+                            </label>
+                            <input
+                                type="email"
+                                id="login-email"
+                                name="email"
+                                class="input-campo"
+                                placeholder="usuario@ejemplo.com"
+                                autocomplete="email"
+                                required
+                                aria-describedby="error-email"
+                            >
+                            <span class="campo-error" id="error-email" role="alert">
+                                Introduce un correo electrónico válido.
+                            </span>
+                        </div>
+
+                        <!-- Campo: Contraseña -->
+                        <div class="grupo-campo">
+                            <label for="login-password" class="etiqueta-campo">
+                                Contraseña
+                            </label>
+                            <input
+                                type="password"
+                                id="login-password"
+                                name="password"
+                                class="input-campo"
+                                placeholder="Tu contraseña"
+                                autocomplete="current-password"
+                                required
+                                aria-describedby="error-password"
+                            >
+                            <span class="campo-error" id="error-password" role="alert">
+                                La contraseña no puede estar vacía.
+                            </span>
+                        </div>
+
+                        <!--
+                            btn-auth sobreescribe el ancho al 100%.
+                            auth.js deshabilita el botón durante la petición
+                            para evitar doble envío.
+                        -->
+                        <button
+                            type="submit"
+                            class="btn btn-verde btn-auth"
+                            id="btn-submit-login"
+                        >
+                            Entrar
+                        </button>
+
+                    </form>
+
+                    <p class="auth-card__enlace">
+                        ¿No tienes cuenta?
+                        <a href="registro.html">Regístrate aquí</a>
+                    </p>
+
+                </div>
+                <!-- fin .auth-card__formulario -->
+
+            </div>
+            <!-- fin .auth-card -->
+
+        </div>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <!-- NUEVO ENLACE DGDA -->
+                <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+                    target="_blank" rel="noopener noreferrer">
+                    DGDA
+                </a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la Dirección General de Derechos de los Animales (DGDA).
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+
+</body>
+</html>

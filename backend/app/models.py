@@ -40,6 +40,8 @@ class Solicitud(Base):
     num_expediente = Column(String(50), nullable=True)
     puntuacion     = Column(DECIMAL(5, 2), nullable=True)
     estado         = Column(Enum("concedida", "no_beneficiaria", "excluida", "desistida"), nullable=False)
+    provincia      = Column(String(100), nullable=True)
+    ccaa           = Column(String(100), nullable=True)
 
     convocatoria = relationship("Convocatoria", back_populates="solicitudes")
     beneficiario = relationship("Beneficiario", back_populates="solicitudes")

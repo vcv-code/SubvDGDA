@@ -42,13 +42,26 @@ def mapear_indices(headers):
     for i, h in enumerate(headers):
         if "expediente" in h:
             mapa["expediente"] = i
-        elif "cuantía" in h or ("importe" in h and "entidad" not in h):
+        elif "cuantía" in h or "concedido" in h or "euros" in h or ("importe" in h and "entidad" not in h):
             mapa["importe_idx"] = i
         elif "entidad" in h:
             mapa["entidad"] = i
         elif "cif" in h or "nif" in h:
             mapa["cif"] = i
+        elif "actuación" in h or "actuacion" in h or "línea" in h or "linea" in h:
+            mapa["linea"] = i
     return mapa
+
+
+def normalizar_linea(texto):
+    if not texto:
+        return None
+    t = texto.lower()
+    if "abandon" in t:
+        return "animales_abandonados"
+    if "felin" in t or "colonia" in t:
+        return "colonias_felinas"
+    return None
 
 
 # =========================
@@ -149,14 +162,14 @@ def parsear_boe_epa_2025(url):
         if el.name == "p":
             texto = el.get_text(" ", strip=True).lower()
 
-            if "beneficiarias" in texto:
-                estado_actual = "concedida"
-            elif "exclu" in texto:
-                estado_actual = "excluida"
-            elif "no adquieren" in texto or "desestimad" in texto or "deneg" in texto:
+            if "no adquieren" in texto or "desestimad" in texto or "deneg" in texto:
                 estado_actual = "denegada"
             elif "desistidas" in texto or "renunci" in texto:
                 estado_actual = "desistida"
+            elif "exclu" in texto:
+                estado_actual = "excluida"
+            elif "beneficiarias" in texto:
+                estado_actual = "concedida"
 
         # -------- TABLAS --------
         elif el.name == "table":
@@ -186,7 +199,8 @@ def parsear_boe_epa_2025(url):
                     "cif": limpiar_cif(safe_get(celdas, mapa.get("cif"))),
                     "puntuacion": extraer_puntos_2025(celdas),
                     "importe": extraer_importe_2025(celdas),
-                    "estado": estado_actual
+                    "estado": estado_actual,
+                    "linea": normalizar_linea(safe_get(celdas, mapa.get("linea"))),
                 }
 
                 # Regla clave: si hay importe → concedida

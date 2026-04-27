@@ -104,11 +104,11 @@ Frontend
 Interfaz web para explorar los datos mediante filtros y visualizaciones. La carpeta `frontend/` contiene:
 
 - `diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
-- `assets/logo.png` — logotipo provisional del proyecto
-- `assets/wireframes_subvenciones_bienestar_animal.pdf` — wireframes de todas las páginas
-- `assets/*.png` — capturas de los wireframes por página
-
-Páginas previstas: `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `privado.html`.
+- `especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
+- `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `auth.js`, `privado.js`)
+- `assets/` — logotipo, imágenes y wireframes en PDF
+- `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
 
 ### Backend
 
@@ -537,7 +537,7 @@ backend/app/
   main.py            → aplicación FastAPI con los routers registrados y manejadores de error personalizados
   routers/
     convocatorias.py → GET /convocatorias/
-    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, buscar, paginación)
+    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, cif, buscar, ccaa, provincia, línea; paginación con total)
     estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
     auth.py          → POST /auth/registro  y  POST /auth/login
     privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
@@ -583,7 +583,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · diseño frontend completado · pendiente maquetación**
+Fase: **backend completado · maquetación frontend completada · pendiente integración JS con API**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -600,12 +600,13 @@ Fase: **backend completado · diseño frontend completado · pendiente maquetaci
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo, estado y búsqueda parcial por nombre de entidad con paginación
+  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
-✔ Nginx como proxy inverso (`docker/nginx/nginx.conf`)
+✔ Nginx como servidor web y proxy inverso (`docker/nginx/nginx.conf`)
   · escucha en el puerto 80
-  · redirige el tráfico al backend (puerto 8000 interno, no expuesto al exterior)
-  · acceso a la API y a `/docs` a través de `http://localhost/`
+  · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
+  · redirige las rutas de la API al backend (puerto 8000 interno, no expuesto al exterior)
+  · acceso a la app en `http://localhost/` y a la API en `http://localhost/docs`
 ✔ autenticación JWT con tres niveles de acceso
   · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
   · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
@@ -622,11 +623,35 @@ Fase: **backend completado · diseño frontend completado · pendiente maquetaci
   · sin exponer internos del servidor en errores 500
 
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
+✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
+  · `index.html` — portada con métricas dinámicas y placeholders de gráficos
+  · `solicitudes.html` — buscador con filtros, tabla paginada y filtros condicionales (CCAA, línea)
+  · `estadisticas.html` — dashboard con 4 KPIs y 3 gráficos Chart.js (línea, donut, barras)
+  · `login.html` / `registro.html` — autenticación con validación client-side y diseño GOV.UK
+  · `privado.html` — zona exclusiva con control de acceso JWT
+✔ integración JS con la API REST: fetch a todos los endpoints, paginación con total de páginas, autenticación con Bearer token
+✔ CORS habilitado en el backend para desarrollo local
+✔ clave JWT segura configurada en variables de entorno (`.env`)
+✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
+✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF con filtro `?cif=` en el backend
+✔ filtro `?cif=` en `GET /solicitudes/`: permite recuperar todas las solicitudes de un beneficiario concreto
+✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y" en el frontend
 
 Pendiente:
 
-- maquetación HTML + CSS + JS
-- integración con la API (Chart.js para gráficos, filtros interactivos, zona privada)
+- páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
+
+### Funcionalidad pendiente: agrupaciones de municipios EELL 2025
+
+La convocatoria EELL 2025 permite que varios municipios presenten una solicitud conjunta como agrupación, con un ayuntamiento representante y un importe asignado a cada miembro.
+
+**Estado actual:** los datos están completamente cargados en la base de datos (13 agrupaciones, 72 municipios miembro) y los modelos ORM `Agrupacion` y `AgrupacionMiembro` están definidos en el backend con sus relaciones. Sin embargo, esta información no se expone aún en la API ni en el frontend.
+
+**Lo que faltaría para implementarlo:**
+
+- Backend: añadir `es_agrupacion: bool` a `SolicitudOut` (una línea en el router consultando `s.concesion.agrupacion`) y opcionalmente un schema `MiembroOut` con la lista de municipios y su importe individual
+- Buscador (`solicitudes.html`): mostrar un badge "Agrupación" en la columna de tipo cuando `es_agrupacion` sea `true`
+- Ficha de entidad (`entidad.html`): cuando la solicitud es una agrupación, mostrar la lista de municipios miembro con el importe que le corresponde a cada uno
 
 ---
 
@@ -749,6 +774,18 @@ docker compose down -v       # para y borra el volumen (reset total de la BD)
 docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
 ```
 
+#### Solución de problemas en WSL2 (Windows)
+
+Si el contenedor `bdns_nginx` no arranca con el error `failed to create shim task` o `no such file or directory` al montar volúmenes, es un problema conocido de Docker Desktop + WSL2 con bind mounts de archivos individuales. La solución es recrear los contenedores desde cero:
+
+```bash
+cd docker
+docker compose down
+docker compose up -d
+```
+
+Si el error persiste, asegúrate de que el volumen de Nginx monta el **directorio** `./nginx` y no el archivo individual `./nginx/nginx.conf`. El archivo de configuración debe llamarse `default.conf` dentro de esa carpeta.
+
 ---
 
 ## Tests
@@ -788,11 +825,30 @@ Complementan a los tests automáticos verificando el stack completo: Nginx → F
 
 ## Flujo de trabajo
 
-```text
-main → estable
-dev → desarrollo
-feature/* → funcionalidades
-```
+El proyecto sigue un flujo basado en main + dev + feature/*, un modelo híbrido entre Git Flow y GitHub Flow, adaptado a equipos pequeños.
+
+### Estructura
+
+main (producción, estable)
+ │
+ └── dev (desarrollo)
+       │
+       ├── feature/*(funcionalidad)
+       └── feature/*(funcionalidad)
+
+### Orden
+
+1. Cada funcionalidad se desarrolla en una rama feature/*
+2. Se hacen commits sobre esa rama
+3. Se integra en dev mediante Pull Request (preferiblemente con squash)
+4. dev actúa como entorno de integración
+5. Cuando es estable, se fusiona en main
+
+### Motivos
+
+Hemos elegido este tipo de flujo porque lo hemos utilizado ambas en las prácticas de empresa y porque separa desarrollo (dev) de producción (main), reduciendo errores y permitiendonos trabajar en paralelo de forma segura, manteniendo un flujo claro y sencillo, adecuado para equipos pequeños y proyectos pequeños o medianos con desarrollo activo, como es el caso.
+
+Otros flujos más simples (todo en main) son arriesgados, y los más complejos (Git Flow completo) añaden complejidad innecesaria.
 
 ---
 
@@ -812,18 +868,36 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ---
 
-## Mejoras futuras anotadas (no implementadas)
+## Mejoras futuras
+
+### Respecto al modelo de datos
+
+- **Cofinanciación EELL**: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
+- **Campo `linea` para EPA 2024**: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
+- **Causas de exclusión EPA**: el BOE las incluye pero con formato diferente al de EELL.
+- **Provincia/CCAA para EPA (asociaciones)**: no derivable del CIF tipo G de forma estándar.
+
+### Respecto al backend
+
+- **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
+
+### Respecto al registro de usuarios
 
 - **Recuperación de contraseña ("¿Olvidaste tu contraseña?")** — flujo de reset por email: token de un solo uso, enlace de reset y expiración. Requiere integración con un servicio de envío de emails (SMTP o SendGrid) y una tabla adicional de tokens en la BD.
 - **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
-- **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
-- **Páginas de error HTML en el frontend** — los manejadores de error del backend ya devuelven JSON estructurado con `error`, `mensaje` y `sugerencia`. Cuando exista el frontend, esos campos se usarán para mostrar páginas visuales con un mensaje claro y un botón "Volver al inicio" en lugar del JSON en bruto.
 - **Login con Google / GitHub (OAuth)** — los wireframes contemplan botones de acceso social. No implementado en el backend actual; requeriría integración con un proveedor OAuth2 externo.
+
+### Respecto al frontend
+
 - **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
-- Cofinanciación EELL: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
-- Campo `linea` para EPA 2024: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
-- Causas de exclusión EPA: el BOE las incluye pero con formato diferente al de EELL.
-- Provincia/CCAA para EPA (asociaciones): no derivable del CIF tipo G de forma estándar.
+- **Agrupaciones de municipios EELL 2025** — la BD y los modelos ORM están completos (13 agrupaciones, 72 miembros). Falta exponer `es_agrupacion` en la API y mostrar el desglose por municipio en la ficha de entidad. Ver detalle en el apartado "Estado actual".
+
+### Respecto al despliegue en producción pública
+
+- **HTTPS / SSL** — imprescindible antes de exponer la aplicación a internet. Nginx gestionaría el certificado (Let's Encrypt) y terminaría el cifrado; sin ello los tokens JWT viajan en texto plano. Requiere un dominio público.
+- **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de salir al exterior.
+- **CORS con dominio específico** — sustituir `allow_origins=["*"]` en `main.py` por la URL del dominio real para evitar que otras webs puedan llamar a la API.
+- **Rate limiting en Nginx** — limitar el número de peticiones por IP al endpoint `/auth/login` para prevenir ataques de fuerza bruta sobre las contraseñas.
 
 ---
 
