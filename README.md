@@ -537,7 +537,7 @@ backend/app/
   main.py            → aplicación FastAPI con los routers registrados y manejadores de error personalizados
   routers/
     convocatorias.py → GET /convocatorias/
-    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, buscar, paginación)
+    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, cif, buscar, ccaa, provincia, línea; paginación con total)
     estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
     auth.py          → POST /auth/registro  y  POST /auth/login
     privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
@@ -600,7 +600,7 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo, estado, búsqueda parcial por nombre, CCAA, provincia y línea de actuación con paginación
+  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
 ✔ Nginx como servidor web y proxy inverso (`docker/nginx/nginx.conf`)
   · escucha en el puerto 80
@@ -629,15 +629,29 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
   · `estadisticas.html` — dashboard con 4 KPIs y 3 gráficos Chart.js (línea, donut, barras)
   · `login.html` / `registro.html` — autenticación con validación client-side y diseño GOV.UK
   · `privado.html` — zona exclusiva con control de acceso JWT
-✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
+✔ integración JS con la API REST: fetch a todos los endpoints, paginación con total de páginas, autenticación con Bearer token
 ✔ CORS habilitado en el backend para desarrollo local
 ✔ clave JWT segura configurada en variables de entorno (`.env`)
+✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
+✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF con filtro `?cif=` en el backend
+✔ filtro `?cif=` en `GET /solicitudes/`: permite recuperar todas las solicitudes de un beneficiario concreto
+✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y" en el frontend
 
 Pendiente:
 
-- integración completa de filtros avanzados (CCAA, provincia, línea) en el frontend (el backend ya los expone)
-- ficha de entidad (`entidad.html`) con historial por CIF — pendiente issue 7C
 - páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
+
+### Funcionalidad pendiente: agrupaciones de municipios EELL 2025
+
+La convocatoria EELL 2025 permite que varios municipios presenten una solicitud conjunta como agrupación, con un ayuntamiento representante y un importe asignado a cada miembro.
+
+**Estado actual:** los datos están completamente cargados en la base de datos (13 agrupaciones, 72 municipios miembro) y los modelos ORM `Agrupacion` y `AgrupacionMiembro` están definidos en el backend con sus relaciones. Sin embargo, esta información no se expone aún en la API ni en el frontend.
+
+**Lo que faltaría para implementarlo:**
+
+- Backend: añadir `es_agrupacion: bool` a `SolicitudOut` (una línea en el router consultando `s.concesion.agrupacion`) y opcionalmente un schema `MiembroOut` con la lista de municipios y su importe individual
+- Buscador (`solicitudes.html`): mostrar un badge "Agrupación" en la columna de tipo cuando `es_agrupacion` sea `true`
+- Ficha de entidad (`entidad.html`): cuando la solicitud es una agrupación, mostrar la lista de municipios miembro con el importe que le corresponde a cada uno
 
 ---
 
@@ -873,9 +887,10 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
 - **Login con Google / GitHub (OAuth)** — los wireframes contemplan botones de acceso social. No implementado en el backend actual; requeriría integración con un proveedor OAuth2 externo.
 
-### Respecto al fronted
+### Respecto al frontend
 
 - **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
+- **Agrupaciones de municipios EELL 2025** — la BD y los modelos ORM están completos (13 agrupaciones, 72 miembros). Falta exponer `es_agrupacion` en la API y mostrar el desglose por municipio en la ficha de entidad. Ver detalle en el apartado "Estado actual".
 
 ### Respecto al despliegue en producción pública
 
