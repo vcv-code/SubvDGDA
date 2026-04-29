@@ -75,6 +75,7 @@ class EstadisticasOut(BaseModel):
     total_registros:  int
     total_concedidas: int
     importe_global:   float
+    entidades_unicas: int
 
 
 # ──────────────────────────────────────────────
