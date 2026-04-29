@@ -37,7 +37,8 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 - [Análisis de la API BDNS](docs/api-bdns.md)  
 - [Modelo de datos del sistema](docs/modelo-datos.md)  
 - [Tests automáticos](docs/tests.md)  
-- [Diseño del frontend](frontend/diseño.md)  
+- [Diseño del frontend](frontend/docs/diseño.md)  
+- [Especificaciones del frontend](frontend/docs/especificaciones-frontend.md)  
 
 ---
 
@@ -103,8 +104,8 @@ Frontend
 
 Interfaz web para explorar los datos mediante filtros y visualizaciones. La carpeta `frontend/` contiene:
 
-- `diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
-- `especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
+- `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
+- `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `auth.js`, `privado.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
@@ -583,7 +584,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · maquetación frontend completada · pendiente integración JS con API**
+Fase: **backend completado · frontend integrado con la API · pendiente funcionalidades avanzadas y despliegue en producción**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -613,10 +614,14 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (26 tests — smoke, funcionales, seguridad)
-  · endpoints públicos: /convocatorias/, /solicitudes/, /estadisticas/
-  · filtros, paginación, búsqueda parcial y estructura de respuestas
-  · autenticación: registro, login, acceso con/sin token
+✔ tests automáticos con pytest (70 tests — smoke, funcionales, unitarios, seguridad)
+  · test_smoke.py (1): arranque de la API
+  · test_convocatorias.py (3): endpoint /convocatorias/
+  · test_solicitudes.py (9): filtros, paginación, búsqueda parcial y estructura de respuestas
+  · test_estadisticas.py (4): endpoint /estadisticas/ y cálculos de totales
+  · test_auth.py (10): registro, login, acceso con/sin token
+  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
+  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
@@ -626,7 +631,7 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
   · `index.html` — portada con métricas dinámicas y placeholders de gráficos
   · `solicitudes.html` — buscador con filtros, tabla paginada y filtros condicionales (CCAA, línea)
-  · `estadisticas.html` — dashboard con 4 KPIs y 3 gráficos Chart.js (línea, donut, barras)
+  · `estadisticas.html` — dashboard con 4 KPIs y 3 contenedores Chart.js maquetados (línea, donut, barras; pendientes de conectar con datos reales)
   · `login.html` / `registro.html` — autenticación con validación client-side y diseño GOV.UK
   · `privado.html` — zona exclusiva con control de acceso JWT
 ✔ integración JS con la API REST: fetch a todos los endpoints, paginación con total de páginas, autenticación con Bearer token
@@ -643,24 +648,54 @@ Fase: **backend completado · maquetación frontend completada · pendiente inte
 
 Pendiente:
 
-- páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
-- gráficos de `estadisticas.html`: los placeholders de Chart.js están maquetados pero pendientes de conectar con datos reales de la API
+### Pendientes de frontend
 
-### Funcionalidad pendiente: gráficos de estadísticas
+- Páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
+- Mejorar los mensajes de error visibles al usuario: los mensajes técnicos actuales no son comprensibles para el usuario final; traducirlos a lenguaje natural
+- Indicadores de carga (spinners): mostrar feedback visual mientras se espera respuesta de la API en todas las páginas con fetch
+- Exportar resultados a CSV: botón en el buscador que descargue la búsqueda actual filtrada; se puede implementar en JS puro (construyendo el CSV en cliente) o con un endpoint `/solicitudes/export` en el backend
+- Repensar las gráficas de `estadisticas.html` y conectarlas con datos reales de la API; valorar añadir una sección de conclusiones relevantes extraídas de los datos
+- Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales o consultar directamente a la DGDA; incluir información de contacto con la DGDA y cómo presentar una solicitud de acceso a información pública
+- Notas con datos relevantes destacados (pendiente de concretar cuáles)
+- Ficha de entidad como modal/popup: al hacer clic en una fila del buscador, mostrar la ficha en un overlay con botón × para cerrar en lugar de navegar a otra página, de modo que al cerrar se conserve la búsqueda y paginación anteriores
+- Valorar la visibilidad y utilidad del botón de borrar filtros del buscador: el funcionamiento técnico es correcto, pero conviene revisar si los usuarios lo encuentran fácilmente y si resulta útil en contexto
+- Renombrar el nombre del proyecto en la cabecera (top-left junto al logo): el texto actual "Bienestar Animal" es demasiado genérico; sustituirlo por algo más descriptivo y abreviado del proyecto (ej. "Subvenciones para Protección Animal" o similar, por decidir), y cambiar el color a negro para que armonice con el logo
+- Botón "Conócenos" en la cabecera: no tiene sentido en el contexto actual; valorar eliminarlo o sustituirlo por otro acceso de interés
+- KPIs de `estadisticas.html`: centrarlos y unificar el estilo con los de `index.html` (alineación, color de fuente) para mantener coherencia visual entre páginas
+- Contenido de la página privada (`privado.html`): tabla resumen con todos los datos por año y estado, con sumatorios, separada por tipo (una para EPAs y otra para EELL); posibles datos o vistas adicionales para usuarios registrados
+- Política de privacidad y aviso legal: página informativa sobre el tratamiento de datos de los usuarios registrados
+- Meta tags de redes sociales (`og:title`, `og:description`, `og:image`): para que al compartir la URL en redes aparezca el logo y una descripción del proyecto
+- Favicon: verificar que está configurado correctamente en todas las páginas HTML
+- Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA en los componentes principales
+- Página "Otros sitios de interés": directorio de organizaciones y recursos relacionados con el bienestar animal, con logo, nombre (enlazado a su web o red social) y descripción breve; candidatos: Basma, Meowmetrics, FdCats, Plataforma GARRA, LosGatosTienenLey, entre otros
 
-`estadisticas.html` tiene los contenedores maquetados con Chart.js para tres gráficos (distribución por estado, importe por año, comparativa EPA/EELL). Los datos están disponibles en `GET /estadisticas/` pero `estadisticas.js` aún no los conecta con los gráficos.
+### Pendientes de backend y API
 
-### Funcionalidad pendiente: agrupaciones de municipios EELL 2025
+- Agrupaciones EELL 2025 expuestas en la API: añadir `es_agrupacion` a `SolicitudOut` y un endpoint o schema con el desglose de municipios miembro; mostrar badge "Agrupación" en el buscador y desglose en la ficha de entidad
+- Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol); valorar añadir modo mantenimiento y visualización de errores del sistema
+- Endpoint `/health`: responde `{"status": "ok"}` y permite a Docker, Nginx o cualquier monitor saber si el servicio está vivo sin consultar datos reales
+- Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian cuando se ejecuta el cron de sincronización con la API BDNS (1-2 veces al año); añadir cabeceras `Cache-Control` via FastAPI o Nginx para evitar consultas innecesarias a la BD; cuando el cron actualice datos, invalidar la caché
+- Cron de sincronización con la API BDNS: tarea periódica que actualice convocatorias automáticamente (frecuencia por decidir)
+- Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
+- Sistema de logs: registro de peticiones, errores y eventos relevantes del backend
 
-La convocatoria EELL 2025 permite que varios municipios presenten una solicitud conjunta como agrupación, con un ayuntamiento representante y un importe asignado a cada miembro.
+### Pendientes de infraestructura y despliegue
 
-**Estado actual:** los datos están completamente cargados en la base de datos (13 agrupaciones, 72 municipios miembro) y los modelos ORM `Agrupacion` y `AgrupacionMiembro` están definidos en el backend con sus relaciones. Sin embargo, esta información no se expone aún en la API ni en el frontend.
+- HTTPS con SSL vía Nginx: certificado de desarrollo (similar a la práctica de clase) y en producción via Let's Encrypt; imprescindible antes de exponer la aplicación a internet (sin HTTPS los tokens JWT viajan en texto plano)
+- Dominios personalizados: configuración de dominio propio tanto en desarrollo como en producción (también cubierto en una práctica de clase)
+- CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
+- Rate limiting en Nginx: limitar peticiones por IP al endpoint `/auth/login` para prevenir fuerza bruta
+- Cabeceras de seguridad en Nginx: añadir `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` y `Referrer-Policy` en `nginx.conf`; son tres líneas que refuerzan la seguridad frente a clickjacking y sniffing de contenido
+- Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar
+- Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
 
-**Lo que faltaría para implementarlo:**
+### Pendientes de usuarios y autenticación
 
-- Backend: añadir `es_agrupacion: bool` a `SolicitudOut` (una línea en el router consultando `s.concesion.agrupacion`) y opcionalmente un schema `MiembroOut` con la lista de municipios y su importe individual
-- Buscador (`solicitudes.html`): mostrar un badge "Agrupación" en la columna de tipo cuando `es_agrupacion` sea `true`
-- Ficha de entidad (`entidad.html`): cuando la solicitud es una agrupación, mostrar la lista de municipios miembro con el importe que le corresponde a cada uno
+- "Recuérdame" en el login: checkbox de sesión persistente que extienda la duración del token o use el refresh token
+- Cambiar contraseña desde el perfil: formulario en `privado.html` para actualizar la contraseña con la actual como confirmación
+- Recuperación de contraseña ("¿Olvidaste tu contraseña?"): flujo de reset por email con token de un solo uso y enlace de caducidad
+- Servidor de correo: enviar email de confirmación al registrarse (SMTP o servicio externo); comparte infraestructura con la recuperación de contraseña
+- Login con terceros (OAuth): integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
 
 ---
 
@@ -701,8 +736,8 @@ pip install -r requeriments.txt
 
 El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
-- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Incluye tanto las herramientas de procesamiento de datos (pdfplumber, beautifulsoup, pandas…) como las del backend (fastapi, sqlalchemy…). Es lo que se instala en el `venv` de la máquina de desarrollo.
-- **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (fastapi, uvicorn, sqlalchemy, pymysql y las de autenticación). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API.
+- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `pandas`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
+- **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (`fastapi`, `uvicorn`, `sqlalchemy`, `pymysql`, `bcrypt`, `python-jose`, `email-validator`, `httpx` y `pytest`). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API. Todas las versiones están fijadas.
 
 ---
 
@@ -811,17 +846,19 @@ pytest -v
 ### Ejecutar por módulo
 
 ```bash
-pytest tests/test_smoke.py        # arranque de la API
+pytest tests/test_smoke.py              # arranque de la API
 pytest tests/test_convocatorias.py
 pytest tests/test_solicitudes.py
 pytest tests/test_estadisticas.py
-pytest tests/test_auth.py         # registro, login y zona privada
+pytest tests/test_auth.py               # registro, login y zona privada
+pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
+pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ```
 
 ### Resultado esperado
 
 ```text
-26 passed
+70 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -879,34 +916,13 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Mejoras futuras
 
-### Respecto al modelo de datos
+Mejoras identificadas pero no planificadas para el desarrollo actual:
 
-- **Cofinanciación EELL**: aporta puntos en la evaluación pero no modifica el importe. Solo disponible en ANEXO V XML 2025.
-- **Campo `linea` para EPA 2024**: la Orden ya estaba en vigor pero el BOE 2024 no lo desglosa por entidad en las tablas parseadas.
-- **Causas de exclusión EPA**: el BOE las incluye pero con formato diferente al de EELL.
-- **Provincia/CCAA para EPA (asociaciones)**: no derivable del CIF tipo G de forma estándar.
-
-### Respecto al backend
-
-- **HTTPS / SSL** — en un despliegue real, Nginx gestionaría el certificado SSL (por ejemplo via Let's Encrypt) y terminaría el cifrado antes de pasar la petición al backend. Requiere un dominio público y un servidor accesible desde internet.
-
-### Respecto al registro de usuarios
-
-- **Recuperación de contraseña ("¿Olvidaste tu contraseña?")** — flujo de reset por email: token de un solo uso, enlace de reset y expiración. Requiere integración con un servicio de envío de emails (SMTP o SendGrid) y una tabla adicional de tokens en la BD.
-- **Verificación de email en el registro** — enviar un código de confirmación al correo antes de activar la cuenta. Misma infraestructura que la recuperación de contraseña.
-- **Login con Google / GitHub (OAuth)** — los wireframes contemplan botones de acceso social. No implementado en el backend actual; requeriría integración con un proveedor OAuth2 externo.
-
-### Respecto al frontend
-
-- **Paleta de colores definitiva** — la paleta actual (`#47C079` como verde principal) es provisional y puede revisarse durante la maquetación.
-- **Agrupaciones de municipios EELL 2025** — la BD y los modelos ORM están completos (13 agrupaciones, 72 miembros). Falta exponer `es_agrupacion` en la API y mostrar el desglose por municipio en la ficha de entidad. Ver detalle en el apartado "Estado actual".
-
-### Respecto al despliegue en producción pública
-
-- **HTTPS / SSL** — imprescindible antes de exponer la aplicación a internet. Nginx gestionaría el certificado (Let's Encrypt) y terminaría el cifrado; sin ello los tokens JWT viajan en texto plano. Requiere un dominio público.
-- **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de salir al exterior.
-- **CORS con dominio específico** — sustituir `allow_origins=["*"]` en `main.py` por la URL del dominio real para evitar que otras webs puedan llamar a la API.
-- **Rate limiting en Nginx** — limitar el número de peticiones por IP al endpoint `/auth/login` para prevenir ataques de fuerza bruta sobre las contraseñas.
+- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
+- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
+- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
+- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
+- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
 
 ---
 
