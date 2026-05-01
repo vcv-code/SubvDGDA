@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ficha de entidad — Subvenciones Bienestar Animal</title>
 
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <meta property="og:title" content="Ficha de entidad — Subvenciones Bienestar Animal">
+    <meta property="og:description" content="Consulta el historial completo de solicitudes de una entidad en todas las convocatorias de bienestar animal.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
@@ -12,7 +21,7 @@
 
     <!-- NAVBAR -->
     <header>
-        <nav class="navbar">
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
                 <span>Bienestar Animal</span>
@@ -83,19 +92,23 @@
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
-            <nav class="footer-principal__nav">
-                <a href="https://github.com" target="_blank">GitHub</a>
-                <span class="footer-principal__sep">|</span>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="#">Documentación</a>
-                <span class="footer-principal__sep">|</span>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
-                <span class="footer-principal__sep">|</span>
-                <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
-                   target="_blank">DGDA</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
-            Datos procedentes de la BDNS y la DGDA · © 2026
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+               target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>
 

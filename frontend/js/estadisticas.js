@@ -136,10 +136,9 @@ function actualizarKPIs(datos) {
     document.getElementById('kpi-total').textContent =
         formatearMiles(datos.total_registros);
 
-    // KPI 2: entidades únicas — pendiente de backend
-    // Cuando el backend exponga el dato, cambiar por:
-    // document.getElementById('kpi-entidades').textContent = formatearMiles(datos.total_entidades);
-    document.getElementById('kpi-entidades').textContent = '—';
+    // KPI 2: entidades únicas — dato real de la API (entidades_unicas en EstadisticasOut)
+    document.getElementById('kpi-entidades').textContent =
+        formatearMiles(datos.entidades_unicas);
 
     // KPI 3: importe total concedido en millones
     document.getElementById('kpi-importe').textContent =
