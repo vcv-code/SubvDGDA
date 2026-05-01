@@ -29,6 +29,17 @@ if (!cif) {
     cargarHistorial(cif);
 }
 
+function badgeEstadoHtml(estado) {
+    const mapa = {
+        'concedida':       { texto: 'Concedida',       clase: 'badge-concedida' },
+        'no_beneficiaria': { texto: 'No beneficiaria', clase: 'badge-no-beneficiaria' },
+        'excluida':        { texto: 'Excluida',         clase: 'badge-excluida' },
+        'desistida':       { texto: 'Desistida',        clase: 'badge-desistida' },
+    };
+    const info = mapa[estado] || { texto: estado, clase: '' };
+    return `<span class="badge ${info.clase}">${info.texto}</span>`;
+}
+
 async function cargarHistorial(cif) {
     try {
         const url = `/solicitudes/?cif=${encodeURIComponent(cif)}`;
@@ -68,7 +79,7 @@ async function cargarHistorial(cif) {
             tr.innerHTML = `
                 <td>${anio}</td>
                 <td>${tipo}</td>
-                <td>${estado}</td>
+                <td>${badgeEstadoHtml(estado)}</td>
                 <td>${importe}</td>
                 <td>${expediente}</td>
             `;
