@@ -584,7 +584,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · sistema de logs activo · pendiente HTTPS, cron y funcionalidades avanzadas**
+Fase: **backend completado · HTTPS activo · pendiente cron y funcionalidades avanzadas**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -617,7 +617,7 @@ Fase: **backend completado · sistema de logs activo · pendiente HTTPS, cron y 
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (87 tests — smoke, funcionales, unitarios, seguridad)
+✔ tests automáticos con pytest (96 tests — smoke, funcionales, unitarios, seguridad, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
@@ -625,12 +625,19 @@ Fase: **backend completado · sistema de logs activo · pendiente HTTPS, cron y 
   · test_auth.py (10): registro, login, acceso con/sin token
   · test_agrupaciones.py (5): endpoint /agrupaciones/ con fixture completa de relaciones
   · test_logging.py (5): middleware de logging y configuración del logger
+  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
   · sin exponer internos del servidor en errores 500
+✔ HTTPS con dominio local (`subvencionesDGDA.local`) y certificado autofirmado
+  · certificado generado con openssl (CN + SAN para compatibilidad con navegadores modernos)
+  · Nginx termina el SSL en el puerto 443; el backend no necesita saber nada de SSL
+  · HTTP (puerto 80) redirige automáticamente a HTTPS con código 301
+  · TLS 1.2 y 1.3 únicamente; cabecera `Strict-Transport-Security` activa
+  · ver [`docs/https.md`](docs/https.md) para reproducir el entorno
 ✔ sistema de logs: registro de cada petición HTTP (IP, método, ruta, código, latencia) y errores 500
   · logger de aplicación con rotación automática de archivos (`logs/app/`)
   · access log y error log de Nginx con formato personalizado (`logs/nginx/`)
@@ -659,6 +666,15 @@ Fase: **backend completado · sistema de logs activo · pendiente HTTPS, cron y 
 ✔ nav renombrado de "Solicitudes" a "Buscador" en todas las páginas
 ✔ enlace DGDA en los créditos del footer de todas las páginas (junto al enlace BDNS existente)
 ✔ contador de resultados en el buscador: "N resultados · Mostrando del X al Y"
+
+Pendiente de merge — rama feature/7d-mejoras-frontend:
+
+✔ favicon en todas las páginas HTML
+✔ meta tags OG (`og:title`, `og:description`, `og:image`) en index, entidad y estadísticas
+✔ botón "Conócenos" → "Ver solicitudes" en index.html
+✔ badge de estado en ficha de entidad: "no_beneficiaria" → "No beneficiaria" con color por estado
+✔ KPI entidades únicas conectado con dato real de la API (`entidades_unicas`)
+✔ mejoras de accesibilidad: `role="navigation"` y `aria-label` en navbar
 
 Pendiente:
 
@@ -695,11 +711,10 @@ Pendiente:
 
 ### Pendientes de infraestructura y despliegue
 
-- HTTPS con SSL vía Nginx: certificado de desarrollo (similar a la práctica de clase) y en producción via Let's Encrypt; imprescindible antes de exponer la aplicación a internet (sin HTTPS los tokens JWT viajan en texto plano)
-- Dominios personalizados: configuración de dominio propio tanto en desarrollo como en producción (también cubierto en una práctica de clase)
+- Dominio real y certificado Let's Encrypt: en producción sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
 - CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 - Rate limiting en Nginx: limitar peticiones por IP al endpoint `/auth/login` para prevenir fuerza bruta
-- Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar
+- Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
 - Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
 
 ### Pendientes de usuarios y autenticación
@@ -850,6 +865,13 @@ Si el error persiste, asegúrate de que el volumen de Nginx monta el **directori
 
 ## Tests
 
+El proyecto tiene **125 pruebas en total**: 96 automáticas con pytest y 29 manuales verificadas en el navegador con Docker levantado.
+
+| Nivel | Cantidad | Herramienta |
+|-------|----------|-------------|
+| Automáticos | 96 | pytest (sin Docker) |
+| Manuales | 29 | Navegador + DevTools |
+
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
 ### Ejecutar todos los tests
@@ -876,7 +898,7 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-87 passed
+96 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
