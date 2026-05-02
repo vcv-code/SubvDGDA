@@ -3,9 +3,8 @@
 
 **Proyecto:** Análisis de Subvenciones de Bienestar Animal y Colonias Felinas  
 **Curso:** 2º DAW — Proyecto Final de Ciclo  
-**Issue:** 7B — Estructura HTML + CSS + JS del frontend  
-**Depende de:** Issue 7A (Diseño y wireframes, completada)  
-**Seguido por:** Issue 7C (Lógica: fetch + filtros + gráficos)
+**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + páginas Recursos y Estadísticas avanzadas)  
+**Depende de:** Issue 7A (Diseño y wireframes, completada)
 
 ---
 
@@ -21,6 +20,7 @@
 8. [Accesibilidad — WCAG 2.1](#8-accesibilidad--wcag-21)
 9. [Decisiones de diseño justificadas](#9-decisiones-de-diseño-justificadas)
 10. [Pendientes de implementación](#10-pendientes-de-implementación)
+11. [Flujo completo de autenticación](#11-flujo-completo-de-autenticación)
 
 ---
 
@@ -64,29 +64,33 @@ frontend/
 │   └── styles.css          → Hoja de estilos compartida por todas las páginas
 │
 ├── js/
-│   ├── home.js             → Lógica de index.html
-│   ├── solicitudes.js      → Lógica del buscador
-│   ├── estadisticas.js     → Lógica del dashboard con Chart.js
-│   ├── auth.js             → Lógica de login y registro (JWT)
-│   ├── privado.js          → Control de acceso y contenido de zona privada
-│   └── entidad.js          → Lógica de la ficha de entidad (implementado en 7C)
+│   ├── home.js                      → Lógica de index.html
+│   ├── solicitudes.js               → Lógica del buscador
+│   ├── estadisticas.js              → Lógica del dashboard con Chart.js
+│   ├── estadisticas-avanzadas.js    → Lógica de estadísticas avanzadas (KPIs, gráficos CCAA, ranking)
+│   ├── recursos.js                  → Lógica del directorio de recursos (pendiente de endpoint)
+│   ├── auth.js                      → Lógica de login y registro (JWT)
+│   ├── privado.js                   → Control de acceso y contenido de zona privada
+│   └── entidad.js                   → Lógica de la ficha de entidad
 │
 ├── assets/
-│   ├── logo.png                → Logotipo del proyecto
+│   ├── logo.png                → Logotipo del proyecto (también usado como favicon)
 │   ├── perro-gato.png          → Foto para la portada (portada-split)
 │   ├── animales-login.png      → Foto decorativa en login.html
 │   ├── animales-registro.png   → Foto decorativa en registro.html
 │   └── wireframes_...pdf       → Wireframes de referencia (issue 7A)
 │
-├── index.html              → Página de inicio (Home)
-├── solicitudes.html        → Buscador de solicitudes con filtros
-├── estadisticas.html       → Dashboard de gráficos con Chart.js
-├── login.html              → Formulario de inicio de sesión
-├── registro.html           → Formulario de creación de cuenta
-├── privado.html            → Zona exclusiva para usuarios registrados
-├── entidad.html            → Ficha de entidad (pendiente 7C)
-├── diseño.md               → Guía visual del proyecto (issue 7A)
-└── especificaciones-frontend.md  → Este documento
+├── index.html                       → Página de inicio (Home)
+├── solicitudes.html                 → Buscador de solicitudes con filtros
+├── estadisticas.html                → Dashboard de gráficos con Chart.js
+├── estadisticas-avanzadas.html      → Análisis avanzado: CCAA, EPA vs EELL, ranking (Issue 7D)
+├── recursos.html                    → Directorio de organizaciones y sitios de interés (Issue 7D)
+├── login.html                       → Formulario de inicio de sesión
+├── registro.html                    → Formulario de creación de cuenta
+├── privado.html                     → Zona exclusiva para usuarios registrados
+├── entidad.html                     → Ficha de entidad con historial y desglose de agrupaciones
+├── diseño.md                        → Guía visual del proyecto (issue 7A)
+└── especificaciones-frontend.md     → Este documento
 ```
 
 ### ¿Por qué un JS por página?
@@ -112,7 +116,7 @@ Definida como **Custom Properties CSS** en `:root` para que un solo cambio de va
 | `--color-hover` | `#52E38E` | Verde claro — estado hover de links |
 | `--color-fondo-verde` | `#E8F5E9` | Verde suave — fondos de secciones |
 | `--color-verde-btn` | `#2E7D32` | Verde oscuro — botones primarios, títulos |
-| `--color-azul` | `#1565C0` | Azul institucional — uso secundario |
+| `--color-azul` | `#1565C0` | Azul institucional — badge Agrupación, spinner |
 | `--color-gris-claro` | `#F5F5F5` | Fondos de tabla, alternado de filas |
 | `--color-gris-medio` | `#E0E0E0` | Bordes de inputs, separadores |
 | `--color-gris-texto` | `#616161` | Texto secundario, labels |
@@ -172,11 +176,26 @@ Se usa una escala basada en **múltiplos de 8px**. Esta escala es estándar en d
 
 ### 4.1 Navbar
 
-Barra de navegación fija (`position: fixed`) de 80px de altura. Contiene el logo a la izquierda y los enlaces de navegación a la derecha. El enlace de la página actual recibe la clase `activo` que aplica un subrayado verde.
+Barra de navegación fija (`position: fixed`) de 80px de altura. Contiene el logo y el nombre **"Subvenciones DGDA"** a la izquierda (texto en negro, alineado visualmente con el logo) y los enlaces de navegación a la derecha. El enlace de la página actual recibe la clase `activo` que aplica un subrayado verde; también se añade `aria-current="page"` para accesibilidad.
 
 El botón "Acceder" tiene un estilo diferente (fondo verde, texto blanco) para destacarlo como la acción principal de autenticación.
 
+**Estructura actual del navbar (Issue 7D) — 6 enlaces, en este orden:**
+
+| Posición | Enlace | Destino | Clase especial |
+|---|---|---|---|
+| 1 | Inicio | `index.html` | `activo` en home |
+| 2 | Buscador | `solicitudes.html` | `activo` en buscador |
+| 3 | Estadísticas | `estadisticas.html` | `activo` en estadísticas |
+| 4 | Estadísticas avanzadas | `estadisticas-avanzadas.html` | `activo` en estadísticas avanzadas |
+| 5 | Recursos | `recursos.html` | `activo` en recursos |
+| 6 | Acceder | `login.html` | `.btn-login` (botón verde) |
+
+Todas las páginas del proyecto han sido actualizadas para incluir este navbar con los 6 enlaces. El patrón de accesibilidad (`role="navigation"`, `aria-label`, `aria-current="page"`) y los estilos se mantienen uniformes en todas las páginas.
+
 **¿Por qué fijo?** En páginas largas como la Home o el Buscador, el usuario necesita poder navegar a otras secciones sin tener que volver al inicio de la página.
+
+**Cambios en Issue 7D:** el nombre del proyecto en el navbar se actualizó de "Bienestar Animal" a **"Subvenciones DGDA"** y el color del texto pasó a negro (`var(--color-negro)`) para armonizar con el logotipo. Además se añadieron los enlaces a "Estadísticas avanzadas" y "Recursos".
 
 ### 4.2 Footer
 
@@ -194,9 +213,24 @@ Se usan tres variantes de tarjeta:
 - **`.card-metrica-verde`** — tarjeta de métrica: fondo verde suave, número grande y label encima.
 - **`.card-anio`** — tarjeta de convocatoria por año: año en grande, estado "Cerrada", líneas EPA/EELL con importe y enlace a resultados.
 
-### 4.4 Badges de estado
+### 4.4 Badges de estado y agrupación
 
-Pequeñas etiquetas de color para los valores de estado de una solicitud. Se aplican con las clases `.badge-concedida`, `.badge-no-beneficiaria`, `.badge-excluida` y `.badge-desistida`. Los colores están justificados en la sección 3.1.
+**Badges de estado de solicitud** — pequeñas etiquetas de color para los valores de estado. Se aplican con las clases `.badge-concedida`, `.badge-no-beneficiaria`, `.badge-excluida` y `.badge-desistida`. Los colores están justificados en la sección 3.1.
+
+**Badge de agrupación** (Issue 7D) — etiqueta azul institucional que aparece junto al nombre de la entidad en el buscador cuando `s.es_agrupacion === true`. Se implementa con la clase `.badge-agrupacion`:
+
+```css
+.badge-agrupacion {
+    background-color: var(--color-azul);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-left: 6px;
+}
+```
+
+En `crearFila()` de `solicitudes.js`, la celda de nombre se construye con `createTextNode` (nombre) más el `<span class="badge-agrupacion">Agrupación</span>` añadido condicionalmente. No se usa `innerHTML` para no exponer el nombre de la entidad a posible inyección HTML.
 
 ### 4.5 Grids
 
@@ -250,6 +284,99 @@ Estructura HTML:
 
 En `registro.html`, cuatro elementos `.password-req` muestran si cada requisito se cumple. Cuando el usuario escribe, `auth.js` añade o quita la clase `ok` en cada indicador con el evento `input`. El CSS convierte el punto `·` en una marca `✓` verde al añadir la clase `ok`. Los indicadores tienen `aria-live="polite"` para ser accesibles con lector de pantalla.
 
+### 4.8 Spinners de carga (Issue 7D)
+
+Todas las páginas que realizan peticiones `fetch` tienen un spinner visual que aparece antes de la petición y desaparece en el bloque `finally`.
+
+**HTML** (presente en `solicitudes.html`, `entidad.html`, `estadisticas.html`, `index.html`, `recursos.html` y `estadisticas-avanzadas.html`):
+
+```html
+<div id="spinner" class="spinner"></div>
+```
+
+**CSS:**
+
+```css
+.spinner {
+    display: none;
+    margin: 20px auto;
+    border: 4px solid #ddd;
+    border-top: 4px solid var(--color-azul);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+```
+
+**Patrón JS** (idéntico en los cuatro archivos):
+
+```javascript
+async function cargarDatos() {
+    document.getElementById('spinner').style.display = 'block';
+    try {
+        // ... fetch ...
+    } catch (error) {
+        // ...
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
+    }
+}
+```
+
+### 4.9 Caja de error visual (Issue 7D)
+
+Cuando el backend devuelve un código de error HTTP (401, 403, 404, 422, 500), el frontend muestra una caja de error estructurada con los campos `mensaje` y `sugerencia` del JSON de error del backend.
+
+**HTML** (presente en `solicitudes.html`, `entidad.html`, `estadisticas.html`, `index.html`, `recursos.html` y `estadisticas-avanzadas.html`):
+
+```html
+<div id="error-box" class="error-box" style="display:none;">
+    <h3>Error</h3>
+    <p id="error-mensaje"></p>
+    <p id="error-sugerencia"></p>
+</div>
+```
+
+**CSS:**
+
+```css
+.error-box {
+    background: #ffe5e5;
+    border: 1px solid #ff8a8a;
+    padding: 16px;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+```
+
+**Patrón JS** (idéntico en los cuatro archivos JS):
+
+```javascript
+if (!respuesta.ok) {
+    let cuerpo = {};
+    try { cuerpo = await respuesta.json(); } catch (_) {}
+    document.getElementById('error-mensaje').textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+    document.getElementById('error-sugerencia').textContent = cuerpo.sugerencia || '';
+    document.getElementById('error-box').style.display      = 'block';
+    throw new Error(`Error ${respuesta.status}`);
+}
+```
+
+El backend devuelve siempre este formato en caso de error:
+
+```json
+{
+  "error": 404,
+  "mensaje": "Recurso no encontrado",
+  "sugerencia": "Comprueba la URL o los parámetros de la petición"
+}
+```
+
 ---
 
 ## 5. Páginas del sistema
@@ -258,15 +385,22 @@ En `registro.html`, cuatro elementos `.password-req` muestran si cada requisito 
 
 **Propósito:** Presentar el proyecto, mostrar las cifras clave y dar acceso rápido a las herramientas principales.
 
+**Cambios en Issues 7C/7D:**
+- Favicon configurado con `<link rel="icon" href="assets/logo.png">`.
+- Metadatos Open Graph (`og:title`, `og:description`, `og:image`) añadidos en el `<head>`.
+- KPI "Entidades únicas" conectado con el dato real de la API (`datos.entidades_unicas`).
+- Botón "Conócenos" → sustituido por "Ver solicitudes" enlazando a `solicitudes.html`.
+- Spinner de carga sobre las métricas.
+- Caja de error visual si el backend no responde.
+
 **Secciones:**
 
 | Sección | Contenido | Datos |
 |---|---|---|
 | Portada partida | Título "Sobre el proyecto" + descripción + foto de animales | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
-| Análisis visual | 2 placeholders para Chart.js (tarta de estados, barras de importe) | Se activa en 7C |
 
-Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave. El JS correspondiente (`mostrarConvocatoriasRecientes`, `crearTarjetaAnio`, `mostrarKpisTransparencia`) también se eliminó de `home.js`.
+Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
 
 **Archivo JS:** `js/home.js` — una sola petición a `/estadisticas/` alimenta todos los bloques.
 
@@ -274,11 +408,15 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 
 **Propósito:** Filtrar y consultar las solicitudes de subvención de la base de datos.
 
-**Filtros disponibles:**
-Actualización (Issue 7B):  
-La búsqueda por nombre ya no se realiza en el cliente.
-El backend implementa el parámetro ?buscar=, por lo que el filtrado se hace ahora server‑side. Se ha eliminado el .filter() en solicitudes.js.
+**Cambios en Issue 7D:**
+- La columna **Expediente** se sustituyó por la columna **Año** en la tabla de resultados.
+- El orden inicial de los resultados es **Entidad (A → Z)**; eliminada la opción "Por defecto" del selector de orden.
+- Badge **"Agrupación"** (azul) aparece junto al nombre de la entidad cuando `es_agrupacion === true`.
+- Botón **"↓ Descargar CSV"** en la barra `tabla-controles` (junto al selector de orden), visible solo cuando hay resultados.
 
+**Filtros disponibles:**
+
+La búsqueda por nombre se realiza server-side. El backend implementa el parámetro `?buscar=`; se ha eliminado el `.filter()` client-side de versiones anteriores.
 
 | Filtro | Tipo | Soportado por API | Condición de visibilidad |
 |---|---|---|---|
@@ -292,15 +430,36 @@ El backend implementa el parámetro ?buscar=, por lo que el filtrado se hace aho
 
 **Tabla de resultados — columnas:**
 
-Entidad, Expediente, Tipo, Estado (badge de color), Importe (€). Se simplificó de 8 a 5 columnas para mejorar la legibilidad; columnas como CIF, Año, Puntuación y CCAA/Provincia se omiten de la vista principal.
+| Columna | Fuente del dato | Notas |
+|---|---|---|
+| Entidad | `s.beneficiario.nombre` | Puede incluir badge "Agrupación" |
+| Año | `s.convocatoria.anio_convocatoria` | Sustituye a "Expediente" desde Issue 7D |
+| Tipo | `s.convocatoria.tipo_convoc` | "epa" → "EPA" |
+| Estado | `s.estado` | Badge de color (verde/rojo/naranja/morado) |
+| Importe (€) | `s.importe` | `—` si es null |
 
-**Control de orden:** Encima de la tabla aparece una barra `.tabla-controles` con el recuento de resultados a la izquierda y un `<select>` de ordenación a la derecha (opciones: por defecto, importe mayor→menor, importe menor→mayor, entidad A→Z). La ordenación es client-side sobre los resultados de la página actual.
+**Control de orden:** encima de la tabla aparece `.tabla-controles` con el recuento de resultados a la izquierda y a la derecha el selector de orden y el botón de exportación. Opciones de orden: Entidad (A → Z), Importe mayor → menor, Importe menor → mayor. La ordenación es client-side sobre los resultados de la página actual.
+
+**Exportación CSV:** el botón "↓ Descargar CSV" construye la URL `/solicitudes/export` con los filtros activos (`buscar`, `tipo`, `ccaa`, `anio`, `estado`) —sin `pagina` ni `limite`— y redirige con `window.location.href`. El backend genera y sirve el fichero CSV completo (todos los resultados de la búsqueda, sin paginación). No hay lógica de generación CSV en el cliente.
+
+```javascript
+function descargarCSV() {
+    const filtros = leerFiltros();
+    const params  = new URLSearchParams();
+    if (filtros.nombre) params.set('buscar', filtros.nombre);
+    if (filtros.tipo)   params.set('tipo',   filtros.tipo);
+    if (filtros.ccaa)   params.set('ccaa',   filtros.ccaa);
+    if (filtros.anio)   params.set('anio',   filtros.anio);
+    if (filtros.estado) params.set('estado', filtros.estado);
+    window.location.href = `${API_URL}/solicitudes/export?${params.toString()}`;
+}
+```
 
 **Paginación:** 50 resultados por página. Parámetros `limite` y `pagina` en la URL de la API.
 
-**Enlace a ficha:** Al hacer clic en cualquier fila se navega a `entidad.html?cif=...`.
+**Enlace a ficha:** al hacer clic en cualquier fila se navega a `entidad.html?cif=...`.
 
-**Parámetros por URL:** La página acepta `?anio=`, `?tipo=` y `?estado=` para pre-rellenar filtros. Así, el botón "Ver resultados →" de las tarjetas de convocatoria en el Home lleva directamente al buscador pre-filtrado por ese año.
+**Parámetros por URL:** la página acepta `?anio=`, `?tipo=` y `?estado=` para pre-rellenar filtros desde enlaces externos.
 
 **Archivo JS:** `js/solicitudes.js`.
 
@@ -308,13 +467,15 @@ Entidad, Expediente, Tipo, Estado (badge de color), Importe (€). Se simplific�
 
 **Propósito:** Dashboard con visualizaciones de datos.
 
+**Cambios en Issue 7D:** spinner de carga y caja de error visual añadidos.
+
 **KPIs (fila superior, orden definitivo):**
 
 | Posición | KPI | Cálculo |
 |---|---|---|
 | 1 | Registros totales | `datos.total_registros` |
 | 2 | Importe concedido € | `datos.importe_global` |
-| 3 | Entidades únicas | `datos.entidades_unicas` (pendiente backend) |
+| 3 | Entidades únicas | `datos.entidades_unicas` (dato real de la API) |
 | 4 | % Concedido | `(total_concedidas / total_registros) × 100` (client-side) |
 
 **Gráficos implementados:**
@@ -330,37 +491,184 @@ Entidad, Expediente, Tipo, Estado (badge de color), Importe (€). Se simplific�
 
 ### 5.4 Ficha de entidad — `entidad.html` + `js/entidad.js`
 
-**Estado:** Implementada en Issue 7C (frontend completo).  
-**Backend:** pendiente de añadir soporte a `?cif=`.
-
 **Propósito:** Mostrar el historial completo de participación de una entidad en todas las convocatorias.
 
+**Cambios en Issue 7D:** desglose de municipios para solicitudes que pertenecen a una agrupación EELL.
+
 **Contenido de la página:**
-- Nombre de la entidad  
-- CIF  
-- Tabla de historial con:
-  - Año de convocatoria  
-  - Tipo (EPA / EELL)  
-  - Estado (badge de color)  
-  - Importe concedido (formateado con separadores de miles)  
-  - Número de expediente  
+- Nombre de la entidad
+- CIF
+- Bloque `#agrupacion-detalle` (oculto por defecto, visible si hay agrupación)
+- Tabla de historial con: Año de convocatoria, Tipo (EPA/EELL), Estado (badge de color), Importe concedido, Número de expediente
+
+**Bloque de desglose de agrupación (`#agrupacion-detalle`):**
+
+Aparece debajo de la tarjeta de datos principales cuando alguna solicitud del historial tiene `es_agrupacion === true`. La lógica está en `entidad.js`:
+
+```javascript
+solicitudes.forEach(s => {
+    // ... pintar fila de la tabla ...
+    if (s.es_agrupacion === true) {
+        cargarAgrupacion(s.id_solic);
+    }
+});
+```
+
+La función `cargarAgrupacion(idSolic)` llama a `GET /agrupaciones/{id_solic}` y rellena:
+- `#agrupacion-representante` → `datos.representante`
+- `#agrupacion-num-municipios` → `datos.num_municipios`
+- `#agrupacion-miembros > tbody` → lista de miembros con `nombre`, `cif` e `importe_asignado`
+
+Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto sin romper la página (error silencioso en `catch`).
+
+**Estructura del bloque HTML:**
+
+```html
+<div id="agrupacion-detalle" class="agrupacion-detalle" style="display:none;">
+    <h3>Municipios de la agrupación</h3>
+    <p id="agrupacion-representante"></p>
+    <p id="agrupacion-num-municipios"></p>
+    <table id="agrupacion-miembros">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>CIF</th>
+                <th>Importe asignado (€)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+```
 
 **Flujo de navegación:**
-1. El usuario hace clic en una fila de `solicitudes.html`.  
-2. El JS redirige a `entidad.html?cif=XXXXXXXXX`.  
-3. `entidad.js` lee el parámetro `cif` y llama a `GET /solicitudes/?cif=`.  
+1. El usuario hace clic en una fila de `solicitudes.html`.
+2. El JS redirige a `entidad.html?cif=XXXXXXXXX`.
+3. `entidad.js` lee el parámetro `cif` y llama a `GET /solicitudes/?cif=`.
 4. Se pinta la tabla con todas las solicitudes de esa entidad.
+5. Si alguna solicitud tiene `es_agrupacion === true`, se llama a `GET /agrupaciones/{id_solic}` y se muestra el desglose.
 
 **Estados visuales implementados:**
-- Cargando…  
-- Error al cargar datos  
-- Entidad sin solicitudes  
-- Tabla con historial  
+- Cargando… (con spinner)
+- Error al cargar datos (caja `.error-box`)
+- Entidad sin solicitudes
+- Tabla con historial
+- Bloque de municipios de agrupación (condicional)
 
-**Pendiente de backend:**  
-El endpoint `/solicitudes/` debe aceptar el parámetro `?cif=` para devolver todas las solicitudes de una entidad. 
+### 5.5 Recursos — `recursos.html` + `js/recursos.js` (Issue 7D)
 
-### 5.5 Login y Registro — `login.html` / `registro.html`
+**Propósito:** Directorio de organizaciones, portales de datos públicos y referencias útiles para entidades que trabajan en bienestar animal o solicitan subvenciones públicas.
+
+**Estado:** Estructura completa implementada. El contenido dinámico queda pendiente hasta que el backend exponga el endpoint `GET /recursos/`.
+
+**Estructura HTML:**
+
+| Bloque | ID / clase | Descripción |
+|---|---|---|
+| Spinner de carga | `#spinner .spinner` | Visible mientras se espera respuesta del backend |
+| Caja de error | `#error-box .error-box` | Muestra `mensaje` + `sugerencia` en errores 4xx/5xx |
+| Cabecera | `.seccion__cabecera` | Título y subtítulo estáticos |
+| Contenedor dinámico | `#recursos-contenido` | JS insertará aquí las tarjetas de recursos |
+| Placeholder inicial | `#recursos-placeholder .card` | Visible hasta que el endpoint esté disponible |
+
+**Archivo JS — `recursos.js`:**
+
+- `cargarRecursos()` — patrón idéntico al del resto del proyecto (spinner → fetch comentado con TODO → catch → finally).
+- `pintarRecursos(recursos)` — agrupa los recursos por categoría y construye un `<div class="grid-3">` por categoría con `<article class="card">` por recurso.
+- `crearTarjetaRecurso(recurso)` — devuelve un `<article class="card">` con logo (opcional), nombre como enlace externo y descripción.
+- `mostrarSinResultados()` — muestra mensaje cuando el endpoint devuelve array vacío.
+
+**Endpoint pendiente de backend:**
+
+```
+GET /recursos/
+Respuesta esperada: [
+  {
+    nombre:      string,
+    url:         string,
+    descripcion: string,
+    categoria:   string,
+    logo:        string | null
+  },
+  ...
+]
+```
+
+**Notas de implementación:**
+- No se ha creado CSS nuevo para esta página; usa las clases existentes (`.card`, `.grid-3`, `.seccion`, etc.).
+- El placeholder usa `class="card"` (no `.tarjeta`, que no existe en `styles.css`).
+- El fetch real está completamente comentado en `recursos.js`; descomenterlo cuando el backend implemente el endpoint.
+
+---
+
+### 5.6 Estadísticas avanzadas — `estadisticas-avanzadas.html` + `js/estadisticas-avanzadas.js` (Issue 7D)
+
+**Propósito:** Análisis detallado por CCAA, comparativa EPA vs EELL, líneas de actuación EPA 2025 y ranking de comunidades autónomas por importe concedido. Complementa a `estadisticas.html` sin modificarla.
+
+**Estado:** Estructura completa implementada. Los datos dinámicos quedan pendientes hasta que el backend exponga los endpoints `GET /estadisticas/avanzadas/` y `GET /estadisticas/por-ccaa/`.
+
+**Fondo visual:** usa la clase `.fondo-stats` (verde suave) para mantener coherencia visual con `estadisticas.html`.
+
+**Estructura HTML:**
+
+| Bloque | ID | Descripción |
+|---|---|---|
+| Spinner | `#spinner` | Patrón estándar del proyecto |
+| Caja de error | `#error-box` | Patrón estándar del proyecto |
+| KPIs avanzados | `#kpis-avanzados .grid-4` | 4 tarjetas de métricas avanzadas |
+| Gráfico CCAA | `#grafico-ccaa-container` | Canvas oculto + placeholder "Pendiente de endpoint" |
+| Gráfico tasa concesión | `#grafico-tasa-container` | Canvas oculto + placeholder "Pendiente de endpoint" |
+| Gráfico líneas EPA 2025 | `#grafico-lineas-container` | Canvas oculto (donut) + placeholder |
+| Ranking CCAA | `#ranking-ccaa` | Lista `<ul>` rellenable por JS |
+
+**KPIs implementados (pendientes de datos):**
+
+| ID | Label | Dato esperado |
+|---|---|---|
+| `#kpi-importe-medio-epa` | Importe medio EPA | Por entidad concedida |
+| `#kpi-importe-medio-eell` | Importe medio EELL | Por entidad concedida |
+| `#kpi-ccaa-top` | CCAA con más concesiones | EELL 2023–2025 |
+| `#kpi-agrupaciones` | Agrupaciones EELL | Con desglose municipal |
+
+**Gráficos preparados en `estadisticas-avanzadas.js`:**
+
+| Función | Tipo Chart.js | Canvas | Endpoint |
+|---|---|---|---|
+| `poblarGraficoCcaa()` | Barras horizontales (`bar` + `indexAxis: 'y'`) | `#grafico-ccaa` | `/estadisticas/por-ccaa/` |
+| `poblarGraficoTasa()` | Líneas (`line`) | `#grafico-tasa` | `/estadisticas/avanzadas/` |
+| `poblarGraficoLineas()` | Donut (`doughnut`) | `#grafico-lineas` | `/estadisticas/avanzadas/` |
+| `poblarRankingCcaa()` | Lista HTML (top 10) | `#ranking-ccaa` | `/estadisticas/por-ccaa/` |
+
+**Endpoints pendientes de backend:**
+
+```
+GET /estadisticas/avanzadas/
+Respuesta esperada: {
+  importe_medio_epa:    number,
+  importe_medio_eell:   number,
+  ccaa_top:             string,
+  num_agrupaciones:     number,
+  tasa_concesion:       [{ anio, tasa_epa, tasa_eell }, ...],
+  lineas_epa_2025:      { abandonados: number, colonias: number }
+}
+
+GET /estadisticas/por-ccaa/
+Respuesta esperada: [
+  { ccaa: string, importe_total: number, num_concesiones: number },
+  ...
+]
+```
+
+**Notas de implementación:**
+- La página es **independiente** de `estadisticas.html`; no reutiliza ni modifica su código.
+- Chart.js 4.4.0 se importa desde CDN jsDelivr, igual que en `estadisticas.html`.
+- Todos los canvas están ocultos con `style="display:none;"` y solo se muestran cuando hay datos reales.
+- Los fetch están completamente comentados en `estadisticas-avanzadas.js`; descomenterlos cuando el backend implemente los endpoints.
+- Incluye un enlace "← Volver a Estadísticas generales" que lleva a `estadisticas.html`.
+
+---
+
+### 5.7 Login y Registro — `login.html` / `registro.html`
 
 **Propósito:** Autenticación de usuarios mediante email y contraseña.
 
@@ -402,9 +710,9 @@ El endpoint `/solicitudes/` debe aceptar el parámetro `?cif=` para devolver tod
 
 **Prevención de doble envío:** El botón de submit se deshabilita mientras espera la respuesta del servidor (`btn.disabled = true`). Se restaura en el bloque `finally` del `try/catch`.
 
-**Botones sociales (Google, GitHub):** Eliminados del HTML. El backend no implementa OAuth y la inclusión de botones deshabilitados generaba confusión en el usuario. El flujo de autenticación es exclusivamente email + contraseña.
+**Botones sociales (Google, GitHub):** Eliminados del HTML. El backend no implementa OAuth y la inclusión de botones deshabilitados generaba confusión en el usuario.
 
-### 5.6 Zona exclusiva — `privado.html` + `js/privado.js`
+### 5.8 Zona exclusiva — `privado.html` + `js/privado.js`
 
 **Propósito:** Contenido reservado para usuarios registrados.
 
@@ -423,12 +731,6 @@ El endpoint `/solicitudes/` debe aceptar el parámetro `?cif=` para devolver tod
 
 Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el tiempo de espera.
 
-**Contenido del resumen exclusivo** (datos reales del backend):
-- Historial completo de entidades por año
-- Análisis de causas de exclusión más frecuentes
-- Comparativa de importes por provincia y CCAA
-- Puntuación mínima para ser concedida por convocatoria
-
 **Cierre de sesión:** `localStorage.removeItem('token')` + redirección a `login.html`. Los JWT son stateless, así que no hay "invalidación" en el servidor — simplemente dejamos de tener el token en el cliente.
 
 ---
@@ -437,37 +739,52 @@ Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el t
 
 ### Endpoints disponibles y su uso en el frontend
 
-| Endpoint | Método | Body / Parámetros | Páginas que lo usan |
+| Endpoint | Método | Parámetros / Body | Páginas que lo usan |
 |---|---|---|---|
-| `/estadisticas/` | GET | — | Home (métricas, KPIs, tarjetas de año), Estadísticas |
-| `/solicitudes/` | GET | `anio`, `tipo`, `estado`, `limite`, `pagina` | Buscador |
-| `/solicitudes/?cif=` | GET | `cif` | Ficha de entidad (pendiente backend) |
+| `/estadisticas/` | GET | — | Home (métricas), Estadísticas (KPIs y gráficos) |
+| `/solicitudes/` | GET | `anio`, `tipo`, `estado`, `buscar`, `ccaa`, `provincia`, `linea`, `limite`, `pagina` | Buscador |
+| `/solicitudes/?cif=` | GET | `cif` | Ficha de entidad |
+| `/solicitudes/export` | GET | `anio`, `tipo`, `estado`, `buscar`, `ccaa` (sin `pagina` ni `limite`) | Buscador (botón CSV) |
+| `/agrupaciones/{id_solic}` | GET | — | Ficha de entidad (desglose de municipios) |
+| `/estadisticas/avanzadas/` | GET | — | Estadísticas avanzadas (KPIs, tasa concesión, líneas EPA 2025) — **pendiente de backend** |
+| `/estadisticas/por-ccaa/` | GET | — | Estadísticas avanzadas (gráfico CCAA, ranking) — **pendiente de backend** |
+| `/recursos/` | GET | — | Recursos (tarjetas de directorio) — **pendiente de backend** |
 | `/auth/login` | POST | JSON `{ email, password }` | Login |
 | `/auth/registro` | POST | JSON `{ email, password }` | Registro |
 | `/privado/perfil` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
 | `/privado/resumen-exclusivo` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
 
-
 ### Estado de implementación de filtros
 
 | Filtro | Backend | Notas |
 |---|---|---|
-| Búsqueda por nombre de entidad | ✔ ?buscar= | |
-| Filtro por CCAA | ✔ ?ccaa= | Campo `ccaa` en tabla `solicitudes`; solo EELL |
-| Filtro por Provincia | ✔ ?provincia= | Campo `provincia` en tabla `solicitudes`; solo EELL |
-| Filtro por Línea | ✔ ?linea= | Campo `linea` en tabla `concesiones`; solo EPA 2025 |
-| Historial de entidad por CIF | Pendiente | Nuevo endpoint o parámetro `?cif=` en `/solicitudes/` |
+| Búsqueda por nombre de entidad | ✔ `?buscar=` | Server-side; eliminado el `.filter()` client-side |
+| Filtro por CCAA | ✔ `?ccaa=` | Campo `ccaa` en tabla `solicitudes`; solo EELL |
+| Filtro por Provincia | ✔ `?provincia=` | Campo `provincia` en tabla `solicitudes`; solo EELL |
+| Filtro por Línea | ✔ `?linea=` | Campo `linea` en tabla `concesiones`; solo EPA 2025 |
+| Historial de entidad por CIF | ✔ `?cif=` | Implementado en Issue 7C |
+| Exportación CSV | ✔ `/solicitudes/export` | Todos los filtros excepto paginación |
+| Desglose de agrupación | ✔ `/agrupaciones/{id_solic}` | Solo cuando `es_agrupacion === true` |
+| Estadísticas avanzadas | ⏳ `/estadisticas/avanzadas/` | Pendiente — fetch comentado en `estadisticas-avanzadas.js` |
+| Distribución por CCAA | ⏳ `/estadisticas/por-ccaa/` | Pendiente — fetch comentado en `estadisticas-avanzadas.js` |
+| Directorio de recursos | ⏳ `/recursos/` | Pendiente — fetch comentado en `recursos.js` |
 
-### Patrón de llamada a la API
+### Patrón de llamada a la API (Issue 7D)
 
-Todas las peticiones siguen el mismo patrón:
+Todas las peticiones siguen el mismo patrón con spinner, error estructurado y finally:
 
 ```javascript
 async function cargarDatos() {
+    document.getElementById('spinner').style.display = 'block';
     try {
         const respuesta = await fetch(`${API_URL}/endpoint/`);
 
         if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            document.getElementById('error-mensaje').textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+            document.getElementById('error-sugerencia').textContent = cuerpo.sugerencia || '';
+            document.getElementById('error-box').style.display      = 'block';
             throw new Error(`Error ${respuesta.status}`);
         }
 
@@ -477,11 +794,13 @@ async function cargarDatos() {
     } catch (error) {
         console.error('Error:', error);
         // Mostrar mensaje de error al usuario...
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
 }
 ```
 
-**¿Por qué `async/await`?** Es la forma moderna y legible de manejar código asíncrono en JavaScript. Alternativas como callbacks o `.then()` producen código más difícil de leer y depurar, especialmente para alguien que aprende.
+**¿Por qué `async/await`?** Es la forma moderna y legible de manejar código asíncrono en JavaScript. Alternativas como callbacks o `.then()` producen código más difícil de leer y depurar.
 
 ---
 
@@ -537,9 +856,11 @@ Se aplican los criterios del nivel AA del estándar WCAG 2.1 (Web Content Access
 ### Atributos ARIA
 
 - `aria-label` y `aria-labelledby`: identifican bloques para lectores de pantalla.
+- `role="navigation"` en los `<nav>`: refuerza la semántica para compatibilidad.
 - `aria-current="page"`: indica al lector de pantalla qué enlace corresponde a la página actual.
 - `aria-hidden="true"`: oculta elementos decorativos (como los separadores `|`) de los lectores de pantalla.
 - `scope="col"` en `<th>`: indica que las cabeceras son de columna, no de fila.
+- `role="alert"` y `aria-live="polite"` en las alertas de error: anunciadas al aparecer.
 
 ### Contraste de colores
 
@@ -580,13 +901,38 @@ El dataset puede superar los 6.000 registros. Descargar todos los registros a la
 
 Si el script se cargara en el `<head>`, se ejecutaría antes de que el navegador hubiera construido los elementos del DOM (tabla, botones, filtros). `document.getElementById()` devolvería `null` y el script fallaría. Al colocarlo al final del `<body>`, el HTML ya está en memoria cuando el script comienza a ejecutarse.
 
+### ¿Por qué el CSV se genera en el backend y no en el cliente?
+
+La exportación CSV se delega completamente al backend (`GET /solicitudes/export`) en lugar de generarla con `Blob` + `URL.createObjectURL` en el cliente. Razones:
+- El backend puede exportar **todos** los registros que coinciden con los filtros, sin limitarse a los 50 de la página actual.
+- No se necesita tener los datos cargados en memoria del navegador.
+- El formato, la codificación (UTF-8 con BOM) y el separador los controla el backend de forma centralizada.
+
 ---
 
 ## 10. Pendientes de implementación
 
-### Issue 7C — Pendientes del frontend
+### Issue 7D — Completado
 
-### Issue 7C — Pendientes del frontend
+| Tarea | Estado |
+|---|---|
+| Badge "Agrupación" en el buscador | ✔ Completado |
+| Desglose de municipios en ficha de entidad | ✔ Completado |
+| Botón "Descargar CSV" → endpoint `/solicitudes/export` | ✔ Completado |
+| Spinners de carga en solicitudes, entidad, estadísticas y home | ✔ Completado |
+| Caja de error visual para 401/403/404/422/500 | ✔ Completado |
+| Favicon en todas las páginas HTML | ✔ Completado |
+| Metadatos OG en index, entidad y estadísticas | ✔ Completado |
+| Botón "Conócenos" → "Ver solicitudes" | ✔ Completado |
+| KPI entidades únicas conectado con `entidades_unicas` de la API | ✔ Completado |
+| Navbar renombrado a "Subvenciones DGDA" | ✔ Completado |
+| Navbar actualizado a 6 enlaces (añadidos Estadísticas avanzadas y Recursos) | ✔ Completado |
+| Columna "Año" en lugar de "Expediente" en la tabla del buscador | ✔ Completado |
+| Orden inicial A→Z y eliminación de "Por defecto" en el select | ✔ Completado |
+| Nueva página `recursos.html` + `js/recursos.js` (estructura + placeholder) | ✔ Completado |
+| Nueva página `estadisticas-avanzadas.html` + `js/estadisticas-avanzadas.js` (estructura + gráficos preparados) | ✔ Completado |
+
+### Issue 7C — Completado
 
 | Tarea | Estado | Notas |
 |---|---|---|
@@ -599,15 +945,21 @@ Si el script se cargara en el `<head>`, se ejecutaría antes de que el navegador
 
 ### Pendientes de backend (Vero)
 
-| Funcionalidad | Cambio necesario |
-|---|---|
-| Historial por CIF | Añadir `?cif=` en `/solicitudes/` |
-| Exponer campo `linea` | Confirmar que el backend lo devuelve correctamente |
-| Ranking de entidades | Nuevo endpoint `/estadisticas/ranking` |
-| Desglose por CCAA | Nuevo endpoint `/estadisticas/por-ccaa` |
+| Funcionalidad | Endpoint necesario | Consume |
+|---|---|---|
+| Ranking de entidades | `GET /estadisticas/ranking` | Por implementar |
+| Estadísticas avanzadas (KPIs, tasa, líneas EPA) | `GET /estadisticas/avanzadas/` | `estadisticas-avanzadas.js` |
+| Distribución geográfica por CCAA | `GET /estadisticas/por-ccaa/` | `estadisticas-avanzadas.js` |
+| Directorio de recursos | `GET /recursos/` | `recursos.js` |
 
+### Pendientes futuros del frontend
 
----
+- Mejorar los mensajes de error visibles al usuario (traducir a lenguaje natural).
+- Ficha de entidad como modal/popup para conservar el contexto de búsqueda al cerrar.
+- Política de privacidad y aviso legal.
+- Contenido de la zona privada: tabla resumen por año/estado/tipo.
+- Activar gráficos y KPIs de `estadisticas-avanzadas.html` cuando el backend implemente los endpoints.
+- Poblar `recursos.html` con datos reales cuando el backend implemente `GET /recursos/`.
 
 ---
 
@@ -647,5 +999,4 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
 
 ---
 
-*Documento generado en el contexto de las issues 7A y 7B.*  
-*Última actualización: 25 de abril de 2026 — Refleja estado final de todas las páginas HTML/CSS/JS.*
+*Última actualización: 2 de mayo de 2026 — Paso 19 del Issue 7D. Refleja estado final tras Issues 7B, 7C y 7D (incluyendo páginas `recursos.html` y `estadisticas-avanzadas.html`).*

@@ -105,10 +105,23 @@ function formatearEjeY(n) {
 // ─────────────────────────────────────────────────────────────
 
 async function cargarEstadisticas() {
+    document.getElementById('spinner').style.display = 'block';
     try {
         // ── Petición a la API ──────────────────────────────────────
         const respuesta = await fetch(`${API_URL}/estadisticas/`);
-        if (!respuesta.ok) throw new Error(`Error ${respuesta.status}`);
+        if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            const errorBox        = document.getElementById('error-box');
+            const errorMensaje    = document.getElementById('error-mensaje');
+            const errorSugerencia = document.getElementById('error-sugerencia');
+            if (errorBox) {
+                errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+                errorSugerencia.textContent = cuerpo.sugerencia || '';
+                errorBox.style.display      = 'block';
+            }
+            throw new Error(`Error ${respuesta.status}`);
+        }
         const datos = await respuesta.json();
 
         // ── Actualizar cada bloque de la página ────────────────────
@@ -123,6 +136,8 @@ async function cargarEstadisticas() {
     } catch (error) {
         console.error('Error al cargar estadísticas:', error);
         mostrarErrorGlobal();
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
 }
 

@@ -103,7 +103,7 @@
             <!-- Logo + nombre del proyecto -->
             <a class="navbar__logo" href="index.html" aria-label="Ir a la página de inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span>Bienestar Animal</span>
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
             </a>
 
             <!--
@@ -134,6 +134,16 @@
          del footer). Solo debe haber un <main> por página.
          ===================================================== -->
     <main>
+
+        <!-- Spinner de carga (Paso 17) -->
+        <div id="spinner" class="spinner"></div>
+
+        <!-- Caja de error estructurado del backend (Paso 18) -->
+        <div id="error-box" class="error-box" style="display:none;">
+            <h3>Error</h3>
+            <p id="error-mensaje"></p>
+            <p id="error-sugerencia"></p>
+        </div>
 
         <!-- ─────────────────────────────────────────────────
              SECCIÓN 1: "SOBRE EL PROYECTO"

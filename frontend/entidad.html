@@ -24,7 +24,7 @@
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span>Bienestar Animal</span>
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -50,11 +50,38 @@
                     <p><strong>CIF:</strong> <span id="entidad-cif"></span></p>
                 </div>
 
+                <!-- Desglose de municipios (solo agrupaciones EELL) -->
+                <div id="agrupacion-detalle" class="agrupacion-detalle" style="display:none;">
+                    <h3>Municipios de la agrupación</h3>
+                    <p id="agrupacion-representante"></p>
+                    <p id="agrupacion-num-municipios"></p>
+                    <table id="agrupacion-miembros">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>CIF</th>
+                                <th>Importe asignado (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- Spinner de carga (Paso 17) -->
+                <div id="spinner" class="spinner"></div>
+
                 <!-- Estado de carga -->
                 <p id="entidad-cargando" class="estado-carga">Cargando datos…</p>
 
                 <!-- Error -->
                 <p id="entidad-error" class="estado-error" style="display:none;"></p>
+
+                <!-- Caja de error estructurado del backend (Paso 18) -->
+                <div id="error-box" class="error-box" style="display:none;">
+                    <h3>Error</h3>
+                    <p id="error-mensaje"></p>
+                    <p id="error-sugerencia"></p>
+                </div>
 
                 <!-- Tabla -->
                 <div id="entidad-tabla-wrapper" class="tabla-wrapper" style="display:none;">
