@@ -32,6 +32,9 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
+      LOG_DIR: /app/logs
+    volumes:
+      - ../logs/app:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -42,11 +45,27 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
       - ../frontend:/usr/share/nginx/html:ro
+      - ../logs/nginx:/var/log/nginx
     depends_on:
       - backend
+
+  # Interfaz web para explorar la base de datos — solo desarrollo
+  # Acceso: http://localhost:8080
+  # Sistema: MySQL, Servidor: db, Usuario y contraseña: los del .env
+  adminer:
+    image: adminer
+    container_name: bdns_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:

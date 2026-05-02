@@ -584,7 +584,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · frontend integrado con la API · pendiente funcionalidades avanzadas y despliegue en producción**
+Fase: **backend completado · HTTPS activo · pendiente cron y funcionalidades avanzadas**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -603,29 +603,50 @@ Fase: **backend completado · frontend integrado con la API · pendiente funcion
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
   · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
-✔ Nginx como servidor web y proxy inverso (`docker/nginx/nginx.conf`)
+✔ Nginx como servidor web y proxy inverso (`docker/nginx/default.conf`)
   · escucha en el puerto 80
   · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
   · redirige las rutas de la API al backend (puerto 8000 interno, no expuesto al exterior)
   · acceso a la app en `http://localhost/` y a la API en `http://localhost/docs`
+  · cabeceras de seguridad: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`
+✔ Adminer como interfaz web de la base de datos (`http://localhost:8080`)
+  · sin instalar nada en el equipo; se levanta con el resto de contenedores
 ✔ autenticación JWT con tres niveles de acceso
   · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
   · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (70 tests — smoke, funcionales, unitarios, seguridad)
-  · test_smoke.py (1): arranque de la API
+✔ tests automáticos con pytest (96 tests — smoke, funcionales, unitarios, seguridad, configuración)
+  · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
-  · test_solicitudes.py (9): filtros, paginación, búsqueda parcial y estructura de respuestas
+  · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
   · test_estadisticas.py (4): endpoint /estadisticas/ y cálculos de totales
   · test_auth.py (10): registro, login, acceso con/sin token
+  · test_agrupaciones.py (5): endpoint /agrupaciones/ con fixture completa de relaciones
+  · test_logging.py (5): middleware de logging y configuración del logger
+  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
   · sin exponer internos del servidor en errores 500
+✔ HTTPS con dominio local (`subvencionesDGDA.local`) y certificado autofirmado
+  · certificado generado con openssl (CN + SAN para compatibilidad con navegadores modernos)
+  · Nginx termina el SSL en el puerto 443; el backend no necesita saber nada de SSL
+  · HTTP (puerto 80) redirige automáticamente a HTTPS con código 301
+  · TLS 1.2 y 1.3 únicamente; cabecera `Strict-Transport-Security` activa
+  · ver [`docs/https.md`](docs/https.md) para reproducir el entorno
+✔ sistema de logs: registro de cada petición HTTP (IP, método, ruta, código, latencia) y errores 500
+  · logger de aplicación con rotación automática de archivos (`logs/app/`)
+  · access log y error log de Nginx con formato personalizado (`logs/nginx/`)
+  · persistencia mediante volúmenes Docker: los logs sobreviven reinicios del contenedor
+✔ endpoint GET /health → `{"status": "ok"}` para monitorización del servicio
+✔ agrupaciones EELL 2025 expuestas en la API
+  · campo `es_agrupacion` en cada solicitud de tipo SolicitudOut
+  · GET /agrupaciones/{id_solic} → desglose completo de municipios miembro con importes
+✔ exportación CSV: GET /solicitudes/export con los mismos filtros que /solicitudes/ y sin paginación
 
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
@@ -646,6 +667,15 @@ Fase: **backend completado · frontend integrado con la API · pendiente funcion
 ✔ enlace DGDA en los créditos del footer de todas las páginas (junto al enlace BDNS existente)
 ✔ contador de resultados en el buscador: "N resultados · Mostrando del X al Y"
 
+Pendiente de merge — rama feature/7d-mejoras-frontend:
+
+✔ favicon en todas las páginas HTML
+✔ meta tags OG (`og:title`, `og:description`, `og:image`) en index, entidad y estadísticas
+✔ botón "Conócenos" → "Ver solicitudes" en index.html
+✔ badge de estado en ficha de entidad: "no_beneficiaria" → "No beneficiaria" con color por estado
+✔ KPI entidades únicas conectado con dato real de la API (`entidades_unicas`)
+✔ mejoras de accesibilidad: `role="navigation"` y `aria-label` en navbar
+
 Pendiente:
 
 ### Pendientes de frontend
@@ -653,7 +683,8 @@ Pendiente:
 - Páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
 - Mejorar los mensajes de error visibles al usuario: los mensajes técnicos actuales no son comprensibles para el usuario final; traducirlos a lenguaje natural
 - Indicadores de carga (spinners): mostrar feedback visual mientras se espera respuesta de la API en todas las páginas con fetch
-- Exportar resultados a CSV: botón en el buscador que descargue la búsqueda actual filtrada; se puede implementar en JS puro (construyendo el CSV en cliente) o con un endpoint `/solicitudes/export` en el backend
+- Mostrar badge "Agrupación" en el buscador y desglose de municipios en la ficha de entidad (backend ya disponible: campo `es_agrupacion` en `/solicitudes/` y `GET /agrupaciones/{id_solic}`)
+- Exportar resultados a CSV: botón en el buscador que descargue la búsqueda actual filtrada mediante el endpoint `GET /solicitudes/export` en el backend (mismos filtros que `/solicitudes/`, sin paginación; backend ya disponible)
 - Repensar las gráficas de `estadisticas.html` y conectarlas con datos reales de la API; valorar añadir una sección de conclusiones relevantes extraídas de los datos
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales o consultar directamente a la DGDA; incluir información de contacto con la DGDA y cómo presentar una solicitud de acceso a información pública
 - Notas con datos relevantes destacados (pendiente de concretar cuáles)
@@ -668,25 +699,22 @@ Pendiente:
 - Favicon: verificar que está configurado correctamente en todas las páginas HTML
 - Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA en los componentes principales
 - Página "Otros sitios de interés": directorio de organizaciones y recursos relacionados con el bienestar animal, con logo, nombre (enlazado a su web o red social) y descripción breve; candidatos: Basma, Meowmetrics, FdCats, Plataforma GARRA, LosGatosTienenLey, entre otros
+- Que en las tablas de resultados tras hacer una búsqueda, si aparece una entidad con estado de no beneficiaria, no aparezca con el guión "no_beneficiaria"
+- En las tablas de resultados tras hacer una búsqueda, no salgan los Expedientes, creo que eso se puede mantener cuando se clica en una entidad y sale su ficha, y en cambio en los resultados de búsquedas normales quizás sí se puede mostrar el año, ya que algunos usuarios eligen el año en el filtro pero otros no
+- Que los resultados salgan inicialmente por orden de Entidad (A -> Z), y luego se pueda elegir entra las otras dos de importe de mayor a menor y viceversa, pero quitar el de Por defecto si se puede
 
 ### Pendientes de backend y API
 
-- Agrupaciones EELL 2025 expuestas en la API: añadir `es_agrupacion` a `SolicitudOut` y un endpoint o schema con el desglose de municipios miembro; mostrar badge "Agrupación" en el buscador y desglose en la ficha de entidad
-- Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol); valorar añadir modo mantenimiento y visualización de errores del sistema
-- Endpoint `/health`: responde `{"status": "ok"}` y permite a Docker, Nginx o cualquier monitor saber si el servicio está vivo sin consultar datos reales
-- Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian cuando se ejecuta el cron de sincronización con la API BDNS (1-2 veces al año); añadir cabeceras `Cache-Control` via FastAPI o Nginx para evitar consultas innecesarias a la BD; cuando el cron actualice datos, invalidar la caché
-- Cron de sincronización con la API BDNS: tarea periódica que actualice convocatorias automáticamente (frecuencia por decidir)
+- Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
+- Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian 1-2 veces al año; añadir cabeceras `Cache-Control` via FastAPI o Nginx
 - Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
-- Sistema de logs: registro de peticiones, errores y eventos relevantes del backend
 
 ### Pendientes de infraestructura y despliegue
 
-- HTTPS con SSL vía Nginx: certificado de desarrollo (similar a la práctica de clase) y en producción via Let's Encrypt; imprescindible antes de exponer la aplicación a internet (sin HTTPS los tokens JWT viajan en texto plano)
-- Dominios personalizados: configuración de dominio propio tanto en desarrollo como en producción (también cubierto en una práctica de clase)
+- Dominio real y certificado Let's Encrypt: en producción sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
 - CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 - Rate limiting en Nginx: limitar peticiones por IP al endpoint `/auth/login` para prevenir fuerza bruta
-- Cabeceras de seguridad en Nginx: añadir `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` y `Referrer-Policy` en `nginx.conf`; son tres líneas que refuerzan la seguridad frente a clickjacking y sniffing de contenido
-- Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar
+- Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
 - Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
 
 ### Pendientes de usuarios y autenticación
@@ -743,15 +771,18 @@ El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
 ## Docker — arrancar el sistema
 
-El proyecto usa Docker Compose con tres servicios definidos en `docker/docker-compose.yml`:
+El proyecto usa Docker Compose con cuatro servicios definidos en `docker/docker-compose.yml`:
 
-| Servicio  | Imagen          | Función                                      | Puerto externo |
-|-----------|-----------------|----------------------------------------------|----------------|
-| `db`      | mariadb:11      | Base de datos MariaDB con el dataset cargado | 3307           |
-| `backend` | Python (build)  | API FastAPI                                  | ninguno (interno) |
-| `nginx`   | nginx:alpine    | Proxy inverso, punto de entrada              | 80             |
+| Servicio   | Imagen          | Función                                      | Puerto externo    |
+|------------|-----------------|----------------------------------------------|-------------------|
+| `db`       | mariadb:11      | Base de datos MariaDB con el dataset cargado | 3307              |
+| `backend`  | Python (build)  | API FastAPI                                  | ninguno (interno) |
+| `nginx`    | nginx:alpine    | Proxy inverso, punto de entrada              | 80                |
+| `adminer`  | adminer         | Interfaz web para explorar la BD             | 8080              |
 
 El backend no expone su puerto al exterior — solo Nginx puede acceder a él dentro de la red Docker.
+
+Adminer está disponible en `http://localhost:8080` con Docker levantado. En el formulario de acceso: **Sistema** → MySQL · **Servidor** → `db` · usuario y contraseña según el `.env`.
 
 ### Modo desarrollo (día a día)
 
@@ -834,6 +865,13 @@ Si el error persiste, asegúrate de que el volumen de Nginx monta el **directori
 
 ## Tests
 
+El proyecto tiene **125 pruebas en total**: 96 automáticas con pytest y 29 manuales verificadas en el navegador con Docker levantado.
+
+| Nivel | Cantidad | Herramienta |
+|-------|----------|-------------|
+| Automáticos | 96 | pytest (sin Docker) |
+| Manuales | 29 | Navegador + DevTools |
+
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
 ### Ejecutar todos los tests
@@ -846,11 +884,13 @@ pytest -v
 ### Ejecutar por módulo
 
 ```bash
-pytest tests/test_smoke.py              # arranque de la API
+pytest tests/test_smoke.py              # arranque de la API y /health
 pytest tests/test_convocatorias.py
-pytest tests/test_solicitudes.py
+pytest tests/test_solicitudes.py        # filtros, paginación y exportación CSV
 pytest tests/test_estadisticas.py
 pytest tests/test_auth.py               # registro, login y zona privada
+pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
+pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ```
@@ -858,7 +898,7 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-70 passed
+96 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
