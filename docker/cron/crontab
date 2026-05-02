@@ -1,0 +1,32 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Crontab — Servicio cron de Subvenciones Bienestar Animal (BDNS/DGDA)
+#
+# Tarea 1: check_bdns.py
+#   Consulta la API BDNS buscando nuevas convocatorias EELL y EPA del año en
+#   curso. Se ejecuta solo en temporada (marzo–junio), con mayor frecuencia
+#   en los meses de mayor probabilidad de publicación (abril y mayo).
+#   Frecuencias justificadas en datos históricos 2021–2025:
+#     · EELL: rango histórico 29-mar al 31-may → pico en abril
+#     · EPA:  rango histórico 05-may al 13-jun → pico en mayo
+#   Una vez encontradas ambas convocatorias del año, el script no vuelve a
+#   consultar la API hasta el año siguiente (estado en logs/cron/estado_YYYY.json)
+#
+# Tarea 2: health_check.py
+#   Llama a GET /health del backend y registra el resultado.
+#   Se ejecuta todo el año cada 6 horas.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Marzo: cada 4 días (EELL puede salir a final de mes)
+0 8 */4 3 * python3 /app/scripts/check_bdns.py
+
+# Abril: cada 2 días (ventana más probable para EELL)
+0 8 */2 4 * python3 /app/scripts/check_bdns.py
+
+# Mayo: cada 2 días (ventana más probable para EPA)
+0 8 */2 5 * python3 /app/scripts/check_bdns.py
+
+# Junio: cada 4 días (posibles rezagadas EPA)
+0 8 */4 6 * python3 /app/scripts/check_bdns.py
+
+# Health check del backend — todo el año, cada 6 horas
+0 */6 * * * python3 /app/scripts/health_check.py

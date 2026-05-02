@@ -217,6 +217,53 @@ function mostrarErrores() {
  * podría ejecutarse antes de que los elementos del HTML estuvieran
  * listos, y document.getElementById() devolvería null.
  */
+// ─────────────────────────────────────────────────────────────
+// AVISOS: convocatorias del año en curso sin resolución
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * cargarAvisos()
+ * Consulta GET /avisos/ y muestra un banner por cada convocatoria
+ * detectada por el cron que aún no tiene resolución publicada.
+ * Si no hay avisos activos, el contenedor permanece oculto.
+ */
+async function cargarAvisos() {
+    const contenedor = document.getElementById('avisos-banner');
+    if (!contenedor) return;
+
+    try {
+        const resp = await fetch(`${API_URL}/avisos/`);
+        if (!resp.ok) return;
+
+        const avisos = await resp.json();
+        if (!avisos.length) return;
+
+        const etiquetas = { eell: 'Entidades Locales', epa: 'Entidades Privadas' };
+
+        contenedor.innerHTML = avisos.map(aviso => {
+            const tipo  = etiquetas[aviso.tipo_convoc] || aviso.tipo_convoc.toUpperCase();
+            const fecha = aviso.fecha_convocatoria
+                ? new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+                : 'fecha pendiente';
+            return `
+                <div class="aviso-banner">
+                    <span class="aviso-banner__icono">📢</span>
+                    <div class="aviso-banner__texto">
+                        <strong>Convocatoria ${aviso.anio_convocatoria} — ${tipo}</strong>
+                        <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
+                    </div>
+                </div>`;
+        }).join('');
+
+        contenedor.style.display = 'block';
+
+    } catch (_) {
+        // El banner es informativo; si falla, no interrumpimos la página
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
+    cargarAvisos();
 });

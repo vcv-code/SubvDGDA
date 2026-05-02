@@ -101,6 +101,21 @@ class EstadisticasOut(BaseModel):
 
 
 # ──────────────────────────────────────────────
+# AVISOS
+# Convocatorias del año en curso sin resolución aún
+# ──────────────────────────────────────────────
+
+class AvisoOut(BaseModel):
+    id_convoc:          int
+    titulo_convoc:      str
+    tipo_convoc:        str
+    anio_convocatoria:  int
+    fecha_convocatoria: Optional[date]
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# ──────────────────────────────────────────────
 # AUTENTICACIÓN
 # ──────────────────────────────────────────────
 
