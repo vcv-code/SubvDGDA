@@ -32,6 +32,9 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
+      LOG_DIR: /app/logs
+    volumes:
+      - ../logs/app:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -45,6 +48,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
       - ../frontend:/usr/share/nginx/html:ro
+      - ../logs/nginx:/var/log/nginx
     depends_on:
       - backend
 

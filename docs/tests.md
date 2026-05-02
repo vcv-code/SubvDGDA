@@ -6,7 +6,7 @@ El proyecto tiene dos niveles de pruebas: tests automáticos con pytest y prueba
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **70 tests automáticos** distribuidos en 7 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos y los parsers.
+El proyecto incluye **87 tests automáticos** distribuidos en 9 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers y el sistema de logging.
 
 ### Cómo funcionan
 
@@ -60,6 +60,23 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 27 | `test_auth.py` | Seguridad | Blanca | `GET /privado/resumen-exclusivo` con token válido devuelve 200 |
 | 28–48 | `test_unificar_datasets.py` | Unitario | Blanca | Funciones de normalización de estados, limpieza de importes, entidades y puntuaciones |
 | 49–70 | `test_parser_epa2025.py` | Unitario | Blanca | Helpers de detección (CIF, expediente, número europeo), mapeo de columnas, extracción de entidad con fallback, normalización de línea, flujo completo con XML mínimo mockeado |
+| 71 | `test_smoke.py` | Smoke | Negra | `GET /health` responde 200 |
+| 72 | `test_smoke.py` | Funcional | Negra | Respuesta de `/health` es exactamente `{"status": "ok"}` |
+| 73 | `test_agrupaciones.py` | Funcional | Negra | ID inexistente en `/agrupaciones/` devuelve 404 |
+| 74 | `test_agrupaciones.py` | Funcional | Blanca | Solicitud sin concesión ni agrupación devuelve 404 |
+| 75 | `test_agrupaciones.py` | Funcional | Negra | Respuesta tiene las claves `id_agrup`, `num_municipios`, `representante`, `miembros` |
+| 76 | `test_agrupaciones.py` | Funcional | Blanca | `num_municipios` coincide con el valor insertado en la fixture |
+| 77 | `test_agrupaciones.py` | Funcional | Negra | Cada miembro tiene `nombre`, `cif` e `importe_asignado` |
+| 78 | `test_solicitudes.py` | Funcional | Negra | `GET /solicitudes/export` devuelve `Content-Type: text/csv` |
+| 79 | `test_solicitudes.py` | Funcional | Blanca | Primera línea del CSV tiene exactamente las 12 columnas esperadas |
+| 80 | `test_solicitudes.py` | Funcional | Blanca | Con 3 solicitudes en BD, el CSV tiene cabecera + 3 filas de datos |
+| 81 | `test_solicitudes.py` | Funcional | Blanca | `?tipo=epa` en export devuelve solo filas con tipo `epa` |
+| 82 | `test_solicitudes.py` | Funcional | Negra | `Content-Disposition` incluye `attachment` y `solicitudes.csv` |
+| 83 | `test_logging.py` | Funcional | Blanca | El middleware registra en el log el método y la ruta de cada request |
+| 84 | `test_logging.py` | Funcional | Blanca | El código HTTP de la respuesta (ej. 404) aparece en el log |
+| 85 | `test_logging.py` | Funcional | Blanca | La IP del cliente queda registrada en cada entrada del log |
+| 86 | `test_logging.py` | Unitario | Blanca | `generic_exception_handler` llama a `logger.error` con el tipo de excepción |
+| 87 | `test_logging.py` | Unitario | Blanca | `setup_logging()` devuelve un logger con nombre `bdns`, nivel INFO y al menos un handler |
 
 ### Descripción por módulo
 
@@ -88,6 +105,19 @@ Los tests más importantes. Cubren tres bloques:
 - **Registro**: usuario nuevo se crea correctamente, email duplicado es rechazado (400), contraseña débil es rechazada por el validador Pydantic (422).
 - **Login**: credenciales correctas devuelven token JWT; contraseña incorrecta o email inexistente devuelven 401.
 - **Zona privada**: los endpoints `/privado/perfil` y `/privado/resumen-exclusivo` devuelven 401 sin token y 200 con token válido.
+
+#### test_agrupaciones.py
+
+Verifica el endpoint `/agrupaciones/{id_solic}`, que devuelve el desglose de municipios miembro de una agrupación EELL. Cubre los casos de error (ID inexistente, solicitud sin agrupación asociada) y el camino feliz con una fixture completa que construye toda la cadena de relaciones: Convocatoria → Beneficiario → Solicitud → Concesion → Agrupacion → AgrupacionMiembro.
+
+**Bug detectado por estos tests:** el router usaba `joinedload("miembros")` y `joinedload("representante")` con strings, que no están admitidos en SQLAlchemy 2.x. Los tests fallaron con `ArgumentError` en todos los entornos, lo que llevó a corregir el router para usar atributos de clase (`Agrupacion.miembros`, `Agrupacion.representante`).
+
+#### test_logging.py
+
+Verifica el sistema de logging implementado en la rama `9c`. Cubre dos partes:
+
+- **Middleware de requests**: comprueba que cada petición HTTP queda registrada con método, ruta, código de respuesta e IP del cliente. Usa `caplog` de pytest para capturar los registros del logger `bdns` sin necesitar archivos en disco.
+- **Configuración del logger**: verifica directamente la función `setup_logging()` y el `generic_exception_handler` usando mocks para no depender del sistema de archivos ni de llamadas HTTP reales.
 
 #### test_unificar_datasets.py
 

@@ -1,3 +1,6 @@
+import logging
+import time
+
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -5,7 +8,10 @@ from fastapi.responses import JSONResponse
 from jose import JWTError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from .logger import setup_logging
 from .routers import convocatorias, solicitudes, estadisticas, auth, privado, agrupaciones
+
+logger = setup_logging()
 
 app = FastAPI(
     title="API Subvenciones Bienestar Animal",
@@ -21,6 +27,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.time()
+    response = await call_next(request)
+    duration = round((time.time() - start) * 1000, 2)
+    logger.info(
+        "%s | %s %s | %s | %sms",
+        request.client.host if request.client else "-",
+        request.method,
+        request.url.path,
+        response.status_code,
+        duration,
+    )
+    return response
 
 app.include_router(convocatorias.router)
 app.include_router(solicitudes.router)
@@ -58,6 +80,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
+    logger.error("%s %s | %s: %s", request.method, request.url.path, type(exc).__name__, exc)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from ..db import get_db
-from ..models import Solicitud, Concesion
+from ..models import Solicitud, Concesion, Agrupacion, AgrupacionMiembro
 from ..schemas import AgrupacionOut, MiembroAgrupacionOut, BeneficiarioOut
 
 router = APIRouter(prefix="/agrupaciones", tags=["agrupaciones"])
@@ -18,11 +18,11 @@ def detalle_agrupacion(id_solic: int, db: Session = Depends(get_db)):
         .options(
             joinedload(Solicitud.concesion)
             .joinedload(Concesion.agrupacion)
-            .joinedload("miembros")
-            .joinedload("beneficiario"),
+            .joinedload(Agrupacion.miembros)
+            .joinedload(AgrupacionMiembro.beneficiario),
             joinedload(Solicitud.concesion)
             .joinedload(Concesion.agrupacion)
-            .joinedload("representante"),
+            .joinedload(Agrupacion.representante),
         )
         .filter(Solicitud.id_solic == id_solic)
         .first()
