@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from jose import JWTError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from .routers import convocatorias, solicitudes, estadisticas, auth, privado
+from .routers import convocatorias, solicitudes, estadisticas, auth, privado, agrupaciones
 
 app = FastAPI(
     title="API Subvenciones Bienestar Animal",
@@ -27,6 +27,7 @@ app.include_router(solicitudes.router)
 app.include_router(estadisticas.router)
 app.include_router(auth.router)
 app.include_router(privado.router)
+app.include_router(agrupaciones.router)
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -65,6 +66,11 @@ async def generic_exception_handler(request: Request, exc: Exception):
             "sugerencia": "Si el problema persiste, contacta con el administrador",
         },
     )
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 @app.get("/")
