@@ -211,3 +211,6 @@ data/raw/epas/
 
 # Archivo de contexto local (no se versiona)
 contexto.txt
+
+# Clave privada SSL — se genera localmente con openssl, nunca se versiona
+docker/ssl/server.key
