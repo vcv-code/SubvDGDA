@@ -85,7 +85,7 @@ Frontend
 | Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
 | Base de datos | MySQL / MariaDB |
 | Tests | pytest, SQLite en memoria |
-| Infraestructura | Docker, Nginx |
+| Infraestructura | Docker, Nginx, supercronic (cron para contenedores) |
 | Control de versiones | Git, GitHub |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
@@ -107,9 +107,9 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `auth.js`, `privado.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `estadisticas-avanzadas.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
-- `index.html`, `estadisticas.html`, `solicitudes.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
+- `index.html`, `estadisticas.html`, `estadisticas-avanzadas.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
 
 ### Backend
 
@@ -540,6 +540,8 @@ backend/app/
     convocatorias.py → GET /convocatorias/
     solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, cif, buscar, ccaa, provincia, línea; paginación con total)
     estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
+    agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
+    avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
     auth.py          → POST /auth/registro  y  POST /auth/login
     privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
 ```
@@ -584,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · pendiente cron y funcionalidades avanzadas**
+Fase: **backend completado · HTTPS activo · cron implementado · frontend 7D mergeado · pendiente pruebas manuales y funcionalidades avanzadas**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -647,61 +649,54 @@ Fase: **backend completado · HTTPS activo · pendiente cron y funcionalidades a
   · campo `es_agrupacion` en cada solicitud de tipo SolicitudOut
   · GET /agrupaciones/{id_solic} → desglose completo de municipios miembro con importes
 ✔ exportación CSV: GET /solicitudes/export con los mismos filtros que /solicitudes/ y sin paginación
-
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
-  · `index.html` — portada con métricas dinámicas y placeholders de gráficos
-  · `solicitudes.html` — buscador con filtros, tabla paginada y filtros condicionales (CCAA, línea)
-  · `estadisticas.html` — dashboard con 4 KPIs y 3 contenedores Chart.js maquetados (línea, donut, barras; pendientes de conectar con datos reales)
-  · `login.html` / `registro.html` — autenticación con validación client-side y diseño GOV.UK
+  · `index.html` — portada con métricas dinámicas, spinners y banner de avisos activos
+  · `solicitudes.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
+  · `estadisticas.html` — dashboard con 4 KPIs
+  · `estadisticas-avanzadas.html` — página nueva: KPIs avanzados y gráficos (pendientes de endpoints de backend)
+  · `recursos.html` — página nueva: directorio de recursos (pendiente de endpoint de backend)
+  · `entidad.html` — ficha de entidad con historial, badges de estado y bloque de agrupación EELL
+  · `login.html` / `registro.html` — autenticación con validación client-side
   · `privado.html` — zona exclusiva con control de acceso JWT
-✔ integración JS con la API REST: fetch a todos los endpoints, paginación con total de páginas, autenticación con Bearer token
+✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
 ✔ CORS habilitado en el backend para desarrollo local
 ✔ clave JWT segura configurada en variables de entorno (`.env`)
 ✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
-✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF con filtro `?cif=` en el backend
-✔ filtro `?cif=` en `GET /solicitudes/`: permite recuperar todas las solicitudes de un beneficiario concreto
-✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y" en el frontend
+✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF, badges de estado, desglose agrupación EELL
+✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y"
 ✔ tarjeta "Entidades únicas" en el dashboard: `GET /estadisticas/` expone `entidades_unicas` (3.067 beneficiarios distintos)
-✔ nav renombrado de "Solicitudes" a "Buscador" en todas las páginas
-✔ enlace DGDA en los créditos del footer de todas las páginas (junto al enlace BDNS existente)
-✔ contador de resultados en el buscador: "N resultados · Mostrando del X al Y"
-
-Pendiente de merge — rama feature/7d-mejoras-frontend:
-
 ✔ favicon en todas las páginas HTML
-✔ meta tags OG (`og:title`, `og:description`, `og:image`) en index, entidad y estadísticas
-✔ botón "Conócenos" → "Ver solicitudes" en index.html
-✔ badge de estado en ficha de entidad: "no_beneficiaria" → "No beneficiaria" con color por estado
-✔ KPI entidades únicas conectado con dato real de la API (`entidades_unicas`)
+✔ meta tags OG (`og:title`, `og:description`, `og:image`) en todas las páginas
+✔ navbar: texto "Subvenciones DGDA" en todas las páginas; spinner y error-box unificados en home, solicitudes y entidad
+✔ tabla solicitudes: columna Expediente → Año, badges de estado, ordenación por defecto A→Z, botón descargar CSV
 ✔ mejoras de accesibilidad: `role="navigation"` y `aria-label` en navbar
+✔ `especificaciones-frontend.md` totalmente actualizado y sincronizado con la implementación real
+✔ servicio cron como contenedor independiente en docker-compose (`docker/cron/`)
+  · `check_bdns.py` — consulta la API BDNS en temporada (mar–jun), detecta nuevas convocatorias DGDA,
+    inserta en BD con fecha_resolucion=NULL, guarda estado en `logs/cron/estado_YYYY.json`
+    (frecuencia por tramos: cada 2 días en abr–may, cada 4 días en mar–jun)
+  · `health_check.py` — llama a GET /health cada 6 horas y loguea el resultado
+  · logs persistidos en `logs/cron/` como volumen Docker
+✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
+✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
+  automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
 
 Pendiente:
 
 ### Pendientes de frontend
 
-- Páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
-- Mejorar los mensajes de error visibles al usuario: los mensajes técnicos actuales no son comprensibles para el usuario final; traducirlos a lenguaje natural
-- Indicadores de carga (spinners): mostrar feedback visual mientras se espera respuesta de la API en todas las páginas con fetch
-- Mostrar badge "Agrupación" en el buscador y desglose de municipios en la ficha de entidad (backend ya disponible: campo `es_agrupacion` en `/solicitudes/` y `GET /agrupaciones/{id_solic}`)
-- Exportar resultados a CSV: botón en el buscador que descargue la búsqueda actual filtrada mediante el endpoint `GET /solicitudes/export` en el backend (mismos filtros que `/solicitudes/`, sin paginación; backend ya disponible)
 - Repensar las gráficas de `estadisticas.html` y conectarlas con datos reales de la API; valorar añadir una sección de conclusiones relevantes extraídas de los datos
-- Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales o consultar directamente a la DGDA; incluir información de contacto con la DGDA y cómo presentar una solicitud de acceso a información pública
-- Notas con datos relevantes destacados (pendiente de concretar cuáles)
-- Ficha de entidad como modal/popup: al hacer clic en una fila del buscador, mostrar la ficha en un overlay con botón × para cerrar en lugar de navegar a otra página, de modo que al cerrar se conserve la búsqueda y paginación anteriores
-- Valorar la visibilidad y utilidad del botón de borrar filtros del buscador: el funcionamiento técnico es correcto, pero conviene revisar si los usuarios lo encuentran fácilmente y si resulta útil en contexto
-- Renombrar el nombre del proyecto en la cabecera (top-left junto al logo): el texto actual "Bienestar Animal" es demasiado genérico; sustituirlo por algo más descriptivo y abreviado del proyecto (ej. "Subvenciones para Protección Animal" o similar, por decidir), y cambiar el color a negro para que armonice con el logo
-- Botón "Conócenos" en la cabecera: no tiene sentido en el contexto actual; valorar eliminarlo o sustituirlo por otro acceso de interés
-- KPIs de `estadisticas.html`: centrarlos y unificar el estilo con los de `index.html` (alineación, color de fuente) para mantener coherencia visual entre páginas
-- Contenido de la página privada (`privado.html`): tabla resumen con todos los datos por año y estado, con sumatorios, separada por tipo (una para EPAs y otra para EELL); posibles datos o vistas adicionales para usuarios registrados
-- Política de privacidad y aviso legal: página informativa sobre el tratamiento de datos de los usuarios registrados
-- Meta tags de redes sociales (`og:title`, `og:description`, `og:image`): para que al compartir la URL en redes aparezca el logo y una descripción del proyecto
-- Favicon: verificar que está configurado correctamente en todas las páginas HTML
-- Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA en los componentes principales
-- Página "Otros sitios de interés": directorio de organizaciones y recursos relacionados con el bienestar animal, con logo, nombre (enlazado a su web o red social) y descripción breve; candidatos: Basma, Meowmetrics, FdCats, Plataforma GARRA, LosGatosTienenLey, entre otros
-- Que en las tablas de resultados tras hacer una búsqueda, si aparece una entidad con estado de no beneficiaria, no aparezca con el guión "no_beneficiaria"
-- En las tablas de resultados tras hacer una búsqueda, no salgan los Expedientes, creo que eso se puede mantener cuando se clica en una entidad y sale su ficha, y en cambio en los resultados de búsquedas normales quizás sí se puede mostrar el año, ya que algunos usuarios eligen el año en el filtro pero otros no
-- Que los resultados salgan inicialmente por orden de Entidad (A -> Z), y luego se pueda elegir entra las otras dos de importe de mayor a menor y viceversa, pero quitar el de Por defecto si se puede
+- Completar `estadisticas-avanzadas.html`: implementar los endpoints de backend necesarios (`GET /estadisticas/avanzadas/` y `GET /estadisticas/por-ccaa/`) y conectar los gráficos; los endpoints están documentados en el JS de la página
+- Completar `recursos.html`: implementar el endpoint `GET /recursos/` en backend con un listado de organizaciones de interés (Basma, Meowmetrics, FdCats, Plataforma GARRA, etc.) y conectar el JS de la página; estructura preparada
+- Verificar que la columna de nombre de entidad se muestra correctamente en la tabla del buscador tras los cambios de la rama 7D (la celda quedó como `<td></td>` en el diff — pendiente de confirmar en prueba visual)
+- Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
+- Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
+- Valorar la visibilidad y utilidad del botón de borrar filtros del buscador
+- KPIs de `estadisticas.html`: centrarlos y unificar el estilo con los de `index.html`
+- Contenido de la página privada (`privado.html`): tabla resumen con datos por año y estado, separada por tipo
+- Política de privacidad y aviso legal
+- Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
 
 ### Pendientes de backend y API
 
@@ -771,16 +766,19 @@ El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
 ## Docker — arrancar el sistema
 
-El proyecto usa Docker Compose con cuatro servicios definidos en `docker/docker-compose.yml`:
+El proyecto usa Docker Compose con cinco servicios definidos en `docker/docker-compose.yml`:
 
-| Servicio   | Imagen          | Función                                      | Puerto externo    |
-|------------|-----------------|----------------------------------------------|-------------------|
-| `db`       | mariadb:11      | Base de datos MariaDB con el dataset cargado | 3307              |
-| `backend`  | Python (build)  | API FastAPI                                  | ninguno (interno) |
-| `nginx`    | nginx:alpine    | Proxy inverso, punto de entrada              | 80                |
-| `adminer`  | adminer         | Interfaz web para explorar la BD             | 8080              |
+| Servicio   | Imagen              | Función                                                   | Puerto externo    |
+|------------|---------------------|-----------------------------------------------------------|-------------------|
+| `db`       | mariadb:11          | Base de datos MariaDB con el dataset cargado              | 3307              |
+| `backend`  | Python (build)      | API FastAPI                                               | ninguno (interno) |
+| `nginx`    | nginx:alpine        | Proxy inverso, punto de entrada                           | 80, 443           |
+| `cron`     | Python + supercronic | Tareas programadas: comprobación BDNS y health check     | ninguno           |
+| `adminer`  | adminer             | Interfaz web para explorar la BD                          | 8080              |
 
-El backend no expone su puerto al exterior — solo Nginx puede acceder a él dentro de la red Docker.
+El backend no expone su puerto al exterior — solo Nginx y el cron pueden acceder a él dentro de la red Docker.
+
+El servicio `cron` usa [supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores: no necesita demonio, registra todo en stdout (visible con `docker logs bdns_cron`) y gestiona bien las variables de entorno. Sus logs se persisten en `logs/cron/`.
 
 Adminer está disponible en `http://localhost:8080` con Docker levantado. En el formulario de acceso: **Sistema** → MySQL · **Servidor** → `db` · usuario y contraseña según el `.env`.
 
@@ -865,11 +863,11 @@ Si el error persiste, asegúrate de que el volumen de Nginx monta el **directori
 
 ## Tests
 
-El proyecto tiene **125 pruebas en total**: 96 automáticas con pytest y 29 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **131 pruebas en total**: 102 automáticas con pytest y 29 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 96 | pytest (sin Docker) |
+| Automáticos | 102 | pytest (sin Docker) |
 | Manuales | 29 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -890,6 +888,7 @@ pytest tests/test_solicitudes.py        # filtros, paginación y exportación CS
 pytest tests/test_estadisticas.py
 pytest tests/test_auth.py               # registro, login y zona privada
 pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
+pytest tests/test_avisos.py             # endpoint /avisos/ — filtros por año y fecha_resolucion
 pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
@@ -898,10 +897,41 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-96 passed
+102 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
+
+### Pruebas manuales pendientes (rama 9e — tras levantar el stack)
+
+Antes de hacer el PR de 9e a dev, verificar con Docker levantado (`docker compose up --build -d`):
+
+**Servicio cron:**
+
+- [ ] El contenedor `bdns_cron` arranca sin errores: `docker compose ps`
+- [ ] Ejecutar manualmente el script BDNS: `docker exec bdns_cron python3 /app/scripts/check_bdns.py`
+- [ ] Revisar el log generado: `docker exec bdns_cron cat /app/logs/cron/bdns_check.log`
+- [ ] Comprobar en Adminer (`localhost:8080`) si se insertó la convocatoria EELL 2026 con `fecha_resolucion = NULL`
+- [ ] Ejecutar manualmente el health check: `docker exec bdns_cron python3 /app/scripts/health_check.py`
+- [ ] Revisar el log del health check: `docker exec bdns_cron cat /app/logs/cron/health_check.log`
+- [ ] Verificar que los ficheros de log aparecen también en `logs/cron/` del host (volumen montado)
+
+**Endpoint /avisos/:**
+
+- [ ] `GET https://subvencionesDGDA.local/avisos/` devuelve lista (vacía si el cron aún no ha corrido, con datos si ya insertó la EELL 2026)
+- [ ] Con la convocatoria 2026 insertada, la respuesta incluye `tipo_convoc`, `titulo_convoc` y `fecha_convocatoria`
+
+**Banner en el frontend:**
+
+- [ ] Abrir `https://subvencionesDGDA.local/` — si hay avisos activos aparece el banner amarillo con el mensaje de la convocatoria 2026
+- [ ] Si no hay avisos, el banner no se muestra (no deja espacio en blanco)
+
+**Frontend 7D — verificaciones pendientes:**
+
+- [ ] Comprobar que la columna de nombre de entidad se muestra correctamente en la tabla del buscador (posible bug en el diff de 7D — la celda `<td></td>` podría estar vacía)
+- [ ] Verificar que `recursos.html` muestra el placeholder sin errores en consola
+- [ ] Verificar que `estadisticas-avanzadas.html` muestra el placeholder sin errores en consola
+- [ ] Comprobar que los badges de estado (Concedida, No beneficiaria, Excluida, Desistida) se renderizan correctamente en la ficha de entidad
 
 ### Pruebas de integración end-to-end (manuales)
 
