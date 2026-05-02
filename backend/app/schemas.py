@@ -47,12 +47,34 @@ class SolicitudOut(BaseModel):
     linea:          Optional[str]     # animales_abandonados | colonias_felinas | None
     provincia:      Optional[str]     # solo EELL; None para EPA
     ccaa:           Optional[str]     # solo EELL; None para EPA
+    es_agrupacion:  bool              # True si la concesión pertenece a una agrupación de municipios
 
     model_config = ConfigDict(from_attributes=True)
 
 class SolicitudesPageOut(BaseModel):
     total:      int
     resultados: list[SolicitudOut]
+
+
+# ──────────────────────────────────────────────
+# AGRUPACIONES
+# Desglose de municipios miembro (solo EELL 2025 concedidas como agrupación)
+# ──────────────────────────────────────────────
+
+class MiembroAgrupacionOut(BaseModel):
+    nombre:           str
+    cif:              Optional[str]
+    importe_asignado: Optional[float]
+
+    model_config = ConfigDict(from_attributes=True)
+
+class AgrupacionOut(BaseModel):
+    id_agrup:       int
+    num_municipios: Optional[int]
+    representante:  BeneficiarioOut
+    miembros:       list[MiembroAgrupacionOut]
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ──────────────────────────────────────────────
