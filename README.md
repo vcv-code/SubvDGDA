@@ -584,7 +584,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · frontend integrado con la API · pendiente funcionalidades avanzadas y despliegue en producción**
+Fase: **backend completado · sistema de logs activo · pendiente HTTPS, cron y funcionalidades avanzadas**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -617,18 +617,24 @@ Fase: **backend completado · frontend integrado con la API · pendiente funcion
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (70 tests — smoke, funcionales, unitarios, seguridad)
-  · test_smoke.py (1): arranque de la API
+✔ tests automáticos con pytest (87 tests — smoke, funcionales, unitarios, seguridad)
+  · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
-  · test_solicitudes.py (9): filtros, paginación, búsqueda parcial y estructura de respuestas
+  · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
   · test_estadisticas.py (4): endpoint /estadisticas/ y cálculos de totales
   · test_auth.py (10): registro, login, acceso con/sin token
+  · test_agrupaciones.py (5): endpoint /agrupaciones/ con fixture completa de relaciones
+  · test_logging.py (5): middleware de logging y configuración del logger
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
   · sin exponer internos del servidor en errores 500
+✔ sistema de logs: registro de cada petición HTTP (IP, método, ruta, código, latencia) y errores 500
+  · logger de aplicación con rotación automática de archivos (`logs/app/`)
+  · access log y error log de Nginx con formato personalizado (`logs/nginx/`)
+  · persistencia mediante volúmenes Docker: los logs sobreviven reinicios del contenedor
 ✔ endpoint GET /health → `{"status": "ok"}` para monitorización del servicio
 ✔ agrupaciones EELL 2025 expuestas en la API
   · campo `es_agrupacion` en cada solicitud de tipo SolicitudOut
@@ -661,7 +667,8 @@ Pendiente:
 - Páginas de error visuales: el backend ya devuelve JSON con `error`, `mensaje` y `sugerencia`; el frontend mostrará páginas con mensaje claro y botón "Volver al inicio"
 - Mejorar los mensajes de error visibles al usuario: los mensajes técnicos actuales no son comprensibles para el usuario final; traducirlos a lenguaje natural
 - Indicadores de carga (spinners): mostrar feedback visual mientras se espera respuesta de la API en todas las páginas con fetch
-- Exportar resultados a CSV: botón en el buscador que descargue la búsqueda actual filtrada mediante el endpoint `GET /solicitudes/export` en el backend (mismos filtros que `/solicitudes/`, sin paginación)
+- Mostrar badge "Agrupación" en el buscador y desglose de municipios en la ficha de entidad (backend ya disponible: campo `es_agrupacion` en `/solicitudes/` y `GET /agrupaciones/{id_solic}`)
+- Exportar resultados a CSV: botón en el buscador que descargue la búsqueda actual filtrada mediante el endpoint `GET /solicitudes/export` en el backend (mismos filtros que `/solicitudes/`, sin paginación; backend ya disponible)
 - Repensar las gráficas de `estadisticas.html` y conectarlas con datos reales de la API; valorar añadir una sección de conclusiones relevantes extraídas de los datos
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales o consultar directamente a la DGDA; incluir información de contacto con la DGDA y cómo presentar una solicitud de acceso a información pública
 - Notas con datos relevantes destacados (pendiente de concretar cuáles)
@@ -682,11 +689,9 @@ Pendiente:
 
 ### Pendientes de backend y API
 
-- Mostrar badge "Agrupación" en el buscador y desglose de municipios en la ficha de entidad (consume `es_agrupacion` y `GET /agrupaciones/{id_solic}` ya disponibles en la API)
 - Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
 - Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian 1-2 veces al año; añadir cabeceras `Cache-Control` via FastAPI o Nginx
 - Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
-- Sistema de logs: registro de peticiones, errores y eventos relevantes del backend
 
 ### Pendientes de infraestructura y despliegue
 
@@ -857,11 +862,13 @@ pytest -v
 ### Ejecutar por módulo
 
 ```bash
-pytest tests/test_smoke.py              # arranque de la API
+pytest tests/test_smoke.py              # arranque de la API y /health
 pytest tests/test_convocatorias.py
-pytest tests/test_solicitudes.py
+pytest tests/test_solicitudes.py        # filtros, paginación y exportación CSV
 pytest tests/test_estadisticas.py
 pytest tests/test_auth.py               # registro, login y zona privada
+pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
+pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ```
@@ -869,7 +876,7 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-70 passed
+87 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
