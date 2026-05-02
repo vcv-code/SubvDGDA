@@ -629,6 +629,11 @@ Fase: **backend completado · frontend integrado con la API · pendiente funcion
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
   · sin exponer internos del servidor en errores 500
+✔ endpoint GET /health → `{"status": "ok"}` para monitorización del servicio
+✔ agrupaciones EELL 2025 expuestas en la API
+  · campo `es_agrupacion` en cada solicitud de tipo SolicitudOut
+  · GET /agrupaciones/{id_solic} → desglose completo de municipios miembro con importes
+✔ exportación CSV: GET /solicitudes/export con los mismos filtros que /solicitudes/ y sin paginación
 
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
@@ -675,14 +680,11 @@ Pendiente:
 - En las tablas de resultados tras hacer una búsqueda, no salgan los Expedientes, creo que eso se puede mantener cuando se clica en una entidad y sale su ficha, y en cambio en los resultados de búsquedas normales quizás sí se puede mostrar el año, ya que algunos usuarios eligen el año en el filtro pero otros no
 - Que los resultados salgan inicialmente por orden de Entidad (A -> Z), y luego se pueda elegir entra las otras dos de importe de mayor a menor y viceversa, pero quitar el de Por defecto si se puede
 
-
 ### Pendientes de backend y API
 
-- Agrupaciones EELL 2025 expuestas en la API: añadir `es_agrupacion` a `SolicitudOut` y un endpoint o schema con el desglose de municipios miembro; mostrar badge "Agrupación" en el buscador y desglose en la ficha de entidad
-- Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol); valorar añadir modo mantenimiento y visualización de errores del sistema
-- Endpoint `/health`: responde `{"status": "ok"}` y permite a Docker, Nginx o cualquier monitor saber si el servicio está vivo sin consultar datos reales
-- Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian cuando se ejecuta el cron de sincronización con la API BDNS (1-2 veces al año); añadir cabeceras `Cache-Control` via FastAPI o Nginx para evitar consultas innecesarias a la BD; cuando el cron actualice datos, invalidar la caché
-- Cron de sincronización con la API BDNS: tarea periódica que actualice convocatorias automáticamente (frecuencia por decidir)
+- Mostrar badge "Agrupación" en el buscador y desglose de municipios en la ficha de entidad (consume `es_agrupacion` y `GET /agrupaciones/{id_solic}` ya disponibles en la API)
+- Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
+- Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian 1-2 veces al año; añadir cabeceras `Cache-Control` via FastAPI o Nginx
 - Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
 - Sistema de logs: registro de peticiones, errores y eventos relevantes del backend
 

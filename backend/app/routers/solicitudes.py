@@ -1,8 +1,11 @@
+import csv
+import io
 from fastapi import APIRouter, Depends, Query
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session, joinedload
 from typing import Optional
 from ..db import get_db
-from ..models import Solicitud, Convocatoria, Beneficiario, Concesion
+from ..models import Solicitud, Convocatoria, Beneficiario, Concesion, Agrupacion
 from ..schemas import SolicitudOut, SolicitudesPageOut
 
 router = APIRouter(prefix="/solicitudes", tags=["solicitudes"])
@@ -44,7 +47,7 @@ def listar_solicitudes(
         .options(
             joinedload(Solicitud.convocatoria),
             joinedload(Solicitud.beneficiario),
-            joinedload(Solicitud.concesion),
+            joinedload(Solicitud.concesion).joinedload(Concesion.agrupacion),
         )
     )
 
@@ -83,6 +86,83 @@ def listar_solicitudes(
             linea          = s.concesion.linea if s.concesion else None,
             provincia      = s.provincia,
             ccaa           = s.ccaa,
+            es_agrupacion  = bool(s.concesion and s.concesion.agrupacion),
         ))
 
     return SolicitudesPageOut(total=total, resultados=resultado)
+
+
+@router.get("/export")
+def exportar_csv(
+    anio:      Optional[int] = Query(None),
+    tipo:      Optional[str] = Query(None),
+    estado:    Optional[str] = Query(None),
+    linea:     Optional[str] = Query(None),
+    provincia: Optional[str] = Query(None),
+    ccaa:      Optional[str] = Query(None),
+    cif:       Optional[str] = Query(None),
+    buscar:    Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+):
+    """
+    Descarga las solicitudes filtradas en formato CSV.
+    Acepta los mismos filtros que GET /solicitudes/ pero devuelve todos los resultados sin paginar.
+    """
+    consulta = (
+        db.query(Solicitud)
+        .join(Convocatoria)
+        .join(Beneficiario)
+        .options(
+            joinedload(Solicitud.convocatoria),
+            joinedload(Solicitud.beneficiario),
+            joinedload(Solicitud.concesion),
+        )
+    )
+
+    if anio:
+        consulta = consulta.filter(Convocatoria.anio_convocatoria == anio)
+    if tipo:
+        consulta = consulta.filter(Convocatoria.tipo_convoc == tipo)
+    if estado:
+        consulta = consulta.filter(Solicitud.estado == estado)
+    if linea:
+        consulta = consulta.filter(Solicitud.concesion.has(Concesion.linea == linea))
+    if provincia:
+        consulta = consulta.filter(Solicitud.provincia == provincia)
+    if ccaa:
+        consulta = consulta.filter(Solicitud.ccaa == ccaa)
+    if cif:
+        consulta = consulta.filter(Beneficiario.cif == cif)
+    if buscar:
+        for palabra in _palabras_clave(buscar):
+            consulta = consulta.filter(Beneficiario.nombre.ilike(f"%{palabra}%"))
+
+    solicitudes = consulta.all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["anio", "tipo", "num_expediente", "entidad", "cif",
+                     "estado", "importe", "linea", "provincia", "ccaa",
+                     "puntuacion", "es_agrupacion"])
+    for s in solicitudes:
+        writer.writerow([
+            s.convocatoria.anio_convocatoria,
+            s.convocatoria.tipo_convoc,
+            s.num_expediente,
+            s.beneficiario.nombre,
+            s.beneficiario.cif,
+            s.estado,
+            float(s.concesion.importe) if s.concesion else "",
+            s.concesion.linea if s.concesion else "",
+            s.provincia or "",
+            s.ccaa or "",
+            float(s.puntuacion) if s.puntuacion is not None else "",
+            bool(s.concesion and s.concesion.agrupacion),
+        ])
+
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=solicitudes.csv"},
+    )
