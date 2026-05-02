@@ -105,10 +105,23 @@ function formatearEjeY(n) {
 // ─────────────────────────────────────────────────────────────
 
 async function cargarEstadisticas() {
+    document.getElementById('spinner').style.display = 'block';
     try {
         // ── Petición a la API ──────────────────────────────────────
         const respuesta = await fetch(`${API_URL}/estadisticas/`);
-        if (!respuesta.ok) throw new Error(`Error ${respuesta.status}`);
+        if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            const errorBox        = document.getElementById('error-box');
+            const errorMensaje    = document.getElementById('error-mensaje');
+            const errorSugerencia = document.getElementById('error-sugerencia');
+            if (errorBox) {
+                errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+                errorSugerencia.textContent = cuerpo.sugerencia || '';
+                errorBox.style.display      = 'block';
+            }
+            throw new Error(`Error ${respuesta.status}`);
+        }
         const datos = await respuesta.json();
 
         // ── Actualizar cada bloque de la página ────────────────────
@@ -123,6 +136,8 @@ async function cargarEstadisticas() {
     } catch (error) {
         console.error('Error al cargar estadísticas:', error);
         mostrarErrorGlobal();
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
 }
 
@@ -136,10 +151,9 @@ function actualizarKPIs(datos) {
     document.getElementById('kpi-total').textContent =
         formatearMiles(datos.total_registros);
 
-    // KPI 2: entidades únicas — pendiente de backend
-    // Cuando el backend exponga el dato, cambiar por:
-    // document.getElementById('kpi-entidades').textContent = formatearMiles(datos.total_entidades);
-    document.getElementById('kpi-entidades').textContent = '—';
+    // KPI 2: entidades únicas — dato real de la API (entidades_unicas en EstadisticasOut)
+    document.getElementById('kpi-entidades').textContent =
+        formatearMiles(datos.entidades_unicas);
 
     // KPI 3: importe total concedido en millones
     document.getElementById('kpi-importe').textContent =
