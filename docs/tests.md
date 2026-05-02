@@ -1,12 +1,20 @@
 # Tests — estrategia y resultados
 
-El proyecto tiene dos niveles de pruebas: tests automáticos con pytest y pruebas manuales del frontend en el navegador.
+El proyecto tiene dos niveles de pruebas:
+
+| Nivel | Cantidad | Herramienta |
+|-------|----------|-------------|
+| Tests automáticos | 96 | pytest (sin Docker) |
+| Pruebas manuales | 29 | Navegador + DevTools con Docker levantado |
+| **Total** | **125** | |
+
+Las pruebas manuales se distribuyen en tres bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend y 10 de endpoints de la API vía `/docs`.
 
 ---
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **87 tests automáticos** distribuidos en 9 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers y el sistema de logging.
+El proyecto incluye **96 tests automáticos** distribuidos en 10 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging y la configuración HTTPS.
 
 ### Cómo funcionan
 
@@ -77,6 +85,15 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 85 | `test_logging.py` | Funcional | Blanca | La IP del cliente queda registrada en cada entrada del log |
 | 86 | `test_logging.py` | Unitario | Blanca | `generic_exception_handler` llama a `logger.error` con el tipo de excepción |
 | 87 | `test_logging.py` | Unitario | Blanca | `setup_logging()` devuelve un logger con nombre `bdns`, nivel INFO y al menos un handler |
+| 88 | `test_https_config.py` | Configuración | Blanca | El archivo `server.crt` existe en `docker/ssl/` |
+| 89 | `test_https_config.py` | Seguridad | Blanca | `server.key` está excluida del repositorio vía `.gitignore` |
+| 90 | `test_https_config.py` | Configuración | Blanca | El certificado tiene `CN=subvencionesDGDA.local` |
+| 91 | `test_https_config.py` | Configuración | Blanca | El certificado incluye `subjectAltName` con el dominio (requerido por navegadores modernos) |
+| 92 | `test_https_config.py` | Configuración | Blanca | El certificado no ha expirado |
+| 93 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `listen 443 ssl` |
+| 94 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `return 301 https://` (redirección HTTP→HTTPS) |
+| 95 | `test_https_config.py` | Seguridad | Blanca | `default.conf` incluye la cabecera `Strict-Transport-Security` |
+| 96 | `test_https_config.py` | Seguridad | Blanca | `default.conf` limita los protocolos a TLS 1.2 y TLS 1.3 |
 
 ### Descripción por módulo
 
@@ -136,8 +153,24 @@ Prueba las funciones del parser EPA 2025 con XMLs mínimos generados en memoria 
 - **Funcional**: comprueba que una funcionalidad completa (endpoint + lógica + BD) produce el resultado esperado.
 - **Unitario**: prueba una pieza de lógica aislada (validador de contraseña, funciones de normalización, helpers del parser).
 - **Seguridad**: verifica que el control de acceso funciona correctamente (rutas protegidas).
+- **Configuración**: verifica que los archivos de infraestructura (certificados, Nginx) tienen el contenido correcto sin necesitar el stack levantado.
 
 La técnica de **caja negra** se aplica cuando el test solo mira la entrada y la salida (código de respuesta, estructura JSON). La técnica de **caja blanca** se aplica cuando el test conoce la lógica interna y diseña los casos en función de ella (filtros, paginación, validaciones específicas, casos límite del parser).
+
+---
+
+## Pruebas manuales de HTTPS
+
+Realizadas con Docker levantado y `subvencionesDGDA.local` añadido al `/etc/hosts`.
+
+| # | Prueba | Resultado esperado | Verificado |
+|---|--------|-------------------|------------|
+| 1 | `https://subvencionesDGDA.local` en el navegador | Carga la aplicación con aviso de certificado autofirmado; al aceptar, funciona completamente | ✔ |
+| 2 | `http://subvencionesDGDA.local` en el navegador | Redirige automáticamente a HTTPS (código 301 visible en Network del DevTools) | ✔ |
+| 3 | Network tab del DevTools en `/solicitudes/` | La petición fetch a la API va por `https://` y devuelve 200 | ✔ |
+| 4 | Headers de respuesta en DevTools | `Strict-Transport-Security`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` presentes | ✔ |
+| 5 | `Remote Address` en DevTools | Muestra `127.0.0.1:443` — confirma que va por el puerto HTTPS | ✔ |
+| 6 | `http://localhost` sigue funcionando | La aplicación sigue accesible por localhost sin romper el flujo de desarrollo | ✔ |
 
 ---
 
