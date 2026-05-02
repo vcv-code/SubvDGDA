@@ -19,6 +19,12 @@ const vacia      = document.getElementById("entidad-vacia");
 const tablaWrap  = document.getElementById("entidad-tabla-wrapper");
 const tablaBody  = document.getElementById("entidad-tabla-body");
 
+// Referencias al bloque de agrupación (Paso 16)
+const agrupacionDetalle      = document.getElementById("agrupacion-detalle");
+const agrupacionRepresentante = document.getElementById("agrupacion-representante");
+const agrupacionNumMunicipios = document.getElementById("agrupacion-num-municipios");
+const agrupacionMiembros     = document.getElementById("agrupacion-miembros");
+
 // Si no hay CIF → error
 if (!cif) {
     cargando.style.display = "none";
@@ -41,11 +47,23 @@ function badgeEstadoHtml(estado) {
 }
 
 async function cargarHistorial(cif) {
+    document.getElementById('spinner').style.display = 'block';
     try {
         const url = `/solicitudes/?cif=${encodeURIComponent(cif)}`;
         const resp = await fetch(url);
 
         if (!resp.ok) {
+            let cuerpo = {};
+            try { cuerpo = await resp.json(); } catch (_) {}
+            const errorBox        = document.getElementById('error-box');
+            const errorMensaje    = document.getElementById('error-mensaje');
+            const errorSugerencia = document.getElementById('error-sugerencia');
+            if (errorBox) {
+                errorMensaje.textContent    = cuerpo.mensaje    || `Error ${resp.status}`;
+                errorSugerencia.textContent = cuerpo.sugerencia || '';
+                cargando.style.display      = 'none';
+                errorBox.style.display      = 'block';
+            }
             throw new Error("Error del servidor");
         }
 
@@ -85,6 +103,11 @@ async function cargarHistorial(cif) {
             `;
 
             tablaBody.appendChild(tr);
+
+            // Si la solicitud pertenece a una agrupación, cargamos el desglose
+            if (s.es_agrupacion === true) {
+                cargarAgrupacion(s.id_solic);
+            }
         });
 
         tablaWrap.style.display = "";
@@ -93,5 +116,59 @@ async function cargarHistorial(cif) {
         cargando.style.display = "none";
         errorBox.style.display = "";
         errorBox.textContent = "No se pudo cargar el historial.";
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
+    }
+}
+
+
+/**
+ * cargarAgrupacion(idSolic)
+ * Llama a GET /agrupaciones/{id_solic} y muestra el desglose
+ * de municipios miembro de la agrupación EELL.
+ *
+ * Respuesta esperada del backend:
+ *   {
+ *     representante: string,
+ *     num_municipios: number,
+ *     miembros: [{ nombre, cif, importe }, ...]
+ *   }
+ */
+async function cargarAgrupacion(idSolic) {
+    try {
+        const resp = await fetch(`/agrupaciones/${idSolic}`);
+        if (!resp.ok) return;  // Si el backend aún no tiene el endpoint, no rompemos la página
+
+        const datos = await resp.json();
+
+        // Rellenar datos del bloque
+        agrupacionRepresentante.textContent =
+            `Entidad representante: ${datos.representante || '—'}`;
+        agrupacionNumMunicipios.textContent =
+            `Número de municipios: ${datos.num_municipios ?? '—'}`;
+
+        // Pintar filas de miembros
+        const tbody = agrupacionMiembros.querySelector("tbody");
+        tbody.innerHTML = "";
+        (datos.miembros || []).forEach(m => {
+            const importe = m.importe !== null && m.importe !== undefined
+                ? new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 })
+                    .format(parseFloat(m.importe)) + " €"
+                : "—";
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${m.nombre || '—'}</td>
+                <td>${m.cif    || '—'}</td>
+                <td>${importe}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Mostrar el bloque
+        agrupacionDetalle.style.display = "block";
+
+    } catch (err) {
+        // Error silencioso: el bloque queda oculto si el endpoint falla
+        agrupacionDetalle.style.display = "none";
     }
 }

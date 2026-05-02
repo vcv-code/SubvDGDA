@@ -86,6 +86,7 @@ function formatearImporte(numero) {
  * Hacer una sola petición es más eficiente que hacer tres.
  */
 async function cargarDatos() {
+    document.getElementById('spinner').style.display = 'block';
     try {
         // ── Paso 1: Petición al servidor ──────────────────────────────
         const respuesta = await fetch(`${API_URL}/estadisticas/`);
@@ -93,6 +94,16 @@ async function cargarDatos() {
         // Si el servidor responde con un error (4xx o 5xx), lo lanzamos
         // manualmente para que lo capture el catch.
         if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            const errorBox        = document.getElementById('error-box');
+            const errorMensaje    = document.getElementById('error-mensaje');
+            const errorSugerencia = document.getElementById('error-sugerencia');
+            if (errorBox) {
+                errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+                errorSugerencia.textContent = cuerpo.sugerencia || '';
+                errorBox.style.display      = 'block';
+            }
             throw new Error(`El servidor devolvió el código: ${respuesta.status}`);
         }
 
@@ -120,6 +131,8 @@ async function cargarDatos() {
         // mostramos mensajes de error en cada bloque afectado.
         console.error('Error al cargar datos de la API:', error);
         mostrarErrores();
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
 }
 

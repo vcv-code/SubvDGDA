@@ -63,7 +63,7 @@
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span>Bienestar Animal</span>
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -86,6 +86,16 @@
     <main class="fondo-stats">
         <section class="seccion" aria-labelledby="stats-titulo">
             <div class="contenedor">
+
+                <!-- Spinner de carga (Paso 17) -->
+                <div id="spinner" class="spinner"></div>
+
+                <!-- Caja de error estructurado del backend (Paso 18) -->
+                <div id="error-box" class="error-box" style="display:none;">
+                    <h3>Error</h3>
+                    <p id="error-mensaje"></p>
+                    <p id="error-sugerencia"></p>
+                </div>
 
                 <!-- Cabecera de la sección -->
                 <div style="margin-bottom: var(--espacio-lg);">
