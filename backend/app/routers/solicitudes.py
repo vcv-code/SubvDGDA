@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session, joinedload
 from typing import Optional
 from ..db import get_db
-from ..models import Solicitud, Convocatoria, Beneficiario, Concesion, Agrupacion
+from ..models import Solicitud, Convocatoria, Beneficiario, Concesion
 from ..schemas import SolicitudOut, SolicitudesPageOut
 
 router = APIRouter(prefix="/solicitudes", tags=["solicitudes"])
@@ -115,7 +115,7 @@ def exportar_csv(
         .options(
             joinedload(Solicitud.convocatoria),
             joinedload(Solicitud.beneficiario),
-            joinedload(Solicitud.concesion),
+            joinedload(Solicitud.concesion).joinedload(Concesion.agrupacion),
         )
     )
 
