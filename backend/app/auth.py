@@ -1,4 +1,5 @@
 import os
+import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -6,7 +7,8 @@ from jose import jwt
 
 SECRET_KEY = os.getenv("SECRET_KEY", "cambia-esto-en-produccion")
 ALGORITHM = "HS256"
-TOKEN_EXPIRE_MINUTOS = 60
+TOKEN_EXPIRE_MINUTOS   = 60
+REFRESH_EXPIRE_DIAS    = 30
 
 
 def hashear_password(password: str) -> str:
@@ -26,3 +28,12 @@ def crear_token(email: str, rol: str) -> str:
 def decodificar_token(token: str) -> dict:
     """Devuelve el payload del token o lanza JWTError si es inválido o ha expirado."""
     return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+
+def crear_refresh_token() -> str:
+    """Genera un token opaco de 64 caracteres hexadecimales."""
+    return secrets.token_hex(32)
+
+
+def refresh_expira_en() -> datetime:
+    return datetime.now(timezone.utc) + timedelta(days=REFRESH_EXPIRE_DIAS)

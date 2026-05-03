@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -619,7 +619,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (111 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (123 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
@@ -631,6 +631,8 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
   · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
   · test_rate_limiting.py (5): configuración de rate limiting en Nginx para /auth/login
+  · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
+  · test_refresh_token.py (6): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
@@ -685,6 +687,16 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
 ✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
   automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
+✔ cambiar contraseña desde la zona privada
+  · PUT /privado/cambiar-contrasena — valida contraseña actual con bcrypt, aplica las mismas reglas de fortaleza del registro
+  · formulario en privado.html con feedback de error (actual incorrecta, nueva débil) y confirmación de éxito
+✔ refresh token y "Recuérdame"
+  · tabla refresh_tokens en BD: token opaco (64 hex), expiración 30 días, flag revocado
+  · login genera siempre un refresh token; rotación en cada uso (el token anterior queda revocado)
+  · POST /auth/refresh — devuelve nuevo access token + nuevo refresh token
+  · POST /auth/logout — revoca el refresh token en el servidor
+  · checkbox "Recuérdame" en login.html: si marcado, guarda el refresh token en localStorage
+  · privado.js renueva automáticamente el access token al cargar si hay refresh token guardado
 ✔ cabeceras Cache-Control en endpoints de datos estáticos
   · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
   · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
@@ -714,10 +726,10 @@ Pendiente:
 
 ### Pendientes de backend y API
 
+- Pruebas manuales para tareas 9gh
 - Implementar `GET /estadisticas/epas/` y `GET /estadisticas/eell/`: endpoints específicos por tipo de entidad para alimentar las páginas `estadisticas-epas.html` y `estadisticas-eell.html`; datos necesarios detallados en el documento de diseño de gráficos
 - Exponer campo `tramo` de EELL 2025: añadir al schema `SolicitudOut` y al endpoint `/solicitudes/`; mostrarlo en la ficha de entidad y como filtro en el buscador (valores 1/2/3, solo aplica a EELL 2025 concedidas; el dato ya existe en `concesiones.tramo`)
 - Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
-- Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
 
 ### Pendientes de infraestructura y despliegue
 
@@ -728,8 +740,6 @@ Pendiente:
 
 ### Pendientes de usuarios y autenticación
 
-- "Recuérdame" en el login: checkbox de sesión persistente que extienda la duración del token o use el refresh token
-- Cambiar contraseña desde el perfil: formulario en `privado.html` para actualizar la contraseña con la actual como confirmación
 - Recuperación de contraseña ("¿Olvidaste tu contraseña?"): flujo de reset por email con token de un solo uso y enlace de caducidad
 - Servidor de correo: enviar email de confirmación al registrarse (SMTP o servicio externo); comparte infraestructura con la recuperación de contraseña
 - Login con terceros (OAuth): integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
@@ -883,11 +893,11 @@ Solución implementada: se sustituyó supercronic por un **scheduler Python prop
 
 ## Tests
 
-El proyecto tiene **142 pruebas en total**: 111 automáticas con pytest y 31 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **154 pruebas en total**: 123 automáticas con pytest y 31 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 111 | pytest (sin Docker) |
+| Automáticos | 123 | pytest (sin Docker) |
 | Manuales | 31 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -911,6 +921,8 @@ pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones
 pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
 pytest tests/test_cache_headers.py      # cabeceras Cache-Control en /convocatorias/ y /estadisticas/
 pytest tests/test_rate_limiting.py      # configuración de rate limiting en Nginx
+pytest tests/test_privado.py            # cambiar contraseña desde la zona privada
+pytest tests/test_refresh_token.py      # refresh token, rotación y logout
 pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
@@ -919,7 +931,7 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-111 passed
+123 passed
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
