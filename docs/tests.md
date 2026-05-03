@@ -1,12 +1,20 @@
 # Tests — estrategia y resultados
 
-El proyecto tiene dos niveles de pruebas: tests automáticos con pytest y pruebas manuales del frontend en el navegador.
+El proyecto tiene dos niveles de pruebas:
+
+| Nivel | Cantidad | Herramienta |
+|-------|----------|-------------|
+| Tests automáticos | 111 | pytest (sin Docker) |
+| Pruebas manuales | 31 | Navegador + DevTools con Docker levantado |
+| **Total** | **142** | |
+
+Las pruebas manuales se distribuyen en cuatro bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs` y 2 de caché y rate limiting.
 
 ---
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **70 tests automáticos** distribuidos en 7 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos y los parsers.
+El proyecto incluye **111 tests automáticos** distribuidos en 13 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
 
 ### Cómo funcionan
 
@@ -60,6 +68,47 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 27 | `test_auth.py` | Seguridad | Blanca | `GET /privado/resumen-exclusivo` con token válido devuelve 200 |
 | 28–48 | `test_unificar_datasets.py` | Unitario | Blanca | Funciones de normalización de estados, limpieza de importes, entidades y puntuaciones |
 | 49–70 | `test_parser_epa2025.py` | Unitario | Blanca | Helpers de detección (CIF, expediente, número europeo), mapeo de columnas, extracción de entidad con fallback, normalización de línea, flujo completo con XML mínimo mockeado |
+| 71 | `test_smoke.py` | Smoke | Negra | `GET /health` responde 200 |
+| 72 | `test_smoke.py` | Funcional | Negra | Respuesta de `/health` es exactamente `{"status": "ok"}` |
+| 73 | `test_agrupaciones.py` | Funcional | Negra | ID inexistente en `/agrupaciones/` devuelve 404 |
+| 74 | `test_agrupaciones.py` | Funcional | Blanca | Solicitud sin concesión ni agrupación devuelve 404 |
+| 75 | `test_agrupaciones.py` | Funcional | Negra | Respuesta tiene las claves `id_agrup`, `num_municipios`, `representante`, `miembros` |
+| 76 | `test_agrupaciones.py` | Funcional | Blanca | `num_municipios` coincide con el valor insertado en la fixture |
+| 77 | `test_agrupaciones.py` | Funcional | Negra | Cada miembro tiene `nombre`, `cif` e `importe_asignado` |
+| 78 | `test_solicitudes.py` | Funcional | Negra | `GET /solicitudes/export` devuelve `Content-Type: text/csv` |
+| 79 | `test_solicitudes.py` | Funcional | Blanca | Primera línea del CSV tiene exactamente las 12 columnas esperadas |
+| 80 | `test_solicitudes.py` | Funcional | Blanca | Con 3 solicitudes en BD, el CSV tiene cabecera + 3 filas de datos |
+| 81 | `test_solicitudes.py` | Funcional | Blanca | `?tipo=epa` en export devuelve solo filas con tipo `epa` |
+| 82 | `test_solicitudes.py` | Funcional | Negra | `Content-Disposition` incluye `attachment` y `solicitudes.csv` |
+| 83 | `test_logging.py` | Funcional | Blanca | El middleware registra en el log el método y la ruta de cada request |
+| 84 | `test_logging.py` | Funcional | Blanca | El código HTTP de la respuesta (ej. 404) aparece en el log |
+| 85 | `test_logging.py` | Funcional | Blanca | La IP del cliente queda registrada en cada entrada del log |
+| 86 | `test_logging.py` | Unitario | Blanca | `generic_exception_handler` llama a `logger.error` con el tipo de excepción |
+| 87 | `test_logging.py` | Unitario | Blanca | `setup_logging()` devuelve un logger con nombre `bdns`, nivel INFO y al menos un handler |
+| 88 | `test_avisos.py` | Funcional | Negra | `GET /avisos/` responde 200 y devuelve lista |
+| 89 | `test_avisos.py` | Funcional | Negra | Con BD vacía devuelve `[]` sin error |
+| 90 | `test_avisos.py` | Funcional | Blanca | Solo devuelve convocatorias del año actual con `fecha_resolucion = NULL` (filtra las resueltas y las de años anteriores) |
+| 91 | `test_avisos.py` | Funcional | Blanca | La respuesta tiene las claves `id_convoc`, `titulo_convoc`, `tipo_convoc`, `anio_convocatoria`, `fecha_convocatoria` |
+| 92 | `test_avisos.py` | Funcional | Blanca | Todos los avisos devueltos tienen `anio_convocatoria` igual al año en curso |
+| 93 | `test_avisos.py` | Funcional | Blanca | Convocatorias con `fecha_resolucion` no nula no aparecen en la respuesta |
+| 94 | `test_https_config.py` | Configuración | Blanca | El archivo `server.crt` existe en `docker/ssl/` |
+| 95 | `test_https_config.py` | Seguridad | Blanca | `server.key` está excluida del repositorio vía `.gitignore` |
+| 96 | `test_https_config.py` | Configuración | Blanca | El certificado tiene `CN=subvencionesDGDA.local` |
+| 97 | `test_https_config.py` | Configuración | Blanca | El certificado incluye `subjectAltName` con el dominio (requerido por navegadores modernos) |
+| 98 | `test_https_config.py` | Configuración | Blanca | El certificado no ha expirado |
+| 99 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `listen 443 ssl` |
+| 100 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `return 301 https://` (redirección HTTP→HTTPS) |
+| 101 | `test_https_config.py` | Seguridad | Blanca | `default.conf` incluye la cabecera `Strict-Transport-Security` |
+| 102 | `test_https_config.py` | Seguridad | Blanca | `default.conf` limita los protocolos a TLS 1.2 y TLS 1.3 |
+| 103 | `test_cache_headers.py` | Rendimiento | Negra | `GET /convocatorias/` incluye `Cache-Control: public` en la respuesta |
+| 104 | `test_cache_headers.py` | Rendimiento | Negra | `GET /convocatorias/` incluye `max-age=86400` (1 día) |
+| 105 | `test_cache_headers.py` | Rendimiento | Negra | `GET /estadisticas/` incluye `Cache-Control: public` en la respuesta |
+| 106 | `test_cache_headers.py` | Rendimiento | Negra | `GET /estadisticas/` incluye `max-age=3600` (1 hora) |
+| 107 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` contiene `limit_req_zone` |
+| 108 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` define la zona `login` para rate limiting |
+| 109 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` establece el límite en `10r/m` (10 peticiones/minuto) |
+| 110 | `test_rate_limiting.py` | Seguridad | Blanca | `default.conf` devuelve código `429` al superar el límite |
+| 111 | `test_rate_limiting.py` | Seguridad | Blanca | El rate limiting se aplica al bloque `/auth/login` y no al resto de la API |
 
 ### Descripción por módulo
 
@@ -89,6 +138,31 @@ Los tests más importantes. Cubren tres bloques:
 - **Login**: credenciales correctas devuelven token JWT; contraseña incorrecta o email inexistente devuelven 401.
 - **Zona privada**: los endpoints `/privado/perfil` y `/privado/resumen-exclusivo` devuelven 401 sin token y 200 con token válido.
 
+#### test_agrupaciones.py
+
+Verifica el endpoint `/agrupaciones/{id_solic}`, que devuelve el desglose de municipios miembro de una agrupación EELL. Cubre los casos de error (ID inexistente, solicitud sin agrupación asociada) y el camino feliz con una fixture completa que construye toda la cadena de relaciones: Convocatoria → Beneficiario → Solicitud → Concesion → Agrupacion → AgrupacionMiembro.
+
+**Bug detectado por estos tests:** el router usaba `joinedload("miembros")` y `joinedload("representante")` con strings, que no están admitidos en SQLAlchemy 2.x. Los tests fallaron con `ArgumentError` en todos los entornos, lo que llevó a corregir el router para usar atributos de clase (`Agrupacion.miembros`, `Agrupacion.representante`).
+
+#### test_avisos.py
+
+Verifica el endpoint `/avisos/` añadido en la rama `9e`. Cubre tres casos principales: BD vacía devuelve lista vacía, solo se devuelven convocatorias del año en curso sin resolución (las que tienen `fecha_resolucion IS NULL`), y las convocatorias ya resueltas o de años anteriores quedan excluidas. Incluye una fixture que inserta tres convocatorias con distintas combinaciones de año y estado de resolución para cubrir los casos límite.
+
+#### test_cache_headers.py
+
+Verifica que los endpoints con datos raramente cambiantes incluyen la cabecera `Cache-Control` correcta. `/convocatorias/` recibe `public, max-age=86400` (1 día); `/estadisticas/` recibe `public, max-age=3600` (1 hora). La cabecera se inyecta en el router FastAPI mediante el parámetro `Response`, que FastAPI resuelve automáticamente como dependencia.
+
+#### test_rate_limiting.py
+
+Verifica la configuración de rate limiting en Nginx siguiendo el mismo patrón que `test_https_config.py`: lee `docker/nginx/default.conf` directamente sin necesitar Docker levantado. Comprueba que la zona `login` está definida con un límite de `10r/m`, que el status de rechazo es `429` y que el bloque de rate limiting está asociado únicamente a `/auth/login`.
+
+#### test_logging.py
+
+Verifica el sistema de logging implementado en la rama `9c`. Cubre dos partes:
+
+- **Middleware de requests**: comprueba que cada petición HTTP queda registrada con método, ruta, código de respuesta e IP del cliente. Usa `caplog` de pytest para capturar los registros del logger `bdns` sin necesitar archivos en disco.
+- **Configuración del logger**: verifica directamente la función `setup_logging()` y el `generic_exception_handler` usando mocks para no depender del sistema de archivos ni de llamadas HTTP reales.
+
 #### test_unificar_datasets.py
 
 Prueba las funciones puras de transformación de `unificar_datasets.py`. El caso más relevante: `normalizar_estado_epa` mapea "denegada" a valores distintos según el año (≤2023 → `excluida`; ≥2024 → `no_beneficiaria`), porque el BOE usa la misma palabra para dos realidades distintas.
@@ -106,8 +180,24 @@ Prueba las funciones del parser EPA 2025 con XMLs mínimos generados en memoria 
 - **Funcional**: comprueba que una funcionalidad completa (endpoint + lógica + BD) produce el resultado esperado.
 - **Unitario**: prueba una pieza de lógica aislada (validador de contraseña, funciones de normalización, helpers del parser).
 - **Seguridad**: verifica que el control de acceso funciona correctamente (rutas protegidas).
+- **Configuración**: verifica que los archivos de infraestructura (certificados, Nginx) tienen el contenido correcto sin necesitar el stack levantado.
 
 La técnica de **caja negra** se aplica cuando el test solo mira la entrada y la salida (código de respuesta, estructura JSON). La técnica de **caja blanca** se aplica cuando el test conoce la lógica interna y diseña los casos en función de ella (filtros, paginación, validaciones específicas, casos límite del parser).
+
+---
+
+## Pruebas manuales de HTTPS
+
+Realizadas con Docker levantado y `subvencionesDGDA.local` añadido al `/etc/hosts`.
+
+| # | Prueba | Resultado esperado | Verificado |
+|---|--------|-------------------|------------|
+| 1 | `https://subvencionesDGDA.local` en el navegador | Carga la aplicación con aviso de certificado autofirmado; al aceptar, funciona completamente | ✔ |
+| 2 | `http://subvencionesDGDA.local` en el navegador | Redirige automáticamente a HTTPS (código 301 visible en Network del DevTools) | ✔ |
+| 3 | Network tab del DevTools en `/solicitudes/` | La petición fetch a la API va por `https://` y devuelve 200 | ✔ |
+| 4 | Headers de respuesta en DevTools | `Strict-Transport-Security`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` presentes | ✔ |
+| 5 | `Remote Address` en DevTools | Muestra `127.0.0.1:443` — confirma que va por el puerto HTTPS | ✔ |
+| 6 | `http://localhost` sigue funcionando | La aplicación sigue accesible por localhost sin romper el flujo de desarrollo | ✔ |
 
 ---
 
@@ -213,3 +303,40 @@ Respuesta esperada: `201`. Después hacer login en `POST /auth/login` con las mi
 | 8 | `GET /privado/perfil` | sin token | 401 | `{"error": 401, "mensaje": "No autenticado", ...}` |
 | 9 | `GET /privado/perfil` | con token | 200 | Email, rol y fecha de alta del usuario |
 | 10 | `GET /privado/resumen-exclusivo` | con token | 200 | Mensaje de bienvenida y lista de contenido exclusivo |
+
+---
+
+## Pruebas manuales de caché y rate limiting
+
+Realizadas con Docker levantado. Verifican el comportamiento en el stack completo (Nginx → FastAPI) que los tests automáticos no pueden cubrir directamente.
+
+| # | Prueba | Cómo realizarla | Resultado esperado | Verificado |
+|---|--------|-----------------|-------------------|------------|
+| 1 | `Cache-Control` en `/convocatorias/` | Abrir `https://subvencionesDGDA.local/convocatorias/` en el navegador con F12 → Network → seleccionar la petición → Response Headers | `cache-control: public, max-age=86400` visible en las cabeceras de respuesta | ✔ |
+| 2 | Rate limiting en `/auth/login` | Ejecutar el bucle curl de abajo desde la terminal WSL | Los primeros 6 intentos (1 base + 5 burst) devuelven `401`; a partir del 7.º devuelven `429 Too Many Requests` | ✔ |
+
+### Comando para verificar el rate limiting
+
+```bash
+for i in $(seq 1 16); do
+  curl -sk -o /dev/null -w "%{http_code}\n" \
+    -X POST https://subvencionesDGDA.local/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"x@x.com","password":"Mal1234"}';
+done
+```
+
+Resultado esperado:
+
+```text
+401  ← peticiones 1-6 (dentro del límite + burst)
+401
+401
+401
+401
+401
+429  ← peticiones 7-16 (límite superado)
+429
+429
+...
+```

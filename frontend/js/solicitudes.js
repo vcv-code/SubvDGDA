@@ -10,8 +10,8 @@
  *   4. Pintar los resultados en la tabla.
  *   5. Gestionar la paginación (botones Anterior / Siguiente).
  *   6. Mostrar / ocultar filtros condicionales (CCAA, Provincia, Línea).
- *   7. Filtrar por nombre de entidad en el cliente (workaround hasta
- *      que el backend implemente búsqueda por texto).
+ *   7. Enviar búsqueda por nombre al backend mediante el parámetro ?buscar=
+ *      (filtrado server-side; el backend ignora stopwords comunes).
  *
  * ENDPOINT PRINCIPAL:
  *   GET /solicitudes/?anio=&tipo=&estado=&limite=&pagina=
@@ -30,7 +30,8 @@
  *     beneficiario: {
  *       id_benef, nombre, cif, tipo_benef
  *     },
- *     importe: number | null   (null si la solicitud no fue concedida)
+ *     importe:        number | null,  (null si la solicitud no fue concedida)
+ *     es_agrupacion:  boolean          // true si pertenece a una agrupación EELL
  *   }
  */
 
@@ -101,6 +102,7 @@ const paginaInfo     = document.getElementById('pagina-info');
 const infoResultados = document.getElementById('info-resultados');
 const tablaControles = document.getElementById('tabla-controles');
 const ordenSelect    = document.getElementById('orden-select');
+const btnDescargarCsv = document.getElementById('btn-descargar-csv');
 
 
 // ─────────────────────────────────────────────────────────────
@@ -167,6 +169,7 @@ async function buscarSolicitudes(pagina = 1) {
 
     // Mostramos el estado de carga y ocultamos el resto
     mostrarEstadoCarga();
+    document.getElementById('spinner').style.display = 'block';
 
     try {
         // ── Construir URL y hacer fetch ───────────────────────────────
@@ -174,6 +177,18 @@ async function buscarSolicitudes(pagina = 1) {
         const respuesta = await fetch(url);
 
         if (!respuesta.ok) {
+            // Intentamos leer el JSON de error estructurado del backend
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            const errorBox      = document.getElementById('error-box');
+            const errorMensaje  = document.getElementById('error-mensaje');
+            const errorSugerencia = document.getElementById('error-sugerencia');
+            if (errorBox) {
+                errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+                errorSugerencia.textContent = cuerpo.sugerencia || '';
+                ocultarTodosEstados();
+                errorBox.style.display = 'block';
+            }
             throw new Error(`Error del servidor: ${respuesta.status}`);
         }
 
@@ -193,6 +208,8 @@ async function buscarSolicitudes(pagina = 1) {
     } catch (error) {
         console.error('Error al buscar solicitudes:', error);
         mostrarError('No se pudo conectar con el servidor. Comprueba que el backend está activo.');
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
 }
 
@@ -216,7 +233,9 @@ function ordenarSolicitudes(solicitudes) {
             return copia.sort((a, b) =>
                 (a.beneficiario.nombre || '').localeCompare(b.beneficiario.nombre || '', 'es'));
         default:
-            return copia;  // Orden de la API
+            // Por defecto: orden alfabético A→Z
+            return copia.sort((a, b) =>
+                (a.beneficiario.nombre || '').localeCompare(b.beneficiario.nombre || '', 'es'));
     }
 }
 
@@ -274,7 +293,7 @@ function crearFila(s) {
 
     // ── Valores de cada celda (5 columnas según wireframe) ─────────
     const nombre      = s.beneficiario.nombre || '—';
-    const expediente  = s.num_expediente       || '—';
+    const anio        = s.convocatoria.anio_convocatoria;
     const tipo        = s.convocatoria.tipo_convoc.toUpperCase(); // "epa" → "EPA"
     const badgeEstado = crearBadge(s.estado);
 
@@ -286,12 +305,22 @@ function crearFila(s) {
 
     // ── Construir HTML de la fila ──────────────────────────────────
     tr.innerHTML = `
-        <td>${nombre}</td>
-        <td style="font-family: monospace; font-size: 0.85rem;">${expediente}</td>
+        <td></td>
+        <td>${anio}</td>
         <td>${tipo}</td>
         <td></td>
         <td>${importe}</td>
     `;
+
+    // Celda 0: nombre de la entidad + badge "Agrupación" si aplica
+    const tdNombre = tr.cells[0];
+    tdNombre.appendChild(document.createTextNode(nombre));
+    if (s.es_agrupacion === true) {
+        const badgeAgrupacion = document.createElement('span');
+        badgeAgrupacion.className   = 'badge-agrupacion';
+        badgeAgrupacion.textContent = 'Agrupación';
+        tdNombre.appendChild(badgeAgrupacion);
+    }
 
     // Badge de estado: se inserta en la celda vacía (índice 3)
     // usando appendChild() para no mezclar HTML con innerHTML
@@ -440,6 +469,37 @@ function mostrarError(mensaje) {
 
 
 // ─────────────────────────────────────────────────────────────
+// FUNCIÓN: descargarCSV
+// Redirige al endpoint de exportación del backend con los
+// filtros activos. El backend genera y sirve el archivo CSV.
+// ─────────────────────────────────────────────────────────────
+/**
+ * Construye la URL de /solicitudes/export con los mismos filtros
+ * que la búsqueda activa, excluyendo pagina y orden (el backend
+ * exporta todos los resultados que coinciden con los filtros).
+ *
+ * Filtros incluidos: buscar, tipo, ccaa, anio, estado.
+ * Filtros excluidos: pagina, limite, orden.
+ *
+ * La descarga se dispara con window.location.href, lo que hace
+ * que el navegador reciba el fichero CSV directamente del servidor.
+ */
+function descargarCSV() {
+    const filtros = leerFiltros();
+    const params  = new URLSearchParams();
+
+    if (filtros.nombre) params.set('buscar', filtros.nombre);
+    if (filtros.tipo)   params.set('tipo',   filtros.tipo);
+    if (filtros.ccaa)   params.set('ccaa',   filtros.ccaa);
+    if (filtros.anio)   params.set('anio',   filtros.anio);
+    if (filtros.estado) params.set('estado', filtros.estado);
+
+    const url = `${API_URL}/solicitudes/export?${params.toString()}`;
+    window.location.href = url;
+}
+
+
+// ─────────────────────────────────────────────────────────────
 // LIMPIAR FILTROS
 // Resetea el formulario y vuelve al estado inicial.
 // ─────────────────────────────────────────────────────────────
@@ -513,6 +573,11 @@ if (ordenSelect) {
             pintarTabla(ultimasSolicitudes);
         }
     });
+}
+
+// Descargar CSV: redirige al endpoint de exportación del backend
+if (btnDescargarCsv) {
+    btnDescargarCsv.addEventListener('click', descargarCSV);
 }
 
 

@@ -86,6 +86,7 @@ function formatearImporte(numero) {
  * Hacer una sola petición es más eficiente que hacer tres.
  */
 async function cargarDatos() {
+    document.getElementById('spinner').style.display = 'block';
     try {
         // ── Paso 1: Petición al servidor ──────────────────────────────
         const respuesta = await fetch(`${API_URL}/estadisticas/`);
@@ -93,6 +94,16 @@ async function cargarDatos() {
         // Si el servidor responde con un error (4xx o 5xx), lo lanzamos
         // manualmente para que lo capture el catch.
         if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            const errorBox        = document.getElementById('error-box');
+            const errorMensaje    = document.getElementById('error-mensaje');
+            const errorSugerencia = document.getElementById('error-sugerencia');
+            if (errorBox) {
+                errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+                errorSugerencia.textContent = cuerpo.sugerencia || '';
+                errorBox.style.display      = 'block';
+            }
             throw new Error(`El servidor devolvió el código: ${respuesta.status}`);
         }
 
@@ -120,6 +131,8 @@ async function cargarDatos() {
         // mostramos mensajes de error en cada bloque afectado.
         console.error('Error al cargar datos de la API:', error);
         mostrarErrores();
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
     }
 }
 
@@ -204,6 +217,53 @@ function mostrarErrores() {
  * podría ejecutarse antes de que los elementos del HTML estuvieran
  * listos, y document.getElementById() devolvería null.
  */
+// ─────────────────────────────────────────────────────────────
+// AVISOS: convocatorias del año en curso sin resolución
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * cargarAvisos()
+ * Consulta GET /avisos/ y muestra un banner por cada convocatoria
+ * detectada por el cron que aún no tiene resolución publicada.
+ * Si no hay avisos activos, el contenedor permanece oculto.
+ */
+async function cargarAvisos() {
+    const contenedor = document.getElementById('avisos-banner');
+    if (!contenedor) return;
+
+    try {
+        const resp = await fetch(`${API_URL}/avisos/`);
+        if (!resp.ok) return;
+
+        const avisos = await resp.json();
+        if (!avisos.length) return;
+
+        const etiquetas = { eell: 'Entidades Locales', epa: 'Entidades Privadas' };
+
+        contenedor.innerHTML = avisos.map(aviso => {
+            const tipo  = etiquetas[aviso.tipo_convoc] || aviso.tipo_convoc.toUpperCase();
+            const fecha = aviso.fecha_convocatoria
+                ? new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+                : 'fecha pendiente';
+            return `
+                <div class="aviso-banner">
+                    <span class="aviso-banner__icono">📢</span>
+                    <div class="aviso-banner__texto">
+                        <strong>Convocatoria ${aviso.anio_convocatoria} — ${tipo}</strong>
+                        <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
+                    </div>
+                </div>`;
+        }).join('');
+
+        contenedor.style.display = 'block';
+
+    } catch (_) {
+        // El banner es informativo; si falla, no interrumpimos la página
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
+    cargarAvisos();
 });

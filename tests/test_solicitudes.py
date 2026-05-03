@@ -1,3 +1,5 @@
+import csv
+import io
 import pytest
 from backend.app.models import Convocatoria, Beneficiario, Solicitud
 
@@ -94,3 +96,42 @@ def test_solicitudes_buscar_sin_resultados(db_con_datos, client):
     data = response.json()
     assert data["total"] == 0
     assert data["resultados"] == []
+
+
+# --- Exportación CSV ---
+
+def test_exportar_csv_content_type(client):
+    response = client.get("/solicitudes/export")
+    assert response.status_code == 200
+    assert "text/csv" in response.headers["content-type"]
+
+
+def test_exportar_csv_cabecera(client):
+    response = client.get("/solicitudes/export")
+    reader = csv.reader(io.StringIO(response.text))
+    cabecera = next(reader)
+    assert cabecera == ["anio", "tipo", "num_expediente", "entidad", "cif",
+                        "estado", "importe", "linea", "provincia", "ccaa",
+                        "puntuacion", "es_agrupacion"]
+
+
+def test_exportar_csv_con_datos(db_con_datos, client):
+    response = client.get("/solicitudes/export")
+    reader = csv.reader(io.StringIO(response.text))
+    filas = list(reader)
+    # cabecera + 3 filas de datos
+    assert len(filas) == 4
+
+
+def test_exportar_csv_filtro_tipo(db_con_datos, client):
+    response = client.get("/solicitudes/export?tipo=epa")
+    reader = csv.reader(io.StringIO(response.text))
+    filas = list(reader)[1:]  # sin cabecera
+    assert len(filas) == 2
+    assert all(f[1] == "epa" for f in filas)
+
+
+def test_exportar_csv_disposition(client):
+    response = client.get("/solicitudes/export")
+    assert "attachment" in response.headers["content-disposition"]
+    assert "solicitudes.csv" in response.headers["content-disposition"]
