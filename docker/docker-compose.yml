@@ -54,6 +54,26 @@ services:
     depends_on:
       - backend
 
+  cron:
+    build:
+      context: ./cron
+    container_name: bdns_cron
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      BACKEND_INTERNAL_URL: http://backend:8000
+    volumes:
+      - ../logs/cron:/app/logs/cron
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
+
   # Interfaz web para explorar la base de datos — solo desarrollo
   # Acceso: http://localhost:8080
   # Sistema: MySQL, Servidor: db, Usuario y contraseña: los del .env

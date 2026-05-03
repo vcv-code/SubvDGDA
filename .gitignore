@@ -214,3 +214,6 @@ contexto.txt
 
 # Clave privada SSL — se genera localmente con openssl, nunca se versiona
 docker/ssl/server.key
+
+# Estado del cron (generado en runtime, varía por máquina)
+logs/cron/estado_*.json
