@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 from sqlalchemy import func, case, distinct
 from ..db import get_db
@@ -9,11 +9,12 @@ router = APIRouter(prefix="/estadisticas", tags=["estadisticas"])
 
 
 @router.get("/", response_model=EstadisticasOut)
-def get_estadisticas(db: Session = Depends(get_db)):
+def get_estadisticas(response: Response, db: Session = Depends(get_db)):
     """
     Devuelve totales agregados por año y tipo para los gráficos del frontend.
     Incluye conteos por estado e importe total concedido.
     """
+    response.headers["Cache-Control"] = "public, max-age=3600"
     filas = (
         db.query(
             Convocatoria.anio_convocatoria,
