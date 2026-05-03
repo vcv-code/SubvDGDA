@@ -85,7 +85,7 @@ Frontend
 | Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
 | Base de datos | MySQL / MariaDB |
 | Tests | pytest, SQLite en memoria |
-| Infraestructura | Docker, Nginx, supercronic (cron para contenedores) |
+| Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor) |
 | Control de versiones | Git, GitHub |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron implementado · frontend 7D mergeado · pendiente pruebas manuales y funcionalidades avanzadas**
+Fase: **backend completado · HTTPS activo · cron verificado · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -673,6 +673,7 @@ Fase: **backend completado · HTTPS activo · cron implementado · frontend 7D m
 ✔ mejoras de accesibilidad: `role="navigation"` y `aria-label` en navbar
 ✔ `especificaciones-frontend.md` totalmente actualizado y sincronizado con la implementación real
 ✔ servicio cron como contenedor independiente en docker-compose (`docker/cron/`)
+  · `scheduler.py` — scheduler Python puro que orquesta las tareas sin binarios externos
   · `check_bdns.py` — consulta la API BDNS en temporada (mar–jun), detecta nuevas convocatorias DGDA,
     inserta en BD con fecha_resolucion=NULL, guarda estado en `logs/cron/estado_YYYY.json`
     (frecuencia por tramos: cada 2 días en abr–may, cada 4 días en mar–jun)
@@ -686,10 +687,9 @@ Pendiente:
 
 ### Pendientes de frontend
 
-- Repensar las gráficas de `estadisticas.html` y conectarlas con datos reales de la API; valorar añadir una sección de conclusiones relevantes extraídas de los datos
-- Completar `estadisticas-avanzadas.html`: implementar los endpoints de backend necesarios (`GET /estadisticas/avanzadas/` y `GET /estadisticas/por-ccaa/`) y conectar los gráficos; los endpoints están documentados en el JS de la página
+- Completar `estadisticas-avanzadas.html`: implementar los endpoints de backend necesarios (`GET /estadisticas/avanzadas/` y `GET /estadisticas/por-ccaa/`) y conectar los gráficos; los endpoints están documentados en el JS de la página; valorar añadir conclusiones relevantes extraídas de los datos
 - Completar `recursos.html`: implementar el endpoint `GET /recursos/` en backend con un listado de organizaciones de interés (Basma, Meowmetrics, FdCats, Plataforma GARRA, etc.) y conectar el JS de la página; estructura preparada
-- Verificar que la columna de nombre de entidad se muestra correctamente en la tabla del buscador tras los cambios de la rama 7D (la celda quedó como `<td></td>` en el diff — pendiente de confirmar en prueba visual)
+- **Bug ficha de entidad:** "Entidad representante: [object Object]" — el JS renderiza el objeto completo en lugar de extraer `.nombre`; el backend devuelve los datos correctos, el fix es en `entidad.js` (rama frontend pendiente)
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
 - Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
 - Valorar la visibilidad y utilidad del botón de borrar filtros del buscador
@@ -773,12 +773,12 @@ El proyecto usa Docker Compose con cinco servicios definidos en `docker/docker-c
 | `db`       | mariadb:11          | Base de datos MariaDB con el dataset cargado              | 3307              |
 | `backend`  | Python (build)      | API FastAPI                                               | ninguno (interno) |
 | `nginx`    | nginx:alpine        | Proxy inverso, punto de entrada                           | 80, 443           |
-| `cron`     | Python + supercronic | Tareas programadas: comprobación BDNS y health check     | ninguno           |
+| `cron`     | Python (scheduler)  | Tareas programadas: comprobación BDNS y health check      | ninguno           |
 | `adminer`  | adminer             | Interfaz web para explorar la BD                          | 8080              |
 
 El backend no expone su puerto al exterior — solo Nginx y el cron pueden acceder a él dentro de la red Docker.
 
-El servicio `cron` usa [supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores: no necesita demonio, registra todo en stdout (visible con `docker logs bdns_cron`) y gestiona bien las variables de entorno. Sus logs se persisten en `logs/cron/`.
+El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) que implementa la misma lógica que un crontab sin depender de binarios externos: registra todo en stdout (visible con `docker logs bdns_cron`) y hereda las variables de entorno del `docker-compose.yml`. Sus logs se persisten en `logs/cron/`.
 
 Adminer está disponible en `http://localhost:8080` con Docker levantado. En el formulario de acceso: **Sistema** → MySQL · **Servidor** → `db` · usuario y contraseña según el `.env`.
 
@@ -859,11 +859,22 @@ docker compose up -d
 
 Si el error persiste, asegúrate de que el volumen de Nginx monta el **directorio** `./nginx` y no el archivo individual `./nginx/nginx.conf`. El archivo de configuración debe llamarse `default.conf` dentro de esa carpeta.
 
+#### Contenedor cron — supercronic no arranca (`Failed to fork exec`)
+
+La versión v0.2.33 de supercronic presenta un bug de inicialización en entornos Docker Desktop + WSL2: el proceso muere inmediatamente con `level=fatal msg="Failed to fork exec: no such file or directory"` antes de leer el crontab, aunque el binario sea válido y el crontab correcto (verificado con `supercronic -test`). En modo `--debug` sí arranca, lo que apunta a una race condition en la secuencia de inicialización.
+
+Solución implementada: se sustituyó supercronic por un **scheduler Python propio** (`docker/cron/scheduler.py`) que implementa la misma lógica de ejecución sin depender de binarios externos. El comportamiento es idéntico al crontab original y no presenta el problema.
+
 ---
 
 ## Tests
 
 El proyecto tiene **131 pruebas en total**: 102 automáticas con pytest y 29 manuales verificadas en el navegador con Docker levantado.
+
+| Nivel | Cantidad | Herramienta |
+|-------|----------|-------------|
+| Automáticos | 102 | pytest (sin Docker) |
+| Manuales | 29 | Navegador + DevTools |
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
@@ -888,7 +899,7 @@ pytest tests/test_solicitudes.py        # filtros, paginación y exportación CS
 pytest tests/test_estadisticas.py
 pytest tests/test_auth.py               # registro, login y zona privada
 pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
-pytest tests/test_avisos.py             # endpoint /avisos/ — filtros por año y fecha_resolucion
+pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
 pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
@@ -900,38 +911,9 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 102 passed
 ```
 
+(96 tests históricos + 6 nuevos de `test_avisos.py` añadidos en la rama 9e)
+
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
-
-### Pruebas manuales pendientes (rama 9e — tras levantar el stack)
-
-Antes de hacer el PR de 9e a dev, verificar con Docker levantado (`docker compose up --build -d`):
-
-**Servicio cron:**
-
-- [ ] El contenedor `bdns_cron` arranca sin errores: `docker compose ps`
-- [ ] Ejecutar manualmente el script BDNS: `docker exec bdns_cron python3 /app/scripts/check_bdns.py`
-- [ ] Revisar el log generado: `docker exec bdns_cron cat /app/logs/cron/bdns_check.log`
-- [ ] Comprobar en Adminer (`localhost:8080`) si se insertó la convocatoria EELL 2026 con `fecha_resolucion = NULL`
-- [ ] Ejecutar manualmente el health check: `docker exec bdns_cron python3 /app/scripts/health_check.py`
-- [ ] Revisar el log del health check: `docker exec bdns_cron cat /app/logs/cron/health_check.log`
-- [ ] Verificar que los ficheros de log aparecen también en `logs/cron/` del host (volumen montado)
-
-**Endpoint /avisos/:**
-
-- [ ] `GET https://subvencionesDGDA.local/avisos/` devuelve lista (vacía si el cron aún no ha corrido, con datos si ya insertó la EELL 2026)
-- [ ] Con la convocatoria 2026 insertada, la respuesta incluye `tipo_convoc`, `titulo_convoc` y `fecha_convocatoria`
-
-**Banner en el frontend:**
-
-- [ ] Abrir `https://subvencionesDGDA.local/` — si hay avisos activos aparece el banner amarillo con el mensaje de la convocatoria 2026
-- [ ] Si no hay avisos, el banner no se muestra (no deja espacio en blanco)
-
-**Frontend 7D — verificaciones pendientes:**
-
-- [ ] Comprobar que la columna de nombre de entidad se muestra correctamente en la tabla del buscador (posible bug en el diff de 7D — la celda `<td></td>` podría estar vacía)
-- [ ] Verificar que `recursos.html` muestra el placeholder sin errores en consola
-- [ ] Verificar que `estadisticas-avanzadas.html` muestra el placeholder sin errores en consola
-- [ ] Comprobar que los badges de estado (Concedida, No beneficiaria, Excluida, Desistida) se renderizan correctamente en la ficha de entidad
 
 ### Pruebas de integración end-to-end (manuales)
 
@@ -988,6 +970,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 Mejoras identificadas pero no planificadas para el desarrollo actual:
 
+- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando la web de infosubvenciones.es para cada convocatoria. No afecta a ninguna funcionalidad actual.
 - **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
 - **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
 - **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.

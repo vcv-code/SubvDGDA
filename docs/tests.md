@@ -4,9 +4,9 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 96 | pytest (sin Docker) |
+| Tests automáticos | 102 | pytest (sin Docker) |
 | Pruebas manuales | 29 | Navegador + DevTools con Docker levantado |
-| **Total** | **125** | |
+| **Total** | **131** | |
 
 Las pruebas manuales se distribuyen en tres bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend y 10 de endpoints de la API vía `/docs`.
 
@@ -14,7 +14,7 @@ Las pruebas manuales se distribuyen en tres bloques: 6 de HTTPS/infraestructura,
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **96 tests automáticos** distribuidos en 10 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging y la configuración HTTPS.
+El proyecto incluye **102 tests automáticos** distribuidos en 11 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS y el endpoint de avisos.
 
 ### Cómo funcionan
 
@@ -85,15 +85,21 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 85 | `test_logging.py` | Funcional | Blanca | La IP del cliente queda registrada en cada entrada del log |
 | 86 | `test_logging.py` | Unitario | Blanca | `generic_exception_handler` llama a `logger.error` con el tipo de excepción |
 | 87 | `test_logging.py` | Unitario | Blanca | `setup_logging()` devuelve un logger con nombre `bdns`, nivel INFO y al menos un handler |
-| 88 | `test_https_config.py` | Configuración | Blanca | El archivo `server.crt` existe en `docker/ssl/` |
-| 89 | `test_https_config.py` | Seguridad | Blanca | `server.key` está excluida del repositorio vía `.gitignore` |
-| 90 | `test_https_config.py` | Configuración | Blanca | El certificado tiene `CN=subvencionesDGDA.local` |
-| 91 | `test_https_config.py` | Configuración | Blanca | El certificado incluye `subjectAltName` con el dominio (requerido por navegadores modernos) |
-| 92 | `test_https_config.py` | Configuración | Blanca | El certificado no ha expirado |
-| 93 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `listen 443 ssl` |
-| 94 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `return 301 https://` (redirección HTTP→HTTPS) |
-| 95 | `test_https_config.py` | Seguridad | Blanca | `default.conf` incluye la cabecera `Strict-Transport-Security` |
-| 96 | `test_https_config.py` | Seguridad | Blanca | `default.conf` limita los protocolos a TLS 1.2 y TLS 1.3 |
+| 88 | `test_avisos.py` | Funcional | Negra | `GET /avisos/` responde 200 y devuelve lista |
+| 89 | `test_avisos.py` | Funcional | Negra | Con BD vacía devuelve `[]` sin error |
+| 90 | `test_avisos.py` | Funcional | Blanca | Solo devuelve convocatorias del año actual con `fecha_resolucion = NULL` (filtra las resueltas y las de años anteriores) |
+| 91 | `test_avisos.py` | Funcional | Blanca | La respuesta tiene las claves `id_convoc`, `titulo_convoc`, `tipo_convoc`, `anio_convocatoria`, `fecha_convocatoria` |
+| 92 | `test_avisos.py` | Funcional | Blanca | Todos los avisos devueltos tienen `anio_convocatoria` igual al año en curso |
+| 93 | `test_avisos.py` | Funcional | Blanca | Convocatorias con `fecha_resolucion` no nula no aparecen en la respuesta |
+| 94 | `test_https_config.py` | Configuración | Blanca | El archivo `server.crt` existe en `docker/ssl/` |
+| 95 | `test_https_config.py` | Seguridad | Blanca | `server.key` está excluida del repositorio vía `.gitignore` |
+| 96 | `test_https_config.py` | Configuración | Blanca | El certificado tiene `CN=subvencionesDGDA.local` |
+| 97 | `test_https_config.py` | Configuración | Blanca | El certificado incluye `subjectAltName` con el dominio (requerido por navegadores modernos) |
+| 98 | `test_https_config.py` | Configuración | Blanca | El certificado no ha expirado |
+| 99 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `listen 443 ssl` |
+| 100 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `return 301 https://` (redirección HTTP→HTTPS) |
+| 101 | `test_https_config.py` | Seguridad | Blanca | `default.conf` incluye la cabecera `Strict-Transport-Security` |
+| 102 | `test_https_config.py` | Seguridad | Blanca | `default.conf` limita los protocolos a TLS 1.2 y TLS 1.3 |
 
 ### Descripción por módulo
 
@@ -128,6 +134,10 @@ Los tests más importantes. Cubren tres bloques:
 Verifica el endpoint `/agrupaciones/{id_solic}`, que devuelve el desglose de municipios miembro de una agrupación EELL. Cubre los casos de error (ID inexistente, solicitud sin agrupación asociada) y el camino feliz con una fixture completa que construye toda la cadena de relaciones: Convocatoria → Beneficiario → Solicitud → Concesion → Agrupacion → AgrupacionMiembro.
 
 **Bug detectado por estos tests:** el router usaba `joinedload("miembros")` y `joinedload("representante")` con strings, que no están admitidos en SQLAlchemy 2.x. Los tests fallaron con `ArgumentError` en todos los entornos, lo que llevó a corregir el router para usar atributos de clase (`Agrupacion.miembros`, `Agrupacion.representante`).
+
+#### test_avisos.py
+
+Verifica el endpoint `/avisos/` añadido en la rama `9e`. Cubre tres casos principales: BD vacía devuelve lista vacía, solo se devuelven convocatorias del año en curso sin resolución (las que tienen `fecha_resolucion IS NULL`), y las convocatorias ya resueltas o de años anteriores quedan excluidas. Incluye una fixture que inserta tres convocatorias con distintas combinaciones de año y estado de resolución para cubrir los casos límite.
 
 #### test_logging.py
 
