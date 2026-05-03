@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -619,7 +619,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · frontend 7D mer
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (96 tests — smoke, funcionales, unitarios, seguridad, configuración)
+✔ tests automáticos con pytest (111 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
@@ -628,6 +628,9 @@ Fase: **backend completado · HTTPS activo · cron verificado · frontend 7D mer
   · test_agrupaciones.py (5): endpoint /agrupaciones/ con fixture completa de relaciones
   · test_logging.py (5): middleware de logging y configuración del logger
   · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
+  · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
+  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
+  · test_rate_limiting.py (5): configuración de rate limiting en Nginx para /auth/login
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
@@ -682,13 +685,24 @@ Fase: **backend completado · HTTPS activo · cron verificado · frontend 7D mer
 ✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
 ✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
   automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
+✔ cabeceras Cache-Control en endpoints de datos estáticos
+  · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
+  · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
+  · implementado en los routers FastAPI mediante parámetro `Response`
+✔ rate limiting en Nginx para prevenir fuerza bruta en el login
+  · `limit_req_zone $binary_remote_addr zone=login:10m rate=10r/m` — 10 peticiones/minuto por IP
+  · `location = /auth/login` con `burst=5 nodelay` y `limit_req_status 429`
+  · el resto de la API no está limitada
 
 Pendiente:
 
 ### Pendientes de frontend
 
-- Completar `estadisticas-avanzadas.html`: implementar los endpoints de backend necesarios (`GET /estadisticas/avanzadas/` y `GET /estadisticas/por-ccaa/`) y conectar los gráficos; los endpoints están documentados en el JS de la página; valorar añadir conclusiones relevantes extraídas de los datos
-- Completar `recursos.html`: implementar el endpoint `GET /recursos/` en backend con un listado de organizaciones de interés (Basma, Meowmetrics, FdCats, Plataforma GARRA, etc.) y conectar el JS de la página; estructura preparada
+- **Tabla de convocatorias en el frontend:** el endpoint `GET /convocatorias/` existe y devuelve las 8 convocatorias con sus datos, pero ninguna página del frontend lo usa. Añadir una tabla o listado (posiblemente en `index.html` o encima de los filtros del buscador) que muestre las convocatorias disponibles: título, tipo, año y periodo. Sirve como referencia visual para el usuario y como evidencia de uso del endpoint cacheado.
+- **Navbar inconsistente:** hay tres versiones distintas del menú según la página — `estadisticas.html` no tiene "Estadísticas avanzadas" ni "Recursos"; `recursos.html` no tiene "Estadísticas avanzadas"; `estadisticas-avanzadas.html` es la única con el menú completo. Unificar en todas las páginas (rama frontend pendiente)
+- **`recursos.html` sin contenido:** la estructura HTML y el placeholder están bien, pero el contenido del directorio (BASMA, FAADA, GEMFE, Plataforma GARRA, MeowMetrics, etc.) no está implementado; puede ir hardcodeado sin necesidad de endpoint de backend
+- **Reestructurar páginas de estadísticas:** la estructura definitiva es — `index.html` (ya tiene gráficos generales con el endpoint existente, sin cambios de backend) + dos páginas nuevas específicas por tipo: `estadisticas-epas.html` (importe medio, top beneficiarios, mediana, nuevos vs recurrentes, distribución de importes) y `estadisticas-eell.html` (mapa/barras por CCAA, % ayuntamientos con ayuda, top provincias, concentración). `estadisticas.html` y `estadisticas-avanzadas.html` actuales se eliminan por redundantes. Pendiente también decidir cómo queda la navbar (dos enlaces separados o un enlace "Estadísticas" con submenu/dropdown).
+- Implementar `GET /estadisticas/epas/` y `GET /estadisticas/eell/` en backend para alimentar las páginas específicas por tipo
 - **Bug ficha de entidad:** "Entidad representante: [object Object]" — el JS renderiza el objeto completo en lugar de extraer `.nombre`; el backend devuelve los datos correctos, el fix es en `entidad.js` (rama frontend pendiente)
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
 - Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
@@ -700,15 +714,15 @@ Pendiente:
 
 ### Pendientes de backend y API
 
+- Implementar `GET /estadisticas/epas/` y `GET /estadisticas/eell/`: endpoints específicos por tipo de entidad para alimentar las páginas `estadisticas-epas.html` y `estadisticas-eell.html`; datos necesarios detallados en el documento de diseño de gráficos
+- Exponer campo `tramo` de EELL 2025: añadir al schema `SolicitudOut` y al endpoint `/solicitudes/`; mostrarlo en la ficha de entidad y como filtro en el buscador (valores 1/2/3, solo aplica a EELL 2025 concedidas; el dato ya existe en `concesiones.tramo`)
 - Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
-- Caché de respuestas para endpoints de datos raramente actualizados: `/convocatorias/` y `/estadisticas/` solo cambian 1-2 veces al año; añadir cabeceras `Cache-Control` via FastAPI o Nginx
 - Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
 
 ### Pendientes de infraestructura y despliegue
 
 - Dominio real y certificado Let's Encrypt: en producción sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
 - CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
-- Rate limiting en Nginx: limitar peticiones por IP al endpoint `/auth/login` para prevenir fuerza bruta
 - Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
 - Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
 
@@ -869,17 +883,12 @@ Solución implementada: se sustituyó supercronic por un **scheduler Python prop
 
 ## Tests
 
-El proyecto tiene **131 pruebas en total**: 102 automáticas con pytest y 29 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **142 pruebas en total**: 111 automáticas con pytest y 31 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 102 | pytest (sin Docker) |
-| Manuales | 29 | Navegador + DevTools |
-
-| Nivel | Cantidad | Herramienta |
-|-------|----------|-------------|
-| Automáticos | 102 | pytest (sin Docker) |
-| Manuales | 29 | Navegador + DevTools |
+| Automáticos | 111 | pytest (sin Docker) |
+| Manuales | 31 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
@@ -900,6 +909,8 @@ pytest tests/test_estadisticas.py
 pytest tests/test_auth.py               # registro, login y zona privada
 pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
 pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
+pytest tests/test_cache_headers.py      # cabeceras Cache-Control en /convocatorias/ y /estadisticas/
+pytest tests/test_rate_limiting.py      # configuración de rate limiting en Nginx
 pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
@@ -908,10 +919,8 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-102 passed
+111 passed
 ```
-
-(96 tests históricos + 6 nuevos de `test_avisos.py` añadidos en la rama 9e)
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
 
