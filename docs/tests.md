@@ -4,17 +4,17 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 102 | pytest (sin Docker) |
-| Pruebas manuales | 29 | Navegador + DevTools con Docker levantado |
-| **Total** | **131** | |
+| Tests automáticos | 111 | pytest (sin Docker) |
+| Pruebas manuales | 31 | Navegador + DevTools con Docker levantado |
+| **Total** | **142** | |
 
-Las pruebas manuales se distribuyen en tres bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend y 10 de endpoints de la API vía `/docs`.
+Las pruebas manuales se distribuyen en cuatro bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs` y 2 de caché y rate limiting.
 
 ---
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **102 tests automáticos** distribuidos en 11 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS y el endpoint de avisos.
+El proyecto incluye **111 tests automáticos** distribuidos en 13 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
 
 ### Cómo funcionan
 
@@ -100,6 +100,15 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 100 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `return 301 https://` (redirección HTTP→HTTPS) |
 | 101 | `test_https_config.py` | Seguridad | Blanca | `default.conf` incluye la cabecera `Strict-Transport-Security` |
 | 102 | `test_https_config.py` | Seguridad | Blanca | `default.conf` limita los protocolos a TLS 1.2 y TLS 1.3 |
+| 103 | `test_cache_headers.py` | Rendimiento | Negra | `GET /convocatorias/` incluye `Cache-Control: public` en la respuesta |
+| 104 | `test_cache_headers.py` | Rendimiento | Negra | `GET /convocatorias/` incluye `max-age=86400` (1 día) |
+| 105 | `test_cache_headers.py` | Rendimiento | Negra | `GET /estadisticas/` incluye `Cache-Control: public` en la respuesta |
+| 106 | `test_cache_headers.py` | Rendimiento | Negra | `GET /estadisticas/` incluye `max-age=3600` (1 hora) |
+| 107 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` contiene `limit_req_zone` |
+| 108 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` define la zona `login` para rate limiting |
+| 109 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` establece el límite en `10r/m` (10 peticiones/minuto) |
+| 110 | `test_rate_limiting.py` | Seguridad | Blanca | `default.conf` devuelve código `429` al superar el límite |
+| 111 | `test_rate_limiting.py` | Seguridad | Blanca | El rate limiting se aplica al bloque `/auth/login` y no al resto de la API |
 
 ### Descripción por módulo
 
@@ -138,6 +147,14 @@ Verifica el endpoint `/agrupaciones/{id_solic}`, que devuelve el desglose de mun
 #### test_avisos.py
 
 Verifica el endpoint `/avisos/` añadido en la rama `9e`. Cubre tres casos principales: BD vacía devuelve lista vacía, solo se devuelven convocatorias del año en curso sin resolución (las que tienen `fecha_resolucion IS NULL`), y las convocatorias ya resueltas o de años anteriores quedan excluidas. Incluye una fixture que inserta tres convocatorias con distintas combinaciones de año y estado de resolución para cubrir los casos límite.
+
+#### test_cache_headers.py
+
+Verifica que los endpoints con datos raramente cambiantes incluyen la cabecera `Cache-Control` correcta. `/convocatorias/` recibe `public, max-age=86400` (1 día); `/estadisticas/` recibe `public, max-age=3600` (1 hora). La cabecera se inyecta en el router FastAPI mediante el parámetro `Response`, que FastAPI resuelve automáticamente como dependencia.
+
+#### test_rate_limiting.py
+
+Verifica la configuración de rate limiting en Nginx siguiendo el mismo patrón que `test_https_config.py`: lee `docker/nginx/default.conf` directamente sin necesitar Docker levantado. Comprueba que la zona `login` está definida con un límite de `10r/m`, que el status de rechazo es `429` y que el bloque de rate limiting está asociado únicamente a `/auth/login`.
 
 #### test_logging.py
 
@@ -286,3 +303,40 @@ Respuesta esperada: `201`. Después hacer login en `POST /auth/login` con las mi
 | 8 | `GET /privado/perfil` | sin token | 401 | `{"error": 401, "mensaje": "No autenticado", ...}` |
 | 9 | `GET /privado/perfil` | con token | 200 | Email, rol y fecha de alta del usuario |
 | 10 | `GET /privado/resumen-exclusivo` | con token | 200 | Mensaje de bienvenida y lista de contenido exclusivo |
+
+---
+
+## Pruebas manuales de caché y rate limiting
+
+Realizadas con Docker levantado. Verifican el comportamiento en el stack completo (Nginx → FastAPI) que los tests automáticos no pueden cubrir directamente.
+
+| # | Prueba | Cómo realizarla | Resultado esperado | Verificado |
+|---|--------|-----------------|-------------------|------------|
+| 1 | `Cache-Control` en `/convocatorias/` | Abrir `https://subvencionesDGDA.local/convocatorias/` en el navegador con F12 → Network → seleccionar la petición → Response Headers | `cache-control: public, max-age=86400` visible en las cabeceras de respuesta | ✔ |
+| 2 | Rate limiting en `/auth/login` | Ejecutar el bucle curl de abajo desde la terminal WSL | Los primeros 6 intentos (1 base + 5 burst) devuelven `401`; a partir del 7.º devuelven `429 Too Many Requests` | ✔ |
+
+### Comando para verificar el rate limiting
+
+```bash
+for i in $(seq 1 16); do
+  curl -sk -o /dev/null -w "%{http_code}\n" \
+    -X POST https://subvencionesDGDA.local/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"x@x.com","password":"Mal1234"}';
+done
+```
+
+Resultado esperado:
+
+```text
+401  ← peticiones 1-6 (dentro del límite + burst)
+401
+401
+401
+401
+401
+429  ← peticiones 7-16 (límite superado)
+429
+429
+...
+```
