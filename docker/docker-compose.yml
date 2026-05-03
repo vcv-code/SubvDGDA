@@ -32,6 +32,9 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
+      LOG_DIR: /app/logs
+    volumes:
+      - ../logs/app:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -42,11 +45,34 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
       - ../frontend:/usr/share/nginx/html:ro
+      - ../logs/nginx:/var/log/nginx
     depends_on:
       - backend
+
+  cron:
+    build:
+      context: ./cron
+    container_name: bdns_cron
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      BACKEND_INTERNAL_URL: http://backend:8000
+    volumes:
+      - ../logs/cron:/app/logs/cron
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
 
   # Interfaz web para explorar la base de datos — solo desarrollo
   # Acceso: http://localhost:8080

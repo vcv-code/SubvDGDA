@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!--
+    estadisticas-avanzadas.html — Dashboard de estadísticas avanzadas
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    ¿Qué hace esta página?
+    ──────────────────────
+    Complementa a estadisticas.html con análisis más detallados:
+    distribución geográfica (CCAA y provincia), comparativas entre
+    tipos de entidad, evolución por línea de actuación y otras
+    visualizaciones pendientes de definir con la compañera de backend.
+
+    Esta página es INDEPENDIENTE de estadisticas.html.
+    No modifica ni reutiliza el código de esa página.
+
+    Estructura prevista (pendiente de endpoints):
+    ─────────────────────────────────────────────
+    1. Fila de KPIs avanzados          → endpoint pendiente
+    2. Distribución geográfica         → endpoint pendiente
+    3. Comparativa por tipo de entidad → endpoint pendiente
+    4. Evolución por línea (EPA 2025)  → endpoint pendiente
+
+    Endpoints pendientes de backend:
+    ─────────────────────────────────
+    GET /estadisticas/avanzadas/
+    GET /estadisticas/por-ccaa/
+    (A definir con la compañera de backend)
+
+    Archivo JS: js/estadisticas-avanzadas.js
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas Avanzadas — Subvenciones Bienestar Animal</title>
+    <meta name="description"
+          content="Análisis avanzado de subvenciones de bienestar animal: distribución geográfica, comparativas por tipo de entidad y evolución por línea de actuación.">
+
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <meta property="og:title" content="Estadísticas Avanzadas — Subvenciones Bienestar Animal">
+    <meta property="og:description" content="Análisis avanzado de subvenciones de bienestar animal: distribución geográfica y comparativas por tipo de entidad.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR — igual que en el resto de páginas.
+         "activo" en Estadísticas (misma sección de análisis).
+         ===================================================== -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="estadisticas-avanzadas.html" class="activo" aria-current="page">Estadísticas avanzadas</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <!--
+        fondo-stats: mismo fondo verde suave que estadisticas.html.
+        Coherencia visual con la sección de análisis.
+    -->
+    <main class="fondo-stats">
+        <section class="seccion" aria-labelledby="avanzadas-titulo">
+            <div class="contenedor">
+
+                <!-- Cabecera de la sección -->
+                <div style="margin-bottom: var(--espacio-lg);">
+                    <h1 style="font-size:2rem; font-weight:700; color:var(--color-negro);"
+                        id="avanzadas-titulo">
+                        Estadísticas avanzadas
+                    </h1>
+                    <p style="color:var(--color-gris-texto); margin-top:4px;">
+                        Análisis detallado por CCAA, tipo de entidad y línea de actuación.
+                        Datos de BDNS y DGDA (2021–2025).
+                    </p>
+                    <p style="margin-top: var(--espacio-xs);">
+                        <a href="estadisticas.html"
+                           style="font-size:0.9rem; color:var(--color-azul);">
+                            ← Volver a Estadísticas generales
+                        </a>
+                    </p>
+                </div>
+
+
+                <!-- Spinner de carga -->
+                <div id="spinner" class="spinner"></div>
+
+                <!-- Caja de error estructurado del backend -->
+                <!--
+                    Se activa cuando el backend responde con 401, 403, 404, 422 o 500.
+                    estadisticas-avanzadas.js rellena los párrafos con los campos
+                    "mensaje" y "sugerencia" del JSON de error.
+                -->
+                <div id="error-box" class="error-box" style="display:none;">
+                    <h3>Error</h3>
+                    <p id="error-mensaje"></p>
+                    <p id="error-sugerencia"></p>
+                </div>
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 1: KPIs AVANZADOS
+                     Pendiente de endpoint GET /estadisticas/avanzadas/
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-4" style="margin-bottom: var(--espacio-lg);"
+                     id="kpis-avanzados">
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">Importe medio EPA</span>
+                        <span class="card-kpi__numero" id="kpi-importe-medio-epa">—</span>
+                        <span class="card-kpi__tag">Por entidad concedida</span>
+                    </div>
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">Importe medio EELL</span>
+                        <span class="card-kpi__numero" id="kpi-importe-medio-eell">—</span>
+                        <span class="card-kpi__tag">Por entidad concedida</span>
+                    </div>
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">CCAA con más concesiones</span>
+                        <span class="card-kpi__numero" id="kpi-ccaa-top">—</span>
+                        <span class="card-kpi__tag">EELL 2023–2025</span>
+                    </div>
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">Agrupaciones EELL</span>
+                        <span class="card-kpi__numero" id="kpi-agrupaciones">—</span>
+                        <span class="card-kpi__tag">Con desglose municipal</span>
+                    </div>
+
+                </div><!-- /kpis-avanzados -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 2: DISTRIBUCIÓN GEOGRÁFICA + COMPARATIVA EPA/EELL
+                     Pendiente de endpoint GET /estadisticas/por-ccaa/
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
+
+                    <!-- Contenedor: distribución por CCAA -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">
+                                    Distribución por CCAA
+                                </p>
+                                <p class="card-grafico__subtitulo">
+                                    Importe total concedido (EELL 2023–2025)
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+
+                        <!--
+                            id="grafico-ccaa": estadisticas-avanzadas.js creará
+                            aquí un gráfico de barras horizontales cuando el
+                            endpoint GET /estadisticas/por-ccaa/ esté disponible.
+                        -->
+                        <div class="chart-container" id="grafico-ccaa-container">
+                            <p class="estado-carga" id="ccaa-pendiente">
+                                Pendiente de endpoint
+                                <code>/estadisticas/por-ccaa/</code>
+                            </p>
+                            <canvas id="grafico-ccaa" style="display:none;"
+                                aria-label="Gráfico de distribución por CCAA"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Contenedor: comparativa tasa de concesión EPA vs EELL -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">
+                                    Tasa de concesión EPA vs EELL
+                                </p>
+                                <p class="card-grafico__subtitulo">
+                                    % de solicitudes concedidas por tipo y año
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+
+                        <!--
+                            id="grafico-tasa": estadisticas-avanzadas.js creará
+                            aquí un gráfico de líneas comparativo cuando el
+                            endpoint esté disponible.
+                        -->
+                        <div class="chart-container" id="grafico-tasa-container">
+                            <p class="estado-carga" id="tasa-pendiente">
+                                Pendiente de endpoint
+                                <code>/estadisticas/avanzadas/</code>
+                            </p>
+                            <canvas id="grafico-tasa" style="display:none;"
+                                aria-label="Gráfico de tasa de concesión EPA vs EELL"></canvas>
+                        </div>
+                    </div>
+
+                </div><!-- /grid-2 fila 2 -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 3: LÍNEAS EPA 2025 + RANKING CCAA
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2">
+
+                    <!-- Contenedor: líneas de actuación EPA 2025 -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">
+                                    Líneas de actuación EPA 2025
+                                </p>
+                                <p class="card-grafico__subtitulo">
+                                    Animales abandonados vs colonias felinas
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+
+                        <!--
+                            id="grafico-lineas": estadisticas-avanzadas.js creará
+                            aquí un donut comparativo entre las dos líneas EPA 2025
+                            cuando el endpoint esté disponible.
+                        -->
+                        <div class="chart-container chart-container--donut"
+                             id="grafico-lineas-container">
+                            <p class="estado-carga" id="lineas-pendiente">
+                                Pendiente de endpoint
+                                <code>/estadisticas/avanzadas/</code>
+                            </p>
+                            <canvas id="grafico-lineas" style="display:none;"
+                                aria-label="Gráfico de líneas de actuación EPA 2025"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Contenedor: ranking de CCAA por importe -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <p class="card-grafico__titulo">
+                                Ranking de CCAA por importe
+                            </p>
+                            <p class="card-grafico__subtitulo">
+                                Importe concedido acumulado (EELL)
+                            </p>
+                        </div>
+
+                        <!--
+                            id="ranking-ccaa": estadisticas-avanzadas.js insertará
+                            aquí los elementos del ranking cuando el backend
+                            exponga el endpoint.
+                        -->
+                        <ul class="ranking-lista" id="ranking-ccaa"
+                            aria-label="Ranking de CCAA por importe concedido">
+                            <!-- Se rellena desde estadisticas-avanzadas.js -->
+                        </ul>
+
+                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">
+                            Ranking pendiente de implementación en el backend.
+                            Se mostrará cuando el endpoint
+                            <code>/estadisticas/por-ccaa/</code> esté disponible.
+                        </div>
+
+                    </div>
+
+                </div><!-- /grid-2 fila 3 -->
+
+            </div><!-- /contenedor -->
+        </section>
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER — igual que en el resto de páginas
+         ===================================================== -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+               target="_blank" rel="noopener noreferrer">
+                Dirección General de Derechos de los Animales (DGDA)
+            </a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+
+    <!--
+        Chart.js — importado antes que el script de la página,
+        igual que en estadisticas.html.
+        Los canvas están ocultos hasta que lleguen datos reales.
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/estadisticas-avanzadas.js"></script>
+
+</body>
+</html>

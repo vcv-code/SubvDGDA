@@ -211,3 +211,12 @@ data/raw/epas/
 
 # Archivo de contexto local (no se versiona)
 contexto.txt
+
+# Clave privada SSL — se genera localmente con openssl, nunca se versiona
+docker/ssl/server.key
+
+# Estado del cron (generado en runtime, varía por máquina)
+logs/cron/estado_*.json
+
+# Guía de estudio detallada del proyecto con especial detalle en el backend
+guia-estudio*.md
