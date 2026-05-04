@@ -1,21 +1,24 @@
 /**
  * home.js — Lógica de la página de inicio (index.html)
  * ──────────────────────────────────────────────────────
- * Este archivo gestiona toda la interacción dinámica de index.html.
- * Se conecta con la API REST del backend mediante fetch() y rellena
- * los bloques de métricas con datos reales.
+ * Gestiona las métricas y los gráficos generales de index.html.
+ * Una única petición a GET /estadisticas/ alimenta todos los bloques.
  *
  * PETICIONES A LA API:
  *   · GET /estadisticas/   → Métricas generales + datos por año
  *
  * BLOQUES QUE SE ACTUALIZAN:
  *   1. Tarjetas de métricas (Sección 2) — Registros, Importe, Entidades
+ *   2. Gráfico de línea    → Evolución del importe total por año
+ *   3. Gráfico de donut    → Distribución por estado
+ *   4. Gráfico de barras   → EPA vs EELL por año
+ *   5. KPI tasa de éxito   → % concedido global
  *
  * CONCEPTOS CLAVE USADOS:
  *   · fetch()           → Petición HTTP asíncrona al servidor
  *   · async / await     → Forma moderna de manejar código asíncrono
  *   · try / catch       → Manejo de errores de red o del servidor
- *   · .json()           → Convierte la respuesta HTTP en objeto JavaScript
+ *   · Chart.js v4       → Librería de gráficos (cargada en el HTML)
  *   · Intl.NumberFormat → Formatea números según el idioma (1234 → 1.234)
  */
 
@@ -24,12 +27,34 @@
 // CONFIGURACIÓN
 // ─────────────────────────────────────────────────────────────
 
-/**
- * URL base de la API.
- * Si el puerto o la dirección del backend cambia, solo hay que
- * modificarlo aquí. Principio DRY (Don't Repeat Yourself).
- */
 const API_URL = '';
+
+/** Años del sistema, usados como etiquetas en los gráficos */
+const ANIOS = [2021, 2022, 2023, 2024, 2025];
+
+/**
+ * Paleta de colores para los gráficos.
+ * Valores literales porque Chart.js no acepta variables CSS.
+ */
+const COLORES = {
+    verdeOscuro:    '#2E7D32',
+    verdeMedio:     '#66BB6A',
+    verdeClaro:     '#A5D6A7',
+    verdeFondo:     'rgba(71, 192, 121, 0.15)',
+    azul:           '#1565C0',
+    concedida:      '#2E7D32',
+    noBeneficiaria: '#A5D6A7',
+    excluida:       '#EF6C00',
+    desistida:      '#C62828',
+    grisTexto:      '#616161',
+    grisMedio:      '#E0E0E0',
+};
+
+const OPCIONES_BASE = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+};
 
 
 // ─────────────────────────────────────────────────────────────
@@ -123,8 +148,12 @@ async function cargarDatos() {
          */
         const datos = await respuesta.json();
 
-        // ── Paso 3: Actualizar las métricas de la página ──────────────
+        // ── Paso 3: Actualizar métricas y gráficos ────────────────────
         mostrarMetricas(datos);
+        crearGraficoLinea(datos.por_anio);
+        crearGraficoDonut(datos);
+        crearGraficoBarras(datos.por_anio);
+        mostrarTasaExito(datos);
 
     } catch (error) {
         // Si hay cualquier fallo (sin conexión, backend caído, JSON inválido...)
@@ -198,6 +227,236 @@ function mostrarErrores() {
     // Sección de métricas
     const cargaMetricas = document.getElementById('metricas-carga');
     if (cargaMetricas) cargaMetricas.innerHTML = mensajeError;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// UTILIDADES DE FORMATO (gráficos)
+// ─────────────────────────────────────────────────────────────
+
+function formatearMiles(n) {
+    return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 0 }).format(n);
+}
+
+function formatearMillones(n) {
+    const m = n / 1_000_000;
+    return new Intl.NumberFormat('es-ES', {
+        minimumFractionDigits: 1, maximumFractionDigits: 1,
+    }).format(m) + ' M€';
+}
+
+function formatearEjeY(n) {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + ' M';
+    if (n >= 1_000)     return (n / 1_000).toFixed(0) + ' K';
+    return n;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// GRÁFICO 1: LÍNEA — Evolución del importe total por año
+// Datos: GET /estadisticas/ → por_anio[].importe_total (EPA + EELL sumados)
+// ─────────────────────────────────────────────────────────────
+
+function crearGraficoLinea(porAnio) {
+    const importesPorAnio = ANIOS.map(anio =>
+        porAnio.filter(d => d.anio === anio)
+               .reduce((suma, d) => suma + d.importe_total, 0)
+    );
+
+    new Chart(document.getElementById('home-grafico-linea'), {
+        type: 'line',
+        data: {
+            labels: ANIOS,
+            datasets: [{
+                label: 'Importe total',
+                data: importesPorAnio,
+                borderColor:          COLORES.verdeOscuro,
+                borderWidth:          2.5,
+                fill:                 true,
+                backgroundColor:      COLORES.verdeFondo,
+                pointBackgroundColor: COLORES.verdeOscuro,
+                pointRadius:          5,
+                pointHoverRadius:     7,
+                tension:              0.4,
+            }],
+        },
+        options: {
+            ...OPCIONES_BASE,
+            scales: {
+                x: {
+                    grid:  { color: COLORES.grisMedio },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
+                },
+                y: {
+                    beginAtZero: true,
+                    grid:  { color: COLORES.grisMedio },
+                    ticks: {
+                        font:     { family: 'Inter', size: 11 },
+                        color:    COLORES.grisTexto,
+                        callback: (v) => formatearEjeY(v),
+                    },
+                },
+            },
+            plugins: {
+                ...OPCIONES_BASE.plugins,
+                tooltip: { callbacks: { label: (ctx) => ' ' + formatearMillones(ctx.raw) } },
+            },
+        },
+    });
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// GRÁFICO 2: DONUT — Distribución por estado
+// Datos: GET /estadisticas/ → totales de por_anio sumados
+// ─────────────────────────────────────────────────────────────
+
+function crearGraficoDonut(datos) {
+    const totales = datos.por_anio.reduce(
+        (acc, d) => {
+            acc.concedidas      += d.concedidas;
+            acc.noBeneficiarias += d.no_beneficiarias;
+            acc.excluidas       += d.excluidas;
+            acc.desistidas      += d.desistidas;
+            return acc;
+        },
+        { concedidas: 0, noBeneficiarias: 0, excluidas: 0, desistidas: 0 }
+    );
+
+    new Chart(document.getElementById('home-grafico-donut'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Concedida', 'No beneficiaria', 'Excluida', 'Desistida'],
+            datasets: [{
+                data: [
+                    totales.concedidas,
+                    totales.noBeneficiarias,
+                    totales.excluidas,
+                    totales.desistidas,
+                ],
+                backgroundColor: [
+                    COLORES.concedida,
+                    COLORES.noBeneficiaria,
+                    COLORES.excluida,
+                    COLORES.desistida,
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff',
+                hoverOffset: 8,
+            }],
+        },
+        options: {
+            ...OPCIONES_BASE,
+            cutout: '62%',
+            plugins: {
+                ...OPCIONES_BASE.plugins,
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                            const pct   = Math.round((ctx.raw / total) * 100);
+                            return ` ${ctx.label}: ${formatearMiles(ctx.raw)} (${pct}%)`;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// GRÁFICO 3: BARRAS — EPA vs EELL por año
+// Datos: GET /estadisticas/ → por_anio[] filtrado por tipo
+// ─────────────────────────────────────────────────────────────
+
+function crearGraficoBarras(porAnio) {
+    const importeEPA  = ANIOS.map(anio => {
+        const d = porAnio.find(x => x.anio === anio && x.tipo === 'epa');
+        return d ? d.importe_total : 0;
+    });
+    const importeEELL = ANIOS.map(anio => {
+        const d = porAnio.find(x => x.anio === anio && x.tipo === 'eell');
+        return d ? d.importe_total : 0;
+    });
+
+    new Chart(document.getElementById('home-grafico-barras'), {
+        type: 'bar',
+        data: {
+            labels: ANIOS,
+            datasets: [
+                {
+                    label: 'EPA',
+                    data:  importeEPA,
+                    backgroundColor: COLORES.verdeOscuro,
+                    borderRadius:    4,
+                    borderSkipped:   false,
+                },
+                {
+                    label: 'EELL',
+                    data:  importeEELL,
+                    backgroundColor: COLORES.verdeMedio,
+                    borderRadius:    4,
+                    borderSkipped:   false,
+                },
+            ],
+        },
+        options: {
+            ...OPCIONES_BASE,
+            plugins: {
+                legend: {
+                    display:  true,
+                    position: 'top',
+                    labels: {
+                        font:           { family: 'Inter', size: 11 },
+                        color:          COLORES.grisTexto,
+                        boxWidth:       12,
+                        boxHeight:      12,
+                        borderRadius:   3,
+                        useBorderRadius: true,
+                        padding:        16,
+                    },
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ` ${ctx.dataset.label}: ${formatearMillones(ctx.raw)}`,
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid:  { display: false },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
+                },
+                y: {
+                    beginAtZero: true,
+                    grid:  { color: COLORES.grisMedio },
+                    ticks: {
+                        font:     { family: 'Inter', size: 11 },
+                        color:    COLORES.grisTexto,
+                        callback: (v) => formatearEjeY(v),
+                    },
+                },
+            },
+        },
+    });
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// KPI: TASA DE ÉXITO GLOBAL
+// Datos: GET /estadisticas/ → total_concedidas / total_registros
+// ─────────────────────────────────────────────────────────────
+
+function mostrarTasaExito(datos) {
+    const el = document.getElementById('home-tasa-exito');
+    if (!el) return;
+    if (datos.total_registros > 0) {
+        const pct = Math.round((datos.total_concedidas / datos.total_registros) * 100);
+        el.textContent = pct + ' %';
+    } else {
+        el.textContent = '—';
+    }
 }
 
 

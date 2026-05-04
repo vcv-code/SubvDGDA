@@ -113,11 +113,11 @@
                 de enlaces de navegación (mejor para SEO y accesibilidad).
             -->
             <ul class="navbar__links">
-                <!-- class="activo" marca visualmente la página actual -->
                 <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas.html">Estadísticas</a></li>
-                <!-- btn-login: estilo diferente para destacar la acción de autenticación -->
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="login.html" class="btn-login">Acceder</a></li>
             </ul>
 
@@ -251,49 +251,112 @@
 
 
         <!-- ─────────────────────────────────────────────────
-             SECCIÓN 3: PLACEHOLDERS DE GRÁFICOS
-             En la issue 7B solo se reserva el espacio.
-             En la issue 7C se integra Chart.js y se sustituye
-             cada .grafico-placeholder por un <canvas>.
+             SECCIÓN 3: GRÁFICOS GENERALES
+             Datos de GET /estadisticas/ — mismo endpoint que
+             las métricas de arriba. home.js usa la respuesta
+             para pintar los tres gráficos con Chart.js.
 
-             ¿Por qué prepararlo ahora?
-             Reservar los contenedores facilita el trabajo en 7C:
-             el HTML ya estará listo y solo habrá que añadir el
-             canvas y el código JavaScript de los gráficos.
+             Fondo verde suave (fondo-stats) para que las tarjetas
+             blancas destaquen con profundidad, igual que en las
+             páginas de estadísticas EPAs y EELL.
              ───────────────────────────────────────────────── -->
-        <section class="seccion seccion--gris" aria-labelledby="graficos-titulo">
-            <div class="contenedor">
+        <section class="fondo-stats" aria-labelledby="graficos-titulo">
+            <div class="seccion contenedor">
 
-                <div class="seccion__cabecera">
-                    <h2 class="seccion__titulo" id="graficos-titulo">
-                        Análisis visual
+                <div style="margin-bottom: var(--espacio-lg);">
+                    <h2 style="font-size:1.6rem; font-weight:700; color:var(--color-negro);"
+                        id="graficos-titulo">
+                        Visión general
                     </h2>
-                    <p class="seccion__subtitulo">
-                        Distribución de solicitudes e importes concedidos por año.
+                    <p style="color:var(--color-gris-texto); margin-top:4px;">
+                        Evolución, distribución y comparativa de subvenciones 2021–2025.
+                        Datos de BDNS y DGDA.
                     </p>
                 </div>
 
-                <div class="grid-2">
+                <!-- Fila 1: línea de evolución + donut de estados -->
+                <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
 
-                    <!--
-                        Cada placeholder tiene un id que home.js (en 7C)
-                        usará para inyectar el <canvas> de Chart.js.
-                    -->
-                    <div class="card">
-                        <h3 style="font-size:1rem; margin-bottom:var(--espacio-sm); color:var(--color-negro);">
-                            Distribución por estado
-                        </h3>
-                        <div class="grafico-placeholder" id="contenedor-grafico-estados">
-                            <span>Próximamente: análisis visual de los datos</span>
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Evolución del importe por año</p>
+                                <p class="card-grafico__subtitulo">Importe total concedido (EPA + EELL)</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="home-grafico-linea"
+                                aria-label="Gráfico de línea: evolución del importe por año"></canvas>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 style="font-size:1rem; margin-bottom:var(--espacio-sm); color:var(--color-negro);">
-                            Importe por año
-                        </h3>
-                        <div class="grafico-placeholder" id="contenedor-grafico-importe">
-                            <span>Próximamente: análisis visual de los datos</span>
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <p class="card-grafico__titulo">Distribución por estado</p>
+                        </div>
+                        <div class="chart-container chart-container--donut">
+                            <canvas id="home-grafico-donut"
+                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
+                        </div>
+                        <div class="leyenda-estados" id="home-leyenda-donut">
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#2E7D32;"></span>
+                                Concedida
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#A5D6A7;"></span>
+                                No beneficiaria
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#EF6C00;"></span>
+                                Excluida
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#C62828;"></span>
+                                Desistida
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Fila 2: barras EPA vs EELL -->
+                <div class="grid-2">
+
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">EPA vs EELL por año (M€)</p>
+                                <p class="card-grafico__subtitulo">Importe concedido por tipo de convocatoria</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="home-grafico-barras"
+                                aria-label="Gráfico de barras: comparativa EPA vs EELL por año"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- KPI tasa de éxito + enlace a estadísticas -->
+                    <div class="card-grafico" style="display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <p class="card-grafico__titulo" style="margin-bottom: var(--espacio-sm);">
+                                Tasa de éxito global
+                            </p>
+                            <p style="font-size:3.5rem; font-weight:700; color:var(--color-verde-btn); margin:0;"
+                               id="home-tasa-exito">—</p>
+                            <p style="color:var(--color-gris-texto); font-size:0.9rem; margin-top:6px;">
+                                Solicitudes concedidas sobre el total 2021–2025
+                            </p>
+                        </div>
+                        <div style="margin-top: var(--espacio-lg);">
+                            <a href="estadisticas-epas.html"
+                               style="display:inline-block; margin-right:12px; color:var(--color-azul); font-size:0.9rem;">
+                                → Estadísticas EPAs
+                            </a>
+                            <a href="estadisticas-eell.html"
+                               style="display:inline-block; color:var(--color-azul); font-size:0.9rem;">
+                                → Estadísticas EELL
+                            </a>
                         </div>
                     </div>
 
@@ -361,6 +424,8 @@
          nada. Al colocarlo al final, el HTML ya está en
          memoria cuando el script se ejecuta.
          ===================================================== -->
+    <!-- Chart.js debe cargarse ANTES que home.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="js/home.js"></script>
 
 </body>
