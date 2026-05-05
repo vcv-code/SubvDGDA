@@ -1,31 +1,17 @@
 <!DOCTYPE html>
 <!--
-    recursos.html — Página de recursos y sitios de interés
+    recursos.html — Directorio de organizaciones y entidades de bienestar animal
     Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
     Curso: 2º DAW · Proyecto Final de Ciclo
 
-    ¿Qué hace esta página?
-    ──────────────────────
-    Muestra un directorio de organizaciones y recursos relacionados
-    con el bienestar animal: entidades colaboradoras, portales de
-    datos públicos, organizaciones de referencia y otros sitios de
-    interés para quienes trabajan en este sector.
+    Página 100% estática. Sin fetch ni dependencias de backend.
+    Contenido basado en el directorio del proyecto (PDF de referencia).
 
-    Estructura:
-    ───────────
-    1. Spinner de carga (oculto por defecto)
-    2. Caja de error (oculta por defecto)
-    3. Contenedor principal con:
-       - Cabecera de sección
-       - Grid de tarjetas de recursos (relleno por recursos.js)
-
-    Endpoint pendiente de backend:
-    ──────────────────────────────
-    GET /recursos/
-    → { nombre, url, descripcion, categoria, logo? }
-    (Pendiente de implementación por la compañera de backend)
-
-    Archivo JS: js/recursos.js
+    Bloques:
+    1. Protección animal    — BASMA, FAADA, Animanaturalis, Intercids, APDDA, AVATMA
+    2. Colonias felinas     — GEMFE, GARRA, Los gatos tienen ley, FDCats, Los 4 de la Empandilla, MeowMetrics
+    3. Entidades especializadas — Cotorras, Free Fox, GREFA, EriSOS, SOS Vencejos, Mis amigas las palomas
+    4. Campañas actuales    — Vets Unidos, Mismos perros, Santuarios, La tortura, Vivotecnia, NAC
 -->
 <html lang="es">
 <head>
@@ -33,11 +19,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recursos — Subvenciones Bienestar Animal</title>
     <meta name="description"
-          content="Directorio de organizaciones y recursos de interés sobre bienestar animal, subvenciones públicas y protección de animales en España.">
+          content="Directorio de organizaciones, entidades y campañas de bienestar animal en España: protección, colonias felinas, fauna urbana y campañas activas.">
 
     <link rel="icon" href="assets/logo.png" type="image/png">
     <meta property="og:title" content="Recursos — Subvenciones Bienestar Animal">
-    <meta property="og:description" content="Directorio de organizaciones y sitios de interés sobre bienestar animal y subvenciones públicas en España.">
+    <meta property="og:description" content="Directorio de organizaciones y entidades de bienestar animal en España.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="assets/logo.png">
 
@@ -45,14 +31,96 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* ── Bloque de categoría ── */
+        .recursos-bloque {
+            margin-bottom: var(--espacio-xl);
+        }
+
+        .recursos-bloque__cabecera {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: var(--espacio-md);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-fondo-verde);
+        }
+
+        .recursos-bloque__titulo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-negro);
+            margin: 0;
+        }
+
+        /* ── Tarjeta de entidad ── */
+        .card-entidad {
+            background: #ffffff;
+            border-radius: var(--radio-card);
+            box-shadow: var(--sombra-card);
+            padding: var(--espacio-md);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .card-entidad__nombre {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-negro);
+            margin: 0;
+        }
+
+        .card-entidad__categoria {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--color-azul);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin: 0;
+        }
+
+        .card-entidad__descripcion {
+            font-size: 0.9rem;
+            color: var(--color-gris-texto);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* ── Grid flexible 3 columnas ── */
+        .grid-recursos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--espacio-md);
+        }
+
+        @media (max-width: 900px) {
+            .grid-recursos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-recursos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Nota al pie ── */
+        .recursos-nota {
+            font-size: 0.82rem;
+            color: var(--color-gris-texto);
+            margin-top: var(--espacio-lg);
+            padding-top: var(--espacio-sm);
+            border-top: 1px solid var(--color-gris-medio);
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =====================================================
-         NAVBAR — igual que en el resto de páginas.
-         "activo" en Recursos cuando se añada al menú.
-         ===================================================== -->
+    <!-- NAVBAR — activo en Recursos -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
@@ -62,7 +130,8 @@
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html" class="activo" aria-current="page">Recursos</a></li>
                 <li><a href="login.html" class="btn-login">Acceder</a></li>
             </ul>
@@ -74,64 +143,307 @@
         <section class="seccion" aria-labelledby="recursos-titulo">
             <div class="contenedor">
 
-                <!-- Cabecera de la sección -->
-                <div class="seccion__cabecera">
+                <!-- Cabecera -->
+                <div class="seccion__cabecera" style="margin-bottom: var(--espacio-lg);">
                     <h1 class="seccion__titulo" id="recursos-titulo">
-                        Recursos y sitios de interés
+                        Recursos
                     </h1>
                     <p class="seccion__subtitulo">
-                        Organizaciones, portales y referencias útiles para entidades
-                        que trabajan en bienestar animal o solicitan subvenciones públicas.
+                        Organizaciones, entidades y campañas del sector del bienestar animal en España.
+                        Directorio de referencia del proyecto.
                     </p>
                 </div>
 
-                <!-- Spinner de carga (se muestra mientras carga la API) -->
-                <div id="spinner" class="spinner"></div>
 
-                <!-- Caja de error estructurado del backend -->
-                <!--
-                    Se muestra si el backend devuelve 401, 403, 404, 422 o 500.
-                    recursos.js rellena los párrafos con los campos
-                    "mensaje" y "sugerencia" del JSON de error.
-                -->
-                <div id="error-box" class="error-box" style="display:none;">
-                    <h3>Error</h3>
-                    <p id="error-mensaje"></p>
-                    <p id="error-sugerencia"></p>
-                </div>
-
-                <!--
-                    Contenedor principal de recursos.
-                    recursos.js insertará aquí las tarjetas cuando el
-                    endpoint GET /recursos/ esté disponible en el backend.
-
-                    Mientras tanto muestra un placeholder informativo.
-                -->
-                <div id="recursos-contenido">
-
-                    <!--
-                        Placeholder visible hasta que el backend implemente
-                        el endpoint. recursos.js lo reemplazará con datos reales.
-                    -->
-                    <div class="card" id="recursos-placeholder">
-                        <p style="color: var(--color-gris-texto); font-size: 0.95rem;">
-                            El directorio de recursos estará disponible próximamente.
-                            Se mostrará aquí cuando el backend implemente el endpoint
-                            <code>/recursos/</code>.
-                        </p>
+                <!-- ═══════════════════════════════════════════════
+                     BLOQUE 1: PROTECCIÓN ANIMAL
+                     ═══════════════════════════════════════════════ -->
+                <div class="recursos-bloque" aria-labelledby="bloque-proteccion">
+                    <div class="recursos-bloque__cabecera">
+                        <h2 class="recursos-bloque__titulo" id="bloque-proteccion">
+                            Protección animal
+                        </h2>
                     </div>
 
+                    <div class="grid-recursos">
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">BASMA</p>
+                            <p class="card-entidad__categoria">Banco de alimentos</p>
+                            <p class="card-entidad__descripcion">
+                                Apoya a protectoras proporcionando alimento y recursos básicos para animales
+                                en situación de vulnerabilidad.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">FAADA</p>
+                            <p class="card-entidad__categoria">Fundación</p>
+                            <p class="card-entidad__descripcion">
+                                Trabaja en la mejora de la legislación y las políticas públicas de bienestar
+                                animal en España.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Animanaturalis</p>
+                            <p class="card-entidad__categoria">Activismo</p>
+                            <p class="card-entidad__descripcion">
+                                Organización centrada en campañas de concienciación y defensa de los derechos
+                                de los animales.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Intercids</p>
+                            <p class="card-entidad__categoria">Operadores jurídicos</p>
+                            <p class="card-entidad__descripcion">
+                                Red de profesionales del derecho que actúa en casos de maltrato y defensa
+                                jurídica de los animales.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">APDDA</p>
+                            <p class="card-entidad__categoria">Ámbito institucional</p>
+                            <p class="card-entidad__descripcion">
+                                Grupo de trabajo en el ámbito político que impulsa iniciativas legislativas
+                                en defensa de los animales.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">AVATMA</p>
+                            <p class="card-entidad__categoria">Veterinario / ámbito técnico</p>
+                            <p class="card-entidad__descripcion">
+                                Asociación de profesionales veterinarios que promueve la protección animal
+                                desde una perspectiva científica y ética, con especial foco en la tauromaquia.
+                            </p>
+                        </article>
+
+                    </div>
                 </div>
-                <!-- /recursos-contenido -->
+
+
+                <!-- ═══════════════════════════════════════════════
+                     BLOQUE 2: COLONIAS FELINAS
+                     ═══════════════════════════════════════════════ -->
+                <div class="recursos-bloque" aria-labelledby="bloque-colonias">
+                    <div class="recursos-bloque__cabecera">
+                        <h2 class="recursos-bloque__titulo" id="bloque-colonias">
+                            Gestión de colonias felinas
+                        </h2>
+                    </div>
+
+                    <div class="grid-recursos">
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">GEMFE</p>
+                            <p class="card-entidad__categoria">Ámbito veterinario</p>
+                            <p class="card-entidad__descripcion">
+                                Grupo de especialidad veterinaria centrado en la salud y bienestar de los gatos,
+                                con labor de formación y divulgación.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Plataforma GARRA</p>
+                            <p class="card-entidad__categoria">Plataforma</p>
+                            <p class="card-entidad__descripcion">
+                                Iniciativa centrada en la defensa y mejora de la gestión ética de colonias
+                                felinas a nivel estatal.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Los gatos tienen ley</p>
+                            <p class="card-entidad__categoria">Iniciativa legal</p>
+                            <p class="card-entidad__descripcion">
+                                Proyecto orientado a impulsar el reconocimiento legal y la protección de los
+                                gatos comunitarios.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">FDCats</p>
+                            <p class="card-entidad__categoria">Federación</p>
+                            <p class="card-entidad__descripcion">
+                                Red de asociaciones enfocada en la gestión de colonias felinas y la
+                                implantación del método CER.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Los 4 de la Empandilla</p>
+                            <p class="card-entidad__categoria">Rescate especializado</p>
+                            <p class="card-entidad__descripcion">
+                                Grupo de rescate activo en Madrid y otras zonas, centrado en intervenciones
+                                complejas y apoyo a la gestión de colonias felinas.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">MeowMetrics</p>
+                            <p class="card-entidad__categoria">Herramienta digital</p>
+                            <p class="card-entidad__descripcion">
+                                Plataforma para la gestión, seguimiento y análisis de colonias felinas
+                                basada en datos.
+                            </p>
+                        </article>
+
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════════════════════════
+                     BLOQUE 3: ENTIDADES ESPECIALIZADAS
+                     ═══════════════════════════════════════════════ -->
+                <div class="recursos-bloque" aria-labelledby="bloque-especializadas">
+                    <div class="recursos-bloque__cabecera">
+                        <h2 class="recursos-bloque__titulo" id="bloque-especializadas">
+                            Entidades especializadas
+                        </h2>
+                    </div>
+
+                    <div class="grid-recursos">
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Plataforma P. Cotorras</p>
+                            <p class="card-entidad__categoria">Iniciativa</p>
+                            <p class="card-entidad__descripcion">
+                                Defiende una gestión ética de las cotorras urbanas frente a planes de control
+                                poblacional basados en la eliminación.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Free Fox</p>
+                            <p class="card-entidad__categoria">Rescate y sensibilización</p>
+                            <p class="card-entidad__descripcion">
+                                Entidad centrada en el rescate y recuperación de zorros y otros animales
+                                silvestres.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">GREFA</p>
+                            <p class="card-entidad__categoria">Centro de recuperación / conservación</p>
+                            <p class="card-entidad__descripcion">
+                                Organización de referencia en recuperación de fauna silvestre y conservación.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Asociación EriSOS</p>
+                            <p class="card-entidad__categoria">Fauna urbana</p>
+                            <p class="card-entidad__descripcion">
+                                Dedicada a la protección y recuperación de erizos en entornos urbanos.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">SOS Vencejos</p>
+                            <p class="card-entidad__categoria">Fauna urbana</p>
+                            <p class="card-entidad__descripcion">
+                                Proyecto de rescate y cuidado de aves urbanas, especialmente vencejos.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Mis amigas las palomas</p>
+                            <p class="card-entidad__categoria">Concienciación urbana</p>
+                            <p class="card-entidad__descripcion">
+                                Iniciativa centrada en la defensa y cambio de percepción sobre las palomas
+                                en ciudades.
+                            </p>
+                        </article>
+
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════════════════════════
+                     BLOQUE 4: CAMPAÑAS ACTUALES
+                     ═══════════════════════════════════════════════ -->
+                <div class="recursos-bloque" aria-labelledby="bloque-campanas">
+                    <div class="recursos-bloque__cabecera">
+                        <h2 class="recursos-bloque__titulo" id="bloque-campanas">
+                            Campañas actuales
+                        </h2>
+                    </div>
+
+                    <div class="grid-recursos">
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Vets Unidos</p>
+                            <p class="card-entidad__categoria">Campaña / ámbito profesional</p>
+                            <p class="card-entidad__descripcion">
+                                Movimiento impulsado por profesionales veterinarios en relación con el
+                                desarrollo del real decreto sobre medicamentos veterinarios, centrado en
+                                su impacto en la práctica clínica y el bienestar animal.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Mismos perros, misma ley</p>
+                            <p class="card-entidad__categoria">Iniciativa legal</p>
+                            <p class="card-entidad__descripcion">
+                                Reivindica la inclusión de los perros de caza en la normativa de protección
+                                animal.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Santuarios no son granjas</p>
+                            <p class="card-entidad__categoria">Campaña</p>
+                            <p class="card-entidad__descripcion">
+                                Reivindica el reconocimiento legal de los santuarios de animales como espacios
+                                de protección diferenciados de explotaciones ganaderas.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">La tortura no es cultura</p>
+                            <p class="card-entidad__categoria">Campaña</p>
+                            <p class="card-entidad__descripcion">
+                                Movimiento que busca la abolición de la tauromaquia en España.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Vivotecnia</p>
+                            <p class="card-entidad__categoria">Caso judicial / actualidad</p>
+                            <p class="card-entidad__descripcion">
+                                Caso mediático que ha reabierto el debate sobre investigación con animales,
+                                control y transparencia.
+                            </p>
+                        </article>
+
+                        <article class="card-entidad">
+                            <p class="card-entidad__nombre">Plataforma NAC (No a la caza)</p>
+                            <p class="card-entidad__categoria">Plataforma</p>
+                            <p class="card-entidad__descripcion">
+                                Denuncia el maltrato y abandono de perros utilizados en actividades
+                                cinegéticas.
+                            </p>
+                        </article>
+
+                    </div>
+                </div>
+
+
+                <p class="recursos-nota">
+                    Directorio de referencia seleccionado por el equipo del proyecto.
+                    El contenido es estático; se actualizará dinámicamente cuando el backend
+                    implemente el endpoint <code>/recursos/</code>.
+                </p>
 
             </div><!-- /contenedor -->
         </section>
     </main>
 
 
-    <!-- =====================================================
-         FOOTER — igual que en el resto de páginas
-         ===================================================== -->
+    <!-- FOOTER -->
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
