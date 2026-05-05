@@ -10,12 +10,7 @@
  *   · Nuevos vs recurrentes por año
  *   · Top beneficiarios por importe
  *
- * ESTADO: pendiente de conexión con el backend.
- * El endpoint GET /estadisticas/epas aún no existe.
- * Cuando esté disponible, descomentar la llamada en
- * cargarEstadisticasEpas() y activar las funciones de pintado.
- *
- * ENDPOINT PENDIENTE:
+ * ENDPOINT:
  *   GET /estadisticas/epas
  *   Respuesta esperada: {
  *     importe_medio:         number,
@@ -111,27 +106,23 @@ async function cargarEstadisticasEpas() {
 
     try {
 
-        // TODO: descomentar cuando GET /estadisticas/epas esté disponible
-        //
-        // const respuesta = await fetch(`${API_URL}/estadisticas/epas`);
-        //
-        // if (!respuesta.ok) {
-        //     let cuerpo = {};
-        //     try { cuerpo = await respuesta.json(); } catch (_) {}
-        //     errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
-        //     errorSugerencia.textContent = cuerpo.sugerencia || '';
-        //     errorBox.style.display      = 'block';
-        //     throw new Error(`Error ${respuesta.status}`);
-        // }
-        //
-        // const datos = await respuesta.json();
-        // poblarKpis(datos);
-        // poblarGraficoDistribucion(datos.distribucion_importes || []);
-        // poblarGraficoMediaMediana(datos.por_anio || []);
-        // poblarGraficoNuevosRecurrentes(datos.por_anio || []);
-        // poblarGraficoTopBeneficiarios(datos.por_anio || []);
+        const respuesta = await fetch(`${API_URL}/estadisticas/epas`);
 
-        // Mientras el endpoint no exista, los placeholders permanecen visibles.
+        if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+            errorSugerencia.textContent = cuerpo.sugerencia || '';
+            errorBox.style.display      = 'block';
+            throw new Error(`Error ${respuesta.status}`);
+        }
+
+        const datos = await respuesta.json();
+        poblarKpis(datos);
+        poblarGraficoDistribucion(datos.distribucion_importes || []);
+        poblarGraficoMediaMediana(datos.por_anio || []);
+        poblarGraficoNuevosRecurrentes(datos.por_anio || []);
+        poblarGraficoTopBeneficiarios(datos.por_anio || []);
 
     } catch (error) {
         console.error('Error al cargar estadísticas EPAs:', error);

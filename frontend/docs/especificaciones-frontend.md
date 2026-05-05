@@ -648,7 +648,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
 **Propósito:** Análisis específico de las convocatorias de Entidades Protectoras de Animales: importe medio, mediana, beneficiarios únicos, nuevas entidades, distribución de importes por rangos, media vs mediana por año, nuevos vs recurrentes y top beneficiarios.
 
-**Estado:** Estructura completa implementada. Los datos dinámicos quedan pendientes hasta que el backend exponga `GET /estadisticas/epas`.
+**Estado:** Completamente implementada y conectada al backend. Endpoint `GET /estadisticas/epas` disponible.
 
 **Fondo visual:** usa la clase `.fondo-stats` (verde suave). Enlace "→ Ver estadísticas EELL" en la cabecera.
 
@@ -682,32 +682,34 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | `poblarGraficoNuevosRecurrentes(porAnio)` | `bar` apilado (`stack: 'entidades'`) | `grafico-nuevos-recurrentes` | `porAnio[].nuevos`, `porAnio[].recurrentes` |
 | `poblarGraficoTopBeneficiarios(porAnio)` | `bar` horizontal (`indexAxis: 'y'`) | `grafico-top-beneficiarios` | `porAnio[último].top_beneficiarios` |
 
-**Endpoint pendiente de backend:**
+**Endpoint `GET /estadisticas/epas`:**
 
-```
-GET /estadisticas/epas
-Respuesta esperada: {
-  importe_medio:         number,
-  mediana:               number,
-  beneficiarios_unicos:  number,
-  nuevas_entidades:      number,
-  distribucion_importes: [{ rango: string, cantidad: number }, ...],
-  por_anio: [
+```json
+{
+  "importe_medio":         number,
+  "mediana":               number,
+  "beneficiarios_unicos":  number,
+  "nuevas_entidades":      number,
+  "distribucion_importes": [{ "rango": string, "cantidad": number }, ...],
+  "por_anio": [
     {
-      anio:              number,
-      media:             number,
-      mediana:           number,
-      nuevos:            number,
-      recurrentes:       number,
-      top_beneficiarios: [{ nombre: string, importe: number }, ...]
+      "anio":              number,
+      "media":             number,
+      "mediana":           number,
+      "nuevos":            number,
+      "recurrentes":       number,
+      "top_beneficiarios": [{ "nombre": string, "importe": number }, ...]
     }, ...
   ]
 }
 ```
 
 **Notas de implementación:**
-- Todos los canvas están ocultos con `style="display:none;"` hasta que haya datos reales.
-- El fetch está completamente comentado en `estadisticas-epas.js`; descomenterlo cuando el backend implemente el endpoint.
+
+- La mediana se calcula en Python con `statistics.median` (MariaDB no tiene función nativa equivalente).
+- `nuevas_entidades` = beneficiarios cuya primera concesión es el año más reciente con datos.
+- `nuevos`/`recurrentes` por año se calculan comparando contra el primer año de concesión histórico de cada beneficiario.
+- Rangos de distribución: `< 5.000 €`, `5.000–15.000 €`, `15.000–30.000 €`, `30.000–60.000 €`, `> 60.000 €`.
 - Colores de gráficos: tonos verdes (`verdeOscuro #2E7D32`, `verdeMedio #66BB6A`, `verdeClaro #A5D6A7`) para EPAs; el top beneficiarios usa azul.
 
 ---
@@ -716,7 +718,7 @@ Respuesta esperada: {
 
 **Propósito:** Análisis específico de las convocatorias de Entidades de la Administración Local (ayuntamientos): % de ayuntamientos con ayuda, importe medio EELL, ratio de exclusión, top provincias por importe, concentración top 10% vs resto, ranking de CCAA y distribución geográfica (mapa pendiente).
 
-**Estado:** Estructura completa implementada. Los datos dinámicos quedan pendientes hasta que el backend exponga `GET /estadisticas/eell`.
+**Estado:** Completamente implementada y conectada al backend. Endpoint `GET /estadisticas/eell` disponible.
 
 **Fondo visual:** usa la clase `.fondo-stats`. Enlace "→ Ver estadísticas EPAs" en la cabecera.
 
@@ -749,39 +751,36 @@ Respuesta esperada: {
 | `poblarGraficoConcentracion(concentracion)` | `doughnut`, `cutout: '62%'`, leyenda abajo | `grafico-concentracion` | `{top_10_pct, resto_pct}` |
 | `poblarRankingCcaa(porCcaa)` | Lista HTML (hasta 19: 17 CCAA + Ceuta + Melilla) | `#ranking-ccaa` | `[{ccaa, importe_total, num_concesiones}]` |
 
-**Mapa CCAA — decisión técnica pendiente:**
+**Mapa CCAA — pendiente:**
 
-El diseño en PDF define un mapa de calor de España por comunidad autónoma, con interacción hover y click. Su implementación queda en espera de:
-1. Disponibilidad del endpoint `GET /estadisticas/eell`.
-2. Decisión sobre la librería de mapas: SVG inline o librería dedicada (Leaflet, D3-geo, etc.).
+El diseño en PDF define un mapa de calor de España por comunidad autónoma, con interacción hover y click. Queda en espera de decisión sobre la librería de mapas (SVG inline, Leaflet, D3-geo…). Mientras tanto se muestra el ranking CCAA como alternativa funcional.
 
-Mientras tanto se muestra el ranking CCAA como alternativa funcional y el contenedor del mapa muestra un aviso descriptivo.
+**Endpoint `GET /estadisticas/eell`:**
 
-**Endpoint pendiente de backend:**
-
-```
-GET /estadisticas/eell
-Respuesta esperada: {
-  pct_ayuntamientos_con_ayuda: number,   // 0–100
-  importe_medio:               number,
-  ratio_exclusion:             number,   // 0–1
-  ccaa_top:                    string,
-  por_ccaa: [
-    { ccaa: string, importe_total: number, num_concesiones: number }, ...
+```json
+{
+  "pct_ayuntamientos_con_ayuda": number,
+  "importe_medio":               number,
+  "ratio_exclusion":             number,
+  "ccaa_top":                    string,
+  "por_ccaa": [
+    { "ccaa": string, "importe_total": number, "num_concesiones": number }, ...
   ],
-  top_provincias: [
-    { provincia: string, importe_total: number }, ...
+  "top_provincias": [
+    { "provincia": string, "importe_total": number }, ...
   ],
-  concentracion: {
-    top_10_pct: number,   // % del importe acaparado por el top 10%
-    resto_pct:  number    // 100 - top_10_pct
+  "concentracion": {
+    "top_10_pct": number,
+    "resto_pct":  number
   }
 }
 ```
 
 **Notas de implementación:**
-- Todos los canvas están ocultos con `style="display:none;"` hasta que haya datos reales.
-- El fetch está completamente comentado en `estadisticas-eell.js`; descomenterlo cuando el backend implemente el endpoint.
+
+- `pct_ayuntamientos_con_ayuda` = beneficiarios con al menos una concesión / total beneficiarios que solicitaron × 100.
+- `ratio_exclusion` = (excluidas + desistidas) / total solicitudes EELL (valor 0–1; el frontend lo multiplica por 100 para mostrar %).
+- `concentracion.top_10_pct` = % del importe acaparado por el decil superior de beneficiarios por importe acumulado.
 - Colores de gráficos: azul institucional (`#1565C0`, `#90CAF9`) para EELL.
 
 ---
@@ -1049,8 +1048,8 @@ La exportación CSV se delega completamente al backend (`GET /solicitudes/export
 | Orden inicial A→Z y eliminación de "Por defecto" en el select | ✔ Completado |
 | Nueva página `recursos.html` + `js/recursos.js` con contenido estático real y pendiente dinámico | ✔ Completado |
 | Gráficos generales integrados en `index.html` usando `GET /estadisticas/` | ✔ Completado |
-| Nueva página `estadisticas-epas.html` + `js/estadisticas-epas.js` (4 gráficos + 4 KPIs, fetch comentado) | ✔ Completado |
-| Nueva página `estadisticas-eell.html` + `js/estadisticas-eell.js` (3 gráficos + ranking CCAA + 4 KPIs, fetch comentado) | ✔ Completado |
+| Nueva página `estadisticas-epas.html` + `js/estadisticas-epas.js` (4 gráficos + 4 KPIs, conectados a `GET /estadisticas/epas`) | ✔ Completado |
+| Nueva página `estadisticas-eell.html` + `js/estadisticas-eell.js` (3 gráficos + ranking CCAA + 4 KPIs, conectados a `GET /estadisticas/eell`) | ✔ Completado |
 
 ### Issue 7C — Completado
 
@@ -1067,14 +1066,10 @@ La exportación CSV se delega completamente al backend (`GET /solicitudes/export
 
 | Funcionalidad | Endpoint necesario | Consume |
 |---|---|---|
-| Estadísticas EPAs (KPIs, gráficos distribución, media vs mediana, nuevos vs recurrentes, top) | `GET /estadisticas/epas` | `estadisticas-epas.js` |
-| Estadísticas EELL (KPIs, top provincias, concentración, ranking y mapa CCAA) | `GET /estadisticas/eell` | `estadisticas-eell.js` |
 | Directorio de recursos dinámico | `GET /recursos/` | `recursos.js` |
 
 ### Pendientes futuros del frontend
 
-- Activar gráficos y KPIs de `estadisticas-epas.html` cuando el backend implemente `GET /estadisticas/epas`.
-- Activar gráficos y KPIs de `estadisticas-eell.html` cuando el backend implemente `GET /estadisticas/eell`.
 - Implementar mapa de calor de CCAA en `estadisticas-eell.html` (decisión técnica pendiente: SVG inline o librería de mapas).
 - Poblar `recursos.html` con datos dinámicos cuando el backend implemente `GET /recursos/`.
 - Eliminar con `git rm` los archivos obsoletos `estadisticas.html`, `js/estadisticas.js`, `estadisticas-avanzadas.html` y `js/estadisticas-avanzadas.js`.
