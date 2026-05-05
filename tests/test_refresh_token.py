@@ -47,3 +47,18 @@ def test_logout_token_inexistente_no_falla(client):
     _login(client)
     r = client.post("/auth/logout", json={"refresh_token": "noexiste" * 8})
     assert r.status_code == 200
+
+
+def test_cambiar_password_revoca_refresh_tokens(client):
+    data = _login(client)
+    refresh_token = data["refresh_token"]
+    token = data["access_token"]
+
+    client.put(
+        "/privado/cambiar-contrasena",
+        json={"contrasena_actual": USUARIO["password"], "contrasena_nueva": "NuevaPass99"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    r = client.post("/auth/refresh", json={"refresh_token": refresh_token})
+    assert r.status_code == 401

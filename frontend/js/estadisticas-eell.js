@@ -12,12 +12,7 @@
  *   · Ranking CCAA por importe (lista HTML)
  *   · Mapa CCAA (pendiente de decisión técnica)
  *
- * ESTADO: pendiente de conexión con el backend.
- * El endpoint GET /estadisticas/eell aún no existe.
- * Cuando esté disponible, descomentar la llamada en
- * cargarEstadisticasEell() y activar las funciones de pintado.
- *
- * ENDPOINT PENDIENTE:
+ * ENDPOINT:
  *   GET /estadisticas/eell
  *   Respuesta esperada: {
  *     pct_ayuntamientos_con_ayuda: number,   // 0-100
@@ -109,26 +104,22 @@ async function cargarEstadisticasEell() {
 
     try {
 
-        // TODO: descomentar cuando GET /estadisticas/eell esté disponible
-        //
-        // const respuesta = await fetch(`${API_URL}/estadisticas/eell`);
-        //
-        // if (!respuesta.ok) {
-        //     let cuerpo = {};
-        //     try { cuerpo = await respuesta.json(); } catch (_) {}
-        //     errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
-        //     errorSugerencia.textContent = cuerpo.sugerencia || '';
-        //     errorBox.style.display      = 'block';
-        //     throw new Error(`Error ${respuesta.status}`);
-        // }
-        //
-        // const datos = await respuesta.json();
-        // poblarKpis(datos);
-        // poblarGraficoTopProvincias(datos.top_provincias   || []);
-        // poblarGraficoConcentracion(datos.concentracion    || {});
-        // poblarRankingCcaa(datos.por_ccaa                  || []);
+        const respuesta = await fetch(`${API_URL}/estadisticas/eell`);
 
-        // Mientras el endpoint no exista, los placeholders permanecen visibles.
+        if (!respuesta.ok) {
+            let cuerpo = {};
+            try { cuerpo = await respuesta.json(); } catch (_) {}
+            errorMensaje.textContent    = cuerpo.mensaje    || `Error ${respuesta.status}`;
+            errorSugerencia.textContent = cuerpo.sugerencia || '';
+            errorBox.style.display      = 'block';
+            throw new Error(`Error ${respuesta.status}`);
+        }
+
+        const datos = await respuesta.json();
+        poblarKpis(datos);
+        poblarGraficoTopProvincias(datos.top_provincias   || []);
+        poblarGraficoConcentracion(datos.concentracion    || {});
+        poblarRankingCcaa(datos.por_ccaa                  || []);
 
     } catch (error) {
         console.error('Error al cargar estadísticas EELL:', error);
