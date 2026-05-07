@@ -107,9 +107,9 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas.js`, `estadisticas-avanzadas.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
-- `index.html`, `estadisticas.html`, `estadisticas-avanzadas.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
 
 ### Backend
 
@@ -539,11 +539,11 @@ backend/app/
   routers/
     convocatorias.py → GET /convocatorias/
     solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, cif, buscar, ccaa, provincia, línea; paginación con total)
-    estadisticas.py  → GET /estadisticas/ (totales agregados por año para gráficos)
+    estadisticas.py  → GET /estadisticas/ · GET /estadisticas/epas · GET /estadisticas/eell
     agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
     avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
-    auth.py          → POST /auth/registro  y  POST /auth/login
-    privado.py       → GET /privado/perfil  y  GET /privado/resumen-exclusivo (requieren token)
+    auth.py          → POST /auth/registro · POST /auth/login · POST /auth/refresh · POST /auth/logout
+    privado.py       → GET /privado/perfil · GET /privado/resumen-exclusivo · PUT /privado/cambiar-contrasena
 ```
 
 La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
@@ -554,11 +554,11 @@ El sistema usa JWT (JSON Web Tokens) con tres niveles de acceso:
 
 | Nivel | Rutas accesibles |
 |-------|-----------------|
-| Sin token | `/convocatorias/`, `/solicitudes/`, `/estadisticas/` |
+| Sin token | `/convocatorias/`, `/solicitudes/`, `/estadisticas/*`, `/avisos/` |
 | `registrado` | Todo lo anterior + `/privado/*` |
 | `admin` | Todo lo anterior + gestión de usuarios |
 
-Flujo: el cliente hace POST a `/auth/login` → recibe un token → lo envía en la cabecera `Authorization: Bearer <token>` en cada petición protegida.
+Flujo: el cliente hace POST a `/auth/login` → recibe un `access_token` (60 min) y un `refresh_token` (30 días) → envía el access token en la cabecera `Authorization: Bearer <token>`. Cuando el access token caduca, puede renovarlo con POST `/auth/refresh` sin volver a hacer login. POST `/auth/logout` revoca el refresh token en el servidor. Cambiar la contraseña también revoca todos los refresh tokens activos del usuario.
 
 Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene problemas de compatibilidad con versiones recientes de bcrypt). El registro valida que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número.
 
@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -604,7 +604,9 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
-  · GET /estadisticas/  → totales por año y tipo para gráficos (14.835.479,86 € globales)
+  · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
+  · GET /estadisticas/epas  → análisis EPA: importe medio, mediana, distribución de importes, nuevos vs recurrentes, top beneficiarios por año
+  · GET /estadisticas/eell  → análisis EELL: % ayuntamientos con ayuda, ranking CCAA, top provincias, concentración del importe
 ✔ Nginx como servidor web y proxy inverso (`docker/nginx/default.conf`)
   · escucha en el puerto 80
   · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
@@ -619,11 +621,11 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (111 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (144 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
-  · test_estadisticas.py (4): endpoint /estadisticas/ y cálculos de totales
+  · test_estadisticas.py (24): /estadisticas/, /estadisticas/epas y /estadisticas/eell — estructura, cálculos, nuevos/recurrentes, concentración
   · test_auth.py (10): registro, login, acceso con/sin token
   · test_agrupaciones.py (5): endpoint /agrupaciones/ con fixture completa de relaciones
   · test_logging.py (5): middleware de logging y configuración del logger
@@ -631,6 +633,8 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
   · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
   · test_rate_limiting.py (5): configuración de rate limiting en Nginx para /auth/login
+  · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
+  · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
@@ -656,9 +660,9 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
   · `index.html` — portada con métricas dinámicas, spinners y banner de avisos activos
   · `solicitudes.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
-  · `estadisticas.html` — dashboard con 4 KPIs
-  · `estadisticas-avanzadas.html` — página nueva: KPIs avanzados y gráficos (pendientes de endpoints de backend)
-  · `recursos.html` — página nueva: directorio de recursos (pendiente de endpoint de backend)
+  · `estadisticas-epas.html` — análisis de EPAs: importe medio, mediana, distribución, nuevos vs recurrentes, top beneficiarios
+  · `estadisticas-eell.html` — análisis de EELL: % ayuntamientos con ayuda, top provincias, concentración, ranking CCAA
+  · `recursos.html` — directorio de organizaciones de protección animal y campañas actuales (contenido estático)
   · `entidad.html` — ficha de entidad con historial, badges de estado y bloque de agrupación EELL
   · `login.html` / `registro.html` — autenticación con validación client-side
   · `privado.html` — zona exclusiva con control de acceso JWT
@@ -685,6 +689,16 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
 ✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
   automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
+✔ cambiar contraseña desde la zona privada
+  · PUT /privado/cambiar-contrasena — valida contraseña actual con bcrypt, aplica las mismas reglas de fortaleza del registro
+  · formulario en privado.html con feedback de error (actual incorrecta, nueva débil) y confirmación de éxito
+✔ refresh token y "Recuérdame"
+  · tabla refresh_tokens en BD: token opaco (64 hex), expiración 30 días, flag revocado
+  · login genera siempre un refresh token; rotación en cada uso (el token anterior queda revocado)
+  · POST /auth/refresh — devuelve nuevo access token + nuevo refresh token
+  · POST /auth/logout — revoca el refresh token en el servidor
+  · checkbox "Recuérdame" en login.html: si marcado, guarda el refresh token en localStorage
+  · privado.js renueva automáticamente el access token al cargar si hay refresh token guardado
 ✔ cabeceras Cache-Control en endpoints de datos estáticos
   · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
   · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
@@ -698,26 +712,18 @@ Pendiente:
 
 ### Pendientes de frontend
 
-- **Tabla de convocatorias en el frontend:** el endpoint `GET /convocatorias/` existe y devuelve las 8 convocatorias con sus datos, pero ninguna página del frontend lo usa. Añadir una tabla o listado (posiblemente en `index.html` o encima de los filtros del buscador) que muestre las convocatorias disponibles: título, tipo, año y periodo. Sirve como referencia visual para el usuario y como evidencia de uso del endpoint cacheado.
-- **Navbar inconsistente:** hay tres versiones distintas del menú según la página — `estadisticas.html` no tiene "Estadísticas avanzadas" ni "Recursos"; `recursos.html` no tiene "Estadísticas avanzadas"; `estadisticas-avanzadas.html` es la única con el menú completo. Unificar en todas las páginas (rama frontend pendiente)
-- **`recursos.html` sin contenido:** la estructura HTML y el placeholder están bien, pero el contenido del directorio (BASMA, FAADA, GEMFE, Plataforma GARRA, MeowMetrics, etc.) no está implementado; puede ir hardcodeado sin necesidad de endpoint de backend
-- **Reestructurar páginas de estadísticas:** la estructura definitiva es — `index.html` (ya tiene gráficos generales con el endpoint existente, sin cambios de backend) + dos páginas nuevas específicas por tipo: `estadisticas-epas.html` (importe medio, top beneficiarios, mediana, nuevos vs recurrentes, distribución de importes) y `estadisticas-eell.html` (mapa/barras por CCAA, % ayuntamientos con ayuda, top provincias, concentración). `estadisticas.html` y `estadisticas-avanzadas.html` actuales se eliminan por redundantes. Pendiente también decidir cómo queda la navbar (dos enlaces separados o un enlace "Estadísticas" con submenu/dropdown).
-- Implementar `GET /estadisticas/epas/` y `GET /estadisticas/eell/` en backend para alimentar las páginas específicas por tipo
-- **Bug ficha de entidad:** "Entidad representante: [object Object]" — el JS renderiza el objeto completo en lugar de extraer `.nombre`; el backend devuelve los datos correctos, el fix es en `entidad.js` (rama frontend pendiente)
+- **Tabla de convocatorias en el frontend:** el endpoint `GET /convocatorias/` existe y devuelve las 8 convocatorias con sus datos, pero ninguna página del frontend lo usa. Añadir una tabla o listado (posiblemente en `index.html` o encima de los filtros del buscador) que muestre las convocatorias disponibles: título, tipo, año y periodo.
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: el ranking CCAA ya funciona, pero el mapa choropleth está pendiente de decisión técnica (SVG inline, Leaflet o D3-geo).
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
 - Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
-- Valorar la visibilidad y utilidad del botón de borrar filtros del buscador
-- KPIs de `estadisticas.html`: centrarlos y unificar el estilo con los de `index.html`
 - Contenido de la página privada (`privado.html`): tabla resumen con datos por año y estado, separada por tipo
 - Política de privacidad y aviso legal
 - Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
 
 ### Pendientes de backend y API
 
-- Implementar `GET /estadisticas/epas/` y `GET /estadisticas/eell/`: endpoints específicos por tipo de entidad para alimentar las páginas `estadisticas-epas.html` y `estadisticas-eell.html`; datos necesarios detallados en el documento de diseño de gráficos
 - Exponer campo `tramo` de EELL 2025: añadir al schema `SolicitudOut` y al endpoint `/solicitudes/`; mostrarlo en la ficha de entidad y como filtro en el buscador (valores 1/2/3, solo aplica a EELL 2025 concedidas; el dato ya existe en `concesiones.tramo`)
 - Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
-- Refresh token (JWT de larga duración): complementar el token de acceso (60 min) con un token de refresco persistente para no forzar re-login frecuente
 
 ### Pendientes de infraestructura y despliegue
 
@@ -728,8 +734,6 @@ Pendiente:
 
 ### Pendientes de usuarios y autenticación
 
-- "Recuérdame" en el login: checkbox de sesión persistente que extienda la duración del token o use el refresh token
-- Cambiar contraseña desde el perfil: formulario en `privado.html` para actualizar la contraseña con la actual como confirmación
 - Recuperación de contraseña ("¿Olvidaste tu contraseña?"): flujo de reset por email con token de un solo uso y enlace de caducidad
 - Servidor de correo: enviar email de confirmación al registrarse (SMTP o servicio externo); comparte infraestructura con la recuperación de contraseña
 - Login con terceros (OAuth): integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
@@ -883,11 +887,11 @@ Solución implementada: se sustituyó supercronic por un **scheduler Python prop
 
 ## Tests
 
-El proyecto tiene **142 pruebas en total**: 111 automáticas con pytest y 31 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **175 pruebas en total**: 144 automáticas con pytest y 31 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 111 | pytest (sin Docker) |
+| Automáticos | 144 | pytest (sin Docker) |
 | Manuales | 31 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -905,12 +909,14 @@ pytest -v
 pytest tests/test_smoke.py              # arranque de la API y /health
 pytest tests/test_convocatorias.py
 pytest tests/test_solicitudes.py        # filtros, paginación y exportación CSV
-pytest tests/test_estadisticas.py
+pytest tests/test_estadisticas.py       # /estadisticas/, /estadisticas/epas y /estadisticas/eell
 pytest tests/test_auth.py               # registro, login y zona privada
 pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
 pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
 pytest tests/test_cache_headers.py      # cabeceras Cache-Control en /convocatorias/ y /estadisticas/
 pytest tests/test_rate_limiting.py      # configuración de rate limiting en Nginx
+pytest tests/test_privado.py            # cambiar contraseña desde la zona privada
+pytest tests/test_refresh_token.py      # refresh token, rotación y logout
 pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
@@ -919,7 +925,8 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-111 passed
+130 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+144 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).

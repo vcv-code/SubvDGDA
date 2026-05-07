@@ -3,10 +3,10 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from ..auth import hashear_password, verificar_password, crear_token
+from ..auth import hashear_password, verificar_password, crear_token, crear_refresh_token, refresh_expira_en
 from ..db import get_db
-from ..models import Usuario
-from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut
+from ..models import Usuario, RefreshToken
+from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn
 
 router = APIRouter(prefix="/auth", tags=["autenticación"])
 
@@ -44,5 +44,37 @@ def login(datos: LoginIn, db: Session = Depends(get_db)):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cuenta desactivada",
         )
-    token = crear_token(usuario.email, usuario.rol)
-    return {"access_token": token, "token_type": "bearer"}
+    access_token  = crear_token(usuario.email, usuario.rol)
+    refresh_token = crear_refresh_token()
+    db.add(RefreshToken(
+        id_usuario=usuario.id_usuario,
+        token=refresh_token,
+        expira_en=refresh_expira_en(),
+    ))
+    db.commit()
+    return {"access_token": access_token, "token_type": "bearer", "refresh_token": refresh_token}
+
+
+@router.post("/refresh", response_model=TokenOut)
+def refresh(datos: RefreshIn, db: Session = Depends(get_db)):
+    rt = db.query(RefreshToken).filter(RefreshToken.token == datos.refresh_token).first()
+    if not rt or rt.revocado or rt.expira_en.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token inválido o expirado")
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == rt.id_usuario).first()
+    if not usuario or not usuario.activo:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuario inactivo")
+    nuevo_access = crear_token(usuario.email, usuario.rol)
+    nuevo_refresh = crear_refresh_token()
+    rt.revocado = True
+    db.add(RefreshToken(id_usuario=usuario.id_usuario, token=nuevo_refresh, expira_en=refresh_expira_en()))
+    db.commit()
+    return {"access_token": nuevo_access, "token_type": "bearer", "refresh_token": nuevo_refresh}
+
+
+@router.post("/logout", status_code=status.HTTP_200_OK)
+def logout(datos: RefreshIn, db: Session = Depends(get_db)):
+    rt = db.query(RefreshToken).filter(RefreshToken.token == datos.refresh_token).first()
+    if rt and not rt.revocado:
+        rt.revocado = True
+        db.commit()
+    return {"mensaje": "Sesión cerrada"}

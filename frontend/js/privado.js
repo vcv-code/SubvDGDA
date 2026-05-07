@@ -67,8 +67,18 @@ function obtenerToken() {
  * tokens de corta duración con refresh tokens. Para el nivel de este
  * proyecto, borrar el token del cliente es suficiente.
  */
-function cerrarSesion() {
+async function cerrarSesion() {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (refreshToken) {
+        // Revocamos el token en el servidor (fire-and-forget, no bloqueamos)
+        fetch(`${API_URL}/auth/logout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh_token: refreshToken }),
+        }).catch(() => {});
+    }
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
     window.location.href = 'login.html';
 }
 
@@ -252,26 +262,44 @@ function mostrarErrorPrivado() {
  */
 async function cargarZonaPrivada() {
 
-    // ── Paso 1: Comprobar token ───────────────────────────────────────────
-    const token = obtenerToken();
-    if (!token) return;   // obtenerToken() ya redirigió si no había token
+    // ── Paso 1: Comprobar token (con renovación automática si hay refresh_token)
+    let token = localStorage.getItem('token');
+    if (!token) {
+        const refreshToken = localStorage.getItem('refresh_token');
+        if (refreshToken) {
+            try {
+                const r = await fetch(`${API_URL}/auth/refresh`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refresh_token: refreshToken }),
+                });
+                if (r.ok) {
+                    const datos = await r.json();
+                    localStorage.setItem('token', datos.access_token);
+                    localStorage.setItem('refresh_token', datos.refresh_token);
+                    token = datos.access_token;
+                } else {
+                    localStorage.removeItem('refresh_token');
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch {
+                window.location.href = 'login.html';
+                return;
+            }
+        } else {
+            window.location.href = 'login.html';
+            return;
+        }
+    }
 
     try {
         // ── Paso 2: Peticiones en paralelo ───────────────────────────────
-        /**
-         * Promise.all() lanza las dos peticiones simultáneamente.
-         * Espera a que AMBAS terminen antes de continuar.
-         * Es más eficiente que esperar la primera y luego lanzar la segunda.
-         *
-         * Si cualquiera de las dos falla (401, error de red...) el catch
-         * lo captura.
-         */
         const [perfil, resumen] = await Promise.all([
             fetchAutenticado('/privado/perfil', token),
             fetchAutenticado('/privado/resumen-exclusivo', token),
         ]);
 
-        // fetchAutenticado() devuelve null si hubo 401 (y ya redirigió)
         if (!perfil || !resumen) return;
 
         // ── Paso 3: Renderizar los datos ─────────────────────────────────
@@ -282,6 +310,64 @@ async function cargarZonaPrivada() {
     } catch (error) {
         console.error('Error al cargar zona privada:', error);
         mostrarErrorPrivado();
+    }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// CAMBIAR CONTRASEÑA
+// ─────────────────────────────────────────────────────────────
+
+async function manejarCambiarPassword(evento) {
+    evento.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = 'login.html'; return; }
+
+    const actual = document.getElementById('password-actual').value;
+    const nueva  = document.getElementById('password-nueva').value;
+    const alerta = document.getElementById('cambiar-password-error');
+    const ok     = document.getElementById('cambiar-password-ok');
+
+    alerta.classList.remove('visible');
+    ok.style.display = 'none';
+
+    try {
+        const respuesta = await fetch(`${API_URL}/privado/cambiar-contrasena`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type':  'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ contrasena_actual: actual, contrasena_nueva: nueva }),
+        });
+
+        if (respuesta.status === 401) {
+            alerta.textContent = 'Contraseña actual incorrecta.';
+            alerta.classList.add('visible');
+            return;
+        }
+        if (respuesta.status === 422) {
+            const datos = await respuesta.json();
+            const raw = datos.detail?.[0]?.msg ?? 'La nueva contraseña no cumple los requisitos.';
+            // Pydantic v2 prefija los errores custom con "Value error, "
+            alerta.textContent = raw.replace(/^Value error,\s*/i, '');
+            alerta.classList.add('visible');
+            return;
+        }
+        if (!respuesta.ok) {
+            alerta.textContent = 'Error inesperado. Inténtalo de nuevo.';
+            alerta.classList.add('visible');
+            return;
+        }
+
+        document.getElementById('password-actual').value = '';
+        document.getElementById('password-nueva').value  = '';
+        ok.style.display = 'block';
+
+    } catch {
+        alerta.textContent = 'No se pudo conectar con el servidor.';
+        alerta.classList.add('visible');
     }
 }
 
@@ -311,4 +397,7 @@ function iniciarBotonesCerrarSesion() {
 document.addEventListener('DOMContentLoaded', () => {
     iniciarBotonesCerrarSesion();
     cargarZonaPrivada();
+
+    const formPassword = document.getElementById('form-cambiar-password');
+    if (formPassword) formPassword.addEventListener('submit', manejarCambiarPassword);
 });

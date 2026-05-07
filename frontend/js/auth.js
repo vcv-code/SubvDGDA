@@ -243,6 +243,15 @@ function iniciarLogin() {
             const datos = await respuesta.json();
             localStorage.setItem('token', datos.access_token);
 
+            // Si "Recuérdame" está marcado, guardamos el refresh token
+            // para que la sesión se pueda renovar automáticamente al volver
+            const recordarme = document.getElementById('recordarme');
+            if (recordarme?.checked) {
+                localStorage.setItem('refresh_token', datos.refresh_token);
+            } else {
+                localStorage.removeItem('refresh_token');
+            }
+
             // ── Paso 6: Redirigir a la zona privada ───────────────────────
             window.location.href = 'privado.html';
 
