@@ -5,10 +5,10 @@ El proyecto tiene dos niveles de pruebas:
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
 | Tests automáticos | 148 | pytest (sin Docker) |
-| Pruebas manuales | 41 | Navegador + DevTools con Docker levantado |
-| **Total** | **189** | |
+| Pruebas manuales | 45 | Navegador + DevTools con Docker levantado |
+| **Total** | **193** | |
 
-Las pruebas manuales se distribuyen en cinco bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, y 10 de las funcionalidades nuevas de esta rama (agrupaciones, tramos, URL persistence).
+Las pruebas manuales se distribuyen en cinco bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, y 14 de las funcionalidades nuevas de esta rama (agrupaciones, tramos, URL persistence y bloque convocatorias en Home).
 
 ---
 
@@ -430,3 +430,7 @@ Realizadas con Docker levantado en `https://localhost`.
 | 21 | Ficha entidad | Acceder directamente a `entidad.html?cif=X` sin historial previo | El botón "Volver al buscador" redirige a `solicitudes.html` | ✔ |
 | 22 | Buscador | Descargar CSV con filtros de provincia y línea activos | El archivo CSV contiene solo los registros filtrados (bug previo: estos filtros se ignoraban en la exportación) | ✔ |
 | 23 | Buscador | Verificar campo `tramo` en la respuesta de la API | `curl -sk "https://localhost/solicitudes/?tipo=eell&anio=2025&estado=concedida&limite=1" \| python3 -c "import sys,json; d=json.load(sys.stdin); print(d['resultados'][0]['tramo'])"` → imprime `1`, `2` o `3` | ✔ |
+| 24 | Home | Cargar `index.html` con Docker levantado | Aparece el bloque "Convocatorias" debajo de los KPIs con dos columnas: EELL y EPA, cada una con sus años, fechas y botones "Ver →" | ✔ |
+| 25 | Home | Clic en "Ver →" de EPA 2025 | Abre el buscador con filtros `tipo=epa&anio=2025` pre-aplicados y resultados cargados | ✔ |
+| 26 | Home | Fila 2026 EELL | Muestra fecha "8 abr 2026" y texto "Pendiente de resolución" en cursiva (sin botón Ver) | ✔ |
+| 27 | Home | Verificar fechas de convocatoria en la API | `curl -sk "https://localhost/convocatorias/" \| python3 -c "import sys,json; [print(c['tipo_convoc'], c['anio_convocatoria'], c['fecha_convocatoria']) for c in json.load(sys.stdin)]"` → muestra fechas reales para todas las convocatorias excepto 2026 EELL que ya las tenía | ✔ |
