@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa · frontend 7D mergeado · pendiente funcionalidades avanzadas y mejoras frontend**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa · frontend 7D mergeado · tramo y agrupaciones expuestos · UX buscador mejorada**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -621,13 +621,26 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
   · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
   · roles: registrado (por defecto) y admin
-✔ tests automáticos con pytest (144 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ campo `tramo` EELL 2025 expuesto en API, frontend y CSV
+  · `SolicitudOut` incluye `tramo: Optional[int]`
+  · badge `T1`/`T2`/`T3` en resultados del buscador y en ficha de entidad
+  · leyenda de tramos (población del municipio) encima de la tabla, visible solo cuando aplica
+  · CSV de exportación incluye columna `tramo`
+✔ bugs corregidos en ficha de agrupación EELL
+  · representante mostraba `[object Object]` → corregido a `datos.representante.nombre`
+  · importes de miembros mostraban `—` → campo `importe_asignado` (nombre correcto del schema)
+✔ persistencia de filtros del buscador en la URL
+  · los filtros activos se escriben como parámetros en la URL al buscar
+  · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
+  · limpiar filtros borra también los parámetros de la URL
+✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
+✔ tests automáticos con pytest (148 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
-  · test_solicitudes.py (14): filtros, paginación, búsqueda parcial, estructura y exportación CSV
+  · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
   · test_estadisticas.py (24): /estadisticas/, /estadisticas/epas y /estadisticas/eell — estructura, cálculos, nuevos/recurrentes, concentración
   · test_auth.py (10): registro, login, acceso con/sin token
-  · test_agrupaciones.py (5): endpoint /agrupaciones/ con fixture completa de relaciones
+  · test_agrupaciones.py (7): endpoint /agrupaciones/ — estructura, importes correctos, representante con nombre
   · test_logging.py (5): middleware de logging y configuración del logger
   · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
@@ -719,10 +732,11 @@ Pendiente:
 - Contenido de la página privada (`privado.html`): tabla resumen con datos por año y estado, separada por tipo
 - Política de privacidad y aviso legal
 - Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
+- **Refactor CSS inline** *(post-entrega, solo si hay tiempo)*: el proyecto acumula estilos inline en el HTML que deberían estar como clases en `styles.css`. No es urgente ni afecta a la funcionalidad, pero mejora el mantenimiento. Hacerlo página por página comprobando visualmente que nada se rompe. Regla para código nuevo: `display:none` en HTML está bien; todo lo demás va a `styles.css`.
 
 ### Pendientes de backend y API
 
-- Exponer campo `tramo` de EELL 2025: añadir al schema `SolicitudOut` y al endpoint `/solicitudes/`; mostrarlo en la ficha de entidad y como filtro en el buscador (valores 1/2/3, solo aplica a EELL 2025 concedidas; el dato ya existe en `concesiones.tramo`)
+- ~~Exponer campo `tramo` de EELL 2025~~ ✔ completado: badge T1/T2/T3 en buscador y ficha, leyenda de tramos, campo en CSV
 - Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
 
 ### Pendientes de infraestructura y despliegue
@@ -736,7 +750,7 @@ Pendiente:
 
 - Recuperación de contraseña ("¿Olvidaste tu contraseña?"): flujo de reset por email con token de un solo uso y enlace de caducidad
 - Servidor de correo: enviar email de confirmación al registrarse (SMTP o servicio externo); comparte infraestructura con la recuperación de contraseña
-- Login con terceros (OAuth): integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
+- Login con terceros (OAuth) *(mejora futura, fuera del alcance de la entrega)*: integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
 
 ---
 
@@ -885,14 +899,32 @@ Solución implementada: se sustituyó supercronic por un **scheduler Python prop
 
 ---
 
+### Actualizar datos o código sin perder nada
+
+El sistema tiene tres capas independientes. Cada una se actualiza de forma diferente:
+
+| Capa | Cuándo actualizar | Cómo | Afecta a los datos |
+|------|------------------|------|--------------------|
+| **Frontend** (HTML/CSS/JS) | Cambio en `frontend/` | Ninguna acción — Nginx lee el volumen en tiempo real | No |
+| **Backend** (Python/FastAPI) | Cambio en `backend/` | `docker compose up -d --build backend` | No — la BD está en volumen separado |
+| **Base de datos** (nuevo año / resolución) | Nuevo dataset parseado | `python -m scripts.data_processing.cargar_dataset` con el nuevo JSON | Solo añade filas, nunca borra |
+
+**Caché del navegador** (JS/CSS): si el navegador muestra una versión antigua del frontend después de un cambio, Ctrl+Shift+R fuerza la recarga ignorando la caché local. En DevTools → Network → "Disable cache" para depurar sin caché.
+
+**Caché HTTP de la API** (Cache-Control): los endpoints `/convocatorias/` (1 día) y `/estadisticas/` (1 hora) devuelven cabeceras `Cache-Control`. FastAPI no cachea internamente — los datos siempre vienen de la BD. Si se actualiza la BD y se quiere que el navegador vea los nuevos datos antes de que expire la caché, basta con hacer Ctrl+Shift+R.
+
+**Volumen de la BD**: `docker compose down` para los contenedores pero **conserva** el volumen con todos los datos. Solo `docker compose down -v` borra el volumen — usar únicamente para reset total desde cero.
+
+---
+
 ## Tests
 
-El proyecto tiene **175 pruebas en total**: 144 automáticas con pytest y 31 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **189 pruebas en total**: 148 automáticas con pytest y 41 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 144 | pytest (sin Docker) |
-| Manuales | 31 | Navegador + DevTools |
+| Automáticos | 148 | pytest (sin Docker) |
+| Manuales | 41 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
@@ -926,7 +958,7 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 
 ```text
 130 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-144 passed   # suite completa con Docker levantado
+148 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).

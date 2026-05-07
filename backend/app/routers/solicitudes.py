@@ -87,6 +87,7 @@ def listar_solicitudes(
             provincia      = s.provincia,
             ccaa           = s.ccaa,
             es_agrupacion  = bool(s.concesion and s.concesion.agrupacion),
+            tramo          = s.concesion.tramo if s.concesion else None,
         ))
 
     return SolicitudesPageOut(total=total, resultados=resultado)
@@ -142,7 +143,7 @@ def exportar_csv(
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow(["anio", "tipo", "num_expediente", "entidad", "cif",
-                     "estado", "importe", "linea", "provincia", "ccaa",
+                     "estado", "importe", "linea", "tramo", "provincia", "ccaa",
                      "puntuacion", "es_agrupacion"])
     for s in solicitudes:
         writer.writerow([
@@ -154,6 +155,7 @@ def exportar_csv(
             s.estado,
             float(s.concesion.importe) if s.concesion else "",
             s.concesion.linea if s.concesion else "",
+            s.concesion.tramo if s.concesion else "",
             s.provincia or "",
             s.ccaa or "",
             float(s.puntuacion) if s.puntuacion is not None else "",
