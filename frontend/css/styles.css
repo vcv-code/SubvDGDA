@@ -634,7 +634,7 @@ table tbody tr:hover {
     justify-content: space-between;
     align-items: center;
     gap: var(--espacio-sm);
-    margin: var(--espacio-sm) 0;
+    margin: 2rem 0 var(--espacio-sm);
     flex-wrap: wrap;
 }
 
@@ -1881,6 +1881,15 @@ canvas {
 
 .badge-agrupacion {
     background-color: var(--color-azul);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-left: 6px;
+}
+
+.badge-tramo {
+    background-color: #b45309;
     color: white;
     padding: 2px 6px;
     border-radius: 4px;
