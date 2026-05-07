@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<!--
+    estadisticas-eell.html — Estadísticas de Entidades de Administración Local (EELL)
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    ¿Qué hace esta página?
+    ──────────────────────
+    Análisis específico de las convocatorias EELL (ayuntamientos):
+    % ayuntamientos con ayuda, importe medio, top provincias por
+    importe, ratio de exclusión, concentración top vs resto y
+    distribución geográfica por CCAA.
+
+    Endpoint objetivo (pendiente de backend):
+    ─────────────────────────────────────────
+    GET /estadisticas/eell
+    Respuesta esperada: {
+        pct_ayuntamientos_con_ayuda: number,
+        importe_medio:               number,
+        ratio_exclusion:             number,
+        por_ccaa: [
+            { ccaa: string, importe_total: number, num_concesiones: number }
+        ],
+        top_provincias: [
+            { provincia: string, importe_total: number }
+        ],
+        concentracion: {
+            top_10_pct:   number,
+            resto_pct:    number
+        }
+    }
+
+    Archivo JS: js/estadisticas-eell.js
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas EELL — Subvenciones Bienestar Animal</title>
+    <meta name="description"
+          content="Análisis de subvenciones a entidades locales (EELL): distribución geográfica, top provincias y concentración de importes 2023–2025.">
+
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <meta property="og:title" content="Estadísticas EELL — Subvenciones Bienestar Animal">
+    <meta property="og:description" content="Análisis de subvenciones concedidas a ayuntamientos (EELL) 2023–2025. Distribución geográfica y comparativas.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR — "activo" en EELL -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html" class="activo" aria-current="page">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main class="fondo-stats">
+        <section class="seccion" aria-labelledby="eell-titulo">
+            <div class="contenedor">
+
+                <!-- Spinner de carga -->
+                <div id="spinner" class="spinner"></div>
+
+                <!-- Caja de error estructurado del backend -->
+                <div id="error-box" class="error-box" style="display:none;">
+                    <h3>Error</h3>
+                    <p id="error-mensaje"></p>
+                    <p id="error-sugerencia"></p>
+                </div>
+
+                <!-- Cabecera -->
+                <div style="margin-bottom: var(--espacio-lg);">
+                    <h1 style="font-size:2rem; font-weight:700; color:var(--color-negro);"
+                        id="eell-titulo">
+                        Estadísticas EELL
+                    </h1>
+                    <p style="color:var(--color-gris-texto); margin-top:4px;">
+                        Análisis de subvenciones concedidas a entidades locales (2023–2025).
+                        Datos de BDNS y DGDA.
+                    </p>
+                    <p style="margin-top: var(--espacio-xs);">
+                        <a href="estadisticas-epas.html"
+                           style="font-size:0.9rem; color:var(--color-azul);">
+                            → Ver estadísticas EPAs
+                        </a>
+                    </p>
+                </div>
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 1: KPIs
+                     Pendiente de endpoint GET /estadisticas/eell
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-4" style="margin-bottom: var(--espacio-lg);">
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">% Ayuntamientos con ayuda</span>
+                        <span class="card-kpi__numero" id="kpi-pct-ayuntamientos">—</span>
+                        <span class="card-kpi__tag">Sobre el total censal</span>
+                    </div>
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">Importe medio EELL</span>
+                        <span class="card-kpi__numero" id="kpi-importe-medio-eell">—</span>
+                        <span class="card-kpi__tag">Por concesión</span>
+                    </div>
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">Ratio de exclusión</span>
+                        <span class="card-kpi__numero" id="kpi-ratio-exclusion">—</span>
+                        <span class="card-kpi__tag">Excluidas / total presentadas</span>
+                    </div>
+
+                    <div class="card-kpi">
+                        <span class="card-kpi__label">CCAA con más concesiones</span>
+                        <span class="card-kpi__numero" id="kpi-ccaa-top">—</span>
+                        <span class="card-kpi__tag">2023–2025</span>
+                    </div>
+
+                </div><!-- /grid-4 KPIs -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 2: TOP PROVINCIAS + CONCENTRACIÓN
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
+
+                    <!-- Top provincias por importe -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Top provincias</p>
+                                <p class="card-grafico__subtitulo">
+                                    Importe total concedido por provincia (EELL)
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+                        <!--
+                            Barras horizontales: provincia en eje Y, importe en eje X.
+                            Datos esperados: top_provincias[{ provincia, importe_total }]
+                        -->
+                        <div class="chart-container" id="grafico-top-provincias-container">
+                            <p class="estado-carga" id="provincias-pendiente">
+                                Pendiente de endpoint <code>/estadisticas/eell</code>
+                            </p>
+                            <canvas id="grafico-top-provincias" style="display:none;"
+                                aria-label="Gráfico de top provincias por importe EELL"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Concentración: top 10% vs resto -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Concentración del importe</p>
+                                <p class="card-grafico__subtitulo">
+                                    % del importe total acaparado por el top 10% de entidades
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+                        <!--
+                            Donut: proporción top 10% vs resto.
+                            Datos esperados: concentracion.top_10_pct y concentracion.resto_pct
+                        -->
+                        <div class="chart-container chart-container--donut"
+                             id="grafico-concentracion-container">
+                            <p class="estado-carga" id="concentracion-pendiente">
+                                Pendiente de endpoint <code>/estadisticas/eell</code>
+                            </p>
+                            <canvas id="grafico-concentracion" style="display:none;"
+                                aria-label="Gráfico de concentración del importe EELL"></canvas>
+                        </div>
+                    </div>
+
+                </div><!-- /grid-2 fila 2 -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 3: RANKING CCAA + NOTA SOBRE MAPA
+                     El mapa de CCAA está pendiente de decisión técnica.
+                     Se muestra como ranking de tabla hasta que el endpoint
+                     esté disponible y se decida la librería de mapas.
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2">
+
+                    <!-- Ranking CCAA por importe -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Ranking CCAA por importe</p>
+                                <p class="card-grafico__subtitulo">
+                                    Importe concedido acumulado por comunidad autónoma
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+                        <!--
+                            Lista HTML generada por JS.
+                            Datos esperados: por_ccaa[{ ccaa, importe_total, num_concesiones }]
+                        -->
+                        <ul class="ranking-lista" id="ranking-ccaa"
+                            aria-label="Ranking de CCAA por importe EELL concedido">
+                            <!-- Se rellena desde estadisticas-eell.js -->
+                        </ul>
+                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">
+                            Ranking pendiente de endpoint
+                            <code>/estadisticas/eell</code>.
+                        </div>
+                    </div>
+
+                    <!-- Distribución geográfica (mapa) — pendiente de decisión técnica -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Distribución por CCAA</p>
+                                <p class="card-grafico__subtitulo">
+                                    Mapa de calor por comunidad autónoma
+                                </p>
+                            </div>
+                            <span class="card-grafico__badge">pendiente</span>
+                        </div>
+                        <!--
+                            El PDF define un mapa de España coloreado por importe
+                            con interacción hover y click.
+                            Implementación pendiente de:
+                              1. Disponibilidad del endpoint /estadisticas/eell
+                              2. Decisión técnica: SVG inline o librería de mapas
+                            Mientras tanto se muestra el aviso informativo.
+                        -->
+                        <div class="chart-container" id="mapa-ccaa-container"
+                             style="display:flex; align-items:center; justify-content:center;">
+                            <div style="text-align:center; color:var(--color-gris-texto);">
+                                <p style="font-size:2.5rem; margin-bottom:8px;">🗺️</p>
+                                <p style="font-size:0.9rem;">
+                                    Mapa de CCAA pendiente de implementación.<br>
+                                    Requiere endpoint <code>/estadisticas/eell</code>
+                                    y decisión técnica sobre la librería de mapas.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /grid-2 fila 3 -->
+
+            </div><!-- /contenedor -->
+        </section>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+               target="_blank" rel="noopener noreferrer">
+                Dirección General de Derechos de los Animales (DGDA)
+            </a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/estadisticas-eell.js"></script>
+
+</body>
+</html>

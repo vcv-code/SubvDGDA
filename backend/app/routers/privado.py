@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
+from ..auth import hashear_password, verificar_password
+from ..db import get_db
 from ..dependencies import require_rol
-from ..models import Usuario
+from ..models import Usuario, RefreshToken
+from ..schemas import CambiarPasswordIn
 
 router = APIRouter(prefix="/privado", tags=["zona privada"])
 
@@ -14,6 +18,27 @@ def perfil(usuario: Usuario = Depends(require_rol("registrado"))):
         "rol": usuario.rol,
         "miembro_desde": usuario.created_at,
     }
+
+
+@router.put("/cambiar-contrasena", status_code=status.HTTP_200_OK)
+def cambiar_contrasena(
+    datos: CambiarPasswordIn,
+    usuario: Usuario = Depends(require_rol("registrado")),
+    db: Session = Depends(get_db),
+):
+    """Cambia la contraseña del usuario autenticado. Requiere la contraseña actual."""
+    if not verificar_password(datos.contrasena_actual, usuario.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Contraseña actual incorrecta",
+        )
+    usuario.password = hashear_password(datos.contrasena_nueva)
+    db.query(RefreshToken).filter(
+        RefreshToken.id_usuario == usuario.id_usuario,
+        RefreshToken.revocado == False,
+    ).update({"revocado": True})
+    db.commit()
+    return {"mensaje": "Contraseña actualizada correctamente"}
 
 
 @router.get("/resumen-exclusivo")

@@ -4,9 +4,9 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 111 | pytest (sin Docker) |
+| Tests automáticos | 123 | pytest (sin Docker) |
 | Pruebas manuales | 31 | Navegador + DevTools con Docker levantado |
-| **Total** | **142** | |
+| **Total** | **154** | |
 
 Las pruebas manuales se distribuyen en cuatro bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs` y 2 de caché y rate limiting.
 
@@ -14,7 +14,7 @@ Las pruebas manuales se distribuyen en cuatro bloques: 6 de HTTPS/infraestructur
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **111 tests automáticos** distribuidos en 13 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
+El proyecto incluye **123 tests automáticos** distribuidos en 15 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
 
 ### Cómo funcionan
 
@@ -109,6 +109,18 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 109 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` establece el límite en `10r/m` (10 peticiones/minuto) |
 | 110 | `test_rate_limiting.py` | Seguridad | Blanca | `default.conf` devuelve código `429` al superar el límite |
 | 111 | `test_rate_limiting.py` | Seguridad | Blanca | El rate limiting se aplica al bloque `/auth/login` y no al resto de la API |
+| 112 | `test_privado.py` | Seguridad | Blanca | `PUT /privado/cambiar-contrasena` sin token devuelve 401 |
+| 113 | `test_privado.py` | Funcional | Blanca | Contraseña actual incorrecta devuelve 401 |
+| 114 | `test_privado.py` | Funcional | Blanca | Nueva contraseña débil devuelve 422 (validador Pydantic) |
+| 115 | `test_privado.py` | Funcional | Blanca | Cambio correcto devuelve 200 con campo `mensaje` |
+| 116 | `test_privado.py` | Funcional | Blanca | Tras el cambio, el login con la contraseña nueva devuelve 200 |
+| 117 | `test_privado.py` | Funcional | Blanca | Tras el cambio, el login con la contraseña vieja devuelve 401 |
+| 118 | `test_refresh_token.py` | Funcional | Blanca | `POST /auth/login` devuelve `refresh_token` de 64 caracteres |
+| 119 | `test_refresh_token.py` | Funcional | Blanca | `POST /auth/refresh` con token válido devuelve nuevo `access_token` |
+| 120 | `test_refresh_token.py` | Seguridad | Blanca | El token usado en `/auth/refresh` queda revocado (rotación); el nuevo sí funciona |
+| 121 | `test_refresh_token.py` | Seguridad | Blanca | Token inventado en `/auth/refresh` devuelve 401 |
+| 122 | `test_refresh_token.py` | Seguridad | Blanca | `POST /auth/logout` revoca el token; un `/auth/refresh` posterior devuelve 401 |
+| 123 | `test_refresh_token.py` | Funcional | Blanca | Logout con token inexistente devuelve 200 sin error |
 
 ### Descripción por módulo
 
@@ -147,6 +159,14 @@ Verifica el endpoint `/agrupaciones/{id_solic}`, que devuelve el desglose de mun
 #### test_avisos.py
 
 Verifica el endpoint `/avisos/` añadido en la rama `9e`. Cubre tres casos principales: BD vacía devuelve lista vacía, solo se devuelven convocatorias del año en curso sin resolución (las que tienen `fecha_resolucion IS NULL`), y las convocatorias ya resueltas o de años anteriores quedan excluidas. Incluye una fixture que inserta tres convocatorias con distintas combinaciones de año y estado de resolución para cubrir los casos límite.
+
+#### test_privado.py
+
+Verifica el endpoint `PUT /privado/cambiar-contrasena`. Cubre los tres casos de error (sin token → 401, contraseña actual incorrecta → 401, nueva contraseña débil → 422) y el camino feliz completo: el cambio devuelve 200, el login con la contraseña nueva funciona, y el login con la contraseña vieja falla. Este último par de tests es el más importante: confirma que el hash en base de datos se actualizó realmente.
+
+#### test_refresh_token.py
+
+Verifica el sistema de refresh token implementado en la rama `9gh`. Cubre el ciclo completo: el login genera un token opaco de 64 caracteres, el refresh devuelve un nuevo access token y rota el refresh token (el anterior queda revocado), un token inventado o ya usado devuelve 401, y el logout revoca correctamente el token en la base de datos. El test de rotación es el más importante: garantiza que cada refresh token solo puede usarse una vez, lo que limita el daño si un token es interceptado.
 
 #### test_cache_headers.py
 

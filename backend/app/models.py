@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, DateTime, Enum, DECIMAL, SmallInteger, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, DateTime, Enum, DECIMAL, SmallInteger, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from .db import Base
 
@@ -95,3 +95,17 @@ class Usuario(Base):
     rol        = Column(Enum("admin", "registrado"), nullable=False, default="registrado")
     activo     = Column(SmallInteger, nullable=False, default=1)
     created_at = Column(DateTime, nullable=False)
+
+    refresh_tokens = relationship("RefreshToken", back_populates="usuario")
+
+
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+
+    id         = Column(Integer, primary_key=True, autoincrement=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    token      = Column(String(64), nullable=False, unique=True)
+    expira_en  = Column(DateTime, nullable=False)
+    revocado   = Column(Boolean, nullable=False, default=False)
+
+    usuario = relationship("Usuario", back_populates="refresh_tokens")
