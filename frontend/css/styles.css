@@ -1897,6 +1897,22 @@ canvas {
     margin-left: 6px;
 }
 
+.btn--sm {
+    padding: 4px 12px;
+    font-size: 0.85rem;
+}
+
+.convoc-pendiente {
+    color: var(--color-gris-texto);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.tabla-convoc th,
+.tabla-convoc td {
+    text-align: center;
+}
+
 
 /* ============================================================
    26. Spinner de carga (Paso 17)

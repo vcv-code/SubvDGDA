@@ -396,7 +396,7 @@ El backend devuelve siempre este formato en caso de error:
 - Favicon configurado con `<link rel="icon" href="assets/logo.png">`.
 - Metadatos Open Graph (`og:title`, `og:description`, `og:image`) añadidos en el `<head>`.
 - KPI "Entidades únicas" conectado con el dato real de la API (`datos.entidades_unicas`).
-- Botón "Conócenos" → sustituido por "Ver solicitudes" enlazando a `solicitudes.html`.
+- Botón hero renombrado a "Ir al buscador" enlazando a `solicitudes.html`.
 - Spinner de carga sobre las métricas.
 - Caja de error visual si el backend no responde.
 - **Nueva sección de gráficos** con fondo verde (`fondo-stats`), usando el endpoint existente `GET /estadisticas/`.
@@ -405,9 +405,10 @@ El backend devuelve siempre este formato en caso de error:
 
 | Sección | Contenido | Datos |
 |---|---|---|
-| Portada partida | Título "Sobre el proyecto" + descripción + foto de animales | Estático |
+| Portada partida | Título "Sobre el proyecto" + descripción + foto de animales + botón "Ir al buscador" | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
-| Gráficos (nueva) | Evolución importe por año (línea), distribución estados (donut), EPA vs EELL por año (barras agrupadas), KPI tasa de éxito | API `/estadisticas/` |
+| Convocatorias | Dos bloques (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador filtrado; pendientes sin `fecha_resolucion` muestran estado | API `/convocatorias/` |
+| Gráficos | Evolución importe por año (línea), distribución estados (donut), EPA vs EELL por año (barras agrupadas), KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
 
@@ -420,7 +421,7 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 | `crearGraficoBarras(porAnio)` | `bar` agrupado | `home-grafico-barras` | `por_anio` separado por tipo |
 | `mostrarTasaExito(datos)` | KPI HTML | `home-tasa-exito` | `total_concedidas / total_registros` |
 
-**Archivo JS:** `js/home.js` — una sola petición a `/estadisticas/` alimenta todos los bloques (métricas + gráficos).
+**Archivo JS:** `js/home.js` — tres funciones asíncronas independientes: `cargarDatos()` (métricas + gráficos desde `/estadisticas/`), `cargarAvisos()` (banner desde `/avisos/`) y `cargarConvocatorias()` (bloque convocatorias desde `/convocatorias/`).
 
 ### 5.2 Buscador — `solicitudes.html`
 
@@ -560,7 +561,19 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 
 **Propósito:** Directorio estático de organizaciones, iniciativas y campañas relevantes en materia de protección animal, gestión ética de colonias felinas, fauna urbana y movimientos actuales. Esta página no depende del backend: todo el contenido procede del documento funcional entregado por el equipo y se integra directamente en HTML.
 
-**Estado:** Contenido completamente implementado (Issue 7D). Logos integrados en todos los bloques (Issue 7E). No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
+**Estado:** Contenido implementado (Issue 7D/7E). En proceso de ajuste visual. No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
+
+**Cambios visuales aplicados (rama 10a):**
+- Logos uniformes: `height: 80px; object-fit: contain` en `.card-entidad img`. Eliminado `width="200"` hardcodeado.
+- Orden de la tarjeta cambiado con CSS `order`: nombre → logo → descripción.
+- Categoría/subtítulo oculto (`display: none`).
+- Todo el contenido centrado (`text-align: center` en `.card-entidad`).
+
+**Pendientes de mejora visual** *(página en proceso de ajuste)*:
+- Color de fondo diferente para cada uno de los 4 bloques — referencia: panel de nueva pestaña de la usuaria.
+- Decidir si eliminar definitivamente la categoría del HTML o mostrarla en otro formato.
+- Ajustar altura del logo (80px) si algún logo queda demasiado pequeño o grande.
+- Revisar aspecto general de las tarjetas una vez aplicados los colores por sección.
 
 **Estructura visual:**
 

@@ -634,6 +634,11 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
   · limpiar filtros borra también los parámetros de la URL
 ✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
+✔ bloque "Convocatorias" en la Home (`index.html`)
+  · tabla separada por tipo (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador
+  · fechas de convocatoria obtenidas de la API BDNS; fechas de resolución de la API del BOE
+  · convocatorias pendientes de resolución (sin `fecha_resolucion`) muestran estado "Pendiente de resolución"
+  · datos incluidos en `cargar_dataset.py` para nuevos despliegues (no requieren UPDATE manual)
 ✔ tests automáticos con pytest (148 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
@@ -725,23 +730,24 @@ Pendiente:
 
 ### Pendientes de frontend
 
-- **Tabla de convocatorias en el frontend:** el endpoint `GET /convocatorias/` existe y devuelve las 8 convocatorias con sus datos, pero ninguna página del frontend lo usa. Añadir una tabla o listado (posiblemente en `index.html` o encima de los filtros del buscador) que muestre las convocatorias disponibles: título, tipo, año y periodo.
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: el ranking CCAA ya funciona, pero el mapa choropleth está pendiente de decisión técnica (SVG inline, Leaflet o D3-geo).
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
 - Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
 - Contenido de la página privada (`privado.html`): tabla resumen con datos por año y estado, separada por tipo
+- **Footer — revisar enlaces**: actualmente muestra GitHub, Documentación y Contacto. Pendiente: sustituir por Aviso legal (obligatorio si se publica) y decidir si mantener Contacto (valorar implicaciones de privacidad según los datos que se exponen).
+- **Home — sección de PDFs oficiales**: hay espacio vacío entre los gráficos y el footer. Posible sección con los documentos BOE de cada convocatoria: título, enlace para ver en el BOE y enlace de descarga directa. Futura adición, no urgente.
 - Política de privacidad y aviso legal
 - Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
+- **Página Recursos — mejoras visuales**: los logos de las entidades tienen tamaños muy dispares y las tarjetas no tienen altura uniforme. Pendiente: normalizar tamaño de imagen en todas las tarjetas (altura fija con `object-fit: contain`) y asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente — bien en el fondo de cada sección o en el fondo de las tarjetas.
 - **Refactor CSS inline** *(post-entrega, solo si hay tiempo)*: el proyecto acumula estilos inline en el HTML que deberían estar como clases en `styles.css`. No es urgente ni afecta a la funcionalidad, pero mejora el mantenimiento. Hacerlo página por página comprobando visualmente que nada se rompe. Regla para código nuevo: `display:none` en HTML está bien; todo lo demás va a `styles.css`.
 
 ### Pendientes de backend y API
 
-- ~~Exponer campo `tramo` de EELL 2025~~ ✔ completado: badge T1/T2/T3 en buscador y ficha, leyenda de tramos, campo en CSV
 - Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
 
 ### Pendientes de infraestructura y despliegue
 
-- Dominio real y certificado Let's Encrypt: en producción sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
+- Dominio real y certificado Let's Encrypt: en producción sustipues stuir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
 - CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 - Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
 - Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
@@ -919,12 +925,12 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 
 ## Tests
 
-El proyecto tiene **189 pruebas en total**: 148 automáticas con pytest y 41 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **193 pruebas en total**: 148 automáticas con pytest y 45 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
 | Automáticos | 148 | pytest (sin Docker) |
-| Manuales | 41 | Navegador + DevTools |
+| Manuales | 45 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
