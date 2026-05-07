@@ -101,6 +101,62 @@ class EstadisticasOut(BaseModel):
 
 
 # ──────────────────────────────────────────────
+# ESTADÍSTICAS EPAs
+# ──────────────────────────────────────────────
+
+class TopBeneficiarioEpa(BaseModel):
+    nombre:  str
+    importe: float
+
+class EpaAnio(BaseModel):
+    anio:              int
+    media:             float
+    mediana:           float
+    nuevos:            int
+    recurrentes:       int
+    top_beneficiarios: list[TopBeneficiarioEpa]
+
+class RangoImporte(BaseModel):
+    rango:    str
+    cantidad: int
+
+class EstadisticasEpaOut(BaseModel):
+    importe_medio:         float
+    mediana:               float
+    beneficiarios_unicos:  int
+    nuevas_entidades:      int
+    distribucion_importes: list[RangoImporte]
+    por_anio:              list[EpaAnio]
+
+
+# ──────────────────────────────────────────────
+# ESTADÍSTICAS EELL
+# ──────────────────────────────────────────────
+
+class CcaaItem(BaseModel):
+    ccaa:             str
+    importe_total:    float
+    num_concesiones:  int
+
+class ProvinciaItem(BaseModel):
+    provincia:     str
+    importe_total: float
+
+class ConcentracionItem(BaseModel):
+    top_10_pct: float
+    resto_pct:  float
+
+class EstadisticasEellOut(BaseModel):
+    pct_ayuntamientos_con_ayuda: float
+    importe_medio:               float
+    ratio_exclusion:             float
+    ccaa_top:                    str
+    por_ccaa:                    list[CcaaItem]
+    top_provincias:              list[ProvinciaItem]
+    concentracion:               ConcentracionItem
+
+
+# ──────────────────────────────────────────────
 # AVISOS
 # Convocatorias del año en curso sin resolución aún
 # ──────────────────────────────────────────────
@@ -136,13 +192,34 @@ class RegistroIn(BaseModel):
             raise ValueError("La contraseña debe contener al menos un número")
         return v
 
+class CambiarPasswordIn(BaseModel):
+    contrasena_actual: str
+    contrasena_nueva:  str
+
+    @field_validator("contrasena_nueva")
+    @classmethod
+    def password_seguro(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError("La contraseña debe tener al menos 8 caracteres")
+        if not any(c.isupper() for c in v):
+            raise ValueError("La contraseña debe contener al menos una mayúscula")
+        if not any(c.islower() for c in v):
+            raise ValueError("La contraseña debe contener al menos una minúscula")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("La contraseña debe contener al menos un número")
+        return v
+
 class LoginIn(BaseModel):
     email:    EmailStr
     password: str
 
 class TokenOut(BaseModel):
-    access_token: str
-    token_type:   str
+    access_token:  str
+    token_type:    str
+    refresh_token: str
+
+class RefreshIn(BaseModel):
+    refresh_token: str
 
 class UsuarioOut(BaseModel):
     id_usuario: int
