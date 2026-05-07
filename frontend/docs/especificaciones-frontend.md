@@ -566,7 +566,7 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 
 **Propósito:** Directorio estático de organizaciones, iniciativas y campañas relevantes en materia de protección animal, gestión ética de colonias felinas, fauna urbana y movimientos actuales. Esta página no depende del backend: todo el contenido procede del documento funcional entregado por el equipo y se integra directamente en HTML.
 
-**Estado:** Contenido completamente implementado. La página se ha reconstruido con un grid responsive y tarjetas informativas. No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
+**Estado:** Contenido completamente implementado (Issue 7D). Logos integrados en todos los bloques (Issue 7E). No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
 
 **Estructura visual:**
 
@@ -575,12 +575,54 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
   - 2 columnas en tablet (≥768px)  
   - 1 columna en móvil  
 - **Tarjetas:** cada entidad se representa con:
+  - logo oficial (enlace externo)  
   - nombre  
   - categoría o ámbito (si aplica)  
   - descripción breve  
 - **Navbar y footer:** se mantienen sin cambios.  
-- **Contenido 100% estático:** sin dependencias del backend.  
-- **Imágenes:** no incluidas en esta fase (se añadirán más adelante).
+- **Contenido 100% estático:** sin dependencias del backend.
+
+---
+
+#### Optimización de imágenes — Issue 7E
+
+**Directorio:** `assets/img/logos/`  
+**Formato:** WebP
+
+**Parámetros de conversión (Squoosh / cwebp):**
+
+| Parámetro | Valor |
+|---|---|
+| Anchura máxima | 512 px (proporción preservada) |
+| Calidad | 75–80 |
+| Reducir paleta | Activado |
+| Effort | 5 |
+
+**Patrón de integración en `<article class="card-entidad">`:**
+
+```html
+<article class="card-entidad">
+    <a href="https://url-oficial.org/" target="_blank" rel="noopener noreferrer">
+        <img src="assets/img/logos/nombre-entidad.webp"
+             alt="Logo Nombre Entidad"
+             width="200"
+             loading="lazy">
+    </a>
+    <p class="card-entidad__nombre">Nombre Entidad</p>
+    <p class="card-entidad__categoria">Categoría</p>
+    <p class="card-entidad__descripcion">Descripción breve.</p>
+</article>
+```
+
+**Reglas aplicadas:**
+
+- `<img>` siempre como primer hijo del `<article>`, dentro de `<a>`.
+- Solo el logo es enlace; el resto de la tarjeta no es interactivo.
+- Atributo `width="200"` únicamente — sin `height` para evitar deformación.
+- `loading="lazy"` en todos los logos (rendimiento en página larga).
+- `alt` con patrón `"Logo Nombre"` (accesibilidad).
+- `target="_blank"` + `rel="noopener noreferrer"` en todos los enlaces externos.
+- Sin estilos inline; sin contenedores adicionales alrededor del `<a>`.
 
 ---
 
@@ -588,12 +630,14 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 
 Entidades de referencia en bienestar animal, activismo, apoyo a protectoras y operadores jurídicos:
 
-- **BASMA** — Banco de alimentos para protectoras; apoyo a animales en situación de vulnerabilidad.  
-- **FAADA** — Fundación dedicada a políticas públicas y legislación de bienestar animal.  
-- **Animanaturalis** — Activismo y campañas de concienciación y defensa de los animales.  
-- **Intercids** — Red de operadores jurídicos especializados en maltrato animal.  
-- **APDDA** — Grupo institucional que impulsa iniciativas legislativas en defensa de los animales.  
-- **AVATMA** — Asociación veterinaria con enfoque técnico y científico, especialmente en tauromaquia.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| BASMA | `basma.webp` | https://piensosolidariobasma.org/ |
+| FAADA | `logo-faada.webp` | https://faada.org/ |
+| Animanaturalis | `logo-animaNaturalis.webp` | https://www.animanaturalis.org/ |
+| Intercids | `Logo-Intercids-c.webp` | https://intercids.com/ |
+| APDDA | `logo-apdda.webp` | https://apdda.es/ |
+| AVATMA | `avatma-negativo-solo-logo.webp` | https://avatma.es/ |
 
 ---
 
@@ -601,12 +645,14 @@ Entidades de referencia en bienestar animal, activismo, apoyo a protectoras y op
 
 Organizaciones y plataformas centradas en CER, gestión ética y divulgación:
 
-- **GEMFE** — Grupo veterinario especializado en salud y bienestar felino.  
-- **Plataforma GARRA** — Defensa estatal de la gestión ética de colonias felinas.  
-- **Los gatos tienen ley** — Iniciativa legal para reconocimiento de gatos comunitarios.  
-- **FDCats** — Federación de asociaciones enfocadas en CER.  
-- **Los 4 de la Empandilla** — Rescate especializado en Madrid y otras zonas.  
-- **MeowMetrics** — Plataforma digital para seguimiento y análisis de colonias felinas.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| GEMFE | `logo-gemfe.webp` | https://gemfe.es/ |
+| Plataforma GARRA | `logo-plataformaGarra.webp` | https://plataformagarra.es/ |
+| Los gatos tienen ley | `Logo-losGatosTienenLey.webp` | https://losgatostienenley.es/ |
+| FDCats | `logo-fdcats.webp` | https://fdcats.es/ |
+| Los 4 de la Empandilla | `logo-losCuatroDeLaEmpandilla.webp` | https://los4delaempandilla.org/ |
+| MeowMetrics | `logo-meowMetrics.webp` | https://meowmetrics.app/ |
 
 ---
 
@@ -614,12 +660,14 @@ Organizaciones y plataformas centradas en CER, gestión ética y divulgación:
 
 Organizaciones centradas en fauna urbana, silvestre o especies concretas:
 
-- **Plataforma Cotorras** — Defensa de la gestión ética de cotorras urbanas.  
-- **Free Fox** — Rescate y sensibilización sobre fauna silvestre.  
-- **GREFA** — Centro de recuperación y conservación de fauna silvestre.  
-- **Asociación EriSOS** — Protección y recuperación de erizos urbanos.  
-- **SOS Vencejos** — Rescate y cuidado de aves urbanas, especialmente vencejos.  
-- **Mis amigas las palomas** — Concienciación y cambio de percepción sobre palomas en ciudades.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| Plataforma Cotorras | `logo-pCotorras.webp` | https://plataformacotorras.es/ |
+| Free Fox | `logo-freeFox.webp` | https://freefox.es/ |
+| GREFA | `logo-grefa.webp` | https://grefa.org/ |
+| Asociación EriSOS | `logo-erisos.webp` | https://erisos.org/ |
+| SOS Vencejos | `logo-sosvencejos.webp` | https://sosvencejos.es/ |
+| MALP | `logoMALP.webp` | https://misamigaslas palomas.es/ |
 
 ---
 
@@ -627,19 +675,22 @@ Organizaciones centradas en fauna urbana, silvestre o especies concretas:
 
 Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
-- **Vets Unidos** — Campaña profesional sobre el RD de medicamentos veterinarios.  
-- **Mismos perros, misma ley** — Inclusión de perros de caza en la normativa de protección animal.  
-- **Santuarios no son granjas** — Reconocimiento legal diferenciado para santuarios de animales.  
-- **La tortura no es cultura** — Movimiento abolicionista de la tauromaquia.  
-- **Vivotecnia** — Caso judicial que reabre el debate sobre investigación animal.  
-- **Plataforma NAC (No a la caza)** — Denuncia del maltrato en actividades cinegéticas.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| Vets Unidos | `Logo-vetsUnidos.webp` | https://vetsunidos.es/ |
+| Mismos perros, misma ley | `logo-mismosPerros.webp` | https://mismosperros.es/ |
+| Santuarios no son granjas | `logo-santuariosNoGranjas.webp` | https://santuariosnosongranigas.es/ |
+| La tortura no es cultura | `logo-torturaNoCultura.webp` | https://latorturanoecultura.es/ |
+| Vivotecnia | `logo-vivotecnia.webp` | https://vivotecnia.es/ |
+| Plataforma NAC | `logo-nac.webp` | https://noalacaza.es/ |
 
 ---
 
 **Notas de implementación:**
-- La página sustituye la versión previa, que contenía únicamente enlaces básicos.  
-- Se mantiene coherencia visual con el resto del proyecto (tipografías, espaciados, estructura de secciones).  
-- Pendiente para fase futura: incorporación de imágenes y logos oficiales.
+- La página sustituye la versión previa que contenía únicamente enlaces básicos.
+- Se mantiene coherencia visual con el resto del proyecto (tipografías, espaciados, estructura de secciones).
+- Los logos WebP están en `assets/img/logos/`; no se requiere subdirectorio adicional por bloque.
+- Las URLs oficiales de la tabla son aproximadas; verificar antes de publicar en producción.
 
 
 ---
