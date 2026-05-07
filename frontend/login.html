@@ -53,7 +53,9 @@
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="login.html" class="btn-login">Acceder</a></li>
             </ul>
         </nav>
@@ -163,6 +165,13 @@
                             auth.js deshabilita el botón durante la petición
                             para evitar doble envío.
                         -->
+                        <div class="grupo-campo" style="flex-direction:row; align-items:center; gap:.5rem;">
+                            <input type="checkbox" id="recordarme" name="recordarme">
+                            <label for="recordarme" class="etiqueta-campo" style="margin-bottom:0; cursor:pointer;">
+                                Recuérdame (mantener sesión 30 días)
+                            </label>
+                        </div>
+
                         <button
                             type="submit"
                             class="btn btn-verde btn-auth"

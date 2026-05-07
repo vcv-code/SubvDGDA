@@ -3,7 +3,7 @@
 
 **Proyecto:** Análisis de Subvenciones de Bienestar Animal y Colonias Felinas  
 **Curso:** 2º DAW — Proyecto Final de Ciclo  
-**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + páginas Recursos y Estadísticas avanzadas)  
+**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + reorganización de estadísticas en EPAs y EELL + página Recursos)  
 **Depende de:** Issue 7A (Diseño y wireframes, completada)
 
 ---
@@ -64,14 +64,14 @@ frontend/
 │   └── styles.css          → Hoja de estilos compartida por todas las páginas
 │
 ├── js/
-│   ├── home.js                      → Lógica de index.html
-│   ├── solicitudes.js               → Lógica del buscador
-│   ├── estadisticas.js              → Lógica del dashboard con Chart.js
-│   ├── estadisticas-avanzadas.js    → Lógica de estadísticas avanzadas (KPIs, gráficos CCAA, ranking)
-│   ├── recursos.js                  → Lógica del directorio de recursos (pendiente de endpoint)
-│   ├── auth.js                      → Lógica de login y registro (JWT)
-│   ├── privado.js                   → Control de acceso y contenido de zona privada
-│   └── entidad.js                   → Lógica de la ficha de entidad
+│   ├── home.js                  → Lógica de index.html (métricas + gráficos generales con GET /estadisticas/)
+│   ├── solicitudes.js           → Lógica del buscador
+│   ├── estadisticas-epas.js     → Lógica de estadísticas EPAs (importe medio, distribución, nuevos vs recurrentes, top beneficiarios)
+│   ├── estadisticas-eell.js     → Lógica de estadísticas EELL (% ayuntamientos, top provincias, concentración, ranking CCAA)
+│   ├── recursos.js              → Lógica del directorio de recursos (pendiente de endpoint)
+│   ├── auth.js                  → Lógica de login y registro (JWT)
+│   ├── privado.js               → Control de acceso y contenido de zona privada
+│   └── entidad.js               → Lógica de la ficha de entidad
 │
 ├── assets/
 │   ├── logo.png                → Logotipo del proyecto (también usado como favicon)
@@ -80,17 +80,18 @@ frontend/
 │   ├── animales-registro.png   → Foto decorativa en registro.html
 │   └── wireframes_...pdf       → Wireframes de referencia (issue 7A)
 │
-├── index.html                       → Página de inicio (Home)
-├── solicitudes.html                 → Buscador de solicitudes con filtros
-├── estadisticas.html                → Dashboard de gráficos con Chart.js
-├── estadisticas-avanzadas.html      → Análisis avanzado: CCAA, EPA vs EELL, ranking (Issue 7D)
-├── recursos.html                    → Directorio de organizaciones y sitios de interés (Issue 7D)
-├── login.html                       → Formulario de inicio de sesión
-├── registro.html                    → Formulario de creación de cuenta
-├── privado.html                     → Zona exclusiva para usuarios registrados
-├── entidad.html                     → Ficha de entidad con historial y desglose de agrupaciones
-├── diseño.md                        → Guía visual del proyecto (issue 7A)
-└── especificaciones-frontend.md     → Este documento
+├── index.html               → Página de inicio (Home) — métricas + gráficos generales
+├── solicitudes.html         → Buscador de solicitudes con filtros
+├── estadisticas-epas.html   → Estadísticas de Entidades Protectoras de Animales (Issue 7D)
+├── estadisticas-eell.html   → Estadísticas de Entidades Locales / Ayuntamientos (Issue 7D)
+├── recursos.html            → Directorio de organizaciones y sitios de interés (Issue 7D)
+├── login.html               → Formulario de inicio de sesión
+├── registro.html            → Formulario de creación de cuenta
+├── privado.html             → Zona exclusiva para usuarios registrados
+├── entidad.html             → Ficha de entidad con historial y desglose de agrupaciones
+└── docs/
+    ├── diseño.md                    → Guía visual del proyecto (issue 7A)
+    └── especificaciones-frontend.md → Este documento
 ```
 
 ### ¿Por qué un JS por página?
@@ -180,14 +181,14 @@ Barra de navegación fija (`position: fixed`) de 80px de altura. Contiene el log
 
 El botón "Acceder" tiene un estilo diferente (fondo verde, texto blanco) para destacarlo como la acción principal de autenticación.
 
-**Estructura actual del navbar (Issue 7D) — 6 enlaces, en este orden:**
+**Estructura actual del navbar (Issue 7D) — Opción A, 6 enlaces directos:**
 
 | Posición | Enlace | Destino | Clase especial |
 |---|---|---|---|
 | 1 | Inicio | `index.html` | `activo` en home |
 | 2 | Buscador | `solicitudes.html` | `activo` en buscador |
-| 3 | Estadísticas | `estadisticas.html` | `activo` en estadísticas |
-| 4 | Estadísticas avanzadas | `estadisticas-avanzadas.html` | `activo` en estadísticas avanzadas |
+| 3 | EPAs | `estadisticas-epas.html` | `activo` en EPAs |
+| 4 | EELL | `estadisticas-eell.html` | `activo` en EELL |
 | 5 | Recursos | `recursos.html` | `activo` en recursos |
 | 6 | Acceder | `login.html` | `.btn-login` (botón verde) |
 
@@ -195,7 +196,9 @@ Todas las páginas del proyecto han sido actualizadas para incluir este navbar c
 
 **¿Por qué fijo?** En páginas largas como la Home o el Buscador, el usuario necesita poder navegar a otras secciones sin tener que volver al inicio de la página.
 
-**Cambios en Issue 7D:** el nombre del proyecto en el navbar se actualizó de "Bienestar Animal" a **"Subvenciones DGDA"** y el color del texto pasó a negro (`var(--color-negro)`) para armonizar con el logotipo. Además se añadieron los enlaces a "Estadísticas avanzadas" y "Recursos".
+**¿Por qué Opción A (dos enlaces directos) y no dropdown?** Se descartó el menú desplegable porque el stack vanilla JS no tiene CSS/JS de dropdown incluido, la accesibilidad (teclado, `focus-within`, mobile touch) requeriría código extra, y dos enlaces directos funcionan igual de bien con la cantidad actual de páginas.
+
+**Cambios en Issue 7D:** el nombre del proyecto en el navbar se actualizó de "Bienestar Animal" a **"Subvenciones DGDA"** y el color del texto pasó a negro (`var(--color-negro)`) para armonizar con el logotipo. Se eliminó el enlace a `estadisticas.html` (el dashboard de gráficos se integró en `index.html`) y se añadieron los enlaces directos a "EPAs" y "EELL" más "Recursos".
 
 ### 4.2 Footer
 
@@ -288,7 +291,7 @@ En `registro.html`, cuatro elementos `.password-req` muestran si cada requisito 
 
 Todas las páginas que realizan peticiones `fetch` tienen un spinner visual que aparece antes de la petición y desaparece en el bloque `finally`.
 
-**HTML** (presente en `solicitudes.html`, `entidad.html`, `estadisticas.html`, `index.html`, `recursos.html` y `estadisticas-avanzadas.html`):
+**HTML** (presente en `solicitudes.html`, `entidad.html`, `index.html`, `recursos.html`, `estadisticas-epas.html` y `estadisticas-eell.html`):
 
 ```html
 <div id="spinner" class="spinner"></div>
@@ -332,7 +335,7 @@ async function cargarDatos() {
 
 Cuando el backend devuelve un código de error HTTP (401, 403, 404, 422, 500), el frontend muestra una caja de error estructurada con los campos `mensaje` y `sugerencia` del JSON de error del backend.
 
-**HTML** (presente en `solicitudes.html`, `entidad.html`, `estadisticas.html`, `index.html`, `recursos.html` y `estadisticas-avanzadas.html`):
+**HTML** (presente en `solicitudes.html`, `entidad.html`, `index.html`, `recursos.html`, `estadisticas-epas.html` y `estadisticas-eell.html`):
 
 ```html
 <div id="error-box" class="error-box" style="display:none;">
@@ -383,7 +386,7 @@ El backend devuelve siempre este formato en caso de error:
 
 ### 5.1 Home — `index.html`
 
-**Propósito:** Presentar el proyecto, mostrar las cifras clave y dar acceso rápido a las herramientas principales.
+**Propósito:** Presentar el proyecto, mostrar las cifras clave y dar acceso rápido a las herramientas principales. Desde Issue 7D también alberga los gráficos de evolución temporal que antes estaban en `estadisticas.html`.
 
 **Cambios en Issues 7C/7D:**
 - Favicon configurado con `<link rel="icon" href="assets/logo.png">`.
@@ -392,6 +395,7 @@ El backend devuelve siempre este formato en caso de error:
 - Botón "Conócenos" → sustituido por "Ver solicitudes" enlazando a `solicitudes.html`.
 - Spinner de carga sobre las métricas.
 - Caja de error visual si el backend no responde.
+- **Nueva sección de gráficos** con fondo verde (`fondo-stats`), usando el endpoint existente `GET /estadisticas/`.
 
 **Secciones:**
 
@@ -399,10 +403,20 @@ El backend devuelve siempre este formato en caso de error:
 |---|---|---|
 | Portada partida | Título "Sobre el proyecto" + descripción + foto de animales | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
+| Gráficos (nueva) | Evolución importe por año (línea), distribución estados (donut), EPA vs EELL por año (barras agrupadas), KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
 
-**Archivo JS:** `js/home.js` — una sola petición a `/estadisticas/` alimenta todos los bloques.
+**Gráficos implementados en `js/home.js`:**
+
+| Función | Tipo Chart.js | Canvas ID | Datos |
+|---|---|---|---|
+| `crearGraficoLinea(porAnio)` | `line` | `home-grafico-linea` | Suma EPA+EELL de `por_anio` |
+| `crearGraficoDonut(datos)` | `doughnut` + `cutout: '62%'` | `home-grafico-donut` | Totales concedidas / resto |
+| `crearGraficoBarras(porAnio)` | `bar` agrupado | `home-grafico-barras` | `por_anio` separado por tipo |
+| `mostrarTasaExito(datos)` | KPI HTML | `home-tasa-exito` | `total_concedidas / total_registros` |
+
+**Archivo JS:** `js/home.js` — una sola petición a `/estadisticas/` alimenta todos los bloques (métricas + gráficos).
 
 ### 5.2 Buscador — `solicitudes.html`
 
@@ -463,31 +477,24 @@ function descargarCSV() {
 
 **Archivo JS:** `js/solicitudes.js`.
 
-### 5.3 Estadísticas — `estadisticas.html`
+### 5.3 Estadísticas generales → integradas en Home (Issue 7D)
 
-**Propósito:** Dashboard con visualizaciones de datos.
+**Decisión de arquitectura:** En la reorganización de Issue 7D se eliminó `estadisticas.html` como página independiente. Los gráficos generales de evolución temporal se integraron directamente en `index.html`, donde el usuario los ve en su primera visita sin necesidad de navegar a una sección separada. Los análisis específicos de EPA y EELL se trasladaron a páginas propias (`estadisticas-epas.html` y `estadisticas-eell.html`).
 
-**Cambios en Issue 7D:** spinner de carga y caja de error visual añadidos.
+**Archivos eliminados:** `estadisticas.html` y `js/estadisticas.js` (se pueden eliminar con `git rm`).
 
-**KPIs (fila superior, orden definitivo):**
+**Qué sustituye a cada elemento de `estadisticas.html`:**
 
-| Posición | KPI | Cálculo |
-|---|---|---|
-| 1 | Registros totales | `datos.total_registros` |
-| 2 | Importe concedido € | `datos.importe_global` |
-| 3 | Entidades únicas | `datos.entidades_unicas` (dato real de la API) |
-| 4 | % Concedido | `(total_concedidas / total_registros) × 100` (client-side) |
+| Contenido anterior en `estadisticas.html` | Nuevo destino |
+|---|---|
+| KPIs: total registros, importe global, entidades únicas, % concedido | `index.html` (métricas) |
+| Gráfico de evolución del importe por año (línea) | `index.html` (nueva sección gráficos) |
+| Gráfico de distribución por estado (donut) | `index.html` (nueva sección gráficos) |
+| Gráfico EPA vs EELL por año (barras agrupadas) | `index.html` (nueva sección gráficos) |
+| Análisis por EPA: importes, beneficiarios, distribución | `estadisticas-epas.html` |
+| Análisis por EELL: ayuntamientos, provincias, CCAA | `estadisticas-eell.html` |
 
-**Gráficos implementados:**
-
-| Gráfico | Tipo | Datos |
-|---|---|---|
-| Evolución del importe por año | Línea | `/estadisticas/` → `por_anio.importe_total` |
-| Distribución por estado | Donut | `/estadisticas/` → totales por estado |
-| EPA vs EELL por año (M€) | Barras agrupadas | `/estadisticas/` → `por_anio` por tipo |
-| Top 5 entidades por importe | Ranking HTML | Endpoint pendiente de backend |
-
-**Librería:** Chart.js 4.4.0 importada desde CDN jsDelivr. Se usa `new Chart()` con tipos `line`, `doughnut` y `bar`.
+**Librería:** Chart.js 4.4.0 importada desde CDN jsDelivr en las páginas que la usan (`index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`).
 
 ### 5.4 Ficha de entidad — `entidad.html` + `js/entidad.js`
 
@@ -555,59 +562,95 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 - Tabla con historial
 - Bloque de municipios de agrupación (condicional)
 
-### 5.5 Recursos — `recursos.html` + `js/recursos.js` (Issue 7D)
+### 5.5 Recursos — `recursos.html`
 
-**Propósito:** Directorio de organizaciones, portales de datos públicos y referencias útiles para entidades que trabajan en bienestar animal o solicitan subvenciones públicas.
+**Propósito:** Directorio estático de organizaciones, iniciativas y campañas relevantes en materia de protección animal, gestión ética de colonias felinas, fauna urbana y movimientos actuales. Esta página no depende del backend: todo el contenido procede del documento funcional entregado por el equipo y se integra directamente en HTML.
 
-**Estado:** Estructura completa implementada. El contenido dinámico queda pendiente hasta que el backend exponga el endpoint `GET /recursos/`.
+**Estado:** Contenido completamente implementado. La página se ha reconstruido con un grid responsive y tarjetas informativas. No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
 
-**Estructura HTML:**
+**Estructura visual:**
 
-| Bloque | ID / clase | Descripción |
-|---|---|---|
-| Spinner de carga | `#spinner .spinner` | Visible mientras se espera respuesta del backend |
-| Caja de error | `#error-box .error-box` | Muestra `mensaje` + `sugerencia` en errores 4xx/5xx |
-| Cabecera | `.seccion__cabecera` | Título y subtítulo estáticos |
-| Contenedor dinámico | `#recursos-contenido` | JS insertará aquí las tarjetas de recursos |
-| Placeholder inicial | `#recursos-placeholder .card` | Visible hasta que el endpoint esté disponible |
-
-**Archivo JS — `recursos.js`:**
-
-- `cargarRecursos()` — patrón idéntico al del resto del proyecto (spinner → fetch comentado con TODO → catch → finally).
-- `pintarRecursos(recursos)` — agrupa los recursos por categoría y construye un `<div class="grid-3">` por categoría con `<article class="card">` por recurso.
-- `crearTarjetaRecurso(recurso)` — devuelve un `<article class="card">` con logo (opcional), nombre como enlace externo y descripción.
-- `mostrarSinResultados()` — muestra mensaje cuando el endpoint devuelve array vacío.
-
-**Endpoint pendiente de backend:**
-
-```
-GET /recursos/
-Respuesta esperada: [
-  {
-    nombre:      string,
-    url:         string,
-    descripcion: string,
-    categoria:   string,
-    logo:        string | null
-  },
-  ...
-]
-```
-
-**Notas de implementación:**
-- No se ha creado CSS nuevo para esta página; usa las clases existentes (`.card`, `.grid-3`, `.seccion`, etc.).
-- El placeholder usa `class="card"` (no `.tarjeta`, que no existe en `styles.css`).
-- El fetch real está completamente comentado en `recursos.js`; descomenterlo cuando el backend implemente el endpoint.
+- **Grid responsive:**  
+  - 3 columnas en escritorio (≥1024px)  
+  - 2 columnas en tablet (≥768px)  
+  - 1 columna en móvil  
+- **Tarjetas:** cada entidad se representa con:
+  - nombre  
+  - categoría o ámbito (si aplica)  
+  - descripción breve  
+- **Navbar y footer:** se mantienen sin cambios.  
+- **Contenido 100% estático:** sin dependencias del backend.  
+- **Imágenes:** no incluidas en esta fase (se añadirán más adelante).
 
 ---
 
-### 5.6 Estadísticas avanzadas — `estadisticas-avanzadas.html` + `js/estadisticas-avanzadas.js` (Issue 7D)
+#### Bloque 1 — Protección animal
 
-**Propósito:** Análisis detallado por CCAA, comparativa EPA vs EELL, líneas de actuación EPA 2025 y ranking de comunidades autónomas por importe concedido. Complementa a `estadisticas.html` sin modificarla.
+Entidades de referencia en bienestar animal, activismo, apoyo a protectoras y operadores jurídicos:
 
-**Estado:** Estructura completa implementada. Los datos dinámicos quedan pendientes hasta que el backend exponga los endpoints `GET /estadisticas/avanzadas/` y `GET /estadisticas/por-ccaa/`.
+- **BASMA** — Banco de alimentos para protectoras; apoyo a animales en situación de vulnerabilidad.  
+- **FAADA** — Fundación dedicada a políticas públicas y legislación de bienestar animal.  
+- **Animanaturalis** — Activismo y campañas de concienciación y defensa de los animales.  
+- **Intercids** — Red de operadores jurídicos especializados en maltrato animal.  
+- **APDDA** — Grupo institucional que impulsa iniciativas legislativas en defensa de los animales.  
+- **AVATMA** — Asociación veterinaria con enfoque técnico y científico, especialmente en tauromaquia.
 
-**Fondo visual:** usa la clase `.fondo-stats` (verde suave) para mantener coherencia visual con `estadisticas.html`.
+---
+
+#### Bloque 2 — Colonias felinas
+
+Organizaciones y plataformas centradas en CER, gestión ética y divulgación:
+
+- **GEMFE** — Grupo veterinario especializado en salud y bienestar felino.  
+- **Plataforma GARRA** — Defensa estatal de la gestión ética de colonias felinas.  
+- **Los gatos tienen ley** — Iniciativa legal para reconocimiento de gatos comunitarios.  
+- **FDCats** — Federación de asociaciones enfocadas en CER.  
+- **Los 4 de la Empandilla** — Rescate especializado en Madrid y otras zonas.  
+- **MeowMetrics** — Plataforma digital para seguimiento y análisis de colonias felinas.
+
+---
+
+#### Bloque 3 — Entidades especializadas
+
+Organizaciones centradas en fauna urbana, silvestre o especies concretas:
+
+- **Plataforma Cotorras** — Defensa de la gestión ética de cotorras urbanas.  
+- **Free Fox** — Rescate y sensibilización sobre fauna silvestre.  
+- **GREFA** — Centro de recuperación y conservación de fauna silvestre.  
+- **Asociación EriSOS** — Protección y recuperación de erizos urbanos.  
+- **SOS Vencejos** — Rescate y cuidado de aves urbanas, especialmente vencejos.  
+- **Mis amigas las palomas** — Concienciación y cambio de percepción sobre palomas en ciudades.
+
+---
+
+#### Bloque 4 — Campañas actuales
+
+Movimientos, iniciativas legales y casos recientes de relevancia pública:
+
+- **Vets Unidos** — Campaña profesional sobre el RD de medicamentos veterinarios.  
+- **Mismos perros, misma ley** — Inclusión de perros de caza en la normativa de protección animal.  
+- **Santuarios no son granjas** — Reconocimiento legal diferenciado para santuarios de animales.  
+- **La tortura no es cultura** — Movimiento abolicionista de la tauromaquia.  
+- **Vivotecnia** — Caso judicial que reabre el debate sobre investigación animal.  
+- **Plataforma NAC (No a la caza)** — Denuncia del maltrato en actividades cinegéticas.
+
+---
+
+**Notas de implementación:**
+- La página sustituye la versión previa, que contenía únicamente enlaces básicos.  
+- Se mantiene coherencia visual con el resto del proyecto (tipografías, espaciados, estructura de secciones).  
+- Pendiente para fase futura: incorporación de imágenes y logos oficiales.
+
+
+---
+
+### 5.6 Estadísticas EPAs — `estadisticas-epas.html` + `js/estadisticas-epas.js` (Issue 7D)
+
+**Propósito:** Análisis específico de las convocatorias de Entidades Protectoras de Animales: importe medio, mediana, beneficiarios únicos, nuevas entidades, distribución de importes por rangos, media vs mediana por año, nuevos vs recurrentes y top beneficiarios.
+
+**Estado:** Completamente implementada y conectada al backend. Endpoint `GET /estadisticas/epas` disponible.
+
+**Fondo visual:** usa la clase `.fondo-stats` (verde suave). Enlace "→ Ver estadísticas EELL" en la cabecera.
 
 **Estructura HTML:**
 
@@ -615,60 +658,134 @@ Respuesta esperada: [
 |---|---|---|
 | Spinner | `#spinner` | Patrón estándar del proyecto |
 | Caja de error | `#error-box` | Patrón estándar del proyecto |
-| KPIs avanzados | `#kpis-avanzados .grid-4` | 4 tarjetas de métricas avanzadas |
-| Gráfico CCAA | `#grafico-ccaa-container` | Canvas oculto + placeholder "Pendiente de endpoint" |
-| Gráfico tasa concesión | `#grafico-tasa-container` | Canvas oculto + placeholder "Pendiente de endpoint" |
-| Gráfico líneas EPA 2025 | `#grafico-lineas-container` | Canvas oculto (donut) + placeholder |
-| Ranking CCAA | `#ranking-ccaa` | Lista `<ul>` rellenable por JS |
+| KPIs | `.grid-4` | 4 tarjetas de métricas EPA |
+| Distribución de importes | `#grafico-distribucion-importes` | Canvas oculto + placeholder |
+| Media vs mediana por año | `#grafico-media-mediana` | Canvas oculto + placeholder |
+| Nuevos vs recurrentes | `#grafico-nuevos-recurrentes` | Canvas oculto + placeholder |
+| Top beneficiarios | `#grafico-top-beneficiarios` | Canvas oculto + placeholder |
 
-**KPIs implementados (pendientes de datos):**
+**KPIs (pendientes de datos):**
 
 | ID | Label | Dato esperado |
 |---|---|---|
-| `#kpi-importe-medio-epa` | Importe medio EPA | Por entidad concedida |
-| `#kpi-importe-medio-eell` | Importe medio EELL | Por entidad concedida |
-| `#kpi-ccaa-top` | CCAA con más concesiones | EELL 2023–2025 |
-| `#kpi-agrupaciones` | Agrupaciones EELL | Con desglose municipal |
+| `#kpi-importe-medio` | Importe medio EPA | `datos.importe_medio` |
+| `#kpi-mediana` | Mediana del importe | `datos.mediana` |
+| `#kpi-beneficiarios-unicos` | Beneficiarios únicos | `datos.beneficiarios_unicos` |
+| `#kpi-nuevas-entidades` | Nuevas entidades | `datos.nuevas_entidades` |
 
-**Gráficos preparados en `estadisticas-avanzadas.js`:**
+**Gráficos preparados en `estadisticas-epas.js`:**
 
-| Función | Tipo Chart.js | Canvas | Endpoint |
+| Función | Tipo Chart.js | Canvas | Datos |
 |---|---|---|---|
-| `poblarGraficoCcaa()` | Barras horizontales (`bar` + `indexAxis: 'y'`) | `#grafico-ccaa` | `/estadisticas/por-ccaa/` |
-| `poblarGraficoTasa()` | Líneas (`line`) | `#grafico-tasa` | `/estadisticas/avanzadas/` |
-| `poblarGraficoLineas()` | Donut (`doughnut`) | `#grafico-lineas` | `/estadisticas/avanzadas/` |
-| `poblarRankingCcaa()` | Lista HTML (top 10) | `#ranking-ccaa` | `/estadisticas/por-ccaa/` |
+| `poblarGraficoDistribucion(distribucion)` | `bar` vertical | `grafico-distribucion-importes` | `[{rango, cantidad}]` |
+| `poblarGraficoMediaMediana(porAnio)` | `bar` agrupado, 2 datasets | `grafico-media-mediana` | `porAnio[].media`, `porAnio[].mediana` |
+| `poblarGraficoNuevosRecurrentes(porAnio)` | `bar` apilado (`stack: 'entidades'`) | `grafico-nuevos-recurrentes` | `porAnio[].nuevos`, `porAnio[].recurrentes` |
+| `poblarGraficoTopBeneficiarios(porAnio)` | `bar` horizontal (`indexAxis: 'y'`) | `grafico-top-beneficiarios` | `porAnio[último].top_beneficiarios` |
 
-**Endpoints pendientes de backend:**
+**Endpoint `GET /estadisticas/epas`:**
 
-```
-GET /estadisticas/avanzadas/
-Respuesta esperada: {
-  importe_medio_epa:    number,
-  importe_medio_eell:   number,
-  ccaa_top:             string,
-  num_agrupaciones:     number,
-  tasa_concesion:       [{ anio, tasa_epa, tasa_eell }, ...],
-  lineas_epa_2025:      { abandonados: number, colonias: number }
+```json
+{
+  "importe_medio":         number,
+  "mediana":               number,
+  "beneficiarios_unicos":  number,
+  "nuevas_entidades":      number,
+  "distribucion_importes": [{ "rango": string, "cantidad": number }, ...],
+  "por_anio": [
+    {
+      "anio":              number,
+      "media":             number,
+      "mediana":           number,
+      "nuevos":            number,
+      "recurrentes":       number,
+      "top_beneficiarios": [{ "nombre": string, "importe": number }, ...]
+    }, ...
+  ]
 }
-
-GET /estadisticas/por-ccaa/
-Respuesta esperada: [
-  { ccaa: string, importe_total: number, num_concesiones: number },
-  ...
-]
 ```
 
 **Notas de implementación:**
-- La página es **independiente** de `estadisticas.html`; no reutiliza ni modifica su código.
-- Chart.js 4.4.0 se importa desde CDN jsDelivr, igual que en `estadisticas.html`.
-- Todos los canvas están ocultos con `style="display:none;"` y solo se muestran cuando hay datos reales.
-- Los fetch están completamente comentados en `estadisticas-avanzadas.js`; descomenterlos cuando el backend implemente los endpoints.
-- Incluye un enlace "← Volver a Estadísticas generales" que lleva a `estadisticas.html`.
+
+- La mediana se calcula en Python con `statistics.median` (MariaDB no tiene función nativa equivalente).
+- `nuevas_entidades` = beneficiarios cuya primera concesión es el año más reciente con datos.
+- `nuevos`/`recurrentes` por año se calculan comparando contra el primer año de concesión histórico de cada beneficiario.
+- Rangos de distribución: `< 5.000 €`, `5.000–15.000 €`, `15.000–30.000 €`, `30.000–60.000 €`, `> 60.000 €`.
+- Colores de gráficos: tonos verdes (`verdeOscuro #2E7D32`, `verdeMedio #66BB6A`, `verdeClaro #A5D6A7`) para EPAs; el top beneficiarios usa azul.
 
 ---
 
-### 5.7 Login y Registro — `login.html` / `registro.html`
+### 5.7 Estadísticas EELL — `estadisticas-eell.html` + `js/estadisticas-eell.js` (Issue 7D)
+
+**Propósito:** Análisis específico de las convocatorias de Entidades de la Administración Local (ayuntamientos): % de ayuntamientos con ayuda, importe medio EELL, ratio de exclusión, top provincias por importe, concentración top 10% vs resto, ranking de CCAA y distribución geográfica (mapa pendiente).
+
+**Estado:** Completamente implementada y conectada al backend. Endpoint `GET /estadisticas/eell` disponible.
+
+**Fondo visual:** usa la clase `.fondo-stats`. Enlace "→ Ver estadísticas EPAs" en la cabecera.
+
+**Estructura HTML:**
+
+| Bloque | ID | Descripción |
+|---|---|---|
+| Spinner | `#spinner` | Patrón estándar del proyecto |
+| Caja de error | `#error-box` | Patrón estándar del proyecto |
+| KPIs | `.grid-4` | 4 tarjetas de métricas EELL |
+| Top provincias | `#grafico-top-provincias` | Canvas oculto + placeholder |
+| Concentración top 10% | `#grafico-concentracion` | Canvas donut oculto + placeholder |
+| Ranking CCAA | `#ranking-ccaa` | `<ul>` rellenable por JS + `#ranking-ccaa-pendiente` |
+| Mapa CCAA | `#mapa-ccaa-container` | Placeholder con 🗺️ — pendiente de decisión técnica |
+
+**KPIs (pendientes de datos):**
+
+| ID | Label | Dato esperado |
+|---|---|---|
+| `#kpi-pct-ayuntamientos` | % Ayuntamientos con ayuda | `datos.pct_ayuntamientos_con_ayuda` |
+| `#kpi-importe-medio-eell` | Importe medio EELL | `datos.importe_medio` |
+| `#kpi-ratio-exclusion` | Ratio de exclusión | `datos.ratio_exclusion` (0–1, se muestra × 100 %) |
+| `#kpi-ccaa-top` | CCAA con más concesiones | `datos.ccaa_top` |
+
+**Gráficos preparados en `estadisticas-eell.js`:**
+
+| Función | Tipo Chart.js | Canvas | Datos |
+|---|---|---|---|
+| `poblarGraficoTopProvincias(topProvincias)` | `bar` horizontal (`indexAxis: 'y'`), top 15 | `grafico-top-provincias` | `[{provincia, importe_total}]` |
+| `poblarGraficoConcentracion(concentracion)` | `doughnut`, `cutout: '62%'`, leyenda abajo | `grafico-concentracion` | `{top_10_pct, resto_pct}` |
+| `poblarRankingCcaa(porCcaa)` | Lista HTML (hasta 19: 17 CCAA + Ceuta + Melilla) | `#ranking-ccaa` | `[{ccaa, importe_total, num_concesiones}]` |
+
+**Mapa CCAA — pendiente:**
+
+El diseño en PDF define un mapa de calor de España por comunidad autónoma, con interacción hover y click. Queda en espera de decisión sobre la librería de mapas (SVG inline, Leaflet, D3-geo…). Mientras tanto se muestra el ranking CCAA como alternativa funcional.
+
+**Endpoint `GET /estadisticas/eell`:**
+
+```json
+{
+  "pct_ayuntamientos_con_ayuda": number,
+  "importe_medio":               number,
+  "ratio_exclusion":             number,
+  "ccaa_top":                    string,
+  "por_ccaa": [
+    { "ccaa": string, "importe_total": number, "num_concesiones": number }, ...
+  ],
+  "top_provincias": [
+    { "provincia": string, "importe_total": number }, ...
+  ],
+  "concentracion": {
+    "top_10_pct": number,
+    "resto_pct":  number
+  }
+}
+```
+
+**Notas de implementación:**
+
+- `pct_ayuntamientos_con_ayuda` = beneficiarios con al menos una concesión / total beneficiarios que solicitaron × 100.
+- `ratio_exclusion` = (excluidas + desistidas) / total solicitudes EELL (valor 0–1; el frontend lo multiplica por 100 para mostrar %).
+- `concentracion.top_10_pct` = % del importe acaparado por el decil superior de beneficiarios por importe acumulado.
+- Colores de gráficos: azul institucional (`#1565C0`, `#90CAF9`) para EELL.
+
+---
+
+### 5.8 Login y Registro — `login.html` / `registro.html`
 
 **Propósito:** Autenticación de usuarios mediante email y contraseña.
 
@@ -712,7 +829,7 @@ Respuesta esperada: [
 
 **Botones sociales (Google, GitHub):** Eliminados del HTML. El backend no implementa OAuth y la inclusión de botones deshabilitados generaba confusión en el usuario.
 
-### 5.8 Zona exclusiva — `privado.html` + `js/privado.js`
+### 5.9 Zona exclusiva — `privado.html` + `js/privado.js`
 
 **Propósito:** Contenido reservado para usuarios registrados.
 
@@ -741,14 +858,14 @@ Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el t
 
 | Endpoint | Método | Parámetros / Body | Páginas que lo usan |
 |---|---|---|---|
-| `/estadisticas/` | GET | — | Home (métricas), Estadísticas (KPIs y gráficos) |
+| `/estadisticas/` | GET | — | Home (métricas + gráficos generales) |
 | `/solicitudes/` | GET | `anio`, `tipo`, `estado`, `buscar`, `ccaa`, `provincia`, `linea`, `limite`, `pagina` | Buscador |
 | `/solicitudes/?cif=` | GET | `cif` | Ficha de entidad |
 | `/solicitudes/export` | GET | `anio`, `tipo`, `estado`, `buscar`, `ccaa` (sin `pagina` ni `limite`) | Buscador (botón CSV) |
 | `/agrupaciones/{id_solic}` | GET | — | Ficha de entidad (desglose de municipios) |
-| `/estadisticas/avanzadas/` | GET | — | Estadísticas avanzadas (KPIs, tasa concesión, líneas EPA 2025) — **pendiente de backend** |
-| `/estadisticas/por-ccaa/` | GET | — | Estadísticas avanzadas (gráfico CCAA, ranking) — **pendiente de backend** |
-| `/recursos/` | GET | — | Recursos (tarjetas de directorio) — **pendiente de backend** |
+| `/estadisticas/epas` | GET | — | Estadísticas EPAs (KPIs, distribución, media vs mediana, nuevos vs recurrentes, top) — **pendiente de backend** |
+| `/estadisticas/eell` | GET | — | Estadísticas EELL (KPIs, top provincias, concentración, ranking CCAA) — **pendiente de backend** |
+| `/recursos/` | GET | — | Recursos (tarjetas de directorio dinámico) — **pendiente de backend** |
 | `/auth/login` | POST | JSON `{ email, password }` | Login |
 | `/auth/registro` | POST | JSON `{ email, password }` | Registro |
 | `/privado/perfil` | GET | Header `Authorization: Bearer <token>` | Zona Privada |
@@ -765,8 +882,8 @@ Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el t
 | Historial de entidad por CIF | ✔ `?cif=` | Implementado en Issue 7C |
 | Exportación CSV | ✔ `/solicitudes/export` | Todos los filtros excepto paginación |
 | Desglose de agrupación | ✔ `/agrupaciones/{id_solic}` | Solo cuando `es_agrupacion === true` |
-| Estadísticas avanzadas | ⏳ `/estadisticas/avanzadas/` | Pendiente — fetch comentado en `estadisticas-avanzadas.js` |
-| Distribución por CCAA | ⏳ `/estadisticas/por-ccaa/` | Pendiente — fetch comentado en `estadisticas-avanzadas.js` |
+| Estadísticas EPAs | ⏳ `/estadisticas/epas` | Pendiente — fetch comentado en `estadisticas-epas.js` |
+| Estadísticas EELL | ⏳ `/estadisticas/eell` | Pendiente — fetch comentado en `estadisticas-eell.js` |
 | Directorio de recursos | ⏳ `/recursos/` | Pendiente — fetch comentado en `recursos.js` |
 
 ### Patrón de llamada a la API (Issue 7D)
@@ -919,18 +1036,20 @@ La exportación CSV se delega completamente al backend (`GET /solicitudes/export
 | Badge "Agrupación" en el buscador | ✔ Completado |
 | Desglose de municipios en ficha de entidad | ✔ Completado |
 | Botón "Descargar CSV" → endpoint `/solicitudes/export` | ✔ Completado |
-| Spinners de carga en solicitudes, entidad, estadísticas y home | ✔ Completado |
+| Spinners de carga en solicitudes, entidad, home, EPAs y EELL | ✔ Completado |
 | Caja de error visual para 401/403/404/422/500 | ✔ Completado |
 | Favicon en todas las páginas HTML | ✔ Completado |
-| Metadatos OG en index, entidad y estadísticas | ✔ Completado |
+| Metadatos OG en index, entidad, EPAs y EELL | ✔ Completado |
 | Botón "Conócenos" → "Ver solicitudes" | ✔ Completado |
 | KPI entidades únicas conectado con `entidades_unicas` de la API | ✔ Completado |
 | Navbar renombrado a "Subvenciones DGDA" | ✔ Completado |
-| Navbar actualizado a 6 enlaces (añadidos Estadísticas avanzadas y Recursos) | ✔ Completado |
+| Navbar reorganizado a 6 enlaces Opción A: Inicio, Buscador, EPAs, EELL, Recursos, Acceder | ✔ Completado |
 | Columna "Año" en lugar de "Expediente" en la tabla del buscador | ✔ Completado |
 | Orden inicial A→Z y eliminación de "Por defecto" en el select | ✔ Completado |
-| Nueva página `recursos.html` + `js/recursos.js` (estructura + placeholder) | ✔ Completado |
-| Nueva página `estadisticas-avanzadas.html` + `js/estadisticas-avanzadas.js` (estructura + gráficos preparados) | ✔ Completado |
+| Nueva página `recursos.html` + `js/recursos.js` con contenido estático real y pendiente dinámico | ✔ Completado |
+| Gráficos generales integrados en `index.html` usando `GET /estadisticas/` | ✔ Completado |
+| Nueva página `estadisticas-epas.html` + `js/estadisticas-epas.js` (4 gráficos + 4 KPIs, conectados a `GET /estadisticas/epas`) | ✔ Completado |
+| Nueva página `estadisticas-eell.html` + `js/estadisticas-eell.js` (3 gráficos + ranking CCAA + 4 KPIs, conectados a `GET /estadisticas/eell`) | ✔ Completado |
 
 ### Issue 7C — Completado
 
@@ -947,19 +1066,17 @@ La exportación CSV se delega completamente al backend (`GET /solicitudes/export
 
 | Funcionalidad | Endpoint necesario | Consume |
 |---|---|---|
-| Ranking de entidades | `GET /estadisticas/ranking` | Por implementar |
-| Estadísticas avanzadas (KPIs, tasa, líneas EPA) | `GET /estadisticas/avanzadas/` | `estadisticas-avanzadas.js` |
-| Distribución geográfica por CCAA | `GET /estadisticas/por-ccaa/` | `estadisticas-avanzadas.js` |
-| Directorio de recursos | `GET /recursos/` | `recursos.js` |
+| Directorio de recursos dinámico | `GET /recursos/` | `recursos.js` |
 
 ### Pendientes futuros del frontend
 
+- Implementar mapa de calor de CCAA en `estadisticas-eell.html` (decisión técnica pendiente: SVG inline o librería de mapas).
+- Poblar `recursos.html` con datos dinámicos cuando el backend implemente `GET /recursos/`.
+- Eliminar con `git rm` los archivos obsoletos `estadisticas.html`, `js/estadisticas.js`, `estadisticas-avanzadas.html` y `js/estadisticas-avanzadas.js`.
 - Mejorar los mensajes de error visibles al usuario (traducir a lenguaje natural).
 - Ficha de entidad como modal/popup para conservar el contexto de búsqueda al cerrar.
 - Política de privacidad y aviso legal.
 - Contenido de la zona privada: tabla resumen por año/estado/tipo.
-- Activar gráficos y KPIs de `estadisticas-avanzadas.html` cuando el backend implemente los endpoints.
-- Poblar `recursos.html` con datos reales cuando el backend implemente `GET /recursos/`.
 
 ---
 
@@ -999,4 +1116,4 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
 
 ---
 
-*Última actualización: 2 de mayo de 2026 — Paso 19 del Issue 7D. Refleja estado final tras Issues 7B, 7C y 7D (incluyendo páginas `recursos.html` y `estadisticas-avanzadas.html`).*
+*Última actualización: 4 de mayo de 2026 — Reorganización completa de estadísticas en Issue 7D. Refleja estado final tras Issues 7B, 7C y 7D: navbar Opción A con 6 enlaces directos, gráficos generales integrados en Home, páginas `estadisticas-epas.html` y `estadisticas-eell.html` con JS propio, y `recursos.html` con contenido estático real.*
