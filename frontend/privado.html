@@ -29,6 +29,11 @@
       Headers: Authorization: Bearer <token>
       → { mensaje: string, contenido: string[] }
 
+    PUT /privado/cambiar-contrasena
+      Headers: Authorization: Bearer <token>
+      Body:    { contrasena_actual, contrasena_nueva }
+      → 200 { mensaje } | 401 actual incorrecta | 422 nueva débil
+
     Archivo JS: js/privado.js
 -->
 <html lang="es">
@@ -65,7 +70,9 @@
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
                 <!--
                     En la zona privada el botón del navbar pasa a ser
                     "Cerrar sesión". privado.js conecta este botón con
@@ -194,6 +201,49 @@
                             <div class="privado-item__linea privado-item__linea--corta"></div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Separador -->
+                <hr class="privado-divisor">
+
+                <!-- Sección cambiar contraseña -->
+                <div class="privado-sesion" style="flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+                    <div class="privado-sesion__info">
+                        <p class="privado-sesion__titulo">Cambiar contraseña</p>
+                        <p class="privado-sesion__desc">
+                            Introduce tu contraseña actual y una nueva para actualizarla.<br>
+                            La nueva contraseña debe tener al menos 8 caracteres, una mayúscula y un número.
+                        </p>
+                    </div>
+                    <form id="form-cambiar-password" novalidate style="flex:1; min-width:260px; max-width:380px;">
+                        <div class="auth-alerta" id="cambiar-password-error" role="alert" aria-live="polite">
+                            Error al cambiar la contraseña.
+                        </div>
+                        <p id="cambiar-password-ok" style="display:none; color:var(--color-verde-oscuro); font-weight:600; margin-bottom:1rem;">
+                            Contraseña actualizada correctamente.
+                        </p>
+                        <div class="grupo-campo">
+                            <label for="password-actual" class="etiqueta-campo">Contraseña actual</label>
+                            <input
+                                type="password"
+                                id="password-actual"
+                                class="input-campo"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="password-nueva" class="etiqueta-campo">Contraseña nueva</label>
+                            <input
+                                type="password"
+                                id="password-nueva"
+                                class="input-campo"
+                                autocomplete="new-password"
+                                required
+                            >
+                        </div>
+                        <button type="submit" class="btn btn-verde">Cambiar contraseña</button>
+                    </form>
                 </div>
 
                 <!-- Separador -->
