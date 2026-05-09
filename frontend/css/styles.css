@@ -1243,6 +1243,12 @@ canvas {
     min-height: 580px;
 }
 
+.auth-card--simple {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    min-height: unset;
+}
+
 /* ── Columna izquierda: panel decorativo con círculo geométrico ──
    Fondo claro (#f0f5f1) con un gran círculo verde centrado y un
    blob secundario en la esquina inferior-derecha. La foto se centra
