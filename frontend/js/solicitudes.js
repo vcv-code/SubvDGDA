@@ -159,6 +159,41 @@ function construirUrl(filtros, pagina) {
 
 
 // ─────────────────────────────────────────────────────────────
+// PERSISTENCIA DE FILTROS EN LA URL
+// Permite que al volver con el botón Atrás los filtros se
+// restauren automáticamente sin perder la búsqueda anterior.
+// ─────────────────────────────────────────────────────────────
+function sincronizarUrl(filtros, pagina) {
+    const params = new URLSearchParams();
+    if (filtros.nombre)    params.set('nombre',    filtros.nombre);
+    if (filtros.anio)      params.set('anio',      filtros.anio);
+    if (filtros.tipo)      params.set('tipo',      filtros.tipo);
+    if (filtros.estado)    params.set('estado',    filtros.estado);
+    if (filtros.ccaa)      params.set('ccaa',      filtros.ccaa);
+    if (filtros.provincia) params.set('provincia', filtros.provincia);
+    if (filtros.linea)     params.set('linea',     filtros.linea);
+    if (pagina > 1)        params.set('pagina',    pagina);
+    const qs = params.toString();
+    history.pushState({}, '', qs ? `?${qs}` : window.location.pathname);
+}
+
+function cargarFiltrosDesdeUrl() {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.toString()) return 0;
+    if (params.get('nombre'))    filtraNombre.value    = params.get('nombre');
+    if (params.get('anio'))      filtroAnio.value      = params.get('anio');
+    if (params.get('tipo'))      filtroTipo.value      = params.get('tipo');
+    if (params.get('estado'))    filtroEstado.value    = params.get('estado');
+    if (params.get('ccaa'))      filtroCcaa.value      = params.get('ccaa');
+    if (params.get('provincia'))
+        document.getElementById('filtro-provincia').value = params.get('provincia');
+    if (params.get('linea'))     filtroLinea.value     = params.get('linea');
+    actualizarFiltrosCondicionales();
+    return parseInt(params.get('pagina')) || 1;
+}
+
+
+// ─────────────────────────────────────────────────────────────
 // FUNCIÓN PRINCIPAL: buscarSolicitudes
 // Orquesta la búsqueda completa: lee filtros → llama a la API
 // → actualiza la tabla y la paginación.
@@ -166,6 +201,7 @@ function construirUrl(filtros, pagina) {
 async function buscarSolicitudes(pagina = 1) {
     const filtros = leerFiltros();
     estado.paginaActual = pagina;
+    sincronizarUrl(filtros, pagina);
 
     // Mostramos el estado de carga y ocultamos el resto
     mostrarEstadoCarga();
@@ -266,6 +302,13 @@ function pintarTabla(solicitudes) {
     paginacion.style.display     = '';
     if (tablaControles) tablaControles.style.display = '';
     if (infoResultados && infoResultados.textContent) infoResultados.style.display = '';
+
+    // Leyenda de tramos: solo si algún resultado tiene tramo
+    const leyenda = document.getElementById('leyenda-tramos');
+    if (leyenda) {
+        leyenda.style.display = ordenadas.some(s => s.tramo !== null && s.tramo !== undefined)
+            ? '' : 'none';
+    }
 }
 
 
@@ -312,7 +355,7 @@ function crearFila(s) {
         <td>${importe}</td>
     `;
 
-    // Celda 0: nombre de la entidad + badge "Agrupación" si aplica
+    // Celda 0: nombre de la entidad + badges si aplican
     const tdNombre = tr.cells[0];
     tdNombre.appendChild(document.createTextNode(nombre));
     if (s.es_agrupacion === true) {
@@ -320,6 +363,12 @@ function crearFila(s) {
         badgeAgrupacion.className   = 'badge-agrupacion';
         badgeAgrupacion.textContent = 'Agrupación';
         tdNombre.appendChild(badgeAgrupacion);
+    }
+    if (s.tramo !== null && s.tramo !== undefined) {
+        const badgeTramo = document.createElement('span');
+        badgeTramo.className   = 'badge-tramo';
+        badgeTramo.textContent = `T${s.tramo}`;
+        tdNombre.appendChild(badgeTramo);
     }
 
     // Badge de estado: se inserta en la celda vacía (índice 3)
@@ -488,11 +537,13 @@ function descargarCSV() {
     const filtros = leerFiltros();
     const params  = new URLSearchParams();
 
-    if (filtros.nombre) params.set('buscar', filtros.nombre);
-    if (filtros.tipo)   params.set('tipo',   filtros.tipo);
-    if (filtros.ccaa)   params.set('ccaa',   filtros.ccaa);
-    if (filtros.anio)   params.set('anio',   filtros.anio);
-    if (filtros.estado) params.set('estado', filtros.estado);
+    if (filtros.nombre)    params.set('buscar',    filtros.nombre);
+    if (filtros.tipo)      params.set('tipo',      filtros.tipo);
+    if (filtros.anio)      params.set('anio',      filtros.anio);
+    if (filtros.estado)    params.set('estado',    filtros.estado);
+    if (filtros.ccaa)      params.set('ccaa',      filtros.ccaa);
+    if (filtros.provincia) params.set('provincia', filtros.provincia);
+    if (filtros.linea)     params.set('linea',     filtros.linea);
 
     const url = `${API_URL}/solicitudes/export?${params.toString()}`;
     window.location.href = url;
@@ -515,8 +566,9 @@ function limpiarFiltros() {
     tablaCarga.style.display = '';
     tablaCarga.textContent   = 'Usa los filtros y pulsa "Buscar" para ver resultados.';
 
-    // Reseteamos la paginación
+    // Reseteamos la paginación y la URL
     estado.paginaActual = 1;
+    history.pushState({}, '', window.location.pathname);
 }
 
 
@@ -582,34 +634,19 @@ if (btnDescargarCsv) {
 
 
 // ─────────────────────────────────────────────────────────────
-// LEER PARÁMETROS DE LA URL (para enlaces desde otras páginas)
+// INICIALIZACIÓN: restaurar filtros desde la URL al cargar
 // ─────────────────────────────────────────────────────────────
-/**
- * Cuando el usuario llega desde la Home haciendo clic en
- * "Ver resultados → " de una tarjeta de año, la URL incluye
- * el parámetro ?anio=2025.
- * Aquí lo leemos y pre-rellenamos el filtro automáticamente.
- *
- * Ejemplo de URL: solicitudes.html?anio=2025
- */
 document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
+    const pagina = cargarFiltrosDesdeUrl();
+    if (pagina) buscarSolicitudes(pagina);
+});
 
-    if (params.has('anio')) {
-        filtroAnio.value = params.get('anio');
-    }
-    if (params.has('tipo')) {
-        filtroTipo.value = params.get('tipo');
-    }
-    if (params.has('estado')) {
-        filtroEstado.value = params.get('estado');
-    }
-
-    // Actualizar filtros condicionales por si vienen parámetros pre-establecidos
-    actualizarFiltrosCondicionales();
-
-    // Si hay parámetros en la URL, lanzamos la búsqueda automáticamente
-    if (params.has('anio') || params.has('tipo') || params.has('estado')) {
-        buscarSolicitudes(1);
+// Botón Atrás / Adelante del navegador: restaurar filtros
+window.addEventListener('popstate', () => {
+    const pagina = cargarFiltrosDesdeUrl();
+    if (pagina) {
+        buscarSolicitudes(pagina);
+    } else {
+        limpiarFiltros();
     }
 });

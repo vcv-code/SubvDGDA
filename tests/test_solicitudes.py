@@ -1,7 +1,7 @@
 import csv
 import io
 import pytest
-from backend.app.models import Convocatoria, Beneficiario, Solicitud
+from backend.app.models import Convocatoria, Beneficiario, Solicitud, Concesion
 
 
 @pytest.fixture
@@ -111,7 +111,7 @@ def test_exportar_csv_cabecera(client):
     reader = csv.reader(io.StringIO(response.text))
     cabecera = next(reader)
     assert cabecera == ["anio", "tipo", "num_expediente", "entidad", "cif",
-                        "estado", "importe", "linea", "provincia", "ccaa",
+                        "estado", "importe", "linea", "tramo", "provincia", "ccaa",
                         "puntuacion", "es_agrupacion"]
 
 
@@ -135,3 +135,33 @@ def test_exportar_csv_disposition(client):
     response = client.get("/solicitudes/export")
     assert "attachment" in response.headers["content-disposition"]
     assert "solicitudes.csv" in response.headers["content-disposition"]
+
+
+# --- Campo tramo ---
+
+@pytest.fixture
+def db_con_tramo(db):
+    conv = Convocatoria(titulo_convoc="EELL 2025", tipo_convoc="eell", anio_convocatoria=2025, periodo_meses=12)
+    db.add(conv)
+    db.flush()
+    benef = Beneficiario(cif="P99999001", nombre="Ayuntamiento de Prueba", tipo_benef="entidad_local")
+    db.add(benef)
+    db.flush()
+    solic = Solicitud(id_convoc=conv.id_convoc, id_benef=benef.id_benef, num_expediente="EXP-T2", estado="concedida")
+    db.add(solic)
+    db.flush()
+    db.add(Concesion(id_solic=solic.id_solic, importe=30000, tramo=2))
+    db.commit()
+    return solic.id_solic
+
+
+def test_tramo_aparece_en_respuesta(db_con_tramo, client):
+    data = client.get("/solicitudes/?cif=P99999001").json()
+    assert data["total"] == 1
+    assert data["resultados"][0]["tramo"] == 2
+
+
+def test_tramo_nulo_en_solicitud_sin_concesion(db_con_datos, client):
+    data = client.get("/solicitudes/?estado=excluida").json()
+    assert data["total"] >= 1
+    assert all(r["tramo"] is None for r in data["resultados"])

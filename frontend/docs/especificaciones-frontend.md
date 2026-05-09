@@ -71,7 +71,9 @@ frontend/
 │   ├── recursos.js              → Lógica del directorio de recursos (pendiente de endpoint)
 │   ├── auth.js                  → Lógica de login y registro (JWT)
 │   ├── privado.js               → Control de acceso y contenido de zona privada
-│   └── entidad.js               → Lógica de la ficha de entidad
+│   ├── entidad.js               → Lógica de la ficha de entidad
+│   ├── recuperar-password.js    → Envío del email de recuperación
+│   └── reset-password.js        → Validación y envío de la nueva contraseña
 │
 ├── assets/
 │   ├── logo.png                → Logotipo del proyecto (también usado como favicon)
@@ -89,6 +91,8 @@ frontend/
 ├── registro.html            → Formulario de creación de cuenta
 ├── privado.html             → Zona exclusiva para usuarios registrados
 ├── entidad.html             → Ficha de entidad con historial y desglose de agrupaciones
+├── recuperar-password.html  → Solicitar enlace de recuperación de contraseña por email
+├── reset-password.html      → Establecer nueva contraseña desde el enlace del email
 └── docs/
     ├── diseño.md                    → Guía visual del proyecto (issue 7A)
     └── especificaciones-frontend.md → Este documento
@@ -216,7 +220,7 @@ Se usan tres variantes de tarjeta:
 - **`.card-metrica-verde`** — tarjeta de métrica: fondo verde suave, número grande y label encima.
 - **`.card-anio`** — tarjeta de convocatoria por año: año en grande, estado "Cerrada", líneas EPA/EELL con importe y enlace a resultados.
 
-### 4.4 Badges de estado y agrupación
+### 4.4 Badges de estado, agrupación y tramo
 
 **Badges de estado de solicitud** — pequeñas etiquetas de color para los valores de estado. Se aplican con las clases `.badge-concedida`, `.badge-no-beneficiaria`, `.badge-excluida` y `.badge-desistida`. Los colores están justificados en la sección 3.1.
 
@@ -234,6 +238,10 @@ Se usan tres variantes de tarjeta:
 ```
 
 En `crearFila()` de `solicitudes.js`, la celda de nombre se construye con `createTextNode` (nombre) más el `<span class="badge-agrupacion">Agrupación</span>` añadido condicionalmente. No se usa `innerHTML` para no exponer el nombre de la entidad a posible inyección HTML.
+
+**Badge de tramo** (rama 10a) — etiqueta marrón oscuro que aparece junto al nombre en el buscador y junto al importe en la ficha de entidad cuando `s.tramo !== null`. Muestra `T1`, `T2` o `T3` según la población del municipio (tramos definidos en la resolución DGDA). Solo aplica a EELL 2025 concedidas. Clase `.badge-tramo`.
+
+Junto con el badge, aparece una **leyenda de tramos** encima de la tabla (oculta si no hay resultados con tramo): `T1 ≤ 10.000 hab. · T2 10.001–50.000 hab. · T3 > 50.000 hab.`
 
 ### 4.5 Grids
 
@@ -392,7 +400,7 @@ El backend devuelve siempre este formato en caso de error:
 - Favicon configurado con `<link rel="icon" href="assets/logo.png">`.
 - Metadatos Open Graph (`og:title`, `og:description`, `og:image`) añadidos en el `<head>`.
 - KPI "Entidades únicas" conectado con el dato real de la API (`datos.entidades_unicas`).
-- Botón "Conócenos" → sustituido por "Ver solicitudes" enlazando a `solicitudes.html`.
+- Botón hero renombrado a "Ir al buscador" enlazando a `solicitudes.html`.
 - Spinner de carga sobre las métricas.
 - Caja de error visual si el backend no responde.
 - **Nueva sección de gráficos** con fondo verde (`fondo-stats`), usando el endpoint existente `GET /estadisticas/`.
@@ -401,9 +409,10 @@ El backend devuelve siempre este formato en caso de error:
 
 | Sección | Contenido | Datos |
 |---|---|---|
-| Portada partida | Título "Sobre el proyecto" + descripción + foto de animales | Estático |
+| Portada partida | Título "Sobre el proyecto" + descripción + foto de animales + botón "Ir al buscador" | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
-| Gráficos (nueva) | Evolución importe por año (línea), distribución estados (donut), EPA vs EELL por año (barras agrupadas), KPI tasa de éxito | API `/estadisticas/` |
+| Convocatorias | Dos bloques (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador filtrado; pendientes sin `fecha_resolucion` muestran estado | API `/convocatorias/` |
+| Gráficos | Evolución importe por año (línea), distribución estados (donut), EPA vs EELL por año (barras agrupadas), KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
 
@@ -416,7 +425,7 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 | `crearGraficoBarras(porAnio)` | `bar` agrupado | `home-grafico-barras` | `por_anio` separado por tipo |
 | `mostrarTasaExito(datos)` | KPI HTML | `home-tasa-exito` | `total_concedidas / total_registros` |
 
-**Archivo JS:** `js/home.js` — una sola petición a `/estadisticas/` alimenta todos los bloques (métricas + gráficos).
+**Archivo JS:** `js/home.js` — tres funciones asíncronas independientes: `cargarDatos()` (métricas + gráficos desde `/estadisticas/`), `cargarAvisos()` (banner desde `/avisos/`) y `cargarConvocatorias()` (bloque convocatorias desde `/convocatorias/`).
 
 ### 5.2 Buscador — `solicitudes.html`
 
@@ -454,26 +463,15 @@ La búsqueda por nombre se realiza server-side. El backend implementa el paráme
 
 **Control de orden:** encima de la tabla aparece `.tabla-controles` con el recuento de resultados a la izquierda y a la derecha el selector de orden y el botón de exportación. Opciones de orden: Entidad (A → Z), Importe mayor → menor, Importe menor → mayor. La ordenación es client-side sobre los resultados de la página actual.
 
-**Exportación CSV:** el botón "↓ Descargar CSV" construye la URL `/solicitudes/export` con los filtros activos (`buscar`, `tipo`, `ccaa`, `anio`, `estado`) —sin `pagina` ni `limite`— y redirige con `window.location.href`. El backend genera y sirve el fichero CSV completo (todos los resultados de la búsqueda, sin paginación). No hay lógica de generación CSV en el cliente.
-
-```javascript
-function descargarCSV() {
-    const filtros = leerFiltros();
-    const params  = new URLSearchParams();
-    if (filtros.nombre) params.set('buscar', filtros.nombre);
-    if (filtros.tipo)   params.set('tipo',   filtros.tipo);
-    if (filtros.ccaa)   params.set('ccaa',   filtros.ccaa);
-    if (filtros.anio)   params.set('anio',   filtros.anio);
-    if (filtros.estado) params.set('estado', filtros.estado);
-    window.location.href = `${API_URL}/solicitudes/export?${params.toString()}`;
-}
-```
+**Exportación CSV:** el botón "↓ Descargar CSV" construye la URL `/solicitudes/export` con todos los filtros activos (`buscar`, `tipo`, `anio`, `estado`, `ccaa`, `provincia`, `linea`) —sin `pagina` ni `limite`— y redirige con `window.location.href`. El backend genera y sirve el fichero CSV completo. No hay lógica de generación CSV en el cliente. El CSV incluye la columna `tramo` (rama 10a).
 
 **Paginación:** 50 resultados por página. Parámetros `limite` y `pagina` en la URL de la API.
 
 **Enlace a ficha:** al hacer clic en cualquier fila se navega a `entidad.html?cif=...`.
 
-**Parámetros por URL:** la página acepta `?anio=`, `?tipo=` y `?estado=` para pre-rellenar filtros desde enlaces externos.
+**Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos se escriben como parámetros en la URL de la página (`solicitudes.html?tipo=eell&anio=2025&estado=concedida`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `solicitudes.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento.
+
+La página también acepta parámetros en la URL al llegar desde enlaces externos (`?anio=2025`, `?tipo=eell`, etc.) — compatible con los enlaces de la Home.
 
 **Archivo JS:** `js/solicitudes.js`.
 
@@ -502,11 +500,11 @@ function descargarCSV() {
 
 **Cambios en Issue 7D:** desglose de municipios para solicitudes que pertenecen a una agrupación EELL.
 
-**Contenido de la página:**
-- Nombre de la entidad
-- CIF
-- Bloque `#agrupacion-detalle` (oculto por defecto, visible si hay agrupación)
-- Tabla de historial con: Año de convocatoria, Tipo (EPA/EELL), Estado (badge de color), Importe concedido, Número de expediente
+**Contenido de la página (orden visual):**
+- Nombre de la entidad y CIF
+- Leyenda de tramos (oculta si ninguna solicitud tiene tramo)
+- Tabla de historial con: Año de convocatoria, Tipo (EPA/EELL), Estado (badge de color), Importe concedido + badge tramo, Número de expediente
+- Bloque `#agrupacion-detalle` (oculto por defecto, visible debajo de la tabla si hay agrupación)
 
 **Bloque de desglose de agrupación (`#agrupacion-detalle`):**
 
@@ -522,9 +520,10 @@ solicitudes.forEach(s => {
 ```
 
 La función `cargarAgrupacion(idSolic)` llama a `GET /agrupaciones/{id_solic}` y rellena:
-- `#agrupacion-representante` → `datos.representante`
+
+- `#agrupacion-representante` → `datos.representante.nombre` (el campo `representante` es un objeto `BeneficiarioOut`; usar `.nombre` evita el bug `[object Object]`)
 - `#agrupacion-num-municipios` → `datos.num_municipios`
-- `#agrupacion-miembros > tbody` → lista de miembros con `nombre`, `cif` e `importe_asignado`
+- `#agrupacion-miembros > tbody` → lista de miembros con `nombre`, `cif` e `importe_asignado` (campo correcto del schema; no `importe`)
 
 Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto sin romper la página (error silencioso en `catch`).
 
@@ -566,7 +565,19 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 
 **Propósito:** Directorio estático de organizaciones, iniciativas y campañas relevantes en materia de protección animal, gestión ética de colonias felinas, fauna urbana y movimientos actuales. Esta página no depende del backend: todo el contenido procede del documento funcional entregado por el equipo y se integra directamente en HTML.
 
-**Estado:** Contenido completamente implementado. La página se ha reconstruido con un grid responsive y tarjetas informativas. No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
+**Estado:** Contenido implementado (Issue 7D/7E). En proceso de ajuste visual. No existe `recursos.js` activo: no hay fetch ni lógica dinámica.
+
+**Cambios visuales aplicados (rama 10a):**
+- Logos uniformes: `height: 80px; object-fit: contain` en `.card-entidad img`. Eliminado `width="200"` hardcodeado.
+- Orden de la tarjeta cambiado con CSS `order`: nombre → logo → descripción.
+- Categoría/subtítulo oculto (`display: none`).
+- Todo el contenido centrado (`text-align: center` en `.card-entidad`).
+
+**Pendientes de mejora visual** *(página en proceso de ajuste)*:
+- Color de fondo diferente para cada uno de los 4 bloques — referencia: panel de nueva pestaña de la usuaria.
+- Decidir si eliminar definitivamente la categoría del HTML o mostrarla en otro formato.
+- Ajustar altura del logo (80px) si algún logo queda demasiado pequeño o grande.
+- Revisar aspecto general de las tarjetas una vez aplicados los colores por sección.
 
 **Estructura visual:**
 
@@ -575,12 +586,54 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
   - 2 columnas en tablet (≥768px)  
   - 1 columna en móvil  
 - **Tarjetas:** cada entidad se representa con:
+  - logo oficial (enlace externo)  
   - nombre  
   - categoría o ámbito (si aplica)  
   - descripción breve  
 - **Navbar y footer:** se mantienen sin cambios.  
-- **Contenido 100% estático:** sin dependencias del backend.  
-- **Imágenes:** no incluidas en esta fase (se añadirán más adelante).
+- **Contenido 100% estático:** sin dependencias del backend.
+
+---
+
+#### Optimización de imágenes — Issue 7E
+
+**Directorio:** `assets/img/logos/`  
+**Formato:** WebP
+
+**Parámetros de conversión (Squoosh / cwebp):**
+
+| Parámetro | Valor |
+|---|---|
+| Anchura máxima | 512 px (proporción preservada) |
+| Calidad | 75–80 |
+| Reducir paleta | Activado |
+| Effort | 5 |
+
+**Patrón de integración en `<article class="card-entidad">`:**
+
+```html
+<article class="card-entidad">
+    <a href="https://url-oficial.org/" target="_blank" rel="noopener noreferrer">
+        <img src="assets/img/logos/nombre-entidad.webp"
+             alt="Logo Nombre Entidad"
+             width="200"
+             loading="lazy">
+    </a>
+    <p class="card-entidad__nombre">Nombre Entidad</p>
+    <p class="card-entidad__categoria">Categoría</p>
+    <p class="card-entidad__descripcion">Descripción breve.</p>
+</article>
+```
+
+**Reglas aplicadas:**
+
+- `<img>` siempre como primer hijo del `<article>`, dentro de `<a>`.
+- Solo el logo es enlace; el resto de la tarjeta no es interactivo.
+- Atributo `width="200"` únicamente — sin `height` para evitar deformación.
+- `loading="lazy"` en todos los logos (rendimiento en página larga).
+- `alt` con patrón `"Logo Nombre"` (accesibilidad).
+- `target="_blank"` + `rel="noopener noreferrer"` en todos los enlaces externos.
+- Sin estilos inline; sin contenedores adicionales alrededor del `<a>`.
 
 ---
 
@@ -588,12 +641,14 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 
 Entidades de referencia en bienestar animal, activismo, apoyo a protectoras y operadores jurídicos:
 
-- **BASMA** — Banco de alimentos para protectoras; apoyo a animales en situación de vulnerabilidad.  
-- **FAADA** — Fundación dedicada a políticas públicas y legislación de bienestar animal.  
-- **Animanaturalis** — Activismo y campañas de concienciación y defensa de los animales.  
-- **Intercids** — Red de operadores jurídicos especializados en maltrato animal.  
-- **APDDA** — Grupo institucional que impulsa iniciativas legislativas en defensa de los animales.  
-- **AVATMA** — Asociación veterinaria con enfoque técnico y científico, especialmente en tauromaquia.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| BASMA | `basma.webp` | https://piensosolidariobasma.org/ |
+| FAADA | `logo-faada.webp` | https://faada.org/ |
+| Animanaturalis | `logo-animaNaturalis.webp` | https://www.animanaturalis.org/ |
+| Intercids | `Logo-Intercids-c.webp` | https://intercids.com/ |
+| APDDA | `logo-apdda.webp` | https://apdda.es/ |
+| AVATMA | `avatma-negativo-solo-logo.webp` | https://avatma.es/ |
 
 ---
 
@@ -601,12 +656,14 @@ Entidades de referencia en bienestar animal, activismo, apoyo a protectoras y op
 
 Organizaciones y plataformas centradas en CER, gestión ética y divulgación:
 
-- **GEMFE** — Grupo veterinario especializado en salud y bienestar felino.  
-- **Plataforma GARRA** — Defensa estatal de la gestión ética de colonias felinas.  
-- **Los gatos tienen ley** — Iniciativa legal para reconocimiento de gatos comunitarios.  
-- **FDCats** — Federación de asociaciones enfocadas en CER.  
-- **Los 4 de la Empandilla** — Rescate especializado en Madrid y otras zonas.  
-- **MeowMetrics** — Plataforma digital para seguimiento y análisis de colonias felinas.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| GEMFE | `logo-gemfe.webp` | https://gemfe.es/ |
+| Plataforma GARRA | `logo-plataformaGarra.webp` | https://plataformagarra.es/ |
+| Los gatos tienen ley | `Logo-losGatosTienenLey.webp` | https://losgatostienenley.es/ |
+| FDCats | `logo-fdcats.webp` | https://fdcats.es/ |
+| Los 4 de la Empandilla | `logo-losCuatroDeLaEmpandilla.webp` | https://los4delaempandilla.org/ |
+| MeowMetrics | `logo-meowMetrics.webp` | https://meowmetrics.app/ |
 
 ---
 
@@ -614,12 +671,14 @@ Organizaciones y plataformas centradas en CER, gestión ética y divulgación:
 
 Organizaciones centradas en fauna urbana, silvestre o especies concretas:
 
-- **Plataforma Cotorras** — Defensa de la gestión ética de cotorras urbanas.  
-- **Free Fox** — Rescate y sensibilización sobre fauna silvestre.  
-- **GREFA** — Centro de recuperación y conservación de fauna silvestre.  
-- **Asociación EriSOS** — Protección y recuperación de erizos urbanos.  
-- **SOS Vencejos** — Rescate y cuidado de aves urbanas, especialmente vencejos.  
-- **Mis amigas las palomas** — Concienciación y cambio de percepción sobre palomas en ciudades.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| Plataforma Cotorras | `logo-pCotorras.webp` | https://plataformacotorras.es/ |
+| Free Fox | `logo-freeFox.webp` | https://freefox.es/ |
+| GREFA | `logo-grefa.webp` | https://grefa.org/ |
+| Asociación EriSOS | `logo-erisos.webp` | https://erisos.org/ |
+| SOS Vencejos | `logo-sosvencejos.webp` | https://sosvencejos.es/ |
+| MALP | `logoMALP.webp` | https://misamigaslas palomas.es/ |
 
 ---
 
@@ -627,19 +686,22 @@ Organizaciones centradas en fauna urbana, silvestre o especies concretas:
 
 Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
-- **Vets Unidos** — Campaña profesional sobre el RD de medicamentos veterinarios.  
-- **Mismos perros, misma ley** — Inclusión de perros de caza en la normativa de protección animal.  
-- **Santuarios no son granjas** — Reconocimiento legal diferenciado para santuarios de animales.  
-- **La tortura no es cultura** — Movimiento abolicionista de la tauromaquia.  
-- **Vivotecnia** — Caso judicial que reabre el debate sobre investigación animal.  
-- **Plataforma NAC (No a la caza)** — Denuncia del maltrato en actividades cinegéticas.
+| Entidad | Archivo logo | URL oficial |
+|---|---|---|
+| Vets Unidos | `Logo-vetsUnidos.webp` | https://vetsunidos.es/ |
+| Mismos perros, misma ley | `logo-mismosPerros.webp` | https://mismosperros.es/ |
+| Santuarios no son granjas | `logo-santuariosNoGranjas.webp` | https://santuariosnosongranigas.es/ |
+| La tortura no es cultura | `logo-torturaNoCultura.webp` | https://latorturanoecultura.es/ |
+| Vivotecnia | `logo-vivotecnia.webp` | https://vivotecnia.es/ |
+| Plataforma NAC | `logo-nac.webp` | https://noalacaza.es/ |
 
 ---
 
 **Notas de implementación:**
-- La página sustituye la versión previa, que contenía únicamente enlaces básicos.  
-- Se mantiene coherencia visual con el resto del proyecto (tipografías, espaciados, estructura de secciones).  
-- Pendiente para fase futura: incorporación de imágenes y logos oficiales.
+- La página sustituye la versión previa que contenía únicamente enlaces básicos.
+- Se mantiene coherencia visual con el resto del proyecto (tipografías, espaciados, estructura de secciones).
+- Los logos WebP están en `assets/img/logos/`; no se requiere subdirectorio adicional por bloque.
+- Las URLs oficiales de la tabla son aproximadas; verificar antes de publicar en producción.
 
 
 ---

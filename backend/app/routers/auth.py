@@ -3,10 +3,12 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from ..auth import hashear_password, verificar_password, crear_token, crear_refresh_token, refresh_expira_en
+from ..auth import (hashear_password, verificar_password, crear_token,
+                    crear_refresh_token, refresh_expira_en,
+                    crear_reset_token, reset_expira_en, enviar_email_recuperacion)
 from ..db import get_db
-from ..models import Usuario, RefreshToken
-from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn
+from ..models import Usuario, RefreshToken, ResetToken
+from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn, RecuperarPasswordIn, ResetPasswordIn
 
 router = APIRouter(prefix="/auth", tags=["autenticación"])
 
@@ -78,3 +80,35 @@ def logout(datos: RefreshIn, db: Session = Depends(get_db)):
         rt.revocado = True
         db.commit()
     return {"mensaje": "Sesión cerrada"}
+
+
+@router.post("/recuperar", status_code=status.HTTP_200_OK)
+def recuperar_password(datos: RecuperarPasswordIn, db: Session = Depends(get_db)):
+    # Respondemos siempre igual para no revelar si el email existe o no
+    respuesta = {"mensaje": "Si ese email está registrado, recibirás un enlace en breve"}
+    usuario = db.query(Usuario).filter(Usuario.email == datos.email).first()
+    if not usuario or not usuario.activo:
+        return respuesta
+    token = crear_reset_token()
+    db.add(ResetToken(
+        id_usuario=usuario.id_usuario,
+        token=token,
+        expira_en=reset_expira_en(),
+    ))
+    db.commit()
+    enviar_email_recuperacion(usuario.email, token)
+    return respuesta
+
+
+@router.post("/reset", status_code=status.HTTP_200_OK)
+def reset_password(datos: ResetPasswordIn, db: Session = Depends(get_db)):
+    rt = db.query(ResetToken).filter(ResetToken.token == datos.token).first()
+    if not rt or rt.usado or rt.expira_en.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enlace inválido o expirado")
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == rt.id_usuario).first()
+    if not usuario or not usuario.activo:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enlace inválido o expirado")
+    usuario.password = hashear_password(datos.contrasena_nueva)
+    rt.usado = True
+    db.commit()
+    return {"mensaje": "Contraseña actualizada correctamente"}
