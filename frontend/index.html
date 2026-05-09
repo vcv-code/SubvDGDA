@@ -185,7 +185,7 @@
                         botón de todas las páginas.
                     -->
                     <a href="solicitudes.html" class="btn btn-primario">
-                        Ver solicitudes
+                        Ir al buscador
                     </a>
                 </div>
 
@@ -248,6 +248,34 @@
                         <span class="card-metrica-verde__numero" id="total-entidades">—</span>
                     </div>
 
+                </div>
+
+                <!-- Bloques de convocatorias por tipo -->
+                <div id="convocatorias-bloque" style="margin-top: var(--espacio-lg); display:none; text-align:center;">
+                    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:var(--espacio-sm);">Convocatorias</h3>
+                    <div class="grid-2">
+                        <div>
+                            <p class="card-grafico__titulo" style="margin-bottom:0.5rem; text-align:center;">Entidades Locales (EELL)</p>
+                            <div class="tabla-wrapper">
+                                <table class="tabla-convoc">
+                                    <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
+                                    <tbody id="convocatorias-eell"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="card-grafico__titulo" style="margin-bottom:0.5rem; text-align:center;">Entidades Protectoras de Animales (EPA)</p>
+                            <div class="tabla-wrapper">
+                                <table class="tabla-convoc">
+                                    <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
+                                    <tbody id="convocatorias-epa"></tbody>
+                                </table>
+                            </div>
+                            <p id="convocatorias-nota" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--color-gris-texto);">
+                                * Período subvencionable de 6 meses (resto: 12 meses).
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
             </div>

@@ -71,3 +71,18 @@ def test_agrupacion_miembros_tienen_campos(db_con_agrupacion, client):
         assert "nombre" in m
         assert "cif" in m
         assert "importe_asignado" in m
+
+
+def test_agrupacion_representante_tiene_nombre(db_con_agrupacion, client):
+    id_con = db_con_agrupacion["id_con_agrup"]
+    data = client.get(f"/agrupaciones/{id_con}").json()
+    assert isinstance(data["representante"], dict)
+    assert data["representante"]["nombre"] == "Ayuntamiento de Burgos"
+
+
+def test_agrupacion_miembros_importes_correctos(db_con_agrupacion, client):
+    id_con = db_con_agrupacion["id_con_agrup"]
+    data = client.get(f"/agrupaciones/{id_con}").json()
+    importes = {m["cif"]: m["importe_asignado"] for m in data["miembros"]}
+    assert importes["P00000001"] == 30000.0
+    assert importes["P00000002"] == 20000.0

@@ -634,7 +634,7 @@ table tbody tr:hover {
     justify-content: space-between;
     align-items: center;
     gap: var(--espacio-sm);
-    margin: var(--espacio-sm) 0;
+    margin: 2rem 0 var(--espacio-sm);
     flex-wrap: wrap;
 }
 
@@ -1241,6 +1241,12 @@ canvas {
     grid-template-columns: 45% 55%;
     overflow: hidden;
     min-height: 580px;
+}
+
+.auth-card--simple {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    min-height: unset;
 }
 
 /* ── Columna izquierda: panel decorativo con círculo geométrico ──
@@ -1886,6 +1892,31 @@ canvas {
     border-radius: 4px;
     font-size: 0.75rem;
     margin-left: 6px;
+}
+
+.badge-tramo {
+    background-color: #b45309;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-left: 6px;
+}
+
+.btn--sm {
+    padding: 4px 12px;
+    font-size: 0.85rem;
+}
+
+.convoc-pendiente {
+    color: var(--color-gris-texto);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.tabla-convoc th,
+.tabla-convoc td {
+    text-align: center;
 }
 
 

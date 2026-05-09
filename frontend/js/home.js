@@ -522,7 +522,65 @@ async function cargarAvisos() {
 }
 
 
+async function cargarConvocatorias() {
+    const bloque = document.getElementById('convocatorias-bloque');
+    if (!bloque) return;
+
+    try {
+        const resp = await fetch(`${API_URL}/convocatorias/`);
+        if (!resp.ok) return;
+
+        const convocatorias = await resp.json();
+        if (!convocatorias.length) return;
+
+        const porTipo = { eell: [], epa: [] };
+        convocatorias.forEach(c => {
+            if (porTipo[c.tipo_convoc]) porTipo[c.tipo_convoc].push(c);
+        });
+
+        const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+        const fmtFecha = iso => {
+            if (!iso) return '—';
+            const [y, m, d] = iso.split('-');
+            return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;
+        };
+
+        const renderFilas = (lista) =>
+            lista
+                .sort((a, b) => b.anio_convocatoria - a.anio_convocatoria)
+                .map(c => {
+                    const asterisco  = c.periodo_meses === 6 ? ' *' : '';
+                    const fechaStr   = fmtFecha(c.fecha_convocatoria);
+                    const pendiente  = c.fecha_resolucion === null && c.fecha_convocatoria !== null;
+                    const accion     = pendiente
+                        ? `<span class="convoc-pendiente">Pendiente de resolución</span>`
+                        : `<a href="solicitudes.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm">Ver →</a>`;
+                    return `<tr>
+                        <td>${c.anio_convocatoria}${asterisco}</td>
+                        <td>${fechaStr}</td>
+                        <td>${accion}</td>
+                    </tr>`;
+                }).join('');
+
+        const tbodyEell = document.getElementById('convocatorias-eell');
+        const tbodyEpa  = document.getElementById('convocatorias-epa');
+        if (tbodyEell) tbodyEell.innerHTML = renderFilas(porTipo.eell);
+        if (tbodyEpa)  tbodyEpa.innerHTML  = renderFilas(porTipo.epa);
+
+        const haySeisMeses = convocatorias.some(c => c.periodo_meses === 6);
+        const notaEl = document.getElementById('convocatorias-nota');
+        if (notaEl) notaEl.style.display = haySeisMeses ? '' : 'none';
+
+        bloque.style.display = '';
+
+    } catch (_) {
+        // Si falla, el bloque permanece oculto
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
     cargarAvisos();
+    cargarConvocatorias();
 });

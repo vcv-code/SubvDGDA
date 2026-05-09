@@ -22,6 +22,14 @@ services:
       timeout: 5s
       retries: 5
 
+  mailpit:
+    image: axllent/mailpit
+    container_name: bdns_mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP — el backend envía emails aquí
+      - "8025:8025"   # Web UI — http://localhost:8025
+
   backend:
     build: ../backend
     container_name: bdns_api
@@ -33,11 +41,15 @@ services:
       DB_PASSWORD: ${MYSQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
       LOG_DIR: /app/logs
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
     volumes:
       - ../logs/app:/app/logs
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
 
   nginx:
     image: nginx:alpine

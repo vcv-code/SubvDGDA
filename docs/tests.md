@@ -4,17 +4,17 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 123 | pytest (sin Docker) |
-| Pruebas manuales | 31 | Navegador + DevTools con Docker levantado |
-| **Total** | **154** | |
+| Tests automáticos | 157 | pytest (sin Docker) |
+| Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
+| **Total** | **209** | |
 
-Las pruebas manuales se distribuyen en cuatro bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs` y 2 de caché y rate limiting.
+Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
 ---
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **123 tests automáticos** distribuidos en 15 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
+El proyecto incluye **148 tests automáticos** distribuidos en 15 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
 
 ### Cómo funcionan
 
@@ -76,7 +76,7 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 76 | `test_agrupaciones.py` | Funcional | Blanca | `num_municipios` coincide con el valor insertado en la fixture |
 | 77 | `test_agrupaciones.py` | Funcional | Negra | Cada miembro tiene `nombre`, `cif` e `importe_asignado` |
 | 78 | `test_solicitudes.py` | Funcional | Negra | `GET /solicitudes/export` devuelve `Content-Type: text/csv` |
-| 79 | `test_solicitudes.py` | Funcional | Blanca | Primera línea del CSV tiene exactamente las 12 columnas esperadas |
+| 79 | `test_solicitudes.py` | Funcional | Blanca | Primera línea del CSV tiene exactamente las 13 columnas esperadas (incluye `tramo`) |
 | 80 | `test_solicitudes.py` | Funcional | Blanca | Con 3 solicitudes en BD, el CSV tiene cabecera + 3 filas de datos |
 | 81 | `test_solicitudes.py` | Funcional | Blanca | `?tipo=epa` en export devuelve solo filas con tipo `epa` |
 | 82 | `test_solicitudes.py` | Funcional | Negra | `Content-Disposition` incluye `attachment` y `solicitudes.csv` |
@@ -121,6 +121,40 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 121 | `test_refresh_token.py` | Seguridad | Blanca | Token inventado en `/auth/refresh` devuelve 401 |
 | 122 | `test_refresh_token.py` | Seguridad | Blanca | `POST /auth/logout` revoca el token; un `/auth/refresh` posterior devuelve 401 |
 | 123 | `test_refresh_token.py` | Funcional | Blanca | Logout con token inexistente devuelve 200 sin error |
+| 124 | `test_refresh_token.py` | Seguridad | Blanca | Cambiar contraseña revoca todos los refresh tokens activos del usuario |
+| 125 | `test_estadisticas.py` | Funcional | Negra | `GET /estadisticas/epas` responde 200 |
+| 126 | `test_estadisticas.py` | Funcional | Negra | Respuesta de `/estadisticas/epas` tiene las claves esperadas |
+| 127 | `test_estadisticas.py` | Funcional | Blanca | Sin datos en BD, `/estadisticas/epas` devuelve ceros sin error |
+| 128 | `test_estadisticas.py` | Funcional | Blanca | Cálculos globales de EPAs (importe medio, mediana, total) correctos con fixture |
+| 129 | `test_estadisticas.py` | Funcional | Blanca | Entidades únicas (sin duplicados por año) calculadas correctamente |
+| 130 | `test_estadisticas.py` | Funcional | Blanca | Nuevos vs recurrentes por año: la primera aparición cuenta como nuevo |
+| 131 | `test_estadisticas.py` | Funcional | Blanca | Top beneficiarios devuelve el importe acumulado por entidad |
+| 132 | `test_estadisticas.py` | Funcional | Blanca | Distribución por tramos: todos los rangos presentes en la respuesta |
+| 133 | `test_estadisticas.py` | Rendimiento | Negra | `/estadisticas/epas` incluye cabecera `Cache-Control` |
+| 134 | `test_estadisticas.py` | Funcional | Negra | `GET /estadisticas/eell` responde 200 |
+| 135 | `test_estadisticas.py` | Funcional | Negra | Respuesta de `/estadisticas/eell` tiene las claves esperadas |
+| 136 | `test_estadisticas.py` | Funcional | Blanca | Sin datos en BD, `/estadisticas/eell` devuelve ceros sin error |
+| 137 | `test_estadisticas.py` | Funcional | Blanca | Porcentaje de ayuntamientos con ayuda calculado correctamente |
+| 138 | `test_estadisticas.py` | Funcional | Blanca | Importe medio por entidad local correcto con fixture |
+| 139 | `test_estadisticas.py` | Funcional | Blanca | Ratio de exclusión (excluidas / total evaluadas) correcto |
+| 140 | `test_estadisticas.py` | Funcional | Blanca | CCAA top devuelve la comunidad con más concedidas |
+| 141 | `test_estadisticas.py` | Funcional | Blanca | Desglose por CCAA tiene el recuento correcto por comunidad |
+| 142 | `test_estadisticas.py` | Funcional | Blanca | Top provincias devuelve las provincias con más concedidas |
+| 143 | `test_estadisticas.py` | Funcional | Blanca | Concentración top 10 %: los porcentajes suman exactamente 100 |
+| 144 | `test_estadisticas.py` | Rendimiento | Negra | `/estadisticas/eell` incluye cabecera `Cache-Control` |
+| 145 | `test_agrupaciones.py` | Funcional | Blanca | `representante` es un objeto con campo `nombre` (no `[object Object]`) |
+| 146 | `test_agrupaciones.py` | Funcional | Blanca | `importe_asignado` de cada miembro coincide con el valor insertado en la fixture |
+| 147 | `test_solicitudes.py` | Funcional | Blanca | Campo `tramo` aparece en la respuesta con el valor correcto para EELL 2025 concedidas |
+| 148 | `test_solicitudes.py` | Funcional | Blanca | Campo `tramo` es `null` para solicitudes sin concesión |
+| 149 | `test_recuperar_password.py` | Funcional | Negra | `POST /auth/recuperar` con email existente devuelve 200 |
+| 150 | `test_recuperar_password.py` | Seguridad | Negra | `POST /auth/recuperar` con email inexistente devuelve también 200 (no revela si existe) |
+| 151 | `test_recuperar_password.py` | Funcional | Blanca | Llamar a `/recuperar` crea exactamente un `ResetToken` en la BD |
+| 152 | `test_recuperar_password.py` | Funcional | Blanca | La función `enviar_email_recuperacion` se llama con el email y el token correctos |
+| 153 | `test_recuperar_password.py` | Funcional | Blanca | `POST /auth/reset` con token válido cambia la contraseña y el login posterior funciona |
+| 154 | `test_recuperar_password.py` | Seguridad | Negra | `POST /auth/reset` con token inventado devuelve 400 |
+| 155 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token ya usado devuelve 400 (no se puede usar dos veces) |
+| 156 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token expirado (insertado con fecha en el pasado) devuelve 400 |
+| 157 | `test_recuperar_password.py` | Unitario | Blanca | Contraseña nueva débil en `/auth/reset` devuelve 422 (validación Pydantic antes de comprobar el token) |
 
 ### Descripción por módulo
 
@@ -140,7 +174,7 @@ Inserta 3 solicitudes de prueba con dos beneficiarios distintos (EPA/asociación
 
 #### test_estadisticas.py
 
-Verifica que el endpoint de estadísticas responde, que el JSON tiene la estructura esperada y que los cálculos de totales e importes son correctos con datos reales.
+Cubre tres endpoints: el general `/estadisticas/` (4 tests) y los específicos `/estadisticas/epas` (10 tests) y `/estadisticas/eell` (10 tests). Para los dos nuevos, cada bloque incluye: respuesta 200, estructura del JSON, comportamiento con BD vacía (ceros sin error), corrección de cálculos con fixture, y cabecera `Cache-Control`. Los tests más importantes son los de cálculo: nuevos vs recurrentes en EPAs (una entidad solo cuenta como nueva la primera vez que aparece), ratio de exclusión en EELL, y la concentración top 10 % (los porcentajes deben sumar exactamente 100).
 
 #### test_auth.py
 
@@ -154,6 +188,8 @@ Los tests más importantes. Cubren tres bloques:
 
 Verifica el endpoint `/agrupaciones/{id_solic}`, que devuelve el desglose de municipios miembro de una agrupación EELL. Cubre los casos de error (ID inexistente, solicitud sin agrupación asociada) y el camino feliz con una fixture completa que construye toda la cadena de relaciones: Convocatoria → Beneficiario → Solicitud → Concesion → Agrupacion → AgrupacionMiembro.
 
+Se añadieron dos tests al detectar bugs en el frontend (ver "Error 3" en pruebas manuales): uno verifica que `representante` es un objeto con campo `nombre` (y no una cadena o tipo incorrecto), y otro verifica que `importe_asignado` de cada miembro llega con el valor numérico correcto.
+
 **Bug detectado por estos tests:** el router usaba `joinedload("miembros")` y `joinedload("representante")` con strings, que no están admitidos en SQLAlchemy 2.x. Los tests fallaron con `ArgumentError` en todos los entornos, lo que llevó a corregir el router para usar atributos de clase (`Agrupacion.miembros`, `Agrupacion.representante`).
 
 #### test_avisos.py
@@ -166,7 +202,7 @@ Verifica el endpoint `PUT /privado/cambiar-contrasena`. Cubre los tres casos de 
 
 #### test_refresh_token.py
 
-Verifica el sistema de refresh token implementado en la rama `9gh`. Cubre el ciclo completo: el login genera un token opaco de 64 caracteres, el refresh devuelve un nuevo access token y rota el refresh token (el anterior queda revocado), un token inventado o ya usado devuelve 401, y el logout revoca correctamente el token en la base de datos. El test de rotación es el más importante: garantiza que cada refresh token solo puede usarse una vez, lo que limita el daño si un token es interceptado.
+Verifica el sistema de refresh token implementado en la rama `9gh`. Cubre el ciclo completo: el login genera un token opaco de 64 caracteres, el refresh devuelve un nuevo access token y rota el refresh token (el anterior queda revocado), un token inventado o ya usado devuelve 401, y el logout revoca correctamente el token en la base de datos. El test de rotación es el más importante: garantiza que cada refresh token solo puede usarse una vez, lo que limita el daño si un token es interceptado. El séptimo test verifica que cambiar la contraseña revoca todos los refresh tokens activos del usuario — una medida de seguridad que impide que sesiones abiertas en otros dispositivos sigan activas tras un cambio de contraseña.
 
 #### test_cache_headers.py
 
@@ -182,6 +218,14 @@ Verifica el sistema de logging implementado en la rama `9c`. Cubre dos partes:
 
 - **Middleware de requests**: comprueba que cada petición HTTP queda registrada con método, ruta, código de respuesta e IP del cliente. Usa `caplog` de pytest para capturar los registros del logger `bdns` sin necesitar archivos en disco.
 - **Configuración del logger**: verifica directamente la función `setup_logging()` y el `generic_exception_handler` usando mocks para no depender del sistema de archivos ni de llamadas HTTP reales.
+
+#### test_recuperar_password.py
+
+Verifica el flujo completo de recuperación de contraseña implementado en la rama `11b`. Cubre los dos endpoints nuevos:
+
+- **`POST /auth/recuperar`**: comprueba que devuelve 200 tanto si el email existe como si no (para no revelar qué cuentas están registradas), que se crea un `ResetToken` en la BD, y que la función de envío de email se invoca con los parámetros correctos. En tests, `enviar_email_recuperacion` se mockea con `unittest.mock.patch` para no necesitar un servidor SMTP real.
+
+- **`POST /auth/reset`**: cubre el camino feliz (token válido → contraseña cambiada → login funciona con nueva contraseña) y los tres casos de error: token inventado (400), token ya usado (400) y token expirado (400). El test de token expirado inserta directamente en la BD un `ResetToken` con `expira_en` en el pasado, sin necesidad de esperar 15 minutos reales.
 
 #### test_unificar_datasets.py
 
@@ -360,3 +404,76 @@ Resultado esperado:
 429
 ...
 ```
+
+---
+
+## Pruebas manuales — agrupaciones, tramos y UX (rama 10a)
+
+Realizadas con Docker levantado en `https://localhost`.
+
+### Bugs corregidos en esta rama
+
+#### Error 3 — Ficha de agrupación mostraba `[object Object]` e importes vacíos
+
+**Detectado en:** prueba manual de la ficha de entidad para un ayuntamiento miembro de una agrupación EELL 2025.
+
+**Síntoma 1:** el campo "Entidad representante" mostraba `[object Object]` en lugar del nombre del ayuntamiento.
+
+**Causa:** el backend devuelve `representante` como objeto `{id_benef, nombre, cif, tipo_benef}`. En `entidad.js` se pintaba directamente `datos.representante` en un template literal, lo que convierte cualquier objeto a su representación string `[object Object]`.
+
+**Corrección:** `datos.representante` → `datos.representante?.nombre`.
+
+**Síntoma 2:** la columna "Importe asignado (€)" mostraba `—` para todos los miembros de la agrupación aunque la BD tenía valores reales.
+
+**Causa:** el schema `MiembroAgrupacionOut` usa el campo `importe_asignado`, pero `entidad.js` buscaba `m.importe` (nombre incorrecto).
+
+**Corrección:** `m.importe` → `m.importe_asignado` en el renderizado de la tabla de miembros.
+
+**Tests añadidos:** entradas 145 y 146 de la tabla.
+
+---
+
+### Flujos verificados (rama 10a)
+
+| # | Pantalla | Acción | Resultado esperado | OK |
+|---|----------|--------|-------------------|-----|
+| 14 | Buscador | Buscar EELL 2025 concedidas | Aparecen badges `T1`, `T2`, `T3` junto al nombre de cada entidad; la leyenda de tramos se muestra encima de la tabla | ✔ |
+| 15 | Buscador | Buscar EPA o EELL de otro año | No aparecen badges de tramo ni leyenda | ✔ |
+| 16 | Ficha entidad | Entidad EELL 2025 concedida con tramo | Badge `T1`/`T2`/`T3` visible junto al importe en la fila correspondiente; leyenda visible encima de la tabla | ✔ |
+| 17 | Ficha entidad | Entidad miembro de agrupación EELL | "Entidad representante" muestra el nombre correcto (no `[object Object]`); importes asignados visibles para cada miembro | ✔ |
+| 18 | Buscador | Buscar con filtros → clic en una fila → botón "Volver al buscador" | Los filtros y resultados se restauran exactamente igual que antes de entrar en la ficha | ✔ |
+| 19 | Buscador | Abrir ficha desde una búsqueda → pulsar Atrás del navegador | Mismo comportamiento que el botón "Volver al buscador" | ✔ |
+| 20 | Buscador | Limpiar filtros | La URL vuelve a `solicitudes.html` sin parámetros | ✔ |
+| 21 | Ficha entidad | Acceder directamente a `entidad.html?cif=X` sin historial previo | El botón "Volver al buscador" redirige a `solicitudes.html` | ✔ |
+| 22 | Buscador | Descargar CSV con filtros de provincia y línea activos | El archivo CSV contiene solo los registros filtrados (bug previo: estos filtros se ignoraban en la exportación) | ✔ |
+| 23 | Buscador | Verificar campo `tramo` en la respuesta de la API | `curl -sk "https://localhost/solicitudes/?tipo=eell&anio=2025&estado=concedida&limite=1" \| python3 -c "import sys,json; d=json.load(sys.stdin); print(d['resultados'][0]['tramo'])"` → imprime `1`, `2` o `3` | ✔ |
+| 24 | Home | Cargar `index.html` con Docker levantado | Aparece el bloque "Convocatorias" debajo de los KPIs con dos columnas: EELL y EPA, cada una con sus años, fechas y botones "Ver →" | ✔ |
+| 25 | Home | Clic en "Ver →" de EPA 2025 | Abre el buscador con filtros `tipo=epa&anio=2025` pre-aplicados y resultados cargados | ✔ |
+| 26 | Home | Fila 2026 EELL | Muestra fecha "8 abr 2026" y texto "Pendiente de resolución" en cursiva (sin botón Ver) | ✔ |
+| 27 | Home | Verificar fechas de convocatoria en la API | `curl -sk "https://localhost/convocatorias/" \| python3 -c "import sys,json; [print(c['tipo_convoc'], c['anio_convocatoria'], c['fecha_convocatoria']) for c in json.load(sys.stdin)]"` → muestra fechas reales para todas las convocatorias excepto 2026 EELL que ya las tenía | ✔ |
+
+---
+
+## Pruebas manuales — recuperación de contraseña (rama 11b)
+
+Realizadas con Docker levantado. Mailpit accesible en `http://localhost:8025`.
+
+### Flujo principal
+
+| # | Pantalla | Acción | Resultado esperado | OK |
+|---|----------|--------|-------------------|-----|
+| 28 | Login | Clic en "¿Olvidaste tu contraseña?" | Navega a `recuperar-password.html` | ✔ |
+| 29 | Recuperar contraseña | Introducir email registrado y pulsar "Enviar enlace" | El formulario desaparece y aparece el mensaje "Si ese email está registrado, recibirás un enlace en breve"; en Mailpit aparece el email con el enlace | ✔ |
+| 30 | Mailpit | Abrir el email recibido | Muestra remitente `noreply@subvencionesDGDA.local`, asunto correcto y enlace con token en el cuerpo | ✔ |
+| 31 | Reset password | Copiar el enlace del email, abrirlo en el navegador, introducir contraseña válida y pulsar "Guardar" | Mensaje de éxito verde y aparece el enlace "Ir a iniciar sesión" | ✔ |
+| 32 | Login | Iniciar sesión con la nueva contraseña | Login correcto, accede a la zona privada | ✔ |
+
+### Casos límite verificados
+
+| # | Prueba | Cómo realizarla | Resultado esperado | OK |
+|---|--------|-----------------|-------------------|-----|
+| 33 | Token inventado → 400 | `curl -sk -X POST https://subvencionesDGDA.local/auth/reset -H "Content-Type: application/json" -d '{"token":"tokenfalso123","contrasena_nueva":"Nueva1234"}'` | `{"error": 400, "mensaje": "Enlace inválido o expirado"}` | ✔ |
+| 34 | Token ya usado → 400 | Abrir el enlace del email en el navegador por segunda vez, introducir contraseña válida y enviar; verificar en F12 → Network | Status 400, mensaje "Enlace inválido o expirado" en la página y en Response del DevTools | ✔ |
+| 35 | Contraseña débil → 422 | `curl -sk -X POST https://subvencionesDGDA.local/auth/reset -H "Content-Type: application/json" -d '{"token":"cualquiera","contrasena_nueva":"debil"}'` | `{"error": 422, "mensaje": "Datos de entrada inválidos"}` | ✔ |
+| 36 | Contraseñas no coinciden → validación frontend | Abrir `reset-password.html?token=inventado`, introducir contraseñas distintas y pulsar "Guardar" | Mensaje de error "Las contraseñas no coinciden" sin petición de red al backend (visible en F12 → Network: sin POST a `/auth/reset`) | ✔ |
+| 37 | Token expirado → 400 | Abrir el enlace de un email pedido hace más de 15 minutos, introducir contraseña válida y pulsar "Guardar" | Status 400, mensaje "Enlace inválido o expirado" en la página y en F12 → Network → Response | ✔ |
