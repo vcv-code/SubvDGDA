@@ -157,6 +157,18 @@ function iniciarLogin() {
     const form = document.getElementById('form-login');
     if (!form) return;   // No estamos en login.html, salimos
 
+    // Si venimos del registro, pre-rellenamos email y contraseña
+    const prefillEmail    = sessionStorage.getItem('prefill_email');
+    const prefillPassword = sessionStorage.getItem('prefill_password');
+    if (prefillEmail) {
+        const inputEmail = document.getElementById('login-email');
+        const inputPass  = document.getElementById('login-password');
+        if (inputEmail) inputEmail.value = prefillEmail;
+        if (inputPass)  inputPass.value  = prefillPassword ?? '';
+        sessionStorage.removeItem('prefill_email');
+        sessionStorage.removeItem('prefill_password');
+    }
+
     // Guardamos el texto original del botón para restaurarlo después de la carga
     const btn = document.getElementById('btn-submit-login');
     if (btn) btn.dataset.textoOriginal = btn.textContent;
@@ -384,8 +396,11 @@ function iniciarRegistro() {
              */
             mostrarAlerta('registro-ok', true, 'Cuenta creada correctamente. Redirigiendo al login...');
 
-            // Esperamos 2 segundos para que el usuario pueda leer el mensaje
-            // y luego redirigimos a login.html
+            // Guardamos email y contraseña en sessionStorage para pre-rellenar
+            // el formulario de login. sessionStorage se borra al cerrar la pestaña.
+            sessionStorage.setItem('prefill_email',    email);
+            sessionStorage.setItem('prefill_password', password);
+
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);

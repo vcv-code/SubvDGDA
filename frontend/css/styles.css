@@ -1779,6 +1779,20 @@ canvas {
     letter-spacing: 0.05em;
 }
 
+.privado-banner__btn-admin {
+    display: none;
+    margin-top: 1rem;
+    padding: .45rem 1.1rem;
+    background: rgba(255, 255, 255, .15);
+    color: var(--color-blanco);
+    border-radius: 4px;
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, .4);
+}
+.privado-banner__btn-admin--visible { display: inline-block; }
+
 /* Cuerpo: gris suave para que las cards blancas resalten */
 .privado-cuerpo {
     background-color: #F3F2F1;

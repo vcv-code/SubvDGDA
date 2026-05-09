@@ -307,6 +307,10 @@ async function cargarZonaPrivada() {
         mostrarPerfil(perfil);
         renderizarContenido(resumen.contenido);
 
+        if (perfil.rol === 'admin') {
+            document.getElementById('btn-panel-admin').classList.add('privado-banner__btn-admin--visible');
+        }
+
     } catch (error) {
         console.error('Error al cargar zona privada:', error);
         mostrarErrorPrivado();

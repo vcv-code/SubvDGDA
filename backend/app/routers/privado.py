@@ -14,6 +14,7 @@ router = APIRouter(prefix="/privado", tags=["zona privada"])
 def perfil(usuario: Usuario = Depends(require_rol("registrado"))):
     """Devuelve los datos del usuario autenticado. Requiere rol: registrado o admin."""
     return {
+        "id_usuario": usuario.id_usuario,
         "email": usuario.email,
         "rol": usuario.rol,
         "miembro_desde": usuario.created_at,
