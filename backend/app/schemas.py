@@ -48,6 +48,7 @@ class SolicitudOut(BaseModel):
     provincia:      Optional[str]     # solo EELL; None para EPA
     ccaa:           Optional[str]     # solo EELL; None para EPA
     es_agrupacion:  bool              # True si la concesión pertenece a una agrupación de municipios
+    tramo:          Optional[int]     # 1, 2 o 3 (solo EELL 2025 concedidas); None en el resto
 
     model_config = ConfigDict(from_attributes=True)
 

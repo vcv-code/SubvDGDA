@@ -62,10 +62,22 @@
             padding: var(--espacio-md);
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .card-entidad a { order: 2; }
+
+        .card-entidad img {
+            display: block;
+            width: 100%;
+            height: 80px;
+            object-fit: contain;
+            object-position: center;
         }
 
         .card-entidad__nombre {
+            order: 1;
             font-size: 1rem;
             font-weight: 700;
             color: var(--color-negro);
@@ -73,16 +85,12 @@
         }
 
         .card-entidad__categoria {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--color-azul);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin: 0;
+            display: none;
         }
 
         .card-entidad__descripcion {
-            font-size: 0.9rem;
+            order: 3;
+            font-size: 0.88rem;
             color: var(--color-gris-texto);
             margin: 0;
             line-height: 1.5;
@@ -172,7 +180,6 @@
                                 <img
                                     src="assets/img/logos/basma.webp"
                                     alt="Logo BASMA"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">BASMA</p>
@@ -188,7 +195,6 @@
                                 <img
                                     src="assets/img/logos/logo-faada.webp"
                                     alt="Logo FAADA"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">FAADA</p>
@@ -204,7 +210,6 @@
                                 <img
                                     src="assets/img/logos/logo-animaNaturalis.webp"
                                     alt="Logo Animanaturalis"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Animanaturalis</p>
@@ -220,7 +225,6 @@
                                 <img
                                     src="assets/img/logos/Logo-Intercids-c.webp"
                                     alt="Logo Intercids"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Intercids</p>
@@ -236,7 +240,6 @@
                                 <img
                                     src="assets/img/logos/logo-apdda.webp"
                                     alt="Logo APDDA"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">APDDA</p>
@@ -252,7 +255,6 @@
                                 <img
                                     src="assets/img/logos/avatma-negativo-solo-logo.webp"
                                     alt="Logo AVATMA"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">AVATMA</p>
@@ -284,7 +286,6 @@
                                 <img
                                     src="assets/img/logos/logo-gemfe.webp"
                                     alt="Logo GEMFE"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">GEMFE</p>
@@ -300,7 +301,6 @@
                                 <img
                                     src="assets/img/logos/logo-plataformaGarra.webp"
                                     alt="Logo Plataforma GARRA"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Plataforma GARRA</p>
@@ -316,7 +316,6 @@
                                 <img
                                     src="assets/img/logos/Logo-losGatosTienenLey.webp"
                                     alt="Logo Los gatos tienen ley"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Los gatos tienen ley</p>
@@ -332,7 +331,6 @@
                                 <img
                                     src="assets/img/logos/logo-fdcats.webp"
                                     alt="Logo FDCats"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">FDCats</p>
@@ -348,7 +346,6 @@
                                 <img
                                     src="assets/img/logos/logo-losCuatroDeLaEmpanadilla.webp"
                                     alt="Logo Los 4 de la Empandilla"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Los 4 de la Empandilla</p>
@@ -364,7 +361,6 @@
                                 <img
                                     src="assets/img/logos/logo-meowMetrics.webp"
                                     alt="Logo MeowMetrics"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">MeowMetrics</p>
@@ -396,7 +392,6 @@
                                 <img
                                     src="assets/img/logos/logo-pCotorras.webp"
                                     alt="Logo Plataforma P. Cotorras"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Plataforma P. Cotorras</p>
@@ -412,7 +407,6 @@
                                 <img
                                     src="assets/img/logos/logo-freeFox.webp"
                                     alt="Logo Free Fox"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Free Fox</p>
@@ -428,7 +422,6 @@
                                 <img
                                     src="assets/img/logos/logo-grefa.webp"
                                     alt="Logo GREFA"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">GREFA</p>
@@ -443,7 +436,6 @@
                                 <img
                                     src="assets/img/logos/logo-erisos.webp"
                                     alt="Logo Asociación EriSOS"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Asociación EriSOS</p>
@@ -458,7 +450,6 @@
                                 <img
                                     src="assets/img/logos/logo-sosvencejos.webp"
                                     alt="Logo SOS Vencejos"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">SOS Vencejos</p>
@@ -473,7 +464,6 @@
                                 <img
                                     src="assets/img/logos/logoMALP.webp"
                                     alt="Logo Mis amigas las palomas"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Mis amigas las palomas</p>
@@ -505,7 +495,6 @@
                                 <img
                                     src="assets/img/logos/Logo-vetsUnidos.webp"
                                     alt="Logo Vets Unidos"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Vets Unidos</p>
@@ -522,7 +511,6 @@
                                 <img
                                     src="assets/img/logos/logo-mismosPerros.webp"
                                     alt="Logo Mismos perros, misma ley"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Mismos perros, misma ley</p>
@@ -538,7 +526,6 @@
                                 <img
                                     src="assets/img/logos/logo-santuariosNoGranjas.webp"
                                     alt="Logo Santuarios no son granjas"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Santuarios no son granjas</p>
@@ -554,7 +541,6 @@
                                 <img
                                     src="assets/img/logos/logo-torturaNoCultura.webp"
                                     alt="Logo La tortura no es cultura"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">La tortura no es cultura</p>
@@ -569,7 +555,6 @@
                                 <img
                                     src="assets/img/logos/logo-vivotecnia.webp"
                                     alt="Logo Vivotecnia"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Vivotecnia</p>
@@ -585,7 +570,6 @@
                                 <img
                                     src="assets/img/logos/logo-nac.webp"
                                     alt="Logo Plataforma NAC"
-                                    width="200"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Plataforma NAC (No a la caza)</p>

@@ -71,6 +71,19 @@ _PERIODO = {
     (2024, "epa"): 6,
 }
 
+# Fechas oficiales obtenidas de la API BDNS (fecha_convocatoria)
+# y de la API del BOE (fecha_resolucion = fecha de publicación en BOE).
+_FECHAS = {
+    (2021, "epa"):  ("2021-10-26", "2022-01-14"),
+    (2022, "epa"):  ("2022-08-24", "2022-12-23"),
+    (2023, "epa"):  ("2023-05-19", "2023-11-20"),
+    (2024, "epa"):  ("2024-06-17", "2024-11-14"),
+    (2025, "epa"):  ("2025-05-05", "2025-12-30"),
+    (2023, "eell"): ("2023-05-19", "2024-01-11"),
+    (2024, "eell"): ("2024-05-31", "2024-11-20"),
+    (2025, "eell"): ("2025-03-27", "2025-12-31"),
+}
+
 
 # ──────────────────────────────────────────────
 # Paso 1: Convocatorias
@@ -93,10 +106,13 @@ def cargar_convocatorias(cursor, registros):
         else:
             periodo = _PERIODO.get((anio, tipo), 12)
             titulo  = _TITULO.get((anio, tipo), f"Convocatoria {tipo.upper()} {anio}")
+            fecha_conv, fecha_resol = _FECHAS.get((anio, tipo), (None, None))
             cursor.execute(
-                "INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, periodo_meses) "
-                "VALUES (%s, %s, %s, %s)",
-                (titulo, tipo, anio, periodo),
+                "INSERT INTO convocatorias "
+                "(titulo_convoc, tipo_convoc, anio_convocatoria, periodo_meses, "
+                " fecha_convocatoria, fecha_resolucion) "
+                "VALUES (%s, %s, %s, %s, %s, %s)",
+                (titulo, tipo, anio, periodo, fecha_conv, fecha_resol),
             )
             mapa[(anio, tipo)] = cursor.lastrowid
 

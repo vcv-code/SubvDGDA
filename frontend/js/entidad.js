@@ -92,13 +92,17 @@ async function cargarHistorial(cif) {
                     .format(parseFloat(s.importe)) + " €"
                 : "—";
 
+            const tramoBadge = s.tramo !== null && s.tramo !== undefined
+                ? `<span class="badge-tramo">T${s.tramo}</span>`
+                : "";
+
             const expediente = s.num_expediente || "—";
 
             tr.innerHTML = `
                 <td>${anio}</td>
                 <td>${tipo}</td>
                 <td>${badgeEstadoHtml(estado)}</td>
-                <td>${importe}</td>
+                <td>${importe}${tramoBadge}</td>
                 <td>${expediente}</td>
             `;
 
@@ -111,6 +115,12 @@ async function cargarHistorial(cif) {
         });
 
         tablaWrap.style.display = "";
+
+        // Leyenda de tramos: solo si alguna solicitud tiene tramo
+        const leyenda = document.getElementById('leyenda-tramos');
+        if (leyenda && solicitudes.some(s => s.tramo !== null && s.tramo !== undefined)) {
+            leyenda.style.display = '';
+        }
 
     } catch (err) {
         cargando.style.display = "none";
@@ -143,7 +153,7 @@ async function cargarAgrupacion(idSolic) {
 
         // Rellenar datos del bloque
         agrupacionRepresentante.textContent =
-            `Entidad representante: ${datos.representante || '—'}`;
+            `Entidad representante: ${datos.representante?.nombre || '—'}`;
         agrupacionNumMunicipios.textContent =
             `Número de municipios: ${datos.num_municipios ?? '—'}`;
 
@@ -151,9 +161,9 @@ async function cargarAgrupacion(idSolic) {
         const tbody = agrupacionMiembros.querySelector("tbody");
         tbody.innerHTML = "";
         (datos.miembros || []).forEach(m => {
-            const importe = m.importe !== null && m.importe !== undefined
+            const importe = m.importe_asignado !== null && m.importe_asignado !== undefined
                 ? new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 })
-                    .format(parseFloat(m.importe)) + " €"
+                    .format(parseFloat(m.importe_asignado)) + " €"
                 : "—";
             const tr = document.createElement("tr");
             tr.innerHTML = `
