@@ -2,7 +2,8 @@
 -- Modelo físico: Análisis de subvenciones DGDA
 -- Base de datos: bdns_dgda
 -- Tablas implementadas: convocatorias, beneficiarios, solicitudes,
---   concesiones, agrupaciones, agrupacion_miembros, usuarios, refresh_tokens
+--   concesiones, agrupaciones, agrupacion_miembros, usuarios, refresh_tokens,
+--   reset_tokens
 -- Tablas fase futura: causas_exclusion, solicitud_causas
 -- ============================================================
 -- Notas:
@@ -160,4 +161,21 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
     PRIMARY KEY (id),
     UNIQUE KEY uq_token (token),
     CONSTRAINT fk_rt_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- RESET TOKENS
+-- Tokens de un solo uso (15 min) para recuperar la contraseña.
+-- Se genera uno por solicitud de recuperación. Una vez usado
+-- o caducado, ya no es válido.
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS reset_tokens (
+    id          INT          NOT NULL AUTO_INCREMENT,
+    id_usuario  INT          NOT NULL,
+    token       VARCHAR(64)  NOT NULL                      COMMENT 'Token opaco generado con secrets.token_hex(32)',
+    expira_en   DATETIME     NOT NULL,
+    usado       TINYINT(1)   NOT NULL DEFAULT 0            COMMENT '1 = ya utilizado',
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_reset_token (token),
+    CONSTRAINT fk_reset_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
 );

@@ -85,7 +85,7 @@ Frontend
 | Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
 | Base de datos | MySQL / MariaDB |
 | Tests | pytest, SQLite en memoria |
-| Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor) |
+| Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
 | Control de versiones | Git, GitHub |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
@@ -107,9 +107,9 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html` — páginas implementadas
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `recuperar-password.html`, `reset-password.html` — páginas implementadas
 
 ### Backend
 
@@ -542,7 +542,7 @@ backend/app/
     estadisticas.py  → GET /estadisticas/ · GET /estadisticas/epas · GET /estadisticas/eell
     agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
     avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
-    auth.py          → POST /auth/registro · POST /auth/login · POST /auth/refresh · POST /auth/logout
+    auth.py          → POST /auth/registro · POST /auth/login · POST /auth/refresh · POST /auth/logout · POST /auth/recuperar · POST /auth/reset
     privado.py       → GET /privado/perfil · GET /privado/resumen-exclusivo · PUT /privado/cambiar-contrasena
 ```
 
@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa · frontend 7D mergeado · tramo y agrupaciones expuestos · UX buscador mejorada**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -639,7 +639,17 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · fechas de convocatoria obtenidas de la API BDNS; fechas de resolución de la API del BOE
   · convocatorias pendientes de resolución (sin `fecha_resolucion`) muestran estado "Pendiente de resolución"
   · datos incluidos en `cargar_dataset.py` para nuevos despliegues (no requieren UPDATE manual)
-✔ tests automáticos con pytest (148 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ Mailpit como servidor SMTP de desarrollo (`http://localhost:8025`)
+  · contenedor `axllent/mailpit` en docker-compose; puerto 1025 (SMTP) y 8025 (web UI)
+  · el backend envía emails vía `smtplib` con variables de entorno `SMTP_HOST=mailpit` y `SMTP_PORT=1025`
+  · los emails quedan atrapados en Mailpit sin llegar a destinatarios reales
+✔ recuperación de contraseña por email
+  · POST /auth/recuperar — genera token opaco (15 min, un solo uso) e envía enlace por email
+  · POST /auth/reset — valida token, valida contraseña nueva y actualiza en BD
+  · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
+  · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
+  · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
+✔ tests automáticos con pytest (157 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
@@ -653,6 +663,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · test_rate_limiting.py (5): configuración de rate limiting en Nginx para /auth/login
   · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
   · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
+  · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
@@ -738,7 +749,7 @@ Pendiente:
 - **Home — sección de PDFs oficiales**: hay espacio vacío entre los gráficos y el footer. Posible sección con los documentos BOE de cada convocatoria: título, enlace para ver en el BOE y enlace de descarga directa. Futura adición, no urgente.
 - Política de privacidad y aviso legal
 - Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
-- **Página Recursos — mejoras visuales**: los logos de las entidades tienen tamaños muy dispares y las tarjetas no tienen altura uniforme. Pendiente: normalizar tamaño de imagen en todas las tarjetas (altura fija con `object-fit: contain`) y asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente — bien en el fondo de cada sección o en el fondo de las tarjetas.
+- **Página Recursos — colores por sección**: los logos ya están uniformes (height 80px + object-fit:contain). Pendiente: asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente.
 - **Refactor CSS inline** *(post-entrega, solo si hay tiempo)*: el proyecto acumula estilos inline en el HTML que deberían estar como clases en `styles.css`. No es urgente ni afecta a la funcionalidad, pero mejora el mantenimiento. Hacerlo página por página comprobando visualmente que nada se rompe. Regla para código nuevo: `display:none` en HTML está bien; todo lo demás va a `styles.css`.
 
 ### Pendientes de backend y API
@@ -754,8 +765,6 @@ Pendiente:
 
 ### Pendientes de usuarios y autenticación
 
-- Recuperación de contraseña ("¿Olvidaste tu contraseña?"): flujo de reset por email con token de un solo uso y enlace de caducidad
-- Servidor de correo: enviar email de confirmación al registrarse (SMTP o servicio externo); comparte infraestructura con la recuperación de contraseña
 - Login con terceros (OAuth) *(mejora futura, fuera del alcance de la entrega)*: integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
 
 ---
@@ -812,9 +821,12 @@ El proyecto usa Docker Compose con cinco servicios definidos en `docker/docker-c
 | `backend`  | Python (build)      | API FastAPI                                               | ninguno (interno) |
 | `nginx`    | nginx:alpine        | Proxy inverso, punto de entrada                           | 80, 443           |
 | `cron`     | Python (scheduler)  | Tareas programadas: comprobación BDNS y health check      | ninguno           |
+| `mailpit`  | axllent/mailpit     | Servidor SMTP de desarrollo — atrapa emails sin enviarlos | 1025 (SMTP), 8025 (web UI) |
 | `adminer`  | adminer             | Interfaz web para explorar la BD                          | 8080              |
 
 El backend no expone su puerto al exterior — solo Nginx y el cron pueden acceder a él dentro de la red Docker.
+
+Mailpit está disponible en `http://localhost:8025`. Cualquier email que el backend "envíe" (recuperación de contraseña) queda atrapado aquí sin llegar a ningún destinatario real.
 
 El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) que implementa la misma lógica que un crontab sin depender de binarios externos: registra todo en stdout (visible con `docker logs bdns_cron`) y hereda las variables de entorno del `docker-compose.yml`. Sus logs se persisten en `logs/cron/`.
 
