@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from datetime import date, datetime
-from typing import Optional
+from typing import Literal, Optional
 
 
 # ──────────────────────────────────────────────
@@ -168,6 +168,7 @@ class AvisoOut(BaseModel):
     tipo_convoc:        str
     anio_convocatoria:  int
     fecha_convocatoria: Optional[date]
+    fecha_resolucion:   Optional[date]
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -250,3 +251,24 @@ class ResetPasswordIn(BaseModel):
         if not any(c.isdigit() for c in v):
             raise ValueError("La contraseña debe contener al menos un número")
         return v
+
+
+# ──────────────────────────────────────────────
+# ADMIN
+# ──────────────────────────────────────────────
+
+class CambiarRolIn(BaseModel):
+    rol: Literal["admin", "registrado"]
+
+class CambiarActivoIn(BaseModel):
+    activo: bool
+
+class AdminEstadoOut(BaseModel):
+    health:               str
+    total_convocatorias:  int
+    total_usuarios:       int
+    total_solicitudes:    int
+    ultima_convocatoria:  Optional[str]
+
+class AdminLogsOut(BaseModel):
+    lineas: list[str]

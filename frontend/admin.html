@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<!--
+    admin.html — Panel de administración
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    ¿Qué hace esta página?
+    ──────────────────────
+    Panel de gestión exclusivo para usuarios con rol "admin".
+    Si no hay token → redirige a login.html.
+    Si el token es válido pero el rol no es "admin" → redirige a privado.html.
+
+    Secciones:
+    ──────────
+    1. Estado general — health, conteos, última convocatoria detectada.
+    2. Usuarios       — listado, activar/desactivar, cambiar rol.
+    3. Avisos         — convocatorias sin resolución, desactivar o eliminar.
+    4. Logs           — últimas N líneas de access.log.
+
+    Endpoints que usa:
+    ──────────────────
+    GET  /admin/estado
+    GET  /admin/usuarios
+    PATCH /admin/usuarios/{id}/rol     Body: { rol }
+    PATCH /admin/usuarios/{id}/activo  Body: { activo }
+    GET  /admin/avisos
+    PATCH /admin/avisos/{id}/desactivar
+    DELETE /admin/avisos/{id}
+    GET  /admin/logs?n=100
+
+    Archivo JS: js/admin.js
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración — Subvenciones Bienestar Animal</title>
+    <meta name="description" content="Panel de administración del sistema de subvenciones de bienestar animal.">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" href="assets/logo.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* ── Variables locales de admin ───────────────────────── */
+        :root {
+            --admin-rojo:      #7a1f2e;
+            --admin-rojo-dark: #5a1520;
+            --admin-fondo:     #f8f4f4;
+        }
+
+        /* ── Banner de admin (mismo patrón que privado-banner) ── */
+        .admin-banner {
+            background: var(--admin-rojo);
+            color: #fff;
+            padding: 2.5rem 0 2rem;
+        }
+        .admin-banner__badge {
+            display: inline-block;
+            background: rgba(255,255,255,.15);
+            color: #fff;
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: .25rem .75rem;
+            border-radius: 2rem;
+            margin-bottom: .75rem;
+        }
+        .admin-banner__titulo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0 0 .5rem;
+        }
+        .admin-banner__meta {
+            font-size: .9rem;
+            opacity: .8;
+            margin: 0;
+        }
+
+        /* ── Cuerpo principal ─────────────────────────────────── */
+        .admin-cuerpo {
+            background: var(--admin-fondo);
+            min-height: 60vh;
+            padding: 2.5rem 0 4rem;
+        }
+
+        /* ── Tarjetas de estado ───────────────────────────────── */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .admin-stat {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            border-left: 4px solid var(--admin-rojo);
+            box-shadow: 0 1px 3px rgba(0,0,0,.07);
+        }
+        .admin-stat__valor {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--admin-rojo);
+            line-height: 1;
+        }
+        .admin-stat__label {
+            font-size: .8rem;
+            color: #555;
+            margin-top: .25rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        /* ── Secciones ────────────────────────────────────────── */
+        .admin-seccion {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.07);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .admin-seccion__cabecera {
+            background: var(--admin-rojo);
+            color: #fff;
+            padding: .9rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .admin-seccion__cuerpo {
+            padding: 1.25rem 1.5rem;
+        }
+
+        /* ── Tabla de usuarios ────────────────────────────────── */
+        .admin-tabla {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .88rem;
+        }
+        .admin-tabla th {
+            background: #f3f0f0;
+            text-align: left;
+            padding: .6rem .75rem;
+            font-weight: 600;
+            color: #444;
+            border-bottom: 2px solid #e8e0e0;
+        }
+        .admin-tabla td {
+            padding: .6rem .75rem;
+            border-bottom: 1px solid #f0ebeb;
+            vertical-align: middle;
+        }
+        .admin-tabla tr:last-child td { border-bottom: none; }
+        .admin-tabla tr:hover td { background: #fdf8f8; }
+
+        /* ── Badges de rol y estado ───────────────────────────── */
+        .badge-rol {
+            display: inline-block;
+            padding: .2rem .6rem;
+            border-radius: 3rem;
+            font-size: .75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+        .badge-rol--admin      { background: #f3e0e2; color: var(--admin-rojo); }
+        .badge-rol--registrado { background: #e8f0e8; color: #2a5a2a; }
+
+        .badge-activo {
+            display: inline-block;
+            padding: .2rem .6rem;
+            border-radius: 3rem;
+            font-size: .75rem;
+            font-weight: 700;
+        }
+        .badge-activo--si { background: #d4edda; color: #155724; }
+        .badge-activo--no { background: #f8d7da; color: #721c24; }
+
+        /* ── Botones de acción en tabla ───────────────────────── */
+        .btn-accion {
+            background: none;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            padding: .25rem .6rem;
+            font-size: .78rem;
+            cursor: pointer;
+            font-family: inherit;
+            margin-right: .25rem;
+            transition: background .15s;
+        }
+        .btn-accion--rojo  { color: var(--admin-rojo); }
+        .btn-accion--rojo:hover  { background: #f3e0e2; }
+        .btn-accion--verde { color: #2a5a2a; }
+        .btn-accion--verde:hover { background: #e8f0e8; }
+        .btn-accion--gris  { color: #555; }
+        .btn-accion--gris:hover  { background: #f0f0f0; }
+
+        /* ── Avisos ───────────────────────────────────────────── */
+        .admin-aviso {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .75rem 0;
+            border-bottom: 1px solid #f0ebeb;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .admin-aviso:last-child { border-bottom: none; }
+        .admin-aviso__info { flex: 1; min-width: 200px; }
+        .admin-aviso__titulo { font-weight: 600; font-size: .9rem; }
+        .admin-aviso__meta   { font-size: .8rem; color: #666; margin-top: .1rem; }
+        .admin-aviso__acciones { display: flex; gap: .5rem; flex-shrink: 0; }
+        .admin-aviso--resuelta .admin-aviso__titulo { color: #888; font-weight: 500; }
+        .admin-aviso--resuelta .admin-aviso__meta   { color: #aaa; }
+
+        .admin-resueltas { margin-top: 1rem; }
+        .admin-resueltas__summary {
+            cursor: pointer;
+            font-size: .82rem;
+            color: #888;
+            padding: .35rem 0;
+            user-select: none;
+            list-style: none;
+        }
+        .admin-resueltas__summary::before {
+            content: '▶ ';
+            font-size: .7rem;
+            transition: transform .15s;
+        }
+        details[open] .admin-resueltas__summary::before { content: '▼ '; }
+        .admin-resueltas__lista { margin-top: .25rem; }
+
+        /* ── Logs ─────────────────────────────────────────────── */
+        .admin-logs-controls {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-bottom: .75rem;
+        }
+        .admin-logs-controls label {
+            font-size: .85rem;
+            font-weight: 600;
+            color: #444;
+        }
+        .admin-logs-controls select {
+            font-family: inherit;
+            font-size: .85rem;
+            padding: .3rem .5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .admin-logs-pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: .78rem;
+            line-height: 1.5;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre;
+        }
+        .admin-logs-pre--vacio {
+            color: #888;
+            font-style: italic;
+        }
+
+        /* ── Alerta global ────────────────────────────────────── */
+        .admin-alerta {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            padding: .75rem 1rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .admin-alerta.visible { display: block; }
+
+        /* ── Toast de confirmación ────────────────────────────── */
+        .admin-toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: #1a3a1a;
+            color: #fff;
+            padding: .75rem 1.25rem;
+            border-radius: 6px;
+            font-size: .88rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity .2s, transform .2s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .admin-toast.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Empty state ──────────────────────────────────────── */
+        .admin-vacio {
+            color: #888;
+            font-size: .9rem;
+            padding: .5rem 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         NAVBAR
+         ===================================================== -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="privado.html">Mi cuenta</a></li>
+                <li>
+                    <button
+                        type="button"
+                        id="btn-cerrar-sesion"
+                        class="btn-login"
+                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;"
+                    >
+                        Cerrar sesión
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <!-- ─────────────────────────────────────────────────
+             BANNER DE ADMINISTRACIÓN
+             ───────────────────────────────────────────────── -->
+        <div class="admin-banner">
+            <div class="contenedor">
+                <span class="admin-banner__badge">Administración</span>
+                <h1 class="admin-banner__titulo">Panel de administración</h1>
+                <p class="admin-banner__meta" id="admin-meta">Cargando datos del sistema...</p>
+            </div>
+        </div>
+
+
+        <!-- ─────────────────────────────────────────────────
+             CUERPO PRINCIPAL
+             ───────────────────────────────────────────────── -->
+        <div class="admin-cuerpo">
+            <div class="contenedor">
+
+                <div class="admin-alerta" id="admin-alerta" role="alert" aria-live="polite"></div>
+
+                <!-- 1. ESTADO GENERAL ──────────────────────── -->
+                <div class="admin-stats" id="admin-stats" aria-label="Estadísticas del sistema">
+                    <div class="admin-stat">
+                        <div class="admin-stat__valor" id="stat-health">—</div>
+                        <div class="admin-stat__label">Estado API</div>
+                    </div>
+                    <div class="admin-stat">
+                        <div class="admin-stat__valor" id="stat-convocatorias">—</div>
+                        <div class="admin-stat__label">Convocatorias</div>
+                    </div>
+                    <div class="admin-stat">
+                        <div class="admin-stat__valor" id="stat-solicitudes">—</div>
+                        <div class="admin-stat__label">Solicitudes</div>
+                    </div>
+                    <div class="admin-stat">
+                        <div class="admin-stat__valor" id="stat-usuarios">—</div>
+                        <div class="admin-stat__label">Usuarios</div>
+                    </div>
+                </div>
+                <p id="admin-ultima-convoc" style="font-size:.85rem; color:#666; margin-bottom:2rem;"></p>
+
+                <!-- 2. USUARIOS ────────────────────────────── -->
+                <section class="admin-seccion" aria-labelledby="titulo-usuarios">
+                    <div class="admin-seccion__cabecera">
+                        <span id="titulo-usuarios">Usuarios</span>
+                    </div>
+                    <div class="admin-seccion__cuerpo">
+                        <div id="admin-usuarios-contenido">
+                            <p class="admin-vacio">Cargando...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. AVISOS ──────────────────────────────── -->
+                <section class="admin-seccion" aria-labelledby="titulo-avisos">
+                    <div class="admin-seccion__cabecera">
+                        <span id="titulo-avisos">Avisos activos</span>
+                        <span style="font-size:.8rem; font-weight:400; opacity:.85;">
+                            Convocatorias sin resolución publicada
+                        </span>
+                    </div>
+                    <div class="admin-seccion__cuerpo">
+                        <div id="admin-avisos-contenido">
+                            <p class="admin-vacio">Cargando...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. LOGS ────────────────────────────────── -->
+                <section class="admin-seccion" aria-labelledby="titulo-logs">
+                    <div class="admin-seccion__cabecera">
+                        <span id="titulo-logs">Logs de acceso</span>
+                    </div>
+                    <div class="admin-seccion__cuerpo">
+                        <div class="admin-logs-controls">
+                            <label for="logs-n">Últimas líneas:</label>
+                            <select id="logs-n">
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                            </select>
+                            <button type="button" class="btn-accion btn-accion--gris" id="btn-recargar-logs">
+                                Recargar
+                            </button>
+                        </div>
+                        <pre class="admin-logs-pre" id="admin-logs-pre">Cargando...</pre>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+    <!-- Toast de confirmación -->
+    <div class="admin-toast" id="admin-toast" role="status" aria-live="polite"></div>
+
+    <script src="js/admin.js"></script>
+
+</body>
+</html>

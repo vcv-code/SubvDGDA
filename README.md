@@ -586,7 +586,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -649,7 +649,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (157 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (179 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
@@ -664,6 +664,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
   · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
   · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
+  · test_admin.py (22): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
@@ -695,6 +696,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · `entidad.html` — ficha de entidad con historial, badges de estado y bloque de agrupación EELL
   · `login.html` / `registro.html` — autenticación con validación client-side
   · `privado.html` — zona exclusiva con control de acceso JWT
+  · `admin.html` — panel de administración exclusivo para rol `admin`
 ✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
 ✔ CORS habilitado en el backend para desarrollo local
 ✔ clave JWT segura configurada en variables de entorno (`.env`)
@@ -736,6 +738,19 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · `limit_req_zone $binary_remote_addr zone=login:10m rate=10r/m` — 10 peticiones/minuto por IP
   · `location = /auth/login` con `burst=5 nodelay` y `limit_req_status 429`
   · el resto de la API no está limitada
+✔ panel de administración (`admin.html` + `js/admin.js`)
+  · acceso exclusivo para usuarios con rol `admin`; redirige a login o privado si no procede
+  · GET /admin/estado → salud del sistema, conteo de convocatorias/solicitudes/usuarios, última convocatoria detectada
+  · GET /admin/usuarios → listado completo de usuarios con email, rol, estado y fecha de alta
+  · PATCH /admin/usuarios/{id}/rol → cambiar rol entre `registrado` y `admin` (protegido: no puede cambiar el propio)
+  · PATCH /admin/usuarios/{id}/activo → activar o desactivar cuenta (protegido: no puede desactivar la propia)
+  · DELETE /admin/usuarios/{id} → elimina el usuario permanentemente, borrando en cascada sus tokens (protegido: no puede borrarse a sí mismo; 404 si no existe)
+  · GET /admin/avisos?incluir_resueltas=true → por defecto solo sin resolución; con el param devuelve también las resueltas (historial desplegable en el panel)
+  · PATCH /admin/avisos/{id}/desactivar → marca la convocatoria como resuelta (desaparece del banner)
+  · PATCH /admin/avisos/{id}/reactivar → elimina la fecha de resolución y vuelve a activar el aviso y el banner
+  · DELETE /admin/avisos/{id} → elimina la convocatoria (rechaza con 409 si tiene solicitudes asociadas)
+  · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
+  · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
 
 Pendiente:
 
@@ -752,20 +767,18 @@ Pendiente:
 - **Página Recursos — colores por sección**: los logos ya están uniformes (height 80px + object-fit:contain). Pendiente: asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente.
 - **Refactor CSS inline** *(post-entrega, solo si hay tiempo)*: el proyecto acumula estilos inline en el HTML que deberían estar como clases en `styles.css`. No es urgente ni afecta a la funcionalidad, pero mejora el mantenimiento. Hacerlo página por página comprobando visualmente que nada se rompe. Regla para código nuevo: `display:none` en HTML está bien; todo lo demás va a `styles.css`.
 
-### Pendientes de backend y API
+### Pendientes de seguridad en registros de usuario
 
-- Panel de administración: endpoint y dashboard para que los usuarios con rol `admin` puedan gestionar cuentas (listar, activar/desactivar, cambiar rol)
+- **Rate limiting en `POST /auth/registro`** *(prioridad 1)*: actualmente ya existe en `/auth/login`. Añadir la misma restricción en Nginx para `/auth/registro` evita que un bot cree miles de cuentas en segundos. Son 2 líneas en `default.conf`.
+- **Verificación de email al registrarse** *(prioridad 2)*: ahora cualquier email inventado puede registrarse y acceder. Exigir clicar un enlace de verificación antes de activar la cuenta elimina las cuentas con emails falsos. Toda la infraestructura (Mailpit, tokens, flujo de email) ya existe — es el mismo patrón que la recuperación de contraseña.
+- **Honeypot en el formulario de registro** *(prioridad 3)*: campo oculto con CSS que los humanos no ven pero los bots rellenan. Si llega relleno → rechazar sin explicación. Cero dependencias externas, frena bots básicos.
 
 ### Pendientes de infraestructura y despliegue
 
-- Dominio real y certificado Let's Encrypt: en producción sustipues stuir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
-- CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 - Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
 - Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
-
-### Pendientes de usuarios y autenticación
-
-- Login con terceros (OAuth) *(mejora futura, fuera del alcance de la entrega)*: integración con Google y/o GitHub; los wireframes ya contemplan los botones de acceso social
+- Dominio real y certificado Let's Encrypt: en producción sustipues stuir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
+- CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 
 ---
 
@@ -985,6 +998,30 @@ Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba e
 
 Complementan a los tests automáticos verificando el stack completo: Nginx → FastAPI → MariaDB real. Se realizan desde `http://localhost/docs` con Docker levantado y cubren filtros con datos reales, paginación, flujo de registro y login, acceso con y sin token, y la respuesta de los manejadores de error. Ver la sección "Prueba manual rápida" en [`docs/tests.md`](docs/tests.md).
 
+#### Pruebas manuales del panel de administración (rama 12a)
+
+Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adicional (`prueba@test.com`).
+
+| Prueba | Resultado | Observaciones |
+|---|---|---|
+| Acceso a `admin.html` sin token (incógnito) | ✅ Redirige a `login.html` | JS verifica token antes de cargar |
+| Acceso a `admin.html` con token de usuario `registrado` | ✅ Redirige a `privado.html` | Backend devuelve 403 en `/privado/perfil` con rol insuficiente |
+| Carga del panel completo (admin) | ✅ 4 secciones cargan en paralelo | health OK · 9 convocatorias · 6398 solicitudes · 4 usuarios |
+| Última convocatoria detectada | ✅ Muestra convocatoria EELL 2026 | Derivado de la BD, no del cron |
+| Tabla de usuarios | ✅ 4 usuarios con rol, estado, fecha | Fila propia marcada con `(tú)` sin botones de acción |
+| Desactivar usuario | ✅ 403 al intentar login posterior | Badge cambia a "Inactivo"; login devuelve 403 correctamente |
+| Botón "Panel de administración" en `privado.html` | ✅ Solo visible para rol `admin` | Oculto con `display:none`; mostrado por JS al confirmar rol |
+| Aviso activo EELL 2026 | ✅ Aparece en sección Avisos | Convocatoria sin `fecha_resolucion` del año en curso |
+| Logs de acceso | ✅ Muestra historial de peticiones | Refleja en tiempo real las llamadas realizadas durante las pruebas |
+
+| Reactivar usuario | ✅ Login funciona tras activar | Badge vuelve a "Activo", 403 desaparece |
+| Hacer admin a otro usuario | ✅ Usuario accede a admin.html | Botón aparece en privado.html al volver a entrar |
+| Quitar admin | ✅ Redirige a privado.html | admin.html ya no accesible |
+| Usuario inactivo en tabla | ✅ Muestra badge "Inactivo" con botón "Activar" | user@example.com visible correctamente |
+| Selector de logs (50 líneas) | ✅ Recarga con número correcto | Logs reflejan intentos fallidos del proceso de debug |
+
+Pendiente: "Marcar resuelta" en aviso EELL 2026 (no bloqueante para el commit).
+
 ---
 
 ## Flujo de trabajo
@@ -1042,6 +1079,9 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
 - **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
+- **Login con terceros (OAuth)** - integración con Google.
+- **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
+- **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
 
 ---
 
@@ -1051,3 +1091,100 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - se mantienen ejemplos
 - los scripts sobrescriben resultados
 - sistema reproducible
+
+---
+
+### Bugs encontrados durante la implementación del panel de administración (rama 12a)
+
+Durante el desarrollo se detectaron tres bugs antes de las pruebas manuales, en la revisión del código y al ejecutar los tests:
+
+**1. `/admin/` ausente en la configuración de Nginx** *(crítico)*
+
+`docker/nginx/default.conf` tenía una expresión regular para las rutas de la API que no incluía `admin`:
+
+```nginx
+# Antes — /admin/ llegaba al servidor de estáticos, devolvía 404
+location ~ ^/(convocatorias|solicitudes|...|avisos|health|...)(/|$) { ... }
+
+# Después — /admin/ se redirige correctamente al backend
+location ~ ^/(convocatorias|solicitudes|...|admin|avisos|health|...)(/|$) { ... }
+```
+
+Sin este cambio, todas las llamadas AJAX del panel habrían devuelto 404 o cargado el HTML de Nginx en lugar de la respuesta JSON del backend.
+
+**2. `GET /privado/perfil` no devolvía `id_usuario`** *(medio)*
+
+El endpoint de perfil devolvía `email`, `rol` y `miembro_desde`, pero no `id_usuario`. El JavaScript de `admin.js` necesita el `id_usuario` del admin en sesión para bloquear los botones de "Desactivar" y "Quitar admin" sobre la propia fila (protección anti-autoedición). Sin ese campo, `miId` siempre era `null` y los botones de protección nunca se ocultaban en el frontend (aunque el backend sí rechazaba las peticiones con 400).
+
+```python
+# Antes
+return {"email": usuario.email, "rol": usuario.rol, "miembro_desde": usuario.created_at}
+
+# Después
+return {"id_usuario": usuario.id_usuario, "email": usuario.email, "rol": usuario.rol, "miembro_desde": usuario.created_at}
+```
+
+**3. `cargarAvisos` en `admin.js` no comprobaba `r.ok`** *(menor)*
+
+Si el token caducaba en mitad de una sesión larga (el access token dura 60 minutos), la respuesta del backend sería un JSON de error `{"detail": "Token inválido o expirado"}` en lugar de un array. Sin comprobar `r.ok`, el código intentaba iterar sobre ese objeto, no encontraba `length` y mostraba "No hay avisos activos" en lugar de un mensaje de error. Corregido añadiendo `if (!r.ok) return` antes de parsear el JSON.
+
+---
+
+### Tests que fallaron en la primera ejecución (rama 12a)
+
+Al ejecutar `test_admin.py` por primera vez, dos tests fallaron y pusieron de manifiesto diferencias concretas entre SQLite (BD de tests) y MariaDB (BD de producción):
+
+**`test_listar_avisos_devuelve_sin_resolucion`** — el helper de test insertaba una convocatoria con `fecha_resolucion="2025-01-01"` (string). SQLite acepta strings en columnas DATE en MariaDB pero el dialecto SQLAlchemy para SQLite lanza `TypeError: SQLite Date type only accepts Python date objects as input`. Corregido pasando `date(2025, 1, 1)` (objeto `datetime.date`). Esto no es un problema en producción con MariaDB, que acepta ambos formatos, pero sí revela que los tests deben usar tipos Python correctos siempre.
+
+**`test_eliminar_aviso_con_solicitudes_devuelve_409`** — el helper creaba un `Beneficiario` con `tipo_benef="epa"`, que no es un valor válido en el ENUM del modelo (`asociacion` o `entidad_local`). MariaDB almacena strings y no valida el ENUM al escribir en modo no estricto, pero SQLAlchemy sí lo valida en memoria al hacer `db.refresh()`. Corregido usando `tipo_benef="asociacion"`. Este caso ilustra la diferencia habitual entre SQLite/SQLAlchemy y MariaDB en la validación de ENUMs: en tests hay que ceñirse a los valores del modelo Python, no confiar en la tolerancia de la BD.
+
+---
+
+### Decisiones y problemas técnicos de implementaciones anteriores
+
+#### Cron — Supercronic incompatible con Docker + WSL2 (rama 9e)
+
+La primera aproximación para el scheduler fue usar [Supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores Docker. Falló con un error de fork al arrancar en el entorno Docker + WSL2 incluso con la opción `--debug`. Solución: scheduler implementado directamente en Python (`docker/cron/scripts/scheduler.py`) usando `time.sleep()` y comprobaciones de hora/día. Sin dependencias de binarios externos, sin permisos especiales, reproducible en cualquier entorno. Lección: en Docker, preferir código Python antes que binarios del sistema cuando el entorno de destino (WSL2) puede tener restricciones de llamadas al sistema.
+
+#### HTTPS — `subjectAltName` obligatorio en navegadores modernos (rama 9a)
+
+Al generar el certificado autofirmado con `openssl`, es imprescindible incluir la extensión `subjectAltName (SAN)` además del `Common Name (CN)`. Chrome (desde 2017) y otros navegadores modernos rechazan certificados que no tengan el dominio también en el SAN, aunque el CN coincida exactamente. Sin SAN, el navegador muestra error de certificado aunque HTTPS esté configurado correctamente. El comando `openssl req` requiere el flag `-addext "subjectAltName=DNS:subvencionesDGDA.local"` o el uso de un archivo de extensiones.
+
+#### HTTPS — flag `-nodes` en `openssl` (rama 9a)
+
+Al generar la clave privada, hay que incluir `-nodes` (no DES) para que la clave no esté protegida por contraseña. Sin este flag, OpenSSL protege la clave con una contraseña que hay que introducir manualmente cada vez que Nginx arranca. En un contenedor Docker, el inicio es no interactivo — sin `-nodes`, Nginx se quedaría bloqueado esperando la contraseña y el contenedor no arrancaría.
+
+#### `limit_req_zone` en `default.conf` (rama 9f)
+
+La directiva `limit_req_zone` de Nginx debe ir dentro del bloque `http {}`, no dentro de un bloque `server {}`. En este proyecto la configuración se divide en archivos en `conf.d/`, que Nginx incluye automáticamente dentro del bloque `http {}` del archivo principal. Por eso colocar `limit_req_zone` al inicio de `default.conf` (fuera de cualquier bloque `server {}`) es correcto — al ser incluido, queda dentro del `http {}` implícito. Si se intentara poner dentro de un bloque `server {}`, Nginx rechazaría la configuración con error al arrancar.
+
+#### Comparar fechas UTC con MariaDB DATETIME naive (rama 9h)
+
+MariaDB almacena el tipo `DATETIME` sin información de zona horaria. SQLAlchemy lo lee como un objeto `datetime` de Python sin timezone (naive). Al compararlo con `datetime.now(timezone.utc)` (que sí tiene timezone, aware), Python lanza `TypeError: can't compare offset-naive and offset-aware datetimes`. Solución: añadir UTC al datetime leído de la BD antes de comparar:
+
+```python
+# rt.expira_en es naive (viene de MariaDB)
+if rt.expira_en.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+    # token expirado
+```
+
+Esto ocurre en los endpoints `/auth/refresh` y `/auth/reset` al validar la expiración del token.
+
+#### Pydantic v2 antepone "Value error," a los mensajes de validación (rama 9g)
+
+Cuando un `@field_validator` lanza `ValueError`, Pydantic v2 prefija automáticamente el mensaje con `"Value error, "`. En el frontend, el error llega como `{"detail": [{"msg": "Value error, La contraseña debe tener al menos 8 caracteres"}]}`. Sin limpiarlo, el usuario vería ese prefijo técnico. Solución en el JS:
+
+```javascript
+const raw = datos.detail?.[0]?.msg ?? 'Error de validación';
+alerta.textContent = raw.replace(/^Value error,\s*/i, '');
+```
+
+Afecta a todos los endpoints que usan `@field_validator`: registro, cambiar contraseña y reset de contraseña.
+
+#### `unittest.mock.patch` — parchear el módulo que usa la función, no el que la define (rama 11b)
+
+Para mockear `enviar_email_recuperacion` en los tests de recuperación de contraseña, hay que parchear la referencia en el router (`backend.app.routers.auth.enviar_email_recuperacion`), no la función original en `backend.app.auth`. Cuando el router hace `from ..auth import enviar_email_recuperacion`, crea su propia referencia local a la función. Si se parchea la función en su módulo de origen, el router sigue usando su referencia local sin parchear. Regla general: parchear siempre en el módulo que usa la función, no en el que la define.
+
+#### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe (rama 11b)
+
+El endpoint devuelve exactamente el mismo mensaje tanto si el email está registrado como si no: `"Si ese email está registrado, recibirás un enlace en breve"`. Esto es una decisión de seguridad deliberada para evitar la enumeración de usuarios: si la respuesta fuera diferente según si el email existe, un atacante podría automatizar peticiones con listas de emails y descubrir qué cuentas están registradas en el sistema. La misma respuesta en ambos casos no filtra ninguna información.
