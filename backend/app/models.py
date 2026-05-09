@@ -97,6 +97,7 @@ class Usuario(Base):
     created_at = Column(DateTime, nullable=False)
 
     refresh_tokens = relationship("RefreshToken", back_populates="usuario")
+    reset_tokens   = relationship("ResetToken",   back_populates="usuario")
 
 
 class RefreshToken(Base):
@@ -109,3 +110,15 @@ class RefreshToken(Base):
     revocado   = Column(Boolean, nullable=False, default=False)
 
     usuario = relationship("Usuario", back_populates="refresh_tokens")
+
+
+class ResetToken(Base):
+    __tablename__ = "reset_tokens"
+
+    id         = Column(Integer, primary_key=True, autoincrement=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
+    token      = Column(String(64), nullable=False, unique=True)
+    expira_en  = Column(DateTime, nullable=False)
+    usado      = Column(Boolean, nullable=False, default=False)
+
+    usuario = relationship("Usuario", back_populates="reset_tokens")
