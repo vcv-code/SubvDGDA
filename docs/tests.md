@@ -4,11 +4,11 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 148 | pytest (sin Docker) |
-| Pruebas manuales | 45 | Navegador + DevTools con Docker levantado |
-| **Total** | **193** | |
+| Tests automáticos | 157 | pytest (sin Docker) |
+| Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
+| **Total** | **209** | |
 
-Las pruebas manuales se distribuyen en cinco bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, y 14 de las funcionalidades nuevas de esta rama (agrupaciones, tramos, URL persistence y bloque convocatorias en Home).
+Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
 ---
 
@@ -146,6 +146,15 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 146 | `test_agrupaciones.py` | Funcional | Blanca | `importe_asignado` de cada miembro coincide con el valor insertado en la fixture |
 | 147 | `test_solicitudes.py` | Funcional | Blanca | Campo `tramo` aparece en la respuesta con el valor correcto para EELL 2025 concedidas |
 | 148 | `test_solicitudes.py` | Funcional | Blanca | Campo `tramo` es `null` para solicitudes sin concesión |
+| 149 | `test_recuperar_password.py` | Funcional | Negra | `POST /auth/recuperar` con email existente devuelve 200 |
+| 150 | `test_recuperar_password.py` | Seguridad | Negra | `POST /auth/recuperar` con email inexistente devuelve también 200 (no revela si existe) |
+| 151 | `test_recuperar_password.py` | Funcional | Blanca | Llamar a `/recuperar` crea exactamente un `ResetToken` en la BD |
+| 152 | `test_recuperar_password.py` | Funcional | Blanca | La función `enviar_email_recuperacion` se llama con el email y el token correctos |
+| 153 | `test_recuperar_password.py` | Funcional | Blanca | `POST /auth/reset` con token válido cambia la contraseña y el login posterior funciona |
+| 154 | `test_recuperar_password.py` | Seguridad | Negra | `POST /auth/reset` con token inventado devuelve 400 |
+| 155 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token ya usado devuelve 400 (no se puede usar dos veces) |
+| 156 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token expirado (insertado con fecha en el pasado) devuelve 400 |
+| 157 | `test_recuperar_password.py` | Unitario | Blanca | Contraseña nueva débil en `/auth/reset` devuelve 422 (validación Pydantic antes de comprobar el token) |
 
 ### Descripción por módulo
 
@@ -209,6 +218,14 @@ Verifica el sistema de logging implementado en la rama `9c`. Cubre dos partes:
 
 - **Middleware de requests**: comprueba que cada petición HTTP queda registrada con método, ruta, código de respuesta e IP del cliente. Usa `caplog` de pytest para capturar los registros del logger `bdns` sin necesitar archivos en disco.
 - **Configuración del logger**: verifica directamente la función `setup_logging()` y el `generic_exception_handler` usando mocks para no depender del sistema de archivos ni de llamadas HTTP reales.
+
+#### test_recuperar_password.py
+
+Verifica el flujo completo de recuperación de contraseña implementado en la rama `11b`. Cubre los dos endpoints nuevos:
+
+- **`POST /auth/recuperar`**: comprueba que devuelve 200 tanto si el email existe como si no (para no revelar qué cuentas están registradas), que se crea un `ResetToken` en la BD, y que la función de envío de email se invoca con los parámetros correctos. En tests, `enviar_email_recuperacion` se mockea con `unittest.mock.patch` para no necesitar un servidor SMTP real.
+
+- **`POST /auth/reset`**: cubre el camino feliz (token válido → contraseña cambiada → login funciona con nueva contraseña) y los tres casos de error: token inventado (400), token ya usado (400) y token expirado (400). El test de token expirado inserta directamente en la BD un `ResetToken` con `expira_en` en el pasado, sin necesidad de esperar 15 minutos reales.
 
 #### test_unificar_datasets.py
 
@@ -434,3 +451,29 @@ Realizadas con Docker levantado en `https://localhost`.
 | 25 | Home | Clic en "Ver →" de EPA 2025 | Abre el buscador con filtros `tipo=epa&anio=2025` pre-aplicados y resultados cargados | ✔ |
 | 26 | Home | Fila 2026 EELL | Muestra fecha "8 abr 2026" y texto "Pendiente de resolución" en cursiva (sin botón Ver) | ✔ |
 | 27 | Home | Verificar fechas de convocatoria en la API | `curl -sk "https://localhost/convocatorias/" \| python3 -c "import sys,json; [print(c['tipo_convoc'], c['anio_convocatoria'], c['fecha_convocatoria']) for c in json.load(sys.stdin)]"` → muestra fechas reales para todas las convocatorias excepto 2026 EELL que ya las tenía | ✔ |
+
+---
+
+## Pruebas manuales — recuperación de contraseña (rama 11b)
+
+Realizadas con Docker levantado. Mailpit accesible en `http://localhost:8025`.
+
+### Flujo principal
+
+| # | Pantalla | Acción | Resultado esperado | OK |
+|---|----------|--------|-------------------|-----|
+| 28 | Login | Clic en "¿Olvidaste tu contraseña?" | Navega a `recuperar-password.html` | ✔ |
+| 29 | Recuperar contraseña | Introducir email registrado y pulsar "Enviar enlace" | El formulario desaparece y aparece el mensaje "Si ese email está registrado, recibirás un enlace en breve"; en Mailpit aparece el email con el enlace | ✔ |
+| 30 | Mailpit | Abrir el email recibido | Muestra remitente `noreply@subvencionesDGDA.local`, asunto correcto y enlace con token en el cuerpo | ✔ |
+| 31 | Reset password | Copiar el enlace del email, abrirlo en el navegador, introducir contraseña válida y pulsar "Guardar" | Mensaje de éxito verde y aparece el enlace "Ir a iniciar sesión" | ✔ |
+| 32 | Login | Iniciar sesión con la nueva contraseña | Login correcto, accede a la zona privada | ✔ |
+
+### Casos límite verificados
+
+| # | Prueba | Cómo realizarla | Resultado esperado | OK |
+|---|--------|-----------------|-------------------|-----|
+| 33 | Token inventado → 400 | `curl -sk -X POST https://subvencionesDGDA.local/auth/reset -H "Content-Type: application/json" -d '{"token":"tokenfalso123","contrasena_nueva":"Nueva1234"}'` | `{"error": 400, "mensaje": "Enlace inválido o expirado"}` | ✔ |
+| 34 | Token ya usado → 400 | Abrir el enlace del email en el navegador por segunda vez, introducir contraseña válida y enviar; verificar en F12 → Network | Status 400, mensaje "Enlace inválido o expirado" en la página y en Response del DevTools | ✔ |
+| 35 | Contraseña débil → 422 | `curl -sk -X POST https://subvencionesDGDA.local/auth/reset -H "Content-Type: application/json" -d '{"token":"cualquiera","contrasena_nueva":"debil"}'` | `{"error": 422, "mensaje": "Datos de entrada inválidos"}` | ✔ |
+| 36 | Contraseñas no coinciden → validación frontend | Abrir `reset-password.html?token=inventado`, introducir contraseñas distintas y pulsar "Guardar" | Mensaje de error "Las contraseñas no coinciden" sin petición de red al backend (visible en F12 → Network: sin POST a `/auth/reset`) | ✔ |
+| 37 | Token expirado → 400 | Abrir el enlace de un email pedido hace más de 15 minutos, introducir contraseña válida y pulsar "Guardar" | Status 400, mensaje "Enlace inválido o expirado" en la página y en F12 → Network → Response | ✔ |

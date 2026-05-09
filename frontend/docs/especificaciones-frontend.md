@@ -71,7 +71,9 @@ frontend/
 │   ├── recursos.js              → Lógica del directorio de recursos (pendiente de endpoint)
 │   ├── auth.js                  → Lógica de login y registro (JWT)
 │   ├── privado.js               → Control de acceso y contenido de zona privada
-│   └── entidad.js               → Lógica de la ficha de entidad
+│   ├── entidad.js               → Lógica de la ficha de entidad
+│   ├── recuperar-password.js    → Envío del email de recuperación
+│   └── reset-password.js        → Validación y envío de la nueva contraseña
 │
 ├── assets/
 │   ├── logo.png                → Logotipo del proyecto (también usado como favicon)
@@ -89,6 +91,8 @@ frontend/
 ├── registro.html            → Formulario de creación de cuenta
 ├── privado.html             → Zona exclusiva para usuarios registrados
 ├── entidad.html             → Ficha de entidad con historial y desglose de agrupaciones
+├── recuperar-password.html  → Solicitar enlace de recuperación de contraseña por email
+├── reset-password.html      → Establecer nueva contraseña desde el enlace del email
 └── docs/
     ├── diseño.md                    → Guía visual del proyecto (issue 7A)
     └── especificaciones-frontend.md → Este documento

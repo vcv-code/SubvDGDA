@@ -6,7 +6,7 @@ El proyecto tiene dos capas de tests con propósitos distintos.
 
 ## Qué se testea y por qué
 
-### 1. Endpoints del backend (`test_smoke`, `test_convocatorias`, `test_solicitudes`, `test_estadisticas`, `test_auth`)
+### 1. Endpoints del backend (`test_smoke`, `test_convocatorias`, `test_solicitudes`, `test_estadisticas`, `test_auth`, `test_recuperar_password`)
 
 Verifican que la API HTTP funciona correctamente: códigos de respuesta, estructura del JSON, filtros, paginación y autenticación JWT.
 
@@ -89,6 +89,9 @@ python -m pytest tests/test_parser_epa2025.py tests/test_unificar_datasets.py -v
 
 # Solo los tests de endpoints
 python -m pytest tests/test_smoke.py tests/test_solicitudes.py tests/test_auth.py tests/test_estadisticas.py tests/test_convocatorias.py -v
+
+# Solo los tests de recuperación de contraseña
+python -m pytest tests/test_recuperar_password.py -v
 ```
 
-No es necesario tener Docker activo para ejecutar ninguno de estos tests.
+No es necesario tener Docker activo para ejecutar ninguno de estos tests. Los tests de `test_recuperar_password.py` usan `unittest.mock.patch` para simular el envío de email — no necesitan Mailpit levantado.
