@@ -375,10 +375,11 @@ function iniciarRegistro() {
              * Si en el futuro el backend añade el campo nombre, bastará
              * con incluirlo en el objeto del body.
              */
+            const sitio_web = document.getElementById('hp-sitio-web')?.value ?? '';
             const respuesta = await fetch(`${API_URL}/auth/registro`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, sitio_web }),
             });
 
             if (!respuesta.ok) {
@@ -394,16 +395,11 @@ function iniciarRegistro() {
              * El usuario debe hacer login a continuación para obtener su token.
              * Esto es el flujo estándar: Registro → Login → Token.
              */
-            mostrarAlerta('registro-ok', true, 'Cuenta creada correctamente. Redirigiendo al login...');
-
-            // Guardamos email y contraseña en sessionStorage para pre-rellenar
-            // el formulario de login. sessionStorage se borra al cerrar la pestaña.
-            sessionStorage.setItem('prefill_email',    email);
-            sessionStorage.setItem('prefill_password', password);
-
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
+            mostrarAlerta('registro-ok', true,
+                'Cuenta creada. Te hemos enviado un email de verificación — ' +
+                'revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.'
+            );
+            // No redirigimos: el usuario debe verificar el email antes de poder hacer login
 
         } catch (error) {
             console.error('Error en registro:', error);
