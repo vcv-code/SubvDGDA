@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from ..db import get_db
 from ..dependencies import require_rol
-from ..models import Convocatoria, RefreshToken, ResetToken, Solicitud, Usuario
+from ..models import Convocatoria, RefreshToken, ResetToken, VerificacionToken, Solicitud, Usuario
 from ..schemas import (
     AdminEstadoOut,
     AdminLogsOut,
@@ -120,6 +120,7 @@ def eliminar_usuario(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
     db.query(RefreshToken).filter(RefreshToken.id_usuario == id_usuario).delete()
     db.query(ResetToken).filter(ResetToken.id_usuario == id_usuario).delete()
+    db.query(VerificacionToken).filter(VerificacionToken.id_usuario == id_usuario).delete()
     db.delete(usuario)
     db.commit()
     return {"mensaje": "Usuario eliminado"}

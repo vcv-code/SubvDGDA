@@ -7,7 +7,8 @@ USUARIO = {"email": "recuperar@example.com", "password": "Segura1234"}
 
 
 def _registrar(client):
-    client.post("/auth/registro", json=USUARIO)
+    with patch("backend.app.routers.auth.enviar_email_verificacion"):
+        client.post("/auth/registro", json=USUARIO)
 
 
 # ──────────────────────────────────────────────

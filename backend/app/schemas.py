@@ -178,8 +178,9 @@ class AvisoOut(BaseModel):
 # ──────────────────────────────────────────────
 
 class RegistroIn(BaseModel):
-    email:    EmailStr
-    password: str
+    email:     EmailStr
+    password:  str
+    sitio_web: str = ""  # honeypot: debe llegar vacío en envíos legítimos
 
     @field_validator("password")
     @classmethod
@@ -224,11 +225,12 @@ class RefreshIn(BaseModel):
     refresh_token: str
 
 class UsuarioOut(BaseModel):
-    id_usuario: int
-    email:      str
-    rol:        str
-    activo:     bool
-    created_at: datetime
+    id_usuario:       int
+    email:            str
+    rol:              str
+    activo:           bool
+    email_verificado: bool
+    created_at:       datetime
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -256,6 +258,28 @@ class ResetPasswordIn(BaseModel):
 # ──────────────────────────────────────────────
 # ADMIN
 # ──────────────────────────────────────────────
+
+# ──────────────────────────────────────────────
+# ZONA PRIVADA
+# Resumen de solicitudes por tipo y año (contenido exclusivo)
+# ──────────────────────────────────────────────
+
+class ResumenFilaTabla(BaseModel):
+    tipo:             str
+    anio:             int
+    total:            int
+    concedidas:       int
+    no_beneficiarias: int
+    excluidas:        int
+    desistidas:       int
+    importe_total:    float
+
+class ResumenTablaOut(BaseModel):
+    filas:            list[ResumenFilaTabla]
+    total_global:     int
+    concedidas_total: int
+    importe_global:   float
+
 
 class CambiarRolIn(BaseModel):
     rol: Literal["admin", "registrado"]

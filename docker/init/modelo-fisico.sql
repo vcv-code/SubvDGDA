@@ -135,12 +135,13 @@ CREATE TABLE IF NOT EXISTS agrupacion_miembros (
 -- Autenticación mediante JWT (implementación fase siguiente).
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS usuarios (
-    id_usuario  INT          NOT NULL AUTO_INCREMENT,
-    email       VARCHAR(255) NOT NULL,
-    password    VARCHAR(255) NOT NULL                      COMMENT 'Hash bcrypt de la contraseña',
-    rol         ENUM('admin','registrado') NOT NULL DEFAULT 'registrado',
-    activo      TINYINT(1)   NOT NULL DEFAULT 1            COMMENT '0 = cuenta desactivada',
-    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_usuario       INT          NOT NULL AUTO_INCREMENT,
+    email            VARCHAR(255) NOT NULL,
+    password         VARCHAR(255) NOT NULL                      COMMENT 'Hash bcrypt de la contraseña',
+    rol              ENUM('admin','registrado') NOT NULL DEFAULT 'registrado',
+    activo           TINYINT(1)   NOT NULL DEFAULT 1            COMMENT '0 = cuenta desactivada por admin',
+    email_verificado TINYINT(1)   NOT NULL DEFAULT 0            COMMENT '0 = pendiente de verificar; 1 = email confirmado',
+    created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_usuario),
     UNIQUE KEY uq_email (email)
 );
@@ -178,4 +179,21 @@ CREATE TABLE IF NOT EXISTS reset_tokens (
     PRIMARY KEY (id),
     UNIQUE KEY uq_reset_token (token),
     CONSTRAINT fk_reset_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- VERIFICACIÓN DE EMAIL
+-- Tokens de un solo uso (24 h) para confirmar la dirección de
+-- email al registrarse. Hasta que no se usa el enlace,
+-- email_verificado=0 en usuarios y el login queda bloqueado.
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS verificacion_tokens (
+    id          INT          NOT NULL AUTO_INCREMENT,
+    id_usuario  INT          NOT NULL,
+    token       VARCHAR(64)  NOT NULL                      COMMENT 'Token opaco generado con secrets.token_hex(32)',
+    expira_en   DATETIME     NOT NULL,
+    usado       TINYINT(1)   NOT NULL DEFAULT 0            COMMENT '1 = ya utilizado',
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_verif_token (token),
+    CONSTRAINT fk_verif_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
 );
