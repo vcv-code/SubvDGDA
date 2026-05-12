@@ -99,7 +99,7 @@
 
                     <!-- Alerta de éxito -->
                     <div class="auth-alerta auth-alerta--ok" id="registro-ok" role="status" aria-live="polite">
-                        Cuenta creada correctamente. Redirigiendo al login...
+                        Cuenta creada. Te hemos enviado un email de verificación — revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
                     </div>
 
                     <form id="form-registro" novalidate>
@@ -172,6 +172,18 @@
                                 <div class="password-req" id="req-minuscula">Al menos una minúscula</div>
                                 <div class="password-req" id="req-numero">Al menos un número</div>
                             </div>
+                        </div>
+
+                        <!-- Campo trampa para bots: oculto para usuarios reales -->
+                        <div class="hp-trampa" aria-hidden="true">
+                            <label for="hp-sitio-web">Sitio web</label>
+                            <input
+                                type="text"
+                                id="hp-sitio-web"
+                                name="sitio_web"
+                                tabindex="-1"
+                                autocomplete="off"
+                            >
                         </div>
 
                         <button
