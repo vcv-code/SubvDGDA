@@ -9,9 +9,10 @@ from jose import jwt
 
 SECRET_KEY = os.getenv("SECRET_KEY", "cambia-esto-en-produccion")
 ALGORITHM = "HS256"
-TOKEN_EXPIRE_MINUTOS   = 60
-REFRESH_EXPIRE_DIAS    = 30
-RESET_EXPIRE_MINUTOS   = 15
+TOKEN_EXPIRE_MINUTOS      = 60
+REFRESH_EXPIRE_DIAS       = 30
+RESET_EXPIRE_MINUTOS      = 15
+VERIFICACION_EXPIRE_HORAS = 24
 
 SMTP_HOST = os.getenv("SMTP_HOST", "localhost")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "1025"))
@@ -53,6 +54,34 @@ def crear_reset_token() -> str:
 
 def reset_expira_en() -> datetime:
     return datetime.now(timezone.utc) + timedelta(minutes=RESET_EXPIRE_MINUTOS)
+
+
+def crear_verificacion_token() -> str:
+    return secrets.token_hex(32)
+
+
+def verificacion_expira_en() -> datetime:
+    return datetime.now(timezone.utc) + timedelta(hours=VERIFICACION_EXPIRE_HORAS)
+
+
+def enviar_email_verificacion(email_destino: str, token: str) -> None:
+    enlace = f"https://subvencionesDGDA.local/verificar-email.html?token={token}"
+
+    msg = EmailMessage()
+    msg["Subject"] = "Verifica tu correo — Subvenciones DGDA"
+    msg["From"]    = EMAIL_FROM
+    msg["To"]      = email_destino
+    msg.set_content(
+        f"Hola,\n\n"
+        f"Gracias por registrarte. Haz clic en el siguiente enlace para verificar tu dirección de correo:\n\n"
+        f"{enlace}\n\n"
+        f"El enlace caduca en {VERIFICACION_EXPIRE_HORAS} horas y solo puede usarse una vez.\n\n"
+        f"Si no has creado una cuenta, ignora este mensaje.\n\n"
+        f"Subvenciones DGDA"
+    )
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as servidor:
+        servidor.send_message(msg)
 
 
 def enviar_email_recuperacion(email_destino: str, token: str) -> None:

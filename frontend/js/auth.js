@@ -157,6 +157,18 @@ function iniciarLogin() {
     const form = document.getElementById('form-login');
     if (!form) return;   // No estamos en login.html, salimos
 
+    // Si venimos del registro, pre-rellenamos email y contraseña
+    const prefillEmail    = sessionStorage.getItem('prefill_email');
+    const prefillPassword = sessionStorage.getItem('prefill_password');
+    if (prefillEmail) {
+        const inputEmail = document.getElementById('login-email');
+        const inputPass  = document.getElementById('login-password');
+        if (inputEmail) inputEmail.value = prefillEmail;
+        if (inputPass)  inputPass.value  = prefillPassword ?? '';
+        sessionStorage.removeItem('prefill_email');
+        sessionStorage.removeItem('prefill_password');
+    }
+
     // Guardamos el texto original del botón para restaurarlo después de la carga
     const btn = document.getElementById('btn-submit-login');
     if (btn) btn.dataset.textoOriginal = btn.textContent;
@@ -363,10 +375,11 @@ function iniciarRegistro() {
              * Si en el futuro el backend añade el campo nombre, bastará
              * con incluirlo en el objeto del body.
              */
+            const sitio_web = document.getElementById('hp-sitio-web')?.value ?? '';
             const respuesta = await fetch(`${API_URL}/auth/registro`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, sitio_web }),
             });
 
             if (!respuesta.ok) {
@@ -382,13 +395,11 @@ function iniciarRegistro() {
              * El usuario debe hacer login a continuación para obtener su token.
              * Esto es el flujo estándar: Registro → Login → Token.
              */
-            mostrarAlerta('registro-ok', true, 'Cuenta creada correctamente. Redirigiendo al login...');
-
-            // Esperamos 2 segundos para que el usuario pueda leer el mensaje
-            // y luego redirigimos a login.html
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
+            mostrarAlerta('registro-ok', true,
+                'Cuenta creada. Te hemos enviado un email de verificación — ' +
+                'revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.'
+            );
+            // No redirigimos: el usuario debe verificar el email antes de poder hacer login
 
         } catch (error) {
             console.error('Error en registro:', error);

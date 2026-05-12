@@ -7,7 +7,7 @@
  * FLUJO COMPLETO:
  *   1. Comprueba si hay token en localStorage
  *   2. Si no hay → redirige a login.html inmediatamente
- *   3. Si hay token → llama a GET /privado/perfil y GET /privado/resumen-exclusivo
+ *   3. Si hay token → llama a GET /privado/perfil
  *      con el header Authorization: Bearer <token>
  *   4. Muestra el saludo personalizado y las tarjetas de contenido
  *   5. Si el servidor responde 401 (token expirado o inválido) → redirige a login.html
@@ -164,68 +164,6 @@ function mostrarPerfil(perfil) {
     el.textContent = `Cuenta activa desde el ${fechaFormateada} · Rol: ${perfil.rol}`;
 }
 
-/**
- * ICONOS_CONTENIDO
- * Mapa de palabras clave → icono SVG para cada tipo de contenido exclusivo.
- * Se usa para añadir un icono visual a cada tarjeta.
- * Los SVG son de Material Icons (camino de diseño simplificado).
- */
-const ICONOS_CONTENIDO = {
-    'historial':    '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-    'análisis':     '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>',
-    'comparativa':  '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>',
-    'puntuación':   '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-};
-
-/**
- * obtenerIcono(texto)
- * Devuelve el SVG correspondiente al contenido, buscando por palabras clave.
- * Si no encuentra ninguna coincidencia, devuelve un icono genérico.
- *
- * @param {string} texto - Descripción del contenido exclusivo
- * @returns {string} HTML del SVG
- */
-function obtenerIcono(texto) {
-    const textoMin = texto.toLowerCase();
-    for (const [clave, svg] of Object.entries(ICONOS_CONTENIDO)) {
-        if (textoMin.includes(clave)) return svg;
-    }
-    // Icono genérico: documento
-    return '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>';
-}
-
-/**
- * renderizarContenido(items)
- * Genera las tarjetas de contenido exclusivo y las inserta en el DOM.
- * Cada item del array es una string que describe el contenido.
- * Usa las clases .privado-item definidas en styles.css sección 23.
- *
- * @param {string[]} items - Array de strings con el contenido exclusivo
- */
-function renderizarContenido(items) {
-    const contenedor = document.getElementById('privado-contenido');
-    if (!contenedor) return;
-
-    // Vaciamos los skeleton loaders de carga
-    contenedor.innerHTML = '';
-
-    items.forEach(item => {
-        const tarjeta = document.createElement('div');
-        tarjeta.className = 'privado-item';
-
-        tarjeta.innerHTML = `
-            <div class="privado-item__icono-svg" aria-hidden="true">
-                ${obtenerIcono(item)}
-            </div>
-            <div>
-                <p class="privado-item__nombre">${item}</p>
-                <p class="privado-item__desc">Disponible para usuarios registrados</p>
-            </div>
-        `;
-
-        contenedor.appendChild(tarjeta);
-    });
-}
 
 /**
  * mostrarErrorPrivado()
@@ -234,10 +172,6 @@ function renderizarContenido(items) {
 function mostrarErrorPrivado() {
     const alerta = document.getElementById('privado-alerta');
     if (alerta) alerta.classList.add('visible');
-
-    // Limpiamos los skeletons para no mostrar contenido de carga falso
-    const contenedor = document.getElementById('privado-contenido');
-    if (contenedor) contenedor.innerHTML = '';
 
     const saludo = document.getElementById('privado-saludo');
     if (saludo) saludo.textContent = 'No se pudo cargar la página';
@@ -255,10 +189,7 @@ function mostrarErrorPrivado() {
  *
  * ¿Por qué dos peticiones y no una?
  * /privado/perfil devuelve los datos del usuario (email, rol, fecha).
- * /privado/resumen-exclusivo devuelve el contenido exclusivo (lista de items).
- * Son responsabilidades diferentes y el backend las tiene separadas.
- * Usamos Promise.all() para hacerlas en paralelo y no esperar una antes
- * de lanzar la otra.
+ * El contenido exclusivo (resumen-tabla y resoluciones) está en exclusivo.html.
  */
 async function cargarZonaPrivada() {
 
@@ -294,18 +225,17 @@ async function cargarZonaPrivada() {
     }
 
     try {
-        // ── Paso 2: Peticiones en paralelo ───────────────────────────────
-        const [perfil, resumen] = await Promise.all([
-            fetchAutenticado('/privado/perfil', token),
-            fetchAutenticado('/privado/resumen-exclusivo', token),
-        ]);
+        // ── Paso 2: Cargar perfil ─────────────────────────────────────────
+        const perfil = await fetchAutenticado('/privado/perfil', token);
+        if (!perfil) return;
 
-        if (!perfil || !resumen) return;
-
-        // ── Paso 3: Renderizar los datos ─────────────────────────────────
-        mostrarSaludo(resumen.mensaje);
+        // ── Paso 3: Renderizar ────────────────────────────────────────────
+        mostrarSaludo(`Bienvenida, ${perfil.email}`);
         mostrarPerfil(perfil);
-        renderizarContenido(resumen.contenido);
+
+        if (perfil.rol === 'admin') {
+            document.getElementById('btn-panel-admin').classList.add('privado-banner__btn-admin--visible');
+        }
 
     } catch (error) {
         console.error('Error al cargar zona privada:', error);

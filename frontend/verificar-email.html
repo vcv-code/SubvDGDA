@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!--
+    verificar-email.html — Confirmación de dirección de correo electrónico
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    El usuario llega aquí desde el enlace del email de verificación.
+    Lee el token de la URL (?token=...) y llama a GET /auth/verificar?token=...
+    Si el token es válido: muestra éxito y enlace al login.
+    Si no: muestra error descriptivo.
+
+    Endpoint: GET /auth/verificar?token=<token>
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar email — Subvenciones Bienestar Animal</title>
+    <meta name="description" content="Verificación de dirección de correo electrónico.">
+
+    <link rel="icon" href="assets/logo.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-fondo">
+        <div class="auth-page">
+
+            <p class="auth-page__servicio">
+                <a href="login.html">← Volver a iniciar sesión</a>
+            </p>
+
+            <div class="auth-card auth-card--simple" aria-labelledby="verif-titulo">
+
+                <div class="auth-card__formulario">
+
+                    <h1 class="auth-card__titulo" id="verif-titulo">
+                        Verificación de email
+                    </h1>
+                    <p class="auth-card__subtitulo" id="verif-subtitulo">
+                        Comprobando tu enlace de verificación...
+                    </p>
+
+                    <div class="auth-alerta" id="verif-error" role="alert" aria-live="polite"></div>
+                    <div class="auth-alerta auth-alerta--ok" id="verif-exito" role="status" aria-live="polite"></div>
+
+                    <div id="verif-accion" class="verif-accion" style="display:none;">
+                        <a href="login.html" class="btn btn-verde btn-auth">
+                            Iniciar sesión
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * Al cargar la página, lee el token de la URL y llama a la API.
+         * No hace falta un archivo JS separado: esta lógica es específica de esta página.
+         */
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const token  = params.get('token');
+
+            const elError  = document.getElementById('verif-error');
+            const elExito  = document.getElementById('verif-exito');
+            const elAccion = document.getElementById('verif-accion');
+            const elSub    = document.getElementById('verif-subtitulo');
+
+            function mostrar(el, msg) {
+                el.textContent = msg;
+                el.classList.add('visible');
+            }
+
+            if (!token) {
+                elSub.textContent = '';
+                mostrar(elError, 'Enlace de verificación no válido. Comprueba que copiaste el enlace completo del email.');
+                return;
+            }
+
+            try {
+                const r = await fetch(`/auth/verificar?token=${encodeURIComponent(token)}`);
+                const datos = await r.json().catch(() => ({}));
+
+                if (r.ok) {
+                    elSub.textContent = '';
+                    mostrar(elExito, datos.mensaje || 'Email verificado correctamente. Ya puedes iniciar sesión.');
+                    elAccion.style.display = 'block';
+                } else {
+                    elSub.textContent = '';
+                    mostrar(elError, datos.mensaje || 'El enlace no es válido o ha caducado. Solicita un nuevo registro si es necesario.');
+                }
+            } catch {
+                elSub.textContent = '';
+                mostrar(elError, 'No se pudo conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo.');
+            }
+        });
+    </script>
+
+</body>
+</html>
