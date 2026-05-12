@@ -1,52 +1,26 @@
 <!DOCTYPE html>
 <!--
-    privado.html — Zona exclusiva para usuarios registrados
+    privado.html — Perfil del usuario registrado
     Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
     Curso: 2º DAW · Proyecto Final de Ciclo
 
-    ¿Qué hace esta página?
-    ──────────────────────
-    Muestra contenido reservado a usuarios con cuenta activa.
-    Si no hay token en localStorage → redirige a login.html.
-    Si el token ha expirado o es inválido → el servidor devuelve 401
-    → privado.js borra el token y redirige a login.html.
+    Muestra el perfil del usuario y permite cambiar la contraseña.
+    Para el contenido exclusivo de datos → exclusivo.html
 
-    Diseño:
-    ───────
-    Misma línea institucional que login/registro (GOV.UK-inspired).
-    · Fondo gris neutro (#F3F2F1).
-    · Banner de cabecera verde oscuro con saludo personalizado.
-    · Tarjetas blancas para cada contenido exclusivo.
-    · Botón de cerrar sesión destacado.
-
-    Endpoints que usa:
-    ──────────────────
-    GET /privado/perfil
-      Headers: Authorization: Bearer <token>
-      → { email, rol, miembro_desde }
-
-    GET /privado/resumen-exclusivo
-      Headers: Authorization: Bearer <token>
-      → { mensaje: string, contenido: string[] }
-
-    PUT /privado/cambiar-contrasena
-      Headers: Authorization: Bearer <token>
-      Body:    { contrasena_actual, contrasena_nueva }
-      → 200 { mensaje } | 401 actual incorrecta | 422 nueva débil
-
-    Archivo JS: js/privado.js
+    Endpoints:
+      GET /privado/perfil → { id_usuario, email, rol, activo, miembro_desde }
+      PUT /privado/cambiar-contrasena → { contrasena_actual, contrasena_nueva }
 -->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zona Privada — Subvenciones Bienestar Animal</title>
-    <meta name="description"
-          content="Área exclusiva para usuarios registrados con análisis avanzados de subvenciones.">
+    <title>Mi perfil — Subvenciones Bienestar Animal</title>
+    <meta name="description" content="Gestiona tu cuenta y accede al contenido exclusivo.">
 
     <link rel="icon" href="assets/logo.png" type="image/png">
-    <meta property="og:title" content="Área privada — Subvenciones Bienestar Animal">
-    <meta property="og:description" content="Zona exclusiva para usuarios registrados. Accede a datos y análisis avanzados de subvenciones de bienestar animal.">
+    <meta property="og:title" content="Mi perfil — Subvenciones Bienestar Animal">
+    <meta property="og:description" content="Zona exclusiva para usuarios registrados.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="assets/logo.png">
 
@@ -58,9 +32,6 @@
 
 <body>
 
-    <!-- =====================================================
-         NAVBAR
-         ===================================================== -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
@@ -73,18 +44,9 @@
                 <li><a href="estadisticas-epas.html">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
-                <!--
-                    En la zona privada el botón del navbar pasa a ser
-                    "Cerrar sesión". privado.js conecta este botón con
-                    la función cerrarSesion().
-                -->
                 <li>
-                    <button
-                        type="button"
-                        id="btn-cerrar-sesion"
-                        class="btn-login"
-                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;"
-                    >
+                    <button type="button" id="btn-cerrar-sesion" class="btn-login"
+                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">
                         Cerrar sesión
                     </button>
                 </li>
@@ -92,188 +54,86 @@
         </nav>
     </header>
 
-
-    <!--
-        La página tiene tres zonas:
-        1. Banner de cabecera (verde oscuro) con saludo y perfil
-        2. Cuerpo principal (gris neutro) con tarjetas de contenido
-        3. Footer
-    -->
     <main>
 
-        <!-- ─────────────────────────────────────────────────
-             ZONA 1: BANNER DE CABECERA
-             Fondo verde oscuro del proyecto.
-             Muestra: badge "Zona Privada" + saludo personalizado
-             + datos del perfil (email, rol, fecha de registro).
-             ───────────────────────────────────────────────── -->
+        <!-- BANNER -->
         <div class="privado-banner" aria-labelledby="privado-titulo">
-
             <div class="contenedor">
-
-                <!--
-                    Badge "Zona Privada": etiqueta pequeña en mayúsculas
-                    que indica al usuario que está en un área restringida.
-                    Mismo patrón que el badge de estado "activo/inactivo".
-                -->
-                <span class="privado-banner__badge">Zona Privada</span>
-
-                <!--
-                    id="privado-saludo": privado.js inserta aquí el mensaje
-                    del backend. Ej: "Bienvenida, usuario@email.com"
-                    Empieza con "..." hasta que llega la respuesta.
-                -->
+                <span class="privado-banner__badge">Mi cuenta</span>
                 <h1 class="privado-banner__titulo" id="privado-titulo">
                     <span id="privado-saludo">Cargando...</span>
                 </h1>
-
-                <!--
-                    id="privado-perfil": muestra email, rol y fecha de registro.
-                    Se rellena desde /privado/perfil vía privado.js.
-                -->
                 <p class="privado-banner__meta" id="privado-perfil"></p>
-
                 <a id="btn-panel-admin" href="admin.html" class="privado-banner__btn-admin">
                     Panel de administración →
                 </a>
-
             </div>
         </div>
 
-
-        <!-- ─────────────────────────────────────────────────
-             ZONA 2: CUERPO PRINCIPAL
-             Fondo gris neutro, misma paleta que login/registro.
-             ───────────────────────────────────────────────── -->
+        <!-- CUERPO -->
         <div class="privado-cuerpo">
             <div class="contenedor">
 
-                <!--
-                    Alerta de error: visible si falla la carga de datos.
-                    privado.js la activa añadiendo la clase "visible".
-                -->
                 <div class="auth-alerta" id="privado-alerta" role="alert" aria-live="polite">
                     No se pudieron cargar los datos. Comprueba tu conexión e inténtalo de nuevo.
                 </div>
 
-                <!-- Título de la sección de contenidos -->
-                <h2 class="privado-seccion__titulo">Contenido exclusivo</h2>
+                <!-- Acceso al área de datos exclusivos -->
+                <h2 class="privado-seccion__titulo">Área exclusiva</h2>
                 <p class="privado-seccion__subtitulo">
-                    Análisis y datos disponibles solo para usuarios registrados.
+                    Accede a los datos completos de subvenciones, resoluciones BOE y análisis avanzados.
                 </p>
+                <a href="exclusivo.html" class="privado-acceso-exclusivo">
+                    <span class="privado-acceso-exclusivo__icono">📊</span>
+                    <span class="privado-acceso-exclusivo__texto">
+                        <strong>Ver contenido exclusivo</strong>
+                        <span>Resumen por convocatoria · Resoluciones oficiales · Análisis</span>
+                    </span>
+                    <span class="privado-acceso-exclusivo__flecha">→</span>
+                </a>
 
-                <!--
-                    id="privado-contenido": privado.js inserta aquí las tarjetas
-                    generadas dinámicamente con los items del array "contenido"
-                    que devuelve /privado/resumen-exclusivo.
-                    Empieza con un placeholder de carga.
-                -->
-                <div
-                    class="privado-grid"
-                    id="privado-contenido"
-                    aria-label="Contenidos exclusivos disponibles"
-                >
-                    <!--
-                        Tarjetas de carga (skeleton visual).
-                        privado.js las reemplaza cuando llegan los datos reales.
-                    -->
-                    <div class="privado-item privado-item--cargando" aria-hidden="true">
-                        <div class="privado-item__icono"></div>
-                        <div class="privado-item__texto">
-                            <div class="privado-item__linea"></div>
-                            <div class="privado-item__linea privado-item__linea--corta"></div>
-                        </div>
-                    </div>
-                    <div class="privado-item privado-item--cargando" aria-hidden="true">
-                        <div class="privado-item__icono"></div>
-                        <div class="privado-item__texto">
-                            <div class="privado-item__linea"></div>
-                            <div class="privado-item__linea privado-item__linea--corta"></div>
-                        </div>
-                    </div>
-                    <div class="privado-item privado-item--cargando" aria-hidden="true">
-                        <div class="privado-item__icono"></div>
-                        <div class="privado-item__texto">
-                            <div class="privado-item__linea"></div>
-                            <div class="privado-item__linea privado-item__linea--corta"></div>
-                        </div>
-                    </div>
-                    <div class="privado-item privado-item--cargando" aria-hidden="true">
-                        <div class="privado-item__icono"></div>
-                        <div class="privado-item__texto">
-                            <div class="privado-item__linea"></div>
-                            <div class="privado-item__linea privado-item__linea--corta"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Separador -->
                 <hr class="privado-divisor">
 
-                <!-- Sección cambiar contraseña -->
+                <!-- Cambiar contraseña -->
+                <h2 class="privado-seccion__titulo">Cambiar contraseña</h2>
+                <p class="privado-seccion__subtitulo">
+                    Mínimo 8 caracteres, una mayúscula, una minúscula y un número.
+                </p>
+
                 <div class="privado-sesion" style="flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
-                    <div class="privado-sesion__info">
-                        <p class="privado-sesion__titulo">Cambiar contraseña</p>
-                        <p class="privado-sesion__desc">
-                            Introduce tu contraseña actual y una nueva para actualizarla.<br>
-                            La nueva contraseña debe tener al menos 8 caracteres, una mayúscula y un número.
-                        </p>
-                    </div>
-                    <form id="form-cambiar-password" novalidate style="flex:1; min-width:260px; max-width:380px;">
+                    <form id="form-cambiar-password" novalidate style="flex:1; min-width:260px; max-width:420px;">
                         <div class="auth-alerta" id="cambiar-password-error" role="alert" aria-live="polite">
                             Error al cambiar la contraseña.
                         </div>
-                        <p id="cambiar-password-ok" style="display:none; color:var(--color-verde-oscuro); font-weight:600; margin-bottom:1rem;">
+                        <p id="cambiar-password-ok" class="cambiar-password-ok" style="display:none;">
                             Contraseña actualizada correctamente.
                         </p>
                         <div class="grupo-campo">
                             <label for="password-actual" class="etiqueta-campo">Contraseña actual</label>
-                            <input
-                                type="password"
-                                id="password-actual"
-                                class="input-campo"
-                                autocomplete="current-password"
-                                required
-                            >
+                            <input type="password" id="password-actual" class="input-campo"
+                                   autocomplete="current-password" required>
                         </div>
                         <div class="grupo-campo">
                             <label for="password-nueva" class="etiqueta-campo">Contraseña nueva</label>
-                            <input
-                                type="password"
-                                id="password-nueva"
-                                class="input-campo"
-                                autocomplete="new-password"
-                                required
-                            >
+                            <input type="password" id="password-nueva" class="input-campo"
+                                   autocomplete="new-password" required>
                         </div>
                         <button type="submit" class="btn btn-verde">Cambiar contraseña</button>
                     </form>
                 </div>
 
-                <!-- Separador -->
                 <hr class="privado-divisor">
 
-                <!-- Sección de cierre de sesión -->
+                <!-- Cerrar sesión -->
                 <div class="privado-sesion">
                     <div class="privado-sesion__info">
                         <p class="privado-sesion__titulo">Cerrar sesión</p>
                         <p class="privado-sesion__desc">
                             Al cerrar sesión se eliminará tu token de acceso.
-                            Tendrás que volver a identificarte para entrar.
                         </p>
                     </div>
-                    <!--
-                        id="btn-cerrar-sesion-principal": segundo punto de cierre
-                        de sesión en el cuerpo de la página.
-                        privado.js conecta ambos botones (navbar + este) con
-                        la misma función cerrarSesion().
-                    -->
-                    <button
-                        type="button"
-                        class="btn btn-verde"
-                        id="btn-cerrar-sesion-principal"
-                        style="white-space:nowrap;"
-                    >
+                    <button type="button" class="btn btn-verde" id="btn-cerrar-sesion-principal"
+                            style="white-space:nowrap;">
                         Cerrar sesión
                     </button>
                 </div>
@@ -283,10 +143,6 @@
 
     </main>
 
-
-    <!-- =====================================================
-         FOOTER — mismo en todas las páginas
-         ===================================================== -->
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
@@ -304,14 +160,12 @@
         <div class="footer-principal__creditos">
             Datos procedentes de la
             <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
-               target="_blank" rel="noopener noreferrer">
-                Base de Datos Nacional de Subvenciones (BDNS)
-            </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+               target="_blank" rel="noopener noreferrer">Base de Datos Nacional de Subvenciones (BDNS)</a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+               target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>
-
 
     <script src="js/privado.js"></script>
 
