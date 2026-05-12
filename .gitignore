@@ -219,5 +219,4 @@ docker/ssl/server.key
 logs/cron/estado_*.json
 
 # Guía de estudio detallada del proyecto con especial detalle en el backend
-guia-estudio*.md
 guia-estudio/
