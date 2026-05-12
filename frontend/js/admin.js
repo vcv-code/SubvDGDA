@@ -124,6 +124,9 @@ async function cargarUsuarios() {
             const badgeActivo = u.activo
                 ? '<span class="badge-activo badge-activo--si">Activo</span>'
                 : '<span class="badge-activo badge-activo--no">Inactivo</span>';
+            const badgeVerif  = u.email_verificado
+                ? '<span class="badge-activo badge-activo--si">✓ Verificado</span>'
+                : '<span class="badge-activo badge-activo--no">✗ Sin verificar</span>';
 
             const btnToggleActivo = esSelf ? '' :
                 `<button class="btn-accion ${u.activo ? 'btn-accion--rojo' : 'btn-accion--verde'}"
@@ -148,6 +151,7 @@ async function cargarUsuarios() {
                 <td>${u.email}${esSelf ? ' <em style="font-size:.75rem;color:#888">(tú)</em>' : ''}</td>
                 <td>${badgeRol}</td>
                 <td>${badgeActivo}</td>
+                <td>${badgeVerif}</td>
                 <td>${formatearFecha(u.created_at)}</td>
                 <td>${btnToggleActivo}${btnToggleRol}${btnEliminar}</td>
             </tr>`;
@@ -159,7 +163,8 @@ async function cargarUsuarios() {
                     <tr>
                         <th>Email</th>
                         <th>Rol</th>
-                        <th>Estado</th>
+                        <th>Cuenta</th>
+                        <th>Email</th>
                         <th>Alta</th>
                         <th>Acciones</th>
                     </tr>
