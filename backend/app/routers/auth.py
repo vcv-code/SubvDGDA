@@ -5,9 +5,10 @@ from sqlalchemy.orm import Session
 
 from ..auth import (hashear_password, verificar_password, crear_token,
                     crear_refresh_token, refresh_expira_en,
-                    crear_reset_token, reset_expira_en, enviar_email_recuperacion)
+                    crear_reset_token, reset_expira_en, enviar_email_recuperacion,
+                    crear_verificacion_token, verificacion_expira_en, enviar_email_verificacion)
 from ..db import get_db
-from ..models import Usuario, RefreshToken, ResetToken
+from ..models import Usuario, RefreshToken, ResetToken, VerificacionToken
 from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn, RecuperarPasswordIn, ResetPasswordIn
 
 router = APIRouter(prefix="/auth", tags=["autenticación"])
@@ -15,6 +16,16 @@ router = APIRouter(prefix="/auth", tags=["autenticación"])
 
 @router.post("/registro", response_model=UsuarioOut, status_code=status.HTTP_201_CREATED)
 def registro(datos: RegistroIn, db: Session = Depends(get_db)):
+    # Honeypot: campo oculto que solo rellenan los bots — devolver éxito falso sin crear cuenta
+    if datos.sitio_web:
+        return UsuarioOut(
+            id_usuario=0,
+            email=datos.email,
+            rol="registrado",
+            activo=True,
+            email_verificado=False,
+            created_at=datetime.now(timezone.utc),
+        )
     if db.query(Usuario).filter(Usuario.email == datos.email).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -25,11 +36,20 @@ def registro(datos: RegistroIn, db: Session = Depends(get_db)):
         password=hashear_password(datos.password),
         rol="registrado",
         activo=1,
+        email_verificado=0,
         created_at=datetime.now(timezone.utc),
     )
     db.add(usuario)
     db.commit()
     db.refresh(usuario)
+    token_verif = crear_verificacion_token()
+    db.add(VerificacionToken(
+        id_usuario=usuario.id_usuario,
+        token=token_verif,
+        expira_en=verificacion_expira_en(),
+    ))
+    db.commit()
+    enviar_email_verificacion(usuario.email, token_verif)
     return usuario
 
 
@@ -45,6 +65,11 @@ def login(datos: LoginIn, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cuenta desactivada",
+        )
+    if not usuario.email_verificado:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.",
         )
     access_token  = crear_token(usuario.email, usuario.rol)
     refresh_token = crear_refresh_token()
@@ -100,6 +125,20 @@ def recuperar_password(datos: RecuperarPasswordIn, db: Session = Depends(get_db)
     return respuesta
 
 
+@router.get("/verificar", status_code=status.HTTP_200_OK)
+def verificar_email(token: str, db: Session = Depends(get_db)):
+    vt = db.query(VerificacionToken).filter(VerificacionToken.token == token).first()
+    if not vt or vt.usado or vt.expira_en.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enlace inválido o expirado")
+    usuario = db.query(Usuario).filter(Usuario.id_usuario == vt.id_usuario).first()
+    if not usuario:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enlace inválido o expirado")
+    usuario.email_verificado = True
+    vt.usado = True
+    db.commit()
+    return {"mensaje": "Email verificado correctamente. Ya puedes iniciar sesión."}
+
+
 @router.post("/reset", status_code=status.HTTP_200_OK)
 def reset_password(datos: ResetPasswordIn, db: Session = Depends(get_db)):
     rt = db.query(ResetToken).filter(ResetToken.token == datos.token).first()
@@ -108,7 +147,8 @@ def reset_password(datos: ResetPasswordIn, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.id_usuario == rt.id_usuario).first()
     if not usuario or not usuario.activo:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Enlace inválido o expirado")
-    usuario.password = hashear_password(datos.contrasena_nueva)
+    usuario.password         = hashear_password(datos.contrasena_nueva)
+    usuario.email_verificado = True
     rt.usado = True
     db.commit()
     return {"mensaje": "Contraseña actualizada correctamente"}

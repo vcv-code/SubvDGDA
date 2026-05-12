@@ -9,7 +9,7 @@ from jose import JWTError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .logger import setup_logging
-from .routers import convocatorias, solicitudes, estadisticas, auth, privado, agrupaciones, avisos
+from .routers import convocatorias, solicitudes, estadisticas, auth, privado, agrupaciones, avisos, admin
 
 logger = setup_logging()
 
@@ -51,6 +51,7 @@ app.include_router(auth.router)
 app.include_router(privado.router)
 app.include_router(agrupaciones.router)
 app.include_router(avisos.router)
+app.include_router(admin.router)
 
 
 @app.exception_handler(StarletteHTTPException)
