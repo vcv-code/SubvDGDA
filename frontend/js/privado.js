@@ -328,13 +328,22 @@ async function manejarCambiarPassword(evento) {
     const token = localStorage.getItem('token');
     if (!token) { window.location.href = 'login.html'; return; }
 
-    const actual = document.getElementById('password-actual').value;
-    const nueva  = document.getElementById('password-nueva').value;
-    const alerta = document.getElementById('cambiar-password-error');
-    const ok     = document.getElementById('cambiar-password-ok');
+    const actual        = document.getElementById('password-actual').value;
+    const nueva         = document.getElementById('password-nueva').value;
+    const nuevaConfirm  = document.getElementById('password-nueva-confirm')?.value ?? '';
+    const errorConfirm  = document.getElementById('error-password-nueva-confirm');
+    const alerta        = document.getElementById('cambiar-password-error');
+    const ok            = document.getElementById('cambiar-password-ok');
 
     alerta.classList.remove('visible');
     ok.style.display = 'none';
+
+    // Validación confirmar contraseña (solo frontend, antes de enviar al servidor)
+    if (nueva !== nuevaConfirm) {
+        if (errorConfirm) errorConfirm.classList.add('visible');
+        return;
+    }
+    if (errorConfirm) errorConfirm.classList.remove('visible');
 
     try {
         const respuesta = await fetch(`${API_URL}/privado/cambiar-contrasena`, {
@@ -367,6 +376,8 @@ async function manejarCambiarPassword(evento) {
 
         document.getElementById('password-actual').value = '';
         document.getElementById('password-nueva').value  = '';
+        const confirmField = document.getElementById('password-nueva-confirm');
+        if (confirmField) confirmField.value = '';
         ok.style.display = 'block';
 
     } catch {

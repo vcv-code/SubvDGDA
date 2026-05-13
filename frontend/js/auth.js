@@ -334,8 +334,9 @@ function iniciarRegistro() {
         evento.preventDefault();
 
         // ── Paso 1: Leer valores ──────────────────────────────────────────
-        const email    = document.getElementById('registro-email').value.trim();
-        const password = document.getElementById('registro-password').value;
+        const email           = document.getElementById('registro-email').value.trim();
+        const password        = document.getElementById('registro-password').value;
+        const passwordConfirm = document.getElementById('registro-password-confirm')?.value ?? '';
         // El campo nombre es solo visual, no se envía al backend
 
         // ── Paso 2: Validación client-side ────────────────────────────────
@@ -354,6 +355,14 @@ function iniciarRegistro() {
             hayErrores = true;
         } else {
             mostrarError('error-password-reg', false);
+        }
+
+        // Validación confirmar contraseña (campo solo frontend)
+        if (password !== passwordConfirm) {
+            mostrarError('error-password-confirm-reg', true);
+            hayErrores = true;
+        } else {
+            mostrarError('error-password-confirm-reg', false);
         }
 
         if (hayErrores) return;

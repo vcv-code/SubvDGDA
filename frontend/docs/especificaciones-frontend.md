@@ -1179,3 +1179,111 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
 ---
 
 *Última actualización: 4 de mayo de 2026 — Reorganización completa de estadísticas en Issue 7D. Refleja estado final tras Issues 7B, 7C y 7D: navbar Opción A con 6 enlaces directos, gráficos generales integrados en Home, páginas `estadisticas-epas.html` y `estadisticas-eell.html` con JS propio, y `recursos.html` con contenido estático real.*
+
+---
+
+## 12. Registro de ajustes post-wireframe (mayo 2026)
+
+### 12.1 Límite de paginación en el buscador de solicitudes
+
+**Archivo modificado:** `js/solicitudes.js`  
+**Cambio:** `LIMITE = 50` → `LIMITE = 100`  
+**Motivo:** El wireframe original (Pantalla 2 — Listado de solicitudes, Pág. 4) especifica server-side pagination con 100 registros por página (aprox. 64 páginas para los 6.398 registros actuales). El valor anterior de 50 era provisional.  
+**Relación con backend:** El parámetro `limite` se pasa como query string a `GET /solicitudes/?limite=100&pagina=N`. El backend ya acepta cualquier valor; este cambio es exclusivamente de frontend.  
+**Sin impacto en:** Lógica de filtros, exportación CSV, paginación (los cálculos usan `Math.ceil(total / LIMITE)` y se recalculan automáticamente).
+
+### 12.2 Corrección de colores de badges de estado
+
+**Archivo modificado:** `css/styles.css` (bloque `:root`, variables `--estado-*`)  
+**Cambio:** Dos variables CSS actualizadas para alinearse con el wireframe (Pantalla 2 — Listado de solicitudes, Pág. 4-5):
+
+| Variable | Antes | Después | Color |
+|---|---|---|---|
+| `--estado-excluida` | `#EF6C00` (naranja) | `#B45309` (ámbar) | según wireframe |
+| `--estado-desistida` | `#6A1B9A` (morado) | `#6B7280` (gris) | según wireframe |
+
+La tabla completa de badges queda: **verde** = concedida · **rojo** = no beneficiaria · **ámbar** = excluida · **gris** = desistida.  
+Los valores elegidos superan el ratio de contraste WCAG AA (4.5:1) sobre fondo blanco con texto blanco.  
+**Relación con backend:** Ninguna. Son estilos visuales puros.  
+**Propagación automática:** Las clases `.badge-excluida` y `.badge-desistida` y cualquier otro elemento que use `var(--estado-excluida)` o `var(--estado-desistida)` se actualizan sin cambios adicionales.
+
+### 12.3 Campo "confirmar contraseña" en registro y cambio de contraseña
+
+**Archivos modificados:** `registro.html`, `privado.html`, `js/auth.js`, `js/privado.js`  
+**Cambio:** Se añade un campo `<input type="password">` de confirmación en dos formularios, con validación client-side que bloquea el envío si las contraseñas no coinciden.
+
+**En `registro.html`:**
+- Nuevo campo `#registro-password-confirm` tras los indicadores de requisitos.
+- Span de error `#error-password-confirm-reg` con mensaje "Las contraseñas no coinciden."
+- `auth.js` (función `iniciarRegistro`): lee `#registro-password-confirm`, compara con `#registro-password` y activa/desactiva el error antes de hacer fetch.
+
+**En `privado.html`:**
+- Nuevo campo `#password-nueva-confirm` tras el campo `#password-nueva`.
+- Span de error `#error-password-nueva-confirm` con mensaje "Las contraseñas no coinciden."
+- `privado.js` (función `manejarCambiarPassword`): valida la coincidencia antes de enviar la petición `PUT /privado/cambiar-contrasena`. Si no coinciden, muestra el error y hace `return` sin llamar al backend.
+- Al completar el cambio con éxito, el campo de confirmación también se limpia.
+
+**Relación con backend:** Ninguna. El backend (`PUT /privado/cambiar-contrasena`) recibe `{ contrasena_actual, contrasena_nueva }` exactamente igual que antes. El campo de confirmación existe solo en el cliente para mejorar la seguridad UX.  
+**Sin impacto en:** Flujo de login, tokens, ni ningún otro formulario.
+
+### 12.4 Comentario obsoleto eliminado en home.js
+
+**Archivo modificado:** `js/home.js` (función `mostrarMetricas`, línea ~197)  
+**Cambio:** El comentario que decía `PENDIENTE DE BACKEND: cuando el schema EstadisticasOut incluya 'entidades_unicas'...` se ha reemplazado por un comentario descriptivo correcto: el campo ya existe y funciona desde el backend.  
+**Motivo:** El campo `entidades_unicas` fue implementado en el backend (`EstadisticasOut` en `schemas.py`) y el endpoint `GET /estadisticas/` lo devuelve correctamente. El comentario era un recordatorio temporal que quedó sin actualizar.  
+**Relación con backend:** Meramente documental. No hay cambio funcional.
+
+### 12.5 Páginas aviso-legal.html y privacidad.html
+
+**Archivos creados:** `aviso-legal.html`, `privacidad.html`  
+**Archivos modificados:** todos los HTML del proyecto (footer de 12 páginas)
+
+**Páginas creadas:** Dos páginas estáticas con contenido adecuado para un proyecto educativo de TFG:
+- `aviso-legal.html`: titularidad (proyecto educativo DAW), finalidad (datos públicos BDNS/DGDA), responsabilidad, propiedad intelectual y contacto.
+- `privacidad.html`: datos recogidos (email + contraseña bcrypt + tokens de sesión), finalidad, derechos del usuario, seguridad (HTTPS TLS 1.2/1.3, bcrypt, tokens revocables) y nota sobre datos públicos.
+
+Ambas páginas tienen `<meta name="robots" content="noindex">` para excluirlas de los motores de búsqueda (igual que `admin.html`). Incluyen navbar y footer completos con los mismos enlaces que el resto del proyecto.
+
+**Footer actualizado en:** `index.html`, `login.html`, `registro.html`, `solicitudes.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `entidad.html`, `privado.html`, `admin.html`, `recursos.html`, `recuperar-password.html`, `reset-password.html`. Se añadieron los enlaces "Aviso legal" y "Privacidad" al `<nav>` del footer usando el separador `footer-principal__sep` ya existente.
+
+**Relación con backend:** Ninguna. Contenido estático puro.  
+**Eliminado de "Pendientes":** El punto "Política de privacidad y aviso legal" que figuraba en la sección de pendientes del documento queda completado.
+
+### 12.6 Tabla de solicitudes responsive — vista de tarjetas en móvil
+
+**Archivos modificados:** `css/styles.css`, `js/solicitudes.js`
+
+**Problema:** En pantallas estrechas (<600 px) la tabla de resultados del buscador desbordaba horizontalmente, obligando al usuario a hacer scroll lateral. La columna "Entidad" (la más ancha) quedaba cortada y los badges de estado eran difíciles de pulsar.
+
+**Solución técnica — CSS (`styles.css`):**  
+Se añadió un bloque `@media (max-width: 600px)` estrictamente acotado a `.tabla-wrapper`. El selector limita el impacto a la tabla de solicitudes y no afecta otras tablas del proyecto (p. ej. la de entidad, que usa `id` en lugar de clase). La técnica empleada es **data-label + `::before { content: attr(data-label) }`**: cada celda pasa a `display: flex; justify-content: space-between` y muestra el nombre de columna como prefijo usando su atributo HTML `data-label`. El `<thead>` se oculta con `display: none` porque la información ya está duplicada en los atributos. Las filas se convierten en tarjetas con borde, `border-radius` y sombra suave, reutilizando las variables CSS del sistema de diseño (`--radio-card`, `--color-gris-medio`, `--color-fondo-verde`).
+
+**Solución técnica — JS (`solicitudes.js`):**  
+En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atributo `data-label` en cada `<td>`. El atributo es texto literal y no requiere lógica adicional. Los valores dinámicos (entidad, año, tipo, estado, importe) no se alteraron.
+
+**Decisiones de diseño:**
+
+| Alternativa descartada | Motivo |
+|---|---|
+| Scroll horizontal | Mal UX en móvil; obliga a gestos torpes |
+| Generar tarjetas `<div>` con JS | Rompe la semántica de tabla; complica paginación |
+| Tabla con `table-layout: fixed` + `overflow hidden` | Recorta texto sin notificarlo al usuario |
+| Bootstrap u otra librería | Sin nuevas dependencias por requisito del proyecto |
+
+**Columnas y sus `data-label`:**
+
+| `<th>` visible | `data-label` en `<td>` |
+|---|---|
+| Entidad beneficiaria | `Entidad` |
+| Año | `Año` |
+| Tipo | `Tipo` |
+| Estado | `Estado` |
+| Importe concedido | `Importe` |
+
+**Breakpoint elegido:** `600 px` — coincide con el breakpoint `sm` de referencia, que es el límite habitual entre móvil portrait y tablet. Las tarjetas de la página de inicio ya usan `480 px`; usar `600 px` para la tabla da más margen en dispositivos en el rango 481–600 px donde la tabla sigue siendo incómoda.
+
+**Accesibilidad:** Ocultar `<thead>` con `display: none` es aceptable porque los `data-label` proporcionan el contexto de cada celda. Los lectores de pantalla en móvil seguirán leyendo el atributo a través del pseudo-elemento `::before`. Los badges de estado conservan su `aria-label`.
+
+**Relación con backend:** Ninguna.  
+**Archivos con cambios de comportamiento visual en otros breakpoints:** Ninguno (el bloque está completamente aislado en `@media (max-width: 600px) { .tabla-wrapper ... }`).  
+**Eliminado de "Pendientes":** El punto "Tabla responsive en móvil (buscador de solicitudes)" de la sección 10.
