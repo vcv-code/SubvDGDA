@@ -31,3 +31,14 @@ def test_nginx_rate_limit_aplicado_a_login():
     contenido = NGINX_CONF.read_text()
     assert "/auth/login" in contenido
     assert "limit_req" in contenido
+
+
+def test_nginx_zona_registro_definida():
+    contenido = NGINX_CONF.read_text()
+    assert "zone=registro" in contenido
+
+
+def test_nginx_rate_limit_aplicado_a_registro():
+    contenido = NGINX_CONF.read_text()
+    assert "/auth/registro" in contenido
+    assert "zone=registro" in contenido
