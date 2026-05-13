@@ -193,8 +193,8 @@ function mostrarMetricas(datos) {
         formatearImporte(datos.importe_global);
 
     // Tarjeta 3: Entidades únicas
-    // PENDIENTE DE BACKEND: cuando el schema EstadisticasOut incluya
-    // 'entidades_unicas', se mostrará aquí automáticamente.
+    // El campo 'entidades_unicas' está disponible en GET /estadisticas/
+    // (campo añadido en el schema EstadisticasOut del backend).
     document.getElementById('total-entidades').textContent =
         datos.entidades_unicas !== undefined
             ? formatearNumero(datos.entidades_unicas)
@@ -227,6 +227,34 @@ function mostrarErrores() {
     // Sección de métricas
     const cargaMetricas = document.getElementById('metricas-carga');
     if (cargaMetricas) cargaMetricas.innerHTML = mensajeError;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// UTILIDAD: descarga de gráfico como PNG
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * configurarDescarga(instanciaChart, btnId, nombreArchivo)
+ * Muestra el botón de descarga de una tarjeta de gráfico y le
+ * añade el listener que llama a chart.toBase64Image() (Chart.js 4.x)
+ * para generar un PNG y descargarlo mediante un <a> temporal.
+ *
+ * @param {Chart}  instanciaChart  - Instancia de Chart.js ya creada.
+ * @param {string} btnId           - ID del <button> en el HTML.
+ * @param {string} nombreArchivo   - Nombre del archivo descargado (.png).
+ */
+function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.display = 'inline-flex';
+    btn.addEventListener('click', () => {
+        const url = instanciaChart.toBase64Image('image/png', 1);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = nombreArchivo;
+        a.click();
+    });
 }
 
 

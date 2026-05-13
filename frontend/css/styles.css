@@ -59,10 +59,10 @@
     --color-blanco:      #FFFFFF;
 
     /* --- Colores de estado (para badges de solicitudes) --- */
-    --estado-concedida:       #2E7D32;
-    --estado-no-beneficiaria: #C62828;
-    --estado-excluida:        #EF6C00;
-    --estado-desistida:       #6A1B9A;
+    --estado-concedida:       #2E7D32;   /* verde   */
+    --estado-no-beneficiaria: #C62828;   /* rojo    */
+    --estado-excluida:        #B45309;   /* ámbar   — según wireframe */
+    --estado-desistida:       #6B7280;   /* gris    — según wireframe */
 
     /* --- Tipografía --- */
     --fuente-principal: 'Inter', sans-serif;
@@ -426,6 +426,77 @@ table tbody tr:nth-child(even) {
 
 table tbody tr:hover {
     background-color: var(--color-fondo-verde);
+}
+
+/* ── Tabla responsive: en <600px las filas se convierten en tarjetas ──
+   Técnica data-label: cada <td> tiene un atributo data-label="Columna"
+   que se muestra como prefijo con ::before. El <thead> se oculta.
+   Solo afecta a .tabla-wrapper (buscador de solicitudes), no a otras tablas.
+   ─────────────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .tabla-wrapper {
+        overflow-x: visible;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .tabla-wrapper table thead {
+        display: none;
+    }
+
+    .tabla-wrapper table,
+    .tabla-wrapper table tbody,
+    .tabla-wrapper table tr,
+    .tabla-wrapper table td {
+        display: block;
+        width: 100%;
+    }
+
+    .tabla-wrapper table tbody tr {
+        background: var(--color-blanco);
+        border: 1px solid var(--color-gris-medio);
+        border-radius: var(--radio-card);
+        margin-bottom: 0.65rem;
+        padding: 0.6rem 0.8rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    /* Cancelar fondo alterno de escritorio */
+    .tabla-wrapper table tbody tr:nth-child(even) {
+        background: var(--color-blanco);
+    }
+
+    .tabla-wrapper table tbody tr:hover {
+        background: var(--color-fondo-verde);
+    }
+
+    .tabla-wrapper table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.28rem 0;
+        border: none;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+    }
+
+    /* Línea separadora entre campos dentro de la tarjeta */
+    .tabla-wrapper table tbody td:not(:last-child) {
+        border-bottom: 1px solid var(--color-gris-claro);
+    }
+
+    /* Etiqueta de columna: content del atributo data-label */
+    .tabla-wrapper table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--color-gris-texto);
+        white-space: nowrap;
+        min-width: 70px;
+        flex-shrink: 0;
+    }
 }
 
 
@@ -1996,4 +2067,81 @@ canvas {
     font-size: 0.875rem;
     color: #6d4c41;
     line-height: 1.4;
+}
+
+/* ============================================================
+   28. Botón de descarga de gráfico como PNG (Task 2.2)
+   ============================================================ */
+
+/**
+ * .btn-descargar-png
+ * Botón pequeño tipo ghost (borde verde, fondo transparente)
+ * que aparece en la cabecera de cada tarjeta de gráfico.
+ * Empieza oculto (display:none) y el JS lo muestra solo cuando
+ * el gráfico se ha pintado correctamente con Chart.js.
+ * Al hacer clic llama a chart.toBase64Image() y descarga el PNG.
+ */
+.btn-descargar-png {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: var(--fuente-base, 'Inter', sans-serif);
+    color: var(--color-verde-btn);
+    background: transparent;
+    border: 1.5px solid var(--color-verde-btn);
+    border-radius: var(--radio-btn, 6px);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+    line-height: 1;
+}
+
+.btn-descargar-png:hover,
+.btn-descargar-png:focus-visible {
+    background: var(--color-verde-btn);
+    color: #ffffff;
+    outline: none;
+}
+
+.btn-descargar-png:focus-visible {
+    box-shadow: 0 0 0 3px rgba(71, 192, 121, 0.35);
+}
+
+/* ============================================================
+   29. Badge de tendencia ↑/↓ en tarjetas KPI (Task 2.3)
+   ============================================================ */
+
+/**
+ * .tendencia-badge
+ * Pastilla pequeña que aparece bajo el número principal del KPI.
+ * Muestra la variación % del último año respecto al anterior:
+ *   ↑ verde  → crecimiento
+ *   ↓ rojo   → descenso
+ * Empieza oculta (display:none); home.js la muestra si hay ≥2 años.
+ * WCAG AA: #2E7D32 sobre #e8f5e9 = 5,4:1 ✓  |  #C62828 sobre #fce4ec = 5,1:1 ✓
+ */
+.tendencia-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-top: 6px;
+    white-space: nowrap;
+}
+
+.tendencia-badge--sube {
+    background: #e8f5e9;
+    color: #2E7D32;
+}
+
+.tendencia-badge--baja {
+    background: #fce4ec;
+    color: #C62828;
 }

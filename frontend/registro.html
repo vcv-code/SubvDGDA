@@ -174,6 +174,26 @@
                             </div>
                         </div>
 
+                        <!-- Confirmar contraseña: validación solo frontend -->
+                        <div class="grupo-campo">
+                            <label for="registro-password-confirm" class="etiqueta-campo">
+                                Confirmar contraseña
+                            </label>
+                            <input
+                                type="password"
+                                id="registro-password-confirm"
+                                name="password_confirm"
+                                class="input-campo"
+                                placeholder="Repite tu contraseña"
+                                autocomplete="new-password"
+                                required
+                                aria-describedby="error-password-confirm-reg"
+                            >
+                            <span class="campo-error" id="error-password-confirm-reg" role="alert">
+                                Las contraseñas no coinciden.
+                            </span>
+                        </div>
+
                         <button
                             type="submit"
                             class="btn btn-verde btn-auth"
@@ -212,6 +232,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
