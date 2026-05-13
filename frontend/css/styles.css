@@ -2037,6 +2037,243 @@ canvas {
     margin-top: 20px;
 }
 
+/* Secciones de la zona privada */
+.privado-divisor {
+    border: none;
+    border-top: 1px solid var(--color-gris-medio);
+    margin: 2rem 0;
+}
+
+.privado-seccion__titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    margin: 0 0 0.4rem;
+}
+
+.privado-seccion__subtitulo {
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+    margin: 0 0 1.2rem;
+}
+
+/* Wrapper con scroll horizontal para tablas anchas */
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+/* Skeleton de carga para tabla resumen */
+.privado-item--cargando-tabla {
+    height: 48px;
+    border-radius: 6px;
+}
+
+/* Mensaje de error dentro de la tabla resumen */
+.tabla-error-msg {
+    color: #c62828;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* Acción de verificación de email (verificar-email.html) */
+.verif-accion {
+    margin-top: 1.5rem;
+}
+
+/* Enlace "Volver" dentro del banner de zona privada */
+.privado-banner__volver {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+.privado-banner__volver:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Tarjeta de acceso al área de contenido exclusivo */
+.privado-acceso-exclusivo {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    background: #fff;
+    border: 2px solid var(--color-verde-btn);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    text-decoration: none;
+    color: var(--color-negro);
+    transition: background 0.15s, box-shadow 0.15s;
+    margin-bottom: 0.5rem;
+}
+
+.privado-acceso-exclusivo:hover {
+    background: var(--color-fondo-verde);
+    box-shadow: 0 2px 8px rgba(46,125,50,0.12);
+}
+
+.privado-acceso-exclusivo__icono {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.privado-acceso-exclusivo__texto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.privado-acceso-exclusivo__texto strong {
+    font-size: 1rem;
+    color: var(--color-verde-btn);
+}
+
+.privado-acceso-exclusivo__texto span {
+    font-size: 0.875rem;
+    color: var(--color-gris-texto);
+}
+
+.privado-acceso-exclusivo__flecha {
+    font-size: 1.4rem;
+    color: var(--color-verde-btn);
+    flex-shrink: 0;
+}
+
+/* Mensaje de éxito al cambiar contraseña */
+.cambiar-password-ok {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Tabla resumen zona privada */
+.resumen-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.resumen-tabla th,
+.resumen-tabla td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.resumen-tabla th {
+    background: var(--color-verde-btn);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.resumen-tabla tbody tr:hover td {
+    background: var(--color-gris-claro);
+}
+
+.resumen-tabla__totales td {
+    font-weight: 700;
+    background: #f0f4f0;
+    border-top: 2px solid var(--color-verde-btn);
+    border-bottom: none;
+}
+
+.resumen-tabla__pendiente td {
+    color: var(--color-gris-texto);
+    font-style: italic;
+}
+
+.resumen-tabla__pendiente td[colspan] {
+    text-align: center;
+}
+
+.resumen-tabla__tipo {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.resumen-tabla__tipo--epa  { background: #e3f2fd; color: #1565c0; }
+.resumen-tabla__tipo--eell { background: #e8f5e9; color: #2e7d32; }
+
+/* Documentos oficiales zona privada */
+.privado-docs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.privado-docs__grupo {
+    background: #fff;
+    border: 1px solid var(--color-gris-medio);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+}
+
+.privado-docs__subtitulo {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-verde-btn);
+    margin: 0 0 0.8rem;
+}
+
+.privado-docs__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.privado-docs__lista a,
+.privado-docs__lista span {
+    font-size: 0.875rem;
+    color: var(--color-verde-btn);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.privado-docs__lista span {
+    color: var(--color-gris-texto);
+    font-style: italic;
+}
+
+.privado-docs__lista a::before {
+    content: "↗";
+    font-size: 0.75rem;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.privado-docs__lista span::before {
+    content: "⏳";
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+.privado-docs__lista a:hover {
+    text-decoration: underline;
+}
+
+/* Honeypot: campo invisible para humanos, visible para bots que rellenan formularios */
+.hp-trampa {
+    display: none;
+    visibility: hidden;
+    position: absolute;
+    left: -9999px;
+}
+
 /* Banner de avisos: convocatorias en tramitación (sin resolución aún) */
 .aviso-banner {
     background: #fff8e1;

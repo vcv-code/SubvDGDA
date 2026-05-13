@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--
+    exclusivo.html — Contenido exclusivo para usuarios registrados
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    Muestra:
+    · Resumen de solicitudes por convocatoria (tabla con datos reales)
+    · Resoluciones oficiales del BOE por año
+    · Próximos análisis disponibles (en desarrollo)
+
+    Endpoints:
+      GET /privado/perfil       → datos del usuario (para el saludo)
+      GET /privado/resumen-tabla → datos de la tabla resumen
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contenido exclusivo — Subvenciones Bienestar Animal</title>
+    <meta name="description" content="Datos exclusivos de subvenciones para usuarios registrados.">
+
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <meta property="og:title" content="Contenido exclusivo — Subvenciones Bienestar Animal">
+    <meta property="og:description" content="Análisis avanzados y resoluciones BOE para usuarios registrados.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li>
+                    <button type="button" id="btn-cerrar-sesion" class="btn-login"
+                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">
+                        Cerrar sesión
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- BANNER -->
+        <div class="privado-banner" aria-labelledby="excl-titulo">
+            <div class="contenedor">
+                <span class="privado-banner__badge">Zona Privada</span>
+                <h1 class="privado-banner__titulo" id="excl-titulo">Contenido exclusivo</h1>
+                <p class="privado-banner__meta">
+                    ← <a href="privado.html" class="privado-banner__volver">Volver a mi perfil</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- CUERPO -->
+        <div class="privado-cuerpo">
+            <div class="contenedor">
+
+                <div class="auth-alerta" id="excl-alerta" role="alert" aria-live="polite">
+                    No se pudieron cargar los datos. Comprueba tu conexión e inténtalo de nuevo.
+                </div>
+
+                <!-- Resumen de solicitudes -->
+                <h2 class="privado-seccion__titulo">Resumen de solicitudes por convocatoria</h2>
+                <p class="privado-seccion__subtitulo">
+                    Datos completos de todas las convocatorias, con desglose por estado e importe.
+                </p>
+
+                <div id="resumen-tabla-contenedor">
+                    <div class="privado-item privado-item--cargando privado-item--cargando-tabla" aria-hidden="true"></div>
+                </div>
+
+                <hr class="privado-divisor">
+
+                <!-- Resoluciones oficiales -->
+                <h2 class="privado-seccion__titulo">Resoluciones oficiales</h2>
+                <p class="privado-seccion__subtitulo">
+                    Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
+                </p>
+
+                <div class="privado-docs">
+                    <div class="privado-docs__grupo">
+                        <h3 class="privado-docs__subtitulo">Entidades de Protección Animal (EPA)</h3>
+                        <ul class="privado-docs__lista">
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2021-8098" target="_blank" rel="noopener noreferrer">EPA 2021 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2022-11310" target="_blank" rel="noopener noreferrer">EPA 2022 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2023-18004" target="_blank" rel="noopener noreferrer">EPA 2023 — Resolución de concesión (periodo semestral)</a></li>
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2024-18573" target="_blank" rel="noopener noreferrer">EPA 2024 — Resolución de concesión (periodo semestral)</a></li>
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-9522" target="_blank" rel="noopener noreferrer">EPA 2025 — Resolución de concesión</a></li>
+                        </ul>
+                    </div>
+                    <div class="privado-docs__grupo">
+                        <h3 class="privado-docs__subtitulo">Entidades Locales (EELL)</h3>
+                        <ul class="privado-docs__lista">
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2023-23049" target="_blank" rel="noopener noreferrer">EELL 2023 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2024-22571" target="_blank" rel="noopener noreferrer">EELL 2024 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-11753" target="_blank" rel="noopener noreferrer">EELL 2025 — Resolución de concesión</a></li>
+                            <li><span>EELL 2026 — Resolución pendiente de publicación</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr class="privado-divisor">
+
+                <!-- Próximas funcionalidades -->
+                <h2 class="privado-seccion__titulo">Próximamente</h2>
+                <p class="privado-seccion__subtitulo">
+                    Análisis adicionales en desarrollo para usuarios registrados.
+                </p>
+
+                <div class="privado-grid">
+                    <div class="privado-item">
+                        <div class="privado-item__icono">🕐</div>
+                        <div class="privado-item__texto">
+                            <p class="privado-item__label">Historial completo por entidad</p>
+                            <p class="privado-item__detalle">Todas las solicitudes de una entidad a lo largo de los años, con evolución de importes</p>
+                        </div>
+                    </div>
+                    <div class="privado-item">
+                        <div class="privado-item__icono">🕐</div>
+                        <div class="privado-item__texto">
+                            <p class="privado-item__label">Causas de exclusión frecuentes</p>
+                            <p class="privado-item__detalle">Análisis de los motivos más comunes de exclusión por tipo de convocatoria</p>
+                        </div>
+                    </div>
+                    <div class="privado-item">
+                        <div class="privado-item__icono">🕐</div>
+                        <div class="privado-item__texto">
+                            <p class="privado-item__label">Importes por provincia y CCAA</p>
+                            <p class="privado-item__detalle">Comparativa territorial de importes concedidos y porcentaje sobre el total</p>
+                        </div>
+                    </div>
+                    <div class="privado-item">
+                        <div class="privado-item__icono">🕐</div>
+                        <div class="privado-item__texto">
+                            <p class="privado-item__label">Puntuación mínima por convocatoria</p>
+                            <p class="privado-item__detalle">Umbral de puntuación a partir del cual se obtuvo concesión en cada año</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">Base de Datos Nacional de Subvenciones (BDNS)</a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+               target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+    <script src="js/exclusivo.js"></script>
+
+</body>
+</html>

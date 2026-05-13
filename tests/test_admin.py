@@ -16,6 +16,7 @@ Cubre:
 """
 
 from datetime import datetime, date, timezone
+from unittest.mock import patch
 
 from backend.app.models import Convocatoria, Solicitud, Usuario
 from backend.app.auth import hashear_password
@@ -47,8 +48,10 @@ def _token_admin(client, db):
     return r.json()["access_token"]
 
 
-def _token_registrado(client):
-    client.post("/auth/registro", json=USUARIO)
+def _token_registrado(client, db):
+    u = Usuario(email=USUARIO["email"], password=hashear_password(USUARIO["password"]),
+                rol="registrado", activo=1, email_verificado=1, created_at=datetime.now(timezone.utc))
+    db.add(u); db.commit()
     r = client.post("/auth/login", json=USUARIO)
     return r.json()["access_token"]
 
@@ -81,8 +84,8 @@ def test_estado_sin_token_devuelve_401(client):
     assert r.status_code == 401
 
 
-def test_estado_rol_registrado_devuelve_403(client):
-    token = _token_registrado(client)
+def test_estado_rol_registrado_devuelve_403(client, db):
+    token = _token_registrado(client, db)
     r = client.get("/admin/estado", headers=_headers(token))
     assert r.status_code == 403
 
@@ -102,7 +105,8 @@ def test_estado_rol_admin_devuelve_200(client, db):
 
 def test_listar_usuarios(client, db):
     token = _token_admin(client, db)
-    client.post("/auth/registro", json=USUARIO)
+    with patch("backend.app.routers.auth.enviar_email_verificacion"):
+        client.post("/auth/registro", json=USUARIO)
     r = client.get("/admin/usuarios", headers=_headers(token))
     assert r.status_code == 200
     emails = [u["email"] for u in r.json()]
@@ -112,7 +116,8 @@ def test_listar_usuarios(client, db):
 
 def test_cambiar_rol_a_admin(client, db):
     token = _token_admin(client, db)
-    client.post("/auth/registro", json=USUARIO)
+    with patch("backend.app.routers.auth.enviar_email_verificacion"):
+        client.post("/auth/registro", json=USUARIO)
     usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
@@ -140,7 +145,8 @@ def test_cambiar_propio_rol_devuelve_400(client, db):
 
 def test_desactivar_usuario(client, db):
     token = _token_admin(client, db)
-    client.post("/auth/registro", json=USUARIO)
+    with patch("backend.app.routers.auth.enviar_email_verificacion"):
+        client.post("/auth/registro", json=USUARIO)
     usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
@@ -174,7 +180,8 @@ def test_usuario_inexistente_devuelve_404(client, db):
 
 def test_eliminar_usuario(client, db):
     token = _token_admin(client, db)
-    client.post("/auth/registro", json=USUARIO)
+    with patch("backend.app.routers.auth.enviar_email_verificacion"):
+        client.post("/auth/registro", json=USUARIO)
     usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 

@@ -109,7 +109,7 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `recuperar-password.html`, `reset-password.html` — páginas implementadas
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
 
 ### Backend
 
@@ -542,8 +542,10 @@ backend/app/
     estadisticas.py  → GET /estadisticas/ · GET /estadisticas/epas · GET /estadisticas/eell
     agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
     avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
-    auth.py          → POST /auth/registro · POST /auth/login · POST /auth/refresh · POST /auth/logout · POST /auth/recuperar · POST /auth/reset
-    privado.py       → GET /privado/perfil · GET /privado/resumen-exclusivo · PUT /privado/cambiar-contrasena
+    auth.py          → POST /auth/registro · GET /auth/verificar · POST /auth/login · POST /auth/refresh · POST /auth/logout · POST /auth/recuperar · POST /auth/reset
+    privado.py       → GET /privado/perfil · GET /privado/resumen-exclusivo · GET /privado/resumen-tabla · PUT /privado/cambiar-contrasena
+    · privado.html → perfil del usuario: datos, cambiar contraseña, enlace a exclusivo.html
+    · exclusivo.html → contenido exclusivo: resumen tabla, resoluciones BOE, próximas funcionalidades
 ```
 
 La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
@@ -586,7 +588,7 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -649,7 +651,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (179 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (193 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
@@ -660,8 +662,9 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
   · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
-  · test_rate_limiting.py (5): configuración de rate limiting en Nginx para /auth/login
+  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
   · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
+  · test_verificacion_email.py (10): registro crea usuario no verificado, token en BD, email enviado, login bloqueado sin verificar, token válido activa cuenta, login tras verificar, token inválido/usado/expirado, reset activa email_verificado
   · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
   · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
   · test_admin.py (22): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs
@@ -734,10 +737,10 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
   · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
   · implementado en los routers FastAPI mediante parámetro `Response`
-✔ rate limiting en Nginx para prevenir fuerza bruta en el login
-  · `limit_req_zone $binary_remote_addr zone=login:10m rate=10r/m` — 10 peticiones/minuto por IP
-  · `location = /auth/login` con `burst=5 nodelay` y `limit_req_status 429`
-  · el resto de la API no está limitada
+✔ rate limiting en Nginx para prevenir fuerza bruta y creación masiva de cuentas
+  · zona `login:10m rate=10r/m` — 10 peticiones/minuto por IP en `/auth/login` (burst=5)
+  · zona `registro:10m rate=5r/m` — 5 peticiones/minuto por IP en `/auth/registro` (burst=3)
+  · ambos con `limit_req_status 429`; el resto de la API no está limitada
 ✔ panel de administración (`admin.html` + `js/admin.js`)
   · acceso exclusivo para usuarios con rol `admin`; redirige a login o privado si no procede
   · GET /admin/estado → salud del sistema, conteo de convocatorias/solicitudes/usuarios, última convocatoria detectada
@@ -756,29 +759,29 @@ Pendiente:
 
 ### Pendientes de frontend
 
+- **Páginas de error personalizadas**: actualmente Nginx muestra su página por defecto en errores 404 y 50x. Pendiente crear `404.html` y `50x.html` con el diseño del proyecto y configurar Nginx con `error_page 404 /404.html` y `error_page 500 502 503 504 /50x.html`.
+- **Reenviar email de verificación**: si el correo de verificación no llega (spam, etc.), el usuario queda bloqueado. Solución de emergencia: usar "Olvidé mi contraseña" (que también verifica el email al completar el reset). Pendiente: enlace "¿No recibiste el email? Volver a enviar" en `verificar-email.html` con un nuevo endpoint `POST /auth/reenviar-verificacion`.
+- **Verificar URLs del BOE en `exclusivo.html`**: los IDs de documento usados (BOE-A-2021-8098, etc.) son aproximados. Contrastar contra la fuente oficial antes de la entrega final.
+- **Página Recursos — colores por sección**: los logos ya están uniformes (height 80px + object-fit:contain). Pendiente: asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente.
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: el ranking CCAA ya funciona, pero el mapa choropleth está pendiente de decisión técnica (SVG inline, Leaflet o D3-geo).
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
 - Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
-- Contenido de la página privada (`privado.html`): tabla resumen con datos por año y estado, separada por tipo
 - **Footer — revisar enlaces**: actualmente muestra GitHub, Documentación y Contacto. Pendiente: sustituir por Aviso legal (obligatorio si se publica) y decidir si mantener Contacto (valorar implicaciones de privacidad según los datos que se exponen).
-- **Home — sección de PDFs oficiales**: hay espacio vacío entre los gráficos y el footer. Posible sección con los documentos BOE de cada convocatoria: título, enlace para ver en el BOE y enlace de descarga directa. Futura adición, no urgente.
 - Política de privacidad y aviso legal
 - Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
-- **Página Recursos — colores por sección**: los logos ya están uniformes (height 80px + object-fit:contain). Pendiente: asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente.
 - **Refactor CSS inline** *(post-entrega, solo si hay tiempo)*: el proyecto acumula estilos inline en el HTML que deberían estar como clases en `styles.css`. No es urgente ni afecta a la funcionalidad, pero mejora el mantenimiento. Hacerlo página por página comprobando visualmente que nada se rompe. Regla para código nuevo: `display:none` en HTML está bien; todo lo demás va a `styles.css`.
 
 ### Pendientes de seguridad en registros de usuario
 
-- **Rate limiting en `POST /auth/registro`** *(prioridad 1)*: actualmente ya existe en `/auth/login`. Añadir la misma restricción en Nginx para `/auth/registro` evita que un bot cree miles de cuentas en segundos. Son 2 líneas en `default.conf`.
-- **Verificación de email al registrarse** *(prioridad 2)*: ahora cualquier email inventado puede registrarse y acceder. Exigir clicar un enlace de verificación antes de activar la cuenta elimina las cuentas con emails falsos. Toda la infraestructura (Mailpit, tokens, flujo de email) ya existe — es el mismo patrón que la recuperación de contraseña.
-- **Honeypot en el formulario de registro** *(prioridad 3)*: campo oculto con CSS que los humanos no ven pero los bots rellenan. Si llega relleno → rechazar sin explicación. Cero dependencias externas, frena bots básicos.
+*(Todas implementadas en la rama 12)*
 
-### Pendientes de infraestructura y despliegue
+✔ **Rate limiting en `POST /auth/registro`**: zona `registro:10m rate=5r/m` en Nginx, `burst=3 nodelay`. Evita creación masiva de cuentas.
+✔ **Honeypot en el formulario de registro**: campo `sitio_web` oculto con CSS (`.hp-trampa`). Si llega relleno → éxito falso sin crear cuenta. Cero dependencias.
+✔ **Verificación de email al registrarse**: `email_verificado` en `usuarios`, tabla `verificacion_tokens`, `GET /auth/verificar?token=...`, página `verificar-email.html`. El reset de contraseña también activa `email_verificado`.
+
+### Pendientes de despliegue
 
 - Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
-- Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
-- Dominio real y certificado Let's Encrypt: en producción sustipues stuir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
-- CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 
 ---
 
@@ -922,6 +925,18 @@ docker compose up -d
 
 Si el error persiste, asegúrate de que el volumen de Nginx monta el **directorio** `./nginx` y no el archivo individual `./nginx/nginx.conf`. El archivo de configuración debe llamarse `default.conf` dentro de esa carpeta.
 
+#### Config de Nginx no se aplica tras editar `default.conf`
+
+Editar `default.conf` cambia el fichero en disco (volumen), pero Nginx **no recarga la config automáticamente** — sigue usando la versión anterior en memoria. Síntoma habitual: añades un bloque `location` o una zona de rate limiting y parece no tener efecto.
+
+```bash
+# Verificar sintaxis antes de recargar (falla seguro si hay error)
+docker exec bdns_nginx nginx -t
+
+# Aplicar la nueva config sin cortar conexiones activas
+docker exec bdns_nginx nginx -s reload
+```
+
 #### Contenedor cron — supercronic no arranca (`Failed to fork exec`)
 
 La versión v0.2.33 de supercronic presenta un bug de inicialización en entornos Docker Desktop + WSL2: el proceso muere inmediatamente con `level=fatal msg="Failed to fork exec: no such file or directory"` antes de leer el crontab, aunque el binario sea válido y el crontab correcto (verificado con `supercronic -test`). En modo `--debug` sí arranca, lo que apunta a una race condition en la secuencia de inicialización.
@@ -938,6 +953,8 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 |------|------------------|------|--------------------|
 | **Frontend** (HTML/CSS/JS) | Cambio en `frontend/` | Ninguna acción — Nginx lee el volumen en tiempo real | No |
 | **Backend** (Python/FastAPI) | Cambio en `backend/` | `docker compose up -d --build backend` | No — la BD está en volumen separado |
+| **Config Nginx** (`default.conf`) | Cambio en `docker/nginx/` | `docker exec bdns_nginx nginx -s reload` | No |
+| **Base de datos** (nuevo campo / tabla) | Cambio en `modelo-fisico.sql` | Migración SQL manual + rebuild backend | Solo añade estructura |
 | **Base de datos** (nuevo año / resolución) | Nuevo dataset parseado | `python -m scripts.data_processing.cargar_dataset` con el nuevo JSON | Solo añade filas, nunca borra |
 
 **Caché del navegador** (JS/CSS): si el navegador muestra una versión antigua del frontend después de un cambio, Ctrl+Shift+R fuerza la recarga ignorando la caché local. En DevTools → Network → "Disable cache" para depurar sin caché.
@@ -1082,6 +1099,9 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Login con terceros (OAuth)** - integración con Google.
 - **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
 - **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
+- Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
+- Dominio real y certificado Let's Encrypt: en producción sustipues stuir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
+- CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
 
 ---
 
