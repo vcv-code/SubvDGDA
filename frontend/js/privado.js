@@ -33,29 +33,6 @@ const API_URL = '';
 // ─────────────────────────────────────────────────────────────
 
 /**
- * obtenerToken()
- * Lee el token JWT de localStorage.
- * Si no existe, redirige al login y devuelve null para detener la ejecución.
- *
- * ¿Por qué comprobar el token en el cliente si el servidor ya lo comprueba?
- * La comprobación del servidor es la que cuenta (seguridad real). La comprobación
- * del cliente es solo para mejorar la experiencia de usuario: evitar la petición
- * al servidor si sabemos de antemano que no hay token, y redirigir de forma
- * instantánea sin esperar la respuesta de red.
- *
- * @returns {string|null} El token JWT o null si no existe
- */
-function obtenerToken() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        // Sin token → no hay sesión iniciada → al login
-        window.location.href = 'login.html';
-        return null;
-    }
-    return token;
-}
-
-/**
  * cerrarSesion()
  * Elimina el token de localStorage y redirige al login.
  * Se llama al hacer clic en cualquiera de los botones de cerrar sesión.
@@ -112,8 +89,9 @@ async function fetchAutenticado(ruta, token) {
     });
 
     if (respuesta.status === 401) {
-        // Token expirado o inválido → limpiar y redirigir
+        // Token expirado o inválido → guardar deeplink y redirigir
         localStorage.removeItem('token');
+        sessionStorage.setItem('redirect_post_login', window.location.href);
         window.location.href = 'login.html';
         return null;
     }
@@ -211,14 +189,17 @@ async function cargarZonaPrivada() {
                     token = datos.access_token;
                 } else {
                     localStorage.removeItem('refresh_token');
+                    sessionStorage.setItem('redirect_post_login', window.location.href);
                     window.location.href = 'login.html';
                     return;
                 }
             } catch {
+                sessionStorage.setItem('redirect_post_login', window.location.href);
                 window.location.href = 'login.html';
                 return;
             }
         } else {
+            sessionStorage.setItem('redirect_post_login', window.location.href);
             window.location.href = 'login.html';
             return;
         }
@@ -252,7 +233,11 @@ async function manejarCambiarPassword(evento) {
     evento.preventDefault();
 
     const token = localStorage.getItem('token');
-    if (!token) { window.location.href = 'login.html'; return; }
+    if (!token) {
+        sessionStorage.setItem('redirect_post_login', window.location.href);
+        window.location.href = 'login.html';
+        return;
+    }
 
     const actual        = document.getElementById('password-actual').value;
     const nueva         = document.getElementById('password-nueva').value;

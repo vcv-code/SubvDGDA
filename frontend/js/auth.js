@@ -264,8 +264,10 @@ function iniciarLogin() {
                 localStorage.removeItem('refresh_token');
             }
 
-            // ── Paso 6: Redirigir a la zona privada ───────────────────────
-            window.location.href = 'privado.html';
+            // ── Paso 6: Redirigir a la zona privada (o a la URL original si hay deeplink) ──
+            const destino = sessionStorage.getItem('redirect_post_login') || 'privado.html';
+            sessionStorage.removeItem('redirect_post_login');
+            window.location.href = destino;
 
         } catch (error) {
             // Error de red (backend apagado, sin conexión, etc.)

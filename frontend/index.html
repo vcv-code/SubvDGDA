@@ -84,6 +84,9 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
     <!-- =====================================================
          NAVBAR — Barra de navegación fija
          ─────────────────────────────────────────────────────
@@ -102,7 +105,7 @@
 
             <!-- Logo + nombre del proyecto -->
             <a class="navbar__logo" href="index.html" aria-label="Ir a la página de inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
                 <span style="color: var(--color-negro);">Subvenciones DGDA</span>
             </a>
 
@@ -133,7 +136,7 @@
          contenido central de la página (distinto del nav y
          del footer). Solo debe haber un <main> por página.
          ===================================================== -->
-    <main>
+    <main id="contenido-principal">
 
         <!-- Spinner de carga (Paso 17) -->
         <div id="spinner" class="spinner"></div>
@@ -236,16 +239,23 @@
                     <div class="card-metrica-verde" id="card-total" style="display:none;">
                         <span class="card-metrica-verde__label">Registros totales</span>
                         <span class="card-metrica-verde__numero" id="total-solicitudes">—</span>
+                        <!-- Badge de tendencia: JS lo rellena si hay ≥2 años en por_anio -->
+                        <span class="tendencia-badge" id="tendencia-registros"
+                              style="display:none;" aria-live="polite"></span>
                     </div>
 
                     <div class="card-metrica-verde" id="card-importe" style="display:none;">
                         <span class="card-metrica-verde__label">Importe Concedido</span>
                         <span class="card-metrica-verde__numero" id="importe-total">—</span>
+                        <!-- Badge de tendencia: JS lo rellena si hay ≥2 años en por_anio -->
+                        <span class="tendencia-badge" id="tendencia-importe"
+                              style="display:none;" aria-live="polite"></span>
                     </div>
 
                     <div class="card-metrica-verde" id="card-entidades" style="display:none;">
                         <span class="card-metrica-verde__label">Entidades únicas</span>
                         <span class="card-metrica-verde__numero" id="total-entidades">—</span>
+                        <!-- Sin badge: entidades_unicas es un escalar sin desglose anual -->
                     </div>
 
                 </div>
@@ -322,7 +332,7 @@
                             </button>
                         </div>
                         <div class="chart-container">
-                            <canvas id="home-grafico-linea"
+                            <canvas id="home-grafico-linea" role="img"
                                 aria-label="Gráfico de línea: evolución del importe por año"></canvas>
                         </div>
                     </div>
@@ -337,7 +347,7 @@
                             </button>
                         </div>
                         <div class="chart-container chart-container--donut">
-                            <canvas id="home-grafico-donut"
+                            <canvas id="home-grafico-donut" role="img"
                                 aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
                         </div>
                         <div class="leyenda-estados" id="home-leyenda-donut">
@@ -378,7 +388,7 @@
                             </button>
                         </div>
                         <div class="chart-container">
-                            <canvas id="home-grafico-barras"
+                            <canvas id="home-grafico-barras" role="img"
                                 aria-label="Gráfico de barras: comparativa EPA vs EELL por año"></canvas>
                         </div>
                     </div>
@@ -431,7 +441,7 @@
         <div class="footer-principal__zona">
 
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
                 <span>
                     <strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026
                 </span>
