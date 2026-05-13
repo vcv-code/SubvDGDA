@@ -1287,3 +1287,181 @@ En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atrib
 **Relación con backend:** Ninguna.  
 **Archivos con cambios de comportamiento visual en otros breakpoints:** Ninguno (el bloque está completamente aislado en `@media (max-width: 600px) { .tabla-wrapper ... }`).  
 **Eliminado de "Pendientes":** El punto "Tabla responsive en móvil (buscador de solicitudes)" de la sección 10.
+
+### 12.7 Botón "Descargar PNG" en tarjetas de gráfico
+
+**Archivos modificados:**
+- `css/styles.css` — nueva clase `.btn-descargar-png` (sección 28)
+- `index.html` — 3 botones en `#btn-dl-linea`, `#btn-dl-donut`, `#btn-dl-barras`
+- `estadisticas-epas.html` — 4 botones: `#btn-dl-distribucion`, `#btn-dl-media-mediana`, `#btn-dl-nuevos`, `#btn-dl-top`
+- `estadisticas-eell.html` — 2 botones: `#btn-dl-provincias`, `#btn-dl-concentracion`
+- `js/home.js` — función `configurarDescarga()` + wire-up en los 3 gráficos
+- `js/estadisticas-epas.js` — función `configurarDescarga()` + wire-up en los 4 gráficos
+- `js/estadisticas-eell.js` — función `configurarDescarga()` + wire-up en los 2 gráficos
+
+**Problema resuelto:** Los gráficos de Chart.js no ofrecen ninguna opción nativa de exportación en la UI. El usuario no podía guardar los gráficos para documentos, informes o presentaciones.
+
+**Solución técnica:** Botón `<button class="btn-descargar-png">` insertado en el `card-grafico__cabecera` de cada tarjeta de gráfico. El botón empieza con `display:none` en el HTML y se muestra dinámicamente en el JS solo después de que el gráfico se haya pintado correctamente (`configurarDescarga()` recibe la instancia de `Chart.js`). El listener de click llama a `instancia.toBase64Image('image/png', 1)`, que devuelve una URL de datos PNG en alta calidad. Se crea un `<a>` temporal con `href = dataURL` y `download = nombreArchivo`, se dispara el click y se descarta, sin abrir nuevas ventanas ni redirigir.
+
+**Función `configurarDescarga(instanciaChart, btnId, nombreArchivo)`:**
+- Recibe la instancia devuelta por `new Chart(...)` (Chart.js siempre devuelve la instancia).
+- Busca el botón en el DOM por su `id`. Si no existe (`null`), retorna silenciosamente.
+- Muestra el botón (`display = 'inline-flex'`).
+- Registra un único listener `'click'` que genera y descarga el PNG.
+- La función está duplicada en los tres archivos JS porque cada script es independiente (sin módulos ES6 ni bundler). No se usa un archivo de utilidades compartido para mantener la stack sin pasos de build.
+
+**Nombres de archivos descargados:**
+
+| Página | Gráfico | `id` botón | Archivo PNG |
+|---|---|---|---|
+| `index.html` | Evolución importe | `btn-dl-linea` | `evolucion-importe.png` |
+| `index.html` | Distribución estados | `btn-dl-donut` | `distribucion-estados.png` |
+| `index.html` | EPA vs EELL | `btn-dl-barras` | `epa-vs-eell.png` |
+| `estadisticas-epas.html` | Distribución importes | `btn-dl-distribucion` | `distribucion-importes-epa.png` |
+| `estadisticas-epas.html` | Media vs mediana | `btn-dl-media-mediana` | `media-mediana-epa.png` |
+| `estadisticas-epas.html` | Nuevos vs recurrentes | `btn-dl-nuevos` | `nuevos-recurrentes-epa.png` |
+| `estadisticas-epas.html` | Top beneficiarios | `btn-dl-top` | `top-beneficiarios-epa.png` |
+| `estadisticas-eell.html` | Top provincias | `btn-dl-provincias` | `top-provincias-eell.png` |
+| `estadisticas-eell.html` | Concentración importe | `btn-dl-concentracion` | `concentracion-eell.png` |
+
+**Gráficos sin botón de descarga (justificado):**
+
+| Elemento | Motivo |
+|---|---|
+| Ranking CCAA (`estadisticas-eell.html`) | Es una lista HTML generada por JS, no un `<canvas>` de Chart.js. `toBase64Image()` no aplica. |
+| Mapa CCAA (`estadisticas-eell.html`) | Pendiente de implementación técnica. |
+| "Tasa de éxito global" (`index.html`) | Es texto plano, no un gráfico. |
+
+**CSS — `.btn-descargar-png`:** Botón ghost (borde verde, fondo transparente) que en hover invierte a fondo verde + texto blanco. `flex-shrink: 0` evita que se comprima en el `card-grafico__cabecera` flex. `font-size: 0.72rem` para no competir visualmente con el título. El `:focus-visible` añade un halo verde de accesibilidad sin afectar a usuarios de ratón.
+
+**Relación con backend:** Ninguna. La descarga ocurre enteramente en el cliente. `toBase64Image()` convierte el canvas de Chart.js a un data URL que el navegador trata como archivo descargable.
+
+**Dependencia de versión:** `chart.toBase64Image(type, quality)` está disponible desde Chart.js 3.x. El proyecto usa Chart.js 4.4.0 (CDN en los HTML), por lo que es compatible.  
+**Sin nuevas dependencias.**  
+**Eliminado de "Pendientes":** El punto "Exportación de gráficos" de la sección 10.
+
+### 12.8 Badges de tendencia ↑/↓ en KPIs del home
+
+**Archivos modificados:** `index.html`, `js/home.js`, `css/styles.css` (sección 29 ya creada en 12.7)
+
+**Problema resuelto:** Las tarjetas de métricas verdes del home mostraban solo el valor acumulado global sin ninguna referencia temporal. El usuario no podía saber si la cifra estaba creciendo o decayendo respecto al año anterior.
+
+**Solución técnica:** Dos nuevas funciones en `home.js` calculan la variación interanual a partir de los datos que ya devuelve `GET /estadisticas/` (campo `por_anio[]`):
+
+- `mostrarTendencias(datos)`: extrae los dos últimos años disponibles de `por_anio[]`, suma `total` e `importe_total` por año (sumando todos los tipos: EPA + EELL), y delega en `mostrarTendencia()`.
+- `mostrarTendencia(id, actual, anterior, anioAnterior)`: calcula `((actual - anterior) / anterior) × 100`, aplica la clase CSS `.tendencia-badge--sube` (verde) o `.tendencia-badge--baja` (rojo), y escribe el texto `↑/↓ X,X % vs AAAA` en el `<span>` oculto.
+
+Se llama desde `mostrarMetricas()` tras poblar los valores, garantizando que los badges solo aparecen cuando hay datos reales.
+
+**KPIs con badge:**
+
+| Tarjeta | Campo `por_anio` | ID badge |
+|---|---|---|
+| Registros totales | suma `d.total` | `tendencia-registros` |
+| Importe Concedido | suma `d.importe_total` | `tendencia-importe` |
+
+**KPI sin badge:** "Entidades únicas" — el campo `datos.entidades_unicas` es un escalar global del schema `EstadisticasOut`; no tiene desglose por año en la respuesta del endpoint, por lo que no es posible calcular la variación. El span no se añade al HTML de esa tarjeta para evitar confusión.
+
+**Comportamiento defensivo:**
+- Si `por_anio` está vacío → no se muestran badges (no hay datos).
+- Si solo hay 1 año → no se muestran badges (necesitamos 2 para comparar).
+- Si `anterior = 0` → `mostrarTendencia` retorna sin hacer nada (evita división por cero).
+- Los badges arrancan con `display:none` en el HTML; el JS los muestra solo si tienen valor calculado.
+
+**Accesibilidad:** Los spans tienen `aria-live="polite"` para que los lectores de pantalla anuncien el cambio cuando el JS los rellena. El contraste de colores cumple WCAG AA: `#2E7D32` sobre `#e8f5e9` = 5,4:1 · `#C62828` sobre `#fce4ec` = 5,1:1.
+
+**Relación con backend:** Ninguna. Cálculo enteramente cliente.  
+**Sin nuevas dependencias.**
+
+### 12.9 Top 5 CCAA por importe en estadísticas EELL
+
+**Archivos modificados:** `estadisticas-eell.html`, `js/estadisticas-eell.js`, `css/styles.css` (nueva sección 30)
+
+**Problema resuelto:** La página EELL no ofrecía un resumen rápido de las comunidades autónomas líderes en recepción de fondos. El ranking de CCAA existente muestra las 17+2 CCAA en una lista sin jerarquía visual clara.
+
+**Solución técnica — JS:** Nueva función `poblarTop5Ccaa(porCcaa)` en `estadisticas-eell.js`:
+1. Ordena `por_ccaa[]` por `importe_total` descendente.
+2. Toma los 5 primeros.
+3. Construye un `<li>` por CCAA con: posición, nombre, barra proporcional CSS (ancho = `importe / importe_max × 100 %`) e importe formateado.
+4. Oculta el placeholder "pendiente" y muestra la lista.
+5. Actualiza el badge del encabezado a `Top 5` una vez cargado.
+Se llama desde `cargarEstadisticasEell()` con `datos.por_ccaa || []`.
+
+**Solución técnica — HTML:** Bloque nuevo insertado en `estadisticas-eell.html` como "fila 4" (después de las filas 2 y 3 existentes), dentro del mismo contenedor. Usa la clase `.card-grafico` existente para mantener consistencia visual. La lista `<ol id="top5-ccaa-lista">` arranca con `display:none`; el JS la muestra cuando tiene datos.
+
+**Solución técnica — CSS (sección 30):** Clase `.top5-lista` (flex column, gap 10px) + `.top5-lista__item` (CSS grid 3 columnas: posición · nombre+barra · importe) + `.top5-lista__pista` (fondo gris claro, altura 6px) + `.top5-lista__fill` (relleno verde, transición 0,4s). Nuevo CSS mínimo sin romper estilos existentes.
+
+**Datos usados:**
+
+| Campo endpoint | Uso |
+|---|---|
+| `por_ccaa[].ccaa` | Nombre de la CCAA |
+| `por_ccaa[].importe_total` | Valor para ordenar y para la barra |
+
+**¿Por qué `por_ccaa` y no `top_provincias`?** El campo `top_provincias` ya alimenta el gráfico de barras horizontales existente en la fila 2. Usar `por_ccaa` para el Top 5 aporta información diferente (nivel autonómico vs provincial) y evita duplicar el mismo dato dos veces en la misma página.
+
+**Relación con backend:** Ninguna. Los datos `por_ccaa[]` ya llegan en la respuesta de `GET /estadisticas/eell`.  
+**Sin nuevas dependencias.**  
+**Eliminado de "Pendientes":** El punto "Top 5 entidades EELL" de la sección 10.
+
+---
+
+### 12.10 Deep link post-login
+
+**Archivos modificados:** `js/auth.js`, `js/privado.js`, `js/exclusivo.js`, `js/admin.js`
+
+**Problema resuelto:** Un usuario que intentaba acceder directamente a `privado.html`, `exclusivo.html` o `admin.html` sin sesión activa era redirigido a `login.html` y, tras hacer login, aterrizaba siempre en `privado.html` perdiendo la URL de destino original.
+
+**Solución técnica:** Patrón sessionStorage de dos pasos:
+
+**Paso 1 — guardar destino antes de redirigir a login.** En cada punto de detección de sesión ausente o expirada:
+```js
+sessionStorage.setItem('redirect_post_login', window.location.href);
+window.location.href = 'login.html';
+```
+Puntos modificados:
+- `privado.js` → `fetchAutenticado()` (401), `cargarZonaPrivada()` (sin token, refresh fallido, catch), `manejarCambiarPassword()` (sin token)
+- `exclusivo.js` → `fetchAutenticado()` (401), bloque DOMContentLoaded (sin token tras intento de renovación)
+- `admin.js` → `verificarAcceso()` línea sin token y línea 401
+
+**Excluidos intencionadamente:**
+- `cerrarSesion()` en `privado.js`, `exclusivo.js` — logout explícito del usuario; no procede guardar deeplink.
+- `admin.js` redirect a `privado.html` por rol insuficiente (no es falta de autenticación, es falta de autorización).
+
+**Paso 2 — leer y consumir el deeplink tras login exitoso.** En `auth.js`, justo después de guardar el token:
+```js
+const destino = sessionStorage.getItem('redirect_post_login') || 'privado.html';
+sessionStorage.removeItem('redirect_post_login');
+window.location.href = destino;
+```
+`sessionStorage.removeItem` es crítico para evitar que un segundo login posterior reutilice una URL ya obsoleta.
+
+**¿Por qué `sessionStorage` y no `localStorage`?** `sessionStorage` es tab-scoped: si el usuario abre una segunda pestaña con la URL privada, cada pestaña gestiona su propio deeplink de forma independiente. `localStorage` hubiera podido sobreescribir el destino de otra pestaña abierta simultáneamente.
+
+**Relación con backend:** Ninguna. Lógica 100% cliente.  
+**Sin nuevas dependencias.**
+
+---
+
+### 12.11 Top 5 CCAA por concesiones acumuladas
+
+**Archivos modificados:** `estadisticas-eell.html`, `js/estadisticas-eell.js`
+
+**Problema resuelto:** La página EELL mostraba el Top 5 por importe (tarea 2.4) pero no ofrecía una vista del volumen de actividad por CCAA medido en número de concesiones. Una comunidad puede concentrar muchas concesiones de importe reducido y no aparecer en el top por importe; el dato de `num_concesiones` del endpoint quedaba sin aprovechar visualmente.
+
+**Solución técnica — JS:** Nueva función `poblarTop5Concesiones(porCcaa)` en `estadisticas-eell.js`, análoga a `poblarTop5Ccaa` pero ordenando por `num_concesiones` descendente y mostrando el recuento formateado (`toLocaleString('es-ES')`) en lugar del importe en euros. Se llama desde `cargarEstadisticasEell()` con `datos.por_ccaa || []`.
+
+**Solución técnica — HTML:** La "fila 4" preexistente (card única) se convierte en `grid-2` para colocar en paralelo el Top 5 por importe y el nuevo Top 5 por concesiones. Reutiliza las mismas clases `.top5-lista`, `.top5-lista__item`, etc. sin añadir CSS nuevo.
+
+**Datos usados:**
+
+| Campo endpoint | Uso |
+|---|---|
+| `por_ccaa[].ccaa` | Nombre de la CCAA |
+| `por_ccaa[].num_concesiones` | Valor para ordenar y para la barra proporcional |
+
+**Relación con backend:** Ninguna. `num_concesiones` ya forma parte de la respuesta de `GET /estadisticas/eell` en cada objeto de `por_ccaa[]`.  
+**Sin nuevas dependencias.**
+
+---
+
