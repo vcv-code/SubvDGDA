@@ -586,209 +586,6 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ---
 
-## Estado actual
-
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas**
-
-✔ parsing XML BOE (EPAs 2021–2025)
-✔ parsing PDF (EELL 2023–2024)
-✔ parsing XML BOE + Excel manual (EELL 2025)
-✔ limpieza y normalización de estados
-✔ dataset unificado (6398 registros · EPA: 3353 · EELL: 3045)
-✔ fix deduplicación cross-year (clave tipo + expediente + anio)
-✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
-✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
-✔ agrupaciones EELL 2025: campos es_agrupacion y municipios_agrupacion en todo el pipeline
-✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
-✔ entorno Docker (docker-compose con MariaDB + FastAPI)
-✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
-✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
-✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
-  · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
-  · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
-  · GET /estadisticas/epas  → análisis EPA: importe medio, mediana, distribución de importes, nuevos vs recurrentes, top beneficiarios por año
-  · GET /estadisticas/eell  → análisis EELL: % ayuntamientos con ayuda, ranking CCAA, top provincias, concentración del importe
-✔ Nginx como servidor web y proxy inverso (`docker/nginx/default.conf`)
-  · escucha en el puerto 80
-  · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
-  · redirige las rutas de la API al backend (puerto 8000 interno, no expuesto al exterior)
-  · acceso a la app en `http://localhost/` y a la API en `http://localhost/docs`
-  · cabeceras de seguridad: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`
-✔ Adminer como interfaz web de la base de datos (`http://localhost:8080`)
-  · sin instalar nada en el equipo; se levanta con el resto de contenedores
-✔ autenticación JWT con tres niveles de acceso
-  · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
-  · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
-  · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
-  · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
-  · roles: registrado (por defecto) y admin
-✔ campo `tramo` EELL 2025 expuesto en API, frontend y CSV
-  · `SolicitudOut` incluye `tramo: Optional[int]`
-  · badge `T1`/`T2`/`T3` en resultados del buscador y en ficha de entidad
-  · leyenda de tramos (población del municipio) encima de la tabla, visible solo cuando aplica
-  · CSV de exportación incluye columna `tramo`
-✔ bugs corregidos en ficha de agrupación EELL
-  · representante mostraba `[object Object]` → corregido a `datos.representante.nombre`
-  · importes de miembros mostraban `—` → campo `importe_asignado` (nombre correcto del schema)
-✔ persistencia de filtros del buscador en la URL
-  · los filtros activos se escriben como parámetros en la URL al buscar
-  · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
-  · limpiar filtros borra también los parámetros de la URL
-✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
-✔ bloque "Convocatorias" en la Home (`index.html`)
-  · tabla separada por tipo (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador
-  · fechas de convocatoria obtenidas de la API BDNS; fechas de resolución de la API del BOE
-  · convocatorias pendientes de resolución (sin `fecha_resolucion`) muestran estado "Pendiente de resolución"
-  · datos incluidos en `cargar_dataset.py` para nuevos despliegues (no requieren UPDATE manual)
-✔ Mailpit como servidor SMTP de desarrollo (`http://localhost:8025`)
-  · contenedor `axllent/mailpit` en docker-compose; puerto 1025 (SMTP) y 8025 (web UI)
-  · el backend envía emails vía `smtplib` con variables de entorno `SMTP_HOST=mailpit` y `SMTP_PORT=1025`
-  · los emails quedan atrapados en Mailpit sin llegar a destinatarios reales
-✔ recuperación de contraseña por email
-  · POST /auth/recuperar — genera token opaco (15 min, un solo uso) e envía enlace por email
-  · POST /auth/reset — valida token, valida contraseña nueva y actualiza en BD
-  · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
-  · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
-  · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (193 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
-  · test_smoke.py (3): arranque de la API y endpoint /health
-  · test_convocatorias.py (3): endpoint /convocatorias/
-  · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
-  · test_estadisticas.py (24): /estadisticas/, /estadisticas/epas y /estadisticas/eell — estructura, cálculos, nuevos/recurrentes, concentración
-  · test_auth.py (10): registro, login, acceso con/sin token
-  · test_agrupaciones.py (7): endpoint /agrupaciones/ — estructura, importes correctos, representante con nombre
-  · test_logging.py (5): middleware de logging y configuración del logger
-  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
-  · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
-  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
-  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
-  · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
-  · test_verificacion_email.py (10): registro crea usuario no verificado, token en BD, email enviado, login bloqueado sin verificar, token válido activa cuenta, login tras verificar, token inválido/usado/expirado, reset activa email_verificado
-  · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
-  · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
-  · test_admin.py (22): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs
-  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
-  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
-  · BD de prueba SQLite en memoria (no requiere Docker)
-✔ manejadores de error personalizados (401, 403, 404, 422, 500)
-  · JSON estructurado con campos error, mensaje y sugerencia
-  · sin exponer internos del servidor en errores 500
-✔ HTTPS con dominio local (`subvencionesDGDA.local`) y certificado autofirmado
-  · certificado generado con openssl (CN + SAN para compatibilidad con navegadores modernos)
-  · Nginx termina el SSL en el puerto 443; el backend no necesita saber nada de SSL
-  · HTTP (puerto 80) redirige automáticamente a HTTPS con código 301
-  · TLS 1.2 y 1.3 únicamente; cabecera `Strict-Transport-Security` activa
-  · ver [`docs/https.md`](docs/https.md) para reproducir el entorno
-✔ sistema de logs: registro de cada petición HTTP (IP, método, ruta, código, latencia) y errores 500
-  · logger de aplicación con rotación automática de archivos (`logs/app/`)
-  · access log y error log de Nginx con formato personalizado (`logs/nginx/`)
-  · persistencia mediante volúmenes Docker: los logs sobreviven reinicios del contenedor
-✔ endpoint GET /health → `{"status": "ok"}` para monitorización del servicio
-✔ agrupaciones EELL 2025 expuestas en la API
-  · campo `es_agrupacion` en cada solicitud de tipo SolicitudOut
-  · GET /agrupaciones/{id_solic} → desglose completo de municipios miembro con importes
-✔ exportación CSV: GET /solicitudes/export con los mismos filtros que /solicitudes/ y sin paginación
-✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
-✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
-  · `index.html` — portada con métricas dinámicas, spinners y banner de avisos activos
-  · `solicitudes.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
-  · `estadisticas-epas.html` — análisis de EPAs: importe medio, mediana, distribución, nuevos vs recurrentes, top beneficiarios
-  · `estadisticas-eell.html` — análisis de EELL: % ayuntamientos con ayuda, top provincias, concentración, ranking CCAA
-  · `recursos.html` — directorio de organizaciones de protección animal y campañas actuales (contenido estático)
-  · `entidad.html` — ficha de entidad con historial, badges de estado y bloque de agrupación EELL
-  · `login.html` / `registro.html` — autenticación con validación client-side
-  · `privado.html` — zona exclusiva con control de acceso JWT
-  · `admin.html` — panel de administración exclusivo para rol `admin`
-✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
-✔ CORS habilitado en el backend para desarrollo local
-✔ clave JWT segura configurada en variables de entorno (`.env`)
-✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
-✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF, badges de estado, desglose agrupación EELL
-✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y"
-✔ tarjeta "Entidades únicas" en el dashboard: `GET /estadisticas/` expone `entidades_unicas` (3.067 beneficiarios distintos)
-✔ favicon en todas las páginas HTML
-✔ meta tags OG (`og:title`, `og:description`, `og:image`) en todas las páginas
-✔ navbar: texto "Subvenciones DGDA" en todas las páginas; spinner y error-box unificados en home, solicitudes y entidad
-✔ tabla solicitudes: columna Expediente → Año, badges de estado, ordenación por defecto A→Z, botón descargar CSV
-✔ mejoras de accesibilidad: `role="navigation"` y `aria-label` en navbar
-✔ `especificaciones-frontend.md` totalmente actualizado y sincronizado con la implementación real
-✔ servicio cron como contenedor independiente en docker-compose (`docker/cron/`)
-  · `scheduler.py` — scheduler Python puro que orquesta las tareas sin binarios externos
-  · `check_bdns.py` — consulta la API BDNS en temporada (mar–jun), detecta nuevas convocatorias DGDA,
-    inserta en BD con fecha_resolucion=NULL, guarda estado en `logs/cron/estado_YYYY.json`
-    (frecuencia por tramos: cada 2 días en abr–may, cada 4 días en mar–jun)
-  · `health_check.py` — llama a GET /health cada 6 horas y loguea el resultado
-  · logs persistidos en `logs/cron/` como volumen Docker
-✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
-✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
-  automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
-✔ cambiar contraseña desde la zona privada
-  · PUT /privado/cambiar-contrasena — valida contraseña actual con bcrypt, aplica las mismas reglas de fortaleza del registro
-  · formulario en privado.html con feedback de error (actual incorrecta, nueva débil) y confirmación de éxito
-✔ refresh token y "Recuérdame"
-  · tabla refresh_tokens en BD: token opaco (64 hex), expiración 30 días, flag revocado
-  · login genera siempre un refresh token; rotación en cada uso (el token anterior queda revocado)
-  · POST /auth/refresh — devuelve nuevo access token + nuevo refresh token
-  · POST /auth/logout — revoca el refresh token en el servidor
-  · checkbox "Recuérdame" en login.html: si marcado, guarda el refresh token en localStorage
-  · privado.js renueva automáticamente el access token al cargar si hay refresh token guardado
-✔ cabeceras Cache-Control en endpoints de datos estáticos
-  · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
-  · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
-  · implementado en los routers FastAPI mediante parámetro `Response`
-✔ rate limiting en Nginx para prevenir fuerza bruta y creación masiva de cuentas
-  · zona `login:10m rate=10r/m` — 10 peticiones/minuto por IP en `/auth/login` (burst=5)
-  · zona `registro:10m rate=5r/m` — 5 peticiones/minuto por IP en `/auth/registro` (burst=3)
-  · ambos con `limit_req_status 429`; el resto de la API no está limitada
-✔ panel de administración (`admin.html` + `js/admin.js`)
-  · acceso exclusivo para usuarios con rol `admin`; redirige a login o privado si no procede
-  · GET /admin/estado → salud del sistema, conteo de convocatorias/solicitudes/usuarios, última convocatoria detectada
-  · GET /admin/usuarios → listado completo de usuarios con email, rol, estado y fecha de alta
-  · PATCH /admin/usuarios/{id}/rol → cambiar rol entre `registrado` y `admin` (protegido: no puede cambiar el propio)
-  · PATCH /admin/usuarios/{id}/activo → activar o desactivar cuenta (protegido: no puede desactivar la propia)
-  · DELETE /admin/usuarios/{id} → elimina el usuario permanentemente, borrando en cascada sus tokens (protegido: no puede borrarse a sí mismo; 404 si no existe)
-  · GET /admin/avisos?incluir_resueltas=true → por defecto solo sin resolución; con el param devuelve también las resueltas (historial desplegable en el panel)
-  · PATCH /admin/avisos/{id}/desactivar → marca la convocatoria como resuelta (desaparece del banner)
-  · PATCH /admin/avisos/{id}/reactivar → elimina la fecha de resolución y vuelve a activar el aviso y el banner
-  · DELETE /admin/avisos/{id} → elimina la convocatoria (rechaza con 409 si tiene solicitudes asociadas)
-  · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
-  · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
-
-Pendiente:
-
-### Pendientes de frontend
-
-- **Modal/popup gráficas** (13d): clic en cualquier gráfica abre un modal con la gráfica ampliada. Afecta a `estadisticas-epas.html`, `estadisticas-eell.html` e `index.html`.
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`. Pendiente: integrar librería de mapas (Leaflet o D3-geo) + GeoJSON de España.
-- **Conclusiones en gráficas de estadísticas**: párrafo breve debajo de cada gráfica con la interpretación del dato. Afecta a todas las gráficas de `estadisticas-epas.html` y `estadisticas-eell.html`.
-- **Página Recursos — colores por sección**: asignar color de fondo diferente a cada sección (Protección animal, Colonias felinas, EPAs, EELL).
-- **Tipografía**: subir suelo mínimo a 0.875rem (14px) para texto legible — labels, subtítulos KPI, textos de tabla. Pasada dedicada post-entrega.
-- Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar.
-- Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA.
-- **Refactor CSS inline** *(post-entrega)*: mover estilos inline del HTML a clases en `styles.css`.
-
-#### Completados en rama 13
-
-- ✔ Páginas de error `404.html` y `50x.html` + `error_page` en Nginx
-- ✔ `POST /auth/reenviar-verificacion` — frontend y backend implementados
-- ✔ URLs del BOE en `exclusivo.html` verificadas y corregidas; resoluciones también en home pública
-- ✔ Aviso legal y política de privacidad (`aviso-legal.html`, `privacidad.html`) + sección cookies
-- ✔ Footer actualizado con aviso legal y privacidad en todas las páginas
-
-### Seguridad en registros de usuario (rama 12) ✔
-
-- ✔ **Rate limiting en `POST /auth/registro`**: zona `registro:10m rate=5r/m` en Nginx, `burst=3 nodelay`. Evita creación masiva de cuentas.
-- ✔ **Honeypot en el formulario de registro**: campo `sitio_web` oculto con CSS (`.hp-trampa`). Si llega relleno → éxito falso sin crear cuenta. Cero dependencias.
-- ✔ **Verificación de email al registrarse**: `email_verificado` en `usuarios`, tabla `verificacion_tokens`, `GET /auth/verificar?token=...`, página `verificar-email.html`. El reset de contraseña también activa `email_verificado`.
-- ✔ **Reenvío de verificación** (`POST /auth/reenviar-verificacion`): invalida tokens anteriores y envía nuevo enlace. Respuesta siempre 200 (no revela si el email existe).
-
-### Pendientes de despliegue
-
-- Script de instalación automática: script (SSH u otro mecanismo visto en clase) que instale dependencias con versiones fijadas, descargue y cargue la base de datos, y deje el sistema listo para arrancar; debe incluir la adición automática de `subvencionesDGDA.local` al `/etc/hosts` (requiere permisos de administrador — en Linux con `sudo tee -a`, en Windows con PowerShell como admin)
-
----
-
 ## Desarrollo
 
 Clonar el repositorio:
@@ -1106,6 +903,200 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
+
+---
+
+## Estado actual
+
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas**
+
+✔ parsing XML BOE (EPAs 2021–2025)
+✔ parsing PDF (EELL 2023–2024)
+✔ parsing XML BOE + Excel manual (EELL 2025)
+✔ limpieza y normalización de estados
+✔ dataset unificado (6398 registros · EPA: 3353 · EELL: 3045)
+✔ fix deduplicación cross-year (clave tipo + expediente + anio)
+✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
+✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
+✔ agrupaciones EELL 2025: campos es_agrupacion y municipios_agrupacion en todo el pipeline
+✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
+✔ entorno Docker (docker-compose con MariaDB + FastAPI)
+✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
+✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
+✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
+  · GET /convocatorias/ → lista las 8 convocatorias
+  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
+  · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
+  · GET /estadisticas/epas  → análisis EPA: importe medio, mediana, distribución de importes, nuevos vs recurrentes, top beneficiarios por año
+  · GET /estadisticas/eell  → análisis EELL: % ayuntamientos con ayuda, ranking CCAA, top provincias, concentración del importe
+✔ Nginx como servidor web y proxy inverso (`docker/nginx/default.conf`)
+  · escucha en el puerto 80
+  · sirve los archivos estáticos del frontend directamente (HTML, CSS, JS, imágenes)
+  · redirige las rutas de la API al backend (puerto 8000 interno, no expuesto al exterior)
+  · acceso a la app en `http://localhost/` y a la API en `http://localhost/docs`
+  · cabeceras de seguridad: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`
+✔ Adminer como interfaz web de la base de datos (`http://localhost:8080`)
+  · sin instalar nada en el equipo; se levanta con el resto de contenedores
+✔ autenticación JWT con tres niveles de acceso
+  · POST /auth/registro → crea usuario con contraseña hasheada (bcrypt)
+  · POST /auth/login    → devuelve token JWT (expira en 60 minutos)
+  · GET  /privado/perfil, /privado/resumen-exclusivo → solo usuarios registrados
+  · validación de contraseña en el registro: mínimo 8 caracteres, mayúscula, minúscula y número
+  · roles: registrado (por defecto) y admin
+✔ campo `tramo` EELL 2025 expuesto en API, frontend y CSV
+  · `SolicitudOut` incluye `tramo: Optional[int]`
+  · badge `T1`/`T2`/`T3` en resultados del buscador y en ficha de entidad
+  · leyenda de tramos (población del municipio) encima de la tabla, visible solo cuando aplica
+  · CSV de exportación incluye columna `tramo`
+✔ bugs corregidos en ficha de agrupación EELL
+  · representante mostraba `[object Object]` → corregido a `datos.representante.nombre`
+  · importes de miembros mostraban `—` → campo `importe_asignado` (nombre correcto del schema)
+✔ persistencia de filtros del buscador en la URL
+  · los filtros activos se escriben como parámetros en la URL al buscar
+  · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
+  · limpiar filtros borra también los parámetros de la URL
+✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
+✔ bloque "Convocatorias" en la Home (`index.html`)
+  · tabla separada por tipo (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador
+  · fechas de convocatoria obtenidas de la API BDNS; fechas de resolución de la API del BOE
+  · convocatorias pendientes de resolución (sin `fecha_resolucion`) muestran estado "Pendiente de resolución"
+  · datos incluidos en `cargar_dataset.py` para nuevos despliegues (no requieren UPDATE manual)
+✔ Mailpit como servidor SMTP de desarrollo (`http://localhost:8025`)
+  · contenedor `axllent/mailpit` en docker-compose; puerto 1025 (SMTP) y 8025 (web UI)
+  · el backend envía emails vía `smtplib` con variables de entorno `SMTP_HOST=mailpit` y `SMTP_PORT=1025`
+  · los emails quedan atrapados en Mailpit sin llegar a destinatarios reales
+✔ recuperación de contraseña por email
+  · POST /auth/recuperar — genera token opaco (15 min, un solo uso) e envía enlace por email
+  · POST /auth/reset — valida token, valida contraseña nueva y actualiza en BD
+  · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
+  · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
+  · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
+✔ tests automáticos con pytest (193 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+  · test_smoke.py (3): arranque de la API y endpoint /health
+  · test_convocatorias.py (3): endpoint /convocatorias/
+  · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
+  · test_estadisticas.py (24): /estadisticas/, /estadisticas/epas y /estadisticas/eell — estructura, cálculos, nuevos/recurrentes, concentración
+  · test_auth.py (10): registro, login, acceso con/sin token
+  · test_agrupaciones.py (7): endpoint /agrupaciones/ — estructura, importes correctos, representante con nombre
+  · test_logging.py (5): middleware de logging y configuración del logger
+  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
+  · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
+  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
+  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
+  · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
+  · test_verificacion_email.py (10): registro crea usuario no verificado, token en BD, email enviado, login bloqueado sin verificar, token válido activa cuenta, login tras verificar, token inválido/usado/expirado, reset activa email_verificado
+  · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
+  · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
+  · test_admin.py (22): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs
+  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
+  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
+  · BD de prueba SQLite en memoria (no requiere Docker)
+✔ manejadores de error personalizados (401, 403, 404, 422, 500)
+  · JSON estructurado con campos error, mensaje y sugerencia
+  · sin exponer internos del servidor en errores 500
+✔ HTTPS con dominio local (`subvencionesDGDA.local`) y certificado autofirmado
+  · certificado generado con openssl (CN + SAN para compatibilidad con navegadores modernos)
+  · Nginx termina el SSL en el puerto 443; el backend no necesita saber nada de SSL
+  · HTTP (puerto 80) redirige automáticamente a HTTPS con código 301
+  · TLS 1.2 y 1.3 únicamente; cabecera `Strict-Transport-Security` activa
+  · ver [`docs/https.md`](docs/https.md) para reproducir el entorno
+✔ sistema de logs: registro de cada petición HTTP (IP, método, ruta, código, latencia) y errores 500
+  · logger de aplicación con rotación automática de archivos (`logs/app/`)
+  · access log y error log de Nginx con formato personalizado (`logs/nginx/`)
+  · persistencia mediante volúmenes Docker: los logs sobreviven reinicios del contenedor
+✔ endpoint GET /health → `{"status": "ok"}` para monitorización del servicio
+✔ agrupaciones EELL 2025 expuestas en la API
+  · campo `es_agrupacion` en cada solicitud de tipo SolicitudOut
+  · GET /agrupaciones/{id_solic} → desglose completo de municipios miembro con importes
+✔ exportación CSV: GET /solicitudes/export con los mismos filtros que /solicitudes/ y sin paginación
+✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
+✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
+  · `index.html` — portada con métricas dinámicas, spinners y banner de avisos activos
+  · `solicitudes.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
+  · `estadisticas-epas.html` — análisis de EPAs: importe medio, mediana, distribución, nuevos vs recurrentes, top beneficiarios
+  · `estadisticas-eell.html` — análisis de EELL: % ayuntamientos con ayuda, top provincias, concentración, ranking CCAA
+  · `recursos.html` — directorio de organizaciones de protección animal y campañas actuales (contenido estático)
+  · `entidad.html` — ficha de entidad con historial, badges de estado y bloque de agrupación EELL
+  · `login.html` / `registro.html` — autenticación con validación client-side
+  · `privado.html` — zona exclusiva con control de acceso JWT
+  · `admin.html` — panel de administración exclusivo para rol `admin`
+✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
+✔ CORS habilitado en el backend para desarrollo local
+✔ clave JWT segura configurada en variables de entorno (`.env`)
+✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
+✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF, badges de estado, desglose agrupación EELL
+✔ respuesta paginada con total: `GET /solicitudes/` devuelve `{"total": N, "resultados": [...]}` para mostrar "Página X de Y"
+✔ tarjeta "Entidades únicas" en el dashboard: `GET /estadisticas/` expone `entidades_unicas` (3.067 beneficiarios distintos)
+✔ favicon en todas las páginas HTML
+✔ meta tags OG (`og:title`, `og:description`, `og:image`) en todas las páginas
+✔ navbar: texto "Subvenciones DGDA" en todas las páginas; spinner y error-box unificados en home, solicitudes y entidad
+✔ tabla solicitudes: columna Expediente → Año, badges de estado, ordenación por defecto A→Z, botón descargar CSV
+✔ mejoras de accesibilidad: `role="navigation"` y `aria-label` en navbar
+✔ `especificaciones-frontend.md` totalmente actualizado y sincronizado con la implementación real
+✔ servicio cron como contenedor independiente en docker-compose (`docker/cron/`)
+  · `scheduler.py` — scheduler Python puro que orquesta las tareas sin binarios externos
+  · `check_bdns.py` — consulta la API BDNS en temporada (mar–jun), detecta nuevas convocatorias DGDA,
+    inserta en BD con fecha_resolucion=NULL, guarda estado en `logs/cron/estado_YYYY.json`
+    (frecuencia por tramos: cada 2 días en abr–may, cada 4 días en mar–jun)
+  · `health_check.py` — llama a GET /health cada 6 horas y loguea el resultado
+  · logs persistidos en `logs/cron/` como volumen Docker
+✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
+✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
+  automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
+✔ cambiar contraseña desde la zona privada
+  · PUT /privado/cambiar-contrasena — valida contraseña actual con bcrypt, aplica las mismas reglas de fortaleza del registro
+  · formulario en privado.html con feedback de error (actual incorrecta, nueva débil) y confirmación de éxito
+✔ refresh token y "Recuérdame"
+  · tabla refresh_tokens en BD: token opaco (64 hex), expiración 30 días, flag revocado
+  · login genera siempre un refresh token; rotación en cada uso (el token anterior queda revocado)
+  · POST /auth/refresh — devuelve nuevo access token + nuevo refresh token
+  · POST /auth/logout — revoca el refresh token en el servidor
+  · checkbox "Recuérdame" en login.html: si marcado, guarda el refresh token en localStorage
+  · privado.js renueva automáticamente el access token al cargar si hay refresh token guardado
+✔ cabeceras Cache-Control en endpoints de datos estáticos
+  · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
+  · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
+  · implementado en los routers FastAPI mediante parámetro `Response`
+✔ rate limiting en Nginx para prevenir fuerza bruta y creación masiva de cuentas
+  · zona `login:10m rate=10r/m` — 10 peticiones/minuto por IP en `/auth/login` (burst=5)
+  · zona `registro:10m rate=5r/m` — 5 peticiones/minuto por IP en `/auth/registro` (burst=3)
+  · ambos con `limit_req_status 429`; el resto de la API no está limitada
+✔ panel de administración (`admin.html` + `js/admin.js`)
+  · acceso exclusivo para usuarios con rol `admin`; redirige a login o privado si no procede
+  · GET /admin/estado → salud del sistema, conteo de convocatorias/solicitudes/usuarios, última convocatoria detectada
+  · GET /admin/usuarios → listado completo de usuarios con email, rol, estado y fecha de alta
+  · PATCH /admin/usuarios/{id}/rol → cambiar rol entre `registrado` y `admin` (protegido: no puede cambiar el propio)
+  · PATCH /admin/usuarios/{id}/activo → activar o desactivar cuenta (protegido: no puede desactivar la propia)
+  · DELETE /admin/usuarios/{id} → elimina el usuario permanentemente, borrando en cascada sus tokens (protegido: no puede borrarse a sí mismo; 404 si no existe)
+  · GET /admin/avisos?incluir_resueltas=true → por defecto solo sin resolución; con el param devuelve también las resueltas (historial desplegable en el panel)
+  · PATCH /admin/avisos/{id}/desactivar → marca la convocatoria como resuelta (desaparece del banner)
+  · PATCH /admin/avisos/{id}/reactivar → elimina la fecha de resolución y vuelve a activar el aviso y el banner
+  · DELETE /admin/avisos/{id} → elimina la convocatoria (rechaza con 409 si tiene solicitudes asociadas)
+  · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
+  · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
+✔ **medidas anti-bots y seguridad en registro** (rama 12)
+  · rate limiting `POST /auth/registro`: zona `registro:10m rate=5r/m`, `burst=3 nodelay`
+  · honeypot: campo `sitio_web` oculto; si llega relleno → éxito falso sin crear cuenta
+  · verificación de email al registrarse: tabla `verificacion_tokens`, `GET /auth/verificar`, bloqueo login con 403
+  · reenvío de verificación `POST /auth/reenviar-verificacion`: invalida tokens anteriores, siempre 200
+✔ zona privada ampliada (rama 12): `privado.html` (perfil) + `exclusivo.html` (contenido exclusivo: tabla resumen, resoluciones BOE)
+✔ panel de administración reorganizado: Avisos primero, botón "← Volver al perfil" en banner
+✔ páginas de error `404.html` y `50x.html` con imagen ilustrativa + `error_page` en Nginx (rama 13)
+✔ aviso legal (`aviso-legal.html`), política de privacidad (`privacidad.html`) y sección de cookies
+✔ footer actualizado con aviso legal y privacidad en todas las páginas; resoluciones BOE en home pública
+✔ mejoras estadísticas y home (rama 13): gráficas home reordenadas, tasa éxito/fracaso, leyenda rosco con descripciones, tooltip desglose EPA/EELL, colores badges corregidos, KPIs centrados, top beneficiarios EPA con zoom y abreviaciones, rangos distribución importes ajustados a datos reales
+
+### Pendientes
+
+- **Modal/popup gráficas** (13d): clic en cualquier gráfica abre un modal con la gráfica ampliada.
+- **Script de instalación automática**: instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts`.
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON.
+- **Conclusiones en gráficas de estadísticas**: párrafo breve debajo de cada gráfica con la interpretación del dato.
+- **Página Recursos — colores por sección**: asignar color de fondo diferente a cada sección.
+- **Tipografía**: subir suelo mínimo a 0.875rem (14px). Pasada dedicada post-entrega.
+- Ficha de entidad como modal/popup en el buscador.
+- Accesibilidad (a11y): contraste, teclado, ARIA.
+- **Refactor CSS inline** *(post-entrega)*.
 
 ---
 
