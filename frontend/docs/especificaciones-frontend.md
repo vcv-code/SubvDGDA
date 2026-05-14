@@ -3,7 +3,7 @@
 
 **Proyecto:** Análisis de Subvenciones de Bienestar Animal y Colonias Felinas  
 **Curso:** 2º DAW — Proyecto Final de Ciclo  
-**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + reorganización de estadísticas en EPAs y EELL + página Recursos)  
+**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + reorganización de estadísticas en EPAs y EELL + página Recursos) · 7F (Revisión final: accesibilidad, rendimiento, responsive, limpieza CSS/JS, páginas de error, reenvío de verificación)  
 **Depende de:** Issue 7A (Diseño y wireframes, completada)
 
 ---
@@ -1182,7 +1182,7 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
 
 ---
 
-## 12. Registro de ajustes post-wireframe (mayo 2026)
+## 12. Registro de ajustes post-wireframe
 
 ### 12.1 Límite de paginación en el buscador de solicitudes
 
@@ -1462,6 +1462,218 @@ window.location.href = destino;
 
 **Relación con backend:** Ninguna. `num_concesiones` ya forma parte de la respuesta de `GET /estadisticas/eell` en cada objeto de `por_ccaa[]`.  
 **Sin nuevas dependencias.**
+
+---
+
+### 12.12 `home2.html` — confirmación de no existencia
+
+Verificado durante la revisión final: el archivo `home2.html` **no existe** en el repositorio. No hay referencia a él en ningún HTML, CSS, JS ni en la configuración de Nginx. No requiere ninguna acción.
+
+---
+
+### 12.13 Accesibilidad — Skip navigation
+
+**Archivos modificados:** `css/styles.css`, los 16 archivos HTML del proyecto.
+
+**Problema resuelto:** WCAG 2.4.1 Bypass Blocks (nivel A) — los usuarios de teclado debían tabular por toda la barra de navegación en cada página antes de llegar al contenido principal. Ninguna página tenía mecanismo de salto.
+
+**Solución técnica:**
+
+Estilos añadidos en `styles.css` (nueva sección 25 — Skip Navigation):
+```css
+.skip-nav {
+    position: absolute; left: -9999px; top: 0;
+    width: 1px; height: 1px; overflow: hidden; z-index: 9999;
+    background: #1a3a1a; color: #fff;
+    font-size: 0.9rem; font-weight: 600;
+    padding: 10px 18px; border-radius: 0 0 6px 0;
+    text-decoration: none; white-space: nowrap;
+}
+.skip-nav:focus {
+    position: fixed; left: 0; top: 0;
+    width: auto; height: auto; overflow: visible;
+    outline: 3px solid var(--color-primario); outline-offset: 2px;
+}
+```
+
+El elemento se coloca inmediatamente después del tag `<body>` en todos los HTML:
+```html
+<a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+```
+
+El atributo `id="contenido-principal"` se añade al elemento `<main>` de cada página (respetando los atributos preexistentes). El enlace usa `href="#contenido-principal"` para mover el foco directamente al área de contenido.
+
+**Contraste:** `#fff` sobre `#1a3a1a` = ratio 12:1 (supera el mínimo AA de 4.5:1 para texto normal).
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.14 Rendimiento — Dimensiones de imagen y lazy loading
+
+**Archivos modificados:** Los 16 archivos HTML del proyecto.
+
+**Problema resuelto:** Los navegadores no podían reservar espacio para las imágenes antes de cargarlas (CLS — Cumulative Layout Shift), y las imágenes del footer (below the fold) se cargaban de forma anticipada sin necesidad.
+
+**Solución técnica:**
+
+Logo en navbar — dimensiones explícitas para prevenir CLS (imagen real: 443×485px, escala CSS 54px de alto):
+```html
+<img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+```
+
+Logo en footer — dimensiones + lazy loading (below the fold en todas las páginas):
+```html
+<img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+```
+
+Los valores `width`/`height` establecen el aspect ratio correcto (443÷485 ≈ 0.913). El navegador calcula el espacio exacto incluso antes de descargar el archivo.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.15 Limpieza de CSS — eliminación de código muerto
+
+**Archivos modificados:** `css/styles.css`
+
+**Bloques eliminados** (confirmado mediante búsqueda en todos los HTML que ningún elemento los referenciaba):
+
+| Bloque eliminado | Descripción |
+|---|---|
+| `.hero`, `.hero__titulo`, `.hero__subtitulo`, `.hero__acciones` | Sección hero original, sustituida por `.portada` en la issue 7B |
+| `.seccion-transparencia`, `.transparencia__*` | Bloque de transparencia eliminado del index en revisiones anteriores |
+| `.footer`, `.footer a`, `.footer a:hover`, `.footer__titulo` | Footer oscuro original, sustituido por `.footer-principal` |
+| `.hero__titulo` dentro de `@media (max-width: 600px)` | Regla media query del hero eliminado |
+
+**CSS restante actualizado:** El comentario de índice al inicio del archivo actualizado de 24 a 28 secciones, reflejando el estado real tras añadidos (skip-nav, chart responsive) y eliminaciones.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.16 Limpieza de JS — eliminación de función muerta
+
+**Archivos modificados:** `js/privado.js`
+
+**Eliminada:** función `obtenerToken()` — definida en el archivo pero nunca llamada desde ningún punto. Adicionalmente, no incluía la lógica de deeplink de sessionStorage (tarea 3.1), lo que la hacía potencialmente peligrosa si alguien la hubiera conectado en el futuro.
+
+**Accesibilidad mejorada:** `<pre id="logs-contenido">` en `admin.html` recibió `aria-label="Últimas líneas del log de acceso del servidor"` y `aria-live="polite"` para que los lectores de pantalla anuncien actualizaciones del log.
+
+**Canvas accesibles:** Los elementos `<canvas>` en `estadisticas-epas.html` (×4), `estadisticas-eell.html` (×2) e `index.html` (×3) recibieron `role="img"` para que los lectores de pantalla los traten como imágenes descriptibles (WCAG 4.1.2).
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.17 Auditoría de rutas y enlaces
+
+**Archivos modificados:** `entidad.html` (meta description), `exclusivo.html` (atributos BOE)
+
+**Hallazgos y correcciones:**
+
+`entidad.html` carecía de `<meta name="description">`. Añadido:
+```html
+<meta name="description" content="Consulta el historial completo de solicitudes de una entidad en todas las convocatorias de bienestar animal.">
+```
+
+Los 8 enlaces a `boe.es` en `exclusivo.html` abrían en pestaña nueva (`target="_blank"`) sin avisar al usuario. Añadido en cada uno:
+```html
+title="Se abre en una pestaña nueva"
+```
+Todos los enlaces externos ya tenían `rel="noopener noreferrer"` — confirmado correcto.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.18 Responsive — revisión final
+
+**Archivos modificados:** `css/styles.css`
+
+**Verificado sin cambios:** `.tabla-scroll` ya tenía `overflow-x: auto` para `exclusivo.html`. La cuadrícula `.privado-grid` colapsaba correctamente en columna única a 640px.
+
+**Añadido:** regla media query para reducir altura de gráficos Chart.js en pantallas muy pequeñas (≤480px):
+```css
+@media (max-width: 480px) {
+    .chart-container         { height: 220px; }
+    .chart-container--donut  { height: 180px; }
+}
+```
+
+Esto evita que los gráficos de barras y de anillo desborden en pantallas de móvil estrecho, donde el canvas a 280px de alto resultaba excesivo.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.19 Páginas de error — 404 y 50x
+
+**Archivos creados:** `frontend/404.html`, `frontend/50x.html`
+
+**Problema resuelto:** Nginx necesita páginas de error propias para responder con una interfaz coherente con el proyecto cuando la ruta no existe (404) o el backend falla (500/502/503/504). Sin estos archivos, el usuario veía la página de error genérica de Nginx.
+
+**Configuración esperada en `docker/nginx/default.conf`:**
+```nginx
+error_page 404 /404.html;
+error_page 500 502 503 504 /50x.html;
+```
+
+**Características comunes de ambas páginas:**
+- Skip navigation (`class="skip-nav"`) — WCAG 2.4.1
+- `<meta name="robots" content="noindex">` — evita indexación en buscadores
+- `id="contenido-principal"` en `<main>`
+- `aria-labelledby` en la tarjeta de error
+- Navbar con todos los enlaces de navegación
+- Footer accesible (logo con `loading="lazy" width="33" height="36"`)
+- Reutilización de las clases CSS existentes (`auth-fondo`, `auth-card`, `btn-verde`, `btn-secundario`, `footer-principal`)
+- Sin dependencias JS (fundamental en `50x.html`: el backend puede estar caído)
+
+**Diferencias entre las páginas:**
+
+| Aspecto | `404.html` | `50x.html` |
+|---|---|---|
+| Título H1 | "Página no encontrada" | "Error del servidor" |
+| Código visual | "404" | "⚙️" |
+| Mensaje | La ruta no existe | El servidor no pudo procesar la solicitud |
+| Acciones | Volver al inicio + Ir al buscador | Volver al inicio + Reintentar (reload JS) |
+| Dependencias JS | Ninguna | `window.location.reload()` inline mínimo |
+
+**Relación con backend:** Ninguna (páginas estáticas servidas por Nginx antes de llegar al backend).
+
+---
+
+### 12.20 Reenvío de verificación de email
+
+**Archivos modificados:** `verificar-email.html`
+
+**Problema resuelto:** Si el enlace de verificación enviado por email caducaba o el usuario lo perdía, la página solo mostraba el error sin ofrecer ninguna salida. El usuario tenía que contactar con soporte o registrarse de nuevo.
+
+**Solución técnica — HTML:** Nueva sección `#verif-reenviar` (oculta por defecto con `display:none`) insertada dentro de `.auth-card__formulario`, después del bloque de acción principal. Contiene un `<form id="form-reenviar">` con:
+- Campo `<input type="email">` (autocomplete="email", required)
+- Div de error `#reenviar-error` con `role="alert" aria-live="polite"`
+- Div de éxito `#reenviar-ok` con `role="status" aria-live="polite"`
+- Botón de envío `#btn-reenviar`
+
+**Solución técnica — JS (inline `<script>`):** La sección se muestra llamando a `mostrarReenviar()` en dos casos:
+1. No hay `?token=` en la URL (enlace incompleto)
+2. La API responde con error al verificar el token (token inválido o caducado)
+
+No se muestra si hay error de red (el problema es de conectividad, no de token).
+
+El formulario llama a `POST /auth/reenviar-verificacion` con body `{ email }`.
+
+**Seguridad — prevención de enumeración de usuarios:** La respuesta siempre muestra el mismo mensaje de éxito, independientemente de si el email existe o no en la base de datos:
+
+> "Si esa dirección está registrada y pendiente de verificación, recibirás un nuevo email en breve. Revisa también el correo no deseado."
+
+El botón se deshabilita tras un envío exitoso para evitar spam accidental. Se rehabilita solo si hay error de red.
+
+**Endpoint requerido en backend:** `POST /auth/reenviar-verificacion`  
+Body: `{ "email": string }`  
+Respuesta esperada: siempre 200 (el backend no debe revelar si el email existe).
+
+**Relación con backend:** Requiere implementar `POST /auth/reenviar-verificacion`.
 
 ---
 
