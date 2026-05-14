@@ -41,7 +41,7 @@
 // ─────────────────────────────────────────────────────────────
 
 const API_URL   = '';
-const LIMITE    = 100;  // Resultados por página. 100 según especificación del wireframe.
+const LIMITE    = 50;   // Resultados por página. 50 es un buen equilibrio entre velocidad y usabilidad.
 
 // ─────────────────────────────────────────────────────────────
 // ESTADO GLOBAL DE LA PÁGINA
