@@ -52,6 +52,7 @@ const COLORES = {
 const OPCIONES_BASE = {
     responsive:          true,
     maintainAspectRatio: false,
+    devicePixelRatio:    window.devicePixelRatio || 2,
     plugins: { legend: { display: false } },
 };
 
@@ -161,6 +162,11 @@ function poblarKpis(datos) {
             datos.nuevas_entidades != null
                 ? datos.nuevas_entidades.toLocaleString('es-ES')
                 : '—';
+        const tag = document.getElementById('kpi-nuevas-entidades-tag');
+        if (tag && datos.por_anio?.length) {
+            const ultimoAnio = Math.max(...datos.por_anio.map(d => d.anio));
+            tag.textContent = `Primera vez concedida en ${ultimoAnio}`;
+        }
     }
 }
 
@@ -388,10 +394,16 @@ function poblarGraficoTopBeneficiarios(porAnio) {
     if (topPendiente) topPendiente.style.display = 'none';
     if (graficoTop)   graficoTop.style.display   = 'block';
 
+    const abreviar = (s) => s
+        .replace(/^ASOCIACI[ÓO]N\b/i, 'A.')
+        .replace(/^ASSOCIACIÓ\b/i,     'A.')
+        .replace(/^ASOC\b/i,           'A.')
+        .replace(/PROTECTORA\b/gi,     'P.');
+
     const instancia = new Chart(graficoTop, {
         type: 'bar',
         data: {
-            labels: top.map(d => d.nombre),
+            labels: top.map((d, i) => `${i + 1}ª - ${abreviar(d.nombre)}`),
             datasets: [{
                 label:           'Importe (€)',
                 data:            top.map(d => d.importe),
@@ -403,32 +415,47 @@ function poblarGraficoTopBeneficiarios(porAnio) {
         options: {
             ...OPCIONES_BASE,
             indexAxis: 'y',
+            layout: { padding: { left: 0 } },
             plugins: {
                 ...OPCIONES_BASE.plugins,
                 tooltip: {
                     callbacks: {
+                        title: ctx => top[ctx[0].dataIndex].nombre,
                         label: ctx => ` ${formatearEuros(ctx.parsed.x)}`,
                     },
                 },
             },
             scales: {
                 x: {
-                    beginAtZero: true,
+                    min:  7000,
+                    max:  8500,
                     grid:  { color: COLORES.grisMedio },
                     ticks: {
-                        font:     { family: 'Inter', size: 11 },
-                        color:    COLORES.grisTexto,
-                        callback: v => formatearEjeY(v),
+                        font:      { family: 'Inter', size: 11 },
+                        color:     COLORES.grisTexto,
+                        stepSize:  500,
+                        callback:  v => {
+                            const k = v / 1000;
+                            return (k % 1 === 0 ? k : k.toFixed(1).replace('.', ',')) + ' K';
+                        },
                     },
                 },
                 y: {
                     grid:  { display: false },
-                    ticks: { font: { family: 'Inter', size: 10 }, color: COLORES.grisTexto },
+                    ticks: {
+                        font:       { family: 'Inter', size: 10 },
+                        color:      COLORES.grisTexto,
+                        crossAlign: 'far',
+                    },
+                    afterFit: (axis) => { axis.width = 290; },
                 },
             },
         },
     });
     configurarDescarga(instancia, 'btn-dl-top', 'top-beneficiarios-epa.png');
+
+    const tituloEl = graficoTop.closest('.card-grafico')?.querySelector('.card-grafico__titulo');
+    if (tituloEl) tituloEl.textContent = `Top beneficiarios ${ultimo.anio}`;
 }
 
 

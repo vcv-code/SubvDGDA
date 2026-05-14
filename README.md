@@ -763,7 +763,8 @@ Pendiente:
 - **Reenviar email de verificación**: si el correo de verificación no llega (spam, etc.), el usuario queda bloqueado. Solución de emergencia: usar "Olvidé mi contraseña" (que también verifica el email al completar el reset). Pendiente: enlace "¿No recibiste el email? Volver a enviar" en `verificar-email.html` con un nuevo endpoint `POST /auth/reenviar-verificacion`.
 - **Verificar URLs del BOE en `exclusivo.html`**: los IDs de documento usados (BOE-A-2021-8098, etc.) son aproximados. Contrastar contra la fuente oficial antes de la entrega final.
 - **Página Recursos — colores por sección**: los logos ya están uniformes (height 80px + object-fit:contain). Pendiente: asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente.
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: el ranking CCAA ya funciona, pero el mapa choropleth está pendiente de decisión técnica (SVG inline, Leaflet o D3-geo).
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: el ranking CCAA ya funciona y los datos vienen de `GET /estadisticas/eell` (no requiere endpoint nuevo). Pendiente: integrar librería de mapas (Leaflet o D3-geo) + GeoJSON de España.
+- **Conclusiones en gráficas de estadísticas**: añadir un párrafo breve debajo de cada gráfica con la lectura/interpretación del dato. Afecta a todas las gráficas de `estadisticas-epas.html` y `estadisticas-eell.html`.
 - Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
 - Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
 - **Footer — revisar enlaces**: actualmente muestra GitHub, Documentación y Contacto. Pendiente: sustituir por Aviso legal (obligatorio si se publica) y decidir si mantener Contacto (valorar implicaciones de privacidad según los datos que se exponen).
@@ -1208,3 +1209,4 @@ Para mockear `enviar_email_recuperacion` en los tests de recuperación de contra
 #### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe (rama 11b)
 
 El endpoint devuelve exactamente el mismo mensaje tanto si el email está registrado como si no: `"Si ese email está registrado, recibirás un enlace en breve"`. Esto es una decisión de seguridad deliberada para evitar la enumeración de usuarios: si la respuesta fuera diferente según si el email existe, un atacante podría automatizar peticiones con listas de emails y descubrir qué cuentas están registradas en el sistema. La misma respuesta en ambos casos no filtra ninguna información.
+antes de
