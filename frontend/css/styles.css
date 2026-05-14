@@ -827,6 +827,12 @@ table tbody tr:hover {
     line-height: 1.1;
 }
 
+.card-metrica-verde__subtitulo {
+    font-size: 0.78rem;
+    color: var(--color-gris-texto);
+    margin: 0;
+}
+
 
 /* ============================================================
    15b. TARJETAS DE CONVOCATORIAS POR AÑO
@@ -2008,9 +2014,14 @@ canvas {
 
 .resumen-tabla th,
 .resumen-tabla td {
-    padding: 10px 14px;
-    text-align: left;
+    padding: 8px 10px;
+    text-align: center;
     border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.resumen-tabla th:nth-child(1),
+.resumen-tabla td:nth-child(1) {
+    text-align: left;
 }
 
 .resumen-tabla th {
@@ -2032,6 +2043,46 @@ canvas {
     background: #f0f4f0;
     border-top: 2px solid var(--color-verde-btn);
     border-bottom: none;
+}
+
+.resumen-tabla__subtotal td {
+    font-weight: 600;
+    background: var(--color-fondo-verde);
+    border-top: 1px solid var(--color-gris-medio);
+    border-bottom: 1px solid var(--color-gris-medio);
+    color: var(--color-gris-texto);
+    font-size: 0.85rem;
+}
+
+.resumen-tabla td[colspan] {
+    text-align: left;
+}
+
+
+.resumen-tabla .col-sep {
+    border-left: 2px solid var(--color-gris-medio);
+}
+
+.resumen-grupos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.resumen-bloque {
+    background: var(--color-blanco);
+    border-radius: var(--radio-card);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.resumen-bloque .resumen-tabla {
+    margin: 0;
+    border-radius: 0;
+}
+
+.resumen-bloque--total .resumen-tabla thead {
+    display: none;
 }
 
 .resumen-tabla__pendiente td {
@@ -2076,6 +2127,8 @@ canvas {
     color: var(--color-verde-btn);
     margin: 0 0 0.8rem;
 }
+
+.privado-docs__subtitulo--negro { color: var(--color-negro); }
 
 .privado-docs__lista {
     list-style: none;
