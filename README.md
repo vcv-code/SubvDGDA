@@ -759,26 +759,29 @@ Pendiente:
 
 ### Pendientes de frontend
 
-- **Páginas de error personalizadas**: actualmente Nginx muestra su página por defecto en errores 404 y 50x. Pendiente crear `404.html` y `50x.html` con el diseño del proyecto y configurar Nginx con `error_page 404 /404.html` y `error_page 500 502 503 504 /50x.html`.
-- **Reenviar email de verificación**: si el correo de verificación no llega (spam, etc.), el usuario queda bloqueado. Solución de emergencia: usar "Olvidé mi contraseña" (que también verifica el email al completar el reset). Pendiente: enlace "¿No recibiste el email? Volver a enviar" en `verificar-email.html` con un nuevo endpoint `POST /auth/reenviar-verificacion`.
-- **Verificar URLs del BOE en `exclusivo.html`**: los IDs de documento usados (BOE-A-2021-8098, etc.) son aproximados. Contrastar contra la fuente oficial antes de la entrega final.
-- **Página Recursos — colores por sección**: los logos ya están uniformes (height 80px + object-fit:contain). Pendiente: asignar un color de fondo diferente a cada una de las 4 secciones (Protección animal, Colonias felinas, EPAs, EELL) para diferenciarlas visualmente.
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: el ranking CCAA ya funciona y los datos vienen de `GET /estadisticas/eell` (no requiere endpoint nuevo). Pendiente: integrar librería de mapas (Leaflet o D3-geo) + GeoJSON de España.
-- **Conclusiones en gráficas de estadísticas**: añadir un párrafo breve debajo de cada gráfica con la lectura/interpretación del dato. Afecta a todas las gráficas de `estadisticas-epas.html` y `estadisticas-eell.html`.
-- Avisos y notas en la web: indicar que los datos pueden contener errores y que conviene contrastarlos con las fuentes oficiales
-- Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar
-- **Footer — revisar enlaces**: actualmente muestra GitHub, Documentación y Contacto. Pendiente: sustituir por Aviso legal (obligatorio si se publica) y decidir si mantener Contacto (valorar implicaciones de privacidad según los datos que se exponen).
-- Política de privacidad y aviso legal
-- Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA
-- **Refactor CSS inline** *(post-entrega, solo si hay tiempo)*: el proyecto acumula estilos inline en el HTML que deberían estar como clases en `styles.css`. No es urgente ni afecta a la funcionalidad, pero mejora el mantenimiento. Hacerlo página por página comprobando visualmente que nada se rompe. Regla para código nuevo: `display:none` en HTML está bien; todo lo demás va a `styles.css`.
+- **Modal/popup gráficas** (13d): clic en cualquier gráfica abre un modal con la gráfica ampliada. Afecta a `estadisticas-epas.html`, `estadisticas-eell.html` e `index.html`.
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`. Pendiente: integrar librería de mapas (Leaflet o D3-geo) + GeoJSON de España.
+- **Conclusiones en gráficas de estadísticas**: párrafo breve debajo de cada gráfica con la interpretación del dato. Afecta a todas las gráficas de `estadisticas-epas.html` y `estadisticas-eell.html`.
+- **Página Recursos — colores por sección**: asignar color de fondo diferente a cada sección (Protección animal, Colonias felinas, EPAs, EELL).
+- **Tipografía**: subir suelo mínimo a 0.875rem (14px) para texto legible — labels, subtítulos KPI, textos de tabla. Pasada dedicada post-entrega.
+- Ficha de entidad como modal/popup: mostrar en overlay al hacer clic en una fila, conservando la búsqueda al cerrar.
+- Accesibilidad (a11y): revisar contraste, navegación por teclado y atributos ARIA.
+- **Refactor CSS inline** *(post-entrega)*: mover estilos inline del HTML a clases en `styles.css`.
 
-### Pendientes de seguridad en registros de usuario
+#### Completados en rama 13
 
-*(Todas implementadas en la rama 12)*
+- ✔ Páginas de error `404.html` y `50x.html` + `error_page` en Nginx
+- ✔ `POST /auth/reenviar-verificacion` — frontend y backend implementados
+- ✔ URLs del BOE en `exclusivo.html` verificadas y corregidas; resoluciones también en home pública
+- ✔ Aviso legal y política de privacidad (`aviso-legal.html`, `privacidad.html`) + sección cookies
+- ✔ Footer actualizado con aviso legal y privacidad en todas las páginas
 
-✔ **Rate limiting en `POST /auth/registro`**: zona `registro:10m rate=5r/m` en Nginx, `burst=3 nodelay`. Evita creación masiva de cuentas.
-✔ **Honeypot en el formulario de registro**: campo `sitio_web` oculto con CSS (`.hp-trampa`). Si llega relleno → éxito falso sin crear cuenta. Cero dependencias.
-✔ **Verificación de email al registrarse**: `email_verificado` en `usuarios`, tabla `verificacion_tokens`, `GET /auth/verificar?token=...`, página `verificar-email.html`. El reset de contraseña también activa `email_verificado`.
+### Seguridad en registros de usuario (rama 12) ✔
+
+- ✔ **Rate limiting en `POST /auth/registro`**: zona `registro:10m rate=5r/m` en Nginx, `burst=3 nodelay`. Evita creación masiva de cuentas.
+- ✔ **Honeypot en el formulario de registro**: campo `sitio_web` oculto con CSS (`.hp-trampa`). Si llega relleno → éxito falso sin crear cuenta. Cero dependencias.
+- ✔ **Verificación de email al registrarse**: `email_verificado` en `usuarios`, tabla `verificacion_tokens`, `GET /auth/verificar?token=...`, página `verificar-email.html`. El reset de contraseña también activa `email_verificado`.
+- ✔ **Reenvío de verificación** (`POST /auth/reenviar-verificacion`): invalida tokens anteriores y envía nuevo enlace. Respuesta siempre 200 (no revela si el email existe).
 
 ### Pendientes de despliegue
 
@@ -1100,18 +1103,19 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Login con terceros (OAuth)** - integración con Google.
 - **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
 - **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
-- Puerto de base de datos: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker
-- Dominio real y certificado Let's Encrypt: en producción sustipues stuir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores)
-- CORS con dominio específico: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido
+- **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
+- **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
 
 ---
 
 ## Notas técnicas
 
-- data/raw/ no se versiona completo
-- se mantienen ejemplos
-- los scripts sobrescriben resultados
-- sistema reproducible
+- `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
+- El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
+- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó en rama 13.
+- Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
+- CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido en rama 13 — el ranking aparecía sin formato hasta entonces.
 
 ---
 
