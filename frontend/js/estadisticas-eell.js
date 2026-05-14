@@ -53,6 +53,7 @@ const COLORES = {
 const OPCIONES_BASE = {
     responsive:          true,
     maintainAspectRatio: false,
+    devicePixelRatio:    window.devicePixelRatio || 2,
     plugins: { legend: { display: false } },
 };
 
@@ -177,10 +178,12 @@ function poblarGraficoTopProvincias(topProvincias) {
     if (provinciasPendiente)  provinciasPendiente.style.display  = 'none';
     if (graficoTopProvincias) graficoTopProvincias.style.display = 'block';
 
+    const abreviarProv = (s) => s.replace('Santa Cruz de Tenerife', 'S.C. Tenerife');
+
     const instancia = new Chart(graficoTopProvincias, {
         type: 'bar',
         data: {
-            labels: top.map(d => d.provincia),
+            labels: top.map(d => abreviarProv(d.provincia)),
             datasets: [{
                 label:           'Importe (€)',
                 data:            top.map(d => d.importe_total),
@@ -295,24 +298,24 @@ function poblarRankingCcaa(porCcaa) {
 
     const ordenadas = [...porCcaa]
         .sort((a, b) => b.importe_total - a.importe_total)
-        .slice(0, 19);  // 17 CCAA + Ceuta + Melilla
+        .slice(0, 10);
 
     rankingCcaa.innerHTML = '';
 
     ordenadas.forEach((d, i) => {
         const li = document.createElement('li');
-        li.className = 'ranking-lista__item';
+        li.className = 'ranking-item';
 
         const posicion = document.createElement('span');
-        posicion.className   = 'ranking-lista__posicion';
+        posicion.className   = 'ranking-item__posicion';
         posicion.textContent = `${i + 1}`;
 
         const nombre = document.createElement('span');
-        nombre.className   = 'ranking-lista__nombre';
+        nombre.className   = 'ranking-item__nombre';
         nombre.textContent = d.ccaa;
 
         const importe = document.createElement('span');
-        importe.className   = 'ranking-lista__valor';
+        importe.className   = 'ranking-item__valor';
         importe.textContent = formatearEuros(d.importe_total);
 
         li.appendChild(posicion);

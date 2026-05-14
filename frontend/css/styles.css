@@ -64,7 +64,7 @@
 
     /* --- Colores de estado (para badges de solicitudes) --- */
     --estado-concedida:       #2E7D32;   /* verde   */
-    --estado-no-beneficiaria: #B45309;   /* ámbar   */
+    --estado-no-beneficiaria: #D97706;   /* ámbar claro */
     --estado-excluida:        #C62828;   /* rojo    — la más grave */
     --estado-desistida:       #6B7280;   /* gris    — según wireframe */
 
@@ -1471,7 +1471,6 @@ canvas {
 /* Fondo verde suave para toda la página de estadísticas */
 .fondo-stats {
     background-color: var(--color-fondo-verde);
-    min-height: calc(100vh - var(--altura-nav));
     padding-bottom: var(--espacio-xl);
 }
 
@@ -1498,10 +1497,12 @@ canvas {
 .card-kpi {
     background-color: var(--color-blanco);
     border-radius: var(--radio-card);
-    box-shadow: var(--sombra-card);
     padding: var(--espacio-md);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: var(--espacio-xs);
 }
 
@@ -1510,23 +1511,24 @@ canvas {
     font-weight: 600;
     color: var(--color-gris-texto);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
 }
 
 .card-kpi__numero {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: var(--color-negro);
-    line-height: 1;
+    color: var(--color-verde-btn);
+    line-height: 1.1;
+}
+
+#kpi-ccaa-top {
+    font-size: 1.3rem;
 }
 
 .card-kpi__tag {
     font-size: 0.78rem;
     color: var(--color-gris-texto);
-    background-color: var(--color-gris-claro);
-    border-radius: 20px;
-    padding: 2px 10px;
-    align-self: flex-start;
+    text-align: center;
 }
 
 /* Tarjeta de gráfico */
@@ -1549,7 +1551,7 @@ canvas {
 }
 
 .card-grafico__titulo {
-    font-size: 0.97rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--color-negro);
     margin: 0;
@@ -1577,6 +1579,20 @@ canvas {
     position: relative;
     height: 280px;
     width: 100%;
+    transform: translateZ(0);
+}
+
+.chart-container canvas {
+    display: block;
+}
+
+#grafico-distribucion-container,
+#grafico-top-container {
+    height: 340px;
+}
+
+#grafico-concentracion-container {
+    height: 280px;
 }
 
 /* Variante para donut: altura menor y centrado */
@@ -1602,12 +1618,24 @@ canvas {
     justify-content: center;
 }
 
+.leyenda-estados--vertical {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+}
+
 .leyenda-item {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 0.82rem;
     color: var(--color-gris-texto);
+}
+
+.leyenda-estados--vertical .leyenda-item {
+    align-items: center;
+    font-size: 0.85rem;
 }
 
 .leyenda-item__color {
@@ -1648,6 +1676,12 @@ canvas {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.ranking-item__valor {
+    font-weight: 600;
+    color: var(--color-verde-btn);
+    white-space: nowrap;
 }
 
 .ranking-item__importe {

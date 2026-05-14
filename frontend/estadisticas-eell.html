@@ -157,7 +157,7 @@
                                     Importe total concedido por provincia (EELL)
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
                             <button class="btn-descargar-png" id="btn-dl-provincias"
                                     style="display:none;"
                                     aria-label="Descargar gráfico de top provincias como PNG">
@@ -186,7 +186,7 @@
                                     % del importe total acaparado por el top 10% de entidades
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
                             <button class="btn-descargar-png" id="btn-dl-concentracion"
                                     style="display:none;"
                                     aria-label="Descargar gráfico de concentración del importe como PNG">
@@ -197,7 +197,7 @@
                             Donut: proporción top 10% vs resto.
                             Datos esperados: concentracion.top_10_pct y concentracion.resto_pct
                         -->
-                        <div class="chart-container chart-container--donut"
+                        <div class="chart-container"
                              id="grafico-concentracion-container">
                             <p class="estado-carga" id="concentracion-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/eell</code>
@@ -227,7 +227,7 @@
                                     Importe concedido acumulado por comunidad autónoma
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
                         </div>
                         <!--
                             Lista HTML generada por JS.
@@ -237,10 +237,7 @@
                             aria-label="Ranking de CCAA por importe EELL concedido">
                             <!-- Se rellena desde estadisticas-eell.js -->
                         </ul>
-                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">
-                            Ranking pendiente de endpoint
-                            <code>/estadisticas/eell</code>.
-                        </div>
+                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">Cargando...</div>
                     </div>
 
                     <!-- Distribución geográfica (mapa) — pendiente de decisión técnica -->
@@ -252,7 +249,7 @@
                                     Mapa de calor por comunidad autónoma
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
                         </div>
                         <!--
                             El PDF define un mapa de España coloreado por importe
@@ -267,9 +264,8 @@
                             <div style="text-align:center; color:var(--color-gris-texto);">
                                 <p style="font-size:2.5rem; margin-bottom:8px;">🗺️</p>
                                 <p style="font-size:0.9rem;">
-                                    Mapa de CCAA pendiente de implementación.<br>
-                                    Requiere endpoint <code>/estadisticas/eell</code>
-                                    y decisión técnica sobre la librería de mapas.
+                                    Mapa de calor por comunidad autónoma pendiente de implementación.<br>
+                                    Los datos ya están disponibles — falta integrar la librería de mapas.
                                 </p>
                             </div>
                         </div>
@@ -289,9 +285,9 @@
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">Top 5 CCAA por importe</p>
+                                <p class="card-grafico__titulo">Top 5 CCAA por subvención</p>
                                 <p class="card-grafico__subtitulo">
-                                    Comunidades autónomas con mayor importe EELL concedido
+                                    Importe total concedido por comunidad autónoma
                                 </p>
                             </div>
                             <span class="card-grafico__badge" id="top5-badge">pendiente</span>
@@ -301,9 +297,7 @@
                             por_ccaa[].importe_total (top 5 ordenado desc).
                             Cada ítem muestra posición, nombre, barra proporcional e importe.
                         -->
-                        <p class="ranking-pendiente" id="top5-ccaa-pendiente">
-                            Pendiente de endpoint <code>/estadisticas/eell</code>.
-                        </p>
+                        <p class="ranking-pendiente" id="top5-ccaa-pendiente">Cargando...</p>
                         <ol class="top5-lista" id="top5-ccaa-lista"
                             style="display:none;"
                             aria-label="Top 5 comunidades autónomas por importe EELL concedido">
@@ -315,9 +309,9 @@
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">Top 5 CCAA por concesiones</p>
+                                <p class="card-grafico__titulo">Top 5 CCAA por ayuntamientos</p>
                                 <p class="card-grafico__subtitulo">
-                                    Comunidades autónomas con más concesiones EELL acumuladas
+                                    Comunidades con más ayuntamientos beneficiados
                                 </p>
                             </div>
                             <span class="card-grafico__badge" id="top5-concesiones-badge">pendiente</span>
@@ -329,9 +323,7 @@
                             Complementa la vista de importe: una CCAA puede tener muchas
                             concesiones pequeñas y no aparecer en el top 5 por importe.
                         -->
-                        <p class="ranking-pendiente" id="top5-concesiones-pendiente">
-                            Pendiente de endpoint <code>/estadisticas/eell</code>.
-                        </p>
+                        <p class="ranking-pendiente" id="top5-concesiones-pendiente">Cargando...</p>
                         <ol class="top5-lista" id="top5-concesiones-lista"
                             style="display:none;"
                             aria-label="Top 5 comunidades autónomas por número de concesiones EELL">

@@ -43,16 +43,17 @@ const COLORES = {
     verdeFondo:     'rgba(71, 192, 121, 0.15)',
     azul:           '#1565C0',
     concedida:      '#2E7D32',
-    noBeneficiaria: '#A5D6A7',
-    excluida:       '#EF6C00',
-    desistida:      '#C62828',
+    noBeneficiaria: '#D97706',
+    excluida:       '#C62828',
+    desistida:      '#6B7280',
     grisTexto:      '#616161',
     grisMedio:      '#E0E0E0',
 };
 
 const OPCIONES_BASE = {
-    responsive: true,
+    responsive:          true,
     maintainAspectRatio: false,
+    devicePixelRatio:    window.devicePixelRatio || 2,
     plugins: { legend: { display: false } },
 };
 
@@ -369,6 +370,8 @@ function crearGraficoLinea(porAnio) {
         porAnio.filter(d => d.anio === anio)
                .reduce((suma, d) => suma + d.importe_total, 0)
     );
+    const epaByAnio  = ANIOS.map(anio => porAnio.filter(d => d.anio === anio && d.tipo === 'epa').reduce((s, d) => s + d.importe_total, 0));
+    const eellByAnio = ANIOS.map(anio => porAnio.filter(d => d.anio === anio && d.tipo === 'eell').reduce((s, d) => s + d.importe_total, 0));
 
     const instancia = new Chart(document.getElementById('home-grafico-linea'), {
         type: 'line',
@@ -406,7 +409,16 @@ function crearGraficoLinea(porAnio) {
             },
             plugins: {
                 ...OPCIONES_BASE.plugins,
-                tooltip: { callbacks: { label: (ctx) => ' ' + formatearMillones(ctx.raw) } },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const lines = [' Total: ' + formatearMillones(ctx.raw)];
+                            if (epaByAnio[ctx.dataIndex]  > 0) lines.push('  EPA:  ' + formatearMillones(epaByAnio[ctx.dataIndex]));
+                            if (eellByAnio[ctx.dataIndex] > 0) lines.push('  EELL: ' + formatearMillones(eellByAnio[ctx.dataIndex]));
+                            return lines;
+                        },
+                    },
+                },
             },
         },
     });
@@ -559,13 +571,16 @@ function crearGraficoBarras(porAnio) {
 // ─────────────────────────────────────────────────────────────
 
 function mostrarTasaExito(datos) {
-    const el = document.getElementById('home-tasa-exito');
-    if (!el) return;
+    const elExito   = document.getElementById('home-tasa-exito');
+    const elFracaso = document.getElementById('home-tasa-fracaso');
+    if (!elExito) return;
     if (datos.total_registros > 0) {
         const pct = Math.round((datos.total_concedidas / datos.total_registros) * 100);
-        el.textContent = pct + ' %';
+        elExito.textContent   = pct + ' %';
+        if (elFracaso) elFracaso.textContent = (100 - pct) + ' %';
     } else {
-        el.textContent = '—';
+        elExito.textContent = '—';
+        if (elFracaso) elFracaso.textContent = '—';
     }
 }
 

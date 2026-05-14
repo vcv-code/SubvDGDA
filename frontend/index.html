@@ -355,7 +355,7 @@
                     </p>
                 </div>
 
-                <!-- Fila 1: línea de evolución + donut de estados -->
+                <!-- Fila 1: línea de evolución + barras EPA vs EELL -->
                 <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
 
                     <div class="card-grafico">
@@ -378,44 +378,6 @@
 
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
-                            <p class="card-grafico__titulo">Distribución por estado</p>
-                            <button class="btn-descargar-png" id="btn-dl-donut"
-                                    style="display:none;"
-                                    aria-label="Descargar gráfico de distribución como PNG">
-                                ↓ PNG
-                            </button>
-                        </div>
-                        <div class="chart-container chart-container--donut">
-                            <canvas id="home-grafico-donut" role="img"
-                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
-                        </div>
-                        <div class="leyenda-estados" id="home-leyenda-donut">
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#2E7D32;"></span>
-                                Concedida
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#A5D6A7;"></span>
-                                No beneficiaria
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#EF6C00;"></span>
-                                Excluida
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#C62828;"></span>
-                                Desistida
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Fila 2: barras EPA vs EELL -->
-                <div class="grid-2">
-
-                    <div class="card-grafico">
-                        <div class="card-grafico__cabecera">
                             <div>
                                 <p class="card-grafico__titulo">EPA vs EELL por año (M€)</p>
                                 <p class="card-grafico__subtitulo">Importe concedido por tipo de convocatoria</p>
@@ -432,19 +394,34 @@
                         </div>
                     </div>
 
-                    <!-- KPI tasa de éxito + enlace a estadísticas -->
-                    <div class="card-grafico" style="display:flex; flex-direction:column; justify-content:space-between;">
-                        <div>
-                            <p class="card-grafico__titulo" style="margin-bottom: var(--espacio-sm);">
-                                Tasa de éxito global
-                            </p>
-                            <p style="font-size:3.5rem; font-weight:700; color:var(--color-verde-btn); margin:0;"
-                               id="home-tasa-exito">—</p>
-                            <p style="color:var(--color-gris-texto); font-size:0.9rem; margin-top:6px;">
-                                Solicitudes concedidas sobre el total 2021–2025
-                            </p>
+                </div>
+
+                <!-- Fila 2: tasa de éxito/fracaso + rosco de estados -->
+                <div class="grid-2">
+
+                    <!-- KPI tasa de éxito/fracaso + enlace a estadísticas -->
+                    <div class="card-grafico" style="display:flex; flex-direction:column;">
+                        <p class="card-grafico__titulo">Tasa de éxito/fracaso totales</p>
+                        <p class="card-grafico__subtitulo" style="margin-bottom: var(--espacio-sm);">
+                            Solicitudes concedidas sobre el total 2021–2025
+                        </p>
+
+                        <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+                            <div style="display:flex; gap:3rem; justify-content:center; flex-wrap:wrap;">
+                                <div style="text-align:center;">
+                                    <p style="font-size:5.5rem; font-weight:700; color:var(--color-verde-btn); margin:0; line-height:1;"
+                                       id="home-tasa-exito">—</p>
+                                    <p style="color:var(--color-gris-texto); font-size:0.85rem; margin-top:6px;">concedidas</p>
+                                </div>
+                                <div style="text-align:center;">
+                                    <p style="font-size:5.5rem; font-weight:700; color:#C62828; margin:0; line-height:1;"
+                                       id="home-tasa-fracaso">—</p>
+                                    <p style="color:var(--color-gris-texto); font-size:0.85rem; margin-top:6px;">no concedidas</p>
+                                </div>
+                            </div>
                         </div>
-                        <div style="margin-top: var(--espacio-lg);">
+
+                        <div style="margin-top:auto; padding-top: var(--espacio-md);">
                             <a href="estadisticas-epas.html"
                                style="display:inline-block; margin-right:12px; color:var(--color-azul); font-size:0.9rem;">
                                 → Estadísticas EPAs
@@ -456,6 +433,38 @@
                         </div>
                     </div>
 
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <p class="card-grafico__titulo">Distribución por estado</p>
+                            <button class="btn-descargar-png" id="btn-dl-donut"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de distribución como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container chart-container--donut">
+                            <canvas id="home-grafico-donut" role="img"
+                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
+                        </div>
+                        <div class="leyenda-estados leyenda-estados--vertical" id="home-leyenda-donut">
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#2E7D32;"></span>
+                                <span><strong>Concedida:</strong> obtienen la subvención</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#D97706;"></span>
+                                <span><strong>No beneficiaria:</strong> puntuación válida, pero sin presupuesto suficiente</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#C62828;"></span>
+                                <span><strong>Excluida:</strong> sin puntuación por problemas en la documentación</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#6B7280;"></span>
+                                <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
+                            </div>
+                        </div>
+                    </div>
 
             </div>
         </section>
