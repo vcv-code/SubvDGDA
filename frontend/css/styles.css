@@ -64,8 +64,8 @@
 
     /* --- Colores de estado (para badges de solicitudes) --- */
     --estado-concedida:       #2E7D32;   /* verde   */
-    --estado-no-beneficiaria: #C62828;   /* rojo    */
-    --estado-excluida:        #B45309;   /* ámbar   — según wireframe */
+    --estado-no-beneficiaria: #B45309;   /* ámbar   */
+    --estado-excluida:        #C62828;   /* rojo    — la más grave */
     --estado-desistida:       #6B7280;   /* gris    — según wireframe */
 
     /* --- Tipografía --- */
