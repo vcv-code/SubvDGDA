@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!--
+    privacidad.html — Política de privacidad
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    Página estática. Contenido meramente informativo para el TFG.
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de privacidad — Subvenciones Bienestar Animal</title>
+    <meta name="description"
+          content="Política de privacidad del proyecto Subvenciones Bienestar Animal BDNS/DGDA.">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="login.html" class="btn-login">Acceder</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main id="contenido-principal">
+        <div class="contenedor" style="padding-top: 3rem; padding-bottom: 4rem; max-width: 760px;">
+
+            <p style="margin-bottom: 0.5rem;">
+                <a href="index.html" style="color: var(--color-primario); font-size: 0.9rem;">← Volver al inicio</a>
+            </p>
+
+            <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem; color: var(--color-negro);">
+                Política de privacidad
+            </h1>
+
+            <section style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Responsable del tratamiento</h2>
+                <p>
+                    Este sitio web es un proyecto educativo del ciclo formativo DAW 2025-2026.
+                    No tiene carácter comercial. Los datos que se recopilan se tratan exclusivamente
+                    con fines demostrativos y educativos.
+                </p>
+            </section>
+
+            <section style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Datos que recogemos</h2>
+                <p>
+                    Al crear una cuenta en el área privada, se almacenan:
+                </p>
+                <ul style="margin-top: 0.5rem; padding-left: 1.5rem; line-height: 1.8;">
+                    <li>Dirección de correo electrónico (identificador de cuenta).</li>
+                    <li>Contraseña cifrada con bcrypt (no reversible).</li>
+                    <li>Fecha de creación de la cuenta.</li>
+                    <li>Tokens de sesión (refresh tokens, con caducidad de 30 días).</li>
+                </ul>
+                <p style="margin-top: 0.75rem;">
+                    No se recogen datos de navegación, ni se usan cookies de seguimiento,
+                    ni se comparten datos con terceros.
+                </p>
+            </section>
+
+            <section style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Finalidad</h2>
+                <p>
+                    Los datos se usan exclusivamente para gestionar el acceso al área privada
+                    del proyecto. No se utilizan para fines publicitarios ni se ceden a terceros.
+                </p>
+            </section>
+
+            <section style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Derechos del usuario</h2>
+                <p>
+                    Puedes solicitar la eliminación de tu cuenta y todos tus datos en cualquier momento
+                    contactando a través del repositorio de GitHub del proyecto. La cuenta también puede
+                    ser eliminada por el administrador desde el panel de gestión.
+                </p>
+            </section>
+
+            <section style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Seguridad</h2>
+                <p>
+                    Las comunicaciones se realizan sobre HTTPS (TLS 1.2/1.3). Las contraseñas se almacenan
+                    cifradas con bcrypt. Los tokens de sesión tienen caducidad y pueden ser revocados
+                    en cualquier momento desde el área privada.
+                </p>
+            </section>
+
+            <section>
+                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Datos públicos</h2>
+                <p>
+                    Los datos sobre subvenciones mostrados en este sitio son públicos, procedentes de la
+                    BDNS y la DGDA, y no contienen información personal de ningún individuo.
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer-principal">
+        <div class="footer-principal__zona">
+            <div class="footer-principal__marca">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
+                <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
+            </div>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="#">Documentación</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+        </div>
+    </footer>
+
+</body>
+</html>

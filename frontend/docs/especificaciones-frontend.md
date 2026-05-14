@@ -3,7 +3,7 @@
 
 **Proyecto:** Análisis de Subvenciones de Bienestar Animal y Colonias Felinas  
 **Curso:** 2º DAW — Proyecto Final de Ciclo  
-**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + reorganización de estadísticas en EPAs y EELL + página Recursos)  
+**Issues cubiertas:** 7B (Estructura HTML/CSS/JS) · 7C (Lógica fetch/filtros/gráficos) · 7D (Mejoras de frontend + reorganización de estadísticas en EPAs y EELL + página Recursos) · 7F (Revisión final: accesibilidad, rendimiento, responsive, limpieza CSS/JS, páginas de error, reenvío de verificación)  
 **Depende de:** Issue 7A (Diseño y wireframes, completada)
 
 ---
@@ -1179,3 +1179,501 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
 ---
 
 *Última actualización: 4 de mayo de 2026 — Reorganización completa de estadísticas en Issue 7D. Refleja estado final tras Issues 7B, 7C y 7D: navbar Opción A con 6 enlaces directos, gráficos generales integrados en Home, páginas `estadisticas-epas.html` y `estadisticas-eell.html` con JS propio, y `recursos.html` con contenido estático real.*
+
+---
+
+## 12. Registro de ajustes post-wireframe
+
+### 12.1 Límite de paginación en el buscador de solicitudes
+
+**Archivo modificado:** `js/solicitudes.js`  
+**Cambio:** `LIMITE = 50` → `LIMITE = 100`  
+**Motivo:** El wireframe original (Pantalla 2 — Listado de solicitudes, Pág. 4) especifica server-side pagination con 100 registros por página (aprox. 64 páginas para los 6.398 registros actuales). El valor anterior de 50 era provisional.  
+**Relación con backend:** El parámetro `limite` se pasa como query string a `GET /solicitudes/?limite=100&pagina=N`. El backend ya acepta cualquier valor; este cambio es exclusivamente de frontend.  
+**Sin impacto en:** Lógica de filtros, exportación CSV, paginación (los cálculos usan `Math.ceil(total / LIMITE)` y se recalculan automáticamente).
+
+### 12.2 Corrección de colores de badges de estado
+
+**Archivo modificado:** `css/styles.css` (bloque `:root`, variables `--estado-*`)  
+**Cambio:** Dos variables CSS actualizadas para alinearse con el wireframe (Pantalla 2 — Listado de solicitudes, Pág. 4-5):
+
+| Variable | Antes | Después | Color |
+|---|---|---|---|
+| `--estado-excluida` | `#EF6C00` (naranja) | `#B45309` (ámbar) | según wireframe |
+| `--estado-desistida` | `#6A1B9A` (morado) | `#6B7280` (gris) | según wireframe |
+
+La tabla completa de badges queda: **verde** = concedida · **rojo** = no beneficiaria · **ámbar** = excluida · **gris** = desistida.  
+Los valores elegidos superan el ratio de contraste WCAG AA (4.5:1) sobre fondo blanco con texto blanco.  
+**Relación con backend:** Ninguna. Son estilos visuales puros.  
+**Propagación automática:** Las clases `.badge-excluida` y `.badge-desistida` y cualquier otro elemento que use `var(--estado-excluida)` o `var(--estado-desistida)` se actualizan sin cambios adicionales.
+
+### 12.3 Campo "confirmar contraseña" en registro y cambio de contraseña
+
+**Archivos modificados:** `registro.html`, `privado.html`, `js/auth.js`, `js/privado.js`  
+**Cambio:** Se añade un campo `<input type="password">` de confirmación en dos formularios, con validación client-side que bloquea el envío si las contraseñas no coinciden.
+
+**En `registro.html`:**
+- Nuevo campo `#registro-password-confirm` tras los indicadores de requisitos.
+- Span de error `#error-password-confirm-reg` con mensaje "Las contraseñas no coinciden."
+- `auth.js` (función `iniciarRegistro`): lee `#registro-password-confirm`, compara con `#registro-password` y activa/desactiva el error antes de hacer fetch.
+
+**En `privado.html`:**
+- Nuevo campo `#password-nueva-confirm` tras el campo `#password-nueva`.
+- Span de error `#error-password-nueva-confirm` con mensaje "Las contraseñas no coinciden."
+- `privado.js` (función `manejarCambiarPassword`): valida la coincidencia antes de enviar la petición `PUT /privado/cambiar-contrasena`. Si no coinciden, muestra el error y hace `return` sin llamar al backend.
+- Al completar el cambio con éxito, el campo de confirmación también se limpia.
+
+**Relación con backend:** Ninguna. El backend (`PUT /privado/cambiar-contrasena`) recibe `{ contrasena_actual, contrasena_nueva }` exactamente igual que antes. El campo de confirmación existe solo en el cliente para mejorar la seguridad UX.  
+**Sin impacto en:** Flujo de login, tokens, ni ningún otro formulario.
+
+### 12.4 Comentario obsoleto eliminado en home.js
+
+**Archivo modificado:** `js/home.js` (función `mostrarMetricas`, línea ~197)  
+**Cambio:** El comentario que decía `PENDIENTE DE BACKEND: cuando el schema EstadisticasOut incluya 'entidades_unicas'...` se ha reemplazado por un comentario descriptivo correcto: el campo ya existe y funciona desde el backend.  
+**Motivo:** El campo `entidades_unicas` fue implementado en el backend (`EstadisticasOut` en `schemas.py`) y el endpoint `GET /estadisticas/` lo devuelve correctamente. El comentario era un recordatorio temporal que quedó sin actualizar.  
+**Relación con backend:** Meramente documental. No hay cambio funcional.
+
+### 12.5 Páginas aviso-legal.html y privacidad.html
+
+**Archivos creados:** `aviso-legal.html`, `privacidad.html`  
+**Archivos modificados:** todos los HTML del proyecto (footer de 12 páginas)
+
+**Páginas creadas:** Dos páginas estáticas con contenido adecuado para un proyecto educativo de TFG:
+- `aviso-legal.html`: titularidad (proyecto educativo DAW), finalidad (datos públicos BDNS/DGDA), responsabilidad, propiedad intelectual y contacto.
+- `privacidad.html`: datos recogidos (email + contraseña bcrypt + tokens de sesión), finalidad, derechos del usuario, seguridad (HTTPS TLS 1.2/1.3, bcrypt, tokens revocables) y nota sobre datos públicos.
+
+Ambas páginas tienen `<meta name="robots" content="noindex">` para excluirlas de los motores de búsqueda (igual que `admin.html`). Incluyen navbar y footer completos con los mismos enlaces que el resto del proyecto.
+
+**Footer actualizado en:** `index.html`, `login.html`, `registro.html`, `solicitudes.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `entidad.html`, `privado.html`, `admin.html`, `recursos.html`, `recuperar-password.html`, `reset-password.html`. Se añadieron los enlaces "Aviso legal" y "Privacidad" al `<nav>` del footer usando el separador `footer-principal__sep` ya existente.
+
+**Relación con backend:** Ninguna. Contenido estático puro.  
+**Eliminado de "Pendientes":** El punto "Política de privacidad y aviso legal" que figuraba en la sección de pendientes del documento queda completado.
+
+### 12.6 Tabla de solicitudes responsive — vista de tarjetas en móvil
+
+**Archivos modificados:** `css/styles.css`, `js/solicitudes.js`
+
+**Problema:** En pantallas estrechas (<600 px) la tabla de resultados del buscador desbordaba horizontalmente, obligando al usuario a hacer scroll lateral. La columna "Entidad" (la más ancha) quedaba cortada y los badges de estado eran difíciles de pulsar.
+
+**Solución técnica — CSS (`styles.css`):**  
+Se añadió un bloque `@media (max-width: 600px)` estrictamente acotado a `.tabla-wrapper`. El selector limita el impacto a la tabla de solicitudes y no afecta otras tablas del proyecto (p. ej. la de entidad, que usa `id` en lugar de clase). La técnica empleada es **data-label + `::before { content: attr(data-label) }`**: cada celda pasa a `display: flex; justify-content: space-between` y muestra el nombre de columna como prefijo usando su atributo HTML `data-label`. El `<thead>` se oculta con `display: none` porque la información ya está duplicada en los atributos. Las filas se convierten en tarjetas con borde, `border-radius` y sombra suave, reutilizando las variables CSS del sistema de diseño (`--radio-card`, `--color-gris-medio`, `--color-fondo-verde`).
+
+**Solución técnica — JS (`solicitudes.js`):**  
+En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atributo `data-label` en cada `<td>`. El atributo es texto literal y no requiere lógica adicional. Los valores dinámicos (entidad, año, tipo, estado, importe) no se alteraron.
+
+**Decisiones de diseño:**
+
+| Alternativa descartada | Motivo |
+|---|---|
+| Scroll horizontal | Mal UX en móvil; obliga a gestos torpes |
+| Generar tarjetas `<div>` con JS | Rompe la semántica de tabla; complica paginación |
+| Tabla con `table-layout: fixed` + `overflow hidden` | Recorta texto sin notificarlo al usuario |
+| Bootstrap u otra librería | Sin nuevas dependencias por requisito del proyecto |
+
+**Columnas y sus `data-label`:**
+
+| `<th>` visible | `data-label` en `<td>` |
+|---|---|
+| Entidad beneficiaria | `Entidad` |
+| Año | `Año` |
+| Tipo | `Tipo` |
+| Estado | `Estado` |
+| Importe concedido | `Importe` |
+
+**Breakpoint elegido:** `600 px` — coincide con el breakpoint `sm` de referencia, que es el límite habitual entre móvil portrait y tablet. Las tarjetas de la página de inicio ya usan `480 px`; usar `600 px` para la tabla da más margen en dispositivos en el rango 481–600 px donde la tabla sigue siendo incómoda.
+
+**Accesibilidad:** Ocultar `<thead>` con `display: none` es aceptable porque los `data-label` proporcionan el contexto de cada celda. Los lectores de pantalla en móvil seguirán leyendo el atributo a través del pseudo-elemento `::before`. Los badges de estado conservan su `aria-label`.
+
+**Relación con backend:** Ninguna.  
+**Archivos con cambios de comportamiento visual en otros breakpoints:** Ninguno (el bloque está completamente aislado en `@media (max-width: 600px) { .tabla-wrapper ... }`).  
+**Eliminado de "Pendientes":** El punto "Tabla responsive en móvil (buscador de solicitudes)" de la sección 10.
+
+### 12.7 Botón "Descargar PNG" en tarjetas de gráfico
+
+**Archivos modificados:**
+- `css/styles.css` — nueva clase `.btn-descargar-png` (sección 28)
+- `index.html` — 3 botones en `#btn-dl-linea`, `#btn-dl-donut`, `#btn-dl-barras`
+- `estadisticas-epas.html` — 4 botones: `#btn-dl-distribucion`, `#btn-dl-media-mediana`, `#btn-dl-nuevos`, `#btn-dl-top`
+- `estadisticas-eell.html` — 2 botones: `#btn-dl-provincias`, `#btn-dl-concentracion`
+- `js/home.js` — función `configurarDescarga()` + wire-up en los 3 gráficos
+- `js/estadisticas-epas.js` — función `configurarDescarga()` + wire-up en los 4 gráficos
+- `js/estadisticas-eell.js` — función `configurarDescarga()` + wire-up en los 2 gráficos
+
+**Problema resuelto:** Los gráficos de Chart.js no ofrecen ninguna opción nativa de exportación en la UI. El usuario no podía guardar los gráficos para documentos, informes o presentaciones.
+
+**Solución técnica:** Botón `<button class="btn-descargar-png">` insertado en el `card-grafico__cabecera` de cada tarjeta de gráfico. El botón empieza con `display:none` en el HTML y se muestra dinámicamente en el JS solo después de que el gráfico se haya pintado correctamente (`configurarDescarga()` recibe la instancia de `Chart.js`). El listener de click llama a `instancia.toBase64Image('image/png', 1)`, que devuelve una URL de datos PNG en alta calidad. Se crea un `<a>` temporal con `href = dataURL` y `download = nombreArchivo`, se dispara el click y se descarta, sin abrir nuevas ventanas ni redirigir.
+
+**Función `configurarDescarga(instanciaChart, btnId, nombreArchivo)`:**
+- Recibe la instancia devuelta por `new Chart(...)` (Chart.js siempre devuelve la instancia).
+- Busca el botón en el DOM por su `id`. Si no existe (`null`), retorna silenciosamente.
+- Muestra el botón (`display = 'inline-flex'`).
+- Registra un único listener `'click'` que genera y descarga el PNG.
+- La función está duplicada en los tres archivos JS porque cada script es independiente (sin módulos ES6 ni bundler). No se usa un archivo de utilidades compartido para mantener la stack sin pasos de build.
+
+**Nombres de archivos descargados:**
+
+| Página | Gráfico | `id` botón | Archivo PNG |
+|---|---|---|---|
+| `index.html` | Evolución importe | `btn-dl-linea` | `evolucion-importe.png` |
+| `index.html` | Distribución estados | `btn-dl-donut` | `distribucion-estados.png` |
+| `index.html` | EPA vs EELL | `btn-dl-barras` | `epa-vs-eell.png` |
+| `estadisticas-epas.html` | Distribución importes | `btn-dl-distribucion` | `distribucion-importes-epa.png` |
+| `estadisticas-epas.html` | Media vs mediana | `btn-dl-media-mediana` | `media-mediana-epa.png` |
+| `estadisticas-epas.html` | Nuevos vs recurrentes | `btn-dl-nuevos` | `nuevos-recurrentes-epa.png` |
+| `estadisticas-epas.html` | Top beneficiarios | `btn-dl-top` | `top-beneficiarios-epa.png` |
+| `estadisticas-eell.html` | Top provincias | `btn-dl-provincias` | `top-provincias-eell.png` |
+| `estadisticas-eell.html` | Concentración importe | `btn-dl-concentracion` | `concentracion-eell.png` |
+
+**Gráficos sin botón de descarga (justificado):**
+
+| Elemento | Motivo |
+|---|---|
+| Ranking CCAA (`estadisticas-eell.html`) | Es una lista HTML generada por JS, no un `<canvas>` de Chart.js. `toBase64Image()` no aplica. |
+| Mapa CCAA (`estadisticas-eell.html`) | Pendiente de implementación técnica. |
+| "Tasa de éxito global" (`index.html`) | Es texto plano, no un gráfico. |
+
+**CSS — `.btn-descargar-png`:** Botón ghost (borde verde, fondo transparente) que en hover invierte a fondo verde + texto blanco. `flex-shrink: 0` evita que se comprima en el `card-grafico__cabecera` flex. `font-size: 0.72rem` para no competir visualmente con el título. El `:focus-visible` añade un halo verde de accesibilidad sin afectar a usuarios de ratón.
+
+**Relación con backend:** Ninguna. La descarga ocurre enteramente en el cliente. `toBase64Image()` convierte el canvas de Chart.js a un data URL que el navegador trata como archivo descargable.
+
+**Dependencia de versión:** `chart.toBase64Image(type, quality)` está disponible desde Chart.js 3.x. El proyecto usa Chart.js 4.4.0 (CDN en los HTML), por lo que es compatible.  
+**Sin nuevas dependencias.**  
+**Eliminado de "Pendientes":** El punto "Exportación de gráficos" de la sección 10.
+
+### 12.8 Badges de tendencia ↑/↓ en KPIs del home
+
+**Archivos modificados:** `index.html`, `js/home.js`, `css/styles.css` (sección 29 ya creada en 12.7)
+
+**Problema resuelto:** Las tarjetas de métricas verdes del home mostraban solo el valor acumulado global sin ninguna referencia temporal. El usuario no podía saber si la cifra estaba creciendo o decayendo respecto al año anterior.
+
+**Solución técnica:** Dos nuevas funciones en `home.js` calculan la variación interanual a partir de los datos que ya devuelve `GET /estadisticas/` (campo `por_anio[]`):
+
+- `mostrarTendencias(datos)`: extrae los dos últimos años disponibles de `por_anio[]`, suma `total` e `importe_total` por año (sumando todos los tipos: EPA + EELL), y delega en `mostrarTendencia()`.
+- `mostrarTendencia(id, actual, anterior, anioAnterior)`: calcula `((actual - anterior) / anterior) × 100`, aplica la clase CSS `.tendencia-badge--sube` (verde) o `.tendencia-badge--baja` (rojo), y escribe el texto `↑/↓ X,X % vs AAAA` en el `<span>` oculto.
+
+Se llama desde `mostrarMetricas()` tras poblar los valores, garantizando que los badges solo aparecen cuando hay datos reales.
+
+**KPIs con badge:**
+
+| Tarjeta | Campo `por_anio` | ID badge |
+|---|---|---|
+| Registros totales | suma `d.total` | `tendencia-registros` |
+| Importe Concedido | suma `d.importe_total` | `tendencia-importe` |
+
+**KPI sin badge:** "Entidades únicas" — el campo `datos.entidades_unicas` es un escalar global del schema `EstadisticasOut`; no tiene desglose por año en la respuesta del endpoint, por lo que no es posible calcular la variación. El span no se añade al HTML de esa tarjeta para evitar confusión.
+
+**Comportamiento defensivo:**
+- Si `por_anio` está vacío → no se muestran badges (no hay datos).
+- Si solo hay 1 año → no se muestran badges (necesitamos 2 para comparar).
+- Si `anterior = 0` → `mostrarTendencia` retorna sin hacer nada (evita división por cero).
+- Los badges arrancan con `display:none` en el HTML; el JS los muestra solo si tienen valor calculado.
+
+**Accesibilidad:** Los spans tienen `aria-live="polite"` para que los lectores de pantalla anuncien el cambio cuando el JS los rellena. El contraste de colores cumple WCAG AA: `#2E7D32` sobre `#e8f5e9` = 5,4:1 · `#C62828` sobre `#fce4ec` = 5,1:1.
+
+**Relación con backend:** Ninguna. Cálculo enteramente cliente.  
+**Sin nuevas dependencias.**
+
+### 12.9 Top 5 CCAA por importe en estadísticas EELL
+
+**Archivos modificados:** `estadisticas-eell.html`, `js/estadisticas-eell.js`, `css/styles.css` (nueva sección 30)
+
+**Problema resuelto:** La página EELL no ofrecía un resumen rápido de las comunidades autónomas líderes en recepción de fondos. El ranking de CCAA existente muestra las 17+2 CCAA en una lista sin jerarquía visual clara.
+
+**Solución técnica — JS:** Nueva función `poblarTop5Ccaa(porCcaa)` en `estadisticas-eell.js`:
+1. Ordena `por_ccaa[]` por `importe_total` descendente.
+2. Toma los 5 primeros.
+3. Construye un `<li>` por CCAA con: posición, nombre, barra proporcional CSS (ancho = `importe / importe_max × 100 %`) e importe formateado.
+4. Oculta el placeholder "pendiente" y muestra la lista.
+5. Actualiza el badge del encabezado a `Top 5` una vez cargado.
+Se llama desde `cargarEstadisticasEell()` con `datos.por_ccaa || []`.
+
+**Solución técnica — HTML:** Bloque nuevo insertado en `estadisticas-eell.html` como "fila 4" (después de las filas 2 y 3 existentes), dentro del mismo contenedor. Usa la clase `.card-grafico` existente para mantener consistencia visual. La lista `<ol id="top5-ccaa-lista">` arranca con `display:none`; el JS la muestra cuando tiene datos.
+
+**Solución técnica — CSS (sección 30):** Clase `.top5-lista` (flex column, gap 10px) + `.top5-lista__item` (CSS grid 3 columnas: posición · nombre+barra · importe) + `.top5-lista__pista` (fondo gris claro, altura 6px) + `.top5-lista__fill` (relleno verde, transición 0,4s). Nuevo CSS mínimo sin romper estilos existentes.
+
+**Datos usados:**
+
+| Campo endpoint | Uso |
+|---|---|
+| `por_ccaa[].ccaa` | Nombre de la CCAA |
+| `por_ccaa[].importe_total` | Valor para ordenar y para la barra |
+
+**¿Por qué `por_ccaa` y no `top_provincias`?** El campo `top_provincias` ya alimenta el gráfico de barras horizontales existente en la fila 2. Usar `por_ccaa` para el Top 5 aporta información diferente (nivel autonómico vs provincial) y evita duplicar el mismo dato dos veces en la misma página.
+
+**Relación con backend:** Ninguna. Los datos `por_ccaa[]` ya llegan en la respuesta de `GET /estadisticas/eell`.  
+**Sin nuevas dependencias.**  
+**Eliminado de "Pendientes":** El punto "Top 5 entidades EELL" de la sección 10.
+
+---
+
+### 12.10 Deep link post-login
+
+**Archivos modificados:** `js/auth.js`, `js/privado.js`, `js/exclusivo.js`, `js/admin.js`
+
+**Problema resuelto:** Un usuario que intentaba acceder directamente a `privado.html`, `exclusivo.html` o `admin.html` sin sesión activa era redirigido a `login.html` y, tras hacer login, aterrizaba siempre en `privado.html` perdiendo la URL de destino original.
+
+**Solución técnica:** Patrón sessionStorage de dos pasos:
+
+**Paso 1 — guardar destino antes de redirigir a login.** En cada punto de detección de sesión ausente o expirada:
+```js
+sessionStorage.setItem('redirect_post_login', window.location.href);
+window.location.href = 'login.html';
+```
+Puntos modificados:
+- `privado.js` → `fetchAutenticado()` (401), `cargarZonaPrivada()` (sin token, refresh fallido, catch), `manejarCambiarPassword()` (sin token)
+- `exclusivo.js` → `fetchAutenticado()` (401), bloque DOMContentLoaded (sin token tras intento de renovación)
+- `admin.js` → `verificarAcceso()` línea sin token y línea 401
+
+**Excluidos intencionadamente:**
+- `cerrarSesion()` en `privado.js`, `exclusivo.js` — logout explícito del usuario; no procede guardar deeplink.
+- `admin.js` redirect a `privado.html` por rol insuficiente (no es falta de autenticación, es falta de autorización).
+
+**Paso 2 — leer y consumir el deeplink tras login exitoso.** En `auth.js`, justo después de guardar el token:
+```js
+const destino = sessionStorage.getItem('redirect_post_login') || 'privado.html';
+sessionStorage.removeItem('redirect_post_login');
+window.location.href = destino;
+```
+`sessionStorage.removeItem` es crítico para evitar que un segundo login posterior reutilice una URL ya obsoleta.
+
+**¿Por qué `sessionStorage` y no `localStorage`?** `sessionStorage` es tab-scoped: si el usuario abre una segunda pestaña con la URL privada, cada pestaña gestiona su propio deeplink de forma independiente. `localStorage` hubiera podido sobreescribir el destino de otra pestaña abierta simultáneamente.
+
+**Relación con backend:** Ninguna. Lógica 100% cliente.  
+**Sin nuevas dependencias.**
+
+---
+
+### 12.11 Top 5 CCAA por concesiones acumuladas
+
+**Archivos modificados:** `estadisticas-eell.html`, `js/estadisticas-eell.js`
+
+**Problema resuelto:** La página EELL mostraba el Top 5 por importe (tarea 2.4) pero no ofrecía una vista del volumen de actividad por CCAA medido en número de concesiones. Una comunidad puede concentrar muchas concesiones de importe reducido y no aparecer en el top por importe; el dato de `num_concesiones` del endpoint quedaba sin aprovechar visualmente.
+
+**Solución técnica — JS:** Nueva función `poblarTop5Concesiones(porCcaa)` en `estadisticas-eell.js`, análoga a `poblarTop5Ccaa` pero ordenando por `num_concesiones` descendente y mostrando el recuento formateado (`toLocaleString('es-ES')`) en lugar del importe en euros. Se llama desde `cargarEstadisticasEell()` con `datos.por_ccaa || []`.
+
+**Solución técnica — HTML:** La "fila 4" preexistente (card única) se convierte en `grid-2` para colocar en paralelo el Top 5 por importe y el nuevo Top 5 por concesiones. Reutiliza las mismas clases `.top5-lista`, `.top5-lista__item`, etc. sin añadir CSS nuevo.
+
+**Datos usados:**
+
+| Campo endpoint | Uso |
+|---|---|
+| `por_ccaa[].ccaa` | Nombre de la CCAA |
+| `por_ccaa[].num_concesiones` | Valor para ordenar y para la barra proporcional |
+
+**Relación con backend:** Ninguna. `num_concesiones` ya forma parte de la respuesta de `GET /estadisticas/eell` en cada objeto de `por_ccaa[]`.  
+**Sin nuevas dependencias.**
+
+---
+
+### 12.12 `home2.html` — confirmación de no existencia
+
+Verificado durante la revisión final: el archivo `home2.html` **no existe** en el repositorio. No hay referencia a él en ningún HTML, CSS, JS ni en la configuración de Nginx. No requiere ninguna acción.
+
+---
+
+### 12.13 Accesibilidad — Skip navigation
+
+**Archivos modificados:** `css/styles.css`, los 16 archivos HTML del proyecto.
+
+**Problema resuelto:** WCAG 2.4.1 Bypass Blocks (nivel A) — los usuarios de teclado debían tabular por toda la barra de navegación en cada página antes de llegar al contenido principal. Ninguna página tenía mecanismo de salto.
+
+**Solución técnica:**
+
+Estilos añadidos en `styles.css` (nueva sección 25 — Skip Navigation):
+```css
+.skip-nav {
+    position: absolute; left: -9999px; top: 0;
+    width: 1px; height: 1px; overflow: hidden; z-index: 9999;
+    background: #1a3a1a; color: #fff;
+    font-size: 0.9rem; font-weight: 600;
+    padding: 10px 18px; border-radius: 0 0 6px 0;
+    text-decoration: none; white-space: nowrap;
+}
+.skip-nav:focus {
+    position: fixed; left: 0; top: 0;
+    width: auto; height: auto; overflow: visible;
+    outline: 3px solid var(--color-primario); outline-offset: 2px;
+}
+```
+
+El elemento se coloca inmediatamente después del tag `<body>` en todos los HTML:
+```html
+<a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+```
+
+El atributo `id="contenido-principal"` se añade al elemento `<main>` de cada página (respetando los atributos preexistentes). El enlace usa `href="#contenido-principal"` para mover el foco directamente al área de contenido.
+
+**Contraste:** `#fff` sobre `#1a3a1a` = ratio 12:1 (supera el mínimo AA de 4.5:1 para texto normal).
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.14 Rendimiento — Dimensiones de imagen y lazy loading
+
+**Archivos modificados:** Los 16 archivos HTML del proyecto.
+
+**Problema resuelto:** Los navegadores no podían reservar espacio para las imágenes antes de cargarlas (CLS — Cumulative Layout Shift), y las imágenes del footer (below the fold) se cargaban de forma anticipada sin necesidad.
+
+**Solución técnica:**
+
+Logo en navbar — dimensiones explícitas para prevenir CLS (imagen real: 443×485px, escala CSS 54px de alto):
+```html
+<img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+```
+
+Logo en footer — dimensiones + lazy loading (below the fold en todas las páginas):
+```html
+<img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+```
+
+Los valores `width`/`height` establecen el aspect ratio correcto (443÷485 ≈ 0.913). El navegador calcula el espacio exacto incluso antes de descargar el archivo.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.15 Limpieza de CSS — eliminación de código muerto
+
+**Archivos modificados:** `css/styles.css`
+
+**Bloques eliminados** (confirmado mediante búsqueda en todos los HTML que ningún elemento los referenciaba):
+
+| Bloque eliminado | Descripción |
+|---|---|
+| `.hero`, `.hero__titulo`, `.hero__subtitulo`, `.hero__acciones` | Sección hero original, sustituida por `.portada` en la issue 7B |
+| `.seccion-transparencia`, `.transparencia__*` | Bloque de transparencia eliminado del index en revisiones anteriores |
+| `.footer`, `.footer a`, `.footer a:hover`, `.footer__titulo` | Footer oscuro original, sustituido por `.footer-principal` |
+| `.hero__titulo` dentro de `@media (max-width: 600px)` | Regla media query del hero eliminado |
+
+**CSS restante actualizado:** El comentario de índice al inicio del archivo actualizado de 24 a 28 secciones, reflejando el estado real tras añadidos (skip-nav, chart responsive) y eliminaciones.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.16 Limpieza de JS — eliminación de función muerta
+
+**Archivos modificados:** `js/privado.js`
+
+**Eliminada:** función `obtenerToken()` — definida en el archivo pero nunca llamada desde ningún punto. Adicionalmente, no incluía la lógica de deeplink de sessionStorage (tarea 3.1), lo que la hacía potencialmente peligrosa si alguien la hubiera conectado en el futuro.
+
+**Accesibilidad mejorada:** `<pre id="logs-contenido">` en `admin.html` recibió `aria-label="Últimas líneas del log de acceso del servidor"` y `aria-live="polite"` para que los lectores de pantalla anuncien actualizaciones del log.
+
+**Canvas accesibles:** Los elementos `<canvas>` en `estadisticas-epas.html` (×4), `estadisticas-eell.html` (×2) e `index.html` (×3) recibieron `role="img"` para que los lectores de pantalla los traten como imágenes descriptibles (WCAG 4.1.2).
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.17 Auditoría de rutas y enlaces
+
+**Archivos modificados:** `entidad.html` (meta description), `exclusivo.html` (atributos BOE)
+
+**Hallazgos y correcciones:**
+
+`entidad.html` carecía de `<meta name="description">`. Añadido:
+```html
+<meta name="description" content="Consulta el historial completo de solicitudes de una entidad en todas las convocatorias de bienestar animal.">
+```
+
+Los 8 enlaces a `boe.es` en `exclusivo.html` abrían en pestaña nueva (`target="_blank"`) sin avisar al usuario. Añadido en cada uno:
+```html
+title="Se abre en una pestaña nueva"
+```
+Todos los enlaces externos ya tenían `rel="noopener noreferrer"` — confirmado correcto.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.18 Responsive — revisión final
+
+**Archivos modificados:** `css/styles.css`
+
+**Verificado sin cambios:** `.tabla-scroll` ya tenía `overflow-x: auto` para `exclusivo.html`. La cuadrícula `.privado-grid` colapsaba correctamente en columna única a 640px.
+
+**Añadido:** regla media query para reducir altura de gráficos Chart.js en pantallas muy pequeñas (≤480px):
+```css
+@media (max-width: 480px) {
+    .chart-container         { height: 220px; }
+    .chart-container--donut  { height: 180px; }
+}
+```
+
+Esto evita que los gráficos de barras y de anillo desborden en pantallas de móvil estrecho, donde el canvas a 280px de alto resultaba excesivo.
+
+**Relación con backend:** Ninguna.
+
+---
+
+### 12.19 Páginas de error — 404 y 50x
+
+**Archivos creados:** `frontend/404.html`, `frontend/50x.html`
+
+**Problema resuelto:** Nginx necesita páginas de error propias para responder con una interfaz coherente con el proyecto cuando la ruta no existe (404) o el backend falla (500/502/503/504). Sin estos archivos, el usuario veía la página de error genérica de Nginx.
+
+**Configuración esperada en `docker/nginx/default.conf`:**
+```nginx
+error_page 404 /404.html;
+error_page 500 502 503 504 /50x.html;
+```
+
+**Características comunes de ambas páginas:**
+- Skip navigation (`class="skip-nav"`) — WCAG 2.4.1
+- `<meta name="robots" content="noindex">` — evita indexación en buscadores
+- `id="contenido-principal"` en `<main>`
+- `aria-labelledby` en la tarjeta de error
+- Navbar con todos los enlaces de navegación
+- Footer accesible (logo con `loading="lazy" width="33" height="36"`)
+- Reutilización de las clases CSS existentes (`auth-fondo`, `auth-card`, `btn-verde`, `btn-secundario`, `footer-principal`)
+- Sin dependencias JS (fundamental en `50x.html`: el backend puede estar caído)
+
+**Diferencias entre las páginas:**
+
+| Aspecto | `404.html` | `50x.html` |
+|---|---|---|
+| Título H1 | "Página no encontrada" | "Error del servidor" |
+| Código visual | "404" | "⚙️" |
+| Mensaje | La ruta no existe | El servidor no pudo procesar la solicitud |
+| Acciones | Volver al inicio + Ir al buscador | Volver al inicio + Reintentar (reload JS) |
+| Dependencias JS | Ninguna | `window.location.reload()` inline mínimo |
+
+**Relación con backend:** Ninguna (páginas estáticas servidas por Nginx antes de llegar al backend).
+
+---
+
+### 12.20 Reenvío de verificación de email
+
+**Archivos modificados:** `verificar-email.html`
+
+**Problema resuelto:** Si el enlace de verificación enviado por email caducaba o el usuario lo perdía, la página solo mostraba el error sin ofrecer ninguna salida. El usuario tenía que contactar con soporte o registrarse de nuevo.
+
+**Solución técnica — HTML:** Nueva sección `#verif-reenviar` (oculta por defecto con `display:none`) insertada dentro de `.auth-card__formulario`, después del bloque de acción principal. Contiene un `<form id="form-reenviar">` con:
+- Campo `<input type="email">` (autocomplete="email", required)
+- Div de error `#reenviar-error` con `role="alert" aria-live="polite"`
+- Div de éxito `#reenviar-ok` con `role="status" aria-live="polite"`
+- Botón de envío `#btn-reenviar`
+
+**Solución técnica — JS (inline `<script>`):** La sección se muestra llamando a `mostrarReenviar()` en dos casos:
+1. No hay `?token=` en la URL (enlace incompleto)
+2. La API responde con error al verificar el token (token inválido o caducado)
+
+No se muestra si hay error de red (el problema es de conectividad, no de token).
+
+El formulario llama a `POST /auth/reenviar-verificacion` con body `{ email }`.
+
+**Seguridad — prevención de enumeración de usuarios:** La respuesta siempre muestra el mismo mensaje de éxito, independientemente de si el email existe o no en la base de datos:
+
+> "Si esa dirección está registrada y pendiente de verificación, recibirás un nuevo email en breve. Revisa también el correo no deseado."
+
+El botón se deshabilita tras un envío exitoso para evitar spam accidental. Se rehabilita solo si hay error de red.
+
+**Endpoint requerido en backend:** `POST /auth/reenviar-verificacion`  
+Body: `{ "email": string }`  
+Respuesta esperada: siempre 200 (el backend no debe revelar si el email existe).
+
+**Relación con backend:** Requiere implementar `POST /auth/reenviar-verificacion`.
+
+---
+

@@ -45,13 +45,18 @@ function formatearFecha(isoStr) {
 
 async function verificarAcceso() {
     const t = token();
-    if (!t) { window.location.href = 'login.html'; return false; }
+    if (!t) {
+        sessionStorage.setItem('redirect_post_login', window.location.href);
+        window.location.href = 'login.html';
+        return false;
+    }
 
     try {
         const r = await fetch(`${API_URL}/privado/perfil`, { headers: authHeaders() });
         if (r.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('refresh_token');
+            sessionStorage.setItem('redirect_post_login', window.location.href);
             window.location.href = 'login.html';
             return false;
         }

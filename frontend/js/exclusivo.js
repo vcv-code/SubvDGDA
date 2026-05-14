@@ -59,6 +59,7 @@ async function fetchAutenticado(ruta, token) {
     });
     if (respuesta.status === 401) {
         localStorage.removeItem('token');
+        sessionStorage.setItem('redirect_post_login', window.location.href);
         window.location.href = 'login.html';
         return null;
     }
@@ -144,7 +145,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let token = localStorage.getItem('token');
     if (!token) {
         token = await intentarRenovarToken();
-        if (!token) { window.location.href = 'login.html'; return; }
+        if (!token) {
+            sessionStorage.setItem('redirect_post_login', window.location.href);
+            window.location.href = 'login.html';
+            return;
+        }
     }
 
     // Verificar que el token es válido (también redirige si está expirado)

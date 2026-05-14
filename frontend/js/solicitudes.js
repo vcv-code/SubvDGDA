@@ -41,8 +41,7 @@
 // ─────────────────────────────────────────────────────────────
 
 const API_URL   = '';
-const LIMITE    = 50;   // Resultados por página. 50 es un buen equilibrio
-                        // entre velocidad de carga y usabilidad.
+const LIMITE    = 100;  // Resultados por página. 100 según especificación del wireframe.
 
 // ─────────────────────────────────────────────────────────────
 // ESTADO GLOBAL DE LA PÁGINA
@@ -347,12 +346,14 @@ function crearFila(s) {
     : '—';
 
     // ── Construir HTML de la fila ──────────────────────────────────
+    // data-label: atributo leído por el CSS en móvil (<600px)
+    // para mostrar el nombre de columna como prefijo en la tarjeta.
     tr.innerHTML = `
-        <td></td>
-        <td>${anio}</td>
-        <td>${tipo}</td>
-        <td></td>
-        <td>${importe}</td>
+        <td data-label="Entidad"></td>
+        <td data-label="Año">${anio}</td>
+        <td data-label="Tipo">${tipo}</td>
+        <td data-label="Estado"></td>
+        <td data-label="Importe">${importe}</td>
     `;
 
     // Celda 0: nombre de la entidad + badges si aplican

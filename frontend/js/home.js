@@ -193,8 +193,8 @@ function mostrarMetricas(datos) {
         formatearImporte(datos.importe_global);
 
     // Tarjeta 3: Entidades únicas
-    // PENDIENTE DE BACKEND: cuando el schema EstadisticasOut incluya
-    // 'entidades_unicas', se mostrará aquí automáticamente.
+    // El campo 'entidades_unicas' está disponible en GET /estadisticas/
+    // (campo añadido en el schema EstadisticasOut del backend).
     document.getElementById('total-entidades').textContent =
         datos.entidades_unicas !== undefined
             ? formatearNumero(datos.entidades_unicas)
@@ -204,6 +204,85 @@ function mostrarMetricas(datos) {
     document.getElementById('card-total').style.display     = '';
     document.getElementById('card-importe').style.display   = '';
     document.getElementById('card-entidades').style.display = '';
+
+    // Badges de tendencia año-sobre-año (no toca el backend)
+    mostrarTendencias(datos);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// BADGES DE TENDENCIA AÑO-SOBRE-AÑO (Task 2.3)
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * mostrarTendencias(datos)
+ * Calcula la variación % entre el último año y el penúltimo disponibles
+ * en datos.por_anio y actualiza los badges de los KPIs "Registros totales"
+ * e "Importe Concedido".
+ *
+ * No toca el backend: todos los cálculos se hacen sobre los datos que
+ * ya devuelve GET /estadisticas/.
+ *
+ * ¿Por qué solo esos dos KPIs?
+ *   · Registros totales → suma d.total de todos los tipos por año.
+ *   · Importe Concedido → suma d.importe_total de todos los tipos por año.
+ *   · Entidades únicas → es un escalar global (datos.entidades_unicas),
+ *     sin desglose anual en el schema; no se puede calcular tendencia.
+ *
+ * @param {Object} datos - Objeto completo de /estadisticas/
+ */
+function mostrarTendencias(datos) {
+    const porAnio = datos.por_anio || [];
+    if (!porAnio.length) return;
+
+    // Obtener años únicos ordenados ascendentemente
+    const anios = [...new Set(porAnio.map(d => d.anio))].sort((a, b) => a - b);
+    if (anios.length < 2) return;   // Necesitamos al menos 2 años para comparar
+
+    const anioActual   = anios[anios.length - 1];
+    const anioAnterior = anios[anios.length - 2];
+
+    // Suma de un campo numérico para todos los tipos de un año dado
+    const sumar = (anio, campo) =>
+        porAnio
+            .filter(d => d.anio === anio)
+            .reduce((suma, d) => suma + (d[campo] || 0), 0);
+
+    mostrarTendencia(
+        'tendencia-registros',
+        sumar(anioActual,   'total'),
+        sumar(anioAnterior, 'total'),
+        anioAnterior
+    );
+
+    mostrarTendencia(
+        'tendencia-importe',
+        sumar(anioActual,   'importe_total'),
+        sumar(anioAnterior, 'importe_total'),
+        anioAnterior
+    );
+}
+
+/**
+ * mostrarTendencia(id, actual, anterior, anioAnterior)
+ * Rellena un badge <span> con la variación % y aplica la clase
+ * de color correcta (verde sube, rojo baja).
+ *
+ * @param {string} id           - ID del <span> en el HTML.
+ * @param {number} actual       - Valor del año más reciente.
+ * @param {number} anterior     - Valor del año de comparación.
+ * @param {number} anioAnterior - Año de comparación (para el texto del badge).
+ */
+function mostrarTendencia(id, actual, anterior, anioAnterior) {
+    const el = document.getElementById(id);
+    if (!el || !anterior) return;
+
+    const pct  = ((actual - anterior) / anterior) * 100;
+    const sube = pct >= 0;
+
+    el.className   = `tendencia-badge ${sube ? 'tendencia-badge--sube' : 'tendencia-badge--baja'}`;
+    el.textContent = `${sube ? '↑' : '↓'} ${Math.abs(pct).toFixed(1)} % vs ${anioAnterior}`;
+    el.style.display = 'inline-flex';
 }
 
 
@@ -227,6 +306,34 @@ function mostrarErrores() {
     // Sección de métricas
     const cargaMetricas = document.getElementById('metricas-carga');
     if (cargaMetricas) cargaMetricas.innerHTML = mensajeError;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// UTILIDAD: descarga de gráfico como PNG
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * configurarDescarga(instanciaChart, btnId, nombreArchivo)
+ * Muestra el botón de descarga de una tarjeta de gráfico y le
+ * añade el listener que llama a chart.toBase64Image() (Chart.js 4.x)
+ * para generar un PNG y descargarlo mediante un <a> temporal.
+ *
+ * @param {Chart}  instanciaChart  - Instancia de Chart.js ya creada.
+ * @param {string} btnId           - ID del <button> en el HTML.
+ * @param {string} nombreArchivo   - Nombre del archivo descargado (.png).
+ */
+function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.display = 'inline-flex';
+    btn.addEventListener('click', () => {
+        const url = instanciaChart.toBase64Image('image/png', 1);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = nombreArchivo;
+        a.click();
+    });
 }
 
 
@@ -263,7 +370,7 @@ function crearGraficoLinea(porAnio) {
                .reduce((suma, d) => suma + d.importe_total, 0)
     );
 
-    new Chart(document.getElementById('home-grafico-linea'), {
+    const instancia = new Chart(document.getElementById('home-grafico-linea'), {
         type: 'line',
         data: {
             labels: ANIOS,
@@ -303,6 +410,7 @@ function crearGraficoLinea(porAnio) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-linea', 'evolucion-importe.png');
 }
 
 
@@ -323,7 +431,7 @@ function crearGraficoDonut(datos) {
         { concedidas: 0, noBeneficiarias: 0, excluidas: 0, desistidas: 0 }
     );
 
-    new Chart(document.getElementById('home-grafico-donut'), {
+    const instancia = new Chart(document.getElementById('home-grafico-donut'), {
         type: 'doughnut',
         data: {
             labels: ['Concedida', 'No beneficiaria', 'Excluida', 'Desistida'],
@@ -362,6 +470,7 @@ function crearGraficoDonut(datos) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-donut', 'distribucion-estados.png');
 }
 
 
@@ -380,7 +489,7 @@ function crearGraficoBarras(porAnio) {
         return d ? d.importe_total : 0;
     });
 
-    new Chart(document.getElementById('home-grafico-barras'), {
+    const instancia = new Chart(document.getElementById('home-grafico-barras'), {
         type: 'bar',
         data: {
             labels: ANIOS,
@@ -440,6 +549,7 @@ function crearGraficoBarras(porAnio) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-barras', 'epa-vs-eell.png');
 }
 
 
