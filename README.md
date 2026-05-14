@@ -1093,9 +1093,8 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON.
 - **Conclusiones en gráficas de estadísticas**: párrafo breve debajo de cada gráfica con la interpretación del dato.
 - **Página Recursos — colores por sección**: asignar color de fondo diferente a cada sección.
-- **Tipografía**: subir suelo mínimo a 0.875rem (14px). Pasada dedicada post-entrega.
 - Ficha de entidad como modal/popup en el buscador.
-- Accesibilidad (a11y): contraste, teclado, ARIA.
+- Revisión general UX/accesibilidad: contraste, tamaños de fuente, teclado, ARIA *(post-entrega)*.
 - **Refactor CSS inline** *(post-entrega)*.
 
 ---
