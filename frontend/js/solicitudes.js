@@ -341,9 +341,12 @@ function crearFila(s) {
 
     // Importe: null si la solicitud no fue concedida
     const importe = s.importe !== null
-    ? new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 })
-        .format(parseFloat(s.importe)) + ' €'
-    : '—';
+        ? new Intl.NumberFormat('es-ES', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+              useGrouping: true
+          }).format(Number(s.importe)) + ' €'
+        : '—';
 
     // ── Construir HTML de la fila ──────────────────────────────────
     // data-label: atributo leído por el CSS en móvil (<600px)
