@@ -54,11 +54,15 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <!-- NAVBAR — "activo" en EPAs -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
                 <span style="color: var(--color-negro);">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
@@ -73,7 +77,7 @@
     </header>
 
 
-    <main class="fondo-stats">
+    <main id="contenido-principal" class="fondo-stats">
         <section class="seccion" aria-labelledby="epas-titulo">
             <div class="contenedor">
 
@@ -154,6 +158,11 @@
                                 </p>
                             </div>
                             <span class="card-grafico__badge">pendiente</span>
+                            <button class="btn-descargar-png" id="btn-dl-distribucion"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de distribución de importes como PNG">
+                                ↓ PNG
+                            </button>
                         </div>
                         <!--
                             Se rellena desde estadisticas-epas.js con
@@ -164,7 +173,7 @@
                             <p class="estado-carga" id="distribucion-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/epas</code>
                             </p>
-                            <canvas id="grafico-distribucion-importes" style="display:none;"
+                            <canvas id="grafico-distribucion-importes" role="img" style="display:none;"
                                 aria-label="Gráfico de distribución de importes EPA"></canvas>
                         </div>
                     </div>
@@ -179,6 +188,11 @@
                                 </p>
                             </div>
                             <span class="card-grafico__badge">pendiente</span>
+                            <button class="btn-descargar-png" id="btn-dl-media-mediana"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de media vs mediana como PNG">
+                                ↓ PNG
+                            </button>
                         </div>
                         <!--
                             Barras agrupadas: una barra para media, otra para mediana.
@@ -188,7 +202,7 @@
                             <p class="estado-carga" id="media-mediana-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/epas</code>
                             </p>
-                            <canvas id="grafico-media-mediana" style="display:none;"
+                            <canvas id="grafico-media-mediana" role="img" style="display:none;"
                                 aria-label="Gráfico de media vs mediana por año"></canvas>
                         </div>
                     </div>
@@ -211,6 +225,11 @@
                                 </p>
                             </div>
                             <span class="card-grafico__badge">pendiente</span>
+                            <button class="btn-descargar-png" id="btn-dl-nuevos"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de nuevos vs recurrentes como PNG">
+                                ↓ PNG
+                            </button>
                         </div>
                         <!--
                             Barras apiladas: nuevos (verde claro) + recurrentes (verde oscuro).
@@ -220,7 +239,7 @@
                             <p class="estado-carga" id="nuevos-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/epas</code>
                             </p>
-                            <canvas id="grafico-nuevos-recurrentes" style="display:none;"
+                            <canvas id="grafico-nuevos-recurrentes" role="img" style="display:none;"
                                 aria-label="Gráfico de entidades nuevas vs recurrentes por año"></canvas>
                         </div>
                     </div>
@@ -235,6 +254,11 @@
                                 </p>
                             </div>
                             <span class="card-grafico__badge">pendiente</span>
+                            <button class="btn-descargar-png" id="btn-dl-top"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de top beneficiarios como PNG">
+                                ↓ PNG
+                            </button>
                         </div>
                         <!--
                             Barras horizontales: nombre de la entidad en eje Y.
@@ -245,7 +269,7 @@
                             <p class="estado-carga" id="top-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/epas</code>
                             </p>
-                            <canvas id="grafico-top-beneficiarios" style="display:none;"
+                            <canvas id="grafico-top-beneficiarios" role="img" style="display:none;"
                                 aria-label="Gráfico de top beneficiarios EPA"></canvas>
                         </div>
                     </div>
@@ -261,7 +285,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -270,6 +294,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">

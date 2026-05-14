@@ -177,7 +177,7 @@ function poblarGraficoDistribucion(distribucion) {
     if (distribucionPendiente) distribucionPendiente.style.display = 'none';
     if (graficoDistribucion)   graficoDistribucion.style.display   = 'block';
 
-    new Chart(graficoDistribucion, {
+    const instancia = new Chart(graficoDistribucion, {
         type: 'bar',
         data: {
             labels: distribucion.map(d => d.rango),
@@ -212,6 +212,7 @@ function poblarGraficoDistribucion(distribucion) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-distribucion', 'distribucion-importes-epa.png');
 }
 
 
@@ -227,7 +228,7 @@ function poblarGraficoMediaMediana(porAnio) {
     if (mediaMedianaPendiente) mediaMedianaPendiente.style.display = 'none';
     if (graficoMediaMediana)   graficoMediaMediana.style.display   = 'block';
 
-    new Chart(graficoMediaMediana, {
+    const instancia = new Chart(graficoMediaMediana, {
         type: 'bar',
         data: {
             labels: porAnio.map(d => d.anio),
@@ -287,6 +288,7 @@ function poblarGraficoMediaMediana(porAnio) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-media-mediana', 'media-mediana-epa.png');
 }
 
 
@@ -302,7 +304,7 @@ function poblarGraficoNuevosRecurrentes(porAnio) {
     if (nuevosPendiente) nuevosPendiente.style.display = 'none';
     if (graficoNuevos)   graficoNuevos.style.display   = 'block';
 
-    new Chart(graficoNuevos, {
+    const instancia = new Chart(graficoNuevos, {
         type: 'bar',
         data: {
             labels: porAnio.map(d => d.anio),
@@ -362,6 +364,7 @@ function poblarGraficoNuevosRecurrentes(porAnio) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-nuevos', 'nuevos-recurrentes-epa.png');
 }
 
 
@@ -385,7 +388,7 @@ function poblarGraficoTopBeneficiarios(porAnio) {
     if (topPendiente) topPendiente.style.display = 'none';
     if (graficoTop)   graficoTop.style.display   = 'block';
 
-    new Chart(graficoTop, {
+    const instancia = new Chart(graficoTop, {
         type: 'bar',
         data: {
             labels: top.map(d => d.nombre),
@@ -425,12 +428,31 @@ function poblarGraficoTopBeneficiarios(porAnio) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-top', 'top-beneficiarios-epa.png');
 }
 
 
 // ─────────────────────────────────────────────────────────────
 // UTILIDADES
 // ─────────────────────────────────────────────────────────────
+
+/**
+ * configurarDescarga(instanciaChart, btnId, nombreArchivo)
+ * Muestra el botón de descarga y lo conecta al PNG del gráfico.
+ * Idéntica a la de home.js — cada JS es independiente.
+ */
+function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.display = 'inline-flex';
+    btn.addEventListener('click', () => {
+        const url = instanciaChart.toBase64Image('image/png', 1);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = nombreArchivo;
+        a.click();
+    });
+}
 
 function formatearEuros(valor) {
     return Number(valor).toLocaleString('es-ES', {

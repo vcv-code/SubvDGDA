@@ -1,10 +1,22 @@
 <!DOCTYPE html>
+<!--
+    404.html — Página de error "No encontrada"
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+    Curso: 2º DAW · Proyecto Final de Ciclo
+
+    Nginx sirve esta página cuando la ruta solicitada no existe.
+    Configuración en docker/nginx/default.conf:
+        error_page 404 /404.html;
+
+    Cumple: skip-nav, WCAG AA, lazy loading, responsive, roles ARIA.
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar contraseña — Subvenciones Bienestar Animal</title>
-    <meta name="description" content="Recupera el acceso a tu cuenta introduciendo tu correo electrónico.">
+    <title>Página no encontrada — Subvenciones Bienestar Animal</title>
+    <meta name="description" content="La página que buscas no existe o ha sido movida.">
+    <meta name="robots" content="noindex">
 
     <link rel="icon" href="assets/logo.png" type="image/png">
 
@@ -19,8 +31,6 @@
     <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
     <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
 
-
-    <!-- NAVBAR -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
@@ -39,56 +49,38 @@
     </header>
 
     <main id="contenido-principal" class="auth-fondo">
-        <div class="auth-page">
+        <div class="auth-page" style="text-align:center;">
 
-            <p class="auth-page__servicio">
-                <a href="login.html">← Volver a iniciar sesión</a>
-            </p>
+            <div class="auth-card auth-card--simple"
+                 style="max-width:480px; margin:0 auto;"
+                 aria-labelledby="error-404-titulo">
 
-            <div class="auth-card auth-card--simple" aria-labelledby="recuperar-titulo">
+                <div class="auth-card__formulario" style="padding:2.5rem;">
 
-                <div class="auth-card__formulario">
+                    <p style="font-size:5rem; font-weight:700; color:var(--color-verde-btn);
+                               margin:0 0 0.25rem; line-height:1;" aria-hidden="true">404</p>
 
-                    <h1 class="auth-card__titulo" id="recuperar-titulo">
-                        Recuperar contraseña
+                    <h1 class="auth-card__titulo" id="error-404-titulo"
+                        style="font-size:1.4rem; margin-bottom:0.75rem;">
+                        Página no encontrada
                     </h1>
-                    <p class="auth-card__subtitulo">
-                        Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+                    <p class="auth-card__subtitulo" style="margin-bottom:1.5rem;">
+                        La dirección que has introducido no existe o ha sido movida.
+                        Comprueba la URL o usa el menú de navegación.
                     </p>
 
-                    <div class="auth-alerta" id="recuperar-alerta" role="alert" aria-live="polite"></div>
-                    <div class="auth-alerta auth-alerta--ok" id="recuperar-exito" role="status" aria-live="polite"></div>
-
-                    <form id="form-recuperar" novalidate>
-
-                        <div class="grupo-campo">
-                            <label for="recuperar-email" class="etiqueta-campo">
-                                Correo electrónico
-                            </label>
-                            <input
-                                type="email"
-                                id="recuperar-email"
-                                name="email"
-                                class="input-campo"
-                                placeholder="usuario@ejemplo.com"
-                                autocomplete="email"
-                                required
-                            >
-                        </div>
-
-                        <button type="submit" class="btn btn-verde btn-auth" id="btn-recuperar">
-                            Enviar enlace
-                        </button>
-
-                    </form>
-
-                    <p class="auth-card__enlace">
-                        ¿Recuerdas tu contraseña?
-                        <a href="login.html">Inicia sesión</a>
-                    </p>
+                    <div style="display:flex; flex-direction:column; gap:0.75rem; align-items:center;">
+                        <a href="index.html" class="btn btn-verde btn-auth"
+                           style="max-width:260px;">
+                            Volver al inicio
+                        </a>
+                        <a href="solicitudes.html"
+                           style="font-size:0.9rem; color:var(--color-azul);">
+                            Ir al buscador de solicitudes →
+                        </a>
+                    </div>
 
                 </div>
-
             </div>
 
         </div>
@@ -97,7 +89,8 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal"
+                     width="33" height="36" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -115,14 +108,16 @@
         <div class="footer-principal__creditos">
             Datos procedentes de la
             <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
-               target="_blank" rel="noopener noreferrer">Base de Datos Nacional de Subvenciones (BDNS)</a>
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
             y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
-                    target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+               target="_blank" rel="noopener noreferrer">
+                Dirección General de Derechos de los Animales (DGDA)
+            </a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>
-
-    <script src="js/recuperar-password.js"></script>
 
 </body>
 </html>
