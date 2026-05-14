@@ -77,6 +77,34 @@
                         </a>
                     </div>
 
+                    <!-- Reenvío de email de verificación (visible en estado de error) -->
+                    <div id="verif-reenviar" style="display:none; margin-top:1.5rem;
+                         border-top:1px solid var(--color-borde); padding-top:1.25rem;">
+                        <p style="font-size:0.9rem; color:var(--color-gris-texto);
+                                  margin-bottom:0.75rem;">
+                            ¿El enlace ha caducado o no te llegó? Solicita un nuevo email.
+                        </p>
+                        <form id="form-reenviar" novalidate>
+                            <div class="auth-campo">
+                                <label for="reenviar-email" class="auth-campo__etiqueta">
+                                    Tu dirección de email
+                                </label>
+                                <input type="email" id="reenviar-email" name="email"
+                                       class="auth-campo__input" autocomplete="email"
+                                       placeholder="usuario@ejemplo.com" required>
+                            </div>
+                            <div class="auth-alerta" id="reenviar-error"
+                                 role="alert" aria-live="polite"></div>
+                            <div class="auth-alerta auth-alerta--ok" id="reenviar-ok"
+                                 role="status" aria-live="polite"></div>
+                            <button type="submit" id="btn-reenviar"
+                                    class="btn btn-secundario btn-auth"
+                                    style="margin-top:0.5rem;">
+                                Reenviar email de verificación
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
 
             </div>
@@ -89,7 +117,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -113,31 +141,52 @@
 
     <script>
         /**
-         * Al cargar la página, lee el token de la URL y llama a la API.
-         * No hace falta un archivo JS separado: esta lógica es específica de esta página.
+         * verificar-email.html — lógica inline
+         * ─────────────────────────────────────
+         * FLUJO:
+         *   1. Lee el ?token= de la URL y llama a GET /auth/verificar
+         *   2. Si OK → muestra éxito + botón de login
+         *   3. Si error o sin token → muestra mensaje de error +
+         *      sección de reenvío (formulario con campo email)
+         *
+         * REENVÍO (id="form-reenviar"):
+         *   • Llama a POST /auth/reenviar-verificacion { email }
+         *   • La respuesta siempre muestra el mismo mensaje de éxito
+         *     para evitar enumeración de usuarios (security by design)
+         *   • El botón se deshabilita tras el primer envío exitoso
+         *     para evitar doble-envío accidental
          */
         document.addEventListener('DOMContentLoaded', async () => {
-            const params = new URLSearchParams(window.location.search);
-            const token  = params.get('token');
 
-            const elError  = document.getElementById('verif-error');
-            const elExito  = document.getElementById('verif-exito');
-            const elAccion = document.getElementById('verif-accion');
-            const elSub    = document.getElementById('verif-subtitulo');
+            // ── Elementos del bloque de verificación ──────────────────────
+            const params   = new URLSearchParams(window.location.search);
+            const token    = params.get('token');
+
+            const elError    = document.getElementById('verif-error');
+            const elExito    = document.getElementById('verif-exito');
+            const elAccion   = document.getElementById('verif-accion');
+            const elSub      = document.getElementById('verif-subtitulo');
+            const elReenviar = document.getElementById('verif-reenviar');
 
             function mostrar(el, msg) {
                 el.textContent = msg;
                 el.classList.add('visible');
             }
 
+            function mostrarReenviar() {
+                if (elReenviar) elReenviar.style.display = 'block';
+            }
+
+            // ── Verificación del token ─────────────────────────────────────
             if (!token) {
                 elSub.textContent = '';
                 mostrar(elError, 'Enlace de verificación no válido. Comprueba que copiaste el enlace completo del email.');
+                mostrarReenviar();
                 return;
             }
 
             try {
-                const r = await fetch(`/auth/verificar?token=${encodeURIComponent(token)}`);
+                const r     = await fetch(`/auth/verificar?token=${encodeURIComponent(token)}`);
                 const datos = await r.json().catch(() => ({}));
 
                 if (r.ok) {
@@ -146,12 +195,64 @@
                     elAccion.style.display = 'block';
                 } else {
                     elSub.textContent = '';
-                    mostrar(elError, datos.mensaje || 'El enlace no es válido o ha caducado. Solicita un nuevo registro si es necesario.');
+                    mostrar(elError, datos.mensaje || 'El enlace no es válido o ha caducado. Puedes solicitar uno nuevo abajo.');
+                    mostrarReenviar();
                 }
             } catch {
                 elSub.textContent = '';
                 mostrar(elError, 'No se pudo conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo.');
+                // No mostramos reenviar aquí: el problema es de red, no de token
             }
+
+            // ── Formulario de reenvío ──────────────────────────────────────
+            const formReenviar  = document.getElementById('form-reenviar');
+            const reenviarError = document.getElementById('reenviar-error');
+            const reenviarOk    = document.getElementById('reenviar-ok');
+            const btnReenviar   = document.getElementById('btn-reenviar');
+
+            if (!formReenviar) return;
+
+            formReenviar.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Limpiar mensajes anteriores
+                reenviarError.textContent = '';
+                reenviarError.classList.remove('visible');
+                reenviarOk.textContent    = '';
+                reenviarOk.classList.remove('visible');
+
+                const email = document.getElementById('reenviar-email').value.trim();
+
+                if (!email) {
+                    reenviarError.textContent = 'Por favor, introduce tu dirección de email.';
+                    reenviarError.classList.add('visible');
+                    return;
+                }
+
+                btnReenviar.disabled    = true;
+                btnReenviar.textContent = 'Enviando…';
+
+                try {
+                    await fetch('/auth/reenviar-verificacion', {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body:    JSON.stringify({ email }),
+                    });
+
+                    // Mensaje neutro siempre (evita enumeración de usuarios)
+                    reenviarOk.textContent = 'Si esa dirección está registrada y pendiente de '
+                        + 'verificación, recibirás un nuevo email en breve. Revisa también el correo no deseado.';
+                    reenviarOk.classList.add('visible');
+                    btnReenviar.textContent = 'Email enviado';
+                    // Botón permanece deshabilitado para evitar doble envío
+
+                } catch {
+                    reenviarError.textContent = 'No se pudo conectar con el servidor. Inténtalo de nuevo.';
+                    reenviarError.classList.add('visible');
+                    btnReenviar.disabled    = false;
+                    btnReenviar.textContent = 'Reenviar email de verificación';
+                }
+            });
         });
     </script>
 

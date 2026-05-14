@@ -595,36 +595,6 @@ table tbody tr:hover {
 
 
 /* ============================================================
-   13. FOOTER
-   Pie de página con texto centrado y fondo oscuro.
-   ============================================================ */
-.footer {
-    background-color: var(--color-negro);
-    color: #aaaaaa;
-    padding: var(--espacio-lg);
-    text-align: center;
-    font-size: 0.85rem;
-    line-height: 1.8;
-}
-
-.footer a {
-    color: var(--color-primario);
-    text-decoration: underline;
-}
-
-.footer a:hover {
-    color: var(--color-hover);
-}
-
-.footer__titulo {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-blanco);
-    margin-bottom: var(--espacio-xs);
-}
-
-
-/* ============================================================
    14. ESTADOS DE CARGA Y ERROR
    Mensajes que se muestran mientras se cargan datos de la API
    o cuando hay un error de red.
@@ -1606,6 +1576,16 @@ canvas {
 /* Variante para donut: altura menor y centrado */
 .chart-container--donut {
     height: 200px;
+}
+
+/* En móvil estrecho los gráficos reducen altura para no dominar el viewport */
+@media (max-width: 480px) {
+    .chart-container {
+        height: 220px;
+    }
+    .chart-container--donut {
+        height: 180px;
+    }
 }
 
 /* Leyenda personalizada del donut */
