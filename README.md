@@ -87,6 +87,7 @@ Frontend
 | Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
 | Control de versiones | Git, GitHub |
+| Herramientas de desarrollo | Makefile, VS Code (extensions.json incluido) |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
 ---
@@ -586,18 +587,28 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Desarrollo
 
+### Instalación automática (recomendada)
+
+Clona el repositorio y ejecuta el script de instalación:
+
+```bash
+git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+cd analisis-bdns-dgda
+bash install.sh
+```
+
+El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL, levanta los contenedores y carga el dataset. Guía paso a paso con confirmación antes de cada acción que requiere permisos o modifica el sistema.
+
+**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
+**Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
+
+### Instalación manual
+
 Clonar el repositorio:
 
 ```bash
 git clone git@github.com:vcv-code/analisis-bdns-dgda.git
 cd analisis-bdns-dgda
-```
-
-Crear rama de desarrollo:
-
-```bash
-git checkout -b dev
-git push -u origin dev
 ```
 
 Sincronizar repositorio:
@@ -612,7 +623,7 @@ git pull
 ## Entorno de trabajo
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install -r requeriments.txt
 ```
@@ -623,6 +634,22 @@ El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
 - **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
 - **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (`fastapi`, `uvicorn`, `sqlalchemy`, `pymysql`, `bcrypt`, `python-jose`, `email-validator`, `httpx` y `pytest`). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API. Todas las versiones están fijadas.
+
+### Extensiones de VS Code recomendadas
+
+El proyecto incluye `.vscode/extensions.json` con extensiones recomendadas. Al abrir la carpeta en VS Code aparece una notificación para instalarlas, o filtra por `@recommended` en el panel de extensiones.
+
+| Extensión | Para qué |
+|---|---|
+| Python + Pylance + Pylint | Backend — autocompletado, tipos y linting |
+| autoDocstring | Genera docstrings de Python con un atajo |
+| Docker | Gestión de contenedores desde VS Code |
+| Remote - WSL | Abre el proyecto desde Windows en WSL2 |
+| Auto Rename Tag | Cierra etiquetas HTML automáticamente |
+| Makefile Tools | Resaltado y soporte para el Makefile |
+| Markdown All in One + markdownlint | README y documentación |
+| Error Lens | Muestra errores y avisos inline sin pasar el ratón |
+| Code Spell Checker (+ Spanish) | Corrector ortográfico en español |
 
 ---
 
@@ -764,6 +791,39 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 
 ---
 
+## Makefile — atajos para el día a día
+
+El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
+
+| Comando | Qué hace |
+|---|---|
+| `make start` | Levanta todos los contenedores |
+| `make stop` | Para los contenedores (conserva los datos) |
+| `make restart` | Para y vuelve a levantar |
+| `make build` | Reconstruye la imagen del backend |
+| `make build-cron` | Reconstruye la imagen del cron |
+| `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
+| `make cargar` | Recarga el dataset sin borrar el volumen |
+| `make test` | Ejecuta los tests con pytest |
+| `make test-v` | Tests con salida detallada |
+| `make logs` | Últimas 100 líneas de logs del backend |
+| `make logs-cron` | Últimas 50 líneas de logs del cron |
+| `make logs-nginx` | Últimas 50 líneas de logs de Nginx |
+| `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
+| `make shell-db` | Abre la consola MariaDB dentro del contenedor |
+| `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
+
+### Windows
+
+`make` no está disponible de serie en Windows. Opciones:
+
+- **Recomendada:** usar WSL2 y ejecutar desde la terminal Linux — `make` funciona directamente
+- **Alternativa:** instalar `make` con `winget install GnuWin32.Make` y ejecutar desde PowerShell
+- **Sin instalar nada:** copiar el comando del target directamente del `Makefile` y ejecutarlo en la terminal
+
+---
+
 ## Tests
 
 El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
@@ -886,62 +946,9 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ---
 
-## Makefile — atajos para el día a día
-
-El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
-
-| Comando | Qué hace |
-|---|---|
-| `make start` | Levanta todos los contenedores |
-| `make stop` | Para los contenedores (conserva los datos) |
-| `make restart` | Para y vuelve a levantar |
-| `make build` | Reconstruye la imagen del backend |
-| `make build-cron` | Reconstruye la imagen del cron |
-| `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
-| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
-| `make cargar` | Recarga el dataset sin borrar el volumen |
-| `make test` | Ejecuta los tests con pytest |
-| `make test-v` | Tests con salida detallada |
-| `make logs` | Últimas 100 líneas de logs del backend |
-| `make logs-cron` | Últimas 50 líneas de logs del cron |
-| `make logs-nginx` | Últimas 50 líneas de logs de Nginx |
-| `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
-| `make shell-db` | Abre la consola MariaDB dentro del contenedor |
-| `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
-
-### Windows
-
-`make` no está disponible de serie en Windows. Opciones:
-
-- **Recomendada:** usar WSL2 y ejecutar desde la terminal Linux — `make` funciona directamente
-- **Alternativa:** instalar `make` con `winget install GnuWin32.Make` y ejecutar desde PowerShell
-- **Sin instalar nada:** copiar el comando del target directamente del `Makefile` y ejecutarlo en la terminal
-
----
-
-## Mejoras futuras
-
-Mejoras identificadas pero no planificadas para el desarrollo actual:
-
-- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando la web de infosubvenciones.es para cada convocatoria. No afecta a ninguna funcionalidad actual.
-- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
-- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
-- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
-- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
-- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
-- **Login con terceros (OAuth)** - integración con Google.
-- **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
-- **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
-- **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
-- **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
-- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
-- **Refactor CSS inline**: algunas páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles puntuales. El CSS del panel de administración y de la zona privada ya se migró completamente a `styles.css`; lo que queda requiere verificación visual página a página.
-
----
-
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas · cron con auto-detección de resoluciones · modal de conclusiones en gráficas**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile)**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1137,7 +1144,9 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ logs de error del backend en panel de admin nuevo endpoint `GET /admin/logs/errores?n=N` que sirve `logs/app/error.log`; nueva sección en `admin.html` con borde rojo sutil; subtítulos aclaratorios en todas las secciones del panel; CSS del panel migrado de `<style>` inline a `styles.css`
 ✔ toggle visibilidad de contraseña botón con icono de ojo en todos los campos de contraseña (`login.html`, `registro.html`, `privado.html`, `reset-password.html`); lógica compartida en `js/utils.js`; al volver a pulsar se oculta de nuevo
 ✔ nombre/alias de usuario columna `nombre` (VARCHAR 100, nullable) en tabla `usuarios`; campo opcional en registro; `PUT /privado/cambiar-nombre` para actualizarlo desde el perfil; `GET /privado/perfil` lo expone; saludo en `privado.html` usa el nombre si existe; tabla de usuarios del panel admin muestra nombre + email cuando está definido
-
+✔ Makefile con targets para el día a día: `start`, `stop`, `restart`, `build`, `reset-db`, `cargar`, `test`, `logs`, `backup`, `shell-db`, `mailpit`
+✔ optimización de imágenes Docker: `backend/Dockerfile` migrado de `python:3.11` a `python:3.11-slim` (~700 MB menos); `pandas` eliminado de `requeriments.txt` (no se usaba)
+✔ script de instalación automática (`install.sh`): comprueba prerequisitos por OS, crea `.env` con SECRET_KEY aleatoria, genera certificado SSL, añade dominio a `/etc/hosts` con confirmación, detecta instalaciones existentes y no sobreescribe datos, carga el dataset en primera instalación
 
 ---
 
@@ -1250,6 +1259,28 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 
 ---
 
+---
+
+## Mejoras futuras
+
+Mejoras identificadas pero no planificadas para el desarrollo actual:
+
+- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando la web de infosubvenciones.es para cada convocatoria. No afecta a ninguna funcionalidad actual.
+- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
+- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
+- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
+- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
+- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
+- **Login con terceros (OAuth)** - integración con Google.
+- **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
+- **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
+- **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
+- **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
+- **Refactor CSS inline**: algunas páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles puntuales. El CSS del panel de administración y de la zona privada ya se migró completamente a `styles.css`; lo que queda requiere verificación visual página a página.
+
+---
+
 ## Pendientes
 
 - **Revisión accesibilidad (pasada ligera)**: verificar jerarquía de headings, `alt` en imágenes, landmarks semánticos. Riesgo bajo — no tocar contrastes ni tamaños de fuente antes de entrega (Miyuki).
@@ -1257,4 +1288,3 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
 - **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
-- **Script de instalación automática** (15c): instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts` (Vero).

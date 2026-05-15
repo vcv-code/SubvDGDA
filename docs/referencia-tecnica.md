@@ -190,6 +190,21 @@ docker exec bdns_cron python3 /app/scripts/check_bdns.py
 
 ---
 
+## Instalación
+
+```bash
+git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+cd analisis-bdns-dgda
+bash install.sh
+```
+
+**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
+**Plataforma:** Linux · macOS · WSL2 (Windows requiere Docker Desktop con integración WSL2)
+
+El script detecta instalaciones existentes y no sobreescribe datos. Si la BD ya tiene solicitudes, solo levanta los contenedores. Para reinstalar desde cero: `make reset-db`.
+
+---
+
 ## Comandos de referencia
 
 | Acción | Comando |

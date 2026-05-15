@@ -9,6 +9,11 @@
 
 set -euo pipefail
 
+# ── Constantes ────────────────────────────────────────────────────────────────
+DOMAIN="subvencionesDGDA.local"
+ENV_FILE="docker/.env"
+SSL_DIR="docker/ssl"
+
 # ── Colores ───────────────────────────────────────────────────────────────────
 if [ -t 1 ]; then
     VERDE="\033[0;32m"
@@ -81,16 +86,14 @@ fase "[1/7] Comprobando sistema operativo..."
 OS="$(uname -s)"
 case "$OS" in
     Linux*)
-        ok "Linux detectado"
         if grep -qi microsoft /proc/version 2>/dev/null; then
             ok "WSL2 detectado — compatible"
-            aviso "Si docker no está disponible, instala Docker Desktop para Windows"
-            aviso "o ejecuta: sudo apt install docker.io docker-compose-plugin"
+        else
+            ok "Linux detectado"
         fi
         ;;
     Darwin*)
         ok "macOS detectado"
-        aviso "Si docker no está instalado, descarga Docker Desktop o instala OrbStack"
         ;;
     CYGWIN*|MINGW*|MSYS*)
         error "Windows nativo no soportado. Usa WSL2 y ejecuta el script desde ahí."
@@ -115,7 +118,21 @@ if command -v docker >/dev/null 2>&1; then
     ok "Docker $DOCKER_VER"
 else
     error "Docker no encontrado."
-    info "Instálalo desde: https://docs.docker.com/engine/install/"
+    case "$OS" in
+        Linux*)
+            if grep -qi microsoft /proc/version 2>/dev/null; then
+                info "WSL2: instala Docker Desktop para Windows desde https://www.docker.com/products/docker-desktop/"
+                info "      Activa la integración con WSL2 en Settings → Resources → WSL Integration"
+            else
+                info "Linux: sudo apt install docker.io docker-compose-plugin  (Debian/Ubuntu)"
+                info "       o sigue la guía oficial: https://docs.docker.com/engine/install/"
+            fi
+            ;;
+        Darwin*)
+            info "macOS: descarga Docker Desktop desde https://www.docker.com/products/docker-desktop/"
+            info "       o instala OrbStack (más ligero): https://orbstack.dev"
+            ;;
+    esac
     FALTAN=$((FALTAN + 1))
 fi
 
@@ -147,6 +164,12 @@ if command -v python3 >/dev/null 2>&1; then
     PY_MINOR=$(echo "$PY_VER" | cut -d. -f2)
     if [ "$PY_MAJOR" -ge 3 ] && [ "$PY_MINOR" -ge 10 ]; then
         ok "Python $PY_VER"
+        # Comprueba que el módulo venv esté disponible (en Ubuntu es paquete aparte)
+        if ! python3 -m venv --help >/dev/null 2>&1; then
+            error "El módulo venv de Python no está disponible."
+            info "Instálalo con: sudo apt install python3-venv"
+            FALTAN=$((FALTAN + 1))
+        fi
     else
         error "Python $PY_VER encontrado, se necesita 3.10 o superior."
         FALTAN=$((FALTAN + 1))
@@ -197,8 +220,6 @@ fi
 # =============================================================================
 fase "[3/7] Configurando variables de entorno..."
 
-ENV_FILE="docker/.env"
-
 if [ -f "$ENV_FILE" ]; then
     ok ".env ya existe — se usará el existente"
     aviso "Si quieres regenerarlo, bórralo manualmente y vuelve a ejecutar el script."
@@ -232,10 +253,8 @@ set +a
 # =============================================================================
 fase "[4/7] Certificado SSL..."
 
-SSL_DIR="docker/ssl"
 CERT="$SSL_DIR/server.crt"
 KEY="$SSL_DIR/server.key"
-DOMAIN="subvencionesDGDA.local"
 
 if [ -f "$CERT" ] && [ -f "$KEY" ]; then
     ok "Certificado SSL ya existe — se reutilizará"
@@ -292,7 +311,7 @@ esperar_db
 FILAS=$(docker exec bdns_dgda_db mariadb \
     -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
     -sNe "SELECT COUNT(*) FROM solicitudes" 2>/dev/null || echo "0")
-[ "${FILAS:-0}" -gt 0 ] && TIENE_DATOS=true
+if [ "${FILAS:-0}" -gt 0 ]; then TIENE_DATOS=true; fi
 
 if $TIENE_DATOS; then
     ok "Base de datos existente con $FILAS solicitudes — no se sobreescribirá"
@@ -304,9 +323,9 @@ else
     info "Primera instalación — construyendo imágenes y descargando dependencias..."
     info "(Puede tardar varios minutos la primera vez)"
     echo
+    # La BD ya está arriba (la levantamos para detectar datos), solo construimos el resto
     (cd docker && docker compose up --build -d)
     echo
-    esperar_db
     info "Cargando dataset en la base de datos..."
     python3 -m scripts.data_processing.cargar_dataset
     echo
