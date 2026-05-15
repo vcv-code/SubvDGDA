@@ -107,7 +107,7 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `recursos.js`, `auth.js`, `privado.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
 
@@ -768,12 +768,12 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 
 ## Tests
 
-El proyecto tiene **193 pruebas en total**: 148 automáticas con pytest y 45 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **247 pruebas en total**: 195 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 148 | pytest (sin Docker) |
-| Manuales | 45 | Navegador + DevTools |
+| Automáticos | 195 | pytest (sin Docker) |
+| Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
@@ -799,6 +799,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 pytest tests/test_privado.py            # cambiar contraseña desde la zona privada
 pytest tests/test_refresh_token.py      # refresh token, rotación y logout
 pytest tests/test_logging.py            # middleware y configuración de logging
+pytest tests/test_verificacion_email.py # verificación de email al registro
+pytest tests/test_admin.py              # panel de administración completo
 pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
 pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ```
@@ -806,8 +808,8 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-130 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-148 passed   # suite completa con Docker levantado
+179 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+195 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -903,12 +905,13 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
+- **Refactor CSS inline**: las páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles de diseño. Los casos sencillos ya se migraron a clases CSS; lo que queda requiere verificación visual página a página.
 
 ---
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas**
+Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas · cron con auto-detección de resoluciones · modal de conclusiones en gráficas**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -971,7 +974,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (193 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (195 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
@@ -999,7 +1002,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · Nginx termina el SSL en el puerto 443; el backend no necesita saber nada de SSL
   · HTTP (puerto 80) redirige automáticamente a HTTPS con código 301
   · TLS 1.2 y 1.3 únicamente; cabecera `Strict-Transport-Security` activa
-  · ver [`docs/https.md`](docs/https.md) para reproducir el entorno
+  · ver sección "Configuración HTTPS local" en [`docs/referencia-tecnica.md`](docs/referencia-tecnica.md) para reproducir el entorno
 ✔ sistema de logs: registro de cada petición HTTP (IP, método, ruta, código, latencia) y errores 500
   · logger de aplicación con rotación automática de archivos (`logs/app/`)
   · access log y error log de Nginx con formato personalizado (`logs/nginx/`)
@@ -1035,14 +1038,24 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ `especificaciones-frontend.md` totalmente actualizado y sincronizado con la implementación real
 ✔ servicio cron como contenedor independiente en docker-compose (`docker/cron/`)
   · `scheduler.py` — scheduler Python puro que orquesta las tareas sin binarios externos
-  · `check_bdns.py` — consulta la API BDNS en temporada (mar–jun), detecta nuevas convocatorias DGDA,
-    inserta en BD con fecha_resolucion=NULL, guarda estado en `logs/cron/estado_YYYY.json`
-    (frecuencia por tramos: cada 2 días en abr–may, cada 4 días en mar–jun)
+  · `check_bdns.py` — lógica en dos pasos en cada ejecución:
+      1. **Detección de resoluciones**: para cada convocatoria del año con `fecha_resolucion=NULL`,
+         consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` en la API BDNS buscando el campo
+         `fechaResolucion`. Si ya está publicada, actualiza la BD → el banner desaparece
+         automáticamente sin intervención manual (BDNS suele actualizarse 1-2 días tras el BOE).
+      2. **Detección de nuevas convocatorias**: si aún no se han registrado EELL y/o EPA del año
+         actual, busca en la API BDNS por "protección animal" y "colonias felinas", detecta el tipo
+         por palabras clave del título (`detectar_tipo`) y las inserta con `fecha_resolucion=NULL`.
+         Estado persistido en `logs/cron/estado_YYYY.json`.
+      Tipo EELL: busca "ENTIDADES LOCALES" o "EELL" en el título.
+      Tipo EPA: busca "ENTIDADES PRIVADAS", "ASOCIACIONES" o "PROTECCI" (cubre "protección animal").
+      Frecuencia: cada 2 días en abr–may, cada 4 días en mar–jun.
   · `health_check.py` — llama a GET /health cada 6 horas y loguea el resultado
   · logs persistidos en `logs/cron/` como volumen Docker
 ✔ GET /avisos/ — devuelve convocatorias del año actual con fecha_resolucion=NULL para el banner de la web
 ✔ banner de avisos en `index.html`: aparece cuando el cron inserta una nueva convocatoria y desaparece
-  automáticamente cuando a fin de año se carga la resolución del BOE (fecha_resolucion ya no es NULL)
+  automáticamente cuando el cron detecta la resolución en la API BDNS (fecha_resolucion se actualiza sola).
+  El enlace al BOE en la sección "Resoluciones oficiales" sí requiere actualización manual en index.html.
 ✔ cambiar contraseña desde la zona privada
   · PUT /privado/cambiar-contrasena — valida contraseña actual con bcrypt, aplica las mismas reglas de fortaleza del registro
   · formulario en privado.html con feedback de error (actual incorrecta, nueva débil) y confirmación de éxito
@@ -1085,17 +1098,21 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ aviso legal (`aviso-legal.html`), política de privacidad (`privacidad.html`) y sección de cookies
 ✔ footer actualizado con aviso legal y privacidad en todas las páginas; resoluciones BOE en home pública
 ✔ mejoras estadísticas y home (rama 13): gráficas home reordenadas, tasa éxito/fracaso, leyenda rosco con descripciones, tooltip desglose EPA/EELL, colores badges corregidos, KPIs centrados, top beneficiarios EPA con zoom y abreviaciones, rangos distribución importes ajustados a datos reales
+✔ modal de conclusiones por gráfica (rama 13): botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica abre un modal con la gráfica como fondo tenue y texto interpretativo encima; compartido entre home, EPAs y EELL mediante `js/modal-grafica.js`; 9 gráficas cubiertas
+✔ página Recursos renovada (rama 13): fondos de color por sección (verde/azul/ámbar/rosa), logos actualizados y normalizados, textos de descripción revisados
+✔ cron — corrección `detectar_tipo` (rama 13): añadida palabra clave `"PROTECCI"` para detectar convocatorias EPA cuyo título en BDNS usa "protección animal" en lugar de "entidades privadas/asociaciones"; resolvía que la EPA 2026 se omitía silenciosamente
+✔ cron — auto-detección de resoluciones (rama 13): nueva función `comprobar_resoluciones()` que en cada ejecución consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion=NULL`; si BDNS ya publica la fecha, la actualiza en la BD → el banner de avisos desaparece automáticamente sin intervención manual
+✔ resoluciones pendientes dinámicas en home (rama 13): `cargarPendientesResoluciones()` en `home.js` lee `/avisos/` e inyecta automáticamente entradas "Resolución pendiente de publicación" en las listas BOE de EELL y EPA; al resolverse, desaparecen solas
 
 ### Pendientes
 
-- **Modal/popup gráficas** (13d): clic en cualquier gráfica abre un modal con la gráfica ampliada.
-- **Script de instalación automática**: instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts`.
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON.
-- **Conclusiones en gráficas de estadísticas**: párrafo breve debajo de cada gráfica con la interpretación del dato.
-- **Página Recursos — colores por sección**: asignar color de fondo diferente a cada sección.
-- Ficha de entidad como modal/popup en el buscador.
-- Revisión general UX/accesibilidad: contraste, tamaños de fuente, teclado, ARIA *(post-entrega)*.
-- **Refactor CSS inline** *(post-entrega)*.
+- **Revisión accesibilidad (pasada ligera)**: verificar jerarquía de headings, `alt` en imágenes, landmarks semánticos. Riesgo bajo — no tocar contrastes ni tamaños de fuente antes de entrega (Miyuki).
+- **Footer**: revisar los enlaces de GitHub, Documentación y Contacto.
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
+- **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
+- **Logs de error del backend en panel de admin**: el visor actual (`GET /admin/logs`) solo expone `logs/app/access.log`; añadir endpoint `GET /admin/logs/errores` que sirva `logs/app/error.log` (Vero).
+- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
+- **Script de instalación automática**: instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts` (Vero).
 
 ---
 
@@ -1203,4 +1220,3 @@ Para mockear `enviar_email_recuperacion` en los tests de recuperación de contra
 #### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe (rama 11b)
 
 El endpoint devuelve exactamente el mismo mensaje tanto si el email está registrado como si no: `"Si ese email está registrado, recibirás un enlace en breve"`. Esto es una decisión de seguridad deliberada para evitar la enumeración de usuarios: si la respuesta fuera diferente según si el email existe, un atacante podría automatizar peticiones con listas de emails y descubrir qué cuentas están registradas en el sistema. La misma respuesta en ambos casos no filtra ninguna información.
-antes de
