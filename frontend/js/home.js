@@ -423,6 +423,8 @@ function crearGraficoLinea(porAnio) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-linea', 'evolucion-importe.png');
+    configurarModal(instancia, 'Evolución del importe por año',
+        'El importe total creció de forma constante entre 2021 y 2025. La incorporación de las EELL en 2023 generó un salto significativo: el presupuesto disponible casi se duplicó respecto a los años anteriores, que solo cubrían protectoras. El ejercicio 2025 es el de mayor volumen de toda la serie.');
 }
 
 
@@ -483,6 +485,8 @@ function crearGraficoDonut(datos) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-donut', 'distribucion-estados.png');
+    configurarModal(instancia, 'Distribución por estado',
+        'Algo más del 40 % de las solicitudes acaban concedidas. El grupo "No beneficiaria" —igual de numeroso— recoge entidades que cumplen todos los requisitos pero quedan fuera por falta de presupuesto. Esto refleja una demanda estructuralmente mayor que los fondos disponibles cada año.');
 }
 
 
@@ -562,6 +566,8 @@ function crearGraficoBarras(porAnio) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-barras', 'epa-vs-eell.png');
+    configurarModal(instancia, 'EPA vs EELL por año',
+        'Desde 2023, las subvenciones a ayuntamientos (EELL) superan en volumen económico a las de protectoras (EPA). Esto no significa que haya más ayuntamientos beneficiados, sino que los importes individuales son mucho más altos: un ayuntamiento gestiona más animales y recibe en consecuencia.');
 }
 
 
@@ -704,8 +710,41 @@ async function cargarConvocatorias() {
 }
 
 
+/**
+ * cargarPendientesResoluciones()
+ * Lee GET /avisos/ y añade dinámicamente una entrada "Resolución pendiente
+ * de publicación" al principio de la lista de resoluciones BOE correspondiente
+ * (EELL o EPA) para cada convocatoria sin resolución.
+ * El estilo (⏳ gris itálica) lo aplica el CSS de .privado-docs__lista span.
+ */
+async function cargarPendientesResoluciones() {
+    try {
+        const resp = await fetch(`${API_URL}/avisos/`);
+        if (!resp.ok) return;
+        const avisos = await resp.json();
+
+        const listas = {
+            eell: document.getElementById('resoluciones-eell'),
+            epa:  document.getElementById('resoluciones-epa'),
+        };
+
+        avisos.forEach(aviso => {
+            const lista = listas[aviso.tipo_convoc];
+            if (!lista) return;
+            const tipo  = aviso.tipo_convoc.toUpperCase();
+            const li    = document.createElement('li');
+            li.innerHTML = `<span>${tipo} ${aviso.anio_convocatoria} — Resolución pendiente de publicación</span>`;
+            lista.prepend(li);
+        });
+    } catch (_) {
+        // Sección informativa; si falla no interrumpimos la página
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
     cargarAvisos();
     cargarConvocatorias();
+    cargarPendientesResoluciones();
 });
