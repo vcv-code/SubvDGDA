@@ -134,9 +134,12 @@
                             <label for="registro-password" class="etiqueta-campo">
                                 Contraseña
                             </label>
-                            <input type="password" id="registro-password" name="password" class="input-campo"
-                                placeholder="Mínimo 8 caracteres" autocomplete="new-password" required
-                                aria-describedby="requisitos-password error-password-reg">
+                            <div class="campo-password-wrapper">
+                                <input type="password" id="registro-password" name="password" class="input-campo"
+                                    placeholder="Mínimo 8 caracteres" autocomplete="new-password" required
+                                    aria-describedby="requisitos-password error-password-reg">
+                                <button type="button" class="btn-ojo" aria-label="Mostrar contraseña"></button>
+                            </div>
                             <span class="campo-error" id="error-password-reg" role="alert">
                                 La contraseña no cumple todos los requisitos.
                             </span>
@@ -159,9 +162,12 @@
                             <label for="registro-password-confirm" class="etiqueta-campo">
                                 Confirmar contraseña
                             </label>
-                            <input type="password" id="registro-password-confirm" name="password_confirm"
-                                class="input-campo" placeholder="Repite tu contraseña" autocomplete="new-password"
-                                required aria-describedby="error-password-confirm-reg">
+                            <div class="campo-password-wrapper">
+                                <input type="password" id="registro-password-confirm" name="password_confirm"
+                                    class="input-campo" placeholder="Repite tu contraseña" autocomplete="new-password"
+                                    required aria-describedby="error-password-confirm-reg">
+                                <button type="button" class="btn-ojo" aria-label="Mostrar contraseña"></button>
+                            </div>
                             <span class="campo-error" id="error-password-confirm-reg" role="alert">
                                 Las contraseñas no coinciden.
                             </span>
@@ -225,6 +231,7 @@
         </div>
     </footer>
 
+    <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
 
 </body>

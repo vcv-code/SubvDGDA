@@ -107,7 +107,7 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
 
@@ -768,7 +768,7 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 
 ## Tests
 
-El proyecto tiene **247 pruebas en total**: 195 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
@@ -808,8 +808,8 @@ pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ### Resultado esperado
 
 ```text
-179 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-195 passed   # suite completa con Docker levantado
+181 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+197 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -990,7 +990,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · test_verificacion_email.py (10): registro crea usuario no verificado, token en BD, email enviado, login bloqueado sin verificar, token válido activa cuenta, login tras verificar, token inválido/usado/expirado, reset activa email_verificado
   · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
   · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
-  · test_admin.py (22): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs
+  · test_admin.py (24): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs de acceso y de error
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
   · BD de prueba SQLite en memoria (no requiere Docker)
@@ -1086,6 +1086,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · PATCH /admin/avisos/{id}/reactivar → elimina la fecha de resolución y vuelve a activar el aviso y el banner
   · DELETE /admin/avisos/{id} → elimina la convocatoria (rechaza con 409 si tiene solicitudes asociadas)
   · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
+  · GET /admin/logs/errores?n=100 → últimas N líneas de `logs/app/error.log` (máx. 500)
   · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
 ✔ **medidas anti-bots y seguridad en registro** (rama 12)
   · rate limiting `POST /auth/registro`: zona `registro:10m rate=5r/m`, `burst=3 nodelay`
@@ -1103,6 +1104,8 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ cron — corrección `detectar_tipo` (rama 13): añadida palabra clave `"PROTECCI"` para detectar convocatorias EPA cuyo título en BDNS usa "protección animal" en lugar de "entidades privadas/asociaciones"; resolvía que la EPA 2026 se omitía silenciosamente
 ✔ cron — auto-detección de resoluciones (rama 13): nueva función `comprobar_resoluciones()` que en cada ejecución consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion=NULL`; si BDNS ya publica la fecha, la actualiza en la BD → el banner de avisos desaparece automáticamente sin intervención manual
 ✔ resoluciones pendientes dinámicas en home (rama 13): `cargarPendientesResoluciones()` en `home.js` lee `/avisos/` e inyecta automáticamente entradas "Resolución pendiente de publicación" en las listas BOE de EELL y EPA; al resolverse, desaparecen solas
+✔ logs de error del backend en panel de admin (rama 15): nuevo endpoint `GET /admin/logs/errores?n=N` que sirve `logs/app/error.log`; nueva sección en `admin.html` con borde rojo sutil; subtítulos aclaratorios en todas las secciones del panel; CSS del panel migrado de `<style>` inline a `styles.css`
+✔ toggle visibilidad de contraseña (rama 15): botón con icono de ojo en todos los campos de contraseña (`login.html`, `registro.html`, `privado.html`, `reset-password.html`); lógica compartida en `js/utils.js`; al volver a pulsar se oculta de nuevo
 
 ### Pendientes
 
@@ -1110,7 +1113,6 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 - **Footer**: revisar los enlaces de GitHub, Documentación y Contacto.
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
 - **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
-- **Logs de error del backend en panel de admin**: el visor actual (`GET /admin/logs`) solo expone `logs/app/access.log`; añadir endpoint `GET /admin/logs/errores` que sirva `logs/app/error.log` (Vero).
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
 - **Script de instalación automática**: instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts` (Vero).
 
