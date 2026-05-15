@@ -54,12 +54,16 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <!-- NAVBAR — "activo" en EELL -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -73,7 +77,7 @@
     </header>
 
 
-    <main class="fondo-stats">
+    <main id="contenido-principal" class="fondo-stats">
         <section class="seccion" aria-labelledby="eell-titulo">
             <div class="contenedor">
 
@@ -153,7 +157,12 @@
                                     Importe total concedido por provincia (EELL)
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
+                            <button class="btn-descargar-png" id="btn-dl-provincias"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de top provincias como PNG">
+                                ↓ PNG
+                            </button>
                         </div>
                         <!--
                             Barras horizontales: provincia en eje Y, importe en eje X.
@@ -163,7 +172,7 @@
                             <p class="estado-carga" id="provincias-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/eell</code>
                             </p>
-                            <canvas id="grafico-top-provincias" style="display:none;"
+                            <canvas id="grafico-top-provincias" role="img" style="display:none;"
                                 aria-label="Gráfico de top provincias por importe EELL"></canvas>
                         </div>
                     </div>
@@ -177,18 +186,23 @@
                                     % del importe total acaparado por el top 10% de entidades
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
+                            <button class="btn-descargar-png" id="btn-dl-concentracion"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de concentración del importe como PNG">
+                                ↓ PNG
+                            </button>
                         </div>
                         <!--
                             Donut: proporción top 10% vs resto.
                             Datos esperados: concentracion.top_10_pct y concentracion.resto_pct
                         -->
-                        <div class="chart-container chart-container--donut"
+                        <div class="chart-container"
                              id="grafico-concentracion-container">
                             <p class="estado-carga" id="concentracion-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/eell</code>
                             </p>
-                            <canvas id="grafico-concentracion" style="display:none;"
+                            <canvas id="grafico-concentracion" role="img" style="display:none;"
                                 aria-label="Gráfico de concentración del importe EELL"></canvas>
                         </div>
                     </div>
@@ -213,7 +227,7 @@
                                     Importe concedido acumulado por comunidad autónoma
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
                         </div>
                         <!--
                             Lista HTML generada por JS.
@@ -223,10 +237,7 @@
                             aria-label="Ranking de CCAA por importe EELL concedido">
                             <!-- Se rellena desde estadisticas-eell.js -->
                         </ul>
-                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">
-                            Ranking pendiente de endpoint
-                            <code>/estadisticas/eell</code>.
-                        </div>
+                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">Cargando...</div>
                     </div>
 
                     <!-- Distribución geográfica (mapa) — pendiente de decisión técnica -->
@@ -238,7 +249,7 @@
                                     Mapa de calor por comunidad autónoma
                                 </p>
                             </div>
-                            <span class="card-grafico__badge">pendiente</span>
+                            
                         </div>
                         <!--
                             El PDF define un mapa de España coloreado por importe
@@ -253,15 +264,72 @@
                             <div style="text-align:center; color:var(--color-gris-texto);">
                                 <p style="font-size:2.5rem; margin-bottom:8px;">🗺️</p>
                                 <p style="font-size:0.9rem;">
-                                    Mapa de CCAA pendiente de implementación.<br>
-                                    Requiere endpoint <code>/estadisticas/eell</code>
-                                    y decisión técnica sobre la librería de mapas.
+                                    Mapa de calor por comunidad autónoma pendiente de implementación.<br>
+                                    Los datos ya están disponibles — falta integrar la librería de mapas.
                                 </p>
                             </div>
                         </div>
                     </div>
 
                 </div><!-- /grid-2 fila 3 -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 4: TOP 5 CCAA — IMPORTE Y CONCESIONES
+                     Ambas listas calculadas en estadisticas-eell.js a
+                     partir de por_ccaa[] — no requieren nuevo endpoint.
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2" style="margin-top: var(--espacio-lg);">
+
+                    <!-- Top 5 CCAA por importe concedido -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Top 5 CCAA por subvención</p>
+                                <p class="card-grafico__subtitulo">
+                                    Importe total concedido por comunidad autónoma
+                                </p>
+                            </div>
+                        </div>
+                        <!--
+                            Lista generada por estadisticas-eell.js usando
+                            por_ccaa[].importe_total (top 5 ordenado desc).
+                            Cada ítem muestra posición, nombre, barra proporcional e importe.
+                        -->
+                        <p class="ranking-pendiente" id="top5-ccaa-pendiente">Cargando...</p>
+                        <ol class="top5-lista" id="top5-ccaa-lista"
+                            style="display:none;"
+                            aria-label="Top 5 comunidades autónomas por importe EELL concedido">
+                            <!-- Se rellena desde estadisticas-eell.js -->
+                        </ol>
+                    </div>
+
+                    <!-- Top 5 CCAA por número de concesiones acumuladas -->
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Top 5 CCAA por ayuntamientos</p>
+                                <p class="card-grafico__subtitulo">
+                                    Comunidades con más ayuntamientos beneficiados
+                                </p>
+                            </div>
+                        </div>
+                        <!--
+                            Lista generada por estadisticas-eell.js usando
+                            por_ccaa[].num_concesiones (top 5 ordenado desc).
+                            Muestra posición, nombre, barra proporcional y número de concesiones.
+                            Complementa la vista de importe: una CCAA puede tener muchas
+                            concesiones pequeñas y no aparecer en el top 5 por importe.
+                        -->
+                        <p class="ranking-pendiente" id="top5-concesiones-pendiente">Cargando...</p>
+                        <ol class="top5-lista" id="top5-concesiones-lista"
+                            style="display:none;"
+                            aria-label="Top 5 comunidades autónomas por número de concesiones EELL">
+                            <!-- Se rellena desde estadisticas-eell.js -->
+                        </ol>
+                    </div>
+
+                </div><!-- /fila 4 top5 -->
 
             </div><!-- /contenedor -->
         </section>
@@ -272,7 +340,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -281,6 +349,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
@@ -299,6 +371,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/modal-grafica.js"></script>
     <script src="js/estadisticas-eell.js"></script>
 
 </body>

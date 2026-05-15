@@ -61,6 +61,10 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <!-- =====================================================
          NAVBAR — igual que en index.html
          Solo cambia qué enlace tiene la clase "activo".
@@ -68,8 +72,8 @@
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -83,7 +87,7 @@
     </header>
 
 
-    <main>
+    <main id="contenido-principal">
         <section class="seccion" aria-labelledby="buscador-titulo">
             <div class="contenedor">
 
@@ -437,7 +441,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -446,6 +450,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">

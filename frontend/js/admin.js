@@ -45,13 +45,18 @@ function formatearFecha(isoStr) {
 
 async function verificarAcceso() {
     const t = token();
-    if (!t) { window.location.href = 'login.html'; return false; }
+    if (!t) {
+        sessionStorage.setItem('redirect_post_login', window.location.href);
+        window.location.href = 'login.html';
+        return false;
+    }
 
     try {
         const r = await fetch(`${API_URL}/privado/perfil`, { headers: authHeaders() });
         if (r.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('refresh_token');
+            sessionStorage.setItem('redirect_post_login', window.location.href);
             window.location.href = 'login.html';
             return false;
         }
@@ -83,10 +88,6 @@ async function cargarEstado() {
         document.getElementById('stat-solicitudes').textContent   = d.total_solicitudes;
         document.getElementById('stat-usuarios').textContent      = d.total_usuarios;
 
-        if (d.ultima_convocatoria) {
-            document.getElementById('admin-ultima-convoc').textContent =
-                `Última convocatoria detectada: ${d.ultima_convocatoria}`;
-        }
     } catch {
         document.getElementById('stat-health').textContent = '✗ Error';
     }

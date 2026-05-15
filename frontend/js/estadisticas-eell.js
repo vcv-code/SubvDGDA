@@ -53,6 +53,7 @@ const COLORES = {
 const OPCIONES_BASE = {
     responsive:          true,
     maintainAspectRatio: false,
+    devicePixelRatio:    window.devicePixelRatio || 2,
     plugins: { legend: { display: false } },
 };
 
@@ -120,6 +121,8 @@ async function cargarEstadisticasEell() {
         poblarGraficoTopProvincias(datos.top_provincias   || []);
         poblarGraficoConcentracion(datos.concentracion    || {});
         poblarRankingCcaa(datos.por_ccaa                  || []);
+        poblarTop5Ccaa(datos.por_ccaa                     || []);
+        poblarTop5Concesiones(datos.por_ccaa              || []);
 
     } catch (error) {
         console.error('Error al cargar estadísticas EELL:', error);
@@ -175,10 +178,12 @@ function poblarGraficoTopProvincias(topProvincias) {
     if (provinciasPendiente)  provinciasPendiente.style.display  = 'none';
     if (graficoTopProvincias) graficoTopProvincias.style.display = 'block';
 
-    new Chart(graficoTopProvincias, {
+    const abreviarProv = (s) => s.replace('Santa Cruz de Tenerife', 'S.C. Tenerife');
+
+    const instancia = new Chart(graficoTopProvincias, {
         type: 'bar',
         data: {
-            labels: top.map(d => d.provincia),
+            labels: top.map(d => abreviarProv(d.provincia)),
             datasets: [{
                 label:           'Importe (€)',
                 data:            top.map(d => d.importe_total),
@@ -215,6 +220,9 @@ function poblarGraficoTopProvincias(topProvincias) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-provincias', 'top-provincias-eell.png');
+    configurarModal(instancia, 'Top provincias por importe EELL',
+        'Las cinco provincias con mayor importe concentran buena parte del total distribuido. Castilla-La Mancha encabeza por importe total, mientras Andalucía lidera por número de ayuntamientos beneficiados. Esta diferencia refleja que algunas provincias tienen pocos municipios pero con importes unitarios más altos por pertenecer al Tramo 1 o Tramo 2.');
 }
 
 
@@ -231,7 +239,7 @@ function poblarGraficoConcentracion(concentracion) {
     if (concentracionPendiente) concentracionPendiente.style.display = 'none';
     if (graficoConcentracion)   graficoConcentracion.style.display   = 'block';
 
-    new Chart(graficoConcentracion, {
+    const instancia = new Chart(graficoConcentracion, {
         type: 'doughnut',
         data: {
             labels: ['Top 10% de entidades', 'Resto de entidades'],
@@ -271,6 +279,9 @@ function poblarGraficoConcentracion(concentracion) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-concentracion', 'concentracion-eell.png');
+    configurarModal(instancia, 'Concentración del importe EELL',
+        'El 10 % de las entidades con mayor subvención acapara más de la mitad del importe total. Este nivel de concentración es habitual en convocatorias por tramos de población: los municipios del Tramo 1 (mayor población) reciben importes base más altos, lo que genera una asimetría natural en el reparto.');
 }
 
 
@@ -291,24 +302,24 @@ function poblarRankingCcaa(porCcaa) {
 
     const ordenadas = [...porCcaa]
         .sort((a, b) => b.importe_total - a.importe_total)
-        .slice(0, 19);  // 17 CCAA + Ceuta + Melilla
+        .slice(0, 10);
 
     rankingCcaa.innerHTML = '';
 
     ordenadas.forEach((d, i) => {
         const li = document.createElement('li');
-        li.className = 'ranking-lista__item';
+        li.className = 'ranking-item';
 
         const posicion = document.createElement('span');
-        posicion.className   = 'ranking-lista__posicion';
+        posicion.className   = 'ranking-item__posicion';
         posicion.textContent = `${i + 1}`;
 
         const nombre = document.createElement('span');
-        nombre.className   = 'ranking-lista__nombre';
+        nombre.className   = 'ranking-item__nombre';
         nombre.textContent = d.ccaa;
 
         const importe = document.createElement('span');
-        importe.className   = 'ranking-lista__valor';
+        importe.className   = 'ranking-item__valor';
         importe.textContent = formatearEuros(d.importe_total);
 
         li.appendChild(posicion);
@@ -320,8 +331,137 @@ function poblarRankingCcaa(porCcaa) {
 
 
 // ─────────────────────────────────────────────────────────────
+// FUNCIÓN: poblarTop5Ccaa  (Task 2.4)
+// Lista top 5 CCAA por importe con barra de proporción.
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * poblarTop5Ccaa(porCcaa)
+ * Ordena el array por importe_total (desc), toma los 5 primeros y
+ * construye una lista visual con:
+ *   · Número de posición (1–5)
+ *   · Nombre de la comunidad autónoma
+ *   · Barra proporcional (el #1 = 100 %, los demás en proporción)
+ *   · Importe formateado
+ *
+ * Usa por_ccaa[] que ya devuelve GET /estadisticas/eell.
+ * No requiere endpoint nuevo ni cambio en backend.
+ *
+ * @param {Array} porCcaa - [{ ccaa: string, importe_total: number, num_concesiones: number }, ...]
+ */
+function poblarTop5Ccaa(porCcaa) {
+    const lista     = document.getElementById('top5-ccaa-lista');
+    const pendiente = document.getElementById('top5-ccaa-pendiente');
+
+    if (!porCcaa.length || !lista) return;
+
+    const top5 = [...porCcaa]
+        .sort((a, b) => b.importe_total - a.importe_total)
+        .slice(0, 5);
+
+    if (!top5.length) return;
+
+    if (pendiente) pendiente.style.display = 'none';
+    lista.style.display = 'flex';
+
+    const maxImporte = top5[0].importe_total;  // El #1 es el 100 %
+
+    lista.innerHTML = top5.map((d, i) => {
+        const pct = maxImporte > 0
+            ? Math.round((d.importe_total / maxImporte) * 100)
+            : 0;
+        return `
+            <li class="top5-lista__item">
+                <span class="top5-lista__pos">${i + 1}</span>
+                <span class="top5-lista__nombre-barra">
+                    <span class="top5-lista__nombre" title="${d.ccaa}">${d.ccaa}</span>
+                    <span class="top5-lista__pista">
+                        <span class="top5-lista__fill" style="width:${pct}%;"></span>
+                    </span>
+                </span>
+                <span class="top5-lista__valor">${formatearEuros(d.importe_total)}</span>
+            </li>`;
+    }).join('');
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// FUNCIÓN: poblarTop5Concesiones  (Task 3.2)
+// Lista top 5 CCAA por número de concesiones acumuladas.
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * poblarTop5Concesiones(porCcaa)
+ * Ordena el array por num_concesiones (desc), toma los 5 primeros y
+ * construye una lista visual con:
+ *   · Número de posición (1–5)
+ *   · Nombre de la comunidad autónoma
+ *   · Barra proporcional (el #1 = 100 %, los demás en proporción)
+ *   · Número de concesiones formateado
+ *
+ * Complementa poblarTop5Ccaa: una CCAA puede acumular muchas concesiones
+ * pequeñas sin destacar por importe total, y viceversa.
+ * Reutiliza por_ccaa[] ya devuelto por GET /estadisticas/eell.
+ *
+ * @param {Array} porCcaa - [{ ccaa: string, importe_total: number, num_concesiones: number }, ...]
+ */
+function poblarTop5Concesiones(porCcaa) {
+    const lista     = document.getElementById('top5-concesiones-lista');
+    const pendiente = document.getElementById('top5-concesiones-pendiente');
+
+    if (!porCcaa.length || !lista) return;
+
+    const top5 = [...porCcaa]
+        .sort((a, b) => b.num_concesiones - a.num_concesiones)
+        .slice(0, 5);
+
+    if (!top5.length) return;
+
+    if (pendiente) pendiente.style.display = 'none';
+    lista.style.display = 'flex';
+
+    const maxConcesiones = top5[0].num_concesiones;
+
+    lista.innerHTML = top5.map((d, i) => {
+        const pct = maxConcesiones > 0
+            ? Math.round((d.num_concesiones / maxConcesiones) * 100)
+            : 0;
+        return `
+            <li class="top5-lista__item">
+                <span class="top5-lista__pos">${i + 1}</span>
+                <span class="top5-lista__nombre-barra">
+                    <span class="top5-lista__nombre" title="${d.ccaa}">${d.ccaa}</span>
+                    <span class="top5-lista__pista">
+                        <span class="top5-lista__fill" style="width:${pct}%;"></span>
+                    </span>
+                </span>
+                <span class="top5-lista__valor">${d.num_concesiones.toLocaleString('es-ES')}</span>
+            </li>`;
+    }).join('');
+}
+
+
+// ─────────────────────────────────────────────────────────────
 // UTILIDADES
 // ─────────────────────────────────────────────────────────────
+
+/**
+ * configurarDescarga(instanciaChart, btnId, nombreArchivo)
+ * Muestra el botón de descarga y lo conecta al PNG del gráfico.
+ * Idéntica a la de home.js y estadisticas-epas.js — cada JS es independiente.
+ */
+function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.display = 'inline-flex';
+    btn.addEventListener('click', () => {
+        const url = instanciaChart.toBase64Image('image/png', 1);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = nombreArchivo;
+        a.click();
+    });
+}
 
 function formatearEuros(valor) {
     return Number(valor).toLocaleString('es-ES', {

@@ -32,11 +32,15 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -54,7 +58,7 @@
         </nav>
     </header>
 
-    <main>
+    <main id="contenido-principal">
 
         <!-- BANNER -->
         <div class="privado-banner" aria-labelledby="privado-titulo">
@@ -118,6 +122,20 @@
                             <input type="password" id="password-nueva" class="input-campo"
                                    autocomplete="new-password" required>
                         </div>
+                        <div class="grupo-campo">
+                            <label for="password-nueva-confirm" class="etiqueta-campo">Confirmar contraseña nueva</label>
+                            <input
+                                type="password"
+                                id="password-nueva-confirm"
+                                class="input-campo"
+                                autocomplete="new-password"
+                                required
+                                aria-describedby="error-password-nueva-confirm"
+                            >
+                            <span class="campo-error" id="error-password-nueva-confirm" role="alert">
+                                Las contraseñas no coinciden.
+                            </span>
+                        </div>
                         <button type="submit" class="btn btn-verde">Cambiar contraseña</button>
                     </form>
                 </div>
@@ -146,7 +164,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -155,6 +173,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">

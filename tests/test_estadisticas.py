@@ -190,12 +190,13 @@ def test_epas_top_beneficiarios(db_epas, client):
 def test_epas_distribucion_tiene_todos_los_rangos(db_epas, client):
     data = client.get("/estadisticas/epas").json()
     rangos = [d["rango"] for d in data["distribucion_importes"]]
-    assert len(rangos) == 5
-    # 4 importes < 5.000 € (1000, 2000, 3000, 4000); el de 5000€ cae en el rango siguiente
+    assert len(rangos) == 6
+    # Test data: 1000, 2000, 3000, 4000, 5000 €
+    # < 2.000: 1000 → 1; 2.000–4.000: 2000,3000 → 2; 4.000–6.000: 4000,5000 → 2
     rango_menor = next(d for d in data["distribucion_importes"] if d["rango"].startswith("<"))
-    assert rango_menor["cantidad"] == 4
-    rango_siguiente = next(d for d in data["distribucion_importes"] if d["rango"].startswith("5.000"))
-    assert rango_siguiente["cantidad"] == 1
+    assert rango_menor["cantidad"] == 1
+    rango_2_4 = next(d for d in data["distribucion_importes"] if d["rango"].startswith("2.000"))
+    assert rango_2_4["cantidad"] == 2
 
 
 def test_epas_cache_header(client):

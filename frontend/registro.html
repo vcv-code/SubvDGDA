@@ -13,16 +13,17 @@
     no lo envía al servidor.
 -->
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear cuenta — Subvenciones Bienestar Animal</title>
-    <meta name="description"
-          content="Crea tu cuenta para acceder al área privada de subvenciones de bienestar animal.">
+    <meta name="description" content="Crea tu cuenta para acceder al área privada de subvenciones de bienestar animal.">
 
     <link rel="icon" href="assets/logo.png" type="image/png">
     <meta property="og:title" content="Crear cuenta — Subvenciones Bienestar Animal">
-    <meta property="og:description" content="Crea tu cuenta para acceder al área privada y seguir convocatorias de subvenciones de bienestar animal.">
+    <meta property="og:description"
+        content="Crea tu cuenta para acceder al área privada y seguir convocatorias de subvenciones de bienestar animal.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="assets/logo.png">
 
@@ -34,12 +35,16 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <!-- NAVBAR -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -53,7 +58,7 @@
     </header>
 
 
-    <main class="auth-fondo">
+    <main id="contenido-principal" class="auth-fondo">
         <div class="auth-page">
 
             <p class="auth-page__servicio">
@@ -71,12 +76,8 @@
                         Si solo tienes una, usa "animales-login.png" en ambas.
                         onerror: si la imagen no carga, muestra el placeholder de texto.
                     -->
-                    <img
-                        src="assets/perro-gato.png"
-                        alt=""
-                        class="auth-card__foto"
-                        onerror="this.src='assets/animales-login.png'; this.onerror=function(){ this.style.display='none'; document.getElementById('ph-reg').style.display='block'; };"
-                    >
+                    <img src="assets/perro-gato.png" alt="" class="auth-card__foto"
+                        onerror="this.src='assets/animales-login.png'; this.onerror=function(){ this.style.display='none'; document.getElementById('ph-reg').style.display='block'; };">
                     <span id="ph-reg" class="auth-card__foto-placeholder" style="display:none;">
                         Imagen de animales
                     </span>
@@ -99,7 +100,8 @@
 
                     <!-- Alerta de éxito -->
                     <div class="auth-alerta auth-alerta--ok" id="registro-ok" role="status" aria-live="polite">
-                        Cuenta creada. Te hemos enviado un email de verificación — revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
+                        Cuenta creada. Te hemos enviado un email de verificación — revisa tu bandeja de entrada y haz
+                        clic en el enlace para activar tu cuenta.
                     </div>
 
                     <form id="form-registro" novalidate>
@@ -108,18 +110,10 @@
                         <div class="grupo-campo">
                             <label for="registro-nombre" class="etiqueta-campo">
                                 Nombre completo
-                                <span style="font-size:0.78rem; font-weight:400; color:var(--color-gris-texto);">
-                                    &nbsp;(opcional)
-                                </span>
+                                <span class="campo-nota">&nbsp;(opcional)</span>
                             </label>
-                            <input
-                                type="text"
-                                id="registro-nombre"
-                                name="nombre"
-                                class="input-campo"
-                                placeholder="Tu nombre"
-                                autocomplete="name"
-                            >
+                            <input type="text" id="registro-nombre" name="nombre" class="input-campo"
+                                placeholder="Tu nombre" autocomplete="name">
                         </div>
 
                         <!-- Correo electrónico -->
@@ -127,16 +121,9 @@
                             <label for="registro-email" class="etiqueta-campo">
                                 Correo electrónico
                             </label>
-                            <input
-                                type="email"
-                                id="registro-email"
-                                name="email"
-                                class="input-campo"
-                                placeholder="usuario@ejemplo.com"
-                                autocomplete="email"
-                                required
-                                aria-describedby="error-email-reg"
-                            >
+                            <input type="email" id="registro-email" name="email" class="input-campo"
+                                placeholder="usuario@ejemplo.com" autocomplete="email" required
+                                aria-describedby="error-email-reg">
                             <span class="campo-error" id="error-email-reg" role="alert">
                                 Introduce un correo electrónico válido.
                             </span>
@@ -147,16 +134,9 @@
                             <label for="registro-password" class="etiqueta-campo">
                                 Contraseña
                             </label>
-                            <input
-                                type="password"
-                                id="registro-password"
-                                name="password"
-                                class="input-campo"
-                                placeholder="Mínimo 8 caracteres"
-                                autocomplete="new-password"
-                                required
-                                aria-describedby="requisitos-password error-password-reg"
-                            >
+                            <input type="password" id="registro-password" name="password" class="input-campo"
+                                placeholder="Mínimo 8 caracteres" autocomplete="new-password" required
+                                aria-describedby="requisitos-password error-password-reg">
                             <span class="campo-error" id="error-password-reg" role="alert">
                                 La contraseña no cumple todos los requisitos.
                             </span>
@@ -166,7 +146,7 @@
                                 CSS: "·" (sin cumplir) → "✓" verde (cumplido).
                             -->
                             <div class="password-requisitos" id="requisitos-password"
-                                 aria-label="Requisitos de la contraseña" aria-live="polite">
+                                aria-label="Requisitos de la contraseña" aria-live="polite">
                                 <div class="password-req" id="req-longitud">Mínimo 8 caracteres</div>
                                 <div class="password-req" id="req-mayuscula">Al menos una mayúscula</div>
                                 <div class="password-req" id="req-minuscula">Al menos una minúscula</div>
@@ -174,27 +154,31 @@
                             </div>
                         </div>
 
+                        <!-- Confirmar contraseña: validación solo frontend -->
+                        <div class="grupo-campo">
+                            <label for="registro-password-confirm" class="etiqueta-campo">
+                                Confirmar contraseña
+                            </label>
+                            <input type="password" id="registro-password-confirm" name="password_confirm"
+                                class="input-campo" placeholder="Repite tu contraseña" autocomplete="new-password"
+                                required aria-describedby="error-password-confirm-reg">
+                            <span class="campo-error" id="error-password-confirm-reg" role="alert">
+                                Las contraseñas no coinciden.
+                            </span>
+                        </div>
+
                         <!-- Campo trampa para bots: oculto para usuarios reales -->
                         <div class="hp-trampa" aria-hidden="true">
                             <label for="hp-sitio-web">Sitio web</label>
-                            <input
-                                type="text"
-                                id="hp-sitio-web"
-                                name="sitio_web"
-                                tabindex="-1"
-                                autocomplete="off"
-                            >
+                            <input type="text" id="hp-sitio-web" name="sitio_web" tabindex="-1" autocomplete="off">
                         </div>
 
-                        <button
-                            type="submit"
-                            class="btn btn-verde btn-auth"
-                            id="btn-submit-registro"
-                        >
+                        <button type="submit" class="btn btn-verde btn-auth" id="btn-submit-registro">
                             Crear cuenta
                         </button>
 
                     </form>
+
 
                     <p class="auth-card__enlace">
                         ¿Ya tienes cuenta?
@@ -215,7 +199,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -224,15 +208,19 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
             Datos procedentes de la
-            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
-               target="_blank" rel="noopener noreferrer">
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index" target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+                target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>
@@ -240,4 +228,5 @@
     <script src="js/auth.js"></script>
 
 </body>
+
 </html>
