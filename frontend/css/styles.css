@@ -16,21 +16,25 @@
    7.  Formularios (Inputs y Selects)
    8.  Tabla
    9.  Badges de estado
-   10. Portada centrada
-   11. Portada partida (texto izquierda + imagen derecha)
-   12. Secciones genéricas
-   13. Grids
-   14. Tarjetas de métricas (versión verde)
-   15. Tarjetas de convocatorias por año
-   16. Sección Transparencia
-   17. Footer
-   18. Estados de carga y error
-   19. Paginación
-   20. Filtros (Buscador)
-   21. Botones adicionales (btn-verde, btn-auth)
-   22. Páginas de autenticación (login / registro)
-   23. Estadísticas (KPIs, gráficos, ranking)
-   24. Zona privada (privado.html)
+   10. Portada partida (texto izquierda + imagen derecha)
+   11. Secciones genéricas
+   12. Grids
+   13. Tarjetas de métricas (versión verde)
+   14. Tarjetas de convocatorias por año
+   15. Footer
+   16. Estados de carga y error
+   17. Paginación
+   18. Filtros (Buscador)
+   19. Botones adicionales (btn-verde, btn-auth)
+   20. Páginas de autenticación (login / registro)
+   21. Estadísticas (KPIs, gráficos, ranking)
+   22. Zona privada (privado.html)
+   23. Responsive adicional (tablas móvil)
+   24. Componentes zona privada (exclusivo, verificar-email)
+   25. Skip-nav (accesibilidad por teclado)
+   26. Botón descarga PNG (Task 2.2)
+   27. Badges de tendencia (Task 2.3)
+   28. Top-5 lista con barra proporcional (Task 2.4)
    ============================================================ */
 
 
@@ -59,10 +63,10 @@
     --color-blanco:      #FFFFFF;
 
     /* --- Colores de estado (para badges de solicitudes) --- */
-    --estado-concedida:       #2E7D32;
-    --estado-no-beneficiaria: #C62828;
-    --estado-excluida:        #EF6C00;
-    --estado-desistida:       #6A1B9A;
+    --estado-concedida:       #2E7D32;   /* verde   */
+    --estado-no-beneficiaria: #D97706;   /* ámbar claro */
+    --estado-excluida:        #C62828;   /* rojo    — la más grave */
+    --estado-desistida:       #6B7280;   /* gris    — según wireframe */
 
     /* --- Tipografía --- */
     --fuente-principal: 'Inter', sans-serif;
@@ -172,6 +176,10 @@ img {
 .navbar__logo img {
     height: 54px;
     width: auto;
+}
+
+.navbar__logo-text {
+    color: var(--color-negro);
 }
 
 /* Contenedor de los enlaces de navegación */
@@ -428,6 +436,77 @@ table tbody tr:hover {
     background-color: var(--color-fondo-verde);
 }
 
+/* ── Tabla responsive: en <600px las filas se convierten en tarjetas ──
+   Técnica data-label: cada <td> tiene un atributo data-label="Columna"
+   que se muestra como prefijo con ::before. El <thead> se oculta.
+   Solo afecta a .tabla-wrapper (buscador de solicitudes), no a otras tablas.
+   ─────────────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .tabla-wrapper {
+        overflow-x: visible;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .tabla-wrapper table thead {
+        display: none;
+    }
+
+    .tabla-wrapper table,
+    .tabla-wrapper table tbody,
+    .tabla-wrapper table tr,
+    .tabla-wrapper table td {
+        display: block;
+        width: 100%;
+    }
+
+    .tabla-wrapper table tbody tr {
+        background: var(--color-blanco);
+        border: 1px solid var(--color-gris-medio);
+        border-radius: var(--radio-card);
+        margin-bottom: 0.65rem;
+        padding: 0.6rem 0.8rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    /* Cancelar fondo alterno de escritorio */
+    .tabla-wrapper table tbody tr:nth-child(even) {
+        background: var(--color-blanco);
+    }
+
+    .tabla-wrapper table tbody tr:hover {
+        background: var(--color-fondo-verde);
+    }
+
+    .tabla-wrapper table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.28rem 0;
+        border: none;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+    }
+
+    /* Línea separadora entre campos dentro de la tarjeta */
+    .tabla-wrapper table tbody td:not(:last-child) {
+        border-bottom: 1px solid var(--color-gris-claro);
+    }
+
+    /* Etiqueta de columna: content del atributo data-label */
+    .tabla-wrapper table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--color-gris-texto);
+        white-space: nowrap;
+        min-width: 70px;
+        flex-shrink: 0;
+    }
+}
+
 
 /* ============================================================
    9. BADGES DE ESTADO
@@ -447,40 +526,6 @@ table tbody tr:hover {
 .badge-no-beneficiaria { background-color: var(--estado-no-beneficiaria); }
 .badge-excluida        { background-color: var(--estado-excluida); }
 .badge-desistida       { background-color: var(--estado-desistida); }
-
-
-/* ============================================================
-   10. SECCIÓN HERO
-   Bloque principal de la página de inicio: fondo verde suave,
-   título grande y botones de acción.
-   ============================================================ */
-.hero {
-    background: linear-gradient(135deg, var(--color-fondo-verde) 0%, #c8f0d8 100%);
-    padding: var(--espacio-xl) var(--espacio-lg);
-    text-align: center;
-}
-
-.hero__titulo {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: var(--color-verde-btn);
-    margin-bottom: var(--espacio-sm);
-    line-height: 1.2;
-}
-
-.hero__subtitulo {
-    font-size: 1.15rem;
-    color: var(--color-gris-texto);
-    max-width: 640px;
-    margin: 0 auto var(--espacio-lg);
-}
-
-.hero__acciones {
-    display: flex;
-    gap: var(--espacio-sm);
-    justify-content: center;
-    flex-wrap: wrap;
-}
 
 
 /* ============================================================
@@ -543,10 +588,6 @@ table tbody tr:hover {
         grid-template-columns: 1fr;
     }
 
-    .hero__titulo {
-        font-size: 2rem;
-    }
-
     .navbar {
         padding: 0 var(--espacio-sm);
     }
@@ -554,36 +595,6 @@ table tbody tr:hover {
     .navbar__links {
         gap: var(--espacio-sm);
     }
-}
-
-
-/* ============================================================
-   13. FOOTER
-   Pie de página con texto centrado y fondo oscuro.
-   ============================================================ */
-.footer {
-    background-color: var(--color-negro);
-    color: #aaaaaa;
-    padding: var(--espacio-lg);
-    text-align: center;
-    font-size: 0.85rem;
-    line-height: 1.8;
-}
-
-.footer a {
-    color: var(--color-primario);
-    text-decoration: underline;
-}
-
-.footer a:hover {
-    color: var(--color-hover);
-}
-
-.footer__titulo {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-blanco);
-    margin-bottom: var(--espacio-xs);
 }
 
 
@@ -820,6 +831,12 @@ table tbody tr:hover {
     line-height: 1.1;
 }
 
+.card-metrica-verde__subtitulo {
+    font-size: 0.78rem;
+    color: var(--color-gris-texto);
+    margin: 0;
+}
+
 
 /* ============================================================
    15b. TARJETAS DE CONVOCATORIAS POR AÑO
@@ -903,100 +920,6 @@ table tbody tr:hover {
 
 .card-anio__enlace:hover {
     text-decoration: underline;
-}
-
-
-/* ============================================================
-   16b. SECCIÓN TRANSPARENCIA
-   Bloque con fondo verde degradado, texto a la izquierda
-   con CTA y KPIs flotantes a la derecha.
-
-   ¿Por qué esta sección?
-   Refuerza el mensaje de transparencia que justifica el
-   proyecto. Visualmente rompe la monotonía y actúa como
-   llamada a la acción secundaria (buscar entidad, ver stats).
-   ============================================================ */
-.seccion-transparencia {
-    background: linear-gradient(135deg, #b8f0cc 0%, var(--color-fondo-verde) 60%, #e0f5e9 100%);
-    padding: var(--espacio-xl) 0;
-}
-
-.transparencia__contenedor {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--espacio-lg);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: var(--espacio-xl);
-}
-
-.transparencia__chip {
-    display: inline-block;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-verde-btn);
-    background-color: rgba(46, 125, 50, 0.1);
-    border: 1px solid rgba(46, 125, 50, 0.3);
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: var(--espacio-sm);
-}
-
-.transparencia__titulo {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-negro);
-    margin-bottom: var(--espacio-sm);
-    line-height: 1.25;
-}
-
-.transparencia__descripcion {
-    font-size: 0.95rem;
-    color: var(--color-gris-texto);
-    margin-bottom: var(--espacio-md);
-    max-width: 460px;
-    line-height: 1.7;
-}
-
-.transparencia__botones {
-    display: flex;
-    gap: var(--espacio-sm);
-    flex-wrap: wrap;
-}
-
-/* KPIs flotantes en la columna derecha */
-.transparencia__kpis {
-    display: flex;
-    gap: var(--espacio-md);
-    justify-content: center;
-}
-
-.transparencia__kpi {
-    text-align: center;
-}
-
-.transparencia__kpi-numero {
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--color-verde-btn);
-    line-height: 1;
-}
-
-.transparencia__kpi-label {
-    font-size: 0.78rem;
-    color: var(--color-gris-texto);
-    margin-top: 4px;
-}
-
-@media (max-width: 768px) {
-    .transparencia__contenedor {
-        grid-template-columns: 1fr;
-    }
-
-    .transparencia__kpis {
-        justify-content: flex-start;
-    }
 }
 
 
@@ -1442,6 +1365,33 @@ canvas {
     margin-bottom: var(--espacio-sm);
 }
 
+.grupo-campo--horizontal {
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+}
+
+.grupo-campo--horizontal .etiqueta-campo {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Texto de ayuda pequeño bajo un campo de formulario */
+.campo-nota {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--color-gris-texto);
+}
+
+/* Botón sin estilos visuales (parece texto plano) */
+.btn-texto {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 /* Etiqueta del campo */
 .etiqueta-campo {
     display: block;
@@ -1552,7 +1502,6 @@ canvas {
 /* Fondo verde suave para toda la página de estadísticas */
 .fondo-stats {
     background-color: var(--color-fondo-verde);
-    min-height: calc(100vh - var(--altura-nav));
     padding-bottom: var(--espacio-xl);
 }
 
@@ -1579,10 +1528,12 @@ canvas {
 .card-kpi {
     background-color: var(--color-blanco);
     border-radius: var(--radio-card);
-    box-shadow: var(--sombra-card);
     padding: var(--espacio-md);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     gap: var(--espacio-xs);
 }
 
@@ -1591,23 +1542,24 @@ canvas {
     font-weight: 600;
     color: var(--color-gris-texto);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
 }
 
 .card-kpi__numero {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: var(--color-negro);
-    line-height: 1;
+    color: var(--color-verde-btn);
+    line-height: 1.1;
+}
+
+#kpi-ccaa-top {
+    font-size: 1.3rem;
 }
 
 .card-kpi__tag {
     font-size: 0.78rem;
     color: var(--color-gris-texto);
-    background-color: var(--color-gris-claro);
-    border-radius: 20px;
-    padding: 2px 10px;
-    align-self: flex-start;
+    text-align: center;
 }
 
 /* Tarjeta de gráfico */
@@ -1630,7 +1582,7 @@ canvas {
 }
 
 .card-grafico__titulo {
-    font-size: 0.97rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--color-negro);
     margin: 0;
@@ -1658,11 +1610,35 @@ canvas {
     position: relative;
     height: 280px;
     width: 100%;
+    transform: translateZ(0);
+}
+
+.chart-container canvas {
+    display: block;
+}
+
+#grafico-distribucion-container,
+#grafico-top-container {
+    height: 340px;
+}
+
+#grafico-concentracion-container {
+    height: 280px;
 }
 
 /* Variante para donut: altura menor y centrado */
 .chart-container--donut {
     height: 200px;
+}
+
+/* En móvil estrecho los gráficos reducen altura para no dominar el viewport */
+@media (max-width: 480px) {
+    .chart-container {
+        height: 220px;
+    }
+    .chart-container--donut {
+        height: 180px;
+    }
 }
 
 /* Leyenda personalizada del donut */
@@ -1673,12 +1649,24 @@ canvas {
     justify-content: center;
 }
 
+.leyenda-estados--vertical {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+}
+
 .leyenda-item {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 0.82rem;
     color: var(--color-gris-texto);
+}
+
+.leyenda-estados--vertical .leyenda-item {
+    align-items: center;
+    font-size: 0.85rem;
 }
 
 .leyenda-item__color {
@@ -1719,6 +1707,12 @@ canvas {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.ranking-item__valor {
+    font-weight: 600;
+    color: var(--color-verde-btn);
+    white-space: nowrap;
 }
 
 .ranking-item__importe {
@@ -2085,9 +2079,14 @@ canvas {
 
 .resumen-tabla th,
 .resumen-tabla td {
-    padding: 10px 14px;
-    text-align: left;
+    padding: 8px 10px;
+    text-align: center;
     border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.resumen-tabla th:nth-child(1),
+.resumen-tabla td:nth-child(1) {
+    text-align: left;
 }
 
 .resumen-tabla th {
@@ -2109,6 +2108,46 @@ canvas {
     background: #f0f4f0;
     border-top: 2px solid var(--color-verde-btn);
     border-bottom: none;
+}
+
+.resumen-tabla__subtotal td {
+    font-weight: 600;
+    background: var(--color-fondo-verde);
+    border-top: 1px solid var(--color-gris-medio);
+    border-bottom: 1px solid var(--color-gris-medio);
+    color: var(--color-gris-texto);
+    font-size: 0.85rem;
+}
+
+.resumen-tabla td[colspan] {
+    text-align: left;
+}
+
+
+.resumen-tabla .col-sep {
+    border-left: 2px solid var(--color-gris-medio);
+}
+
+.resumen-grupos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.resumen-bloque {
+    background: var(--color-blanco);
+    border-radius: var(--radio-card);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.resumen-bloque .resumen-tabla {
+    margin: 0;
+    border-radius: 0;
+}
+
+.resumen-bloque--total .resumen-tabla thead {
+    display: none;
 }
 
 .resumen-tabla__pendiente td {
@@ -2153,6 +2192,8 @@ canvas {
     color: var(--color-verde-btn);
     margin: 0 0 0.8rem;
 }
+
+.privado-docs__subtitulo--negro { color: var(--color-negro); }
 
 .privado-docs__lista {
     list-style: none;
@@ -2233,4 +2274,348 @@ canvas {
     font-size: 0.875rem;
     color: #6d4c41;
     line-height: 1.4;
+}
+
+/* ============================================================
+   28. Botón de descarga de gráfico como PNG (Task 2.2)
+   ============================================================ */
+
+/**
+ * .btn-descargar-png
+ * Botón pequeño tipo ghost (borde verde, fondo transparente)
+ * que aparece en la cabecera de cada tarjeta de gráfico.
+ * Empieza oculto (display:none) y el JS lo muestra solo cuando
+ * el gráfico se ha pintado correctamente con Chart.js.
+ * Al hacer clic llama a chart.toBase64Image() y descarga el PNG.
+ */
+.btn-descargar-png {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: var(--fuente-base, 'Inter', sans-serif);
+    color: var(--color-verde-btn);
+    background: transparent;
+    border: 1.5px solid var(--color-verde-btn);
+    border-radius: var(--radio-btn, 6px);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+    line-height: 1;
+}
+
+.btn-descargar-png:hover,
+.btn-descargar-png:focus-visible {
+    background: var(--color-verde-btn);
+    color: #ffffff;
+    outline: none;
+}
+
+.btn-descargar-png:focus-visible {
+    box-shadow: 0 0 0 3px rgba(71, 192, 121, 0.35);
+}
+
+/* ============================================================
+   29. Badge de tendencia ↑/↓ en tarjetas KPI (Task 2.3)
+   ============================================================ */
+
+/**
+ * .tendencia-badge
+ * Pastilla pequeña que aparece bajo el número principal del KPI.
+ * Muestra la variación % del último año respecto al anterior:
+ *   ↑ verde  → crecimiento
+ *   ↓ rojo   → descenso
+ * Empieza oculta (display:none); home.js la muestra si hay ≥2 años.
+ * WCAG AA: #2E7D32 sobre #e8f5e9 = 5,4:1 ✓  |  #C62828 sobre #fce4ec = 5,1:1 ✓
+ */
+.tendencia-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-top: 6px;
+    white-space: nowrap;
+}
+
+.tendencia-badge--sube {
+    background: #e8f5e9;
+    color: #2E7D32;
+}
+
+.tendencia-badge--baja {
+    background: #fce4ec;
+    color: #C62828;
+}
+
+/* ============================================================
+   30. Top-5 lista de entidades con barra de proporción (Task 2.4)
+   ============================================================ */
+
+/**
+ * .top5-lista
+ * Lista ordenada de las 5 entidades con más importe.
+ * Cada ítem muestra: posición · nombre · barra proporcional · importe.
+ * La barra usa un <span> hijo cuyo ancho se calcula en JS como
+ * porcentaje respecto al valor máximo (el ítem #1 = 100%).
+ */
+.top5-lista {
+    list-style: none;
+    padding: 0;
+    margin: var(--espacio-sm) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.top5-lista__item {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.top5-lista__pos {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-gris-texto);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.top5-lista__nombre-barra {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.top5-lista__nombre {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-negro);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Pista de la barra de proporción */
+.top5-lista__pista {
+    height: 6px;
+    background: var(--color-gris-claro, #F3F4F6);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+/* Relleno dinámico — su width% se establece por JS */
+.top5-lista__fill {
+    display: block;
+    height: 100%;
+    background: var(--color-verde-btn);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.top5-lista__valor {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    white-space: nowrap;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   25. SKIP-NAV — Accesibilidad por teclado (WCAG 2.4.1)
+   ============================================================ */
+
+/**
+ * .skip-nav
+ * Enlace "Saltar al contenido principal" oculto visualmente
+ * pero accesible para usuarios de teclado y lectores de pantalla.
+ * Al recibir foco (Tab) aparece en la esquina superior izquierda
+ * con contraste WCAG AA (#fff sobre #1a3a1a = 12:1).
+ *
+ * Requiere que el destino tenga id="contenido-principal".
+ */
+.skip-nav {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 9999;
+    background: #1a3a1a;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 0 0 6px 0;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.skip-nav:focus {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    outline: 3px solid var(--color-primario);
+    outline-offset: 2px;
+}
+
+
+/* ============================================================
+   29. Modal de conclusiones por gráfica (modal-grafica.js)
+   ============================================================ */
+
+/* Botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica */
+.card-grafico__trigger {
+    display: block;
+    width: calc(100% + 2 * var(--espacio-md));
+    margin: auto calc(-1 * var(--espacio-md)) calc(-1 * var(--espacio-md));
+    background: none;
+    border: none;
+    border-top: 1px solid var(--color-gris-medio);
+    padding: 10px var(--espacio-md);
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--color-azul);
+    text-align: left;
+    border-radius: 0 0 var(--radio-card) var(--radio-card);
+    transition: background 0.15s;
+}
+
+.card-grafico__trigger::after {
+    content: ' →';
+}
+
+.card-grafico__trigger:hover {
+    background: rgba(21, 101, 192, 0.06);
+}
+
+.card-grafico__trigger:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: -2px;
+}
+
+/* Modal */
+.modal-grafica {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--espacio-md);
+}
+
+.modal-grafica--visible {
+    display: flex;
+}
+
+.modal-grafica__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.modal-grafica__panel {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 10px;
+    width: 90vw;
+    max-width: 560px;
+    min-height: 340px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Gráfica como fondo tenue */
+.modal-grafica__fondo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.09;
+    padding: 56px 16px 16px;
+    pointer-events: none;
+}
+
+/* Contenido por encima del fondo */
+.modal-grafica__contenido {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal-grafica__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-sm);
+    padding: var(--espacio-sm) var(--espacio-md);
+    border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.modal-grafica__titulo {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+.modal-grafica__cerrar {
+    background: none;
+    border: 1px solid var(--color-gris-medio);
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--color-gris-texto);
+    padding: 3px 9px;
+    line-height: 1.5;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.modal-grafica__cerrar:hover {
+    background: var(--color-gris-claro);
+    color: var(--color-negro);
+}
+
+.modal-grafica__cerrar:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+}
+
+.modal-grafica__cuerpo {
+    padding: var(--espacio-md) var(--espacio-md) var(--espacio-lg);
+    flex: 1;
+}
+
+.modal-grafica__etiqueta {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-verde-btn);
+    margin: 0 0 10px;
+}
+
+.modal-grafica__texto {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-negro);
+    margin: 0;
 }

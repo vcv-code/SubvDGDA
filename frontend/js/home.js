@@ -43,16 +43,17 @@ const COLORES = {
     verdeFondo:     'rgba(71, 192, 121, 0.15)',
     azul:           '#1565C0',
     concedida:      '#2E7D32',
-    noBeneficiaria: '#A5D6A7',
-    excluida:       '#EF6C00',
-    desistida:      '#C62828',
+    noBeneficiaria: '#D97706',
+    excluida:       '#C62828',
+    desistida:      '#6B7280',
     grisTexto:      '#616161',
     grisMedio:      '#E0E0E0',
 };
 
 const OPCIONES_BASE = {
-    responsive: true,
+    responsive:          true,
     maintainAspectRatio: false,
+    devicePixelRatio:    window.devicePixelRatio || 2,
     plugins: { legend: { display: false } },
 };
 
@@ -193,8 +194,8 @@ function mostrarMetricas(datos) {
         formatearImporte(datos.importe_global);
 
     // Tarjeta 3: Entidades únicas
-    // PENDIENTE DE BACKEND: cuando el schema EstadisticasOut incluya
-    // 'entidades_unicas', se mostrará aquí automáticamente.
+    // El campo 'entidades_unicas' está disponible en GET /estadisticas/
+    // (campo añadido en el schema EstadisticasOut del backend).
     document.getElementById('total-entidades').textContent =
         datos.entidades_unicas !== undefined
             ? formatearNumero(datos.entidades_unicas)
@@ -204,6 +205,85 @@ function mostrarMetricas(datos) {
     document.getElementById('card-total').style.display     = '';
     document.getElementById('card-importe').style.display   = '';
     document.getElementById('card-entidades').style.display = '';
+
+    // Badges de tendencia año-sobre-año (no toca el backend)
+    mostrarTendencias(datos);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// BADGES DE TENDENCIA AÑO-SOBRE-AÑO (Task 2.3)
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * mostrarTendencias(datos)
+ * Calcula la variación % entre el último año y el penúltimo disponibles
+ * en datos.por_anio y actualiza los badges de los KPIs "Registros totales"
+ * e "Importe Concedido".
+ *
+ * No toca el backend: todos los cálculos se hacen sobre los datos que
+ * ya devuelve GET /estadisticas/.
+ *
+ * ¿Por qué solo esos dos KPIs?
+ *   · Registros totales → suma d.total de todos los tipos por año.
+ *   · Importe Concedido → suma d.importe_total de todos los tipos por año.
+ *   · Entidades únicas → es un escalar global (datos.entidades_unicas),
+ *     sin desglose anual en el schema; no se puede calcular tendencia.
+ *
+ * @param {Object} datos - Objeto completo de /estadisticas/
+ */
+function mostrarTendencias(datos) {
+    const porAnio = datos.por_anio || [];
+    if (!porAnio.length) return;
+
+    // Obtener años únicos ordenados ascendentemente
+    const anios = [...new Set(porAnio.map(d => d.anio))].sort((a, b) => a - b);
+    if (anios.length < 2) return;   // Necesitamos al menos 2 años para comparar
+
+    const anioActual   = anios[anios.length - 1];
+    const anioAnterior = anios[anios.length - 2];
+
+    // Suma de un campo numérico para todos los tipos de un año dado
+    const sumar = (anio, campo) =>
+        porAnio
+            .filter(d => d.anio === anio)
+            .reduce((suma, d) => suma + (d[campo] || 0), 0);
+
+    mostrarTendencia(
+        'tendencia-registros',
+        sumar(anioActual,   'total'),
+        sumar(anioAnterior, 'total'),
+        anioAnterior
+    );
+
+    mostrarTendencia(
+        'tendencia-importe',
+        sumar(anioActual,   'importe_total'),
+        sumar(anioAnterior, 'importe_total'),
+        anioAnterior
+    );
+}
+
+/**
+ * mostrarTendencia(id, actual, anterior, anioAnterior)
+ * Rellena un badge <span> con la variación % y aplica la clase
+ * de color correcta (verde sube, rojo baja).
+ *
+ * @param {string} id           - ID del <span> en el HTML.
+ * @param {number} actual       - Valor del año más reciente.
+ * @param {number} anterior     - Valor del año de comparación.
+ * @param {number} anioAnterior - Año de comparación (para el texto del badge).
+ */
+function mostrarTendencia(id, actual, anterior, anioAnterior) {
+    const el = document.getElementById(id);
+    if (!el || !anterior) return;
+
+    const pct  = ((actual - anterior) / anterior) * 100;
+    const sube = pct >= 0;
+
+    el.className   = `tendencia-badge ${sube ? 'tendencia-badge--sube' : 'tendencia-badge--baja'}`;
+    el.textContent = `${sube ? '↑' : '↓'} ${Math.abs(pct).toFixed(1)} % vs ${anioAnterior}`;
+    el.style.display = 'inline-flex';
 }
 
 
@@ -227,6 +307,34 @@ function mostrarErrores() {
     // Sección de métricas
     const cargaMetricas = document.getElementById('metricas-carga');
     if (cargaMetricas) cargaMetricas.innerHTML = mensajeError;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// UTILIDAD: descarga de gráfico como PNG
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * configurarDescarga(instanciaChart, btnId, nombreArchivo)
+ * Muestra el botón de descarga de una tarjeta de gráfico y le
+ * añade el listener que llama a chart.toBase64Image() (Chart.js 4.x)
+ * para generar un PNG y descargarlo mediante un <a> temporal.
+ *
+ * @param {Chart}  instanciaChart  - Instancia de Chart.js ya creada.
+ * @param {string} btnId           - ID del <button> en el HTML.
+ * @param {string} nombreArchivo   - Nombre del archivo descargado (.png).
+ */
+function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.display = 'inline-flex';
+    btn.addEventListener('click', () => {
+        const url = instanciaChart.toBase64Image('image/png', 1);
+        const a   = document.createElement('a');
+        a.href     = url;
+        a.download = nombreArchivo;
+        a.click();
+    });
 }
 
 
@@ -262,8 +370,10 @@ function crearGraficoLinea(porAnio) {
         porAnio.filter(d => d.anio === anio)
                .reduce((suma, d) => suma + d.importe_total, 0)
     );
+    const epaByAnio  = ANIOS.map(anio => porAnio.filter(d => d.anio === anio && d.tipo === 'epa').reduce((s, d) => s + d.importe_total, 0));
+    const eellByAnio = ANIOS.map(anio => porAnio.filter(d => d.anio === anio && d.tipo === 'eell').reduce((s, d) => s + d.importe_total, 0));
 
-    new Chart(document.getElementById('home-grafico-linea'), {
+    const instancia = new Chart(document.getElementById('home-grafico-linea'), {
         type: 'line',
         data: {
             labels: ANIOS,
@@ -299,10 +409,22 @@ function crearGraficoLinea(porAnio) {
             },
             plugins: {
                 ...OPCIONES_BASE.plugins,
-                tooltip: { callbacks: { label: (ctx) => ' ' + formatearMillones(ctx.raw) } },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => {
+                            const lines = [' Total: ' + formatearMillones(ctx.raw)];
+                            if (epaByAnio[ctx.dataIndex]  > 0) lines.push('  EPA:  ' + formatearMillones(epaByAnio[ctx.dataIndex]));
+                            if (eellByAnio[ctx.dataIndex] > 0) lines.push('  EELL: ' + formatearMillones(eellByAnio[ctx.dataIndex]));
+                            return lines;
+                        },
+                    },
+                },
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-linea', 'evolucion-importe.png');
+    configurarModal(instancia, 'Evolución del importe por año',
+        'El importe total creció de forma constante entre 2021 y 2025. La incorporación de las EELL en 2023 generó un salto significativo: el presupuesto disponible casi se duplicó respecto a los años anteriores, que solo cubrían protectoras. El ejercicio 2025 es el de mayor volumen de toda la serie.');
 }
 
 
@@ -323,7 +445,7 @@ function crearGraficoDonut(datos) {
         { concedidas: 0, noBeneficiarias: 0, excluidas: 0, desistidas: 0 }
     );
 
-    new Chart(document.getElementById('home-grafico-donut'), {
+    const instancia = new Chart(document.getElementById('home-grafico-donut'), {
         type: 'doughnut',
         data: {
             labels: ['Concedida', 'No beneficiaria', 'Excluida', 'Desistida'],
@@ -362,6 +484,9 @@ function crearGraficoDonut(datos) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-donut', 'distribucion-estados.png');
+    configurarModal(instancia, 'Distribución por estado',
+        'Algo más del 40 % de las solicitudes acaban concedidas. El grupo "No beneficiaria" —igual de numeroso— recoge entidades que cumplen todos los requisitos pero quedan fuera por falta de presupuesto. Esto refleja una demanda estructuralmente mayor que los fondos disponibles cada año.');
 }
 
 
@@ -380,7 +505,7 @@ function crearGraficoBarras(porAnio) {
         return d ? d.importe_total : 0;
     });
 
-    new Chart(document.getElementById('home-grafico-barras'), {
+    const instancia = new Chart(document.getElementById('home-grafico-barras'), {
         type: 'bar',
         data: {
             labels: ANIOS,
@@ -440,6 +565,9 @@ function crearGraficoBarras(porAnio) {
             },
         },
     });
+    configurarDescarga(instancia, 'btn-dl-barras', 'epa-vs-eell.png');
+    configurarModal(instancia, 'EPA vs EELL por año',
+        'Desde 2023, las subvenciones a ayuntamientos (EELL) superan en volumen económico a las de protectoras (EPA). Esto no significa que haya más ayuntamientos beneficiados, sino que los importes individuales son mucho más altos: un ayuntamiento gestiona más animales y recibe en consecuencia.');
 }
 
 
@@ -449,13 +577,16 @@ function crearGraficoBarras(porAnio) {
 // ─────────────────────────────────────────────────────────────
 
 function mostrarTasaExito(datos) {
-    const el = document.getElementById('home-tasa-exito');
-    if (!el) return;
+    const elExito   = document.getElementById('home-tasa-exito');
+    const elFracaso = document.getElementById('home-tasa-fracaso');
+    if (!elExito) return;
     if (datos.total_registros > 0) {
         const pct = Math.round((datos.total_concedidas / datos.total_registros) * 100);
-        el.textContent = pct + ' %';
+        elExito.textContent   = pct + ' %';
+        if (elFracaso) elFracaso.textContent = (100 - pct) + ' %';
     } else {
-        el.textContent = '—';
+        elExito.textContent = '—';
+        if (elFracaso) elFracaso.textContent = '—';
     }
 }
 
@@ -579,8 +710,41 @@ async function cargarConvocatorias() {
 }
 
 
+/**
+ * cargarPendientesResoluciones()
+ * Lee GET /avisos/ y añade dinámicamente una entrada "Resolución pendiente
+ * de publicación" al principio de la lista de resoluciones BOE correspondiente
+ * (EELL o EPA) para cada convocatoria sin resolución.
+ * El estilo (⏳ gris itálica) lo aplica el CSS de .privado-docs__lista span.
+ */
+async function cargarPendientesResoluciones() {
+    try {
+        const resp = await fetch(`${API_URL}/avisos/`);
+        if (!resp.ok) return;
+        const avisos = await resp.json();
+
+        const listas = {
+            eell: document.getElementById('resoluciones-eell'),
+            epa:  document.getElementById('resoluciones-epa'),
+        };
+
+        avisos.forEach(aviso => {
+            const lista = listas[aviso.tipo_convoc];
+            if (!lista) return;
+            const tipo  = aviso.tipo_convoc.toUpperCase();
+            const li    = document.createElement('li');
+            li.innerHTML = `<span>${tipo} ${aviso.anio_convocatoria} — Resolución pendiente de publicación</span>`;
+            lista.prepend(li);
+        });
+    } catch (_) {
+        // Sección informativa; si falla no interrumpimos la página
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
     cargarAvisos();
     cargarConvocatorias();
+    cargarPendientesResoluciones();
 });

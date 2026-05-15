@@ -264,8 +264,10 @@ function iniciarLogin() {
                 localStorage.removeItem('refresh_token');
             }
 
-            // ── Paso 6: Redirigir a la zona privada ───────────────────────
-            window.location.href = 'privado.html';
+            // ── Paso 6: Redirigir a la zona privada (o a la URL original si hay deeplink) ──
+            const destino = sessionStorage.getItem('redirect_post_login') || 'privado.html';
+            sessionStorage.removeItem('redirect_post_login');
+            window.location.href = destino;
 
         } catch (error) {
             // Error de red (backend apagado, sin conexión, etc.)
@@ -334,8 +336,9 @@ function iniciarRegistro() {
         evento.preventDefault();
 
         // ── Paso 1: Leer valores ──────────────────────────────────────────
-        const email    = document.getElementById('registro-email').value.trim();
-        const password = document.getElementById('registro-password').value;
+        const email           = document.getElementById('registro-email').value.trim();
+        const password        = document.getElementById('registro-password').value;
+        const passwordConfirm = document.getElementById('registro-password-confirm')?.value ?? '';
         // El campo nombre es solo visual, no se envía al backend
 
         // ── Paso 2: Validación client-side ────────────────────────────────
@@ -354,6 +357,14 @@ function iniciarRegistro() {
             hayErrores = true;
         } else {
             mostrarError('error-password-reg', false);
+        }
+
+        // Validación confirmar contraseña (campo solo frontend)
+        if (password !== passwordConfirm) {
+            mostrarError('error-password-confirm-reg', true);
+            hayErrores = true;
+        } else {
+            mostrarError('error-password-confirm-reg', false);
         }
 
         if (hayErrores) return;

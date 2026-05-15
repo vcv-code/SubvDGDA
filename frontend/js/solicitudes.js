@@ -41,8 +41,7 @@
 // ─────────────────────────────────────────────────────────────
 
 const API_URL   = '';
-const LIMITE    = 50;   // Resultados por página. 50 es un buen equilibrio
-                        // entre velocidad de carga y usabilidad.
+const LIMITE    = 50;   // Resultados por página. 50 es un buen equilibrio entre velocidad y usabilidad.
 
 // ─────────────────────────────────────────────────────────────
 // ESTADO GLOBAL DE LA PÁGINA
@@ -342,17 +341,22 @@ function crearFila(s) {
 
     // Importe: null si la solicitud no fue concedida
     const importe = s.importe !== null
-    ? new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 })
-        .format(parseFloat(s.importe)) + ' €'
-    : '—';
+        ? new Intl.NumberFormat('es-ES', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+              useGrouping: true
+          }).format(Number(s.importe)) + ' €'
+        : '—';
 
     // ── Construir HTML de la fila ──────────────────────────────────
+    // data-label: atributo leído por el CSS en móvil (<600px)
+    // para mostrar el nombre de columna como prefijo en la tarjeta.
     tr.innerHTML = `
-        <td></td>
-        <td>${anio}</td>
-        <td>${tipo}</td>
-        <td></td>
-        <td>${importe}</td>
+        <td data-label="Entidad"></td>
+        <td data-label="Año">${anio}</td>
+        <td data-label="Tipo">${tipo}</td>
+        <td data-label="Estado"></td>
+        <td data-label="Importe">${importe}</td>
     `;
 
     // Celda 0: nombre de la entidad + badges si aplican

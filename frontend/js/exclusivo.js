@@ -59,6 +59,7 @@ async function fetchAutenticado(ruta, token) {
     });
     if (respuesta.status === 401) {
         localStorage.removeItem('token');
+        sessionStorage.setItem('redirect_post_login', window.location.href);
         window.location.href = 'login.html';
         return null;
     }
@@ -80,53 +81,93 @@ async function cargarResumenTabla(token) {
         const fmt = (n) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
         const num = (n) => n.toLocaleString('es-ES');
 
-        const filasConDatos  = datos.filas.filter(f => f.total > 0);
-        const totNobenef     = filasConDatos.reduce((s, f) => s + f.no_beneficiarias, 0);
-        const totExcl        = filasConDatos.reduce((s, f) => s + f.excluidas, 0);
-        const totDesist      = filasConDatos.reduce((s, f) => s + f.desistidas, 0);
+        const colgroup = `<colgroup>
+            <col style="width:10%"><col style="width:7%"><col style="width:9%">
+            <col style="width:13%"><col style="width:12%"><col style="width:12%">
+            <col style="width:12%"><col style="width:15%">
+        </colgroup>`;
 
-        const filas = datos.filas.map(f => {
+        const cabecera = `<tr>
+            <th>Tipo</th><th>Año</th><th>Total</th>
+            <th class="col-sep">Concedidas</th>
+            <th>No benef.</th><th>Excluidas</th><th>Desistidas</th>
+            <th class="col-sep">Importe concedido</th>
+        </tr>`;
+
+        const renderFila = (f) => {
             if (f.total === 0) {
                 return `<tr class="resumen-tabla__pendiente">
                     <td><span class="resumen-tabla__tipo resumen-tabla__tipo--${f.tipo}">${f.tipo.toUpperCase()}</span></td>
                     <td>${f.anio}</td>
-                    <td colspan="6">Resolución pendiente de publicación</td>
+                    <td colspan="6" style="text-align:center;">Resolución pendiente de publicación</td>
                 </tr>`;
             }
             return `<tr>
                 <td><span class="resumen-tabla__tipo resumen-tabla__tipo--${f.tipo}">${f.tipo.toUpperCase()}</span></td>
                 <td>${f.anio}</td>
                 <td>${num(f.total)}</td>
-                <td>${num(f.concedidas)}</td>
+                <td class="col-sep">${num(f.concedidas)}</td>
                 <td>${num(f.no_beneficiarias)}</td>
                 <td>${num(f.excluidas)}</td>
                 <td>${num(f.desistidas)}</td>
-                <td>${fmt(f.importe_total)}</td>
+                <td class="col-sep">${fmt(f.importe_total)}</td>
             </tr>`;
-        }).join('');
+        };
+
+        const renderBloque = (tipo, filasTipo) => {
+            const cd = filasTipo.filter(f => f.total > 0);
+            const s  = (campo) => cd.reduce((a, f) => a + f[campo], 0);
+            const subtotal = cd.length ? `
+                <tfoot>
+                    <tr class="resumen-tabla__subtotal">
+                        <td colspan="2">Subtotal ${tipo.toUpperCase()}</td>
+                        <td>${num(s('total'))}</td>
+                        <td class="col-sep">${num(s('concedidas'))}</td>
+                        <td>${num(s('no_beneficiarias'))}</td>
+                        <td>${num(s('excluidas'))}</td>
+                        <td>${num(s('desistidas'))}</td>
+                        <td class="col-sep">${fmt(s('importe_total'))}</td>
+                    </tr>
+                </tfoot>` : '';
+            return `
+                <div class="resumen-bloque tabla-scroll">
+                    <table class="resumen-tabla" aria-label="Solicitudes ${tipo.toUpperCase()}" style="table-layout:fixed;">
+                        ${colgroup}<thead>${cabecera}</thead>
+                        <tbody>${filasTipo.map(renderFila).join('')}</tbody>
+                        ${subtotal}
+                    </table>
+                </div>`;
+        };
+
+        const filasEpa  = datos.filas.filter(f => f.tipo === 'epa').sort((a, b) => b.anio - a.anio);
+        const filasEell = datos.filas.filter(f => f.tipo === 'eell').sort((a, b) => b.anio - a.anio);
+
+        const todosConDatos = datos.filas.filter(f => f.total > 0);
+        const totNobenef = todosConDatos.reduce((s, f) => s + f.no_beneficiarias, 0);
+        const totExcl    = todosConDatos.reduce((s, f) => s + f.excluidas, 0);
+        const totDesist  = todosConDatos.reduce((s, f) => s + f.desistidas, 0);
 
         contenedor.innerHTML = `
-            <div class="tabla-scroll">
-                <table class="resumen-tabla" aria-label="Resumen de solicitudes por convocatoria">
-                    <thead>
-                        <tr>
-                            <th>Tipo</th><th>Año</th><th>Total</th><th>Concedidas</th>
-                            <th>No benef.</th><th>Excluidas</th><th>Desistidas</th><th>Importe concedido</th>
-                        </tr>
-                    </thead>
-                    <tbody>${filas}</tbody>
-                    <tfoot>
-                        <tr class="resumen-tabla__totales">
-                            <td colspan="2">TOTAL</td>
-                            <td>${num(datos.total_global)}</td>
-                            <td>${num(datos.concedidas_total)}</td>
-                            <td>${num(totNobenef)}</td>
-                            <td>${num(totExcl)}</td>
-                            <td>${num(totDesist)}</td>
-                            <td>${fmt(datos.importe_global)}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+            <div class="resumen-grupos">
+                ${renderBloque('epa', filasEpa)}
+                ${renderBloque('eell', filasEell)}
+                <div class="resumen-bloque resumen-bloque--total tabla-scroll">
+                    <table class="resumen-tabla" aria-label="Total global" style="table-layout:fixed;">
+                        ${colgroup}
+                        <thead>${cabecera}</thead>
+                        <tbody>
+                            <tr class="resumen-tabla__totales">
+                                <td colspan="2">TOTAL GLOBAL</td>
+                                <td>${num(datos.total_global)}</td>
+                                <td class="col-sep">${num(datos.concedidas_total)}</td>
+                                <td>${num(totNobenef)}</td>
+                                <td>${num(totExcl)}</td>
+                                <td>${num(totDesist)}</td>
+                                <td class="col-sep">${fmt(datos.importe_global)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>`;
     } catch {
         if (contenedor) contenedor.innerHTML = '<p class="tabla-error-msg">No se pudo cargar la tabla de resumen.</p>';
@@ -144,7 +185,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let token = localStorage.getItem('token');
     if (!token) {
         token = await intentarRenovarToken();
-        if (!token) { window.location.href = 'login.html'; return; }
+        if (!token) {
+            sessionStorage.setItem('redirect_post_login', window.location.href);
+            window.location.href = 'login.html';
+            return;
+        }
     }
 
     // Verificar que el token es válido (también redirige si está expirado)

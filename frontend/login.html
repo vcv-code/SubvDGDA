@@ -43,12 +43,16 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <!-- NAVBAR -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -62,7 +66,7 @@
     </header>
 
 
-    <main class="auth-fondo">
+    <main id="contenido-principal" class="auth-fondo">
         <div class="auth-page">
 
             <!-- Enlace de contexto: sitúa al usuario dentro de la web -->
@@ -165,9 +169,9 @@
                             auth.js deshabilita el botón durante la petición
                             para evitar doble envío.
                         -->
-                        <div class="grupo-campo" style="flex-direction:row; align-items:center; gap:.5rem;">
+                        <div class="grupo-campo grupo-campo--horizontal">
                             <input type="checkbox" id="recordarme" name="recordarme">
-                            <label for="recordarme" class="etiqueta-campo" style="margin-bottom:0; cursor:pointer;">
+                            <label for="recordarme" class="etiqueta-campo">
                                 Recuérdame (mantener sesión 30 días)
                             </label>
                         </div>
@@ -205,7 +209,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -214,6 +218,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">

@@ -81,6 +81,19 @@
             opacity: .8;
             margin: 0;
         }
+        .admin-banner__volver {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: .45rem 1.1rem;
+            background: rgba(255,255,255,.15);
+            color: var(--color-blanco);
+            border-radius: 4px;
+            font-size: .85rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,.4);
+        }
+        .admin-banner__volver:hover { background: rgba(255,255,255,.25); }
 
         /* ── Cuerpo principal ─────────────────────────────────── */
         .admin-cuerpo {
@@ -320,14 +333,18 @@
 
 <body>
 
+    <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+
     <!-- =====================================================
          NAVBAR
          ===================================================== -->
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -340,8 +357,7 @@
                     <button
                         type="button"
                         id="btn-cerrar-sesion"
-                        class="btn-login"
-                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;"
+                        class="btn-login btn-texto"
                     >
                         Cerrar sesión
                     </button>
@@ -351,16 +367,16 @@
     </header>
 
 
-    <main>
+    <main id="contenido-principal">
 
         <!-- ─────────────────────────────────────────────────
              BANNER DE ADMINISTRACIÓN
              ───────────────────────────────────────────────── -->
         <div class="admin-banner">
             <div class="contenedor">
-                <span class="admin-banner__badge">Administración</span>
                 <h1 class="admin-banner__titulo">Panel de administración</h1>
                 <p class="admin-banner__meta" id="admin-meta">Cargando datos del sistema...</p>
+                <a href="privado.html" class="admin-banner__volver">← Volver al perfil</a>
             </div>
         </div>
 
@@ -392,21 +408,7 @@
                         <div class="admin-stat__label">Usuarios</div>
                     </div>
                 </div>
-                <p id="admin-ultima-convoc" style="font-size:.85rem; color:#666; margin-bottom:2rem;"></p>
-
-                <!-- 2. USUARIOS ────────────────────────────── -->
-                <section class="admin-seccion" aria-labelledby="titulo-usuarios">
-                    <div class="admin-seccion__cabecera">
-                        <span id="titulo-usuarios">Usuarios</span>
-                    </div>
-                    <div class="admin-seccion__cuerpo">
-                        <div id="admin-usuarios-contenido">
-                            <p class="admin-vacio">Cargando...</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 3. AVISOS ──────────────────────────────── -->
+                <!-- 2. AVISOS ──────────────────────────────── -->
                 <section class="admin-seccion" aria-labelledby="titulo-avisos">
                     <div class="admin-seccion__cabecera">
                         <span id="titulo-avisos">Avisos activos</span>
@@ -416,6 +418,18 @@
                     </div>
                     <div class="admin-seccion__cuerpo">
                         <div id="admin-avisos-contenido">
+                            <p class="admin-vacio">Cargando...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. USUARIOS ────────────────────────────── -->
+                <section class="admin-seccion" aria-labelledby="titulo-usuarios">
+                    <div class="admin-seccion__cabecera">
+                        <span id="titulo-usuarios">Usuarios</span>
+                    </div>
+                    <div class="admin-seccion__cuerpo">
+                        <div id="admin-usuarios-contenido">
                             <p class="admin-vacio">Cargando...</p>
                         </div>
                     </div>
@@ -439,7 +453,9 @@
                                 Recargar
                             </button>
                         </div>
-                        <pre class="admin-logs-pre" id="admin-logs-pre">Cargando...</pre>
+                        <pre class="admin-logs-pre" id="admin-logs-pre"
+                             aria-label="Últimas líneas del log de acceso del servidor"
+                             aria-live="polite">Cargando...</pre>
                     </div>
                 </section>
 
@@ -455,7 +471,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal">
+                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -464,6 +480,10 @@
                 <a href="#">Documentación</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="mailto:">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
