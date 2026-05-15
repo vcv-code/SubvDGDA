@@ -88,10 +88,6 @@ async function cargarEstado() {
         document.getElementById('stat-solicitudes').textContent   = d.total_solicitudes;
         document.getElementById('stat-usuarios').textContent      = d.total_usuarios;
 
-        if (d.ultima_convocatoria) {
-            document.getElementById('admin-ultima-convoc').textContent =
-                `Última convocatoria detectada: ${d.ultima_convocatoria}`;
-        }
     } catch {
         document.getElementById('stat-health').textContent = '✗ Error';
     }

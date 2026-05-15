@@ -237,6 +237,9 @@ class UsuarioOut(BaseModel):
 class RecuperarPasswordIn(BaseModel):
     email: EmailStr
 
+class ReenviarVerificacionIn(BaseModel):
+    email: EmailStr
+
 class ResetPasswordIn(BaseModel):
     token:            str
     contrasena_nueva: str
