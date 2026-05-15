@@ -9,9 +9,9 @@ Datos concretos del sistema para consulta rápida.
 | Contenedor | Imagen | Función |
 |---|---|---|
 | `bdns_nginx` | nginx:alpine | Proxy inverso: sirve el frontend estático y redirige las rutas `/api` al backend. Gestiona HTTPS y rate limiting. |
-| `bdns_api` | docker-backend | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
+| `bdns_api` | python:3.11-slim (build local) | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
 | `bdns_dgda_db` | mariadb:11 | Base de datos principal. |
-| `bdns_cron` | docker-cron | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
+| `bdns_cron` | python:3.12-slim (build local) | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
 | `bdns_mailpit` | axllent/mailpit | Servidor SMTP de desarrollo. Captura los emails enviados sin llegar a destino real. |
 | `bdns_adminer` | adminer | Interfaz web para administrar la BD directamente. Solo para desarrollo. |
 
@@ -79,7 +79,7 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 | Tabla | Contenido |
 |---|---|
-| `usuarios` | Cuentas de acceso a la plataforma |
+| `usuarios` | Cuentas de acceso a la plataforma (`nombre` VARCHAR 100 nullable — alias opcional) |
 | `refresh_tokens` | Tokens de larga duración para renovar el access token |
 | `reset_tokens` | Tokens de un solo uso para recuperar contraseña |
 | `verificacion_tokens` | Tokens de un solo uso para confirmar email al registrarse |
@@ -190,6 +190,21 @@ docker exec bdns_cron python3 /app/scripts/check_bdns.py
 
 ---
 
+## Instalación
+
+```bash
+git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+cd analisis-bdns-dgda
+bash install.sh
+```
+
+**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
+**Plataforma:** Linux · macOS · WSL2 (Windows requiere Docker Desktop con integración WSL2)
+
+El script detecta instalaciones existentes y no sobreescribe datos. Si la BD ya tiene solicitudes, solo levanta los contenedores. Para reinstalar desde cero: `make reset-db`.
+
+---
+
 ## Comandos de referencia
 
 | Acción | Comando |
@@ -252,8 +267,8 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
   - Errores 500: `"METHOD /ruta | TipoExcepcion: mensaje"`
 - **Destinos (en Docker):**
   - Consola: siempre activa
-  - `logs/backend/access.log` — rotación cada 5 MB, 5 copias de backup
-  - `logs/backend/error.log` — solo errores, misma rotación
+  - `logs/app/access.log` — rotación cada 5 MB, 5 copias de backup
+  - `logs/app/error.log` — solo errores, misma rotación
 
 ### Logs de Nginx
 
@@ -268,7 +283,7 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 195 tests pasando, 0 fallando (actualizado 2026-05-14)
+- **Total:** 197 tests pasando, 0 fallando (actualizado 2026-05-15)
 
 | Archivo | Qué testea |
 |---|---|
@@ -277,8 +292,8 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 | `test_refresh_token.py` | Renovación del access token con refresh token |
 | `test_recuperar_password.py` | Solicitud y validación del token de reset |
 | `test_verificacion_email.py` | Flujo completo de verificación de email post-registro |
-| `test_privado.py` | Endpoints del área privada (requieren autenticación) |
-| `test_admin.py` | Acceso denegado sin token o sin rol admin; gestión de usuarios y avisos |
+| `test_privado.py` | Endpoints del área privada: cambiar contraseña y nombre/alias |
+| `test_admin.py` | Control de acceso, gestión de usuarios y avisos, visor de logs de acceso y de error |
 | `test_avisos.py` | CRUD de avisos de convocatorias |
 | `test_convocatorias.py` | `GET /convocatorias/` devuelve JSON válido |
 | `test_solicitudes.py` | Filtros, paginación y búsqueda en `/solicitudes/` |

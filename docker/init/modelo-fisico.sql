@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS agrupacion_miembros (
 CREATE TABLE IF NOT EXISTS usuarios (
     id_usuario       INT          NOT NULL AUTO_INCREMENT,
     email            VARCHAR(255) NOT NULL,
+    nombre           VARCHAR(100) NULL                          COMMENT 'Nombre o alias opcional del usuario',
     password         VARCHAR(255) NOT NULL                      COMMENT 'Hash bcrypt de la contraseña',
     rol              ENUM('admin','registrado') NOT NULL DEFAULT 'registrado',
     activo           TINYINT(1)   NOT NULL DEFAULT 1            COMMENT '0 = cuenta desactivada por admin',
