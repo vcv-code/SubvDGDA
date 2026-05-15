@@ -366,6 +366,35 @@ async function cargarLogs() {
 }
 
 
+// ── 5. Logs de error ──────────────────────────────────────────────────────────
+
+async function cargarLogsErrores() {
+    const pre = document.getElementById('admin-logs-errores-pre');
+    const n   = document.getElementById('logs-errores-n').value;
+    pre.textContent = 'Cargando...';
+    pre.className   = 'admin-logs-pre admin-logs-pre--error';
+    try {
+        const r = await fetch(`${API_URL}/admin/logs/errores?n=${n}`, { headers: authHeaders() });
+        if (!r.ok) {
+            pre.textContent = 'Error al cargar logs.';
+            pre.classList.add('admin-logs-pre--vacio');
+            return;
+        }
+        const data = await r.json();
+        if (!data.lineas.length) {
+            pre.textContent = '(sin registros)';
+            pre.classList.add('admin-logs-pre--vacio');
+        } else {
+            pre.textContent = data.lineas.join('\n');
+            pre.scrollTop   = pre.scrollHeight;
+        }
+    } catch {
+        pre.textContent = 'Error al cargar logs.';
+        pre.classList.add('admin-logs-pre--vacio');
+    }
+}
+
+
 // ── Cerrar sesión ─────────────────────────────────────────────────────────────
 
 async function cerrarSesion() {
@@ -395,6 +424,7 @@ async function init() {
         cargarUsuarios(),
         cargarAvisos(),
         cargarLogs(),
+        cargarLogsErrores(),
     ]);
 
     document.getElementById('btn-cerrar-sesion')
@@ -403,6 +433,10 @@ async function init() {
         .addEventListener('click', cargarLogs);
     document.getElementById('logs-n')
         .addEventListener('change', cargarLogs);
+    document.getElementById('btn-recargar-logs-errores')
+        .addEventListener('click', cargarLogsErrores);
+    document.getElementById('logs-errores-n')
+        .addEventListener('change', cargarLogsErrores);
 }
 
 init();
