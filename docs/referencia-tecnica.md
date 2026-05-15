@@ -9,9 +9,9 @@ Datos concretos del sistema para consulta rápida.
 | Contenedor | Imagen | Función |
 |---|---|---|
 | `bdns_nginx` | nginx:alpine | Proxy inverso: sirve el frontend estático y redirige las rutas `/api` al backend. Gestiona HTTPS y rate limiting. |
-| `bdns_api` | docker-backend | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
+| `bdns_api` | python:3.11-slim (build local) | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
 | `bdns_dgda_db` | mariadb:11 | Base de datos principal. |
-| `bdns_cron` | docker-cron | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
+| `bdns_cron` | python:3.12-slim (build local) | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
 | `bdns_mailpit` | axllent/mailpit | Servidor SMTP de desarrollo. Captura los emails enviados sin llegar a destino real. |
 | `bdns_adminer` | adminer | Interfaz web para administrar la BD directamente. Solo para desarrollo. |
 
