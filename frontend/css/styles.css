@@ -178,6 +178,10 @@ img {
     width: auto;
 }
 
+.navbar__logo-text {
+    color: var(--color-negro);
+}
+
 /* Contenedor de los enlaces de navegación */
 .navbar__links {
     display: flex;
@@ -1361,6 +1365,33 @@ canvas {
     margin-bottom: var(--espacio-sm);
 }
 
+.grupo-campo--horizontal {
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+}
+
+.grupo-campo--horizontal .etiqueta-campo {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Texto de ayuda pequeño bajo un campo de formulario */
+.campo-nota {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--color-gris-texto);
+}
+
+/* Botón sin estilos visuales (parece texto plano) */
+.btn-texto {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 /* Etiqueta del campo */
 .etiqueta-campo {
     display: block;
@@ -2440,4 +2471,151 @@ canvas {
     overflow: visible;
     outline: 3px solid var(--color-primario);
     outline-offset: 2px;
+}
+
+
+/* ============================================================
+   29. Modal de conclusiones por gráfica (modal-grafica.js)
+   ============================================================ */
+
+/* Botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica */
+.card-grafico__trigger {
+    display: block;
+    width: calc(100% + 2 * var(--espacio-md));
+    margin: auto calc(-1 * var(--espacio-md)) calc(-1 * var(--espacio-md));
+    background: none;
+    border: none;
+    border-top: 1px solid var(--color-gris-medio);
+    padding: 10px var(--espacio-md);
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--color-azul);
+    text-align: left;
+    border-radius: 0 0 var(--radio-card) var(--radio-card);
+    transition: background 0.15s;
+}
+
+.card-grafico__trigger::after {
+    content: ' →';
+}
+
+.card-grafico__trigger:hover {
+    background: rgba(21, 101, 192, 0.06);
+}
+
+.card-grafico__trigger:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: -2px;
+}
+
+/* Modal */
+.modal-grafica {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--espacio-md);
+}
+
+.modal-grafica--visible {
+    display: flex;
+}
+
+.modal-grafica__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.modal-grafica__panel {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 10px;
+    width: 90vw;
+    max-width: 560px;
+    min-height: 340px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Gráfica como fondo tenue */
+.modal-grafica__fondo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.09;
+    padding: 56px 16px 16px;
+    pointer-events: none;
+}
+
+/* Contenido por encima del fondo */
+.modal-grafica__contenido {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal-grafica__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espacio-sm);
+    padding: var(--espacio-sm) var(--espacio-md);
+    border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.modal-grafica__titulo {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+.modal-grafica__cerrar {
+    background: none;
+    border: 1px solid var(--color-gris-medio);
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--color-gris-texto);
+    padding: 3px 9px;
+    line-height: 1.5;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.modal-grafica__cerrar:hover {
+    background: var(--color-gris-claro);
+    color: var(--color-negro);
+}
+
+.modal-grafica__cerrar:focus-visible {
+    outline: 2px solid var(--color-primario);
+    outline-offset: 2px;
+}
+
+.modal-grafica__cuerpo {
+    padding: var(--espacio-md) var(--espacio-md) var(--espacio-lg);
+    flex: 1;
+}
+
+.modal-grafica__etiqueta {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-verde-btn);
+    margin: 0 0 10px;
+}
+
+.modal-grafica__texto {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--color-negro);
+    margin: 0;
 }
