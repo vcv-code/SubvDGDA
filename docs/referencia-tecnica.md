@@ -121,6 +121,42 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 ---
 
+## Configuración HTTPS local
+
+Nginx actúa como **terminador SSL**: recibe las peticiones HTTPS del navegador, descifra el tráfico y lo reenvía al backend por HTTP interno. El backend no necesita saber nada de SSL.
+
+### Reproducir el entorno (instalación nueva)
+
+1. Generar el certificado autofirmado (válido 1 año):
+
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout docker/ssl/server.key \
+  -out docker/ssl/server.crt \
+  -subj "/CN=subvencionesDGDA.local/O=DAW/C=ES" \
+  -addext "subjectAltName=DNS:subvencionesDGDA.local,DNS:localhost"
+```
+
+El `subjectAltName` es obligatorio — sin él, Chrome y Firefox rechazan la conexión.
+
+1. Añadir al `/etc/hosts` del sistema (Windows: `C:\Windows\System32\drivers\etc\hosts`, requiere Bloc de notas como admin):
+
+```text
+127.0.0.1 subvencionesDGDA.local
+```
+
+1. `cd docker && docker compose up -d`
+1. Acceder a `https://subvencionesDGDA.local` — aceptar el aviso de certificado autofirmado.
+
+### Archivos generados
+
+| Archivo | Versionar | Nota |
+|---|---|---|
+| `docker/ssl/server.crt` | Sí | Certificado público |
+| `docker/ssl/server.key` | No (`.gitignore`) | Clave privada — cada instalación genera la suya |
+
+---
+
 ## Cron (scheduler)
 
 El contenedor `bdns_cron` ejecuta `scheduler.py` con dos tareas:
@@ -134,10 +170,22 @@ El contenedor `bdns_cron` ejecuta `scheduler.py` con dos tareas:
 
 La frecuencia mayor en abril–mayo es porque es cuando suelen publicarse las convocatorias de la DGDA.
 
+`check_bdns.py` ejecuta dos fases en cada llamada:
+
+1. **Detección de resoluciones** (siempre): consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion = NULL` del año actual. Si BDNS ya publica la fecha, la actualiza en la BD y el banner de la home desaparece automáticamente.
+2. **Detección de nuevas convocatorias** (solo si faltan): busca nuevas convocatorias DGDA del año actual en la API BDNS por palabras clave del título. Si encuentra una nueva, la inserta con `fecha_resolucion = NULL`.
+
+Detección de tipo por palabras clave en el título:
+
+| Tipo | Palabras clave |
+|---|---|
+| `eell` | `"ENTIDADES LOCALES"`, `"EELL"` |
+| `epa` | `"ENTIDADES PRIVADAS"`, `"ASOCIACIONES"`, `"PROTECCI"` (cubre "protección animal") |
+
 ### Lanzar el cron manualmente
 
 ```bash
-docker exec bdns_cron python3 /app/check_bdns.py
+docker exec bdns_cron python3 /app/scripts/check_bdns.py
 ```
 
 ---
@@ -154,7 +202,8 @@ docker exec bdns_cron python3 /app/check_bdns.py
 | Rebuild backend + reiniciar | `cd docker && docker compose down && docker compose up -d` (tras reinicio WSL2) |
 | Ver logs nginx | `docker logs bdns_nginx --tail 50` |
 | Ejecutar tests | `source venv/bin/activate && python -m pytest tests/ -q` |
-| Lanzar cron manualmente | `docker exec bdns_cron python3 /app/check_bdns.py` |
+| Lanzar cron manualmente | `docker exec bdns_cron python3 /app/scripts/check_bdns.py` |
+| Rebuild del cron | `cd docker && docker compose up --build -d cron` |
 
 ---
 
