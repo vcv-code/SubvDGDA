@@ -148,8 +148,12 @@ async function cargarUsuarios() {
                      Eliminar
                  </button>`;
 
+            const nombreMostrado = u.nombre
+                ? `<span>${u.nombre}</span><br><small class="admin-usuario__email">${u.email}</small>`
+                : u.email;
+
             return `<tr>
-                <td>${u.email}${esSelf ? ' <em style="font-size:.75rem;color:#888">(tú)</em>' : ''}</td>
+                <td>${nombreMostrado}${esSelf ? ' <em style="font-size:.75rem;color:#888">(tú)</em>' : ''}</td>
                 <td>${badgeRol}</td>
                 <td>${badgeActivo}</td>
                 <td>${badgeVerif}</td>
@@ -162,10 +166,10 @@ async function cargarUsuarios() {
             <table class="admin-tabla">
                 <thead>
                     <tr>
-                        <th>Email</th>
+                        <th>Usuario</th>
                         <th>Rol</th>
                         <th>Cuenta</th>
-                        <th>Email</th>
+                        <th>Email verif.</th>
                         <th>Alta</th>
                         <th>Acciones</th>
                     </tr>

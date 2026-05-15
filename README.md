@@ -17,7 +17,7 @@ Proyecto desarrollado por:
 
 El proyecto consiste en el desarrollo de una **plataforma web para analizar subvenciones públicas relacionadas con bienestar animal en España**, centralizando información actualmente dispersa y permitiendo su consulta, filtrado y visualización a partir de datos abiertos y documentos oficiales.
 
-El sistema permitirá:
+El sistema permite:
 
 - centralizar información de subvenciones públicas  
 - consultar convocatorias y beneficiarios  
@@ -42,7 +42,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 
 ---
 
-## Arquitectura prevista del sistema
+## Arquitectura del sistema
 
 El sistema sigue una arquitectura cliente–servidor basada en una API REST:
 
@@ -122,7 +122,7 @@ Responsable de:
 
 ### Base de datos
 
-Almacenará:
+Almacena:
 
 - convocatorias  
 - concesiones  
@@ -543,9 +543,7 @@ backend/app/
     agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
     avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
     auth.py          → POST /auth/registro · GET /auth/verificar · POST /auth/login · POST /auth/refresh · POST /auth/logout · POST /auth/recuperar · POST /auth/reset
-    privado.py       → GET /privado/perfil · GET /privado/resumen-exclusivo · GET /privado/resumen-tabla · PUT /privado/cambiar-contrasena
-    · privado.html → perfil del usuario: datos, cambiar contraseña, enlace a exclusivo.html
-    · exclusivo.html → contenido exclusivo: resumen tabla, resoluciones BOE, próximas funcionalidades
+    privado.py       → GET /privado/perfil · PUT /privado/cambiar-nombre · PUT /privado/cambiar-contrasena · GET /privado/resumen-exclusivo · GET /privado/resumen-tabla
 ```
 
 La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
@@ -630,7 +628,7 @@ El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
 ## Docker — arrancar el sistema
 
-El proyecto usa Docker Compose con cinco servicios definidos en `docker/docker-compose.yml`:
+El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-compose.yml`:
 
 | Servicio   | Imagen              | Función                                                   | Puerto externo    |
 |------------|---------------------|-----------------------------------------------------------|-------------------|
@@ -665,7 +663,7 @@ uvicorn backend.app.main:app --reload --port 8000
 
 API disponible en `http://localhost:8000/docs`
 
-### Despliegue completo (3 contenedores con Nginx)
+### Despliegue completo (stack completo con Docker Compose)
 
 #### Primera vez (volumen vacío o tras `down -v`)
 
@@ -772,7 +770,7 @@ El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 man
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 195 | pytest (sin Docker) |
+| Automáticos | 197 | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -796,7 +794,8 @@ pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones
 pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
 pytest tests/test_cache_headers.py      # cabeceras Cache-Control en /convocatorias/ y /estadisticas/
 pytest tests/test_rate_limiting.py      # configuración de rate limiting en Nginx
-pytest tests/test_privado.py            # cambiar contraseña desde la zona privada
+pytest tests/test_privado.py            # cambiar contraseña y nombre desde la zona privada
+pytest tests/test_recuperar_password.py # recuperación de contraseña por email
 pytest tests/test_refresh_token.py      # refresh token, rotación y logout
 pytest tests/test_logging.py            # middleware y configuración de logging
 pytest tests/test_verificacion_email.py # verificación de email al registro
@@ -818,7 +817,7 @@ Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba e
 
 Complementan a los tests automáticos verificando el stack completo: Nginx → FastAPI → MariaDB real. Se realizan desde `http://localhost/docs` con Docker levantado y cubren filtros con datos reales, paginación, flujo de registro y login, acceso con y sin token, y la respuesta de los manejadores de error. Ver la sección "Prueba manual rápida" en [`docs/tests.md`](docs/tests.md).
 
-#### Pruebas manuales del panel de administración (rama 12a)
+#### Pruebas manuales del panel de administración
 
 Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adicional (`prueba@test.com`).
 
@@ -839,8 +838,6 @@ Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adi
 | Quitar admin | ✅ Redirige a privado.html | admin.html ya no accesible |
 | Usuario inactivo en tabla | ✅ Muestra badge "Inactivo" con botón "Activar" | user@example.com visible correctamente |
 | Selector de logs (50 líneas) | ✅ Recarga con número correcto | Logs reflejan intentos fallidos del proceso de debug |
-
-Pendiente: "Marcar resuelta" en aviso EELL 2026 (no bloqueante para el commit).
 
 ---
 
@@ -905,7 +902,7 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
-- **Refactor CSS inline**: las páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles de diseño. Los casos sencillos ya se migraron a clases CSS; lo que queda requiere verificación visual página a página.
+- **Refactor CSS inline**: algunas páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles puntuales. El CSS del panel de administración y de la zona privada ya se migró completamente a `styles.css`; lo que queda requiere verificación visual página a página.
 
 ---
 
@@ -1088,33 +1085,26 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
   · GET /admin/logs/errores?n=100 → últimas N líneas de `logs/app/error.log` (máx. 500)
   · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
-✔ **medidas anti-bots y seguridad en registro** (rama 12)
+✔ **medidas anti-bots y seguridad en registro**
   · rate limiting `POST /auth/registro`: zona `registro:10m rate=5r/m`, `burst=3 nodelay`
   · honeypot: campo `sitio_web` oculto; si llega relleno → éxito falso sin crear cuenta
   · verificación de email al registrarse: tabla `verificacion_tokens`, `GET /auth/verificar`, bloqueo login con 403
   · reenvío de verificación `POST /auth/reenviar-verificacion`: invalida tokens anteriores, siempre 200
-✔ zona privada ampliada (rama 12): `privado.html` (perfil) + `exclusivo.html` (contenido exclusivo: tabla resumen, resoluciones BOE)
+✔ zona privada ampliada `privado.html` (perfil) + `exclusivo.html` (contenido exclusivo: tabla resumen, resoluciones BOE)
 ✔ panel de administración reorganizado: Avisos primero, botón "← Volver al perfil" en banner
-✔ páginas de error `404.html` y `50x.html` con imagen ilustrativa + `error_page` en Nginx (rama 13)
+✔ páginas de error `404.html` y `50x.html` con imagen ilustrativa + `error_page` en Nginx
 ✔ aviso legal (`aviso-legal.html`), política de privacidad (`privacidad.html`) y sección de cookies
 ✔ footer actualizado con aviso legal y privacidad en todas las páginas; resoluciones BOE en home pública
-✔ mejoras estadísticas y home (rama 13): gráficas home reordenadas, tasa éxito/fracaso, leyenda rosco con descripciones, tooltip desglose EPA/EELL, colores badges corregidos, KPIs centrados, top beneficiarios EPA con zoom y abreviaciones, rangos distribución importes ajustados a datos reales
-✔ modal de conclusiones por gráfica (rama 13): botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica abre un modal con la gráfica como fondo tenue y texto interpretativo encima; compartido entre home, EPAs y EELL mediante `js/modal-grafica.js`; 9 gráficas cubiertas
-✔ página Recursos renovada (rama 13): fondos de color por sección (verde/azul/ámbar/rosa), logos actualizados y normalizados, textos de descripción revisados
-✔ cron — corrección `detectar_tipo` (rama 13): añadida palabra clave `"PROTECCI"` para detectar convocatorias EPA cuyo título en BDNS usa "protección animal" en lugar de "entidades privadas/asociaciones"; resolvía que la EPA 2026 se omitía silenciosamente
-✔ cron — auto-detección de resoluciones (rama 13): nueva función `comprobar_resoluciones()` que en cada ejecución consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion=NULL`; si BDNS ya publica la fecha, la actualiza en la BD → el banner de avisos desaparece automáticamente sin intervención manual
-✔ resoluciones pendientes dinámicas en home (rama 13): `cargarPendientesResoluciones()` en `home.js` lee `/avisos/` e inyecta automáticamente entradas "Resolución pendiente de publicación" en las listas BOE de EELL y EPA; al resolverse, desaparecen solas
-✔ logs de error del backend en panel de admin (rama 15): nuevo endpoint `GET /admin/logs/errores?n=N` que sirve `logs/app/error.log`; nueva sección en `admin.html` con borde rojo sutil; subtítulos aclaratorios en todas las secciones del panel; CSS del panel migrado de `<style>` inline a `styles.css`
-✔ toggle visibilidad de contraseña (rama 15): botón con icono de ojo en todos los campos de contraseña (`login.html`, `registro.html`, `privado.html`, `reset-password.html`); lógica compartida en `js/utils.js`; al volver a pulsar se oculta de nuevo
+✔ mejoras estadísticas y home gráficas home reordenadas, tasa éxito/fracaso, leyenda rosco con descripciones, tooltip desglose EPA/EELL, colores badges corregidos, KPIs centrados, top beneficiarios EPA con zoom y abreviaciones, rangos distribución importes ajustados a datos reales
+✔ modal de conclusiones por gráfica botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica abre un modal con la gráfica como fondo tenue y texto interpretativo encima; compartido entre home, EPAs y EELL mediante `js/modal-grafica.js`; 9 gráficas cubiertas
+✔ página Recursos renovada fondos de color por sección (verde/azul/ámbar/rosa), logos actualizados y normalizados, textos de descripción revisados
+✔ cron — corrección `detectar_tipo` añadida palabra clave `"PROTECCI"` para detectar convocatorias EPA cuyo título en BDNS usa "protección animal" en lugar de "entidades privadas/asociaciones"; resolvía que la EPA 2026 se omitía silenciosamente
+✔ cron — auto-detección de resoluciones nueva función `comprobar_resoluciones()` que en cada ejecución consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion=NULL`; si BDNS ya publica la fecha, la actualiza en la BD → el banner de avisos desaparece automáticamente sin intervención manual
+✔ resoluciones pendientes dinámicas en home `cargarPendientesResoluciones()` en `home.js` lee `/avisos/` e inyecta automáticamente entradas "Resolución pendiente de publicación" en las listas BOE de EELL y EPA; al resolverse, desaparecen solas
+✔ logs de error del backend en panel de admin nuevo endpoint `GET /admin/logs/errores?n=N` que sirve `logs/app/error.log`; nueva sección en `admin.html` con borde rojo sutil; subtítulos aclaratorios en todas las secciones del panel; CSS del panel migrado de `<style>` inline a `styles.css`
+✔ toggle visibilidad de contraseña botón con icono de ojo en todos los campos de contraseña (`login.html`, `registro.html`, `privado.html`, `reset-password.html`); lógica compartida en `js/utils.js`; al volver a pulsar se oculta de nuevo
+✔ nombre/alias de usuario columna `nombre` (VARCHAR 100, nullable) en tabla `usuarios`; campo opcional en registro; `PUT /privado/cambiar-nombre` para actualizarlo desde el perfil; `GET /privado/perfil` lo expone; saludo en `privado.html` usa el nombre si existe; tabla de usuarios del panel admin muestra nombre + email cuando está definido
 
-### Pendientes
-
-- **Revisión accesibilidad (pasada ligera)**: verificar jerarquía de headings, `alt` en imágenes, landmarks semánticos. Riesgo bajo — no tocar contrastes ni tamaños de fuente antes de entrega (Miyuki).
-- **Footer**: revisar los enlaces de GitHub, Documentación y Contacto.
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
-- **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
-- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
-- **Script de instalación automática**: instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts` (Vero).
 
 ---
 
@@ -1122,13 +1112,15 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
-- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó en rama 13.
+- El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
+- El botón "Cerrar sesión" del navbar usa la clase `btn-login` (igual que "Acceder"). Antes tenía `btn-login btn-texto` o inline `background:none` que eliminaban el fondo verde pero dejaban el texto blanco, haciéndolo invisible. Corregido usando solo `btn-login` con `border: none` y `font-family: inherit` en el CSS para cubrir los defaults del elemento `<button>`.
+- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó.
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
-- CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido en rama 13 — el ranking aparecía sin formato hasta entonces.
+- CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido — el ranking aparecía sin formato hasta entonces.
 
 ---
 
-### Bugs encontrados durante la implementación del panel de administración (rama 12a)
+### Bugs encontrados durante la implementación del panel de administración
 
 Durante el desarrollo se detectaron tres bugs antes de las pruebas manuales, en la revisión del código y al ejecutar los tests:
 
@@ -1164,7 +1156,7 @@ Si el token caducaba en mitad de una sesión larga (el access token dura 60 minu
 
 ---
 
-### Tests que fallaron en la primera ejecución (rama 12a)
+### Tests que fallaron en la primera ejecución
 
 Al ejecutar `test_admin.py` por primera vez, dos tests fallaron y pusieron de manifiesto diferencias concretas entre SQLite (BD de tests) y MariaDB (BD de producción):
 
@@ -1176,23 +1168,23 @@ Al ejecutar `test_admin.py` por primera vez, dos tests fallaron y pusieron de ma
 
 ### Decisiones y problemas técnicos de implementaciones anteriores
 
-#### Cron — Supercronic incompatible con Docker + WSL2 (rama 9e)
+#### Cron — Supercronic incompatible con Docker + WSL2
 
 La primera aproximación para el scheduler fue usar [Supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores Docker. Falló con un error de fork al arrancar en el entorno Docker + WSL2 incluso con la opción `--debug`. Solución: scheduler implementado directamente en Python (`docker/cron/scripts/scheduler.py`) usando `time.sleep()` y comprobaciones de hora/día. Sin dependencias de binarios externos, sin permisos especiales, reproducible en cualquier entorno. Lección: en Docker, preferir código Python antes que binarios del sistema cuando el entorno de destino (WSL2) puede tener restricciones de llamadas al sistema.
 
-#### HTTPS — `subjectAltName` obligatorio en navegadores modernos (rama 9a)
+#### HTTPS — `subjectAltName` obligatorio en navegadores modernos
 
 Al generar el certificado autofirmado con `openssl`, es imprescindible incluir la extensión `subjectAltName (SAN)` además del `Common Name (CN)`. Chrome (desde 2017) y otros navegadores modernos rechazan certificados que no tengan el dominio también en el SAN, aunque el CN coincida exactamente. Sin SAN, el navegador muestra error de certificado aunque HTTPS esté configurado correctamente. El comando `openssl req` requiere el flag `-addext "subjectAltName=DNS:subvencionesDGDA.local"` o el uso de un archivo de extensiones.
 
-#### HTTPS — flag `-nodes` en `openssl` (rama 9a)
+#### HTTPS — flag `-nodes` en `openssl`
 
 Al generar la clave privada, hay que incluir `-nodes` (no DES) para que la clave no esté protegida por contraseña. Sin este flag, OpenSSL protege la clave con una contraseña que hay que introducir manualmente cada vez que Nginx arranca. En un contenedor Docker, el inicio es no interactivo — sin `-nodes`, Nginx se quedaría bloqueado esperando la contraseña y el contenedor no arrancaría.
 
-#### `limit_req_zone` en `default.conf` (rama 9f)
+#### `limit_req_zone` en `default.conf`
 
 La directiva `limit_req_zone` de Nginx debe ir dentro del bloque `http {}`, no dentro de un bloque `server {}`. En este proyecto la configuración se divide en archivos en `conf.d/`, que Nginx incluye automáticamente dentro del bloque `http {}` del archivo principal. Por eso colocar `limit_req_zone` al inicio de `default.conf` (fuera de cualquier bloque `server {}`) es correcto — al ser incluido, queda dentro del `http {}` implícito. Si se intentara poner dentro de un bloque `server {}`, Nginx rechazaría la configuración con error al arrancar.
 
-#### Comparar fechas UTC con MariaDB DATETIME naive (rama 9h)
+#### Comparar fechas UTC con MariaDB DATETIME naive
 
 MariaDB almacena el tipo `DATETIME` sin información de zona horaria. SQLAlchemy lo lee como un objeto `datetime` de Python sin timezone (naive). Al compararlo con `datetime.now(timezone.utc)` (que sí tiene timezone, aware), Python lanza `TypeError: can't compare offset-naive and offset-aware datetimes`. Solución: añadir UTC al datetime leído de la BD antes de comparar:
 
@@ -1204,7 +1196,7 @@ if rt.expira_en.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
 
 Esto ocurre en los endpoints `/auth/refresh` y `/auth/reset` al validar la expiración del token.
 
-#### Pydantic v2 antepone "Value error," a los mensajes de validación (rama 9g)
+#### Pydantic v2 antepone "Value error," a los mensajes de validación
 
 Cuando un `@field_validator` lanza `ValueError`, Pydantic v2 prefija automáticamente el mensaje con `"Value error, "`. En el frontend, el error llega como `{"detail": [{"msg": "Value error, La contraseña debe tener al menos 8 caracteres"}]}`. Sin limpiarlo, el usuario vería ese prefijo técnico. Solución en el JS:
 
@@ -1215,10 +1207,21 @@ alerta.textContent = raw.replace(/^Value error,\s*/i, '');
 
 Afecta a todos los endpoints que usan `@field_validator`: registro, cambiar contraseña y reset de contraseña.
 
-#### `unittest.mock.patch` — parchear el módulo que usa la función, no el que la define (rama 11b)
+#### `unittest.mock.patch` — parchear el módulo que usa la función, no el que la define
 
 Para mockear `enviar_email_recuperacion` en los tests de recuperación de contraseña, hay que parchear la referencia en el router (`backend.app.routers.auth.enviar_email_recuperacion`), no la función original en `backend.app.auth`. Cuando el router hace `from ..auth import enviar_email_recuperacion`, crea su propia referencia local a la función. Si se parchea la función en su módulo de origen, el router sigue usando su referencia local sin parchear. Regla general: parchear siempre en el módulo que usa la función, no en el que la define.
 
-#### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe (rama 11b)
+#### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe
 
 El endpoint devuelve exactamente el mismo mensaje tanto si el email está registrado como si no: `"Si ese email está registrado, recibirás un enlace en breve"`. Esto es una decisión de seguridad deliberada para evitar la enumeración de usuarios: si la respuesta fuera diferente según si el email existe, un atacante podría automatizar peticiones con listas de emails y descubrir qué cuentas están registradas en el sistema. La misma respuesta en ambos casos no filtra ninguna información.
+
+---
+
+## Pendientes
+
+- **Revisión accesibilidad (pasada ligera)**: verificar jerarquía de headings, `alt` en imágenes, landmarks semánticos. Riesgo bajo — no tocar contrastes ni tamaños de fuente antes de entrega (Miyuki).
+- **Footer**: revisar los enlaces de GitHub, Documentación y Contacto.
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
+- **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
+- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
+- **Script de instalación automática** (15c): instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts` (Vero).
