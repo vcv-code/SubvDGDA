@@ -148,8 +148,12 @@ async function cargarUsuarios() {
                      Eliminar
                  </button>`;
 
+            const nombreMostrado = u.nombre
+                ? `<span>${u.nombre}</span><br><small class="admin-usuario__email">${u.email}</small>`
+                : u.email;
+
             return `<tr>
-                <td>${u.email}${esSelf ? ' <em style="font-size:.75rem;color:#888">(tú)</em>' : ''}</td>
+                <td>${nombreMostrado}${esSelf ? ' <em style="font-size:.75rem;color:#888">(tú)</em>' : ''}</td>
                 <td>${badgeRol}</td>
                 <td>${badgeActivo}</td>
                 <td>${badgeVerif}</td>
@@ -162,10 +166,10 @@ async function cargarUsuarios() {
             <table class="admin-tabla">
                 <thead>
                     <tr>
-                        <th>Email</th>
+                        <th>Usuario</th>
                         <th>Rol</th>
                         <th>Cuenta</th>
-                        <th>Email</th>
+                        <th>Email verif.</th>
                         <th>Alta</th>
                         <th>Acciones</th>
                     </tr>
@@ -366,6 +370,35 @@ async function cargarLogs() {
 }
 
 
+// ── 5. Logs de error ──────────────────────────────────────────────────────────
+
+async function cargarLogsErrores() {
+    const pre = document.getElementById('admin-logs-errores-pre');
+    const n   = document.getElementById('logs-errores-n').value;
+    pre.textContent = 'Cargando...';
+    pre.className   = 'admin-logs-pre admin-logs-pre--error';
+    try {
+        const r = await fetch(`${API_URL}/admin/logs/errores?n=${n}`, { headers: authHeaders() });
+        if (!r.ok) {
+            pre.textContent = 'Error al cargar logs.';
+            pre.classList.add('admin-logs-pre--vacio');
+            return;
+        }
+        const data = await r.json();
+        if (!data.lineas.length) {
+            pre.textContent = '(sin registros)';
+            pre.classList.add('admin-logs-pre--vacio');
+        } else {
+            pre.textContent = data.lineas.join('\n');
+            pre.scrollTop   = pre.scrollHeight;
+        }
+    } catch {
+        pre.textContent = 'Error al cargar logs.';
+        pre.classList.add('admin-logs-pre--vacio');
+    }
+}
+
+
 // ── Cerrar sesión ─────────────────────────────────────────────────────────────
 
 async function cerrarSesion() {
@@ -395,6 +428,7 @@ async function init() {
         cargarUsuarios(),
         cargarAvisos(),
         cargarLogs(),
+        cargarLogsErrores(),
     ]);
 
     document.getElementById('btn-cerrar-sesion')
@@ -403,6 +437,10 @@ async function init() {
         .addEventListener('click', cargarLogs);
     document.getElementById('logs-n')
         .addEventListener('change', cargarLogs);
+    document.getElementById('btn-recargar-logs-errores')
+        .addEventListener('click', cargarLogsErrores);
+    document.getElementById('logs-errores-n')
+        .addEventListener('change', cargarLogsErrores);
 }
 
 init();
