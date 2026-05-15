@@ -106,7 +106,7 @@
             <!-- Logo + nombre del proyecto -->
             <a class="navbar__logo" href="index.html" aria-label="Ir a la página de inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
 
             <!--
@@ -307,8 +307,7 @@
                     <div class="grid-2">
                         <div class="privado-docs__grupo">
                             <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
-                            <ul class="privado-docs__lista">
-                                <li><span>EELL 2026 — Resolución pendiente de publicación</span></li>
+                            <ul class="privado-docs__lista" id="resoluciones-eell">
                                 <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
                                 <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
                                 <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
@@ -316,7 +315,7 @@
                         </div>
                         <div class="privado-docs__grupo">
                             <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
-                            <ul class="privado-docs__lista">
+                            <ul class="privado-docs__lista" id="resoluciones-epa">
                                 <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
                                 <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
                                 <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
@@ -351,7 +350,6 @@
                     </h2>
                     <p style="color:var(--color-gris-texto); margin-top:4px;">
                         Evolución, distribución y comparativa de subvenciones 2021–2025.
-                        Datos de BDNS y DGDA.
                     </p>
                 </div>
 
@@ -417,6 +415,7 @@
                                     <p style="font-size:5.5rem; font-weight:700; color:#C62828; margin:0; line-height:1;"
                                        id="home-tasa-fracaso">—</p>
                                     <p style="color:var(--color-gris-texto); font-size:0.85rem; margin-top:6px;">no concedidas</p>
+                                    <p style="color:var(--color-gris-texto); font-size:0.72rem; margin-top:3px;">(no benef. + excluídas + desistidas)</p>
                                 </div>
                             </div>
                         </div>
@@ -534,6 +533,7 @@
          ===================================================== -->
     <!-- Chart.js debe cargarse ANTES que home.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/modal-grafica.js"></script>
     <script src="js/home.js"></script>
 
 </body>
