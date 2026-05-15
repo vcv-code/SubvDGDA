@@ -64,6 +64,7 @@ Frontend
 
 ## Modelo de datos (comparativa diagramas ER)
 
+```html
 <table align="center">
   <tr>
     <th>Original</th>
@@ -74,6 +75,7 @@ Frontend
     <td><img src="docs/img/Modelo-ER-Def.jpg" width="400" alt="Diagrama ER definitivo"></td>
   </tr>
 </table>
+```
 
 ---
 
@@ -896,7 +898,7 @@ Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adi
 | Reactivar usuario | ✅ Login funciona tras activar | Badge vuelve a "Activo", 403 desaparece |
 | Hacer admin a otro usuario | ✅ Usuario accede a admin.html | Botón aparece en privado.html al volver a entrar |
 | Quitar admin | ✅ Redirige a privado.html | admin.html ya no accesible |
-| Usuario inactivo en tabla | ✅ Muestra badge "Inactivo" con botón "Activar" | user@example.com visible correctamente |
+| Usuario inactivo en tabla | ✅ Muestra badge "Inactivo" con botón "Activar" | user@example .com visible correctamente |
 | Selector de logs (50 líneas) | ✅ Recarga con número correcto | Logs reflejan intentos fallidos del proceso de debug |
 
 ---
