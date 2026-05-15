@@ -621,7 +621,7 @@ pip install -r requeriments.txt
 
 El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
-- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `pandas`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
+- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
 - **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (`fastapi`, `uvicorn`, `sqlalchemy`, `pymysql`, `bcrypt`, `python-jose`, `email-validator`, `httpx` y `pytest`). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API. Todas las versiones están fijadas.
 
 ---
@@ -633,7 +633,7 @@ El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-co
 | Servicio   | Imagen              | Función                                                   | Puerto externo    |
 |------------|---------------------|-----------------------------------------------------------|-------------------|
 | `db`       | mariadb:11          | Base de datos MariaDB con el dataset cargado              | 3307              |
-| `backend`  | Python (build)      | API FastAPI                                               | ninguno (interno) |
+| `backend`  | Python 3.11-slim (build) | API FastAPI                                          | ninguno (interno) |
 | `nginx`    | nginx:alpine        | Proxy inverso, punto de entrada                           | 80, 443           |
 | `cron`     | Python (scheduler)  | Tareas programadas: comprobación BDNS y health check      | ninguno           |
 | `mailpit`  | axllent/mailpit     | Servidor SMTP de desarrollo — atrapa emails sin enviarlos | 1025 (SMTP), 8025 (web UI) |
@@ -883,6 +883,39 @@ Las funcionalidades y tareas de desarrollo se registran como **Issues**, que pos
 - Done
 
 Cada funcionalidad o investigación se desarrolla en una rama feature/* y posteriormente se integra en la rama dev mediante Pull Requests.
+
+---
+
+## Makefile — atajos para el día a día
+
+El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
+
+| Comando | Qué hace |
+|---|---|
+| `make start` | Levanta todos los contenedores |
+| `make stop` | Para los contenedores (conserva los datos) |
+| `make restart` | Para y vuelve a levantar |
+| `make build` | Reconstruye la imagen del backend |
+| `make build-cron` | Reconstruye la imagen del cron |
+| `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
+| `make cargar` | Recarga el dataset sin borrar el volumen |
+| `make test` | Ejecuta los tests con pytest |
+| `make test-v` | Tests con salida detallada |
+| `make logs` | Últimas 100 líneas de logs del backend |
+| `make logs-cron` | Últimas 50 líneas de logs del cron |
+| `make logs-nginx` | Últimas 50 líneas de logs de Nginx |
+| `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
+| `make shell-db` | Abre la consola MariaDB dentro del contenedor |
+| `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
+
+### Windows
+
+`make` no está disponible de serie en Windows. Opciones:
+
+- **Recomendada:** usar WSL2 y ejecutar desde la terminal Linux — `make` funciona directamente
+- **Alternativa:** instalar `make` con `winget install GnuWin32.Make` y ejecutar desde PowerShell
+- **Sin instalar nada:** copiar el comando del target directamente del `Makefile` y ejecutarlo en la terminal
 
 ---
 

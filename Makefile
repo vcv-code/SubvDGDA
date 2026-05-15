@@ -1,0 +1,81 @@
+# Makefile — Subvenciones Bienestar Animal (BDNS / DGDA)
+# Atajos para las tareas habituales del proyecto.
+# Requiere: make, Docker, Python 3 con venv activable en venv/
+#
+# Windows: make no está disponible de serie.
+# Opciones: (1) usar WSL2 y ejecutar desde Linux,
+#           (2) instalar make con: winget install GnuWin32.Make
+#           (3) copiar el comando directamente de cada target.
+
+.PHONY: start stop restart build build-cron reload-nginx \
+        reset-db cargar test logs logs-cron logs-nginx \
+        backup shell-db mailpit
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+
+start:
+	cd docker && docker compose up -d
+
+stop:
+	cd docker && docker compose down
+
+restart:
+	cd docker && docker compose down && docker compose up -d
+
+build:
+	cd docker && docker compose up --build -d backend
+
+build-cron:
+	cd docker && docker compose up --build -d cron
+
+reload-nginx:
+	docker exec bdns_nginx nginx -s reload
+
+# ── Base de datos ─────────────────────────────────────────────────────────────
+
+reset-db:
+	@echo "⚠️  Esto borrará todos los datos. ¿Continuar? [s/N]" && read ans && [ "$$ans" = "s" ]
+	cd docker && docker compose down -v && docker compose up -d
+	@echo "Esperando a que la BD esté lista..."
+	@until docker exec bdns_dgda_db mariadb -uroot -proot -e "SELECT 1" >/dev/null 2>&1; do \
+		printf "."; sleep 2; \
+	done && echo ""
+	venv/bin/python -m scripts.data_processing.cargar_dataset
+
+cargar:
+	venv/bin/python -m scripts.data_processing.cargar_dataset
+
+# ── Tests ─────────────────────────────────────────────────────────────────────
+
+test:
+	venv/bin/python -m pytest tests/ -q
+
+test-v:
+	venv/bin/python -m pytest tests/ -v
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+
+logs:
+	docker logs bdns_api --tail 100
+
+logs-cron:
+	docker logs bdns_cron --tail 50
+
+logs-nginx:
+	docker logs bdns_nginx --tail 50
+
+# ── Utilidades ────────────────────────────────────────────────────────────────
+
+backup:
+	docker exec bdns_dgda_db mariadb-dump -uroot -proot bdns_dgda \
+		> backup_$$(date +%Y%m%d_%H%M%S).sql
+	@echo "Backup guardado en el directorio actual."
+
+shell-db:
+	docker exec -it bdns_dgda_db mariadb -uroot -proot bdns_dgda
+
+mailpit:
+	@echo "Mailpit disponible en http://localhost:8025"
+	@which xdg-open >/dev/null 2>&1 && xdg-open http://localhost:8025 || \
+	 which open       >/dev/null 2>&1 && open       http://localhost:8025 || \
+	 echo "(Ábrelo manualmente en el navegador)"
