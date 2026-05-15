@@ -221,6 +221,8 @@ function poblarGraficoTopProvincias(topProvincias) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-provincias', 'top-provincias-eell.png');
+    configurarModal(instancia, 'Top provincias por importe EELL',
+        'Las cinco provincias con mayor importe concentran buena parte del total distribuido. Castilla-La Mancha encabeza por importe total, mientras Andalucía lidera por número de ayuntamientos beneficiados. Esta diferencia refleja que algunas provincias tienen pocos municipios pero con importes unitarios más altos por pertenecer al Tramo 1 o Tramo 2.');
 }
 
 
@@ -278,6 +280,8 @@ function poblarGraficoConcentracion(concentracion) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-concentracion', 'concentracion-eell.png');
+    configurarModal(instancia, 'Concentración del importe EELL',
+        'El 10 % de las entidades con mayor subvención acapara más de la mitad del importe total. Este nivel de concentración es habitual en convocatorias por tramos de población: los municipios del Tramo 1 (mayor población) reciben importes base más altos, lo que genera una asimetría natural en el reparto.');
 }
 
 
@@ -348,7 +352,6 @@ function poblarRankingCcaa(porCcaa) {
 function poblarTop5Ccaa(porCcaa) {
     const lista     = document.getElementById('top5-ccaa-lista');
     const pendiente = document.getElementById('top5-ccaa-pendiente');
-    const badge     = document.getElementById('top5-badge');
 
     if (!porCcaa.length || !lista) return;
 
@@ -358,9 +361,7 @@ function poblarTop5Ccaa(porCcaa) {
 
     if (!top5.length) return;
 
-    // Ocultar placeholder, mostrar lista y actualizar badge
     if (pendiente) pendiente.style.display = 'none';
-    if (badge)     badge.textContent       = `Top ${top5.length}`;
     lista.style.display = 'flex';
 
     const maxImporte = top5[0].importe_total;  // El #1 es el 100 %
@@ -407,7 +408,6 @@ function poblarTop5Ccaa(porCcaa) {
 function poblarTop5Concesiones(porCcaa) {
     const lista     = document.getElementById('top5-concesiones-lista');
     const pendiente = document.getElementById('top5-concesiones-pendiente');
-    const badge     = document.getElementById('top5-concesiones-badge');
 
     if (!porCcaa.length || !lista) return;
 
@@ -418,7 +418,6 @@ function poblarTop5Concesiones(porCcaa) {
     if (!top5.length) return;
 
     if (pendiente) pendiente.style.display = 'none';
-    if (badge)     badge.textContent       = `Top ${top5.length}`;
     lista.style.display = 'flex';
 
     const maxConcesiones = top5[0].num_concesiones;
