@@ -52,6 +52,7 @@ const COLORES = {
 const OPCIONES_BASE = {
     responsive:          true,
     maintainAspectRatio: false,
+    devicePixelRatio:    window.devicePixelRatio || 2,
     plugins: { legend: { display: false } },
 };
 
@@ -161,6 +162,11 @@ function poblarKpis(datos) {
             datos.nuevas_entidades != null
                 ? datos.nuevas_entidades.toLocaleString('es-ES')
                 : '—';
+        const tag = document.getElementById('kpi-nuevas-entidades-tag');
+        if (tag && datos.por_anio?.length) {
+            const ultimoAnio = Math.max(...datos.por_anio.map(d => d.anio));
+            tag.textContent = `Primera vez concedida en ${ultimoAnio}`;
+        }
     }
 }
 
@@ -213,6 +219,8 @@ function poblarGraficoDistribucion(distribucion) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-distribucion', 'distribucion-importes-epa.png');
+    configurarModal(instancia, 'Distribución de importes EPA',
+        'La mayoría de las protectoras reciben entre 2.000 € y 6.000 €. Los tramos más altos (más de 10.000 €) son minoritarios y corresponden a entidades con puntuaciones muy elevadas en varios criterios. El reparto es relativamente equilibrado: no hay una diferencia extrema entre el importe más habitual y la media.');
 }
 
 
@@ -289,6 +297,8 @@ function poblarGraficoMediaMediana(porAnio) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-media-mediana', 'media-mediana-epa.png');
+    configurarModal(instancia, 'Media vs mediana por año',
+        'La mediana es sistemáticamente inferior a la media en todos los años. Esto significa que unas pocas entidades con importes muy altos elevan el promedio, pero la mayoría de las protectoras reciben menos de lo que indica la media. La mediana refleja mejor lo que corresponde a una protectora típica.');
 }
 
 
@@ -365,6 +375,8 @@ function poblarGraficoNuevosRecurrentes(porAnio) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-nuevos', 'nuevos-recurrentes-epa.png');
+    configurarModal(instancia, 'Entidades nuevas y recurrentes',
+        'La mayor parte de las entidades beneficiarias ya participaron el año anterior. El grupo de nuevas incorporaciones se mantiene estable en torno al 20-30 %, lo que indica un núcleo consolidado de protectoras que accede a la convocatoria de forma regular y acumula historial de puntuación.');
 }
 
 
@@ -388,10 +400,16 @@ function poblarGraficoTopBeneficiarios(porAnio) {
     if (topPendiente) topPendiente.style.display = 'none';
     if (graficoTop)   graficoTop.style.display   = 'block';
 
+    const abreviar = (s) => s
+        .replace(/^ASOCIACI[ÓO]N\b/i, 'A.')
+        .replace(/^ASSOCIACIÓ\b/i,     'A.')
+        .replace(/^ASOC\b/i,           'A.')
+        .replace(/PROTECTORA\b/gi,     'P.');
+
     const instancia = new Chart(graficoTop, {
         type: 'bar',
         data: {
-            labels: top.map(d => d.nombre),
+            labels: top.map((d, i) => `${i + 1}ª - ${abreviar(d.nombre)}`),
             datasets: [{
                 label:           'Importe (€)',
                 data:            top.map(d => d.importe),
@@ -403,32 +421,49 @@ function poblarGraficoTopBeneficiarios(porAnio) {
         options: {
             ...OPCIONES_BASE,
             indexAxis: 'y',
+            layout: { padding: { left: 0 } },
             plugins: {
                 ...OPCIONES_BASE.plugins,
                 tooltip: {
                     callbacks: {
+                        title: ctx => top[ctx[0].dataIndex].nombre,
                         label: ctx => ` ${formatearEuros(ctx.parsed.x)}`,
                     },
                 },
             },
             scales: {
                 x: {
-                    beginAtZero: true,
+                    min:  7000,
+                    max:  8500,
                     grid:  { color: COLORES.grisMedio },
                     ticks: {
-                        font:     { family: 'Inter', size: 11 },
-                        color:    COLORES.grisTexto,
-                        callback: v => formatearEjeY(v),
+                        font:      { family: 'Inter', size: 11 },
+                        color:     COLORES.grisTexto,
+                        stepSize:  500,
+                        callback:  v => {
+                            const k = v / 1000;
+                            return (k % 1 === 0 ? k : k.toFixed(1).replace('.', ',')) + ' K';
+                        },
                     },
                 },
                 y: {
                     grid:  { display: false },
-                    ticks: { font: { family: 'Inter', size: 10 }, color: COLORES.grisTexto },
+                    ticks: {
+                        font:       { family: 'Inter', size: 10 },
+                        color:      COLORES.grisTexto,
+                        crossAlign: 'far',
+                    },
+                    afterFit: (axis) => { axis.width = 290; },
                 },
             },
         },
     });
     configurarDescarga(instancia, 'btn-dl-top', 'top-beneficiarios-epa.png');
+    configurarModal(instancia, 'Top beneficiarios EPA',
+        'Las entidades con mayor importe acumulado son protectoras que han obtenido alta puntuación en varias convocatorias consecutivas. La diferencia entre las primeras posiciones refleja que el sistema premia la trayectoria: cuantos más años se participa y se mejoran las instalaciones o la capacidad, mayor es la puntuación.');
+
+    const tituloEl = graficoTop.closest('.card-grafico')?.querySelector('.card-grafico__titulo');
+    if (tituloEl) tituloEl.textContent = `Top beneficiarios ${ultimo.anio}`;
 }
 
 

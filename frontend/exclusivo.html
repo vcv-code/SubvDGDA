@@ -42,7 +42,7 @@
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -51,8 +51,7 @@
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li>
-                    <button type="button" id="btn-cerrar-sesion" class="btn-login"
-                        style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">
+                    <button type="button" id="btn-cerrar-sesion" class="btn-login btn-texto">
                         Cerrar sesión
                     </button>
                 </li>
@@ -93,36 +92,6 @@
 
                 <hr class="privado-divisor">
 
-                <!-- Resoluciones oficiales -->
-                <h2 class="privado-seccion__titulo">Resoluciones oficiales</h2>
-                <p class="privado-seccion__subtitulo">
-                    Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
-                </p>
-
-                <div class="privado-docs">
-                    <div class="privado-docs__grupo">
-                        <h3 class="privado-docs__subtitulo">Entidades de Protección Animal (EPA)</h3>
-                        <ul class="privado-docs__lista">
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2021-8098" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2021 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2022-11310" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2023-18004" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión (periodo semestral)</a></li>
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2024-18573" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión (periodo semestral)</a></li>
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-9522" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
-                        </ul>
-                    </div>
-                    <div class="privado-docs__grupo">
-                        <h3 class="privado-docs__subtitulo">Entidades Locales (EELL)</h3>
-                        <ul class="privado-docs__lista">
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2023-23049" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2024-22571" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-11753" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
-                            <li><span>EELL 2026 — Resolución pendiente de publicación</span></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <hr class="privado-divisor">
-
                 <!-- Próximas funcionalidades -->
                 <h2 class="privado-seccion__titulo">Próximamente</h2>
                 <p class="privado-seccion__subtitulo">
@@ -133,22 +102,8 @@
                     <div class="privado-item">
                         <div class="privado-item__icono">🕐</div>
                         <div class="privado-item__texto">
-                            <p class="privado-item__label">Historial completo por entidad</p>
-                            <p class="privado-item__detalle">Todas las solicitudes de una entidad a lo largo de los años, con evolución de importes</p>
-                        </div>
-                    </div>
-                    <div class="privado-item">
-                        <div class="privado-item__icono">🕐</div>
-                        <div class="privado-item__texto">
                             <p class="privado-item__label">Causas de exclusión frecuentes</p>
                             <p class="privado-item__detalle">Análisis de los motivos más comunes de exclusión por tipo de convocatoria</p>
-                        </div>
-                    </div>
-                    <div class="privado-item">
-                        <div class="privado-item__icono">🕐</div>
-                        <div class="privado-item__texto">
-                            <p class="privado-item__label">Importes por provincia y CCAA</p>
-                            <p class="privado-item__detalle">Comparativa territorial de importes concedidos y porcentaje sobre el total</p>
                         </div>
                     </div>
                     <div class="privado-item">

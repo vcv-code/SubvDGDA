@@ -36,7 +36,14 @@
         /* ── Bloque de categoría ── */
         .recursos-bloque {
             margin-bottom: var(--espacio-xl);
+            border-radius: 14px;
+            padding: var(--espacio-md);
         }
+
+        .recursos-bloque--proteccion    { background: #E8F5E9; }
+        .recursos-bloque--colonias      { background: #E3F2FD; }
+        .recursos-bloque--especializadas { background: #FFF8E1; }
+        .recursos-bloque--campanas      { background: #FCE4EC; }
 
         .recursos-bloque__cabecera {
             display: flex;
@@ -44,7 +51,7 @@
             gap: 10px;
             margin-bottom: var(--espacio-md);
             padding-bottom: 10px;
-            border-bottom: 2px solid var(--color-fondo-verde);
+            border-bottom: 2px solid rgba(0,0,0,0.08);
         }
 
         .recursos-bloque__titulo {
@@ -71,7 +78,7 @@
         .card-entidad img {
             display: block;
             width: 100%;
-            height: 80px;
+            height: 100px;
             object-fit: contain;
             object-position: center;
         }
@@ -136,7 +143,7 @@
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -169,7 +176,7 @@
                 <!-- ═══════════════════════════════════════════════
                      BLOQUE 1: PROTECCIÓN ANIMAL
                      ═══════════════════════════════════════════════ -->
-                <div class="recursos-bloque" aria-labelledby="bloque-proteccion">
+                <div class="recursos-bloque recursos-bloque--proteccion" aria-labelledby="bloque-proteccion">
                     <div class="recursos-bloque__cabecera">
                         <h2 class="recursos-bloque__titulo" id="bloque-proteccion">
                             Protección animal
@@ -181,52 +188,50 @@
                         <article class="card-entidad">
                             <a href="https://piensosolidariobasma.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/basma.webp"
+                                    src="assets/img/logos/basma.webp?v=9"
                                     alt="Logo BASMA"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">BASMA</p>
                             <p class="card-entidad__categoria">Banco de alimentos</p>
                             <p class="card-entidad__descripcion">
-                                Apoya a protectoras proporcionando alimento y recursos básicos para animales
-                                en situación de vulnerabilidad.
+                                Banco solidario de alimento para animales a nivel nacional, para protectoras
+                                y gestoras de colonias en situaciones de emergencia.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://faada.org" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-faada.webp"
+                                    src="assets/img/logos/logo-faada.webp?v=9"
                                     alt="Logo FAADA"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">FAADA</p>
                             <p class="card-entidad__categoria">Fundación</p>
                             <p class="card-entidad__descripcion">
-                                Trabaja en la mejora de la legislación y las políticas públicas de bienestar
-                                animal en España.
+                                Trabaja en la mejora de la legislación y políticas públicas de bienestar animal, además de impulsar proyectos sociales.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://animanaturalis.org" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-animaNaturalis.webp"
+                                    src="assets/img/logos/logo-animaNaturalis.webp?v=9"
                                     alt="Logo Animanaturalis"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Animanaturalis</p>
                             <p class="card-entidad__categoria">Activismo</p>
                             <p class="card-entidad__descripcion">
-                                Organización centrada en campañas de concienciación y defensa de los derechos
-                                de los animales.
+                                Organización con campañas de concienciación de gran impacto y protestas en defensa de los derechos de los animales.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://intercids.org" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/Logo-Intercids-c.webp"
+                                    src="assets/img/logos/Logo-Intercids-c.webp?v=9"
                                     alt="Logo Intercids"
                                     loading="lazy">
                             </a>
@@ -241,7 +246,7 @@
                         <article class="card-entidad">
                             <a href="https://apdda.es" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-apdda.webp"
+                                    src="assets/img/logos/logo-apdda.webp?v=9"
                                     alt="Logo APDDA"
                                     loading="lazy">
                             </a>
@@ -256,15 +261,15 @@
                         <article class="card-entidad">
                             <a href="https://avatma.org" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/avatma-negativo-solo-logo.webp"
+                                    src="assets/img/logos/avatma-negativo-solo-logo.webp?v=9"
                                     alt="Logo AVATMA"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">AVATMA</p>
                             <p class="card-entidad__categoria">Veterinario / ámbito técnico</p>
                             <p class="card-entidad__descripcion">
-                                Asociación de profesionales veterinarios que promueve la protección animal
-                                desde una perspectiva científica y ética, con especial foco en la tauromaquia.
+                                Profesionales veterinarios contra la tauromaquia, que promueven
+                                la protección animal con criterios científicos y éticos.
                             </p>
                         </article>
 
@@ -275,7 +280,7 @@
                 <!-- ═══════════════════════════════════════════════
                      BLOQUE 2: COLONIAS FELINAS
                      ═══════════════════════════════════════════════ -->
-                <div class="recursos-bloque" aria-labelledby="bloque-colonias">
+                <div class="recursos-bloque recursos-bloque--colonias" aria-labelledby="bloque-colonias">
                     <div class="recursos-bloque__cabecera">
                         <h2 class="recursos-bloque__titulo" id="bloque-colonias">
                             Gestión de colonias felinas
@@ -287,90 +292,96 @@
                         <article class="card-entidad">
                             <a href="https://gemfe.es" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-gemfe.webp"
+                                    src="assets/img/logos/logo-gemfe.webp?v=9"
                                     alt="Logo GEMFE"
                                     loading="lazy">
                             </a>
-                            <p class="card-entidad__nombre">GEMFE</p>
+                            <p class="card-entidad__nombre">GEMFE (AVEPA)</p>
                             <p class="card-entidad__categoria">Ámbito veterinario</p>
                             <p class="card-entidad__descripcion">
-                                Grupo de especialidad veterinaria centrado en la salud y bienestar de los gatos,
-                                con labor de formación y divulgación.
+                                Grupo de especialidad de AVEPA centrado en medicina felina, formación
+                                veterinaria y divulgación sobre salud y bienestar de los gatos, con recursos
+                                dirigidos a profesionales y personas cuidadoras.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://lightblue-kangaroo-745053.hostingersite.com/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-plataformaGarra.webp"
+                                    src="assets/img/logos/logo-plataformaGarra.webp?v=9"
                                     alt="Logo Plataforma GARRA"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Plataforma GARRA</p>
                             <p class="card-entidad__categoria">Plataforma</p>
                             <p class="card-entidad__descripcion">
-                                Iniciativa centrada en la defensa y mejora de la gestión ética de colonias
-                                felinas a nivel estatal.
+                                Iniciativa para la defensa de la gestión ética de colonias felinas
+                                a nivel estatal, que lucha contra el incumplimiento de las normativas
+                                de bienestar animal por parte de las administraciones.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://losgatostienenley.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/Logo-losGatosTienenLey.webp"
+                                    src="assets/img/logos/Logo-losGatosTienenLey.webp?v=9"
                                     alt="Logo Los gatos tienen ley"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Los gatos tienen ley</p>
                             <p class="card-entidad__categoria">Iniciativa legal</p>
                             <p class="card-entidad__descripcion">
-                                Proyecto orientado a impulsar el reconocimiento legal y la protección de los
-                                gatos comunitarios.
+                                Proyecto orientado a impulsar el reconocimiento legal y la protección de
+                                los gatos comunitarios, con movilizaciones en distintas ciudades de España
+                                en defensa de la aplicación efectiva de la Ley 7/2023.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.fdcats.com/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-fdcats.webp"
+                                    src="assets/img/logos/logo-fdcats.webp?v=9"
                                     alt="Logo FDCats"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">FDCats</p>
                             <p class="card-entidad__categoria">Federación</p>
                             <p class="card-entidad__descripcion">
-                                Red de asociaciones enfocada en la gestión de colonias felinas y la
-                                implantación del método CER.
+                                Federación con larga trayectoria en la gestión ética de colonias felinas
+                                e implantación del método CER, ofreciendo formación y recursos útiles para
+                                voluntariado y administraciones.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.facebook.com/p/Los-Cuatro-De-La-Empanadilla-100064632378209/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-losCuatroDeLaEmpanadilla.webp"
+                                    src="assets/img/logos/logo-losCuatroDeLaEmpanadilla.webp?v=9"
                                     alt="Logo Los 4 de la Empandilla"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Los 4 de la Empandilla</p>
                             <p class="card-entidad__categoria">Rescate especializado</p>
                             <p class="card-entidad__descripcion">
-                                Grupo de rescate activo en Madrid y otras zonas, centrado en intervenciones
-                                complejas y apoyo a la gestión de colonias felinas.
+                                Grupo de rescate en Madrid y otras zonas, con intervenciones complejas
+                                y rescates especializados de gatos en situaciones de riesgo o vulnerabilidad,
+                                además de apoyo a la gestión ética de colonias felinas.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://meowmetrics.com/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-meowMetrics.webp"
+                                    src="assets/img/logos/logo-meowMetrics.webp?v=9"
                                     alt="Logo MeowMetrics"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">MeowMetrics</p>
                             <p class="card-entidad__categoria">Herramienta digital</p>
                             <p class="card-entidad__descripcion">
-                                Plataforma para la gestión, seguimiento y análisis de colonias felinas
-                                basada en datos.
+                                Plataforma digital para la gestión y análisis de colonias felinas que facilita
+                                la coordinación entre administraciones y voluntariado mediante datos, avisos
+                                y herramientas de seguimiento CER.
                             </p>
                         </article>
 
@@ -381,7 +392,7 @@
                 <!-- ═══════════════════════════════════════════════
                      BLOQUE 3: ENTIDADES ESPECIALIZADAS
                      ═══════════════════════════════════════════════ -->
-                <div class="recursos-bloque" aria-labelledby="bloque-especializadas">
+                <div class="recursos-bloque recursos-bloque--especializadas" aria-labelledby="bloque-especializadas">
                     <div class="recursos-bloque__cabecera">
                         <h2 class="recursos-bloque__titulo" id="bloque-especializadas">
                             Entidades especializadas
@@ -393,87 +404,84 @@
                         <article class="card-entidad">
                             <a href="https://www.facebook.com/ProteccionCotorras/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-pCotorras.webp"
+                                    src="assets/img/logos/logo-pCotorras.webp?v=9"
                                     alt="Logo Plataforma P. Cotorras"
                                     loading="lazy">
                             </a>
-                            <p class="card-entidad__nombre">Plataforma P. Cotorras</p>
+                            <p class="card-entidad__nombre">Plataforma Prot. Cotorras</p>
                             <p class="card-entidad__categoria">Iniciativa</p>
                             <p class="card-entidad__descripcion">
-                                Defiende una gestión ética de las cotorras urbanas frente a planes de control
-                                poblacional basados en la eliminación.
+                                Defiende una gestión ética de las cotorras urbanas frente a los planes de control poblacional de las administraciones basados en la eliminación.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.facebook.com/p/Free-FOX-Nuestros-Amigos-los-Zorros-100082807059569/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-freeFox.webp"
+                                    src="assets/img/logos/logo-freeFox.webp?v=9"
                                     alt="Logo Free Fox"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Free Fox</p>
                             <p class="card-entidad__categoria">Rescate y sensibilización</p>
                             <p class="card-entidad__descripcion">
-                                Entidad centrada en el rescate y recuperación de zorros y otros animales
-                                silvestres.
+                                Entidad de rescate y recuperación de zorros, promoviendo su regreso a hábitats seguros sin generar dependencia innecesaria hacia las personas.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.grefa.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-grefa.webp"
+                                    src="assets/img/logos/logo-grefa.webp?v=9"
                                     alt="Logo GREFA"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">GREFA</p>
                             <p class="card-entidad__categoria">Centro de recuperación / conservación</p>
                             <p class="card-entidad__descripcion">
-                                Organización de referencia en recuperación de fauna silvestre y conservación.
+                                Organización dedicada a la recuperación de fauna silvestre y conservación de especies autóctonas, con proyectos de rescate, rehabilitación y reintroducción.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.erisos.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-erisos.webp"
+                                    src="assets/img/logos/logo-erisos.webp?v=9"
                                     alt="Logo Asociación EriSOS"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Asociación EriSOS</p>
                             <p class="card-entidad__categoria">Fauna urbana</p>
                             <p class="card-entidad__descripcion">
-                                Dedicada a la protección y recuperación de erizos en entornos urbanos.
+                                Asociación dedicada a la protección, recuperación y conservación de erizos, además de la divulgación sobre las amenazas que afectan a esta especie.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://sosvencejos.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-sosvencejos.webp"
+                                    src="assets/img/logos/logo-sosvencejos.webp?v=9"
                                     alt="Logo SOS Vencejos"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">SOS Vencejos</p>
                             <p class="card-entidad__categoria">Fauna urbana</p>
                             <p class="card-entidad__descripcion">
-                                Proyecto de rescate y cuidado de aves urbanas, especialmente vencejos.
+                                Proyecto de rescate y cuidado de aves urbanas, especialmente vencejos, con una importante labor de divulgación y ayuda durante épocas de cría.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.misamigaslaspalomas.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logoMALP.webp"
+                                    src="assets/img/logos/logoMALP.webp?v=9"
                                     alt="Logo Mis amigas las palomas"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Mis amigas las palomas</p>
                             <p class="card-entidad__categoria">Concienciación urbana</p>
                             <p class="card-entidad__descripcion">
-                                Iniciativa centrada en la defensa y cambio de percepción sobre las palomas
-                                en ciudades.
+                                Asociación centrada en la defensa y cambio de percepción sobre las palomas, con información, consejos y contenidos de divulgación sobre convivencia y cuidados.
                             </p>
                         </article>
 
@@ -484,7 +492,7 @@
                 <!-- ═══════════════════════════════════════════════
                      BLOQUE 4: CAMPAÑAS ACTUALES
                      ═══════════════════════════════════════════════ -->
-                <div class="recursos-bloque" aria-labelledby="bloque-campanas">
+                <div class="recursos-bloque recursos-bloque--campanas" aria-labelledby="bloque-campanas">
                     <div class="recursos-bloque__cabecera">
                         <h2 class="recursos-bloque__titulo" id="bloque-campanas">
                             Campañas actuales
@@ -496,90 +504,85 @@
                         <article class="card-entidad">
                             <a href="https://vetsunidos.es/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/Logo-vetsUnidos.webp"
+                                    src="assets/img/logos/Logo-vetsUnidos.webp?v=9"
                                     alt="Logo Vets Unidos"
                                     loading="lazy">
                             </a>
-                            <p class="card-entidad__nombre">Vets Unidos</p>
+                            <p class="card-entidad__nombre">Vet Warriors + Vets Unidos</p>
                             <p class="card-entidad__categoria">Campaña / ámbito profesional</p>
                             <p class="card-entidad__descripcion">
-                                Movimiento impulsado por profesionales veterinarios en relación con el
-                                desarrollo del real decreto sobre medicamentos veterinarios, centrado en
-                                su impacto en la práctica clínica y el bienestar animal.
+                            Colectivos veterinarios contra el Real Decreto 666/2023, con labores de divulgación y movilizaciones en defensa de una práctica clínica basada en criterios científicos y el bienestar animal.
                             </p>
                         </article>
-
+ 
                         <article class="card-entidad">
                             <a href="https://www.mismosperrosmismosderechos.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-mismosPerros.webp"
+                                    src="assets/img/logos/logo-mismosPerros.webp?v=9"
                                     alt="Logo Mismos perros, misma ley"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Mismos perros, misma ley</p>
                             <p class="card-entidad__categoria">Iniciativa legal</p>
                             <p class="card-entidad__descripcion">
-                                Reivindica la inclusión de los perros de caza en la normativa de protección
-                                animal.
+                                Reivindica la inclusión de los perros utilizados en actividades cinegéticas dentro de la
+                                normativa general de protección animal, con una regulación equivalente al resto de perros y acorde al bienestar animal.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://santuariosnosongranjas.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-santuariosNoGranjas.webp"
+                                    src="assets/img/logos/logo-santuariosNoGranjas.webp?v=9"
                                     alt="Logo Santuarios no son granjas"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Santuarios no son granjas</p>
                             <p class="card-entidad__categoria">Campaña</p>
                             <p class="card-entidad__descripcion">
-                                Reivindica el reconocimiento legal de los santuarios de animales como espacios
-                                de protección diferenciados de explotaciones ganaderas.
+                                Reivindica el reconocimiento legal de los santuarios de animales como espacios de protección, recuperación y labor social, diferenciados de normativas orientadas a la producción/explotación animal.
                             </p>
                         </article>
 
                         <article class="card-entidad">
-                            <a href="https://www.facebook.com/p/LA-TORTURA-NO-ES-CULTURA-TORTURE-IS-NOT-CULTURE-100068194984422/" target="_blank" rel="noopener noreferrer">
+                            <a href="https://www.instagram.com/union_antitaurina/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-torturaNoCultura.webp"
+                                    src="assets/img/logos/logo-torturaNoCultura.webp?v=9"
                                     alt="Logo La tortura no es cultura"
                                     loading="lazy">
                             </a>
-                            <p class="card-entidad__nombre">La tortura no es cultura</p>
+                            <p class="card-entidad__nombre">Unión Antitaurina</p>
                             <p class="card-entidad__categoria">Campaña</p>
                             <p class="card-entidad__descripcion">
-                                Movimiento que busca la abolición de la tauromaquia en España.
+                                Colectivo antiespecista con gran actividad en protestas, acciones y campañas contra la tauromaquia y otras formas de explotación animal, además de una intensa labor de difusión y movilización en redes sociales.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://www.vivotecnia.com/es/nosotros/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-vivotecnia.webp"
+                                    src="assets/img/logos/logo-vivotecnia.webp?v=9"
                                     alt="Logo Vivotecnia"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Vivotecnia</p>
                             <p class="card-entidad__categoria">Caso judicial / actualidad</p>
                             <p class="card-entidad__descripcion">
-                                Caso mediático que ha reabierto el debate sobre investigación con animales,
-                                control y transparencia.
+                                Caso mediático de maltrato animal en un centro de experimentación, que ha reabierto el debate sobre el control, transparencia y bienestar animal en estos lugares y la necesidad de utilizar alternativas éticas.
                             </p>
                         </article>
 
                         <article class="card-entidad">
                             <a href="https://plataformanac.org/" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="assets/img/logos/logo-nac.webp"
+                                    src="assets/img/logos/logo-nac.webp?v=9"
                                     alt="Logo Plataforma NAC"
                                     loading="lazy">
                             </a>
                             <p class="card-entidad__nombre">Plataforma NAC (No a la caza)</p>
                             <p class="card-entidad__categoria">Plataforma</p>
                             <p class="card-entidad__descripcion">
-                                Denuncia el maltrato y abandono de perros utilizados en actividades
-                                cinegéticas.
+                                Denuncia el maltrato y abandono de galgos, podencos y otros perros utilizados en actividades cinegéticas, además del impacto ambiental y político de este sector sobre el bienestar animal.
                             </p>
                         </article>
 
@@ -589,8 +592,6 @@
 
                 <p class="recursos-nota">
                     Directorio de referencia seleccionado por el equipo del proyecto.
-                    El contenido es estático; se actualizará dinámicamente cuando el backend
-                    implemente el endpoint <code>/recursos/</code>.
                 </p>
 
             </div><!-- /contenedor -->
