@@ -33,6 +33,7 @@ def registro(datos: RegistroIn, db: Session = Depends(get_db)):
         )
     usuario = Usuario(
         email=datos.email,
+        nombre=datos.nombre.strip() or None,
         password=hashear_password(datos.password),
         rol="registrado",
         activo=1,

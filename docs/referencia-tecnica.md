@@ -79,7 +79,7 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 | Tabla | Contenido |
 |---|---|
-| `usuarios` | Cuentas de acceso a la plataforma |
+| `usuarios` | Cuentas de acceso a la plataforma (`nombre` VARCHAR 100 nullable — alias opcional) |
 | `refresh_tokens` | Tokens de larga duración para renovar el access token |
 | `reset_tokens` | Tokens de un solo uso para recuperar contraseña |
 | `verificacion_tokens` | Tokens de un solo uso para confirmar email al registrarse |
@@ -252,8 +252,8 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
   - Errores 500: `"METHOD /ruta | TipoExcepcion: mensaje"`
 - **Destinos (en Docker):**
   - Consola: siempre activa
-  - `logs/backend/access.log` — rotación cada 5 MB, 5 copias de backup
-  - `logs/backend/error.log` — solo errores, misma rotación
+  - `logs/app/access.log` — rotación cada 5 MB, 5 copias de backup
+  - `logs/app/error.log` — solo errores, misma rotación
 
 ### Logs de Nginx
 
@@ -268,7 +268,7 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 195 tests pasando, 0 fallando (actualizado 2026-05-14)
+- **Total:** 197 tests pasando, 0 fallando (actualizado 2026-05-15)
 
 | Archivo | Qué testea |
 |---|---|
@@ -277,8 +277,8 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 | `test_refresh_token.py` | Renovación del access token con refresh token |
 | `test_recuperar_password.py` | Solicitud y validación del token de reset |
 | `test_verificacion_email.py` | Flujo completo de verificación de email post-registro |
-| `test_privado.py` | Endpoints del área privada (requieren autenticación) |
-| `test_admin.py` | Acceso denegado sin token o sin rol admin; gestión de usuarios y avisos |
+| `test_privado.py` | Endpoints del área privada: cambiar contraseña y nombre/alias |
+| `test_admin.py` | Control de acceso, gestión de usuarios y avisos, visor de logs de acceso y de error |
 | `test_avisos.py` | CRUD de avisos de convocatorias |
 | `test_convocatorias.py` | `GET /convocatorias/` devuelve JSON válido |
 | `test_solicitudes.py` | Filtros, paginación y búsqueda en `/solicitudes/` |
