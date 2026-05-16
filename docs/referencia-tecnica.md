@@ -118,6 +118,8 @@ Fuentes externas (API / PDF / XML / XLSX)
 | HTTPS | Certificado autofirmado, TLS 1.2 y 1.3 únicamente |
 | Cabeceras de seguridad | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `HSTS: max-age=31536000` |
 | Panel de admin | Solo accesible para usuarios con `rol = 'admin'` |
+| Sesión activa en login/registro | Si hay token en `localStorage`, `login.html` y `registro.html` redirigen automáticamente a `privado.html` sin mostrar el formulario |
+| Navbar en páginas públicas | `js/navbar.js` detecta el token en `localStorage` y reemplaza el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin necesidad de petición al servidor |
 
 ---
 
@@ -177,6 +179,8 @@ La frecuencia mayor en abril–mayo es porque es cuando suelen publicarse las co
 1. **Detección de resoluciones** (siempre): consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion = NULL` del año actual. Si BDNS ya publica la fecha, la actualiza en la BD y el banner de la home desaparece automáticamente.
 2. **Detección de nuevas convocatorias** (solo si faltan): busca nuevas convocatorias DGDA del año actual en la API BDNS por palabras clave del título. Si encuentra una nueva, la inserta con `fecha_resolucion = NULL`.
 
+Los títulos que devuelve la API BDNS son los títulos oficiales del BOE, que pueden ser muy largos (p. ej. *"Subvenciones a entidades locales destinadas a mejorar e impulsar el control poblacional de colonias felinas, correspondiente al año 2026"*). El cron normaliza el título antes de insertarlo usando un diccionario interno, de forma que todos los registros mantengan el mismo formato corto independientemente de lo que devuelva la API.
+
 Detección de tipo por palabras clave en el título:
 
 | Tipo | Palabras clave |
@@ -189,6 +193,19 @@ Detección de tipo por palabras clave en el título:
 ```bash
 docker exec bdns_cron python3 /app/scripts/check_bdns.py
 ```
+
+### Mantenimiento anual — qué actualizar en el código
+
+El cron actualiza las BDs en ejecución automáticamente. Para que instalaciones nuevas arranquen con los datos correctos sin esperar al cron, hay que mantener dos sitios en el código cada año:
+
+| Evento | Fichero | Qué cambiar |
+|--------|---------|-------------|
+| Sale convocatoria nueva | `scripts/data_processing/cargar_dataset.py` | Añadir `(año, tipo): (fecha_conv, None)` en `_FECHAS` |
+| Sale convocatoria nueva | `install.sh` | Añadir `INSERT ... WHERE NOT EXISTS` en el bloque de migraciones |
+| Sale resolución | `scripts/data_processing/cargar_dataset.py` | Cambiar `None` → fecha en `_FECHAS` |
+| Sale resolución | `install.sh` | Añadir `UPDATE ... WHERE fecha_resolucion IS NULL` en migraciones |
+
+Sin estas actualizaciones la app funciona igualmente (el cron lo compensa), pero una instalación nueva hecha inmediatamente después del `git pull` tardará horas en ver los datos correctos.
 
 ---
 

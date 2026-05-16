@@ -425,6 +425,15 @@ function iniciarRegistro() {
  * En registro.html se activa iniciarRegistro().
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // Si ya hay sesión activa, redirigir sin mostrar el formulario de login ni de registro
+    if (localStorage.getItem('token')) {
+        const esLogin    = !!document.getElementById('form-login');
+        const esRegistro = !!document.getElementById('form-registro');
+        if (esLogin || esRegistro) {
+            window.location.href = 'privado.html';
+            return;
+        }
+    }
     iniciarLogin();
     iniciarRegistro();
 });

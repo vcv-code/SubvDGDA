@@ -223,6 +223,19 @@ img {
     color: var(--color-blanco);
 }
 
+.navbar__user-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* El enlace "Mi perfil" dentro del bloque de usuario no necesita
+   el padding-bottom del resto de enlaces (evita desalineación con el botón) */
+.navbar__links a.navbar__user-link {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
 
 /* ============================================================
    4. CONTENEDOR PRINCIPAL
