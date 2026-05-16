@@ -180,6 +180,7 @@ class AvisoOut(BaseModel):
 class RegistroIn(BaseModel):
     email:     EmailStr
     password:  str
+    nombre:    str = ""
     sitio_web: str = ""  # honeypot: debe llegar vacío en envíos legítimos
 
     @field_validator("password")
@@ -194,6 +195,20 @@ class RegistroIn(BaseModel):
         if not any(c.isdigit() for c in v):
             raise ValueError("La contraseña debe contener al menos un número")
         return v
+
+class CambiarNombreIn(BaseModel):
+    nombre: str
+
+    @field_validator("nombre")
+    @classmethod
+    def nombre_valido(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("El nombre no puede estar vacío")
+        if len(v) > 100:
+            raise ValueError("El nombre no puede superar los 100 caracteres")
+        return v
+
 
 class CambiarPasswordIn(BaseModel):
     contrasena_actual: str
@@ -227,6 +242,7 @@ class RefreshIn(BaseModel):
 class UsuarioOut(BaseModel):
     id_usuario:       int
     email:            str
+    nombre:           Optional[str] = None
     rol:              str
     activo:           bool
     email_verificado: bool
@@ -235,6 +251,9 @@ class UsuarioOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class RecuperarPasswordIn(BaseModel):
+    email: EmailStr
+
+class ReenviarVerificacionIn(BaseModel):
     email: EmailStr
 
 class ResetPasswordIn(BaseModel):

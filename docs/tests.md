@@ -4,17 +4,48 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 157 | pytest (sin Docker) |
+| Tests automáticos | 195 | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **209** | |
+| **Total** | **247** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
+
+Nota sobre ejecución: 16 de los 195 tests automáticos requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 179. Con Docker completo, pasan los 195.
+
+---
+
+## Qué no se testea y por qué
+
+### `cargar_dataset.py`
+
+No tiene tests por dos razones:
+
+1. **Es lógica de inserción, no de transformación.** Su única responsabilidad es hacer INSERTs e IGNOREs correctamente. Los datos que inserta ya han sido validados por los tests del parser y del unificador.
+2. **Requeriría una MariaDB real.** A diferencia del backend (que usa SQLite en memoria como sustituto), `cargar_dataset` usa características específicas de MariaDB (`ON DUPLICATE KEY`, tipos `ENUM`, `DECIMAL`) que SQLite no reproduce fielmente.
+
+### Parsers de años anteriores y EELL
+
+Los parsers EPA 2021–2024 y EELL (PDF y BOE) no tienen tests unitarios. Sus funciones de extracción son más simples o dependen de `pdfplumber` (difícil de mockear). La validación de sus datos se hace comparando los totales con los publicados en el BOE.
+
+---
+
+## SQLite vs MariaDB: diferencias conocidas
+
+Los tests de endpoints usan SQLite en memoria como sustituto de MariaDB. Funciona bien para probar lógica de aplicación, pero no replica el comportamiento de MariaDB en tres puntos:
+
+| Característica | MariaDB (producción) | SQLite (tests) |
+|---|---|---|
+| `ENUM` en columnas | Rechaza valores fuera del enum a nivel de BD | Lo acepta como texto cualquiera |
+| `DECIMAL(12,2)` | Precisión fija, redondea al guardar | Se trata como float de Python |
+| `ON DUPLICATE KEY UPDATE` | Sintaxis nativa para upserts | No existe |
+
+Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HTTP, autenticación), no **integridad de la BD**, por lo que SQLite es suficiente. Si en el futuro se quisiera testear algo que dependa de estas diferencias, habría que añadir un contenedor MariaDB al entorno de CI con `@pytest.mark.integration`.
 
 ---
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **148 tests automáticos** distribuidos en 15 archivos que cubren la API REST, el sistema de autenticación, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
+El proyecto incluye **195 tests automáticos** distribuidos en 18 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
 
 ### Cómo funcionan
 
@@ -155,6 +186,40 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 155 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token ya usado devuelve 400 (no se puede usar dos veces) |
 | 156 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token expirado (insertado con fecha en el pasado) devuelve 400 |
 | 157 | `test_recuperar_password.py` | Unitario | Blanca | Contraseña nueva débil en `/auth/reset` devuelve 422 (validación Pydantic antes de comprobar el token) |
+| 158 | `test_verificacion_email.py` | Funcional | Blanca | `POST /auth/registro` crea el usuario con `email_verificado=0` |
+| 159 | `test_verificacion_email.py` | Funcional | Blanca | El registro inserta un token de verificación en `verificacion_tokens` |
+| 160 | `test_verificacion_email.py` | Funcional | Blanca | La función de envío de email se llama con el email y token correctos |
+| 161 | `test_verificacion_email.py` | Seguridad | Blanca | `POST /auth/login` devuelve 403 si el email no está verificado |
+| 162 | `test_verificacion_email.py` | Funcional | Blanca | `GET /auth/verificar?token=...` válido establece `email_verificado=1` |
+| 163 | `test_verificacion_email.py` | Funcional | Blanca | Login correcto tras verificar el email |
+| 164 | `test_verificacion_email.py` | Seguridad | Negra | Token inventado en `/auth/verificar` devuelve 400 |
+| 165 | `test_verificacion_email.py` | Seguridad | Blanca | Token ya usado en `/auth/verificar` devuelve 400 |
+| 166 | `test_verificacion_email.py` | Seguridad | Blanca | Token expirado en `/auth/verificar` devuelve 400 |
+| 167 | `test_verificacion_email.py` | Funcional | Blanca | `POST /auth/reset` exitoso también activa `email_verificado` |
+| 168 | `test_admin.py` | Seguridad | Negra | `GET /admin/estado` sin token devuelve 401 |
+| 169 | `test_admin.py` | Seguridad | Blanca | `GET /admin/estado` con rol `registrado` devuelve 403 |
+| 170 | `test_admin.py` | Funcional | Blanca | `GET /admin/estado` con rol `admin` devuelve 200 con campos `total_solicitudes`, `total_usuarios`, `total_convocatorias` |
+| 171 | `test_admin.py` | Funcional | Blanca | `GET /admin/usuarios` devuelve lista con email, rol, activo y created_at |
+| 172 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/usuarios/{id}/rol` cambia rol a `admin` |
+| 173 | `test_admin.py` | Seguridad | Blanca | `PATCH /admin/usuarios/{id}/rol` sobre la propia cuenta devuelve 400 |
+| 174 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/usuarios/{id}/activo` desactiva la cuenta |
+| 175 | `test_admin.py` | Seguridad | Blanca | `PATCH /admin/usuarios/{id}/activo` sobre la propia cuenta devuelve 400 |
+| 176 | `test_admin.py` | Seguridad | Blanca | `PATCH /admin/usuarios/{id_inexistente}/activo` devuelve 404 |
+| 177 | `test_admin.py` | Funcional | Blanca | `DELETE /admin/usuarios/{id}` elimina el usuario de la BD |
+| 178 | `test_admin.py` | Seguridad | Blanca | `DELETE /admin/usuarios/{id}` sobre la propia cuenta devuelve 400 |
+| 179 | `test_admin.py` | Seguridad | Blanca | `DELETE /admin/usuarios/{id_inexistente}` devuelve 404 |
+| 180 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos` sin resolución devuelve solo avisos activos |
+| 181 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos` con fecha_resolucion != NULL no aparece en la lista por defecto |
+| 182 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/avisos/{id}/desactivar` actualiza fecha_resolucion |
+| 183 | `test_admin.py` | Funcional | Blanca | `DELETE /admin/avisos/{id}` sin solicitudes elimina la convocatoria |
+| 184 | `test_admin.py` | Seguridad | Blanca | `DELETE /admin/avisos/{id}` con solicitudes asociadas devuelve 409 |
+| 185 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/avisos/{id}/reactivar` elimina fecha_resolucion |
+| 186 | `test_admin.py` | Seguridad | Blanca | Reactivar aviso ya activo devuelve 400 |
+| 187 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos?incluir_resueltas=true` devuelve avisos activos e inactivos |
+| 188 | `test_admin.py` | Seguridad | Blanca | Aviso inexistente devuelve 404 |
+| 189 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs` devuelve una lista (aunque esté vacía) |
+| 190 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs/errores` devuelve una lista (aunque esté vacía) |
+| 191 | `test_admin.py` | Seguridad | Blanca | `GET /admin/logs/errores` con rol `registrado` devuelve 403 |
 
 ### Descripción por módulo
 
@@ -226,6 +291,14 @@ Verifica el flujo completo de recuperación de contraseña implementado en la ra
 - **`POST /auth/recuperar`**: comprueba que devuelve 200 tanto si el email existe como si no (para no revelar qué cuentas están registradas), que se crea un `ResetToken` en la BD, y que la función de envío de email se invoca con los parámetros correctos. En tests, `enviar_email_recuperacion` se mockea con `unittest.mock.patch` para no necesitar un servidor SMTP real.
 
 - **`POST /auth/reset`**: cubre el camino feliz (token válido → contraseña cambiada → login funciona con nueva contraseña) y los tres casos de error: token inventado (400), token ya usado (400) y token expirado (400). El test de token expirado inserta directamente en la BD un `ResetToken` con `expira_en` en el pasado, sin necesidad de esperar 15 minutos reales.
+
+#### test_verificacion_email.py
+
+Cubre el flujo completo de verificación de email en el registro: el usuario se crea con `email_verificado=0`, se genera un token en `verificacion_tokens`, el login queda bloqueado hasta verificar, y `GET /auth/verificar?token=...` activa la cuenta. Incluye casos de token inválido, expirado y ya usado. Un test adicional verifica que completar el flujo de recuperación de contraseña también activa `email_verificado` (porque demostrar que recibes el email de reset equivale a demostrar que controlas esa dirección).
+
+#### test_admin.py
+
+Cubre el panel de administración completo: control de acceso (401 sin token, 403 con rol `registrado`), lectura del estado del sistema, CRUD de usuarios con las protecciones anti-autoedición (400 al intentar modificar la propia cuenta), gestión completa de avisos (listar, desactivar, reactivar, eliminar, protección 409 si hay solicitudes asociadas), y visor de logs de acceso y de error (`GET /admin/logs` y `GET /admin/logs/errores`). Detectó dos diferencias entre SQLite y MariaDB durante el desarrollo: `date(2025, 1, 1)` como tipo Python en lugar de string para columnas DATE, y `tipo_benef="asociacion"` (valor ENUM válido) en lugar de `"epa"`.
 
 #### test_unificar_datasets.py
 

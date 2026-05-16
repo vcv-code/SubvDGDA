@@ -9,7 +9,7 @@ from ..auth import (hashear_password, verificar_password, crear_token,
                     crear_verificacion_token, verificacion_expira_en, enviar_email_verificacion)
 from ..db import get_db
 from ..models import Usuario, RefreshToken, ResetToken, VerificacionToken
-from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn, RecuperarPasswordIn, ResetPasswordIn
+from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn, RecuperarPasswordIn, ResetPasswordIn, ReenviarVerificacionIn
 
 router = APIRouter(prefix="/auth", tags=["autenticación"])
 
@@ -33,6 +33,7 @@ def registro(datos: RegistroIn, db: Session = Depends(get_db)):
         )
     usuario = Usuario(
         email=datos.email,
+        nombre=datos.nombre.strip() or None,
         password=hashear_password(datos.password),
         rol="registrado",
         activo=1,
@@ -122,6 +123,32 @@ def recuperar_password(datos: RecuperarPasswordIn, db: Session = Depends(get_db)
     ))
     db.commit()
     enviar_email_recuperacion(usuario.email, token)
+    return respuesta
+
+
+@router.post("/reenviar-verificacion", status_code=status.HTTP_200_OK)
+def reenviar_verificacion(datos: ReenviarVerificacionIn, db: Session = Depends(get_db)):
+    respuesta = {"mensaje": "Si el email existe y no está verificado, recibirás un nuevo enlace."}
+    usuario = db.query(Usuario).filter(
+        Usuario.email == datos.email,
+        Usuario.activo == True,
+        Usuario.email_verificado == False,
+    ).first()
+    if not usuario:
+        return respuesta
+    # Invalidar tokens anteriores pendientes para este usuario
+    db.query(VerificacionToken).filter(
+        VerificacionToken.id_usuario == usuario.id_usuario,
+        VerificacionToken.usado == False,
+    ).update({"usado": True})
+    token = crear_verificacion_token()
+    db.add(VerificacionToken(
+        id_usuario=usuario.id_usuario,
+        token=token,
+        expira_en=verificacion_expira_en(),
+    ))
+    db.commit()
+    enviar_email_verificacion(usuario.email, token)
     return respuesta
 
 
