@@ -152,8 +152,10 @@ El `subjectAltName` es obligatorio — sin él, Chrome y Firefox rechazan la con
 
 | Archivo | Versionar | Nota |
 |---|---|---|
-| `docker/ssl/server.crt` | Sí | Certificado público |
-| `docker/ssl/server.key` | No (`.gitignore`) | Clave privada — cada instalación genera la suya |
+| `docker/ssl/server.crt` | No (`.gitignore`) | Certificado público — cada máquina genera el suyo |
+| `docker/ssl/server.key` | No (`.gitignore`) | Clave privada — cada máquina genera la suya |
+
+Cert y key deben ser del mismo par generado con el mismo `openssl`. Si uno proviene de git y el otro es local, Nginx falla al arrancar con `key values mismatch`.
 
 ---
 
