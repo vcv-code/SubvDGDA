@@ -201,11 +201,12 @@ fi
 # =============================================================================
 echo
 echo -e "${NEGRITA}  El script realizará las siguientes acciones:${RESET}"
-[ ! -f "docker/.env" ]         && echo "  • Crear docker/.env con credenciales de desarrollo"
+[ ! -f "docker/.env" ]           && echo "  • Crear docker/.env con credenciales de desarrollo"
 [ ! -f "docker/ssl/server.crt" ] && echo "  • Generar certificado SSL autofirmado"
 ! grep -q "$DOMAIN" /etc/hosts 2>/dev/null && \
     echo "  • (Opcional) Añadir $DOMAIN a /etc/hosts — requiere sudo"
-echo "  • Levantar los contenedores Docker"
+echo "  • Aplicar migraciones de esquema (idempotente)"
+echo "  • Reconstruir y levantar los contenedores Docker"
 echo "  • Cargar el dataset si la BD está vacía"
 [ ! -d "venv" ] && echo "  • (Opcional) Crear entorno virtual Python"
 echo
@@ -291,6 +292,12 @@ else
     if confirmar "¿Añadir $DOMAIN a /etc/hosts? (recomendado)"; then
         echo "127.0.0.1  ${DOMAIN}" | sudo tee -a /etc/hosts > /dev/null
         ok "Añadido a /etc/hosts"
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+            aviso "WSL2: el navegador Windows usa su propio fichero de hosts."
+            aviso "      Añade también esta línea (como administrador) en Windows:"
+            aviso "      C:\\Windows\\System32\\drivers\\etc\\hosts"
+            aviso "          127.0.0.1  ${DOMAIN}"
+        fi
     else
         echo
         aviso "No se ha modificado /etc/hosts — el dominio $DOMAIN no estará disponible."
@@ -321,6 +328,55 @@ TIENE_DATOS=false
 FILAS=0
 (cd docker && docker compose up -d db 2>/dev/null) || true
 esperar_db
+# ── Migraciones de esquema (siempre, idempotentes) ──────────────────────────
+# Se ejecutan aunque la BD ya tenga datos: las sentencias usan IF NOT EXISTS
+# y ADD COLUMN IF NOT EXISTS, por lo que son seguras de repetir.
+docker exec bdns_dgda_db mariadb \
+    -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
+    -e "
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id         INT          NOT NULL AUTO_INCREMENT,
+    id_usuario INT          NOT NULL,
+    token      VARCHAR(64)  NOT NULL,
+    expira_en  DATETIME     NOT NULL,
+    revocado   TINYINT(1)   NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_token (token),
+    CONSTRAINT fk_rt_usuario FOREIGN KEY (id_usuario)
+        REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS reset_tokens (
+    id         INT          NOT NULL AUTO_INCREMENT,
+    id_usuario INT          NOT NULL,
+    token      VARCHAR(64)  NOT NULL,
+    expira_en  DATETIME     NOT NULL,
+    usado      TINYINT(1)   NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_reset_token (token),
+    CONSTRAINT fk_reset_usuario FOREIGN KEY (id_usuario)
+        REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS verificacion_tokens (
+    id         INT          NOT NULL AUTO_INCREMENT,
+    id_usuario INT          NOT NULL,
+    token      VARCHAR(64)  NOT NULL,
+    expira_en  DATETIME     NOT NULL,
+    usado      TINYINT(1)   NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_verif_token (token),
+    CONSTRAINT fk_verif_usuario FOREIGN KEY (id_usuario)
+        REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+);
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS nombre VARCHAR(100) NULL AFTER email;
+INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
+VALUES (
+    'admin@demo.local',
+    'Admin Demo',
+    '\$2b\$12\$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
+    'admin', 1, 1, NOW()
+);
+" 2>/dev/null && ok "Esquema al día" || aviso "Migración omitida (BD vacía, se aplicará en el primer arranque)"
+
 FILAS=$(docker exec bdns_dgda_db mariadb \
     -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
     -sNe "SELECT COUNT(*) FROM solicitudes" 2>/dev/null || echo "0")
@@ -330,8 +386,9 @@ if $TIENE_DATOS; then
     ok "Base de datos existente con $FILAS solicitudes — no se sobreescribirá"
     aviso "Para reinstalar la BD desde cero: make reset-db"
     echo
-    info "Levantando todos los contenedores..."
-    (cd docker && docker compose up -d)
+    info "Actualizando imágenes y levantando todos los contenedores..."
+    info "(El backend se reconstruye para que el código esté siempre actualizado)"
+    (cd docker && docker compose up --build -d)
 else
     info "Primera instalación — construyendo imágenes y descargando dependencias..."
     info "(Puede tardar varios minutos la primera vez)"
@@ -400,6 +457,10 @@ else
 fi
 echo -e "  ${NEGRITA}→ Mailpit:${RESET}  http://localhost:8025"
 echo -e "  ${NEGRITA}→ Adminer:${RESET}  http://localhost:8080"
+echo
+echo "  Cuenta de administrador:"
+echo -e "  ${NEGRITA}→ Email:${RESET}     admin@demo.local"
+echo -e "  ${NEGRITA}→ Contraseña:${RESET} Admin1234!"
 echo
 echo "  Comandos útiles:"
 echo "    make start      — levantar contenedores"
