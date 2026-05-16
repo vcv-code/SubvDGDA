@@ -211,8 +211,11 @@ async function cargarZonaPrivada() {
         if (!perfil) return;
 
         // ── Paso 3: Renderizar ────────────────────────────────────────────
-        mostrarSaludo(`Bienvenida, ${perfil.email}`);
+        mostrarSaludo(`Bienvenida, ${perfil.nombre ?? perfil.email}`);
         mostrarPerfil(perfil);
+
+        const campoNombre = document.getElementById('nombre-nuevo');
+        if (campoNombre && perfil.nombre) campoNombre.value = perfil.nombre;
 
         if (perfil.rol === 'admin') {
             document.getElementById('btn-panel-admin').classList.add('privado-banner__btn-admin--visible');
@@ -221,6 +224,54 @@ async function cargarZonaPrivada() {
     } catch (error) {
         console.error('Error al cargar zona privada:', error);
         mostrarErrorPrivado();
+    }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// CAMBIAR NOMBRE
+// ─────────────────────────────────────────────────────────────
+
+async function manejarCambiarNombre(evento) {
+    evento.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = 'login.html'; return; }
+
+    const nombre = document.getElementById('nombre-nuevo').value.trim();
+    const alerta = document.getElementById('cambiar-nombre-error');
+    const ok     = document.getElementById('cambiar-nombre-ok');
+
+    alerta.classList.remove('visible');
+    ok.style.display = 'none';
+
+    try {
+        const respuesta = await fetch(`${API_URL}/privado/cambiar-nombre`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({ nombre }),
+        });
+
+        if (respuesta.status === 422) {
+            const datos = await respuesta.json();
+            const raw = datos.detail?.[0]?.msg ?? 'Nombre no válido.';
+            alerta.textContent = raw.replace(/^Value error,\s*/i, '');
+            alerta.classList.add('visible');
+            return;
+        }
+        if (!respuesta.ok) {
+            alerta.textContent = 'Error inesperado. Inténtalo de nuevo.';
+            alerta.classList.add('visible');
+            return;
+        }
+
+        const datos = await respuesta.json();
+        mostrarSaludo(`Bienvenida, ${datos.nombre}`);
+        ok.style.display = 'block';
+
+    } catch {
+        alerta.textContent = 'No se pudo conectar con el servidor.';
+        alerta.classList.add('visible');
     }
 }
 
@@ -323,6 +374,9 @@ function iniciarBotonesCerrarSesion() {
 document.addEventListener('DOMContentLoaded', () => {
     iniciarBotonesCerrarSesion();
     cargarZonaPrivada();
+
+    const formNombre = document.getElementById('form-cambiar-nombre');
+    if (formNombre) formNombre.addEventListener('submit', manejarCambiarNombre);
 
     const formPassword = document.getElementById('form-cambiar-password');
     if (formPassword) formPassword.addEventListener('submit', manejarCambiarPassword);

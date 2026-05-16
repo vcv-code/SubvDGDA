@@ -35,7 +35,7 @@
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
@@ -52,33 +52,26 @@
         <div class="auth-page" style="text-align:center;">
 
             <div class="auth-card auth-card--simple"
-                 style="max-width:480px; margin:0 auto;"
-                 aria-labelledby="error-404-titulo">
+                 style="max-width:950px; margin:0 auto;"
+                 role="main" aria-label="Página no encontrada">
 
-                <div class="auth-card__formulario" style="padding:2.5rem;">
+                <div class="auth-card__formulario" style="padding:0.75rem 2rem 2rem;">
 
-                    <p style="font-size:5rem; font-weight:700; color:var(--color-verde-btn);
-                               margin:0 0 0.25rem; line-height:1;" aria-hidden="true">404</p>
+                    <img src="assets/img/error404.webp"
+                         alt="Un perro y un gato han desconectado el cable — página no encontrada"
+                         style="width:100%; max-width:620px; margin:0 auto 0.4rem; display:block;">
 
-                    <h1 class="auth-card__titulo" id="error-404-titulo"
-                        style="font-size:1.4rem; margin-bottom:0.75rem;">
-                        Página no encontrada
-                    </h1>
-                    <p class="auth-card__subtitulo" style="margin-bottom:1.5rem;">
+                    <p class="auth-card__subtitulo" style="margin-bottom:0.2rem;">
                         La dirección que has introducido no existe o ha sido movida.
-                        Comprueba la URL o usa el menú de navegación.
+                    </p>
+                    <p class="auth-card__subtitulo" style="margin-bottom:1.25rem;">
+                        Por favor, comprueba la URL o usa el menú de navegación.
                     </p>
 
-                    <div style="display:flex; flex-direction:column; gap:0.75rem; align-items:center;">
-                        <a href="index.html" class="btn btn-verde btn-auth"
-                           style="max-width:260px;">
-                            Volver al inicio
-                        </a>
-                        <a href="solicitudes.html"
-                           style="font-size:0.9rem; color:var(--color-azul);">
-                            Ir al buscador de solicitudes →
-                        </a>
-                    </div>
+                    <a href="index.html" class="btn btn-verde btn-auth"
+                       style="max-width:260px; margin:0 auto;">
+                        Volver al inicio
+                    </a>
 
                 </div>
             </div>

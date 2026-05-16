@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-check_bdns.py — Comprueba nuevas convocatorias DGDA en la API BDNS.
+check_bdns.py — Comprueba nuevas convocatorias DGDA en la API BDNS y detecta resoluciones.
 
-Lógica:
-  1. Lee el fichero de estado del año actual (logs/cron/estado_YYYY.json).
-     Si ya constan EELL y EPA como encontradas → sale sin consultar la API.
-  2. Consulta la API BDNS filtrando por año actual y organismo DGDA.
-  3. Para cada convocatoria nueva (no existe en BD por num_convoc):
-     - Detecta el tipo (eell / epa) por palabras clave del título.
-     - Inserta en la tabla convocatorias con fecha_resolucion = NULL.
-     - Actualiza el estado del año.
+Lógica (orden de ejecución):
+  1. Comprueba si las convocatorias del año actual con fecha_resolucion=NULL
+     ya tienen resolución publicada en la API BDNS. Si la tienen, actualiza
+     la BD → el banner de la home desaparece automáticamente.
+  2. Si aún faltan convocatorias por registrar, consulta la API BDNS para
+     detectar nuevas convocatorias DGDA del año actual.
+  3. Para cada convocatoria nueva:
+     · Detecta el tipo (eell / epa) por palabras clave del título.
+     · Inserta en convocatorias con fecha_resolucion = NULL.
+     · Actualiza el fichero de estado del año.
   4. Guarda el estado actualizado.
 
-El campo fecha_resolucion = NULL es la señal que usa el backend (/avisos/)
-para mostrar el banner "convocatoria en tramitación" en el frontend.
-Cuando a fin de año se carguen los datos del BOE se actualizará ese campo
-y el banner desaparecerá automáticamente.
+El paso 1 corre siempre (aunque EELL y EPA ya estén registradas) para que
+las resoluciones se detecten automáticamente sin intervención manual.
 """
 
 import json
@@ -27,16 +27,16 @@ from datetime import datetime
 import pymysql
 import requests
 
-BDNS_API = "https://www.infosubvenciones.es/bdnstrans/api"
-YEAR = datetime.now().year
-LOG_DIR = "/app/logs/cron"
+BDNS_API  = "https://www.infosubvenciones.es/bdnstrans/api"
+YEAR      = datetime.now().year
+LOG_DIR   = "/app/logs/cron"
 STATE_FILE = f"{LOG_DIR}/estado_{YEAR}.json"
-LOG_FILE = f"{LOG_DIR}/bdns_check.log"
+LOG_FILE  = f"{LOG_DIR}/bdns_check.log"
 
-DB_HOST = os.environ.get("DB_HOST", "db")
-DB_PORT = int(os.environ.get("DB_PORT", 3306))
-DB_NAME = os.environ.get("DB_NAME", "bdns_dgda")
-DB_USER = os.environ.get("DB_USER", "bdns_user")
+DB_HOST     = os.environ.get("DB_HOST", "db")
+DB_PORT     = int(os.environ.get("DB_PORT", 3306))
+DB_NAME     = os.environ.get("DB_NAME", "bdns_dgda")
+DB_USER     = os.environ.get("DB_USER", "bdns_user")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "bdns_pass")
 
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -50,6 +50,10 @@ log = logging.getLogger()
 log.addHandler(logging.StreamHandler(sys.stdout))
 
 
+# ──────────────────────────────────────────────
+# Estado
+# ──────────────────────────────────────────────
+
 def load_state():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE) as f:
@@ -62,14 +66,14 @@ def save_state(state):
         json.dump(state, f)
 
 
+# ──────────────────────────────────────────────
+# Base de datos
+# ──────────────────────────────────────────────
+
 def get_db():
     return pymysql.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        db=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        charset="utf8mb4",
+        host=DB_HOST, port=DB_PORT, db=DB_NAME,
+        user=DB_USER, password=DB_PASSWORD, charset="utf8mb4",
     )
 
 
@@ -87,7 +91,6 @@ def insertar_convocatoria(conn, tipo, num_convoc, titulo, fecha_str):
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date() if fecha_str else None
     except (ValueError, TypeError):
         fecha = None
-
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -101,32 +104,117 @@ def insertar_convocatoria(conn, tipo, num_convoc, titulo, fecha_str):
     conn.commit()
 
 
+def actualizar_fecha_resolucion(conn, id_convoc, fecha):
+    with conn.cursor() as cur:
+        cur.execute(
+            "UPDATE convocatorias SET fecha_resolucion = %s WHERE id_convoc = %s",
+            (fecha, id_convoc),
+        )
+    conn.commit()
+
+
+# ──────────────────────────────────────────────
+# API BDNS
+# ──────────────────────────────────────────────
+
 def detectar_tipo(descripcion):
-    """Determina si la convocatoria es EELL o EPA por palabras clave del título."""
     desc = descripcion.upper()
     if "ENTIDADES LOCALES" in desc or "EELL" in desc:
         return "eell"
-    if "ENTIDADES PRIVADAS" in desc or "ASOCIACIONES" in desc:
+    if "ENTIDADES PRIVADAS" in desc or "ASOCIACIONES" in desc or "PROTECCI" in desc:
         return "epa"
     return None
+
+
+def parsear_fecha(fecha_str):
+    """Acepta DD/MM/YYYY o YYYY-MM-DD. Devuelve date o None."""
+    if not fecha_str:
+        return None
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(fecha_str, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+def consultar_resolucion_bdns(num_convoc):
+    """
+    Consulta el detalle de una convocatoria en la API BDNS y devuelve
+    la fecha de resolución si ya está publicada, o None si no.
+
+    La API devuelve el campo fechaResolucion cuando la convocatoria
+    ya tiene resolución registrada en BDNS (habitualmente 1-2 días
+    después de la publicación en el BOE).
+    """
+    try:
+        resp = requests.get(
+            f"{BDNS_API}/convocatorias/{num_convoc}", timeout=30
+        )
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        # Intentar los dos nombres de campo que usa la API BDNS
+        fecha_str = data.get("fechaResolucion") or data.get("fechaPublicacionResolucion")
+        return parsear_fecha(fecha_str)
+    except requests.RequestException as e:
+        log.error("Error consultando detalle BDNS para convocatoria %s: %s", num_convoc, e)
+        return None
+
+
+def comprobar_resoluciones(conn):
+    """
+    Para cada convocatoria del año actual sin fecha_resolucion en la BD,
+    consulta la API BDNS. Si ya tiene resolución publicada la registra
+    en la BD → el banner de avisos desaparece automáticamente.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT id_convoc, num_convoc, tipo_convoc
+            FROM convocatorias
+            WHERE fecha_resolucion IS NULL
+              AND num_convoc IS NOT NULL
+              AND anio_convocatoria = %s
+            """,
+            (YEAR,),
+        )
+        pendientes = cur.fetchall()
+
+    if not pendientes:
+        return
+
+    log.info(
+        "Comprobando resolución en BDNS para %d convocatoria(s) pendiente(s)...",
+        len(pendientes),
+    )
+    for id_convoc, num_convoc, tipo in pendientes:
+        fecha_res = consultar_resolucion_bdns(num_convoc)
+        if fecha_res:
+            actualizar_fecha_resolucion(conn, id_convoc, fecha_res)
+            log.info(
+                "Resolución detectada y registrada: %s (convoc. %s) — %s",
+                tipo.upper(), num_convoc, fecha_res,
+            )
+        else:
+            log.info(
+                "Convocatoria %s (%s) aún sin resolución en BDNS.",
+                tipo.upper(), num_convoc,
+            )
 
 
 def buscar_en_bdns(termino_busqueda):
     """Devuelve convocatorias DGDA del año actual encontradas en la API BDNS."""
     resultados = []
     page = 0
-
     while True:
         params = {
-            "page": page,
-            "pageSize": 50,
-            "order": "numeroConvocatoria",
-            "direccion": "desc",
+            "page": page, "pageSize": 50,
+            "order": "numeroConvocatoria", "direccion": "desc",
             "vpd": "GE",
             "descripcion": termino_busqueda,
             "descripcionTipoBusqueda": 0,
-            "mrr": "false",
-            "contribucion": "false",
+            "mrr": "false", "contribucion": "false",
             "fechaDesde": f"01/01/{YEAR}",
             "fechaHasta": datetime.now().strftime("%d/%m/%Y"),
             "tipoAdministracion": "C",
@@ -143,7 +231,7 @@ def buscar_en_bdns(termino_busqueda):
 
         for c in data.get("content", []):
             nivel3 = (c.get("nivel3") or "").upper()
-            desc = (c.get("descripcion") or "").upper()
+            desc   = (c.get("descripcion") or "").upper()
             if "DERECHOS DE LOS ANIMALES" in nivel3 and "SUBVENCIONES" in desc:
                 resultados.append(c)
 
@@ -154,13 +242,13 @@ def buscar_en_bdns(termino_busqueda):
     return resultados
 
 
+# ──────────────────────────────────────────────
+# Main
+# ──────────────────────────────────────────────
+
 def main():
     log.info("=== Inicio check_bdns — %s ===", datetime.now().strftime("%Y-%m-%d"))
     state = load_state()
-
-    if state["eell"] and state["epa"]:
-        log.info("Temporada %s completada (EELL y EPA registradas). Sin acción.", YEAR)
-        return
 
     try:
         conn = get_db()
@@ -169,22 +257,38 @@ def main():
         sys.exit(1)
 
     try:
-        convocatorias = buscar_en_bdns("protección animal")
+        # Paso 1: detectar resoluciones publicadas en BDNS (corre siempre)
+        comprobar_resoluciones(conn)
+
+        # Paso 2: buscar nuevas convocatorias solo si aún faltan
+        if state["eell"] and state["epa"]:
+            log.info(
+                "Temporada %s completada (EELL y EPA registradas). Solo se comprobaron resoluciones.",
+                YEAR,
+            )
+            return
+
+        convocatorias  = buscar_en_bdns("protección animal")
         convocatorias += buscar_en_bdns("colonias felinas")
 
         if not convocatorias:
             log.info("API BDNS: sin resultados para %s.", YEAR)
         else:
-            log.info("API BDNS: %d convocatoria(s) encontrada(s) para %s.", len(convocatorias), YEAR)
+            log.info(
+                "API BDNS: %d convocatoria(s) encontrada(s) para %s.",
+                len(convocatorias), YEAR,
+            )
 
         for c in convocatorias:
-            num = c.get("numeroConvocatoria")
+            num   = c.get("numeroConvocatoria")
             titulo = c.get("descripcion", "Sin título")
-            fecha = c.get("fechaRecepcion")
-            tipo = detectar_tipo(titulo)
+            fecha  = c.get("fechaRecepcion")
+            tipo   = detectar_tipo(titulo)
 
             if tipo is None:
-                log.warning("Tipo no detectado para convocatoria %s — '%s'. Omitida.", num, titulo)
+                log.warning(
+                    "Tipo no detectado para convocatoria %s — '%s'. Omitida.", num, titulo
+                )
                 continue
 
             if state[tipo]:
@@ -192,7 +296,10 @@ def main():
                 continue
 
             if convocatoria_existe(conn, num):
-                log.info("Convocatoria %s ya existe en BD. Marcando %s como encontrada.", num, tipo.upper())
+                log.info(
+                    "Convocatoria %s ya existe en BD. Marcando %s como encontrada.",
+                    num, tipo.upper(),
+                )
                 state[tipo] = True
             else:
                 insertar_convocatoria(conn, tipo, num, titulo, fecha)

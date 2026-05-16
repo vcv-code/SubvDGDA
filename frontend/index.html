@@ -106,7 +106,7 @@
             <!-- Logo + nombre del proyecto -->
             <a class="navbar__logo" href="index.html" aria-label="Ir a la página de inicio">
                 <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
-                <span style="color: var(--color-negro);">Subvenciones DGDA</span>
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
 
             <!--
@@ -183,6 +183,15 @@
                         concedidas, denegadas o en trámite, facilitando tanto la consulta
                         pública como el análisis técnico.
                     </p>
+                    <p class="portada-split__descripcion">
+                        La gestión de animales abandonados y colonias felinas es una
+                        <strong>obligación legal</strong> de los ayuntamientos y mancomunidades,
+                        reforzada por la Ley 7/2023 de bienestar animal. No obtener la subvención
+                        no les exime de cumplirla. Cabe destacar que a las entidades locales
+                        se les adelanta el dinero, mientras que las protectoras —que asumen
+                        una labor que no les corresponde legalmente— lo cobran a año vencido
+                        (tienen que adelantarlo ellas).
+                    </p>
                     <!--
                         Botón con clase "btn btn-primario" (definida en styles.css).
                         El uso de clases reutilizables evita repetir estilos en cada
@@ -240,15 +249,15 @@
                     <div class="card-metrica-verde" id="card-total" style="display:none;">
                         <span class="card-metrica-verde__label">Registros totales</span>
                         <span class="card-metrica-verde__numero" id="total-solicitudes">—</span>
-                        <!-- Badge de tendencia: JS lo rellena si hay ≥2 años en por_anio -->
+                        <span class="card-metrica-verde__subtitulo">Convocatorias y concesiones (EPA + EELL)</span>
                         <span class="tendencia-badge" id="tendencia-registros"
                               style="display:none;" aria-live="polite"></span>
                     </div>
 
                     <div class="card-metrica-verde" id="card-importe" style="display:none;">
-                        <span class="card-metrica-verde__label">Importe Concedido</span>
+                        <span class="card-metrica-verde__label">Importe concedido (EPA + EELL)</span>
                         <span class="card-metrica-verde__numero" id="importe-total">—</span>
-                        <!-- Badge de tendencia: JS lo rellena si hay ≥2 años en por_anio -->
+                        <span class="card-metrica-verde__subtitulo">Suma de todos los años disponibles</span>
                         <span class="tendencia-badge" id="tendencia-importe"
                               style="display:none;" aria-live="polite"></span>
                     </div>
@@ -256,7 +265,8 @@
                     <div class="card-metrica-verde" id="card-entidades" style="display:none;">
                         <span class="card-metrica-verde__label">Entidades únicas</span>
                         <span class="card-metrica-verde__numero" id="total-entidades">—</span>
-                        <!-- Sin badge: entidades_unicas es un escalar sin desglose anual -->
+                        <span class="card-metrica-verde__subtitulo">Protectoras y administraciones solicitantes</span>
+                        <span class="card-metrica-verde__subtitulo">sin duplicados entre años</span>
                     </div>
 
                 </div>
@@ -289,6 +299,34 @@
                     </div>
                 </div>
 
+                <!-- Resoluciones oficiales BOE -->
+                <div style="margin-top: var(--espacio-xl);">
+                    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.25rem; text-align:center;">Resoluciones oficiales</h3>
+                    <p style="text-align:center; font-size:0.9rem; color:var(--color-gris-texto); margin-bottom:var(--espacio-md);">
+                        Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
+                    </p>
+                    <div class="grid-2">
+                        <div class="privado-docs__grupo">
+                            <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
+                            <ul class="privado-docs__lista" id="resoluciones-eell">
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
+                            </ul>
+                        </div>
+                        <div class="privado-docs__grupo">
+                            <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
+                            <ul class="privado-docs__lista" id="resoluciones-epa">
+                                <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
+                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Convocatoria</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -313,11 +351,10 @@
                     </h2>
                     <p style="color:var(--color-gris-texto); margin-top:4px;">
                         Evolución, distribución y comparativa de subvenciones 2021–2025.
-                        Datos de BDNS y DGDA.
                     </p>
                 </div>
 
-                <!-- Fila 1: línea de evolución + donut de estados -->
+                <!-- Fila 1: línea de evolución + barras EPA vs EELL -->
                 <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
 
                     <div class="card-grafico">
@@ -406,7 +443,8 @@
                                 Solicitudes concedidas sobre el total 2021–2025
                             </p>
                         </div>
-                        <div style="margin-top: var(--espacio-lg);">
+
+                        <div style="margin-top:auto; padding-top: var(--espacio-md);">
                             <a href="estadisticas-epas.html"
                                style="display:inline-block; margin-right:12px; color:var(--color-azul); font-size:0.9rem;">
                                 → Estadísticas EPAs
@@ -418,7 +456,38 @@
                         </div>
                     </div>
 
-                </div>
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
+                            <p class="card-grafico__titulo">Distribución por estado</p>
+                            <button class="btn-descargar-png" id="btn-dl-donut"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de distribución como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container chart-container--donut">
+                            <canvas id="home-grafico-donut" role="img"
+                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
+                        </div>
+                        <div class="leyenda-estados leyenda-estados--vertical" id="home-leyenda-donut">
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#2E7D32;"></span>
+                                <span><strong>Concedida:</strong> obtienen la subvención</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#D97706;"></span>
+                                <span><strong>No beneficiaria:</strong> puntuación válida, pero sin presupuesto suficiente</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#C62828;"></span>
+                                <span><strong>Excluida:</strong> sin puntuación por problemas en la documentación</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" style="background-color:#6B7280;"></span>
+                                <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
+                            </div>
+                        </div>
+                    </div>
 
             </div>
         </section>
@@ -484,6 +553,7 @@
          ===================================================== -->
     <!-- Chart.js debe cargarse ANTES que home.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/modal-grafica.js"></script>
     <script src="js/home.js"></script>
 
 </body>

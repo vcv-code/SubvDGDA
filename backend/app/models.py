@@ -91,6 +91,7 @@ class Usuario(Base):
 
     id_usuario       = Column(Integer, primary_key=True, autoincrement=True)
     email            = Column(String(255), nullable=False, unique=True)
+    nombre           = Column(String(100), nullable=True)
     password         = Column(String(255), nullable=False)
     rol              = Column(Enum("admin", "registrado"), nullable=False, default="registrado")
     activo           = Column(SmallInteger, nullable=False, default=1)

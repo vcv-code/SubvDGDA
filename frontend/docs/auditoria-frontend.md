@@ -1,4 +1,4 @@
-# Checklist de Entrega — Frontend
+# Auditoría de calidad — Frontend
 ## Proyecto BDNS/DGDA · Subvenciones de Bienestar Animal · 2º DAW 2026
 
 > **Cómo usar este documento:**  
