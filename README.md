@@ -603,6 +603,67 @@ El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL
 
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
+**Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv
+**Descarga primera vez:** ~300-400 MB de imágenes Docker (según las que ya tengas cacheadas)
+
+#### Flujos posibles según las respuestas
+
+El script hace tres preguntas y toma varias decisiones automáticas:
+
+**Pregunta 1 — `¿Continuar? [s/N]`**
+
+| Respuesta | Resultado |
+|-----------|-----------|
+| `s` | La instalación continúa |
+| `N` (o Enter) | El script se aborta sin modificar nada en el sistema |
+
+##### Decisiones automáticas (sin preguntar)
+
+Antes de continuar el script detecta si ya existen recursos y los reutiliza sin sobreescribir:
+
+| Recurso | Si ya existe | Si no existe |
+|---------|-------------|--------------|
+| `docker/.env` | Se reutiliza | Se crea con contraseñas de desarrollo y `SECRET_KEY` aleatoria |
+| Certificado SSL | Se reutiliza | Se genera con `openssl` (válido 1 año) |
+| Base de datos con datos | No se toca | Se carga el dataset completo (primera instalación) |
+| `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
+| Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
+
+**Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
+
+Esta pregunta solo aparece si el dominio no está ya en `/etc/hosts`.
+
+| Respuesta | Resultado |
+|-----------|-----------|
+| `s` | Se añade el dominio con `sudo`. La app queda disponible en `https://subvencionesDGDA.local` con HTTPS completo. |
+| `N` (o Enter) | El dominio no se toca. La instalación **continúa igualmente**. La app queda disponible en `http://localhost` (sin HTTPS). Ver limitaciones abajo. |
+
+Limitaciones de acceder por `http://localhost` en vez del dominio local:
+
+- Sin HTTPS — el navegador no mostrará el candado
+- Las cookies con el flag `Secure` no se enviarán (puede afectar a la sesión en algunos navegadores)
+- El enlace de recuperación de contraseña que llega por email usa la URL del dominio — no funcionará si el dominio no está en `/etc/hosts`
+
+Para añadirlo manualmente en cualquier momento:
+
+```bash
+echo '127.0.0.1 subvencionesDGDA.local' | sudo tee -a /etc/hosts
+```
+
+**Pregunta 3 — `¿Crear entorno virtual Python (venv)? (solo para tests y scripts) [s/N]`**
+
+Esta pregunta solo aparece si no existe ya un `venv/`. El script informa de que ocupa ~50 MB y que **no es necesario para usar la aplicación web**.
+
+| Respuesta | Resultado |
+|-----------|-----------|
+| `s` | Se crea el `venv` y se instalan las dependencias de `requeriments.txt` |
+| `N` (o Enter) | No se crea. La aplicación web **funciona igualmente**. Solo es necesario para ejecutar los tests (`make test`) y los scripts de parseo de datos. |
+
+Para crearlo manualmente después si se necesita:
+
+```bash
+python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt
+```
 
 ### Instalación manual
 
@@ -835,7 +896,7 @@ El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 man
 | Automáticos | 197 | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
-Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
+Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
 ### Ejecutar todos los tests
 
@@ -847,23 +908,31 @@ pytest -v
 ### Ejecutar por módulo
 
 ```bash
+# — Pipeline de datos (base del proyecto) —
+pytest tests/test_unificar_datasets.py  # normalización y deduplicación del dataset
+pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
+
+# — API pública (sin autenticación) —
 pytest tests/test_smoke.py              # arranque de la API y /health
-pytest tests/test_convocatorias.py
+pytest tests/test_convocatorias.py      # listado de convocatorias
 pytest tests/test_solicitudes.py        # filtros, paginación y exportación CSV
 pytest tests/test_estadisticas.py       # /estadisticas/, /estadisticas/epas y /estadisticas/eell
-pytest tests/test_auth.py               # registro, login y zona privada
 pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
 pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
+
+# — Autenticación y acceso —
+pytest tests/test_auth.py               # registro y login básico
+pytest tests/test_verificacion_email.py # verificación de email al registrarse
+pytest tests/test_refresh_token.py      # refresh token, rotación y logout
+pytest tests/test_recuperar_password.py # recuperación de contraseña por email
+pytest tests/test_privado.py            # zona privada: cambiar contraseña y nombre
+pytest tests/test_admin.py              # panel de administración completo
+
+# — Infraestructura —
+pytest tests/test_logging.py            # middleware y configuración de logging
+pytest tests/test_https_config.py       # certificado SSL y configuración Nginx HTTPS
 pytest tests/test_cache_headers.py      # cabeceras Cache-Control en /convocatorias/ y /estadisticas/
 pytest tests/test_rate_limiting.py      # configuración de rate limiting en Nginx
-pytest tests/test_privado.py            # cambiar contraseña y nombre desde la zona privada
-pytest tests/test_recuperar_password.py # recuperación de contraseña por email
-pytest tests/test_refresh_token.py      # refresh token, rotación y logout
-pytest tests/test_logging.py            # middleware y configuración de logging
-pytest tests/test_verificacion_email.py # verificación de email al registro
-pytest tests/test_admin.py              # panel de administración completo
-pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
-pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ```
 
 ### Resultado esperado
@@ -965,7 +1034,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ entorno Docker (docker-compose con MariaDB + FastAPI)
 ✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
-✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
+✔ backend FastAPI: modelos ORM, schemas Pydantic, primeros endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
   · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
@@ -1013,25 +1082,29 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (195 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (197 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+  · — Pipeline de datos —
+  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
+  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
+  · — API pública —
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
   · test_estadisticas.py (24): /estadisticas/, /estadisticas/epas y /estadisticas/eell — estructura, cálculos, nuevos/recurrentes, concentración
-  · test_auth.py (10): registro, login, acceso con/sin token
   · test_agrupaciones.py (7): endpoint /agrupaciones/ — estructura, importes correctos, representante con nombre
-  · test_logging.py (5): middleware de logging y configuración del logger
-  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
-  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
-  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
-  · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
+  · — Autenticación y acceso —
+  · test_auth.py (10): registro, login, acceso con/sin token
   · test_verificacion_email.py (10): registro crea usuario no verificado, token en BD, email enviado, login bloqueado sin verificar, token válido activa cuenta, login tras verificar, token inválido/usado/expirado, reset activa email_verificado
   · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
   · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
+  · test_privado.py (6): zona privada — cambiar contraseña y nombre/alias
   · test_admin.py (24): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs de acceso y de error
-  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
-  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
+  · — Infraestructura —
+  · test_logging.py (5): middleware de logging y configuración del logger
+  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
+  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
+  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
