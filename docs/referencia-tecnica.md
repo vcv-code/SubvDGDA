@@ -200,8 +200,22 @@ bash install.sh
 
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows requiere Docker Desktop con integración WSL2)
+**Descarga primera vez:** ~300-400 MB de imágenes Docker
+**Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv (solo necesario para tests y scripts de parseo)
 
 El script detecta instalaciones existentes y no sobreescribe datos. Si la BD ya tiene solicitudes, solo levanta los contenedores. Para reinstalar desde cero: `make reset-db`.
+
+### Qué se descarga en la primera instalación
+
+| Imagen | Uso | Tamaño aproximado |
+|--------|-----|-------------------|
+| `mariadb:11` | Base de datos | ~120 MB |
+| `python:3.11-slim` | Backend y cron (compartida) | ~75 MB |
+| `nginx:alpine` | Proxy inverso | ~11 MB |
+| `adminer` | Interfaz web de BD | ~13 MB |
+| `axllent/mailpit` | SMTP de desarrollo | ~13 MB |
+
+En instalaciones posteriores las imágenes ya están cacheadas localmente — arrancar el entorno es instantáneo.
 
 ---
 

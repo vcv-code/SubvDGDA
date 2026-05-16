@@ -292,9 +292,22 @@ else
         echo "127.0.0.1  ${DOMAIN}" | sudo tee -a /etc/hosts > /dev/null
         ok "Añadido a /etc/hosts"
     else
-        aviso "No se ha modificado /etc/hosts."
-        aviso "Puedes añadirlo manualmente: echo '127.0.0.1 ${DOMAIN}' | sudo tee -a /etc/hosts"
-        aviso "Sin esto solo podrás acceder por http://localhost (sin HTTPS)."
+        echo
+        aviso "No se ha modificado /etc/hosts — el dominio $DOMAIN no estará disponible."
+        echo
+        echo "  Puedes acceder igualmente por:"
+        echo -e "  ${NEGRITA}→ Web:${RESET}      http://localhost"
+        echo -e "  ${NEGRITA}→ API docs:${RESET} http://localhost/docs"
+        echo
+        echo "  Limitaciones sin el dominio local:"
+        echo "    • Sin HTTPS — el navegador no mostrará el candado"
+        echo "    • Cookies con flag Secure no se enviarán"
+        echo "    • El correo de recuperación de contraseña usa la URL del dominio;"
+        echo "      el enlace no funcionará si no está en /etc/hosts"
+        echo
+        echo "  Para añadirlo manualmente en cualquier momento:"
+        echo "    echo '127.0.0.1 ${DOMAIN}' | sudo tee -a /etc/hosts"
+        echo
     fi
 fi
 
@@ -326,8 +339,17 @@ else
     # La BD ya está arriba (la levantamos para detectar datos), solo construimos el resto
     (cd docker && docker compose up --build -d)
     echo
+    # cargar_dataset necesita PyMySQL (no está en Python del sistema).
+    # Si no hay venv todavía, lo creamos aquí — la fase 7 lo detectará y lo reutilizará.
+    if [ ! -d "venv" ]; then
+        info "Preparando entorno Python para cargar el dataset..."
+        python3 -m venv venv
+        venv/bin/pip install --quiet --upgrade pip
+        venv/bin/pip install --quiet -r requeriments.txt
+        ok "Entorno Python listo"
+    fi
     info "Cargando dataset en la base de datos..."
-    python3 -m scripts.data_processing.cargar_dataset
+    venv/bin/python3 -m scripts.data_processing.cargar_dataset
     echo
     ok "Dataset cargado correctamente"
 fi
@@ -341,17 +363,19 @@ if [ -d "venv" ]; then
     ok "venv ya existe — se usará el existente"
 else
     echo
-    echo "  El venv local es necesario para ejecutar los tests y los scripts de parseo."
+    echo "  El venv NO es necesario para usar la aplicación web — esta ya funciona."
+    echo "  Solo lo necesitas si vas a ejecutar los tests o los scripts de parseo de datos."
+    echo "  Ocupa ~50 MB."
     echo
 
-    if confirmar "¿Crear entorno virtual Python (venv) e instalar dependencias?"; then
+    if confirmar "¿Crear entorno virtual Python (venv)? (solo para tests y scripts)"; then
         python3 -m venv venv
         venv/bin/pip install --quiet --upgrade pip
         venv/bin/pip install --quiet -r requeriments.txt
         ok "venv creado con dependencias instaladas"
     else
-        aviso "Venv no creado. Puedes crearlo manualmente después con:"
-        aviso "  python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt"
+        aviso "Venv omitido — la aplicación web funciona igualmente."
+        aviso "Para crearlo después: python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt"
     fi
 fi
 
@@ -364,8 +388,16 @@ echo -e "${VERDE}${NEGRITA}║   ¡Instalación completada!                     
 echo -e "${VERDE}${NEGRITA}╚══════════════════════════════════════════════════════╝${RESET}"
 echo
 echo "  Acceso:"
-echo -e "  ${NEGRITA}→ Web:${RESET}      https://${DOMAIN}"
-echo -e "  ${NEGRITA}→ API docs:${RESET} https://${DOMAIN}/docs"
+if grep -q "$DOMAIN" /etc/hosts 2>/dev/null; then
+    echo -e "  ${NEGRITA}→ Web:${RESET}      https://${DOMAIN}"
+    echo -e "  ${NEGRITA}→ API docs:${RESET} https://${DOMAIN}/docs"
+else
+    echo -e "  ${NEGRITA}→ Web:${RESET}      http://localhost  ${AMARILLO}(sin HTTPS — dominio local no configurado)${RESET}"
+    echo -e "  ${NEGRITA}→ API docs:${RESET} http://localhost/docs"
+    echo
+    echo -e "  ${AMARILLO}Para activar HTTPS añade el dominio a /etc/hosts:${RESET}"
+    echo "    echo '127.0.0.1 ${DOMAIN}' | sudo tee -a /etc/hosts"
+fi
 echo -e "  ${NEGRITA}→ Mailpit:${RESET}  http://localhost:8025"
 echo -e "  ${NEGRITA}→ Adminer:${RESET}  http://localhost:8080"
 echo
@@ -375,8 +407,4 @@ echo "    make stop       — parar contenedores"
 echo "    make test       — ejecutar tests"
 echo "    make logs       — ver logs del backend"
 echo "    make reset-db   — reinstalar BD desde cero"
-echo
-if ! grep -q "$DOMAIN" /etc/hosts 2>/dev/null; then
-    aviso "Recuerda añadir $DOMAIN a /etc/hosts para acceder por HTTPS."
-fi
 echo
