@@ -370,7 +370,7 @@ CREATE TABLE IF NOT EXISTS verificacion_tokens (
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS nombre VARCHAR(100) NULL AFTER email;
 INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
 VALUES (
-    'admin@demo.local',
+    'admin@demo.com',
     'Admin Demo',
     '\$2b\$12\$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
     'admin', 1, 1, NOW()
@@ -459,7 +459,7 @@ echo -e "  ${NEGRITA}→ Mailpit:${RESET}  http://localhost:8025"
 echo -e "  ${NEGRITA}→ Adminer:${RESET}  http://localhost:8080"
 echo
 echo "  Cuenta de administrador:"
-echo -e "  ${NEGRITA}→ Email:${RESET}     admin@demo.local"
+echo -e "  ${NEGRITA}→ Email:${RESET}     admin@demo.com"
 echo -e "  ${NEGRITA}→ Contraseña:${RESET} Admin1234!"
 echo
 echo "  Comandos útiles:"

@@ -203,11 +203,11 @@ CREATE TABLE IF NOT EXISTS verificacion_tokens (
 -- USUARIO ADMIN DE DEMO
 -- Creado solo en instalaciones nuevas (INSERT IGNORE ignora
 -- el insert si el email ya existe).
--- Credenciales: admin@demo.local / Admin1234!
+-- Credenciales: admin@demo.com / Admin1234!
 -- ------------------------------------------------------------
 INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
 VALUES (
-    'admin@demo.local',
+    'admin@demo.com',
     'Admin Demo',
     '$2b$12$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
     'admin', 1, 1, NOW()
