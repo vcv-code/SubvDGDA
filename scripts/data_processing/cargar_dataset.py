@@ -79,9 +79,11 @@ _FECHAS = {
     (2023, "epa"):  ("2023-05-19", "2023-11-20"),
     (2024, "epa"):  ("2024-06-17", "2024-11-14"),
     (2025, "epa"):  ("2025-05-05", "2025-12-30"),
+    (2026, "epa"):  ("2026-05-11", None),
     (2023, "eell"): ("2023-05-19", "2024-01-11"),
     (2024, "eell"): ("2024-05-31", "2024-11-20"),
     (2025, "eell"): ("2025-03-27", "2025-12-31"),
+    (2026, "eell"): ("2026-04-08", None),
 }
 
 
@@ -384,6 +386,24 @@ def main():
 
             print("[5/6] Agrupaciones y miembros...")
             cargar_agrupaciones(cursor, registros, mapa_benef, mapa_conces)
+
+            print("[6/6] Fechas de resolución conocidas...")
+            resoluciones = [
+                ("epa",  2021, "2022-01-14"),
+                ("epa",  2022, "2022-12-23"),
+                ("epa",  2023, "2023-11-20"),
+                ("epa",  2024, "2024-11-14"),
+                ("epa",  2025, "2025-12-30"),
+                ("eell", 2023, "2024-01-11"),
+                ("eell", 2024, "2024-11-20"),
+                ("eell", 2025, "2025-12-31"),
+            ]
+            for tipo, anio, fecha in resoluciones:
+                cursor.execute(
+                    "UPDATE convocatorias SET fecha_resolucion=%s "
+                    "WHERE tipo_convoc=%s AND anio_convocatoria=%s AND fecha_resolucion IS NULL",
+                    (fecha, tipo, anio),
+                )
 
         conn.commit()
         print("\nCarga completada correctamente.")

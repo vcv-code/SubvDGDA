@@ -86,11 +86,18 @@ def convocatoria_existe(conn, num_convoc):
         return cur.fetchone() is not None
 
 
+_TITULO_NORMALIZADO = {
+    "epa":  "Subvenciones a entidades de protección animal {year}",
+    "eell": "Subvenciones a entidades locales para protección animal {year}",
+}
+
+
 def insertar_convocatoria(conn, tipo, num_convoc, titulo, fecha_str):
     try:
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date() if fecha_str else None
     except (ValueError, TypeError):
         fecha = None
+    titulo_final = _TITULO_NORMALIZADO.get(tipo, titulo).format(year=YEAR)
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -99,7 +106,7 @@ def insertar_convocatoria(conn, tipo, num_convoc, titulo, fecha_str):
                  fecha_convocatoria, fecha_resolucion, periodo_meses)
             VALUES (%s, %s, %s, %s, %s, NULL, 12)
             """,
-            (str(num_convoc), titulo[:255], tipo, YEAR, fecha),
+            (str(num_convoc), titulo_final, tipo, YEAR, fecha),
         )
     conn.commit()
 
