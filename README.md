@@ -606,7 +606,7 @@ El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL
 1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
 2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
 3. Para acceder al panel de administración, inicia sesión con:
-   - Email: `admin@demo.local`
+   - Email: `admin@demo.com`
    - Contraseña: `Admin1234!`
 
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
@@ -641,7 +641,7 @@ El script crea también un **usuario administrador de demo** si no existe ningun
 
 | Campo | Valor |
 |-------|-------|
-| Email | `admin@demo.local` |
+| Email | `admin@demo.com` |
 | Contraseña | `Admin1234!` |
 | Rol | `admin` |
 

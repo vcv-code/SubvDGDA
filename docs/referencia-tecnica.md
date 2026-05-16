@@ -249,7 +249,7 @@ En instalaciones posteriores las imágenes ya están cacheadas localmente — ar
 | **bcrypt** | 5.0.0 | Hash y verificación de contraseñas en registro y login. |
 | **python-jose** | 3.5.0 | Genera y valida los JWT (access token y refresh token) con algoritmo HS256. |
 | **cryptography** | 46.0.5 | Soporte criptográfico requerido por python-jose para la firma HS256. |
-| **email-validator** | 2.3.0 | Valida el formato del email en el schema del registro. |
+| **email-validator** | 2.3.0 | Valida el formato del email en el schema del registro. **Importante:** la versión 2.x rechaza dominios especiales/reservados (`.local`, `.test`, `.example`, `.internal`, `.localhost`) con error 422. Los emails de desarrollo o demo deben usar un TLD público válido (`@demo.com`, `@example.com`). |
 | **pytest** | 9.0.3 | Framework de tests. |
 | **httpx** | 0.28.1 | Cliente HTTP que simula peticiones a la API en los tests (`TestClient`). |
 
