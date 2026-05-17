@@ -88,6 +88,11 @@
 
     /* --- Altura del navbar --- */
     --altura-nav: 80px;
+
+    /* --- Identidad visual global (navbar + footer) --- */
+    --nav-oscuro:    #1A3429;   /* Verde institucional oscuro */
+    --btn-cta:       #2DC26C;   /* Verde CTA (botones de acción) */
+    --btn-cta-hover: #25A85B;   /* Verde CTA en hover */
 }
 
 
@@ -146,17 +151,18 @@ img {
 /* ============================================================
    3. NAVBAR
    Barra de navegación fija en la parte superior.
-   Contiene el logo a la izquierda y los enlaces a la derecha.
+   Diseño unificado en verde oscuro institucional (#1A3429)
+   para todas las páginas del proyecto.
    ============================================================ */
 .navbar {
-    position: fixed;           /* Se queda fija al hacer scroll */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: var(--altura-nav);
-    background-color: var(--color-blanco);
-    box-shadow: var(--sombra-nav);
-    z-index: 1000;             /* Siempre encima del resto del contenido */
+    background-color: var(--nav-oscuro);          /* #1A3429 — institucional */
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.28);
+    z-index: 1000;
 
     display: flex;
     align-items: center;
@@ -164,19 +170,25 @@ img {
     padding: 0 var(--espacio-lg);
 }
 
-/* Logo + nombre del proyecto */
+/* Logo: texto blanco sobre fondo oscuro */
 .navbar__logo {
     display: flex;
     align-items: center;
-    gap: var(--espacio-xs);
+    gap: 12px;
     font-weight: 700;
     font-size: 1.1rem;
-    color: var(--color-verde-btn);
+    color: #FFFFFF;
 }
 
+.navbar__logo-text {
+    color: #FFFFFF;
+}
+
+/* Logo PNG — sin filtro de inversión; drop-shadow para visibilidad */
 .navbar__logo img {
-    height: 54px;
+    height: 44px;
     width: auto;
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
 }
 
 /* Contenedor de los enlaces de navegación */
@@ -186,49 +198,59 @@ img {
     gap: var(--espacio-lg);
 }
 
-/* Cada enlace del navbar */
+/* Cada enlace: blanco semitransparente */
 .navbar__links a {
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--color-gris-texto);
+    color: rgba(255, 255, 255, 0.80);
     transition: color 0.2s ease;
     padding-bottom: 4px;
-    border-bottom: 2px solid transparent; /* Línea invisible por defecto */
+    border-bottom: 2px solid transparent;
 }
 
 .navbar__links a:hover,
 .navbar__links a.activo {
-    color: var(--color-verde-btn);
-    border-bottom-color: var(--color-foco);
+    color: #FFFFFF;
+    border-bottom-color: var(--btn-cta);
 }
 
-/* Botón de Login en el navbar (tiene estilo diferente) */
+/* Botón "Acceder" / "Cerrar sesión": pill verde brillante */
 .navbar__links .btn-login {
-    background-color: var(--color-verde-btn);
-    color: var(--color-blanco);
+    background-color: var(--btn-cta);
+    color: #FFFFFF;
     padding: 8px var(--espacio-sm);
-    border-radius: var(--radio-btn);
+    border-radius: 50px;
     border-bottom: none;
     font-weight: 600;
+    font-family: var(--fuente-principal);
+    cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
 .navbar__links .btn-login:hover {
-    background-color: var(--color-foco);
-    color: var(--color-blanco);
+    background-color: var(--btn-cta-hover);
+    color: #FFFFFF;
 }
 
+/* Bloque de usuario (navbar.js) */
 .navbar__user-controls {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* El enlace "Mi perfil" dentro del bloque de usuario no necesita
-   el padding-bottom del resto de enlaces (evita desalineación con el botón) */
+/* "Mi perfil": enlace inyectado por navbar.js cuando hay sesión */
 .navbar__links a.navbar__user-link {
     padding-bottom: 0;
     border-bottom: none;
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navbar__links a.navbar__user-link:hover {
+    color: #FFFFFF;
 }
 
 
@@ -955,16 +977,20 @@ table tbody tr:hover {
    al flexbox definido en body (sección 2 de este CSS).
    ============================================================ */
 
-/* Color del footer como variable local para reutilizarlo */
+/* ============================================================
+   Footer unificado en verde oscuro institucional para
+   coherencia visual con el navbar en todas las páginas.
+   ============================================================ */
 .footer-principal {
-    --footer-bg:       #E1FEE5;   /* Verde claro */
-    --footer-bg-sub:   #bbfdc3;   /* Verde más oscuro para la franja inferior */
-    --footer-texto:    #1d221f;   /* Verde aún más oscuro desaturado — buena legibilidad */
-    --footer-texto-dim: #486e53;  /* Texto secundario */
-    --footer-borde:    #78b78a;   /* Separador interno */
+    --footer-bg:        #1A3429;                  /* espejo del --nav-oscuro */
+    --footer-bg-sub:    #142b20;
+    --footer-texto:     rgba(255, 255, 255, 0.88);
+    --footer-texto-dim: rgba(255, 255, 255, 0.52);
+    --footer-borde:     rgba(255, 255, 255, 0.10);
 
     background-color: var(--footer-bg);
     color: var(--footer-texto);
+    border-top: none;                             /* sin línea superior visible */
 }
 
 /* ── Zona principal: logo + enlaces ── */
@@ -988,15 +1014,16 @@ table tbody tr:hover {
     color: var(--footer-texto);
 }
 
+/* Logo PNG — sin filtro de inversión; drop-shadow para visibilidad */
 .footer-principal__marca img {
-    height: 36px;
+    height: 40px;
     width: auto;
-    /* Filtro para que el logo (si tiene colores) se vea bien sobre fondo oscuro */
-    filter: brightness(1.1);
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
 }
 
+/* Nombre del proyecto en blanco puro para máxima legibilidad */
 .footer-principal__marca strong {
-    color: #223a2a;   /* El nombre del proyecto en blanco puro para destacar */
+    color: #FFFFFF;
     font-weight: 700;
 }
 
@@ -1014,7 +1041,7 @@ table tbody tr:hover {
 }
 
 .footer-principal__nav a:hover {
-    color: var(--color-foco);   /* Verde oscuro WCAG — contraste sobre fondo claro */
+    color: #FFFFFF;
 }
 
 /* Separadores | */
@@ -1033,14 +1060,14 @@ table tbody tr:hover {
 }
 
 .footer-principal__creditos a {
-    color: var(--footer-texto);
+    color: var(--footer-texto-dim);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.2s ease;
 }
 
 .footer-principal__creditos a:hover {
-    color: var(--color-foco);
+    color: var(--footer-texto);
 }
 
 @media (max-width: 600px) {
@@ -2803,60 +2830,13 @@ canvas {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* --- 31.4 Navbar (solo portada) --- */
-.pagina-inicio .navbar {
-    background-color: var(--color-blanco);
-    border-bottom: 2px solid var(--color-neutro);
-}
+/* --- 31.4 Navbar (solo portada) — NEUTRALIZADO --- */
+/* El navbar oscuro (#1A3429) está definido globalmente en Section 3.
+   No se necesita ningún override por .pagina-inicio. */
 
-.pagina-inicio .nav-link:hover,
-.pagina-inicio .nav-link:focus {
-    color: var(--color-verde-btn);
-    background-color: var(--color-arena);
-}
-
-/* --- 31.5 Footer opción B — verde oscuro institucional --- */
-.pagina-inicio .footer-principal {
-    --footer-bg:         #2E6B4F;
-    --footer-texto:      #FFFFFF;
-    --footer-secundario: rgba(255, 255, 255, 0.75);
-    --footer-separador:  rgba(255, 255, 255, 0.45);
-    --footer-hover:      #F2E9D8;
-
-    background-color: var(--footer-bg);
-    border-top: 3px solid var(--color-arena);
-}
-
-.pagina-inicio .footer-principal,
-.pagina-inicio .footer-principal p,
-.pagina-inicio .footer-principal span {
-    color: var(--footer-texto);
-}
-
-.pagina-inicio .footer-principal .footer-subtitulo {
-    color: var(--footer-secundario);
-}
-
-.pagina-inicio .footer-principal a {
-    color: var(--footer-secundario);
-    text-decoration: none;
-}
-
-.pagina-inicio .footer-principal a:hover,
-.pagina-inicio .footer-principal a:focus {
-    color: var(--footer-hover);
-    text-decoration: underline;
-}
-
-.pagina-inicio .footer-principal hr,
-.pagina-inicio .footer-divider {
-    border-color: var(--footer-separador);
-}
-
-/* Logo → blanco puro mediante filtro CSS (sin segunda imagen) */
-.pagina-inicio .footer-principal .footer-logo {
-    filter: brightness(0) invert(1);
-}
+/* --- 31.5 Footer (solo portada) — NEUTRALIZADO --- */
+/* El footer oscuro (#1A3429) está definido globalmente en Section 17b.
+   No se necesita ningún override por .pagina-inicio. */
 
 /* ═══════════════════════════════════════════════════════════════════
    32. MODAL DE CONCLUSIONES (modal-grafica.js)
@@ -3047,51 +3027,9 @@ canvas {
     --sombra-calida: 0 4px 20px rgba(26, 52, 41, 0.11);
 }
 
-/* ─── 33.1 NAVBAR — verde oscuro institucional ─────────────────── */
-.pagina-inicio .navbar {
-    background-color: var(--nav-oscuro);
-    border-bottom: none;
-    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.28);
-}
-
-/* Logo: texto blanco */
-.pagina-inicio .navbar__logo {
-    color: #FFFFFF;
-}
-
-.pagina-inicio .navbar__logo-text {
-    color: #FFFFFF;
-}
-
-/* Logo SVG/PNG → invertir a blanco con filtro CSS */
-.pagina-inicio .navbar__logo img {
-    filter: brightness(0) invert(1);
-}
-
-/* Links del nav: blanco semitransparente */
-.pagina-inicio .navbar__links a {
-    color: rgba(255, 255, 255, 0.80);
-    border-bottom-color: transparent;
-}
-
-.pagina-inicio .navbar__links a:hover,
-.pagina-inicio .navbar__links a.activo {
-    color: #FFFFFF;
-    border-bottom-color: var(--btn-cta);
-}
-
-/* Botón "Acceder" en el nav: verde brillante pill */
-.pagina-inicio .navbar__links .btn-login {
-    background-color: var(--btn-cta);
-    color: #FFFFFF;
-    border-radius: 50px;
-    border-bottom: none;
-}
-
-.pagina-inicio .navbar__links .btn-login:hover {
-    background-color: var(--btn-cta-hover);
-    color: #FFFFFF;
-}
+/* ─── 33.1 NAVBAR — ahora global (Section 3) ───────────────────── */
+/* Los estilos de navbar oscuro están en la Section 3 global.
+   No se necesita override por .pagina-inicio. */
 
 /* ─── 33.2 HERO — fondo crema, ancho completo ──────────────────── */
 .pagina-inicio .portada-split {
@@ -3105,9 +3043,9 @@ canvas {
     max-width: 100%;
     margin: 0;
     padding: 0 0 0 clamp(var(--espacio-lg), 7vw, 96px);
-    grid-template-columns: 45fr 55fr;
+    grid-template-columns: 55fr 45fr;   /* texto 55 %, imagen 45 % */
     gap: 0;
-    min-height: 500px;
+    min-height: 280px;
     align-items: stretch;
 }
 
@@ -3167,45 +3105,30 @@ canvas {
     outline-offset: 3px;
 }
 
-/* ─── 33.5 IMAGEN DEL HERO — gato-portada.jpg + corte orgánico ──── */
+/* ─── 33.5 IMAGEN DEL HERO — gato-portada.jpeg ──── */
 /*
-   Técnica: background-image muestra gato-portada.jpg en el contenedor.
-   La <img> real se vuelve invisible (opacity:0) y actúa como espaciador
-   para mantener la altura del contenedor.
-   clip-path: corte en dientes de sierra suaves en el borde izquierdo,
-   dejando ver el fondo crema del hero a través de los entrantes.
+   Técnica: la imagen se carga en HTML con <img src="assets/gato-portada.jpeg">.
+   El contenedor actúa solo como wrapper con overflow: hidden.
+   La <img> usa object-fit: cover y object-position: center 10%
+   para encuadrar la cabeza/torso del gato. clip-path: none — bordes limpios.
 */
 .pagina-inicio .portada-split__imagen {
-    background-image: url('../assets/gato-portada.jpg');
-    background-size: cover;
-    background-position: center 20%;
-    background-color: #b8dfc8;  /* fallback si la imagen no carga */
+    background-color: #b8dfc8;         /* fallback si la imagen no carga */
     border-radius: 0;
     box-shadow: none;
-    overflow: visible;
-    min-height: 500px;
-    clip-path: polygon(
-        11%  0%,
-        100% 0%,
-        100% 100%,
-        0%   100%,
-        0%   86%,
-        11%  74%,
-        0%   61%,
-        11%  48%,
-        0%   35%,
-        11%  22%,
-        0%   9%
-    );
+    overflow: hidden;
+    min-height: 280px;
+    clip-path: none;                   /* sin recorte — bordes limpios */
 }
 
-/* La <img> original: invisible, solo aporta altura al contenedor */
+/* La <img> ocupa todo el contenedor */
 .pagina-inicio .portada-split__imagen img {
-    opacity: 0;
+    opacity: 1;
     width: 100%;
     height: 100%;
-    min-height: 500px;
+    min-height: 280px;
     object-fit: cover;
+    object-position: center 10%;
     border-radius: 0;
     display: block;
 }
@@ -3244,10 +3167,9 @@ canvas {
     box-shadow: var(--sombra-calida);
 }
 
-/* ─── 33.10 FOOTER — ajuste borde superior con el CTA ───────────── */
-.pagina-inicio .footer-principal {
-    border-top: 4px solid var(--btn-cta);
-}
+/* ─── 33.10 FOOTER — ahora global (Section 17b) ────────────────── */
+/* Los estilos de footer oscuro están en la Section 17b global.
+   No se necesita override por .pagina-inicio. */
 
 /* ─── 33.11 RESPONSIVE HERO ──────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -3259,13 +3181,12 @@ canvas {
 
     .pagina-inicio .portada-split__imagen {
         order: -1;               /* Imagen arriba en móvil */
-        min-height: 260px;
-        clip-path: none;         /* Sin corte zigzag en móvil */
-        background-position: center 15%;
+        min-height: 200px;
+        clip-path: none;
     }
 
     .pagina-inicio .portada-split__imagen img {
-        min-height: 260px;
+        min-height: 200px;
     }
 
     .pagina-inicio .portada-split__texto {
@@ -3279,5 +3200,616 @@ canvas {
     .pagina-inicio .portada-split__texto .btn-primario {
         align-self: stretch;
         text-align: center;
+    }
+}
+
+
+/* ============================================================
+   34. AJUSTES ADICIONALES — 2026-05-17
+   ============================================================ */
+
+/* ─── 34.1 PÁGINA 404 — contenedor más compacto ────────────────── */
+/*
+   Los estilos inline del HTML (max-width:950px / max-width:620px)
+   se sobreescriben desde CSS con !important sin modificar el HTML.
+   El modificador .auth-card--simple solo lo usa 404.html,
+   por lo que el cambio no afecta al resto de páginas auth.
+*/
+.auth-card--simple {
+    max-width: 520px !important;
+    margin: 0 auto !important;
+}
+
+/* Imagen de la página 404 */
+.auth-card--simple .auth-card__formulario img {
+    max-width: 320px !important;
+    margin: 0 auto 0.3rem !important;
+}
+
+/* Padding interior más ceñido */
+.auth-card--simple .auth-card__formulario {
+    padding: 0.5rem 1.75rem 1.75rem !important;
+}
+
+
+/* ─── 34.2 SECCIÓN "POR QUÉ REGISTRARSE" (index.html) ──────────── */
+/*
+   Sección compacta entre los gráficos y el footer.
+   Usa únicamente clases nuevas (.seccion-registro__*).
+   Iconos: SVG inline en el HTML — sin emojis.
+*/
+.seccion-registro {
+    background-color: var(--hero-crema, #F5EFE3);
+    padding: var(--espacio-lg) 0;      /* compacto: lg en vez de xl */
+}
+
+.seccion-registro__contenedor {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 var(--espacio-lg);
+    text-align: center;
+}
+
+.seccion-registro__titulo {
+    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+    font-weight: 700;
+    color: var(--texto-hero, #132D1F);
+    margin-bottom: 6px;
+}
+
+.seccion-registro__subtitulo {
+    color: var(--color-gris-texto);
+    font-size: 0.93rem;
+    line-height: 1.55;
+    margin-bottom: var(--espacio-md);
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.seccion-registro__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--espacio-sm);            /* más ceñido */
+    margin-bottom: var(--espacio-md);
+    text-align: left;
+}
+
+.seccion-registro__card {
+    background-color: #FFFFFF;
+    border-radius: 12px;               /* radio más contenido */
+    padding: var(--espacio-md) var(--espacio-sm);
+    box-shadow: 0 2px 12px rgba(26, 52, 41, 0.08);
+    border-top: 3px solid var(--btn-cta, #2DC26C);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Icono SVG */
+.seccion-registro__icono {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    color: var(--btn-cta, #2DC26C);
+}
+
+.seccion-registro__icono svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.seccion-registro__card-titulo {
+    font-size: 0.93rem;
+    font-weight: 700;
+    color: var(--texto-hero, #132D1F);
+    margin: 0;
+}
+
+.seccion-registro__card-texto {
+    font-size: 0.85rem;
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Botón CTA de registro */
+.seccion-registro__cta {
+    display: inline-block;
+    background-color: var(--btn-cta, #2DC26C);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 12px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.seccion-registro__cta:hover {
+    background-color: var(--btn-cta-hover, #25A85B);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+.seccion-registro__cta:focus-visible {
+    outline: 3px solid var(--texto-hero, #132D1F);
+    outline-offset: 3px;
+    background-color: var(--btn-cta-hover, #25A85B);
+}
+
+/* Responsive: columna única en móvil */
+@media (max-width: 768px) {
+    .seccion-registro__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seccion-registro__card {
+        padding: var(--espacio-sm);
+    }
+}
+
+
+/* ─── 34.3 RECUPERAR CONTRASEÑA — contenedor compacto ──────────────── */
+/*
+   recuperar-password.html usa .auth-card--simple pero el wrapper .auth-page
+   heredaba el ancho de 920px (diseñado para login/registro de 2 columnas).
+   Aquí se reduce el ancho del wrapper para alinearlo con la card de 480px
+   y se ajusta el padding vertical del fondo.
+   Alcance: scoped via :has(#recuperar-alerta) — solo afecta a esta página.
+   Compatible: Chrome 105+, Firefox 121+, Safari 15.4+.
+*/
+.auth-fondo:has(#recuperar-alerta) {
+    align-items: flex-start;          /* no centra verticalmente */
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.auth-page:has(#recuperar-alerta) {
+    max-width: 460px;                 /* alineado con la card (480px) */
+}
+
+/* El enlace "← Volver a iniciar sesión" queda alineado con el borde
+   izquierdo de la card porque ambos comparten el mismo ancho máximo. */
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECCIÓN 35 — REFACTOR INLINE STYLES (Tarea 13.2)
+   Clases extraídas de atributos style="" de solicitudes.html e index.html.
+   ─────────────────────────────────────────────────────────────────── */
+
+/* 35.0 solicitudes.html — buscador de entidades */
+
+/* Campo de búsqueda de entidad: ocupa más espacio que los demás filtros */
+.form-grupo--entidad {
+    flex: 2;
+    min-width: 200px;
+}
+
+/* Fila de botones de acción del formulario de filtros */
+.filtros__botones {
+    display: flex;
+    gap: var(--espacio-sm);
+    margin-top: var(--espacio-sm);
+}
+
+/* Leyenda de tramos EELL (visual; display:none permanece inline, gestionado por JS) */
+.leyenda-tramos {
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--color-gris-texto);
+}
+
+/* Info de resultados ("Mostrando X de Y…") */
+.info-resultados {
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+}
+
+/* Zona derecha de los controles sobre la tabla (orden + CSV) */
+.tabla-controles__derecha {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-sm);
+    flex-wrap: wrap;
+}
+
+/* Form-grupo del selector de orden (horizontal, sin margen extra) */
+.form-grupo--orden {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--espacio-xs);
+}
+
+/* Etiqueta del selector de orden */
+.label-orden {
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Select de orden con anchura mínima fija */
+.select-orden {
+    min-width: 180px;
+}
+
+/* Botón de descarga CSV */
+.btn-csv {
+    white-space: nowrap;
+    font-size: 0.88rem;
+}
+
+/* 35.0b index.html — métricas de carga */
+
+/* Tarjeta de métricas que ocupa el ancho completo del grid */
+.metricas-carga {
+    grid-column: 1 / -1;
+}
+
+/* 35.0c Estadísticas (epas + eell) y index — bloques de cabecera de sección */
+
+/* Wrapper de cabecera antes de los grids de KPIs y gráficos */
+.bloque-intro {
+    margin-bottom: var(--espacio-lg);
+}
+
+/* Título principal H1/H2 dentro del bloque-intro */
+.bloque-titulo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-negro);
+}
+
+/* Variante de bloque-titulo en tamaño medio (secciones internas) */
+.bloque-titulo--md {
+    font-size: 1.6rem;
+}
+
+/* Subtítulo descriptivo bajo el título */
+.bloque-subtitulo {
+    color: var(--color-gris-texto);
+    margin-top: 4px;
+}
+
+/* Párrafo de fecha de actualización */
+.bloque-actualizacion {
+    margin-top: var(--espacio-xs);
+}
+
+/* Enlace a fuente de datos (pequeño, color azul) */
+.link-fuente {
+    font-size: 0.9rem;
+    color: var(--color-azul);
+}
+
+/* Bloque de convocatorias centrado (display:none gestionado por JS) */
+.convocatorias-bloque {
+    margin-top: var(--espacio-lg);
+    text-align: center;
+}
+
+/* Variante de card-grafico__titulo con texto centrado */
+.card-grafico__titulo--centrado {
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* Nota pequeña bajo tabla de convocatorias */
+.convocatorias-nota {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-gris-texto);
+}
+
+/* Utilidad: margin-bottom lg en contenedores de grid */
+.mb-lg {
+    margin-bottom: var(--espacio-lg);
+}
+
+/* Utilidad: margin-top xl */
+.mt-xl {
+    margin-top: var(--espacio-xl);
+}
+
+/* 35.0d index.html — bloque de convocatorias y resoluciones */
+
+/* Título de sub-bloque (convocatorias, resoluciones…) */
+.sub-bloque__titulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: var(--espacio-sm);
+}
+
+/* Versión centrada del sub-bloque__titulo */
+.sub-bloque__titulo--centrado {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    text-align: center;
+}
+
+/* Subtítulo centrado del sub-bloque */
+.sub-bloque__subtitulo {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-gris-texto);
+    margin-bottom: var(--espacio-md);
+}
+
+/* Número grande en tarjeta resumen (ej. total concedido) */
+.card-grafico__numero {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--color-verde-btn);
+    margin: 0;
+}
+
+/* Nota secundaria bajo el número */
+.card-grafico__nota {
+    color: var(--color-gris-texto);
+    font-size: 0.9rem;
+    margin-top: 6px;
+}
+
+/* Pie de tarjeta con links de acción */
+.card-grafico__pie {
+    margin-top: auto;
+    padding-top: var(--espacio-md);
+}
+
+/* Enlace de acción dentro de tarjeta de estadística */
+.link-estadistica {
+    display: inline-block;
+    color: var(--color-azul);
+    font-size: 0.9rem;
+}
+
+.link-estadistica + .link-estadistica {
+    margin-left: 12px;
+}
+
+/* Variante de card-grafico con layout flex columna */
+.card-grafico--col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Variante de chart-container centrada (para placeholder del mapa de calor) */
+.chart-container--centrado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Placeholder del mapa de calor CCAA (Tarea 13.3 pendiente) */
+.mapa-placeholder {
+    text-align: center;
+    color: var(--color-gris-texto);
+}
+
+.mapa-placeholder__icono {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.mapa-placeholder__texto {
+    font-size: 0.9rem;
+}
+
+/* 35.0e entidad.html — leyenda de tramos */
+/* (reutiliza .leyenda-tramos de solicitudes; se añade
+   aquí solo el margin diferente que usa entidad) */
+.leyenda-tramos--entidad {
+    margin-bottom: 1rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECCIÓN 36 — MODAL DE ENTIDAD
+   Ficha resumen de entidad abierta desde solicitudes.html.
+   Backdrop semitransparente + card centrada + animación fade+scale.
+   ─────────────────────────────────────────────────────────────────── */
+
+/* 36.1 Backdrop */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--espacio-md);
+    /* Estado inicial: oculto */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.modal-backdrop.modal-abierto {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 36.2 Card del modal */
+.modal-card {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Animación de entrada */
+    transform: scale(0.93) translateY(12px);
+    transition: transform 0.22s ease, opacity 0.22s ease;
+    opacity: 0;
+}
+
+.modal-backdrop.modal-abierto .modal-card {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+/* 36.3 Cabecera del modal */
+.modal-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--espacio-sm);
+    padding: var(--espacio-md) var(--espacio-md) var(--espacio-sm);
+    border-bottom: 1px solid var(--color-borde);
+    flex-shrink: 0;
+}
+
+.modal-cabecera__titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-texto);
+    margin: 0;
+    line-height: 1.35;
+}
+
+.modal-cabecera__cif {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--color-gris-texto);
+    display: block;
+    margin-top: 2px;
+}
+
+/* 36.4 Botón de cierre */
+.modal-cerrar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-gris-texto);
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.modal-cerrar:hover,
+.modal-cerrar:focus-visible {
+    color: var(--color-texto);
+    background-color: var(--color-fondo);
+    outline: 2px solid var(--color-verde);
+    outline-offset: 2px;
+}
+
+/* 36.5 Cuerpo scrollable */
+.modal-cuerpo {
+    padding: var(--espacio-md);
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* 36.6 Filas de datos de la ficha */
+.modal-dato {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: var(--espacio-sm);
+}
+
+.modal-dato__etiqueta {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-gris-texto);
+}
+
+.modal-dato__valor {
+    font-size: 0.95rem;
+    color: var(--color-texto);
+}
+
+/* 36.7 Tabla de histórico dentro del modal */
+.modal-historico-titulo {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-gris-texto);
+    margin: var(--espacio-md) 0 var(--espacio-xs);
+}
+
+.modal-historico-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.modal-historico-tabla th {
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-gris-texto);
+    padding: 6px 8px;
+    border-bottom: 2px solid var(--color-borde);
+}
+
+.modal-historico-tabla td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--color-borde);
+    color: var(--color-texto);
+    vertical-align: middle;
+}
+
+.modal-historico-tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 36.8 Estado de carga / error / vacío dentro del modal */
+.modal-estado {
+    text-align: center;
+    padding: var(--espacio-lg) var(--espacio-md);
+    color: var(--color-gris-texto);
+    font-size: 0.92rem;
+}
+
+.modal-estado--error {
+    color: var(--color-rojo, #c0392b);
+}
+
+/* 36.9 Pie del modal con enlace a ficha completa */
+.modal-pie {
+    padding: var(--espacio-sm) var(--espacio-md);
+    border-top: 1px solid var(--color-borde);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--espacio-sm);
+    flex-shrink: 0;
+    background-color: var(--color-fondo);
+}
+
+/* 36.10 Responsive: móvil */
+@media (max-width: 600px) {
+    .modal-card {
+        max-height: 92vh;
+        border-radius: 8px;
+    }
+
+    .modal-cabecera {
+        padding: var(--espacio-sm);
+    }
+
+    .modal-cuerpo {
+        padding: var(--espacio-sm);
+    }
+
+    .modal-pie {
+        padding: var(--espacio-sm);
     }
 }

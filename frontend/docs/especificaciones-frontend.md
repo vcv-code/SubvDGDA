@@ -181,11 +181,23 @@ Se usa una escala basada en **múltiplos de 8px**. Esta escala es estándar en d
 
 ### 4.1 Navbar
 
-Barra de navegación fija (`position: fixed`) de 80px de altura. Contiene el logo y el nombre **"Subvenciones DGDA"** a la izquierda (texto en negro, alineado visualmente con el logo) y los enlaces de navegación a la derecha. El enlace de la página actual recibe la clase `activo` que aplica un subrayado verde; también se añade `aria-current="page"` para accesibilidad.
+Barra de navegación fija (`position: fixed`) de 80px de altura. Fondo verde oscuro institucional `#1A3429` en **todas las páginas**. Contiene el logo y el nombre **"Subvenciones DGDA"** a la izquierda (texto blanco, logo con `drop-shadow` sutil) y los enlaces de navegación a la derecha en blanco semitransparente. El enlace de la página actual recibe la clase `activo` que aplica blanco puro y subrayado CTA verde (`#2DC26C`); también se añade `aria-current="page"` para accesibilidad.
 
-El botón "Acceder" tiene un estilo diferente (fondo verde, texto blanco) para destacarlo como la acción principal de autenticación.
+El botón "Acceder" / "Cerrar sesión" tiene estilo pill (`border-radius: 50px`, fondo `#2DC26C`, texto blanco) para destacarlo visualmente. Cuando hay sesión activa, `navbar.js` sustituye "Acceder" por "Mi perfil" (`.navbar__user-link`) + "Cerrar sesión" (`.btn-login` como `<button>`).
 
-**Estructura actual del navbar (Issue 7D) — Opción A, 6 enlaces directos:**
+**Diseño visual unificado (Sesión 2026-05-17):**
+
+| Elemento | Valor |
+|---|---|
+| Fondo | `#1A3429` (`--nav-oscuro`) |
+| Logo imagen | Sin filtro de inversión; `drop-shadow` para contraste |
+| Logo texto | `#FFFFFF` |
+| Links | `rgba(255,255,255,0.80)` → hover `#FFFFFF` |
+| Borde activo | `border-bottom: 2px solid #2DC26C` |
+| Botón CTA | `background: #2DC26C`, pill `border-radius: 50px` |
+| Contraste WCAG | Texto blanco sobre `#1A3429` > 7:1 ✔ |
+
+**Estructura del navbar — Opción A, 6 enlaces directos:**
 
 | Posición | Enlace | Destino | Clase especial |
 |---|---|---|---|
@@ -194,21 +206,26 @@ El botón "Acceder" tiene un estilo diferente (fondo verde, texto blanco) para d
 | 3 | EPAs | `estadisticas-epas.html` | `activo` en EPAs |
 | 4 | EELL | `estadisticas-eell.html` | `activo` en EELL |
 | 5 | Recursos | `recursos.html` | `activo` en recursos |
-| 6 | Acceder | `login.html` | `.btn-login` (botón verde) |
+| 6 | Acceder | `login.html` | `.btn-login` (pill verde) |
 
-Todas las páginas del proyecto han sido actualizadas para incluir este navbar con los 6 enlaces. El patrón de accesibilidad (`role="navigation"`, `aria-label`, `aria-current="page"`) y los estilos se mantienen uniformes en todas las páginas.
-
-**¿Por qué fijo?** En páginas largas como la Home o el Buscador, el usuario necesita poder navegar a otras secciones sin tener que volver al inicio de la página.
-
-**¿Por qué Opción A (dos enlaces directos) y no dropdown?** Se descartó el menú desplegable porque el stack vanilla JS no tiene CSS/JS de dropdown incluido, la accesibilidad (teclado, `focus-within`, mobile touch) requeriría código extra, y dos enlaces directos funcionan igual de bien con la cantidad actual de páginas.
-
-**Cambios en Issue 7D:** el nombre del proyecto en el navbar se actualizó de "Bienestar Animal" a **"Subvenciones DGDA"** y el color del texto pasó a negro (`var(--color-negro)`) para armonizar con el logotipo. Se eliminó el enlace a `estadisticas.html` (el dashboard de gráficos se integró en `index.html`) y se añadieron los enlaces directos a "EPAs" y "EELL" más "Recursos".
+Todas las páginas del proyecto comparten este navbar unificado. El patrón de accesibilidad (`role="navigation"`, `aria-label`, `aria-current="page"`) se mantiene uniforme.
 
 ### 4.2 Footer
 
-Footer en dos zonas:
-- **Zona principal** (verde claro `#E1FEE5`): logo del proyecto a la izquierda, enlaces GitHub / Documentación / Contacto a la derecha.
-- **Zona de créditos** (verde más oscuro `#bbfdc3`): crédito de los datos (BDNS y DGDA) y aviso de proyecto educativo.
+Footer en dos zonas, con fondo verde oscuro institucional `#1A3429` en **todas las páginas**, espejo visual del navbar:
+
+- **Zona principal** (`#1A3429`): logo del proyecto (sin filtros de inversión, con `drop-shadow` sutil) a la izquierda; nombre **"Proyecto BDNS/DGDA"** en blanco puro `#FFFFFF`; enlaces GitHub / Aviso legal / Privacidad a la derecha en blanco semitransparente. Sin borde superior visible.
+- **Zona de créditos** (`#142b20`): crédito de los datos (BDNS y DGDA) y aviso de proyecto educativo en texto blanco tenue.
+
+| Elemento | Valor |
+|---|---|
+| Fondo zona principal | `#1A3429` |
+| Fondo zona créditos | `#142b20` |
+| Nombre proyecto (`<strong>`) | `#FFFFFF` — contraste máximo |
+| Texto general | `rgba(255,255,255,0.88)` — WCAG AA > 7:1 |
+| Texto créditos | `rgba(255,255,255,0.52)` |
+| Logo | `drop-shadow` sutil, `height: 40px`, sin filtros de inversión |
+| Borde superior | Ninguno |
 
 **Sticky footer:** El footer siempre aparece al pie de la ventana, incluso cuando el contenido es corto. Se consigue con `display: flex; flex-direction: column; min-height: 100vh` en el `body` y `flex: 1` en `main`.
 
@@ -1676,4 +1693,412 @@ Respuesta esperada: siempre 200 (el backend no debe revelar si el email existe).
 **Relación con backend:** Requiere implementar `POST /auth/reenviar-verificacion`.
 
 ---
+
+### 12.21 Correcciones de accesibilidad y HTML (Sesión 2026-05-16)
+
+**Atributo `title` faltante en `estadisticas-epas.html`**  
+El enlace `<a href="estadisticas-epas.html" class="activo" aria-current="page">EPAs</a>` carecía del atributo descriptivo requerido para usuarios de lector de pantalla. Se añadió `title="Entidades Protectoras de Animales"`.
+
+**Null bytes en `index.html`**  
+El archivo acumuló 722 bytes nulos (posiciones 30901–31622) tras el script de reemplazo de URLs de GitHub. Se sanearon con Python (`data.rstrip(b'\x00')`). El archivo quedó en 30 901 bytes sin caracteres de control.
+
+**URLs de GitHub corregidas en 18 páginas HTML**  
+Todas las páginas contenían `href="https://github.com"` en el footer. Se actualizaron al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`.
+
+---
+
+### 12.22 CSS — Section 32: Modal de conclusiones (añadida, Sesión 2026-05-16)
+
+`modal-grafica.js` usaba las clases `.modal-grafica`, `.modal-grafica__panel`, `.card-grafico__trigger`, etc., que no tenían ninguna regla CSS. Se añadió la **Section 32** completa al final de `styles.css`:
+
+| Selector | Función |
+|---|---|
+| `.card-grafico__trigger` | Botón pill "¿Qué conclusiones se sacan?" dentro de la tarjeta |
+| `.modal-grafica` | Overlay posicionado en `fixed`, `display:none` por defecto |
+| `.modal-grafica--visible` | Clase activa: `display:flex` |
+| `.modal-grafica__backdrop` | Fondo semi-opaco, cierra al hacer clic |
+| `.modal-grafica__panel` | Panel centrado `min(90vw, 680px)` |
+| `.modal-grafica__fondo` | PNG del gráfico como imagen de fondo tenue (`opacity:0.08`) |
+| `.modal-grafica__cerrar` | Botón ✕ con `focus` automático al abrir |
+
+---
+
+### 12.23 CSS — Section 33: Estética visual (Sesión 2026-05-16, refinada 2026-05-17)
+
+Toda la estética de `index.html` se encapsuló bajo el selector `body.pagina-inicio` para **impacto cero** en las otras 17 páginas.
+
+#### 33.0 — Variables de página de inicio
+```css
+.pagina-inicio {
+    --nav-oscuro:    #1A3429;
+    --btn-cta:       #2DC26C;
+    --btn-cta-hover: #25A85B;
+    --hero-crema:    #F5EFE3;
+    --texto-hero:    #132D1F;
+    --card-radio:    16px;
+    --sombra-calida: 0 4px 20px rgba(26, 52, 41, 0.11);
+}
+```
+
+#### 33.1 — Navbar oscuro institucional *(neutralizado — Sesión 2026-05-17)*
+Originalmente encapsulaba los estilos del navbar oscuro bajo `.pagina-inicio .navbar`: fondo `#1A3429`, texto blanco al 80 %, hover blanco puro con borde inferior CTA (`#2DC26C`), botón "Acceder"/"Cerrar sesión" pill verde brillante, `.navbar__user-link` y `.navbar__user-controls` (inyectados por `navbar.js`), logo sin filtro `invert/brightness` con `drop-shadow` sutil.
+
+Neutralizado en la sesión de unificación: todos los estilos se migraron a **Section 3 global** (`.navbar { }`), y el bloque `.pagina-inicio .navbar { }` se reemplazó por un comentario. El navbar es idéntico en las 18 páginas del proyecto sin necesidad de override. Ver 12.27.
+
+#### 33.2–33.4 — Hero layout + tipografía + CTA
+- Contenedor a ancho completo, grid `55fr 45fr` (texto 55 %, imagen 45 %), `min-height: 280px`.
+- Columna texto: padding interior con `clamp()`.
+- Título: `clamp(2.2rem, 4vw, 3.4rem)`, color `--texto-hero`.
+- Botón CTA: `border-radius: 50px`, `padding: 14px 36px`, verde brillante.
+
+#### 33.5 — Imagen del hero (`<img>` HTML directo, sin clip-path)
+La imagen se carga mediante una etiqueta `<img>` real en el HTML: `<img src="assets/gato-portada.jpeg">`. El contenedor `.portada-split__imagen` **no usa** `background-image` en CSS — la imagen es visible y semánticamente accesible. `object-fit: cover` con `object-position: center 10%` encuadra la cabeza/torso del gato. `clip-path: none` — bordes limpios sin recorte. `opacity: 1` — la imagen es completamente visible.
+
+#### 33.6–33.9 — Secciones y tarjetas
+- Sección datos: fondo `#FDFAF5` (crema suave).
+- Métricas: fondo blanco, `border-top: 4px solid var(--btn-cta)`, radio 16 px, sombra cálida.
+- `fondo-stats`: `#EEF3EE` (verde muy suave).
+- Tarjetas gráfico: radio 16 px, sombra cálida.
+
+#### 33.10 — Footer oscuro institucional *(neutralizado — Sesión 2026-05-17)*
+El override `.pagina-inicio .footer-principal { background-color: #2E6B4F; border-top: 3px solid var(--color-arena); }` que existía en Section 31.5 fue **eliminado** en la sesión de unificación. Los estilos del footer son ahora globales (Section 17b) y se aplican igual en todas las páginas.
+
+Los valores actuales (definidos en Section 17b, no en Section 33) son:
+
+| Propiedad | Valor |
+|---|---|
+| Fondo | `#1A3429` — igual que el navbar |
+| Texto principal | `rgba(255,255,255,0.88)` — contraste WCAG AA: > 7:1 |
+| Nombre proyecto (`strong`) | `#FFFFFF` |
+| Logo | `filter: drop-shadow(...)` sin inversión |
+| Borde superior | Ninguno |
+| Zona créditos | `#142b20` |
+
+**Section 33.10 en styles.css:** eliminada. Contiene solo un comentario explicativo que señala la neutralización.
+
+#### 33.11 — Responsive hero (≤768 px)
+Grid de 1 columna, imagen arriba (`order: -1`), sin `clip-path`, `min-height: 200px`. La imagen del hero se carga desde el HTML (`<img src="assets/gato-portada.jpeg">`), por lo que no hay `background-position` ni `background-image` en esta sección.
+
+---
+
+### 12.24 CSS — Section 34: Ajustes adicionales (Sesión 2026-05-17)
+
+#### 34.1 — Página 404 más compacta
+Los `style=""` inline del HTML establecían `max-width:950px` (contenedor) y `max-width:620px` (imagen). Se sobrescriben con `!important` desde CSS sin modificar el HTML:
+
+| Selector | Valor anterior (inline) | Valor nuevo (CSS) |
+|---|---|---|
+| `.auth-card--simple` | `max-width: 950px` | `max-width: 520px` |
+| `.auth-card--simple img` | `max-width: 620px` | `max-width: 320px` |
+| `.auth-card--simple .auth-card__formulario` | `padding: 0.75rem 2rem 2rem` | `padding: 0.5rem 1.75rem 1.75rem` |
+
+El modificador `.auth-card--simple` es exclusivo de `404.html`.
+
+#### 34.2 — Sección "Por qué registrarse" (index.html)
+Nueva sección añadida antes del `<footer>` de `index.html`. Clases nuevas (prefijo `seccion-registro__`), sin interferir con ningún selector existente.
+
+- Grid de 3 tarjetas (`border-top: 3px solid var(--btn-cta)`, radio 12 px, padding compacto).
+- Iconos: **SVG inline** (no emojis) — barras de gráfico, campana, portapapeles con líneas.
+- Beneficios: Informes personalizados · Alertas de convocatorias · Historial de solicitudes.
+- Botón CTA pill verde (`border-radius: 50px`) enlazando a `registro.html`.
+- Responsive: columna única en ≤ 768 px.
+
+#### 34.3 — Layout de recuperar-password.html (Sesión 2026-05-17)
+`recuperar-password.html` usa la misma clase `.auth-page` que login y registro, pero tiene diseño de una sola columna. Sin modificar el HTML, se scopa el ajuste con `:has(#recuperar-alerta)` (CSS nativo, sin JS):
+
+```css
+.auth-fondo:has(#recuperar-alerta) {
+    align-items: flex-start;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.auth-page:has(#recuperar-alerta) {
+    max-width: 460px;
+}
+```
+
+- **Compatibilidad:** Chrome 105+, Firefox 121+, Safari 15.4+.  
+- **Efecto:** la card se limita a 460 px, el enlace "← Volver a iniciar sesión" queda alineado con su borde izquierdo porque comparte el mismo contenedor ancho.
+
+---
+
+### 12.25 Correcciones de estética — Sesión 2026-05-17 (segunda ronda)
+
+**Archivos modificados:** `css/styles.css`, `frontend/index.html`
+
+#### Hero — eliminación de clip-path y reducción de altura
+
+| Parámetro | Valor anterior | Valor nuevo |
+|---|---|---|
+| `grid-template-columns` | `45fr 55fr` (imagen mayor) | `55fr 45fr` (imagen ≤ 45 %) |
+| `min-height` contenedor | `380px` | `280px` |
+| `min-height` imagen | `380px` | `280px` |
+| `clip-path` | `polygon(15% 0%, ...)` (3 dientes) | `none` |
+| `background-position` | `center 12%` | `center 10%` |
+| Móvil `min-height` | `220px` | `200px` |
+
+#### Logo navbar — sin filtros de inversión
+
+Eliminada la regla `filter: brightness(0) invert(1)` del logo en `.pagina-inicio .navbar__logo img`. Sustituida por `filter: drop-shadow(0 1px 4px rgba(0,0,0,0.45))` para dar profundidad sin alterar colores.
+
+#### Footer — sin borde superior, nombre del proyecto en blanco puro
+
+- Eliminado `border-top: 3px solid var(--btn-cta)`.
+- Añadida regla `.footer-principal__marca strong { color: #FFFFFF; }` para máxima legibilidad del nombre "Proyecto BDNS/DGDA".
+- Logo con `filter: drop-shadow(...)` (sin inversión), altura `40px`.
+
+#### Sección "Por qué registrarse" — compactada
+
+- `padding` reducido de `var(--espacio-xl)` a `var(--espacio-lg)`.
+- Tarjetas: radio 12 px, padding `var(--espacio-md) var(--espacio-sm)`.
+- Gap del grid: `var(--espacio-sm)` en lugar de `var(--espacio-md)`.
+- Iconos SVG: `width/height: 28px` con `stroke` del color `--btn-cta`.
+- Emojis eliminados del HTML y reemplazados por SVG inline accesibles con `aria-hidden="true"`.
+
+---
+
+### 12.26 Resumen de archivos modificados — Sesiones 2026-05-16 y 2026-05-17
+
+| Archivo | Cambios aplicados |
+|---|---|
+| `css/styles.css` | Section 32 (modal), Section 33 (estética inicio + correcciones), Section 34 (ajustes) |
+| `index.html` | Sección "Por qué registrarse" con SVG inline, null bytes saneados |
+| `estadisticas-epas.html` | `title=` añadido al enlace EPAs |
+| `404.html` + `50x.html` + 16 páginas | URLs de GitHub corregidas |
+| `docs/especificaciones-frontend.md` | Secciones 12.21–12.26 integradas correctamente |
+
+---
+
+### 12.27 Unificación de navbar y footer — Sesión 2026-05-17
+
+**Archivos modificados:** `css/styles.css`, `docs/especificaciones-frontend.md`
+
+#### Contexto
+
+Hasta esta sesión, el navbar oscuro (`#1A3429`) y el footer oscuro estaban encapsulados bajo `.pagina-inicio` (solo `index.html`). El resto de las 17 páginas mantenían el navbar blanco original y el footer verde claro. Esto generaba incoherencia visual entre páginas.
+
+#### Cambios en `css/styles.css`
+
+**Section 1 — Variables globales (`:root`):**  
+Se añadieron las variables de identidad visual a `:root` para que estén disponibles en todas las páginas sin necesidad de heredarlas de `.pagina-inicio`:
+
+```css
+--nav-oscuro:    #1A3429;
+--btn-cta:       #2DC26C;
+--btn-cta-hover: #25A85B;
+```
+
+**Section 3 — Navbar (reescrita como global):**  
+Se migraron todos los estilos oscuros del navbar de `.pagina-inicio .navbar` a `.navbar` (global). El navbar ahora es idéntico en las 18 páginas del proyecto:
+
+- Fondo `#1A3429`, sombra `0 2px 14px rgba(0,0,0,0.28)`
+- Logo texto `#FFFFFF`, logo img `drop-shadow` sin filtro de inversión
+- Links `rgba(255,255,255,0.80)` → hover `#FFFFFF` con borde CTA
+- Botón pill verde `#2DC26C`, hover `#25A85B`
+- `.navbar__user-link` en blanco semitransparente (navbar.js)
+
+**Section 17b — Footer (reescrita como global):**  
+Se migraron todos los estilos oscuros del footer de `.pagina-inicio .footer-principal` a `.footer-principal` (global). El footer ahora es idéntico en las 18 páginas:
+
+- Fondo `#1A3429`, sin borde superior (`border-top: none`)
+- Nombre del proyecto (`<strong>`) en `#FFFFFF`
+- Logo img `drop-shadow` sin inversión, `height: 40px`
+- Zona créditos `#142b20`
+
+**Section 33.1 y 33.10 — Neutralizadas:**  
+Los overrides de `.pagina-inicio` para navbar y footer fueron reemplazados por comentarios que indican que los estilos están ahora en sus secciones globales.
+
+#### Cabecera visual (hero con gato-portada.jpg)
+
+La cabecera visual con imagen del gato (`portada-split`, `gato-portada.jpg`, `background-image`) es **exclusiva de `index.html`**. Está scoped bajo `.pagina-inicio .portada-split` y no se inserta en ninguna otra página. Verificado: solo aparece en `index.html`.
+
+#### Impacto por página
+
+| Página | Navbar antes | Navbar ahora | Footer antes | Footer ahora |
+|---|---|---|---|---|
+| `index.html` | Oscuro (Section 33.1) | Oscuro (Section 3 global) | Oscuro (Section 33.10) | Oscuro (Section 17b global) |
+| 17 páginas restantes | Blanco | Oscuro | Verde claro | Oscuro |
+
+---
+
+### 12.28 Resumen de archivos modificados — Sesión 2026-05-17 (unificación)
+
+| Archivo | Cambios aplicados |
+|---|---|
+| `css/styles.css` | Section 1 (vars globales), Section 3 (navbar global), Section 17b (footer global), Section 33.1/33.10 neutralizadas |
+| `docs/especificaciones-frontend.md` | Secciones 4.1 y 4.2 actualizadas, 12.27–12.28 añadidas |
+
+---
+
+### 12.29 Corrección de imagen hero — Sesión 2026-05-17
+
+**Problema:** El hero de `index.html` quedó roto tras la unificación de la sesión anterior. La imagen se cargaba vía `background-image` en CSS con `opacity: 0` en el `<img>`, lo que impedía su visualización correcta.
+
+**Solución aplicada:**
+
+- **`css/styles.css` — Section 33.5**: Eliminadas las propiedades `background-image: url('../assets/gato-portada.jpg')`, `background-size: cover` y `background-position: center 10%` del selector `.pagina-inicio .portada-split__imagen`. La imagen ahora se gestiona exclusivamente desde el HTML.
+- **`css/styles.css` — Section 33.5**: Cambiado `opacity: 0` a `opacity: 1` en `.pagina-inicio .portada-split__imagen img`. La imagen es visible.
+- **`css/styles.css` — Section 33.11** (responsive móvil): Eliminada la propiedad `background-position: center 10%` que ya no aplica al no haber background-image.
+- **`index.html`**: Sustituido `<img src="assets/perro-gato.png">` por `<img src="assets/gato-portada.jpeg">` con alt text actualizado. Referencia a `perro-gato.png` eliminada del HTML.
+- **`docs/especificaciones-frontend.md` — Section 33.5**: Descripción reescrita para reflejar la técnica correcta (imagen en HTML, no en CSS).
+
+**Principio:** La imagen del hero se carga siempre vía etiqueta `<img>` en HTML, no vía `background-image` en CSS. Esto garantiza accesibilidad semántica y carga correcta por el navegador.
+
+### 12.30 Resumen de archivos modificados — Sesión 2026-05-17 (restauración hero)
+
+| Archivo | Cambios aplicados |
+|---|---|
+| `css/styles.css` | Section 33.5: eliminado background-image, opacity: 0 → 1; Section 33.11: eliminado background-position residual |
+| `index.html` | `<img src>` cambiado de `perro-gato.png` a `gato-portada.jpeg` |
+| `docs/especificaciones-frontend.md` | Section 33.5 reescrita, 12.29–12.30 añadidas |
+
+---
+
+### 12.31 Corrección de navbar/footer en index y layout de recuperar-password — Sesión 2026-05-17
+
+**Problema 1 — Navbar blanco en index.html:**
+La Section 31.4 del CSS contenía `.pagina-inicio .navbar { background-color: var(--color-blanco); }`, que sobreescribía el navbar verde oscuro global definido en Section 3. El índice aparecía con navbar blanco.
+
+**Problema 2 — Footer diferente en index.html:**
+La Section 31.5 del CSS contenía `.pagina-inicio .footer-principal { background-color: #2E6B4F; border-top: 3px solid var(--color-arena); }`, que divergía del footer global (#1A3429, sin borde) definido en Section 17b.
+
+**Problema 3 — Contenedor recuperar-password.html demasiado ancho:**
+`.auth-page` heredaba `max-width: 920px` (diseñado para login/registro de dos columnas). El enlace "← Volver a iniciar sesión" quedaba desalineado con la card de 480px.
+
+**Soluciones aplicadas:**
+
+- **`css/styles.css` — Section 31.4**: Neutralizada. Eliminado el bloque `.pagina-inicio .navbar { background-color: var(--color-blanco); }`. El navbar de index.html usa ahora el estilo global oscuro de Section 3.
+- **`css/styles.css` — Section 31.5**: Neutralizada. Eliminado el bloque completo de overrides de footer en `.pagina-inicio`. El footer de index.html usa ahora el estilo global oscuro de Section 17b.
+- **`css/styles.css` — Section 34.3** (nueva): Añadida sección específica para `recuperar-password.html`. Ver especificación técnica completa en [§ 34.3 de la Sección 12.24](#342--sección-por-qué-registrarse-indexhtml).
+
+**Principio:** Los estilos de navbar y footer son globales (Sections 3 y 17b). Ninguna página tiene overrides de color para estos elementos. La clase `.pagina-inicio` solo aplica estilos propios del hero y secciones internas del index.
+
+### 12.32 Resumen de archivos modificados — Sesión 2026-05-17 (navbar/footer/recuperar)
+
+| Archivo | Cambios aplicados |
+|---|---|
+| `css/styles.css` | Section 31.4 neutralizada (navbar blanco eliminado); Section 31.5 neutralizada (footer override eliminado); Section 34.3 añadida (layout recuperar-password) |
+| `docs/especificaciones-frontend.md` | 12.31–12.32 añadidas |
+
+---
+
+### 12.33 Tarea 13.1 — Modal de entidad en solicitudes.html (Sesión 2026-05-17)
+
+Implementación completa del modal de ficha de entidad. Al hacer clic en una fila del buscador, en lugar de navegar a `entidad.html?cif=…`, se abre un modal en página con la ficha resumida.
+
+**Archivos creados / modificados:**
+
+| Archivo | Cambios |
+|---|---|
+| `css/styles.css` | Section 36 añadida (`.modal-backdrop`, `.modal-card`, `.modal-cabecera`, `.modal-cuerpo`, `.modal-pie`, `.modal-historico-tabla`, responsive ≤600 px) |
+| `js/modal-entidad.js` | Nuevo. Expone `window.abrirModalEntidad(cif, nombre, openerEl)`. Fetch a `GET /solicitudes/?cif=`, rellena ficha, gestiona apertura/cierre (X, backdrop click, ESC), trampa de foco WCAG 2.4.3 |
+| `solicitudes.html` | HTML del modal (`#modal-entidad`) añadido antes de los scripts. `<script src="js/modal-entidad.js">` añadido |
+| `js/solicitudes.js` | `crearFila()`: reemplazado `window.location.href = entidad.html?cif=…` por `window.abrirModalEntidad(cif, nombre, tr)` |
+
+**Comportamiento del modal:**
+- Backdrop semitransparente (`rgba(0,0,0,0.55)`) + card centrada, máx. 640 px.
+- Animación fade+scale de entrada (0.22 s).
+- Muestra: nombre de entidad, CIF, CCAA, importe total concedido (solo concedidas), nº solicitudes, tabla histórica (año / tipo / estado+tramo / importe).
+- Botón "Ver ficha completa →" abre `entidad.html?cif=…` en pestaña nueva.
+- Cierre: botón × · clic en backdrop · tecla ESC.
+- Foco devuelto al `<tr>` de origen al cerrar (WCAG 2.4.3).
+- Bloquea scroll del `<body>` mientras está abierto.
+
+---
+
+### 12.34 Tarea 13.2 — Refactor CSS inline (Sesión 2026-05-17)
+
+Extracción de estilos de layout, tipografía y color desde atributos `style=""` hacia clases reutilizables en `styles.css`. Los `style="display:none;"` funcionales (controlados por JS) se conservan intactos.
+
+**Nuevas clases en `css/styles.css` (Section 35):**
+
+| Clase | Propósito | Páginas |
+|---|---|---|
+| `.form-grupo--entidad` | `flex:2; min-width:200px` para campo de búsqueda de entidad | `solicitudes.html` |
+| `.filtros__botones` | Flex row con gap y margin-top para botones de acción | `solicitudes.html` |
+| `.leyenda-tramos` | Tipografía y color de la leyenda de tramos EELL | `solicitudes.html`, `entidad.html` |
+| `.leyenda-tramos--entidad` | Variante con `margin-bottom:1rem` para entidad.html | `entidad.html` |
+| `.info-resultados` | Tamaño y color del contador de resultados | `solicitudes.html` |
+| `.tabla-controles__derecha` | Flex row para zona derecha de controles | `solicitudes.html` |
+| `.form-grupo--orden` | Flex row sin margen para selector de orden | `solicitudes.html` |
+| `.label-orden` | Tipografía compacta de la etiqueta del selector | `solicitudes.html` |
+| `.select-orden` | `min-width:180px` para el select de orden | `solicitudes.html` |
+| `.btn-csv` | `white-space:nowrap; font-size:0.88rem` para botón CSV | `solicitudes.html` |
+| `.metricas-carga` | `grid-column:1/-1` en spinner de métricas | `index.html` |
+| `.bloque-intro` | `margin-bottom:var(--espacio-lg)` para cabeceras de sección | `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html` |
+| `.bloque-titulo` | Tipografía `2rem/700/negro` de título de sección | `estadisticas-epas.html`, `estadisticas-eell.html` |
+| `.bloque-titulo--md` | Variante `1.6rem` para secciones internas | `index.html` |
+| `.bloque-subtitulo` | Color gris y `margin-top:4px` para subtítulo | Varias |
+| `.bloque-actualizacion` | `margin-top:var(--espacio-xs)` para línea de fecha | Varias |
+| `.link-fuente` | `font-size:0.9rem; color:var(--color-azul)` para fuentes | Varias |
+| `.mb-lg` | Utilidad: `margin-bottom:var(--espacio-lg)` | Varias |
+| `.mt-xl` | Utilidad: `margin-top:var(--espacio-xl)` | `index.html`, `estadisticas-eell.html` |
+| `.convocatorias-bloque` | Layout centrado del bloque de convocatorias | `index.html` |
+| `.sub-bloque__titulo` | H3 de sub-bloque (1.1rem/700) | `index.html` |
+| `.sub-bloque__titulo--centrado` | Variante centrada del anterior | `index.html` |
+| `.sub-bloque__subtitulo` | Párrafo descriptivo centrado de sub-bloque | `index.html` |
+| `.card-grafico__titulo--centrado` | Título de tarjeta centrado | `index.html` |
+| `.convocatorias-nota` | Nota tipográfica pequeña bajo tabla convocatorias | `index.html` |
+| `.card-grafico__numero` | Número grande (`3.5rem/700/verde`) en tarjeta KPI | `index.html` |
+| `.card-grafico__nota` | Texto secundario bajo el número | `index.html` |
+| `.card-grafico__pie` | `margin-top:auto` + padding para pie de tarjeta | `index.html` |
+| `.link-estadistica` | Enlace inline azul en tarjetas de gráfico | `index.html` |
+| `.card-grafico--col` | Variante flex-column de `.card-grafico` | `index.html` |
+| `.chart-container--centrado` | Flex centrado para placeholder de mapa | `estadisticas-eell.html` |
+| `.mapa-placeholder` | Contenedor centrado del placeholder del mapa de calor | `estadisticas-eell.html` |
+| `.mapa-placeholder__icono` | Icono emoji 2.5rem del placeholder | `estadisticas-eell.html` |
+| `.mapa-placeholder__texto` | Texto 0.9rem del placeholder | `estadisticas-eell.html` |
+
+---
+
+### 12.35 Resumen de archivos modificados — Sesión 2026-05-17 (Tareas 13.1 y 13.2)
+
+| Archivo | Cambios aplicados |
+|---|---|
+| `css/styles.css` | Sections 35 (refactor inline) y 36 (modal de entidad) añadidas |
+| `js/modal-entidad.js` | Creado (modal de ficha de entidad) |
+| `js/solicitudes.js` | `crearFila()`: navegación reemplazada por apertura de modal |
+| `solicitudes.html` | HTML del modal añadido; clases refactorizadas; scripts actualizados |
+| `index.html` | Clases refactorizadas (metricas-carga, bloques de gráficos) |
+| `estadisticas-epas.html` | Cabecera y grids refactorizados (`.bloque-intro`, `.mb-lg`) |
+| `estadisticas-eell.html` | Cabecera, grids y mapa placeholder refactorizados |
+| `entidad.html` | Leyenda de tramos refactorizada |
+| `docs/especificaciones-frontend.md` | 12.33–12.35 añadidas; 33.10, 33.11, 34.3 corregidas |
+
+---
+
+## 13. Mejoras pendientes y roadmap
+
+Las siguientes tareas están planificadas pero no implementadas. Cada una tiene su especificación aquí y su referencia en el changelog cuando se complete.
+
+### 13.1 Modal de entidad en solicitudes.html *(completada — 2026-05-17)*
+
+Ver implementación completa en [§ 12.33](#1233-tarea-131--modal-de-entidad-en-solicitudeshtml-sesión-2026-05-17).
+
+### 13.2 Refactor CSS inline *(completada — 2026-05-17)*
+
+Ver implementación completa en [§ 12.34](#1234-tarea-132--refactor-css-inline-sesión-2026-05-17).
+
+### 13.3 Mapa de calor de CCAA en estadísticas EELL
+
+**Estado:** pendiente  
+**Página:** `estadisticas-eell.html`  
+**Objetivo:** Sustituir el placeholder actual del mapa por un mapa real de calor de comunidades autónomas que represente el importe total concedido por CCAA.
+
+**Especificación técnica:**
+
+- **Datos:** el endpoint `GET /estadisticas/eell/` ya devuelve `por_ccaa[]` con `ccaa`, `importe_total`, `num_concesiones`. No requiere cambios en el backend.
+- **Librería propuesta:** [Leaflet.js](https://leafletjs.com/) con [GeoJSON de CCAA españolas](https://github.com/codeforgermany/click_that_hood/blob/main/public/data/spain-communities.geojson) o equivalente de dominio público.
+- **Alternativa sin librería:** SVG estático de España con `<path>` por CCAA, coloreado dinámicamente con JS interpolando entre blanco y `var(--color-verde-btn)`.
+- **Accesibilidad:** tabla de datos accesible como alternativa al mapa (WCAG 1.1.1 — Non-text Content).
+- **CSS:** clases nuevas en Section 36 o 37, prefijo `.mapa-ccaa__`.
+- **Selector de métrica:** botón o select que alterne entre "Importe total" y "Nº concesiones".
+
+**Archivos afectados cuando se implemente:**
+
+| Archivo | Cambio previsto |
+|---|---|
+| `estadisticas-eell.html` | Sustituir `#mapa-ccaa-container` placeholder por mapa real |
+| `js/estadisticas-eell.js` | Función `pintarMapaCCAA(datosCcaa)` |
+| `css/styles.css` | Nuevas clases `.mapa-ccaa__*` |
 
