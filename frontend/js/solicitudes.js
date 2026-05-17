@@ -323,13 +323,16 @@ function crearFila(s) {
     tr.style.cursor = 'pointer';
 
     /**
-     * Al hacer clic navegamos a entidad.html pasando el CIF en la URL.
-     * entidad.html lo leerá con URLSearchParams para mostrar el historial.
+     * Al hacer clic abrimos el modal de entidad (Tarea 13.1).
+     * Se llama a abrirModalEntidad() definida en modal-entidad.js,
+     * pasando el CIF, el nombre y la propia fila como opener (para
+     * devolver el foco al cerrar — WCAG 2.4.3).
      */
     tr.addEventListener('click', () => {
-        const cif = s.beneficiario.cif || '';
-        if (cif) {
-            window.location.href = `entidad.html?cif=${encodeURIComponent(cif)}`;
+        const cif    = s.beneficiario.cif    || '';
+        const nombre = s.beneficiario.nombre || '';
+        if (cif && typeof window.abrirModalEntidad === 'function') {
+            window.abrirModalEntidad(cif, nombre, tr);
         }
     });
 
