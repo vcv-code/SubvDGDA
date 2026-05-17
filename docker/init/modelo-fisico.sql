@@ -198,3 +198,17 @@ CREATE TABLE IF NOT EXISTS verificacion_tokens (
     UNIQUE KEY uq_verif_token (token),
     CONSTRAINT fk_verif_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
 );
+
+-- ------------------------------------------------------------
+-- USUARIO ADMIN DE DEMO
+-- Creado solo en instalaciones nuevas (INSERT IGNORE ignora
+-- el insert si el email ya existe).
+-- Credenciales: admin@demo.com / Admin1234!
+-- ------------------------------------------------------------
+INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
+VALUES (
+    'admin@demo.com',
+    'Admin Demo',
+    '$2b$12$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
+    'admin', 1, 1, NOW()
+);

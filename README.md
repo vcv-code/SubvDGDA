@@ -601,6 +601,14 @@ bash install.sh
 
 El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL, levanta los contenedores y carga el dataset. Guía paso a paso con confirmación antes de cada acción que requiere permisos o modifica el sistema.
 
+#### Primeros pasos tras la instalación
+
+1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
+2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
+3. Para acceder al panel de administración, inicia sesión con:
+   - Email: `admin@demo.com`
+   - Contraseña: `Admin1234!`
+
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
 **Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv
@@ -628,6 +636,34 @@ Antes de continuar el script detecta si ya existen recursos y los reutiliza sin 
 | Base de datos con datos | No se toca | Se carga el dataset completo (primera instalación) |
 | `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
 | Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
+
+El script crea también un **usuario administrador de demo** si no existe ninguno:
+
+| Campo | Valor |
+|-------|-------|
+| Email | `admin@demo.com` |
+| Contraseña | `Admin1234!` |
+| Rol | `admin` |
+
+Este usuario permite acceder al panel de administración en cualquier instalación limpia. Si ya existe una cuenta con ese email (instalaciones previas), `INSERT IGNORE` lo omite sin error.
+
+Además, **siempre** (sin importar si hay datos o no):
+
+- **Migraciones de esquema** — el script aplica `CREATE TABLE IF NOT EXISTS` y `ALTER TABLE … ADD COLUMN IF NOT EXISTS` para que la BD esté al día con el código. Son seguras de repetir: si las tablas o columnas ya existen, no hacen nada.
+- **Rebuild del backend** — la imagen Docker del backend se reconstruye para que el código en ejecución coincida siempre con el código del repositorio. Gracias al caché de Docker (solo se re-ejecuta la capa de código, no `pip install`), el rebuild tarda ~10-20 s en instalaciones existentes.
+
+#### Actualizar el proyecto (después de `git pull`)
+
+Cada vez que se actualice el código con `git pull`, ejecutar el script es suficiente para aplicar todos los cambios:
+
+```bash
+git pull
+bash install.sh   # responde 's' para continuar
+```
+
+El script detecta la BD existente, aplica las migraciones pendientes y reconstruye el backend. Los datos no se tocan.
+
+> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual), volver a ejecutar `bash install.sh` lo regenera automáticamente.
 
 **Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
 
