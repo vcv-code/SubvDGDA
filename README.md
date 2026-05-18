@@ -1055,7 +1055,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile)**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1258,6 +1258,18 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ Makefile con targets para el día a día: `start`, `stop`, `restart`, `build`, `reset-db`, `cargar`, `test`, `logs`, `backup`, `shell-db`, `mailpit`
 ✔ optimización de imágenes Docker: `backend/Dockerfile` migrado de `python:3.11` a `python:3.11-slim` (~700 MB menos); `pandas` eliminado de `requeriments.txt` (no se usaba)
 ✔ script de instalación automática (`install.sh`): comprueba prerequisitos por OS, crea `.env` con SECRET_KEY aleatoria, genera certificado SSL, añade dominio a `/etc/hosts` con confirmación, detecta instalaciones existentes y no sobreescribe datos, carga el dataset en primera instalación
+✔ revisión de accesibilidad WCAG 2.2 (Bloque A–C)
+  · `--color-foco: #2E6B4F` (~5.1:1 en blanco) sustituye `--color-primario` en hover/focus interactivos (Issue 14)
+  · `aria-hidden="true"` en manchas de color decorativas de las leyendas (rosco y barras)
+  · colores primera leyenda del rosco corregidos para coincidir con el objeto `COLORES` de `home.js`
+  · `aria-current="page"` en el enlace activo del navbar en todas las páginas (ya existía; verificado)
+  · `title="Entidades Protectoras de Animales"` en el enlace EPAs del navbar en todas las páginas
+  · etiquetas de sección `<h2>` en lugar de `<span>` en los 4 bloques del panel de administración
+  · CSS `.admin-*` y `.tarjeta`/`.agrupacion-detalle` migrados de inline/ausentes a `styles.css` (Secciones 29 y 30)
+✔ footer limpio en todas las páginas
+  · eliminados enlaces "Documentación" y "Contacto" (rotos; sin página de destino real)
+  · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`
+  · estructura uniforme en las 18 páginas HTML: GitHub · Aviso legal · Privacidad
 
 ---
 
@@ -1394,8 +1406,7 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 
 ## Pendientes
 
-- **Revisión accesibilidad (pasada ligera)**: verificar jerarquía de headings, `alt` en imágenes, landmarks semánticos. Riesgo bajo — no tocar contrastes ni tamaños de fuente antes de entrega (Miyuki).
-- **Footer**: revisar los enlaces de GitHub, Documentación y Contacto.
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
 - **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
+- **Refactor CSS inline (opcional)**: algunas páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) mantienen estilos inline puntuales; requiere verificación visual página a página antes de mover a `styles.css`.

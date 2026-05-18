@@ -637,7 +637,7 @@ async function cargarAvisos() {
                 : 'fecha pendiente';
             return `
                 <div class="aviso-banner">
-                    <span class="aviso-banner__icono">📢</span>
+                    <span class="aviso-banner__icono" aria-hidden="true">📢</span>
                     <div class="aviso-banner__texto">
                         <strong>Convocatoria ${aviso.anio_convocatoria} — ${tipo}</strong>
                         <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
