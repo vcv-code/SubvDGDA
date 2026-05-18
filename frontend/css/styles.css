@@ -2842,6 +2842,7 @@ canvas {
 .admin-aviso__titulo { font-weight: 600; font-size: .9rem; }
 .admin-aviso__meta   { font-size: .8rem; color: #666; margin-top: .1rem; }
 .admin-aviso__acciones { display: flex; gap: .5rem; flex-shrink: 0; }
+.admin-acciones-td { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
 .admin-aviso--resuelta .admin-aviso__titulo { color: #888; font-weight: 500; }
 .admin-aviso--resuelta .admin-aviso__meta   { color: #aaa; }
 
@@ -3413,7 +3414,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* ─── 33.6 SECCIÓN DE DATOS — crema cálida ─────────── */
 .pagina-inicio .seccion-datos {
-    background-color: var(--hero-crema);
+    background-color: var(--hero-crema, #FAF4EE);
 }
 
 .pagina-inicio .seccion-datos__titulo {
@@ -3521,7 +3522,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
    Iconos: SVG inline en el HTML — sin emojis.
 */
 .seccion-registro {
-    background-color: var(--hero-crema);
+    background-color: var(--hero-crema, #FAF4EE);
     padding: var(--espacio-lg) 0;      /* compacto: lg en vez de xl */
 }
 
@@ -3872,7 +3873,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 }
 
 .seccion-resoluciones {
-    background-color: var(--hero-crema);
+    background-color: var(--hero-crema, #FAF4EE);
     padding: var(--espacio-xl) 0;
 }
 

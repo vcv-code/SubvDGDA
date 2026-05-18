@@ -158,7 +158,7 @@ async function cargarUsuarios() {
                 <td>${badgeActivo}</td>
                 <td>${badgeVerif}</td>
                 <td>${formatearFecha(u.created_at)}</td>
-                <td>${btnToggleActivo}${btnToggleRol}${btnEliminar}</td>
+                <td><div class="admin-acciones-td">${btnToggleActivo}${btnToggleRol}${btnEliminar}</div></td>
             </tr>`;
         }).join('');
 
