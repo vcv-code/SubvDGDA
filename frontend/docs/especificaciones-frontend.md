@@ -2065,6 +2065,26 @@ Extracción de estilos de layout, tipografía y color desde atributos `style=""`
 | `entidad.html` | Leyenda de tramos refactorizada |
 | `docs/especificaciones-frontend.md` | 12.33–12.35 añadidas; 33.10, 33.11, 34.3 corregidas |
 
+### 12.36 Correcciones puntuales — Sesión 2026-05-18
+
+**Archivos modificados:** `solicitudes.html`, `admin.html`, `css/styles.css`
+
+#### Bug botón CSV (`solicitudes.html`)
+El botón `#btn-descargar-csv` tenía duplicado el atributo `class=""` (uno con `btn btn-secundario` y otro con `btn-csv`). Unificados en un único atributo: `class="btn btn-secundario btn-csv"`.
+
+#### Inline styles en `<h2>` de admin.html
+Los cuatro `<h2>` de las secciones de admin llevaban `style="font-size:inherit;font-weight:inherit;margin:0;"`. Creada clase `.titulo-admin` en `styles.css` (junto a los demás estilos de admin) con esas mismas propiedades. Inline styles eliminados y clase aplicada.
+
+#### Restauración de colores de badges
+Las variables de color de estado (en `:root`) se habían asignado de forma invertida. Corregido el swap:
+
+| Variable | Valor anterior (incorrecto) | Valor restaurado |
+|---|---|---|
+| `--estado-no-beneficiaria` | `#C62828` (rojo) | `#B45309` (ámbar) |
+| `--estado-excluida` | `#B45309` (ámbar) | `#C62828` (rojo) |
+
+Ningún otro badge ni color fue modificado. Las clases `.badge-no-beneficiaria` y `.badge-excluida` consumen las variables — no requirieron cambios.
+
 ---
 
 ## 13. Mejoras pendientes y roadmap
