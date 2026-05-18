@@ -1055,7 +1055,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1103,6 +1103,34 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
   · limpiar filtros borra también los parámetros de la URL
 ✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
+✔ panel de admin restaurado — cabeceras rojas, badges de rol/estado, botones ghost, fondo pastel rojo
+✔ zona privada restaurada — dos columnas, privado-card, fondo pastel morado, títulos verde oscuro
+✔ sistema de color semántico — cuatro roles diferenciados:
+  · Verde institucional (`#1A3429`, `#2DC26C`) — acciones de contenido, gráficas, estructura
+  · Ámbar (`#D97706`) — acento interactivo: botón "Acceder", cards disponibles, avisos
+  · Morado (`#7C3AED`) — zona privada (privado.html, exclusivo.html)
+  · Rojo oscuro (`#7F1D1D`) — panel de administración
+✔ paleta de fondos en home — alternancia verde/crema en 6 secciones:
+  · Verde (`#DFF0E1`): hero, convocatorias, visión general
+  · Crema (`#FAF4EE`): métricas, resoluciones, registro
+  · Buscador y estadísticas: fondo crema (`fondo-crema`)
+✔ imagen hero generada con IA (`homebdns.webp`, 280KB) — plaza española, gestora con chaleco, perro y gato
+✔ gráficas unificadas — colores `#1A3429` / `#2DC26C` en home.js, estadisticas-epas.js y estadisticas-eell.js
+✔ formatter manual de importes — separador de miles garantizado independiente del locale del navegador
+✔ modal de entidad en buscador (`solicitudes.html`)
+  · reemplaza la navegación a `entidad.html` por un modal inline sin salir del buscador
+  · muestra nombre, CIF, CCAA (solo si disponible), total recibido, nº solicitudes e histórico con expediente
+  · histórico ordenado de más reciente a más antiguo; importes con separador de miles garantizado
+  · CCAA oculta automáticamente para EPAs (el dato no está disponible en asociaciones)
+✔ navbar responsive en tres breakpoints (900 / 768 / 600 px)
+  · texto del logo oculto en pantallas muy pequeñas; links y botón "Acceder" reducidos progresivamente
+✔ retoques visuales rama 17 (home, buscador, estadísticas)
+  · hero: imagen cubre altura del texto sin bandas verdes; centrado en desktop con max-width 1200px
+  · aviso de convocatorias en ámbar más visible (#D97706)
+  · tablas de convocatorias: cabecera verde, filas blancas, responsive correcto
+  · KPI cards de estadísticas: números verdes centrados restaurados (revertido refactor Miyuki)
+  · separador de miles en importes con formatter manual (independiente del locale del navegador)
+  · URL de la DGDA en footer actualizada a dsca.gob.es en todos los ficheros HTML
 ✔ bloque "Convocatorias" en la Home (`index.html`)
   · tabla separada por tipo (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador
   · fechas de convocatoria obtenidas de la API BDNS; fechas de resolución de la API del BOE
@@ -1400,13 +1428,15 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
-- **Refactor CSS inline**: algunas páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles puntuales. El CSS del panel de administración y de la zona privada ya se migró completamente a `styles.css`; lo que queda requiere verificación visual página a página.
 
 ---
 
+## Limitaciones conocidas del dato de origen
+
+- **Punto final en nombres de entidades**: la BDNS registra los nombres tal cual los declararon las entidades en su momento. Algunas incluyen punto final ("ASOCIACIÓN GATO AYUD.") y otras no. Es una inconsistencia de la fuente, no un bug. No se normaliza en el frontend para no crear divergencias con el CSV exportado y la API.
+
 ## Pendientes
 
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
-- **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
+- **Navbar hamburguesa en móvil**: el navbar actual es funcional en ≥600px pero en pantallas muy pequeñas (320–375px) sería mejor un menú hamburguesa con toggle JS. Patrón estándar hoy; requiere unas 40 líneas entre HTML/CSS/JS + trampa de foco para accesibilidad.
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
-- **Refactor CSS inline (opcional)**: algunas páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) mantienen estilos inline puntuales; requiere verificación visual página a página antes de mover a `styles.css`.

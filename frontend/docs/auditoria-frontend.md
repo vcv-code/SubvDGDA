@@ -103,7 +103,8 @@
 - [ ] Los gráficos Chart.js reducen altura a 220px (barras) / 180px (donut) en ≤480px
 - [ ] La cuadrícula `.privado-grid` colapsa a columna única en ≤640px
 - [ ] Los formularios de autenticación son utilizables en móvil
-- [ ] El navbar no desborda en pantallas estrechas
+- [x] El navbar no desborda en pantallas estrechas — responsive en 3 breakpoints (900/768/600px); texto del logo oculto en ≤600px
+- [x] `.privado-dos-columnas` colapsa a columna única en ≤768px
 
 ---
 
@@ -225,8 +226,8 @@
 - [ ] **Flujo de reenvío:** registro → enlace expirado → reenvío → nuevo enlace → verificación
 - [ ] **Deep link:** acceder directamente a `privado.html` sin sesión → login → aterrizar en `privado.html`
 - [ ] **Cambio de contraseña:** contraseña actual incorrecta muestra error; correcta muestra éxito
-- [ ] **Buscador con filtros:** filtrar por año, tipo, estado, CCAA; paginación funciona
-- [ ] **Ficha de entidad:** desde buscador → clic en CIF → carga historial correcto
+- [x] **Buscador con filtros:** filtrar por año, tipo, estado, CCAA; paginación funciona con botones compactos
+- [x] **Ficha de entidad:** desde buscador → clic en fila → modal inline con historial, expediente, importes y CCAA (cuando disponible)
 - [ ] **Error 404:** navegar a `http://localhost/ruta-inexistente` → aparece `404.html`
 - [ ] **Error 50x:** parar el backend → navegar a cualquier página con API → aparece `50x.html`
 - [ ] **Responsividad:** verificar portada, buscador y estadísticas en Firefox DevTools 375px
