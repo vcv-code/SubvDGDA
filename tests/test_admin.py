@@ -34,6 +34,7 @@ def _registrar_admin(db):
         password=hashear_password(ADMIN["password"]),
         rol="admin",
         activo=1,
+        email_verificado=1,
         created_at=datetime.now(timezone.utc),
     )
     db.add(admin)
