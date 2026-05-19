@@ -27,6 +27,7 @@ def registro(datos: RegistroIn, db: Session = Depends(get_db)):
             created_at=datetime.now(timezone.utc),
         )
     if db.query(Usuario).filter(Usuario.email == datos.email).first():
+        # Respuesta idéntica al registro exitoso para evitar enumeración de usuarios
         return UsuarioOut(
             id_usuario=0,
             email=datos.email,
