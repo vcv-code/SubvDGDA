@@ -27,9 +27,14 @@ def registro(datos: RegistroIn, db: Session = Depends(get_db)):
             created_at=datetime.now(timezone.utc),
         )
     if db.query(Usuario).filter(Usuario.email == datos.email).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Ya existe una cuenta con ese email",
+        # Respuesta idéntica al registro exitoso para evitar enumeración de usuarios
+        return UsuarioOut(
+            id_usuario=0,
+            email=datos.email,
+            rol="registrado",
+            activo=True,
+            email_verificado=False,
+            created_at=datetime.now(timezone.utc),
         )
     usuario = Usuario(
         email=datos.email,
