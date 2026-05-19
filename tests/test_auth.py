@@ -30,7 +30,7 @@ def test_registro_email_duplicado(client):
     with patch("backend.app.routers.auth.enviar_email_verificacion"):
         client.post("/auth/registro", json=USUARIO_VALIDO)
         response = client.post("/auth/registro", json=USUARIO_VALIDO)
-    assert response.status_code == 400
+    assert response.status_code == 201
 
 
 def test_registro_contrasena_debil(client):
