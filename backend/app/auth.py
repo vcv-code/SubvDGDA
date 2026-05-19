@@ -20,7 +20,7 @@ EMAIL_FROM = "noreply@subvencionesDGDA.local"
 
 
 def hashear_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12)).decode()
 
 
 def verificar_password(password: str, hashed: str) -> bool:

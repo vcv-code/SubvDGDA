@@ -74,6 +74,9 @@ CREATE TABLE IF NOT EXISTS solicitudes (
     -- Clave compuesta: el mismo num_expediente puede aparecer en convocatorias distintas
     -- (entidades que desistieron un año y volvieron al siguiente).
     UNIQUE KEY uq_expediente (num_expediente, id_convoc),
+    INDEX idx_solic_estado    (estado),
+    INDEX idx_solic_provincia (provincia),
+    INDEX idx_solic_ccaa      (ccaa),
     CONSTRAINT fk_solic_convoc FOREIGN KEY (id_convoc) REFERENCES convocatorias (id_convoc),
     CONSTRAINT fk_solic_benef  FOREIGN KEY (id_benef)  REFERENCES beneficiarios  (id_benef)
 );

@@ -1439,5 +1439,6 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 ## Pendientes
 
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
+- **Auditoría backend pendiente (post-entrega)**: CORS restringido al dominio, TTL access token 15 min, paginación en `/admin/usuarios`, puerto BD no expuesto, enumeración en registro, retry en cron
 - **Trampa de foco en menú hamburguesa**: el menú cierra con Esc y click fuera, pero no implementa focus trap completo (Tab no cicla dentro del menú). Mejora de accesibilidad futura.
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
