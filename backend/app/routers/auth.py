@@ -182,5 +182,9 @@ def reset_password(datos: ResetPasswordIn, db: Session = Depends(get_db)):
     usuario.password         = hashear_password(datos.contrasena_nueva)
     usuario.email_verificado = True
     rt.usado = True
+    db.query(RefreshToken).filter(
+        RefreshToken.id_usuario == usuario.id_usuario,
+        RefreshToken.revocado == False,
+    ).update({"revocado": True})
     db.commit()
     return {"mensaje": "Contraseña actualizada correctamente"}
