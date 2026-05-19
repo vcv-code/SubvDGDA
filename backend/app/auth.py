@@ -9,7 +9,7 @@ from jose import jwt
 
 SECRET_KEY = os.getenv("SECRET_KEY", "cambia-esto-en-produccion")
 ALGORITHM = "HS256"
-TOKEN_EXPIRE_MINUTOS      = 60
+TOKEN_EXPIRE_MINUTOS      = 15
 REFRESH_EXPIRE_DIAS       = 30
 RESET_EXPIRE_MINUTOS      = 15
 VERIFICACION_EXPIRE_HORAS = 24
@@ -20,7 +20,7 @@ EMAIL_FROM = "noreply@subvencionesDGDA.local"
 
 
 def hashear_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12)).decode()
 
 
 def verificar_password(password: str, hashed: str) -> bool:

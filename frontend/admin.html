@@ -45,290 +45,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 
-    <style>
-        /* ── Variables locales de admin ───────────────────────── */
-        :root {
-            --admin-rojo:      #7a1f2e;
-            --admin-rojo-dark: #5a1520;
-            --admin-fondo:     #f8f4f4;
-        }
-
-        /* ── Banner de admin (mismo patrón que privado-banner) ── */
-        .admin-banner {
-            background: var(--admin-rojo);
-            color: #fff;
-            padding: 2.5rem 0 2rem;
-        }
-        .admin-banner__badge {
-            display: inline-block;
-            background: rgba(255,255,255,.15);
-            color: #fff;
-            font-size: .7rem;
-            font-weight: 700;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            padding: .25rem .75rem;
-            border-radius: 2rem;
-            margin-bottom: .75rem;
-        }
-        .admin-banner__titulo {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin: 0 0 .5rem;
-        }
-        .admin-banner__meta {
-            font-size: .9rem;
-            opacity: .8;
-            margin: 0;
-        }
-        .admin-banner__volver {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: .45rem 1.1rem;
-            background: rgba(255,255,255,.15);
-            color: var(--color-blanco);
-            border-radius: 4px;
-            font-size: .85rem;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px solid rgba(255,255,255,.4);
-        }
-        .admin-banner__volver:hover { background: rgba(255,255,255,.25); }
-
-        /* ── Cuerpo principal ─────────────────────────────────── */
-        .admin-cuerpo {
-            background: var(--admin-fondo);
-            min-height: 60vh;
-            padding: 2.5rem 0 4rem;
-        }
-
-        /* ── Tarjetas de estado ───────────────────────────────── */
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2.5rem;
-        }
-        .admin-stat {
-            background: #fff;
-            border-radius: 8px;
-            padding: 1.25rem 1.5rem;
-            border-left: 4px solid var(--admin-rojo);
-            box-shadow: 0 1px 3px rgba(0,0,0,.07);
-        }
-        .admin-stat__valor {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--admin-rojo);
-            line-height: 1;
-        }
-        .admin-stat__label {
-            font-size: .8rem;
-            color: #555;
-            margin-top: .25rem;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-        }
-
-        /* ── Secciones ────────────────────────────────────────── */
-        .admin-seccion {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.07);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        .admin-seccion__cabecera {
-            background: var(--admin-rojo);
-            color: #fff;
-            padding: .9rem 1.5rem;
-            font-weight: 700;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .admin-seccion__cuerpo {
-            padding: 1.25rem 1.5rem;
-        }
-
-        /* ── Tabla de usuarios ────────────────────────────────── */
-        .admin-tabla {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: .88rem;
-        }
-        .admin-tabla th {
-            background: #f3f0f0;
-            text-align: left;
-            padding: .6rem .75rem;
-            font-weight: 600;
-            color: #444;
-            border-bottom: 2px solid #e8e0e0;
-        }
-        .admin-tabla td {
-            padding: .6rem .75rem;
-            border-bottom: 1px solid #f0ebeb;
-            vertical-align: middle;
-        }
-        .admin-tabla tr:last-child td { border-bottom: none; }
-        .admin-tabla tr:hover td { background: #fdf8f8; }
-
-        /* ── Badges de rol y estado ───────────────────────────── */
-        .badge-rol {
-            display: inline-block;
-            padding: .2rem .6rem;
-            border-radius: 3rem;
-            font-size: .75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-        }
-        .badge-rol--admin      { background: #f3e0e2; color: var(--admin-rojo); }
-        .badge-rol--registrado { background: #e8f0e8; color: #2a5a2a; }
-
-        .badge-activo {
-            display: inline-block;
-            padding: .2rem .6rem;
-            border-radius: 3rem;
-            font-size: .75rem;
-            font-weight: 700;
-        }
-        .badge-activo--si { background: #d4edda; color: #155724; }
-        .badge-activo--no { background: #f8d7da; color: #721c24; }
-
-        /* ── Botones de acción en tabla ───────────────────────── */
-        .btn-accion {
-            background: none;
-            border: 1px solid currentColor;
-            border-radius: 4px;
-            padding: .25rem .6rem;
-            font-size: .78rem;
-            cursor: pointer;
-            font-family: inherit;
-            margin-right: .25rem;
-            transition: background .15s;
-        }
-        .btn-accion--rojo  { color: var(--admin-rojo); }
-        .btn-accion--rojo:hover  { background: #f3e0e2; }
-        .btn-accion--verde { color: #2a5a2a; }
-        .btn-accion--verde:hover { background: #e8f0e8; }
-        .btn-accion--gris  { color: #555; }
-        .btn-accion--gris:hover  { background: #f0f0f0; }
-
-        /* ── Avisos ───────────────────────────────────────────── */
-        .admin-aviso {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: .75rem 0;
-            border-bottom: 1px solid #f0ebeb;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .admin-aviso:last-child { border-bottom: none; }
-        .admin-aviso__info { flex: 1; min-width: 200px; }
-        .admin-aviso__titulo { font-weight: 600; font-size: .9rem; }
-        .admin-aviso__meta   { font-size: .8rem; color: #666; margin-top: .1rem; }
-        .admin-aviso__acciones { display: flex; gap: .5rem; flex-shrink: 0; }
-        .admin-aviso--resuelta .admin-aviso__titulo { color: #888; font-weight: 500; }
-        .admin-aviso--resuelta .admin-aviso__meta   { color: #aaa; }
-
-        .admin-resueltas { margin-top: 1rem; }
-        .admin-resueltas__summary {
-            cursor: pointer;
-            font-size: .82rem;
-            color: #888;
-            padding: .35rem 0;
-            user-select: none;
-            list-style: none;
-        }
-        .admin-resueltas__summary::before {
-            content: '▶ ';
-            font-size: .7rem;
-            transition: transform .15s;
-        }
-        details[open] .admin-resueltas__summary::before { content: '▼ '; }
-        .admin-resueltas__lista { margin-top: .25rem; }
-
-        /* ── Logs ─────────────────────────────────────────────── */
-        .admin-logs-controls {
-            display: flex;
-            align-items: center;
-            gap: .75rem;
-            margin-bottom: .75rem;
-        }
-        .admin-logs-controls label {
-            font-size: .85rem;
-            font-weight: 600;
-            color: #444;
-        }
-        .admin-logs-controls select {
-            font-family: inherit;
-            font-size: .85rem;
-            padding: .3rem .5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .admin-logs-pre {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            font-family: 'Courier New', monospace;
-            font-size: .78rem;
-            line-height: 1.5;
-            padding: 1rem;
-            border-radius: 6px;
-            overflow-x: auto;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre;
-        }
-        .admin-logs-pre--vacio {
-            color: #888;
-            font-style: italic;
-        }
-
-        /* ── Alerta global ────────────────────────────────────── */
-        .admin-alerta {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            border-radius: 6px;
-            padding: .75rem 1rem;
-            margin-bottom: 1.5rem;
-            display: none;
-        }
-        .admin-alerta.visible { display: block; }
-
-        /* ── Toast de confirmación ────────────────────────────── */
-        .admin-toast {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            background: #1a3a1a;
-            color: #fff;
-            padding: .75rem 1.25rem;
-            border-radius: 6px;
-            font-size: .88rem;
-            font-weight: 600;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity .2s, transform .2s;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        .admin-toast.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ── Empty state ──────────────────────────────────────── */
-        .admin-vacio {
-            color: #888;
-            font-size: .9rem;
-            padding: .5rem 0;
-        }
-    </style>
 </head>
 
 <body>
@@ -349,7 +65,7 @@
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="privado.html">Mi cuenta</a></li>
@@ -357,12 +73,18 @@
                     <button
                         type="button"
                         id="btn-cerrar-sesion"
-                        class="btn-login btn-texto"
+                        class="btn-login"
                     >
                         Cerrar sesión
                     </button>
                 </li>
+            
             </ul>
+            <button class="navbar__hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
     </header>
 
@@ -411,22 +133,22 @@
                 <!-- 2. AVISOS ──────────────────────────────── -->
                 <section class="admin-seccion" aria-labelledby="titulo-avisos">
                     <div class="admin-seccion__cabecera">
-                        <span id="titulo-avisos">Avisos activos</span>
-                        <span style="font-size:.8rem; font-weight:400; opacity:.85;">
-                            Convocatorias sin resolución publicada
-                        </span>
+                        <h2 id="titulo-avisos" class="titulo-admin">Avisos / Banners</h2>
+                        <span class="admin-seccion__subtitulo">Convocatorias sin resolución publicada *</span>
                     </div>
                     <div class="admin-seccion__cuerpo">
                         <div id="admin-avisos-contenido">
                             <p class="admin-vacio">Cargando...</p>
                         </div>
+                        <p class="admin-seccion__pie">* Los avisos se resuelven automáticamente cuando el cron detecta la fecha de resolución en BDNS. También puedes marcarlos como resueltos manualmente.</p>
                     </div>
                 </section>
 
                 <!-- 3. USUARIOS ────────────────────────────── -->
                 <section class="admin-seccion" aria-labelledby="titulo-usuarios">
                     <div class="admin-seccion__cabecera">
-                        <span id="titulo-usuarios">Usuarios</span>
+                        <h2 id="titulo-usuarios" class="titulo-admin">Usuarios</h2>
+                        <span class="admin-seccion__subtitulo">Gestión de cuentas registradas en la plataforma</span>
                     </div>
                     <div class="admin-seccion__cuerpo">
                         <div id="admin-usuarios-contenido">
@@ -438,7 +160,8 @@
                 <!-- 4. LOGS ────────────────────────────────── -->
                 <section class="admin-seccion" aria-labelledby="titulo-logs">
                     <div class="admin-seccion__cabecera">
-                        <span id="titulo-logs">Logs de acceso</span>
+                        <h2 id="titulo-logs" class="titulo-admin">Logs de acceso</h2>
+                        <span class="admin-seccion__subtitulo">Registro de todas las peticiones HTTP al servidor</span>
                     </div>
                     <div class="admin-seccion__cuerpo">
                         <div class="admin-logs-controls">
@@ -459,6 +182,31 @@
                     </div>
                 </section>
 
+                <!-- 5. LOGS DE ERROR ─────────────────────── -->
+                <section class="admin-seccion" aria-labelledby="titulo-logs-errores">
+                    <div class="admin-seccion__cabecera">
+                        <h2 id="titulo-logs-errores" class="titulo-admin">Logs de error</h2>
+                        <span class="admin-seccion__subtitulo">Errores internos (500) y excepciones no controladas</span>
+                    </div>
+                    <div class="admin-seccion__cuerpo">
+                        <div class="admin-logs-controls">
+                            <label for="logs-errores-n">Últimas líneas:</label>
+                            <select id="logs-errores-n">
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                            </select>
+                            <button type="button" class="btn-accion btn-accion--gris" id="btn-recargar-logs-errores">
+                                Recargar
+                            </button>
+                        </div>
+                        <pre class="admin-logs-pre admin-logs-pre--error" id="admin-logs-errores-pre"
+                             aria-label="Últimas líneas del log de errores del servidor"
+                             aria-live="polite">Cargando...</pre>
+                    </div>
+                </section>
+
             </div>
         </div>
 
@@ -475,11 +223,7 @@
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="#">Documentación</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="mailto:">Contacto</a>
+                <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="aviso-legal.html">Aviso legal</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
@@ -492,7 +236,7 @@
                target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>

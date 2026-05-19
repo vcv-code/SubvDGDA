@@ -68,16 +68,22 @@
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas-epas.html" class="activo" aria-current="page">EPAs</a></li>
+                <li><a href="estadisticas-epas.html" class="activo" aria-current="page" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="login.html" class="btn-login">Acceder</a></li>
+            
             </ul>
+            <button class="navbar__hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
     </header>
 
 
-    <main id="contenido-principal" class="fondo-stats">
+    <main id="contenido-principal" class="fondo-crema">
         <section class="seccion" aria-labelledby="epas-titulo">
             <div class="contenedor">
 
@@ -92,18 +98,16 @@
                 </div>
 
                 <!-- Cabecera -->
-                <div style="margin-bottom: var(--espacio-lg);">
-                    <h1 style="font-size:2rem; font-weight:700; color:var(--color-negro);"
-                        id="epas-titulo">
+                <div class="bloque-intro">
+                    <h1 class="bloque-titulo" id="epas-titulo">
                         Estadísticas EPAs
                     </h1>
-                    <p style="color:var(--color-gris-texto); margin-top:4px;">
+                    <p class="bloque-subtitulo">
                         Análisis de subvenciones concedidas a protectoras de animales (2021–2025).
                         Datos de BDNS y DGDA.
                     </p>
-                    <p style="margin-top: var(--espacio-xs);">
-                        <a href="estadisticas-eell.html"
-                           style="font-size:0.9rem; color:var(--color-azul);">
+                    <p class="bloque-actualizacion">
+                        <a href="estadisticas-eell.html" class="link-fuente">
                             → Ver estadísticas EELL
                         </a>
                     </p>
@@ -114,7 +118,7 @@
                      FILA 1: KPIs
                      Pendiente de endpoint GET /estadisticas/epas
                      ───────────────────────────────────────────────── -->
-                <div class="grid-4" style="margin-bottom: var(--espacio-lg);">
+                <div class="grid-4 mb-lg">
 
                     <div class="card-kpi">
                         <span class="card-kpi__label">Importe medio EPA</span>
@@ -146,7 +150,7 @@
                 <!-- ─────────────────────────────────────────────────
                      FILA 2: DISTRIBUCIÓN DE IMPORTES + MEDIA VS MEDIANA
                      ───────────────────────────────────────────────── -->
-                <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
+                <div class="grid-2 mb-lg">
 
                     <!-- Distribución de importes por rangos -->
                     <div class="card-grafico">
@@ -291,11 +295,7 @@
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="#">Documentación</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="mailto:">Contacto</a>
+                <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="aviso-legal.html">Aviso legal</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
@@ -308,7 +308,7 @@
                target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones"
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones"
                target="_blank" rel="noopener noreferrer">
                 Dirección General de Derechos de los Animales (DGDA)
             </a>.
@@ -319,6 +319,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="js/modal-grafica.js"></script>
+    <script src="js/navbar.js"></script>
     <script src="js/estadisticas-epas.js"></script>
 
 </body>

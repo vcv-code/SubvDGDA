@@ -74,6 +74,9 @@ CREATE TABLE IF NOT EXISTS solicitudes (
     -- Clave compuesta: el mismo num_expediente puede aparecer en convocatorias distintas
     -- (entidades que desistieron un año y volvieron al siguiente).
     UNIQUE KEY uq_expediente (num_expediente, id_convoc),
+    INDEX idx_solic_estado    (estado),
+    INDEX idx_solic_provincia (provincia),
+    INDEX idx_solic_ccaa      (ccaa),
     CONSTRAINT fk_solic_convoc FOREIGN KEY (id_convoc) REFERENCES convocatorias (id_convoc),
     CONSTRAINT fk_solic_benef  FOREIGN KEY (id_benef)  REFERENCES beneficiarios  (id_benef)
 );
@@ -137,6 +140,7 @@ CREATE TABLE IF NOT EXISTS agrupacion_miembros (
 CREATE TABLE IF NOT EXISTS usuarios (
     id_usuario       INT          NOT NULL AUTO_INCREMENT,
     email            VARCHAR(255) NOT NULL,
+    nombre           VARCHAR(100) NULL                          COMMENT 'Nombre o alias opcional del usuario',
     password         VARCHAR(255) NOT NULL                      COMMENT 'Hash bcrypt de la contraseña',
     rol              ENUM('admin','registrado') NOT NULL DEFAULT 'registrado',
     activo           TINYINT(1)   NOT NULL DEFAULT 1            COMMENT '0 = cuenta desactivada por admin',
@@ -196,4 +200,18 @@ CREATE TABLE IF NOT EXISTS verificacion_tokens (
     PRIMARY KEY (id),
     UNIQUE KEY uq_verif_token (token),
     CONSTRAINT fk_verif_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- USUARIO ADMIN DE DEMO
+-- Creado solo en instalaciones nuevas (INSERT IGNORE ignora
+-- el insert si el email ya existe).
+-- Credenciales: admin@demo.com / Admin1234!
+-- ------------------------------------------------------------
+INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
+VALUES (
+    'admin@demo.com',
+    'Admin Demo',
+    '$2b$12$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
+    'admin', 1, 1, NOW()
 );

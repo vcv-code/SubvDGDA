@@ -130,12 +130,14 @@ async function cargarResumenTabla(token) {
                     </tr>
                 </tfoot>` : '';
             return `
+                <div class="resumen-tabla-card">
                 <div class="resumen-bloque tabla-scroll">
                     <table class="resumen-tabla" aria-label="Solicitudes ${tipo.toUpperCase()}" style="table-layout:fixed;">
                         ${colgroup}<thead>${cabecera}</thead>
                         <tbody>${filasTipo.map(renderFila).join('')}</tbody>
                         ${subtotal}
                     </table>
+                </div>
                 </div>`;
         };
 
@@ -151,6 +153,7 @@ async function cargarResumenTabla(token) {
             <div class="resumen-grupos">
                 ${renderBloque('epa', filasEpa)}
                 ${renderBloque('eell', filasEell)}
+                <div class="resumen-tabla-card">
                 <div class="resumen-bloque resumen-bloque--total tabla-scroll">
                     <table class="resumen-tabla" aria-label="Total global" style="table-layout:fixed;">
                         ${colgroup}
@@ -167,6 +170,7 @@ async function cargarResumenTabla(token) {
                             </tr>
                         </tbody>
                     </table>
+                </div>
                 </div>
             </div>`;
     } catch {

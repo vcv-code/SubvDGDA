@@ -9,9 +9,9 @@ Datos concretos del sistema para consulta rápida.
 | Contenedor | Imagen | Función |
 |---|---|---|
 | `bdns_nginx` | nginx:alpine | Proxy inverso: sirve el frontend estático y redirige las rutas `/api` al backend. Gestiona HTTPS y rate limiting. |
-| `bdns_api` | docker-backend | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
+| `bdns_api` | python:3.11-slim (build local) | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
 | `bdns_dgda_db` | mariadb:11 | Base de datos principal. |
-| `bdns_cron` | docker-cron | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
+| `bdns_cron` | python:3.12-slim (build local) | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
 | `bdns_mailpit` | axllent/mailpit | Servidor SMTP de desarrollo. Captura los emails enviados sin llegar a destino real. |
 | `bdns_adminer` | adminer | Interfaz web para administrar la BD directamente. Solo para desarrollo. |
 
@@ -79,7 +79,7 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 | Tabla | Contenido |
 |---|---|
-| `usuarios` | Cuentas de acceso a la plataforma |
+| `usuarios` | Cuentas de acceso a la plataforma (`nombre` VARCHAR 100 nullable — alias opcional) |
 | `refresh_tokens` | Tokens de larga duración para renovar el access token |
 | `reset_tokens` | Tokens de un solo uso para recuperar contraseña |
 | `verificacion_tokens` | Tokens de un solo uso para confirmar email al registrarse |
@@ -118,6 +118,8 @@ Fuentes externas (API / PDF / XML / XLSX)
 | HTTPS | Certificado autofirmado, TLS 1.2 y 1.3 únicamente |
 | Cabeceras de seguridad | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `HSTS: max-age=31536000` |
 | Panel de admin | Solo accesible para usuarios con `rol = 'admin'` |
+| Sesión activa en login/registro | Si hay token en `localStorage`, `login.html` y `registro.html` redirigen automáticamente a `privado.html` sin mostrar el formulario |
+| Navbar en páginas públicas | `js/navbar.js` detecta el token en `localStorage` y reemplaza el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin necesidad de petición al servidor |
 
 ---
 
@@ -152,8 +154,10 @@ El `subjectAltName` es obligatorio — sin él, Chrome y Firefox rechazan la con
 
 | Archivo | Versionar | Nota |
 |---|---|---|
-| `docker/ssl/server.crt` | Sí | Certificado público |
-| `docker/ssl/server.key` | No (`.gitignore`) | Clave privada — cada instalación genera la suya |
+| `docker/ssl/server.crt` | No (`.gitignore`) | Certificado público — cada máquina genera el suyo |
+| `docker/ssl/server.key` | No (`.gitignore`) | Clave privada — cada máquina genera la suya |
+
+Cert y key deben ser del mismo par generado con el mismo `openssl`. Si uno proviene de git y el otro es local, Nginx falla al arrancar con `key values mismatch`.
 
 ---
 
@@ -175,6 +179,8 @@ La frecuencia mayor en abril–mayo es porque es cuando suelen publicarse las co
 1. **Detección de resoluciones** (siempre): consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion = NULL` del año actual. Si BDNS ya publica la fecha, la actualiza en la BD y el banner de la home desaparece automáticamente.
 2. **Detección de nuevas convocatorias** (solo si faltan): busca nuevas convocatorias DGDA del año actual en la API BDNS por palabras clave del título. Si encuentra una nueva, la inserta con `fecha_resolucion = NULL`.
 
+Los títulos que devuelve la API BDNS son los títulos oficiales del BOE, que pueden ser muy largos (p. ej. *"Subvenciones a entidades locales destinadas a mejorar e impulsar el control poblacional de colonias felinas, correspondiente al año 2026"*). El cron normaliza el título antes de insertarlo usando un diccionario interno, de forma que todos los registros mantengan el mismo formato corto independientemente de lo que devuelva la API.
+
 Detección de tipo por palabras clave en el título:
 
 | Tipo | Palabras clave |
@@ -187,6 +193,48 @@ Detección de tipo por palabras clave en el título:
 ```bash
 docker exec bdns_cron python3 /app/scripts/check_bdns.py
 ```
+
+### Mantenimiento anual — qué actualizar en el código
+
+El cron actualiza las BDs en ejecución automáticamente. Para que instalaciones nuevas arranquen con los datos correctos sin esperar al cron, hay que mantener dos sitios en el código cada año:
+
+| Evento | Fichero | Qué cambiar |
+|--------|---------|-------------|
+| Sale convocatoria nueva | `scripts/data_processing/cargar_dataset.py` | Añadir `(año, tipo): (fecha_conv, None)` en `_FECHAS` |
+| Sale convocatoria nueva | `install.sh` | Añadir `INSERT ... WHERE NOT EXISTS` en el bloque de migraciones |
+| Sale resolución | `scripts/data_processing/cargar_dataset.py` | Cambiar `None` → fecha en `_FECHAS` |
+| Sale resolución | `install.sh` | Añadir `UPDATE ... WHERE fecha_resolucion IS NULL` en migraciones |
+
+Sin estas actualizaciones la app funciona igualmente (el cron lo compensa), pero una instalación nueva hecha inmediatamente después del `git pull` tardará horas en ver los datos correctos.
+
+---
+
+## Instalación
+
+```bash
+git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+cd analisis-bdns-dgda
+bash install.sh
+```
+
+**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
+**Plataforma:** Linux · macOS · WSL2 (Windows requiere Docker Desktop con integración WSL2)
+**Descarga primera vez:** ~300-400 MB de imágenes Docker
+**Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv (solo necesario para tests y scripts de parseo)
+
+El script detecta instalaciones existentes y no sobreescribe datos. Si la BD ya tiene solicitudes, solo levanta los contenedores. Para reinstalar desde cero: `make reset-db`.
+
+### Qué se descarga en la primera instalación
+
+| Imagen | Uso | Tamaño aproximado |
+|--------|-----|-------------------|
+| `mariadb:11` | Base de datos | ~120 MB |
+| `python:3.11-slim` | Backend y cron (compartida) | ~75 MB |
+| `nginx:alpine` | Proxy inverso | ~11 MB |
+| `adminer` | Interfaz web de BD | ~13 MB |
+| `axllent/mailpit` | SMTP de desarrollo | ~13 MB |
+
+En instalaciones posteriores las imágenes ya están cacheadas localmente — arrancar el entorno es instantáneo.
 
 ---
 
@@ -218,7 +266,7 @@ docker exec bdns_cron python3 /app/scripts/check_bdns.py
 | **bcrypt** | 5.0.0 | Hash y verificación de contraseñas en registro y login. |
 | **python-jose** | 3.5.0 | Genera y valida los JWT (access token y refresh token) con algoritmo HS256. |
 | **cryptography** | 46.0.5 | Soporte criptográfico requerido por python-jose para la firma HS256. |
-| **email-validator** | 2.3.0 | Valida el formato del email en el schema del registro. |
+| **email-validator** | 2.3.0 | Valida el formato del email en el schema del registro. **Importante:** la versión 2.x rechaza dominios especiales/reservados (`.local`, `.test`, `.example`, `.internal`, `.localhost`) con error 422. Los emails de desarrollo o demo deben usar un TLD público válido (`@demo.com`, `@example.com`). |
 | **pytest** | 9.0.3 | Framework de tests. |
 | **httpx** | 0.28.1 | Cliente HTTP que simula peticiones a la API en los tests (`TestClient`). |
 
@@ -252,8 +300,8 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
   - Errores 500: `"METHOD /ruta | TipoExcepcion: mensaje"`
 - **Destinos (en Docker):**
   - Consola: siempre activa
-  - `logs/backend/access.log` — rotación cada 5 MB, 5 copias de backup
-  - `logs/backend/error.log` — solo errores, misma rotación
+  - `logs/app/access.log` — rotación cada 5 MB, 5 copias de backup
+  - `logs/app/error.log` — solo errores, misma rotación
 
 ### Logs de Nginx
 
@@ -268,7 +316,7 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 195 tests pasando, 0 fallando (actualizado 2026-05-14)
+- **Total:** 197 tests pasando, 0 fallando (actualizado 2026-05-15)
 
 | Archivo | Qué testea |
 |---|---|
@@ -277,8 +325,8 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 | `test_refresh_token.py` | Renovación del access token con refresh token |
 | `test_recuperar_password.py` | Solicitud y validación del token de reset |
 | `test_verificacion_email.py` | Flujo completo de verificación de email post-registro |
-| `test_privado.py` | Endpoints del área privada (requieren autenticación) |
-| `test_admin.py` | Acceso denegado sin token o sin rol admin; gestión de usuarios y avisos |
+| `test_privado.py` | Endpoints del área privada: cambiar contraseña y nombre/alias |
+| `test_admin.py` | Control de acceso, gestión de usuarios y avisos, visor de logs de acceso y de error |
 | `test_avisos.py` | CRUD de avisos de convocatorias |
 | `test_convocatorias.py` | `GET /convocatorias/` devuelve JSON válido |
 | `test_solicitudes.py` | Filtros, paginación y búsqueda en `/solicitudes/` |
