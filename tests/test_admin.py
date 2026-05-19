@@ -34,6 +34,7 @@ def _registrar_admin(db):
         password=hashear_password(ADMIN["password"]),
         rol="admin",
         activo=1,
+        email_verificado=1,
         created_at=datetime.now(timezone.utc),
     )
     db.add(admin)
@@ -315,3 +316,17 @@ def test_logs_devuelve_lista(client, db):
     assert r.status_code == 200
     assert "lineas" in r.json()
     assert isinstance(r.json()["lineas"], list)
+
+
+def test_logs_errores_devuelve_lista(client, db):
+    token = _token_admin(client, db)
+    r = client.get("/admin/logs/errores?n=10", headers=_headers(token))
+    assert r.status_code == 200
+    assert "lineas" in r.json()
+    assert isinstance(r.json()["lineas"], list)
+
+
+def test_logs_errores_requiere_admin(client, db):
+    token = _token_registrado(client, db)
+    r = client.get("/admin/logs/errores?n=10", headers=_headers(token))
+    assert r.status_code == 403

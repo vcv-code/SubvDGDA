@@ -337,9 +337,9 @@ function iniciarRegistro() {
 
         // ── Paso 1: Leer valores ──────────────────────────────────────────
         const email           = document.getElementById('registro-email').value.trim();
+        const nombre          = document.getElementById('registro-nombre')?.value.trim() ?? '';
         const password        = document.getElementById('registro-password').value;
         const passwordConfirm = document.getElementById('registro-password-confirm')?.value ?? '';
-        // El campo nombre es solo visual, no se envía al backend
 
         // ── Paso 2: Validación client-side ────────────────────────────────
         let hayErrores = false;
@@ -376,21 +376,11 @@ function iniciarRegistro() {
 
         try {
             // ── Paso 4: Petición POST /auth/registro ──────────────────────
-            /**
-             * El backend espera { email, password }.
-             * Respuesta correcta: 201 Created con { id_usuario, email, rol, ... }
-             * Respuesta de error: 400 Bad Request si el email ya existe.
-             *
-             * NOTA: El campo "nombre" del formulario NO se envía porque
-             * el schema RegistroIn del backend solo tiene email y password.
-             * Si en el futuro el backend añade el campo nombre, bastará
-             * con incluirlo en el objeto del body.
-             */
             const sitio_web = document.getElementById('hp-sitio-web')?.value ?? '';
             const respuesta = await fetch(`${API_URL}/auth/registro`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, sitio_web }),
+                body: JSON.stringify({ email, nombre, password, sitio_web }),
             });
 
             if (!respuesta.ok) {
@@ -435,6 +425,15 @@ function iniciarRegistro() {
  * En registro.html se activa iniciarRegistro().
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // Si ya hay sesión activa, redirigir sin mostrar el formulario de login ni de registro
+    if (localStorage.getItem('token')) {
+        const esLogin    = !!document.getElementById('form-login');
+        const esRegistro = !!document.getElementById('form-registro');
+        if (esLogin || esRegistro) {
+            window.location.href = 'privado.html';
+            return;
+        }
+    }
     iniciarLogin();
     iniciarRegistro();
 });

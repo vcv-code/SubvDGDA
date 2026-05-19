@@ -17,7 +17,7 @@ Proyecto desarrollado por:
 
 El proyecto consiste en el desarrollo de una **plataforma web para analizar subvenciones públicas relacionadas con bienestar animal en España**, centralizando información actualmente dispersa y permitiendo su consulta, filtrado y visualización a partir de datos abiertos y documentos oficiales.
 
-El sistema permitirá:
+El sistema permite:
 
 - centralizar información de subvenciones públicas  
 - consultar convocatorias y beneficiarios  
@@ -42,7 +42,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 
 ---
 
-## Arquitectura prevista del sistema
+## Arquitectura del sistema
 
 El sistema sigue una arquitectura cliente–servidor basada en una API REST:
 
@@ -64,6 +64,7 @@ Frontend
 
 ## Modelo de datos (comparativa diagramas ER)
 
+```html
 <table align="center">
   <tr>
     <th>Original</th>
@@ -74,6 +75,7 @@ Frontend
     <td><img src="docs/img/Modelo-ER-Def.jpg" width="400" alt="Diagrama ER definitivo"></td>
   </tr>
 </table>
+```
 
 ---
 
@@ -87,6 +89,7 @@ Frontend
 | Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
 | Control de versiones | Git, GitHub |
+| Herramientas de desarrollo | Makefile, VS Code (extensions.json incluido) |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
 
 ---
@@ -107,7 +110,7 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
 
@@ -122,7 +125,7 @@ Responsable de:
 
 ### Base de datos
 
-Almacenará:
+Almacena:
 
 - convocatorias  
 - concesiones  
@@ -543,9 +546,7 @@ backend/app/
     agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
     avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
     auth.py          → POST /auth/registro · GET /auth/verificar · POST /auth/login · POST /auth/refresh · POST /auth/logout · POST /auth/recuperar · POST /auth/reset
-    privado.py       → GET /privado/perfil · GET /privado/resumen-exclusivo · GET /privado/resumen-tabla · PUT /privado/cambiar-contrasena
-    · privado.html → perfil del usuario: datos, cambiar contraseña, enlace a exclusivo.html
-    · exclusivo.html → contenido exclusivo: resumen tabla, resoluciones BOE, próximas funcionalidades
+    privado.py       → GET /privado/perfil · PUT /privado/cambiar-nombre · PUT /privado/cambiar-contrasena · GET /privado/resumen-exclusivo · GET /privado/resumen-tabla
 ```
 
 La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
@@ -588,18 +589,125 @@ Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar
 
 ## Desarrollo
 
+### Instalación automática (recomendada)
+
+Clona el repositorio y ejecuta el script de instalación:
+
+```bash
+git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+cd analisis-bdns-dgda
+bash install.sh
+```
+
+El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL, levanta los contenedores y carga el dataset. Guía paso a paso con confirmación antes de cada acción que requiere permisos o modifica el sistema.
+
+#### Primeros pasos tras la instalación
+
+1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
+2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
+3. Para acceder al panel de administración, inicia sesión con:
+   - Email: `admin@demo.com`
+   - Contraseña: `Admin1234!`
+
+**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
+**Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
+**Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv
+**Descarga primera vez:** ~300-400 MB de imágenes Docker (según las que ya tengas cacheadas)
+
+#### Flujos posibles según las respuestas
+
+El script hace tres preguntas y toma varias decisiones automáticas:
+
+**Pregunta 1 — `¿Continuar? [s/N]`**
+
+| Respuesta | Resultado |
+|-----------|-----------|
+| `s` | La instalación continúa |
+| `N` (o Enter) | El script se aborta sin modificar nada en el sistema |
+
+##### Decisiones automáticas (sin preguntar)
+
+Antes de continuar el script detecta si ya existen recursos y los reutiliza sin sobreescribir:
+
+| Recurso | Si ya existe | Si no existe |
+|---------|-------------|--------------|
+| `docker/.env` | Se reutiliza | Se crea con contraseñas de desarrollo y `SECRET_KEY` aleatoria |
+| Certificado SSL | Se reutiliza | Se genera con `openssl` (válido 1 año) |
+| Base de datos con datos | No se toca | Se carga el dataset completo (primera instalación) |
+| `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
+| Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
+
+El script crea también un **usuario administrador de demo** si no existe ninguno:
+
+| Campo | Valor |
+|-------|-------|
+| Email | `admin@demo.com` |
+| Contraseña | `Admin1234!` |
+| Rol | `admin` |
+
+Este usuario permite acceder al panel de administración en cualquier instalación limpia. Si ya existe una cuenta con ese email (instalaciones previas), `INSERT IGNORE` lo omite sin error.
+
+Además, **siempre** (sin importar si hay datos o no):
+
+- **Migraciones de esquema** — el script aplica `CREATE TABLE IF NOT EXISTS` y `ALTER TABLE … ADD COLUMN IF NOT EXISTS` para que la BD esté al día con el código. Son seguras de repetir: si las tablas o columnas ya existen, no hacen nada.
+- **Rebuild del backend** — la imagen Docker del backend se reconstruye para que el código en ejecución coincida siempre con el código del repositorio. Gracias al caché de Docker (solo se re-ejecuta la capa de código, no `pip install`), el rebuild tarda ~10-20 s en instalaciones existentes.
+
+#### Actualizar el proyecto (después de `git pull`)
+
+Cada vez que se actualice el código con `git pull`, ejecutar el script es suficiente para aplicar todos los cambios:
+
+```bash
+git pull
+bash install.sh   # responde 's' para continuar
+```
+
+El script detecta la BD existente, aplica las migraciones pendientes y reconstruye el backend. Los datos no se tocan.
+
+> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual), volver a ejecutar `bash install.sh` lo regenera automáticamente.
+
+**Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
+
+Esta pregunta solo aparece si el dominio no está ya en `/etc/hosts`.
+
+| Respuesta | Resultado |
+|-----------|-----------|
+| `s` | Se añade el dominio con `sudo`. La app queda disponible en `https://subvencionesDGDA.local` con HTTPS completo. |
+| `N` (o Enter) | El dominio no se toca. La instalación **continúa igualmente**. La app queda disponible en `http://localhost` (sin HTTPS). Ver limitaciones abajo. |
+
+Limitaciones de acceder por `http://localhost` en vez del dominio local:
+
+- Sin HTTPS — el navegador no mostrará el candado
+- Las cookies con el flag `Secure` no se enviarán (puede afectar a la sesión en algunos navegadores)
+- El enlace de recuperación de contraseña que llega por email usa la URL del dominio — no funcionará si el dominio no está en `/etc/hosts`
+
+Para añadirlo manualmente en cualquier momento:
+
+```bash
+echo '127.0.0.1 subvencionesDGDA.local' | sudo tee -a /etc/hosts
+```
+
+**Pregunta 3 — `¿Crear entorno virtual Python (venv)? (solo para tests y scripts) [s/N]`**
+
+Esta pregunta solo aparece si no existe ya un `venv/`. El script informa de que ocupa ~50 MB y que **no es necesario para usar la aplicación web**.
+
+| Respuesta | Resultado |
+|-----------|-----------|
+| `s` | Se crea el `venv` y se instalan las dependencias de `requeriments.txt` |
+| `N` (o Enter) | No se crea. La aplicación web **funciona igualmente**. Solo es necesario para ejecutar los tests (`make test`) y los scripts de parseo de datos. |
+
+Para crearlo manualmente después si se necesita:
+
+```bash
+python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt
+```
+
+### Instalación manual
+
 Clonar el repositorio:
 
 ```bash
 git clone git@github.com:vcv-code/analisis-bdns-dgda.git
 cd analisis-bdns-dgda
-```
-
-Crear rama de desarrollo:
-
-```bash
-git checkout -b dev
-git push -u origin dev
 ```
 
 Sincronizar repositorio:
@@ -614,7 +722,7 @@ git pull
 ## Entorno de trabajo
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install -r requeriments.txt
 ```
@@ -623,19 +731,35 @@ pip install -r requeriments.txt
 
 El proyecto tiene dos archivos de requisitos con propósitos distintos:
 
-- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `pandas`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
+- **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
 - **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (`fastapi`, `uvicorn`, `sqlalchemy`, `pymysql`, `bcrypt`, `python-jose`, `email-validator`, `httpx` y `pytest`). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API. Todas las versiones están fijadas.
+
+### Extensiones de VS Code recomendadas
+
+El proyecto incluye `.vscode/extensions.json` con extensiones recomendadas. Al abrir la carpeta en VS Code aparece una notificación para instalarlas, o filtra por `@recommended` en el panel de extensiones.
+
+| Extensión | Para qué |
+|---|---|
+| Python + Pylance + Pylint | Backend — autocompletado, tipos y linting |
+| autoDocstring | Genera docstrings de Python con un atajo |
+| Docker | Gestión de contenedores desde VS Code |
+| Remote - WSL | Abre el proyecto desde Windows en WSL2 |
+| Auto Rename Tag | Cierra etiquetas HTML automáticamente |
+| Makefile Tools | Resaltado y soporte para el Makefile |
+| Markdown All in One + markdownlint | README y documentación |
+| Error Lens | Muestra errores y avisos inline sin pasar el ratón |
+| Code Spell Checker (+ Spanish) | Corrector ortográfico en español |
 
 ---
 
 ## Docker — arrancar el sistema
 
-El proyecto usa Docker Compose con cinco servicios definidos en `docker/docker-compose.yml`:
+El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-compose.yml`:
 
 | Servicio   | Imagen              | Función                                                   | Puerto externo    |
 |------------|---------------------|-----------------------------------------------------------|-------------------|
 | `db`       | mariadb:11          | Base de datos MariaDB con el dataset cargado              | 3307              |
-| `backend`  | Python (build)      | API FastAPI                                               | ninguno (interno) |
+| `backend`  | Python 3.11-slim (build) | API FastAPI                                          | ninguno (interno) |
 | `nginx`    | nginx:alpine        | Proxy inverso, punto de entrada                           | 80, 443           |
 | `cron`     | Python (scheduler)  | Tareas programadas: comprobación BDNS y health check      | ninguno           |
 | `mailpit`  | axllent/mailpit     | Servidor SMTP de desarrollo — atrapa emails sin enviarlos | 1025 (SMTP), 8025 (web UI) |
@@ -665,7 +789,7 @@ uvicorn backend.app.main:app --reload --port 8000
 
 API disponible en `http://localhost:8000/docs`
 
-### Despliegue completo (3 contenedores con Nginx)
+### Despliegue completo (stack completo con Docker Compose)
 
 #### Primera vez (volumen vacío o tras `down -v`)
 
@@ -766,16 +890,49 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 
 ---
 
+## Makefile — atajos para el día a día
+
+El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
+
+| Comando | Qué hace |
+|---|---|
+| `make start` | Levanta todos los contenedores |
+| `make stop` | Para los contenedores (conserva los datos) |
+| `make restart` | Para y vuelve a levantar |
+| `make build` | Reconstruye la imagen del backend |
+| `make build-cron` | Reconstruye la imagen del cron |
+| `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
+| `make cargar` | Recarga el dataset sin borrar el volumen |
+| `make test` | Ejecuta los tests con pytest |
+| `make test-v` | Tests con salida detallada |
+| `make logs` | Últimas 100 líneas de logs del backend |
+| `make logs-cron` | Últimas 50 líneas de logs del cron |
+| `make logs-nginx` | Últimas 50 líneas de logs de Nginx |
+| `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
+| `make shell-db` | Abre la consola MariaDB dentro del contenedor |
+| `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
+
+### Windows
+
+`make` no está disponible de serie en Windows. Opciones:
+
+- **Recomendada:** usar WSL2 y ejecutar desde la terminal Linux — `make` funciona directamente
+- **Alternativa:** instalar `make` con `winget install GnuWin32.Make` y ejecutar desde PowerShell
+- **Sin instalar nada:** copiar el comando del target directamente del `Makefile` y ejecutarlo en la terminal
+
+---
+
 ## Tests
 
-El proyecto tiene **247 pruebas en total**: 195 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 195 | pytest (sin Docker) |
+| Automáticos | 197 | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
-Los tests automáticos verifican los endpoints de la API y el sistema de autenticación sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
+Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
 ### Ejecutar todos los tests
 
@@ -787,29 +944,38 @@ pytest -v
 ### Ejecutar por módulo
 
 ```bash
+# — Pipeline de datos (base del proyecto) —
+pytest tests/test_unificar_datasets.py  # normalización y deduplicación del dataset
+pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
+
+# — API pública (sin autenticación) —
 pytest tests/test_smoke.py              # arranque de la API y /health
-pytest tests/test_convocatorias.py
+pytest tests/test_convocatorias.py      # listado de convocatorias
 pytest tests/test_solicitudes.py        # filtros, paginación y exportación CSV
 pytest tests/test_estadisticas.py       # /estadisticas/, /estadisticas/epas y /estadisticas/eell
-pytest tests/test_auth.py               # registro, login y zona privada
 pytest tests/test_agrupaciones.py       # endpoint /agrupaciones/ con relaciones completas
 pytest tests/test_avisos.py             # endpoint /avisos/ — convocatorias pendientes de resolución
+
+# — Autenticación y acceso —
+pytest tests/test_auth.py               # registro y login básico
+pytest tests/test_verificacion_email.py # verificación de email al registrarse
+pytest tests/test_refresh_token.py      # refresh token, rotación y logout
+pytest tests/test_recuperar_password.py # recuperación de contraseña por email
+pytest tests/test_privado.py            # zona privada: cambiar contraseña y nombre
+pytest tests/test_admin.py              # panel de administración completo
+
+# — Infraestructura —
+pytest tests/test_logging.py            # middleware y configuración de logging
+pytest tests/test_https_config.py       # certificado SSL y configuración Nginx HTTPS
 pytest tests/test_cache_headers.py      # cabeceras Cache-Control en /convocatorias/ y /estadisticas/
 pytest tests/test_rate_limiting.py      # configuración de rate limiting en Nginx
-pytest tests/test_privado.py            # cambiar contraseña desde la zona privada
-pytest tests/test_refresh_token.py      # refresh token, rotación y logout
-pytest tests/test_logging.py            # middleware y configuración de logging
-pytest tests/test_verificacion_email.py # verificación de email al registro
-pytest tests/test_admin.py              # panel de administración completo
-pytest tests/test_unificar_datasets.py  # funciones de normalización del pipeline
-pytest tests/test_parser_epa2025.py     # helpers y flujo del parser EPA 2025
 ```
 
 ### Resultado esperado
 
 ```text
-179 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-195 passed   # suite completa con Docker levantado
+181 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+197 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -818,7 +984,7 @@ Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba e
 
 Complementan a los tests automáticos verificando el stack completo: Nginx → FastAPI → MariaDB real. Se realizan desde `http://localhost/docs` con Docker levantado y cubren filtros con datos reales, paginación, flujo de registro y login, acceso con y sin token, y la respuesta de los manejadores de error. Ver la sección "Prueba manual rápida" en [`docs/tests.md`](docs/tests.md).
 
-#### Pruebas manuales del panel de administración (rama 12a)
+#### Pruebas manuales del panel de administración
 
 Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adicional (`prueba@test.com`).
 
@@ -837,10 +1003,8 @@ Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adi
 | Reactivar usuario | ✅ Login funciona tras activar | Badge vuelve a "Activo", 403 desaparece |
 | Hacer admin a otro usuario | ✅ Usuario accede a admin.html | Botón aparece en privado.html al volver a entrar |
 | Quitar admin | ✅ Redirige a privado.html | admin.html ya no accesible |
-| Usuario inactivo en tabla | ✅ Muestra badge "Inactivo" con botón "Activar" | user@example.com visible correctamente |
+| Usuario inactivo en tabla | ✅ Muestra badge "Inactivo" con botón "Activar" | user@example .com visible correctamente |
 | Selector de logs (50 líneas) | ✅ Recarga con número correcto | Logs reflejan intentos fallidos del proceso de debug |
-
-Pendiente: "Marcar resuelta" en aviso EELL 2026 (no bloqueante para el commit).
 
 ---
 
@@ -889,29 +1053,9 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ---
 
-## Mejoras futuras
-
-Mejoras identificadas pero no planificadas para el desarrollo actual:
-
-- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando la web de infosubvenciones.es para cada convocatoria. No afecta a ninguna funcionalidad actual.
-- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
-- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
-- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
-- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
-- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
-- **Login con terceros (OAuth)** - integración con Google.
-- **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
-- **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
-- **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
-- **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
-- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
-- **Refactor CSS inline**: las páginas complejas (`index.html`, `estadisticas-*.html`, `solicitudes.html`) aún tienen inline styles de diseño. Los casos sencillos ya se migraron a clases CSS; lo que queda requiere verificación visual página a página.
-
----
-
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron verificado · caché y rate limiting activos · autenticación completa con verificación de email y recuperación de contraseña · Mailpit activo · frontend integrado · tramo y agrupaciones expuestos · UX buscador mejorada · panel de administración activo · zona privada ampliada · medidas anti-bots activas · cron con auto-detección de resoluciones · modal de conclusiones en gráficas**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤768px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA · auditoría de seguridad completada**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -926,7 +1070,7 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 ✔ entorno Docker (docker-compose con MariaDB + FastAPI)
 ✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
-✔ backend FastAPI: modelos ORM, schemas Pydantic y 3 endpoints verificados
+✔ backend FastAPI: modelos ORM, schemas Pydantic, primeros endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
   · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
@@ -959,6 +1103,36 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
   · limpiar filtros borra también los parámetros de la URL
 ✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
+✔ auditoría de seguridad backend — bcrypt rounds=12 explícito · email_verificado default=0 coherente · índices BD en estado/provincia/ccaa · TTL access token 15 min · anti-enumeración en registro (201 siempre) · 197 tests pasando
+✔ navbar hamburguesa en ≤768px — menú desplegable con animación X, rayita ámbar en hover, cierre con Esc/click fuera/click en enlace; botón añadido en las 18 páginas HTML
+✔ panel de admin restaurado — cabeceras rojas, badges de rol/estado, botones ghost, fondo pastel rojo
+✔ zona privada restaurada — dos columnas, privado-card, fondo pastel morado, títulos verde oscuro
+✔ sistema de color semántico — cuatro roles diferenciados:
+  · Verde institucional (`#1A3429`, `#2DC26C`) — acciones de contenido, gráficas, estructura
+  · Ámbar (`#D97706`) — acento interactivo: botón "Acceder", cards disponibles, avisos
+  · Morado (`#7C3AED`) — zona privada (privado.html, exclusivo.html)
+  · Rojo oscuro (`#7F1D1D`) — panel de administración
+✔ paleta de fondos en home — alternancia verde/crema en 6 secciones:
+  · Verde (`#DFF0E1`): hero, convocatorias, visión general
+  · Crema (`#FAF4EE`): métricas, resoluciones, registro
+  · Buscador y estadísticas: fondo crema (`fondo-crema`)
+✔ imagen hero generada con IA (`homebdns.webp`, 280KB) — plaza española, gestora con chaleco, perro y gato
+✔ gráficas unificadas — colores `#1A3429` / `#2DC26C` en home.js, estadisticas-epas.js y estadisticas-eell.js
+✔ formatter manual de importes — separador de miles garantizado independiente del locale del navegador
+✔ modal de entidad en buscador (`solicitudes.html`)
+  · reemplaza la navegación a `entidad.html` por un modal inline sin salir del buscador
+  · muestra nombre, CIF, CCAA (solo si disponible), total recibido, nº solicitudes e histórico con expediente
+  · histórico ordenado de más reciente a más antiguo; importes con separador de miles garantizado
+  · CCAA oculta automáticamente para EPAs (el dato no está disponible en asociaciones)
+✔ navbar responsive en tres breakpoints (900 / 768 / 600 px)
+  · texto del logo oculto en pantallas muy pequeñas; links y botón "Acceder" reducidos progresivamente
+✔ retoques visuales rama 17 (home, buscador, estadísticas)
+  · hero: imagen cubre altura del texto sin bandas verdes; centrado en desktop con max-width 1200px
+  · aviso de convocatorias en ámbar más visible (#D97706)
+  · tablas de convocatorias: cabecera verde, filas blancas, responsive correcto
+  · KPI cards de estadísticas: números verdes centrados restaurados (revertido refactor Miyuki)
+  · separador de miles en importes con formatter manual (independiente del locale del navegador)
+  · URL de la DGDA en footer actualizada a dsca.gob.es en todos los ficheros HTML
 ✔ bloque "Convocatorias" en la Home (`index.html`)
   · tabla separada por tipo (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador
   · fechas de convocatoria obtenidas de la API BDNS; fechas de resolución de la API del BOE
@@ -974,25 +1148,29 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (195 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (197 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+  · — Pipeline de datos —
+  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
+  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
+  · — API pública —
   · test_smoke.py (3): arranque de la API y endpoint /health
   · test_convocatorias.py (3): endpoint /convocatorias/
   · test_solicitudes.py (16): filtros, paginación, búsqueda parcial, estructura, exportación CSV y campo tramo
   · test_estadisticas.py (24): /estadisticas/, /estadisticas/epas y /estadisticas/eell — estructura, cálculos, nuevos/recurrentes, concentración
-  · test_auth.py (10): registro, login, acceso con/sin token
   · test_agrupaciones.py (7): endpoint /agrupaciones/ — estructura, importes correctos, representante con nombre
-  · test_logging.py (5): middleware de logging y configuración del logger
-  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_avisos.py (6): endpoint /avisos/ — convocatorias pendientes de resolución
-  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
-  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
-  · test_privado.py (6): cambiar contraseña — contraseña actual incorrecta, nueva débil, cambio correcto, login con nueva/vieja contraseña
+  · — Autenticación y acceso —
+  · test_auth.py (10): registro, login, acceso con/sin token
   · test_verificacion_email.py (10): registro crea usuario no verificado, token en BD, email enviado, login bloqueado sin verificar, token válido activa cuenta, login tras verificar, token inválido/usado/expirado, reset activa email_verificado
   · test_refresh_token.py (7): refresh token — login devuelve token, renovación, rotación, token inválido, logout revoca, cambio contraseña revoca tokens
   · test_recuperar_password.py (9): recuperación contraseña — email existente/inexistente, token creado en BD, email enviado, reset válido, token inválido/usado/expirado, contraseña débil
-  · test_admin.py (22): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs
-  · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
-  · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
+  · test_privado.py (6): zona privada — cambiar contraseña y nombre/alias
+  · test_admin.py (24): panel de administración — control de acceso (401/403), estado del sistema, CRUD de usuarios, eliminación con cascada de tokens, protección auto-edición, gestión de avisos, reactivar aviso, historial de resueltas, protección 409 con solicitudes, logs de acceso y de error
+  · — Infraestructura —
+  · test_logging.py (5): middleware de logging y configuración del logger
+  · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
+  · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
+  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
@@ -1086,33 +1264,42 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
   · PATCH /admin/avisos/{id}/reactivar → elimina la fecha de resolución y vuelve a activar el aviso y el banner
   · DELETE /admin/avisos/{id} → elimina la convocatoria (rechaza con 409 si tiene solicitudes asociadas)
   · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
+  · GET /admin/logs/errores?n=100 → últimas N líneas de `logs/app/error.log` (máx. 500)
   · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
-✔ **medidas anti-bots y seguridad en registro** (rama 12)
+✔ **medidas anti-bots y seguridad en registro**
   · rate limiting `POST /auth/registro`: zona `registro:10m rate=5r/m`, `burst=3 nodelay`
   · honeypot: campo `sitio_web` oculto; si llega relleno → éxito falso sin crear cuenta
   · verificación de email al registrarse: tabla `verificacion_tokens`, `GET /auth/verificar`, bloqueo login con 403
   · reenvío de verificación `POST /auth/reenviar-verificacion`: invalida tokens anteriores, siempre 200
-✔ zona privada ampliada (rama 12): `privado.html` (perfil) + `exclusivo.html` (contenido exclusivo: tabla resumen, resoluciones BOE)
+✔ zona privada ampliada `privado.html` (perfil) + `exclusivo.html` (contenido exclusivo: tabla resumen, resoluciones BOE)
 ✔ panel de administración reorganizado: Avisos primero, botón "← Volver al perfil" en banner
-✔ páginas de error `404.html` y `50x.html` con imagen ilustrativa + `error_page` en Nginx (rama 13)
+✔ páginas de error `404.html` y `50x.html` con imagen ilustrativa + `error_page` en Nginx
 ✔ aviso legal (`aviso-legal.html`), política de privacidad (`privacidad.html`) y sección de cookies
 ✔ footer actualizado con aviso legal y privacidad en todas las páginas; resoluciones BOE en home pública
-✔ mejoras estadísticas y home (rama 13): gráficas home reordenadas, tasa éxito/fracaso, leyenda rosco con descripciones, tooltip desglose EPA/EELL, colores badges corregidos, KPIs centrados, top beneficiarios EPA con zoom y abreviaciones, rangos distribución importes ajustados a datos reales
-✔ modal de conclusiones por gráfica (rama 13): botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica abre un modal con la gráfica como fondo tenue y texto interpretativo encima; compartido entre home, EPAs y EELL mediante `js/modal-grafica.js`; 9 gráficas cubiertas
-✔ página Recursos renovada (rama 13): fondos de color por sección (verde/azul/ámbar/rosa), logos actualizados y normalizados, textos de descripción revisados
-✔ cron — corrección `detectar_tipo` (rama 13): añadida palabra clave `"PROTECCI"` para detectar convocatorias EPA cuyo título en BDNS usa "protección animal" en lugar de "entidades privadas/asociaciones"; resolvía que la EPA 2026 se omitía silenciosamente
-✔ cron — auto-detección de resoluciones (rama 13): nueva función `comprobar_resoluciones()` que en cada ejecución consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion=NULL`; si BDNS ya publica la fecha, la actualiza en la BD → el banner de avisos desaparece automáticamente sin intervención manual
-✔ resoluciones pendientes dinámicas en home (rama 13): `cargarPendientesResoluciones()` en `home.js` lee `/avisos/` e inyecta automáticamente entradas "Resolución pendiente de publicación" en las listas BOE de EELL y EPA; al resolverse, desaparecen solas
-
-### Pendientes
-
-- **Revisión accesibilidad (pasada ligera)**: verificar jerarquía de headings, `alt` en imágenes, landmarks semánticos. Riesgo bajo — no tocar contrastes ni tamaños de fuente antes de entrega (Miyuki).
-- **Footer**: revisar los enlaces de GitHub, Documentación y Contacto.
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki).
-- **Ficha de entidad como modal/popup** en el buscador, en lugar de navegar a página separada (Miyuki).
-- **Logs de error del backend en panel de admin**: el visor actual (`GET /admin/logs`) solo expone `logs/app/access.log`; añadir endpoint `GET /admin/logs/errores` que sirva `logs/app/error.log` (Vero).
-- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
-- **Script de instalación automática**: instala dependencias, carga BD, añade `subvencionesDGDA.local` al `/etc/hosts` (Vero).
+✔ mejoras estadísticas y home gráficas home reordenadas, tasa éxito/fracaso, leyenda rosco con descripciones, tooltip desglose EPA/EELL, colores badges corregidos, KPIs centrados, top beneficiarios EPA con zoom y abreviaciones, rangos distribución importes ajustados a datos reales
+✔ modal de conclusiones por gráfica botón "¿Qué conclusiones se sacan?" al pie de cada tarjeta de gráfica abre un modal con la gráfica como fondo tenue y texto interpretativo encima; compartido entre home, EPAs y EELL mediante `js/modal-grafica.js`; 9 gráficas cubiertas
+✔ página Recursos renovada fondos de color por sección (verde/azul/ámbar/rosa), logos actualizados y normalizados, textos de descripción revisados
+✔ cron — corrección `detectar_tipo` añadida palabra clave `"PROTECCI"` para detectar convocatorias EPA cuyo título en BDNS usa "protección animal" en lugar de "entidades privadas/asociaciones"; resolvía que la EPA 2026 se omitía silenciosamente
+✔ cron — auto-detección de resoluciones nueva función `comprobar_resoluciones()` que en cada ejecución consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion=NULL`; si BDNS ya publica la fecha, la actualiza en la BD → el banner de avisos desaparece automáticamente sin intervención manual
+✔ resoluciones pendientes dinámicas en home `cargarPendientesResoluciones()` en `home.js` lee `/avisos/` e inyecta automáticamente entradas "Resolución pendiente de publicación" en las listas BOE de EELL y EPA; al resolverse, desaparecen solas
+✔ logs de error del backend en panel de admin nuevo endpoint `GET /admin/logs/errores?n=N` que sirve `logs/app/error.log`; nueva sección en `admin.html` con borde rojo sutil; subtítulos aclaratorios en todas las secciones del panel; CSS del panel migrado de `<style>` inline a `styles.css`
+✔ toggle visibilidad de contraseña botón con icono de ojo en todos los campos de contraseña (`login.html`, `registro.html`, `privado.html`, `reset-password.html`); lógica compartida en `js/utils.js`; al volver a pulsar se oculta de nuevo
+✔ nombre/alias de usuario columna `nombre` (VARCHAR 100, nullable) en tabla `usuarios`; campo opcional en registro; `PUT /privado/cambiar-nombre` para actualizarlo desde el perfil; `GET /privado/perfil` lo expone; saludo en `privado.html` usa el nombre si existe; tabla de usuarios del panel admin muestra nombre + email cuando está definido
+✔ Makefile con targets para el día a día: `start`, `stop`, `restart`, `build`, `reset-db`, `cargar`, `test`, `logs`, `backup`, `shell-db`, `mailpit`
+✔ optimización de imágenes Docker: `backend/Dockerfile` migrado de `python:3.11` a `python:3.11-slim` (~700 MB menos); `pandas` eliminado de `requeriments.txt` (no se usaba)
+✔ script de instalación automática (`install.sh`): comprueba prerequisitos por OS, crea `.env` con SECRET_KEY aleatoria, genera certificado SSL, añade dominio a `/etc/hosts` con confirmación, detecta instalaciones existentes y no sobreescribe datos, carga el dataset en primera instalación
+✔ revisión de accesibilidad WCAG 2.2 (Bloque A–C)
+  · `--color-foco: #2E6B4F` (~5.1:1 en blanco) sustituye `--color-primario` en hover/focus interactivos (Issue 14)
+  · `aria-hidden="true"` en manchas de color decorativas de las leyendas (rosco y barras)
+  · colores primera leyenda del rosco corregidos para coincidir con el objeto `COLORES` de `home.js`
+  · `aria-current="page"` en el enlace activo del navbar en todas las páginas (ya existía; verificado)
+  · `title="Entidades Protectoras de Animales"` en el enlace EPAs del navbar en todas las páginas
+  · etiquetas de sección `<h2>` en lugar de `<span>` en los 4 bloques del panel de administración
+  · CSS `.admin-*` y `.tarjeta`/`.agrupacion-detalle` migrados de inline/ausentes a `styles.css` (Secciones 29 y 30)
+✔ footer limpio en todas las páginas
+  · eliminados enlaces "Documentación" y "Contacto" (rotos; sin página de destino real)
+  · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`
+  · estructura uniforme en las 18 páginas HTML: GitHub · Aviso legal · Privacidad
 
 ---
 
@@ -1120,13 +1307,15 @@ Fase: **backend completado · HTTPS activo · cron verificado · caché y rate l
 
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
-- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó en rama 13.
+- El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
+- El botón "Cerrar sesión" del navbar usa la clase `btn-login` (igual que "Acceder"). Antes tenía `btn-login btn-texto` o inline `background:none` que eliminaban el fondo verde pero dejaban el texto blanco, haciéndolo invisible. Corregido usando solo `btn-login` con `border: none` y `font-family: inherit` en el CSS para cubrir los defaults del elemento `<button>`.
+- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó.
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
-- CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido en rama 13 — el ranking aparecía sin formato hasta entonces.
+- CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido — el ranking aparecía sin formato hasta entonces.
 
 ---
 
-### Bugs encontrados durante la implementación del panel de administración (rama 12a)
+### Bugs encontrados durante la implementación del panel de administración
 
 Durante el desarrollo se detectaron tres bugs antes de las pruebas manuales, en la revisión del código y al ejecutar los tests:
 
@@ -1162,7 +1351,7 @@ Si el token caducaba en mitad de una sesión larga (el access token dura 60 minu
 
 ---
 
-### Tests que fallaron en la primera ejecución (rama 12a)
+### Tests que fallaron en la primera ejecución
 
 Al ejecutar `test_admin.py` por primera vez, dos tests fallaron y pusieron de manifiesto diferencias concretas entre SQLite (BD de tests) y MariaDB (BD de producción):
 
@@ -1174,23 +1363,23 @@ Al ejecutar `test_admin.py` por primera vez, dos tests fallaron y pusieron de ma
 
 ### Decisiones y problemas técnicos de implementaciones anteriores
 
-#### Cron — Supercronic incompatible con Docker + WSL2 (rama 9e)
+#### Cron — Supercronic incompatible con Docker + WSL2
 
 La primera aproximación para el scheduler fue usar [Supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores Docker. Falló con un error de fork al arrancar en el entorno Docker + WSL2 incluso con la opción `--debug`. Solución: scheduler implementado directamente en Python (`docker/cron/scripts/scheduler.py`) usando `time.sleep()` y comprobaciones de hora/día. Sin dependencias de binarios externos, sin permisos especiales, reproducible en cualquier entorno. Lección: en Docker, preferir código Python antes que binarios del sistema cuando el entorno de destino (WSL2) puede tener restricciones de llamadas al sistema.
 
-#### HTTPS — `subjectAltName` obligatorio en navegadores modernos (rama 9a)
+#### HTTPS — `subjectAltName` obligatorio en navegadores modernos
 
 Al generar el certificado autofirmado con `openssl`, es imprescindible incluir la extensión `subjectAltName (SAN)` además del `Common Name (CN)`. Chrome (desde 2017) y otros navegadores modernos rechazan certificados que no tengan el dominio también en el SAN, aunque el CN coincida exactamente. Sin SAN, el navegador muestra error de certificado aunque HTTPS esté configurado correctamente. El comando `openssl req` requiere el flag `-addext "subjectAltName=DNS:subvencionesDGDA.local"` o el uso de un archivo de extensiones.
 
-#### HTTPS — flag `-nodes` en `openssl` (rama 9a)
+#### HTTPS — flag `-nodes` en `openssl`
 
 Al generar la clave privada, hay que incluir `-nodes` (no DES) para que la clave no esté protegida por contraseña. Sin este flag, OpenSSL protege la clave con una contraseña que hay que introducir manualmente cada vez que Nginx arranca. En un contenedor Docker, el inicio es no interactivo — sin `-nodes`, Nginx se quedaría bloqueado esperando la contraseña y el contenedor no arrancaría.
 
-#### `limit_req_zone` en `default.conf` (rama 9f)
+#### `limit_req_zone` en `default.conf`
 
 La directiva `limit_req_zone` de Nginx debe ir dentro del bloque `http {}`, no dentro de un bloque `server {}`. En este proyecto la configuración se divide en archivos en `conf.d/`, que Nginx incluye automáticamente dentro del bloque `http {}` del archivo principal. Por eso colocar `limit_req_zone` al inicio de `default.conf` (fuera de cualquier bloque `server {}`) es correcto — al ser incluido, queda dentro del `http {}` implícito. Si se intentara poner dentro de un bloque `server {}`, Nginx rechazaría la configuración con error al arrancar.
 
-#### Comparar fechas UTC con MariaDB DATETIME naive (rama 9h)
+#### Comparar fechas UTC con MariaDB DATETIME naive
 
 MariaDB almacena el tipo `DATETIME` sin información de zona horaria. SQLAlchemy lo lee como un objeto `datetime` de Python sin timezone (naive). Al compararlo con `datetime.now(timezone.utc)` (que sí tiene timezone, aware), Python lanza `TypeError: can't compare offset-naive and offset-aware datetimes`. Solución: añadir UTC al datetime leído de la BD antes de comparar:
 
@@ -1202,7 +1391,7 @@ if rt.expira_en.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
 
 Esto ocurre en los endpoints `/auth/refresh` y `/auth/reset` al validar la expiración del token.
 
-#### Pydantic v2 antepone "Value error," a los mensajes de validación (rama 9g)
+#### Pydantic v2 antepone "Value error," a los mensajes de validación
 
 Cuando un `@field_validator` lanza `ValueError`, Pydantic v2 prefija automáticamente el mensaje con `"Value error, "`. En el frontend, el error llega como `{"detail": [{"msg": "Value error, La contraseña debe tener al menos 8 caracteres"}]}`. Sin limpiarlo, el usuario vería ese prefijo técnico. Solución en el JS:
 
@@ -1213,10 +1402,44 @@ alerta.textContent = raw.replace(/^Value error,\s*/i, '');
 
 Afecta a todos los endpoints que usan `@field_validator`: registro, cambiar contraseña y reset de contraseña.
 
-#### `unittest.mock.patch` — parchear el módulo que usa la función, no el que la define (rama 11b)
+#### `unittest.mock.patch` — parchear el módulo que usa la función, no el que la define
 
 Para mockear `enviar_email_recuperacion` en los tests de recuperación de contraseña, hay que parchear la referencia en el router (`backend.app.routers.auth.enviar_email_recuperacion`), no la función original en `backend.app.auth`. Cuando el router hace `from ..auth import enviar_email_recuperacion`, crea su propia referencia local a la función. Si se parchea la función en su módulo de origen, el router sigue usando su referencia local sin parchear. Regla general: parchear siempre en el módulo que usa la función, no en el que la define.
 
-#### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe (rama 11b)
+#### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe
 
 El endpoint devuelve exactamente el mismo mensaje tanto si el email está registrado como si no: `"Si ese email está registrado, recibirás un enlace en breve"`. Esto es una decisión de seguridad deliberada para evitar la enumeración de usuarios: si la respuesta fuera diferente según si el email existe, un atacante podría automatizar peticiones con listas de emails y descubrir qué cuentas están registradas en el sistema. La misma respuesta en ambos casos no filtra ninguna información.
+
+---
+
+---
+
+## Mejoras futuras
+
+Mejoras identificadas pero no planificadas para el desarrollo actual:
+
+- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando la web de infosubvenciones.es para cada convocatoria. No afecta a ninguna funcionalidad actual.
+- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
+- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
+- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
+- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
+- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
+- **Login con terceros (OAuth)** - integración con Google.
+- **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
+- **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
+- **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
+- **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
+
+---
+
+## Limitaciones conocidas del dato de origen
+
+- **Punto final en nombres de entidades**: la BDNS registra los nombres tal cual los declararon las entidades en su momento. Algunas incluyen punto final ("ASOCIACIÓN GATO AYUD.") y otras no. Es una inconsistencia de la fuente, no un bug. No se normaliza en el frontend para no crear divergencias con el CSV exportado y la API.
+
+## Pendientes
+
+- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
+- **Auditoría backend (post-entrega)**: paginación en `/admin/usuarios`, retry en cron si BDNS no responde — el resto se corrigió o es solo relevante en producción real
+- **Trampa de foco en menú hamburguesa**: el menú cierra con Esc y click fuera, pero no implementa focus trap completo (Tab no cicla dentro del menú). Mejora de accesibilidad futura.
+- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).

@@ -19,7 +19,8 @@ from ..schemas import (
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
-LOG_FILE = os.getenv("LOG_DIR", "/app/logs") + "/access.log"
+LOG_FILE       = os.getenv("LOG_DIR", "/app/logs") + "/access.log"
+LOG_FILE_ERROR = os.getenv("LOG_DIR", "/app/logs") + "/error.log"
 
 
 # ── Estado general ────────────────────────────────────────────────────────────
@@ -209,6 +210,19 @@ def ver_logs(
 ):
     try:
         with open(LOG_FILE, "r", encoding="utf-8", errors="replace") as f:
+            lineas = f.readlines()
+        return AdminLogsOut(lineas=[l.rstrip() for l in lineas[-n:]])
+    except FileNotFoundError:
+        return AdminLogsOut(lineas=["(archivo de log no disponible)"])
+
+
+@router.get("/logs/errores", response_model=AdminLogsOut)
+def ver_logs_errores(
+    n: int = Query(100, ge=1, le=500),
+    _admin: Usuario = Depends(require_rol("admin")),
+):
+    try:
+        with open(LOG_FILE_ERROR, "r", encoding="utf-8", errors="replace") as f:
             lineas = f.readlines()
         return AdminLogsOut(lineas=[l.rstrip() for l in lineas[-n:]])
     except FileNotFoundError:

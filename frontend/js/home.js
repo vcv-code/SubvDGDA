@@ -37,10 +37,10 @@ const ANIOS = [2021, 2022, 2023, 2024, 2025];
  * Valores literales porque Chart.js no acepta variables CSS.
  */
 const COLORES = {
-    verdeOscuro:    '#2E7D32',
-    verdeMedio:     '#66BB6A',
+    verdeOscuro:    '#1A3429',
+    verdeMedio:     '#2DC26C',
     verdeClaro:     '#A5D6A7',
-    verdeFondo:     'rgba(71, 192, 121, 0.15)',
+    verdeFondo:     'rgba(26, 52, 41, 0.10)',
     azul:           '#1565C0',
     concedida:      '#2E7D32',
     noBeneficiaria: '#D97706',
@@ -637,7 +637,7 @@ async function cargarAvisos() {
                 : 'fecha pendiente';
             return `
                 <div class="aviso-banner">
-                    <span class="aviso-banner__icono">📢</span>
+                    <span class="aviso-banner__icono" aria-hidden="true">📢</span>
                     <div class="aviso-banner__texto">
                         <strong>Convocatoria ${aviso.anio_convocatoria} — ${tipo}</strong>
                         <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
@@ -703,6 +703,8 @@ async function cargarConvocatorias() {
         if (notaEl) notaEl.style.display = haySeisMeses ? '' : 'none';
 
         bloque.style.display = '';
+        const seccion = document.getElementById('seccion-convocatorias');
+        if (seccion) seccion.style.display = '';
 
     } catch (_) {
         // Si falla, el bloque permanece oculto
