@@ -206,6 +206,35 @@ img {
     gap: var(--espacio-lg);
 }
 
+/* Botón hamburguesa — oculto en desktop, visible en ≤600px */
+.navbar__hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: auto;
+}
+.navbar__hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.navbar--open .navbar__hamburger span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.navbar--open .navbar__hamburger span:nth-child(2) {
+    opacity: 0;
+}
+.navbar--open .navbar__hamburger span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 /* Cada enlace: blanco semitransparente */
 .navbar__links a {
     font-size: 0.95rem;
@@ -245,22 +274,23 @@ img {
 /* Bloque de usuario (navbar.js) */
 .navbar__user-controls {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 12px;
 }
 
 /* "Mi perfil": enlace inyectado por navbar.js cuando hay sesión */
 .navbar__links a.navbar__user-link {
-    padding-bottom: 0;
-    border-bottom: none;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
     color: rgba(255, 255, 255, 0.80);
     font-size: 0.95rem;
     font-weight: 500;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
 }
 
 .navbar__links a.navbar__user-link:hover {
     color: #FFFFFF;
+    border-bottom-color: var(--color-acento);
 }
 
 
@@ -643,63 +673,85 @@ table tbody tr:hover {
     }
 }
 
-/* En pantallas pequeñas, todo pasa a 1 columna */
-@media (max-width: 900px) {
-    .navbar__links {
-        gap: var(--espacio-sm);
-    }
-    .navbar__links a {
-        font-size: 0.88rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0 var(--espacio-sm);
-    }
-    .navbar__logo {
-        font-size: 0.95rem;
-        gap: 8px;
-    }
-    .navbar__logo img {
-        height: 36px;
-    }
-    .navbar__links {
-        gap: 0.5rem;
-    }
-    .navbar__links a {
-        font-size: 0.82rem;
-    }
-    .navbar__links .btn-login {
-        padding: 6px 10px;
-        font-size: 0.82rem;
-    }
-}
 
 @media (max-width: 600px) {
     .grid-3,
     .grid-2 {
         grid-template-columns: 1fr;
     }
+}
 
+@media (max-width: 768px) {
+    /* ── Hamburguesa activa en tablet y móvil ── */
     .navbar {
-        padding: 0 var(--espacio-xs);
+        padding: 0 var(--espacio-sm);
     }
-    .navbar__logo-text {
-        display: none;
-    }
-    .navbar__logo img {
-        height: 32px;
-    }
+    .navbar__logo-text { display: block; }
+    .navbar__hamburger { display: flex; }
+
     .navbar__links {
-        gap: 0.35rem;
+        display: none;
+        position: fixed;
+        top: var(--altura-nav);
+        left: 0;
+        right: 0;
+        background-color: var(--nav-oscuro);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--espacio-md) var(--espacio-lg);
+        gap: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 999;
     }
+    .navbar--open .navbar__links { display: flex; }
+
+    .navbar__links li {
+        width: 100%;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .navbar__links li:last-child { border-bottom: none; }
+
     .navbar__links a {
-        font-size: 0.78rem;
+        font-size: 1rem;
+        padding: 14px 12px;
+        display: block;
+        border-bottom: none !important;
+        border-left: 3px solid transparent;
+        transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .navbar__links a:hover,
+    .navbar__links a.activo {
+        border-left-color: var(--color-acento);
+        color: #fff;
+        border-bottom: none !important;
+    }
+
+    .navbar__user-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 0;
+        width: 100%;
+    }
+    .navbar__user-controls .navbar__user-link {
+        padding: 14px 12px;
+        display: block;
+        font-size: 1rem;
+        border-left: 3px solid transparent;
+        transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .navbar__user-controls .navbar__user-link:hover {
+        border-left-color: var(--color-acento);
+        color: #fff;
+        border-bottom: none;
     }
     .navbar__links .btn-login {
-        padding: 5px 8px;
-        font-size: 0.78rem;
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+        padding: 7px 24px;
+        font-size: 0.85rem;
+        border-radius: 20px;
     }
 }
 
@@ -3466,8 +3518,8 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
     .pagina-inicio .portada-split__imagen img {
         object-fit: cover;
-        height: 220px;
-        object-position: 50% 40%;
+        height: clamp(240px, 55vw, 380px);
+        object-position: 50% 35%;
     }
 
     .pagina-inicio .portada-split__texto {
