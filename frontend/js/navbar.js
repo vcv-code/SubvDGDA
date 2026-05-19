@@ -38,5 +38,44 @@
         li.replaceChildren(linkPerfil, btnCerrar);
     }
 
-    document.addEventListener('DOMContentLoaded', actualizarNavbar);
+    function iniciarHamburguesa() {
+        const nav = document.querySelector('nav.navbar');
+        const btn = document.querySelector('.navbar__hamburger');
+        if (!nav || !btn) return;
+
+        btn.addEventListener('click', () => {
+            const abierto = nav.classList.toggle('navbar--open');
+            btn.setAttribute('aria-expanded', abierto);
+        });
+
+        // Cerrar al hacer click en un enlace
+        nav.querySelectorAll('.navbar__links a, .navbar__links button').forEach(el => {
+            el.addEventListener('click', () => {
+                nav.classList.remove('navbar--open');
+                btn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', e => {
+            if (!nav.contains(e.target)) {
+                nav.classList.remove('navbar--open');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                nav.classList.remove('navbar--open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.focus();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        actualizarNavbar();
+        iniciarHamburguesa();
+    });
 }());
