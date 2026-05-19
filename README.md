@@ -112,7 +112,33 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
 - `assets/` — logotipo, imágenes y wireframes en PDF
+- `scripts/` — utilidades de desarrollo (ver abajo)
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
+
+#### Scripts de desarrollo (`frontend/scripts/`)
+
+- **`color-privado.sh`** — cambia los colores del banner y fondo de `privado.html` y `exclusivo.html` sin tocar el código a mano. Edita las variables CSS `--banner-privado`, `--fondo-privado` y `--hover-privado` en `styles.css`.
+
+  ```bash
+  # Interactivo (pregunta los colores uno a uno)
+  ./frontend/scripts/color-privado.sh
+
+  # Con argumentos directos
+  ./frontend/scripts/color-privado.sh "#2D6A4F" "#FAF4EE" "#E8F2EC"
+
+  # Solo cambiar el banner, dejar el resto igual
+  ./frontend/scripts/color-privado.sh "#1A3429" "" ""
+  ```
+
+#### Variables CSS de la zona privada
+
+Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `:root` (editables con el script o a mano):
+
+| Variable | Valor actual | Uso |
+|---|---|---|
+| `--banner-privado` | `#2D6A4F` | Fondo del banner superior |
+| `--fondo-privado` | `#FAF4EE` | Fondo del cuerpo de la página |
+| `--hover-privado` | `#E8F2EC` | Hover de la tarjeta de acceso a exclusivo |
 
 ### Backend
 
@@ -564,6 +590,8 @@ El sistema usa JWT (JSON Web Tokens) con tres niveles de acceso:
 Flujo: el cliente hace POST a `/auth/login` → recibe un `access_token` (60 min) y un `refresh_token` (30 días) → envía el access token en la cabecera `Authorization: Bearer <token>`. Cuando el access token caduca, puede renovarlo con POST `/auth/refresh` sin volver a hacer login. POST `/auth/logout` revoca el refresh token en el servidor. Cambiar la contraseña también revoca todos los refresh tokens activos del usuario.
 
 Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene problemas de compatibilidad con versiones recientes de bcrypt). El registro valida que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número.
+
+El endpoint `POST /auth/reset` revoca todos los refresh tokens activos del usuario al restablecer la contraseña, igual que hace `PUT /privado/cambiar-contrasena`.
 
 #### Manejadores de error personalizados
 
@@ -1440,6 +1468,7 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 ## Pendientes
 
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
-- **Auditoría backend (post-entrega)**: paginación en `/admin/usuarios`, retry en cron si BDNS no responde — el resto se corrigió o es solo relevante en producción real
+- **Auditoría backend (post-entrega)**: paginación en `/admin/usuarios`, retry en cron si BDNS no responde — el resto se corrigió o es solo relevante en producción real.
 - **Trampa de foco en menú hamburguesa**: el menú cierra con Esc y click fuera, pero no implementa focus trap completo (Tab no cicla dentro del menú). Mejora de accesibilidad futura.
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
+- **Logs de cron en panel admin**: mostrar `bdns_check.log` y `health_check.log` en el panel de administración con el mismo estilo que los logs de acceso y error actuales. Requiere: (1) montar `../logs/cron:/app/logs/cron` en el contenedor backend y añadir `LOG_CRON_DIR: /app/logs/cron` en `docker-compose.yml`; (2) dos endpoints nuevos en `backend/app/routers/admin.py` (`GET /admin/logs/cron-bdns` y `GET /admin/logs/cron-health`); (3) dos secciones nuevas en `frontend/admin.html` y sus funciones correspondientes en `frontend/js/admin.js`.
