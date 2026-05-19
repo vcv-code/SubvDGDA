@@ -41,10 +41,10 @@ const API_URL = '';
 const ANIOS = [2021, 2022, 2023, 2024, 2025];
 
 const COLORES = {
-    verdeOscuro:  '#2E7D32',
-    verdeMedio:   '#66BB6A',
+    verdeOscuro:  '#1A3429',
+    verdeMedio:   '#2DC26C',
     verdeClaro:   '#A5D6A7',
-    azul:         '#1565C0',
+    azul:         '#1A3429',
     grisTexto:    '#616161',
     grisMedio:    '#E0E0E0',
 };
@@ -490,11 +490,8 @@ function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
 }
 
 function formatearEuros(valor) {
-    return Number(valor).toLocaleString('es-ES', {
-        style:                'currency',
-        currency:             'EUR',
-        maximumFractionDigits: 0,
-    });
+    const num = Math.round(Number(valor));
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
 }
 
 function formatearEjeY(n) {

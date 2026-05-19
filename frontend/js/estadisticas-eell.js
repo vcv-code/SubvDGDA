@@ -42,10 +42,10 @@
 const API_URL = '';
 
 const COLORES = {
-    azul:        '#1565C0',
-    azulClaro:   '#90CAF9',
-    verdeOscuro: '#2E7D32',
-    verdeMedio:  '#66BB6A',
+    azul:        '#1A3429',
+    azulClaro:   '#2DC26C',
+    verdeOscuro: '#1A3429',
+    verdeMedio:  '#2DC26C',
     grisTexto:   '#616161',
     grisMedio:   '#E0E0E0',
 };
@@ -464,11 +464,8 @@ function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
 }
 
 function formatearEuros(valor) {
-    return Number(valor).toLocaleString('es-ES', {
-        style:                'currency',
-        currency:             'EUR',
-        maximumFractionDigits: 0,
-    });
+    const num = Math.round(Number(valor));
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
 }
 
 function formatearEjeY(n) {

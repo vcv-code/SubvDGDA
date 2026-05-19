@@ -87,7 +87,7 @@ const filtroCcaa     = document.getElementById('filtro-ccaa');
 const filtroLinea    = document.getElementById('filtro-linea');
 
 const grupoCcaa      = document.getElementById('grupo-ccaa');
-const grupoProvicia  = document.getElementById('grupo-provincia');
+const grupoProvincia  = document.getElementById('grupo-provincia');
 const grupoLinea     = document.getElementById('grupo-linea');
 
 const tablaCarga     = document.getElementById('tabla-carga');
@@ -99,7 +99,8 @@ const tablaBody      = document.getElementById('tabla-body');
 const paginacion     = document.getElementById('paginacion');
 const paginaInfo     = document.getElementById('pagina-info');
 const infoResultados = document.getElementById('info-resultados');
-const tablaControles = document.getElementById('tabla-controles');
+const tablaControles  = document.getElementById('tabla-controles');
+const resultadosCard  = document.getElementById('resultados-card');
 const ordenSelect    = document.getElementById('orden-select');
 const btnDescargarCsv = document.getElementById('btn-descargar-csv');
 
@@ -300,6 +301,7 @@ function pintarTabla(solicitudes) {
     tablaWrapper.style.display   = '';
     paginacion.style.display     = '';
     if (tablaControles) tablaControles.style.display = '';
+    if (resultadosCard)  resultadosCard.style.display  = '';
     if (infoResultados && infoResultados.textContent) infoResultados.style.display = '';
 
     // Leyenda de tramos: solo si algún resultado tiene tramo
@@ -323,13 +325,16 @@ function crearFila(s) {
     tr.style.cursor = 'pointer';
 
     /**
-     * Al hacer clic navegamos a entidad.html pasando el CIF en la URL.
-     * entidad.html lo leerá con URLSearchParams para mostrar el historial.
+     * Al hacer clic abrimos el modal de entidad (Tarea 13.1).
+     * Se llama a abrirModalEntidad() definida en modal-entidad.js,
+     * pasando el CIF, el nombre y la propia fila como opener (para
+     * devolver el foco al cerrar — WCAG 2.4.3).
      */
     tr.addEventListener('click', () => {
-        const cif = s.beneficiario.cif || '';
-        if (cif) {
-            window.location.href = `entidad.html?cif=${encodeURIComponent(cif)}`;
+        const cif    = s.beneficiario.cif    || '';
+        const nombre = s.beneficiario.nombre || '';
+        if (cif && typeof window.abrirModalEntidad === 'function') {
+            window.abrirModalEntidad(cif, nombre, tr);
         }
     });
 
@@ -455,7 +460,7 @@ function actualizarFiltrosCondicionales() {
 
     // CCAA y Provincia: visibles solo para EELL
     grupoCcaa.style.display     = esEell ? '' : 'none';
-    grupoProvicia.style.display = esEell ? '' : 'none';
+    grupoProvincia.style.display = esEell ? '' : 'none';
 
     // Línea de actuación: visible solo para EPA 2025
     grupoLinea.style.display    = esEpa2025 ? '' : 'none';
@@ -500,6 +505,7 @@ function ocultarTodosEstados() {
     tablaWrapper.style.display = 'none';
     paginacion.style.display   = 'none';
     if (tablaControles)  tablaControles.style.display  = 'none';
+    if (resultadosCard)  resultadosCard.style.display   = 'none';
     if (infoResultados)  infoResultados.style.display  = 'none';
 }
 

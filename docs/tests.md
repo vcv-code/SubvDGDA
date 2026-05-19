@@ -218,6 +218,8 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 187 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos?incluir_resueltas=true` devuelve avisos activos e inactivos |
 | 188 | `test_admin.py` | Seguridad | Blanca | Aviso inexistente devuelve 404 |
 | 189 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs` devuelve una lista (aunque esté vacía) |
+| 190 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs/errores` devuelve una lista (aunque esté vacía) |
+| 191 | `test_admin.py` | Seguridad | Blanca | `GET /admin/logs/errores` con rol `registrado` devuelve 403 |
 
 ### Descripción por módulo
 
@@ -296,7 +298,7 @@ Cubre el flujo completo de verificación de email en el registro: el usuario se 
 
 #### test_admin.py
 
-Cubre el panel de administración completo: control de acceso (401 sin token, 403 con rol `registrado`), lectura del estado del sistema, CRUD de usuarios con las protecciones anti-autoedición (400 al intentar modificar la propia cuenta), y gestión completa de avisos (listar, desactivar, reactivar, eliminar, protección 409 si hay solicitudes asociadas). Detectó dos diferencias entre SQLite y MariaDB durante el desarrollo: `date(2025, 1, 1)` como tipo Python en lugar de string para columnas DATE, y `tipo_benef="asociacion"` (valor ENUM válido) en lugar de `"epa"`.
+Cubre el panel de administración completo: control de acceso (401 sin token, 403 con rol `registrado`), lectura del estado del sistema, CRUD de usuarios con las protecciones anti-autoedición (400 al intentar modificar la propia cuenta), gestión completa de avisos (listar, desactivar, reactivar, eliminar, protección 409 si hay solicitudes asociadas), y visor de logs de acceso y de error (`GET /admin/logs` y `GET /admin/logs/errores`). Detectó dos diferencias entre SQLite y MariaDB durante el desarrollo: `date(2025, 1, 1)` como tipo Python en lugar de string para columnas DATE, y `tipo_benef="asociacion"` (valor ENUM válido) en lugar de `"epa"`.
 
 #### test_unificar_datasets.py
 

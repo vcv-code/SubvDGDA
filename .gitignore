@@ -212,7 +212,9 @@ data/raw/epas/
 # Archivo de contexto local (no se versiona)
 contexto.txt
 
-# Clave privada SSL — se genera localmente con openssl, nunca se versiona
+# Certificado y clave SSL — se generan localmente, nunca se versionan
+# (cert y key deben ser del mismo par; si uno cambia el otro deja de funcionar)
+docker/ssl/server.crt
 docker/ssl/server.key
 
 # Estado del cron (generado en runtime, varía por máquina)
