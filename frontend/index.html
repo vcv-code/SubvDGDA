@@ -82,7 +82,7 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
+<body class="pagina-inicio">
 
     <!-- Enlace de salto: accesibilidad por teclado (WCAG 2.4.1) -->
     <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
@@ -118,7 +118,7 @@
             <ul class="navbar__links">
                 <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
                 <li><a href="solicitudes.html">Buscador</a></li>
-                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="login.html" class="btn-login">Acceder</a></li>
@@ -201,9 +201,9 @@
                     </a>
                 </div>
 
-                <!-- Columna derecha: imagen de animales -->
+                <!-- Columna derecha: imagen del gato -->
                 <div class="portada-split__imagen">
-                    <img src="assets/perro-gato.png" alt="Perro y gato representando el bienestar animal"
+                    <img src="assets/homebdns.webp" alt="Gestora de bienestar animal en una plaza española, con perro y gato descansando en un banco"
                         class="portada-split__imagen-real">
                 </div>
 
@@ -223,8 +223,8 @@
                     Subvenciones de Bienestar Animal (2021–2025)
                 </h2>
                 <p class="seccion-datos__subtitulo">
-                    Consulta, filtra y analiza más de 6.000 registros de entidades,
-                    importes y líneas de ayuda.
+                    Consulta, filtra y analiza miles de registros de entidades,
+                    importes y líneas de ayuda. Datos procedentes de BDNS y DGDA.
                 </p>
 
                 <!--
@@ -236,7 +236,7 @@
                 <div class="grid-3" id="metricas-grid">
 
                     <!-- Spinner de carga inicial -->
-                    <p class="estado-carga" style="grid-column: 1 / -1;" id="metricas-carga">
+                    <p class="estado-carga metricas-carga" id="metricas-carga">
                         Cargando datos…
                     </p>
 
@@ -270,12 +270,29 @@
 
                 </div>
 
-                <!-- Bloques de convocatorias por tipo -->
-                <div id="convocatorias-bloque" style="margin-top: var(--espacio-lg); display:none; text-align:center;">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:var(--espacio-sm);">Convocatorias</h3>
+            </div>
+        </section>
+
+        <!-- Sección convocatorias — oculta hasta que carga JS -->
+        <section id="seccion-convocatorias" style="display:none;">
+            <div class="contenedor">
+                <div id="convocatorias-bloque" class="convocatorias-bloque">
+                    <h3 class="sub-bloque__titulo">Convocatorias</h3>
                     <div class="grid-2">
                         <div>
-                            <p class="card-grafico__titulo" style="margin-bottom:0.5rem; text-align:center;">Entidades Locales (EELL)</p>
+                            <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Protectoras de Animales (EPA)</h3>
+                            <div class="tabla-wrapper">
+                                <table class="tabla-convoc">
+                                    <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
+                                    <tbody id="convocatorias-epa"></tbody>
+                                </table>
+                            </div>
+                            <p id="convocatorias-nota" class="convocatorias-nota" style="display:none;">
+                                * Período subvencionable de 6 meses (resto: 12 meses).
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Locales (EELL)</h3>
                             <div class="tabla-wrapper">
                                 <table class="tabla-convoc">
                                     <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
@@ -283,49 +300,38 @@
                                 </table>
                             </div>
                         </div>
-                        <div>
-                            <p class="card-grafico__titulo" style="margin-bottom:0.5rem; text-align:center;">Entidades Protectoras de Animales (EPA)</p>
-                            <div class="tabla-wrapper">
-                                <table class="tabla-convoc">
-                                    <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
-                                    <tbody id="convocatorias-epa"></tbody>
-                                </table>
-                            </div>
-                            <p id="convocatorias-nota" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--color-gris-texto);">
-                                * Período subvencionable de 6 meses (resto: 12 meses).
-                            </p>
-                        </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Resoluciones oficiales BOE -->
-                <div style="margin-top: var(--espacio-xl);">
-                    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.25rem; text-align:center;">Resoluciones oficiales</h3>
-                    <p style="text-align:center; font-size:0.9rem; color:var(--color-gris-texto); margin-bottom:var(--espacio-md);">
-                        Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
-                    </p>
-                    <div class="grid-2">
-                        <div class="privado-docs__grupo">
-                            <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
-                            <ul class="privado-docs__lista" id="resoluciones-eell">
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
-                            </ul>
-                        </div>
-                        <div class="privado-docs__grupo">
-                            <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
-                            <ul class="privado-docs__lista" id="resoluciones-epa">
-                                <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Convocatoria</a></li>
-                            </ul>
-                        </div>
+        <!-- Resoluciones oficiales BOE -->
+        <section class="seccion-resoluciones">
+            <div class="contenedor">
+                <h3 class="sub-bloque__titulo--centrado">Resoluciones oficiales</h3>
+                <p class="sub-bloque__subtitulo">
+                    Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
+                </p>
+                <div class="grid-2">
+                    <div class="privado-docs__grupo">
+                        <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
+                        <ul class="privado-docs__lista" id="resoluciones-epa">
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2021 — Resolución de concesión</a></li>
+                        </ul>
+                    </div>
+                    <div class="privado-docs__grupo">
+                        <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
+                        <ul class="privado-docs__lista" id="resoluciones-eell">
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -343,23 +349,22 @@
         <section class="fondo-stats" aria-labelledby="graficos-titulo">
             <div class="seccion contenedor">
 
-                <div style="margin-bottom: var(--espacio-lg);">
-                    <h2 style="font-size:1.6rem; font-weight:700; color:var(--color-negro);"
-                        id="graficos-titulo">
+                <div class="bloque-intro">
+                    <h2 class="bloque-titulo bloque-titulo--md" id="graficos-titulo">
                         Visión general
                     </h2>
-                    <p style="color:var(--color-gris-texto); margin-top:4px;">
+                    <p class="bloque-subtitulo">
                         Evolución, distribución y comparativa de subvenciones 2021–2025.
                     </p>
                 </div>
 
                 <!-- Fila 1: línea de evolución + barras EPA vs EELL -->
-                <div class="grid-2" style="margin-bottom: var(--espacio-lg);">
+                <div class="grid-2 mb-lg">
 
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">Evolución del importe por año</p>
+                                <h3 class="card-grafico__titulo">Evolución del importe por año</h3>
                                 <p class="card-grafico__subtitulo">Importe total concedido (EPA + EELL)</p>
                             </div>
                             <button class="btn-descargar-png" id="btn-dl-linea"
@@ -376,8 +381,46 @@
 
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
+                            <h3 class="card-grafico__titulo">Distribución por estado</h3>
+                            <button class="btn-descargar-png" id="btn-dl-donut"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de distribución como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container chart-container--donut">
+                            <canvas id="home-grafico-donut" role="img"
+                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
+                        </div>
+                        <div class="leyenda-estados leyenda-estados--vertical" id="home-leyenda-donut">
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#2E7D32;"></span>
+                                <span><strong>Concedida:</strong> obtienen la subvención</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#D97706;"></span>
+                                <span><strong>No beneficiaria:</strong> puntuación válida, pero sin presupuesto suficiente</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#C62828;"></span>
+                                <span><strong>Excluida:</strong> sin puntuación por problemas en la documentación</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#6B7280;"></span>
+                                <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Fila 2: barras EPA vs EELL -->
+                <div class="grid-2">
+
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">EPA vs EELL por año (M€)</p>
+                                <h3 class="card-grafico__titulo">EPA vs EELL por año (M€)</h3>
                                 <p class="card-grafico__subtitulo">Importe concedido por tipo de convocatoria</p>
                             </div>
                             <button class="btn-descargar-png" id="btn-dl-barras"
@@ -392,82 +435,124 @@
                         </div>
                     </div>
 
-                </div>
+                    <!-- KPI tasa de éxito / fracaso + enlace a estadísticas -->
+                    <div class="card-grafico card-grafico--col">
+                        <div>
+                            <h3 class="card-grafico__titulo">Tasa de éxito/fracaso totales</h3>
+                            <p class="card-grafico__subtitulo">Solicitudes concedidas sobre el total 2021–2025</p>
+                        </div>
 
-                <!-- Fila 2: tasa de éxito/fracaso + rosco de estados -->
-                <div class="grid-2">
-
-                    <!-- KPI tasa de éxito/fracaso + enlace a estadísticas -->
-                    <div class="card-grafico" style="display:flex; flex-direction:column;">
-                        <p class="card-grafico__titulo">Tasa de éxito/fracaso totales</p>
-                        <p class="card-grafico__subtitulo" style="margin-bottom: var(--espacio-sm);">
-                            Solicitudes concedidas sobre el total 2021–2025
-                        </p>
-
-                        <div style="flex:1; display:flex; align-items:center; justify-content:center;">
-                            <div style="display:flex; gap:3rem; justify-content:center; flex-wrap:wrap;">
-                                <div style="text-align:center;">
-                                    <p style="font-size:5.5rem; font-weight:700; color:var(--color-verde-btn); margin:0; line-height:1;"
-                                       id="home-tasa-exito">—</p>
-                                    <p style="color:var(--color-gris-texto); font-size:0.85rem; margin-top:6px;">concedidas</p>
-                                </div>
-                                <div style="text-align:center;">
-                                    <p style="font-size:5.5rem; font-weight:700; color:#C62828; margin:0; line-height:1;"
-                                       id="home-tasa-fracaso">—</p>
-                                    <p style="color:var(--color-gris-texto); font-size:0.85rem; margin-top:6px;">no concedidas</p>
-                                    <p style="color:var(--color-gris-texto); font-size:0.72rem; margin-top:3px;">(no benef. + excluídas + desistidas)</p>
-                                </div>
+                        <div class="tasa-kpi-grid">
+                            <div class="tasa-kpi-item">
+                                <p class="card-grafico__numero card-grafico__numero--exito" id="home-tasa-exito">—</p>
+                                <p class="card-grafico__nota">concedidas</p>
+                            </div>
+                            <div class="tasa-kpi-item">
+                                <p class="card-grafico__numero card-grafico__numero--fracaso" id="home-tasa-fracaso">—</p>
+                                <p class="card-grafico__nota">no concedidas</p>
+                                <p class="card-grafico__nota card-grafico__nota--xs">(no benef. + excluídas + desistidas)</p>
                             </div>
                         </div>
 
-                        <div style="margin-top:auto; padding-top: var(--espacio-md);">
-                            <a href="estadisticas-epas.html"
-                               style="display:inline-block; margin-right:12px; color:var(--color-azul); font-size:0.9rem;">
+                        <div class="card-grafico__pie">
+                            <a href="estadisticas-epas.html" class="link-estadistica">
                                 → Estadísticas EPAs
                             </a>
-                            <a href="estadisticas-eell.html"
-                               style="display:inline-block; color:var(--color-azul); font-size:0.9rem;">
+                            <a href="estadisticas-eell.html" class="link-estadistica">
                                 → Estadísticas EELL
                             </a>
                         </div>
                     </div>
 
-                    <div class="card-grafico">
-                        <div class="card-grafico__cabecera">
-                            <p class="card-grafico__titulo">Distribución por estado</p>
-                            <button class="btn-descargar-png" id="btn-dl-donut"
-                                    style="display:none;"
-                                    aria-label="Descargar gráfico de distribución como PNG">
-                                ↓ PNG
-                            </button>
-                        </div>
-                        <div class="chart-container chart-container--donut">
-                            <canvas id="home-grafico-donut" role="img"
-                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
-                        </div>
-                        <div class="leyenda-estados leyenda-estados--vertical" id="home-leyenda-donut">
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#2E7D32;"></span>
-                                <span><strong>Concedida:</strong> obtienen la subvención</span>
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#D97706;"></span>
-                                <span><strong>No beneficiaria:</strong> puntuación válida, pero sin presupuesto suficiente</span>
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#C62828;"></span>
-                                <span><strong>Excluida:</strong> sin puntuación por problemas en la documentación</span>
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" style="background-color:#6B7280;"></span>
-                                <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
-                            </div>
-                        </div>
-                    </div>
 
             </div>
         </section>
 
+
+
+        <!-- ─────────────────────────────────────────────────
+             SECCIÓN 4: POR QUÉ REGISTRARSE
+             Beneficios de crear una cuenta en la plataforma.
+             CSS en Section 34.2 de styles.css.
+             ───────────────────────────────────────────────── -->
+        <section class="seccion-registro" aria-labelledby="registro-titulo">
+            <div class="seccion-registro__contenedor">
+
+                <h2 class="seccion-registro__titulo" id="registro-titulo">
+                    ¿Por qué crear una cuenta?
+                </h2>
+                <p class="seccion-registro__subtitulo">
+                    Accede a datos y análisis exclusivos sobre subvenciones de bienestar animal,
+                    pensados para entidades, protectoras y cualquier persona interesada en la
+                    transparencia de los fondos públicos.
+                </p>
+
+                <div class="seccion-registro__grid">
+
+                    <div class="seccion-registro__card">
+                        <span class="seccion-registro__badge-disponible">Disponible</span>
+                        <!-- Icono: gráfico de barras (resumen de datos) -->
+                        <span class="seccion-registro__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="12" width="4" height="9" rx="1"/>
+                                <rect x="10" y="7" width="4" height="14" rx="1"/>
+                                <rect x="17" y="3" width="4" height="18" rx="1"/>
+                            </svg>
+                        </span>
+                        <p class="seccion-registro__card-titulo">Resumen de solicitudes</p>
+                        <p class="seccion-registro__card-texto">
+                            Tabla completa de todas las convocatorias EPA y EELL
+                            con desglose por estado e importe concedido.
+                        </p>
+                    </div>
+
+                    <div class="seccion-registro__card seccion-registro__card--proximamente">
+                        <span class="seccion-registro__badge-prox">Próximamente</span>
+                        <!-- Icono: documento con análisis -->
+                        <span class="seccion-registro__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                                <rect x="9" y="3" width="6" height="4" rx="1"/>
+                                <line x1="9" y1="12" x2="15" y2="12"/>
+                                <line x1="9" y1="16" x2="13" y2="16"/>
+                            </svg>
+                        </span>
+                        <p class="seccion-registro__card-titulo">Causas de exclusión frecuentes</p>
+                        <p class="seccion-registro__card-texto">
+                            Análisis de los motivos más comunes de exclusión
+                            por tipo de convocatoria.
+                        </p>
+                    </div>
+
+                    <div class="seccion-registro__card seccion-registro__card--proximamente">
+                        <span class="seccion-registro__badge-prox">Próximamente</span>
+                        <!-- Icono: diana / umbral -->
+                        <span class="seccion-registro__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="6"/>
+                                <circle cx="12" cy="12" r="2"/>
+                            </svg>
+                        </span>
+                        <p class="seccion-registro__card-titulo">Puntuación mínima por convocatoria</p>
+                        <p class="seccion-registro__card-texto">
+                            Umbral de puntuación a partir del cual se obtuvo
+                            concesión en cada año.
+                        </p>
+                    </div>
+
+                </div>
+
+                <a href="registro.html" class="seccion-registro__cta"
+                   aria-label="Crear cuenta gratuita en la plataforma">
+                    Regístrate
+                </a>
+
+            </div>
+        </section>
 
     </main>
 
@@ -494,11 +579,7 @@
             </div>
 
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="#">Documentación</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="mailto:">Contacto</a>
+                <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="aviso-legal.html">Aviso legal</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
@@ -514,7 +595,7 @@
                target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
 
@@ -531,6 +612,7 @@
          nada. Al colocarlo al final, el HTML ya está en
          memoria cuando el script se ejecuta.
          ===================================================== -->
+    <script src="js/navbar.js"></script>
     <!-- Chart.js debe cargarse ANTES que home.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="js/modal-grafica.js"></script>
@@ -538,4 +620,4 @@
 
 </body>
 
-</html>                
+</html>

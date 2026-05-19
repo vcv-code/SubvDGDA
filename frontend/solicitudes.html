@@ -78,7 +78,7 @@
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="solicitudes.html" class="activo" aria-current="page">Buscador</a></li>
-                <li><a href="estadisticas-epas.html">EPAs</a></li>
+                <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="login.html" class="btn-login">Acceder</a></li>
@@ -87,7 +87,7 @@
     </header>
 
 
-    <main id="contenido-principal">
+    <main id="contenido-principal" class="fondo-crema">
         <section class="seccion" aria-labelledby="buscador-titulo">
             <div class="contenedor">
 
@@ -134,7 +134,7 @@
                             NOTA: este filtro se aplica en el cliente (JS), no en la API,
                             porque el endpoint /solicitudes/ no tiene parámetro de nombre.
                         -->
-                        <div class="form-grupo" style="flex: 2; min-width: 200px;">
+                        <div class="form-grupo form-grupo--entidad">
                             <label for="filtro-nombre">Entidad</label>
                             <input
                                 type="search"
@@ -278,15 +278,15 @@
 
 
                     <!-- ── Botones de acción ── -->
-                    <div style="display:flex; gap:var(--espacio-sm); margin-top:var(--espacio-sm);">
-                        <button type="submit" class="btn btn-primario" id="btn-buscar">
+                    <div class="filtros__botones">
+                        <button type="submit" class="btn btn-primario btn--sm" id="btn-buscar">
                             Buscar
                         </button>
                         <!--
                             type="button": evita que este botón envíe el formulario.
                             Solo limpia los campos y recarga los resultados.
                         -->
-                        <button type="button" class="btn btn-secundario" id="btn-limpiar">
+                        <button type="button" class="btn btn-secundario btn--sm" id="btn-limpiar">
                             Limpiar filtros
                         </button>
                     </div>
@@ -332,23 +332,24 @@
                     Oculta hasta que haya resultados.
                 -->
                 <!-- Leyenda de tramos EELL (oculto hasta que haya resultados con tramo) -->
-                <div id="leyenda-tramos" style="display:none; margin-bottom:0.75rem; font-size:0.8rem; color:var(--color-gris-texto);">
+                <div id="leyenda-tramos" class="leyenda-tramos" style="display:none;">
                     <strong>Tramos EELL</strong> (población del municipio):
                     <span class="badge-tramo">T1</span> ≤ 10.000 hab. &nbsp;
                     <span class="badge-tramo">T2</span> 10.001 – 50.000 hab. &nbsp;
                     <span class="badge-tramo">T3</span> &gt; 50.000 hab.
                 </div>
 
-                <div class="tabla-controles" id="tabla-controles" style="display:none;">
-                    <div id="info-resultados" style="font-size:0.9rem; color:var(--color-gris-texto);">
+                <div class="resultados-card" id="resultados-card" style="display:none;">
+                <div class="tabla-controles" id="tabla-controles">
+                    <div id="info-resultados" class="info-resultados">
                         <!-- Actualizado por solicitudes.js -->
                     </div>
-                    <div style="display:flex; align-items:center; gap:var(--espacio-sm); flex-wrap:wrap;">
-                        <div class="form-grupo" style="margin:0; display:flex; flex-direction:row; align-items:center; gap:var(--espacio-xs);">
-                            <label for="orden-select" style="font-size:0.88rem; font-weight:600; white-space:nowrap;">
+                    <div class="tabla-controles__derecha">
+                        <div class="form-grupo form-grupo--orden">
+                            <label for="orden-select" class="label-orden">
                                 Orden:
                             </label>
-                            <select id="orden-select" class="form-control" style="min-width:180px;">
+                            <select id="orden-select" class="form-control select-orden">
                                 <option value="entidad-az">Entidad (A → Z)</option>
                                 <option value="importe-desc">Importe (mayor → menor)</option>
                                 <option value="importe-asc">Importe (menor → mayor)</option>
@@ -361,10 +362,9 @@
                         -->
                         <button
                             type="button"
-                            class="btn btn-secundario"
+                            class="btn btn-secundario btn--sm btn-csv"
                             id="btn-descargar-csv"
-                            title="Descargar resultados de esta página en formato CSV"
-                            style="white-space:nowrap; font-size:0.88rem;">
+                            title="Descargar resultados de esta página en formato CSV">
                             ↓ Descargar CSV
                         </button>
                     </div>
@@ -418,17 +418,18 @@
                         El formato del texto central es "Anterior | Página X de Y | Siguiente"
                         según el wireframe pagFiltros.png.
                     -->
-                    <button class="btn btn-secundario" id="btn-anterior" disabled>
+                    <button class="btn btn-secundario btn--sm" id="btn-anterior" disabled>
                         Anterior
                     </button>
 
                     <span id="pagina-info">Página 1</span>
 
-                    <button class="btn btn-secundario" id="btn-siguiente" disabled>
+                    <button class="btn btn-secundario btn--sm" id="btn-siguiente" disabled>
                         Siguiente
                     </button>
 
                 </div><!-- /paginacion -->
+                </div><!-- /resultados-card -->
 
             </div><!-- /contenedor -->
         </section>
@@ -445,11 +446,7 @@
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="#">Documentación</a>
-                <span class="footer-principal__sep" aria-hidden="true">|</span>
-                <a href="mailto:">Contacto</a>
+                <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="aviso-legal.html">Aviso legal</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
@@ -462,12 +459,88 @@
                target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>
 
 
+    <!-- ═══════════════════════════════════════════════════════════════
+         MODAL DE ENTIDAD (Tarea 13.1)
+         Se abre al hacer clic en una fila del buscador.
+         ════════════════════════════════════════════════════════════════ -->
+    <div
+        id="modal-entidad"
+        class="modal-backdrop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-nombre"
+        aria-hidden="true"
+    >
+        <div class="modal-card">
+
+            <!-- Cabecera -->
+            <div class="modal-cabecera">
+                <div>
+                    <h2 class="modal-cabecera__titulo" id="modal-nombre">—</h2>
+                    <span class="modal-cabecera__cif" id="modal-cif"></span>
+                </div>
+                <button
+                    class="modal-cerrar"
+                    id="modal-cerrar"
+                    type="button"
+                    aria-label="Cerrar ficha de entidad"
+                >×</button>
+            </div>
+
+            <!-- Cuerpo scrollable -->
+            <div class="modal-cuerpo" id="modal-cuerpo">
+
+                <!-- Datos de resumen -->
+                <div class="modal-dato">
+                    <span class="modal-dato__etiqueta">Comunidad autónoma</span>
+                    <span class="modal-dato__valor" id="modal-ccaa">—</span>
+                </div>
+                <div class="modal-dato">
+                    <span class="modal-dato__etiqueta">Total recibido (concedidas)</span>
+                    <span class="modal-dato__valor" id="modal-total-importe">—</span>
+                </div>
+                <div class="modal-dato">
+                    <span class="modal-dato__etiqueta">Nº solicitudes en el sistema</span>
+                    <span class="modal-dato__valor" id="modal-total-sols">—</span>
+                </div>
+
+                <!-- Estado de carga / error -->
+                <div class="modal-estado" id="modal-estado" aria-live="polite">
+                    Cargando datos…
+                </div>
+
+                <!-- Histórico de solicitudes -->
+                <div id="modal-historico" style="display:none;">
+                    <p class="modal-historico-titulo">Histórico de solicitudes</p>
+                    <table class="modal-historico-tabla" aria-label="Histórico de solicitudes de la entidad">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:10%; text-align:center;">Año</th>
+                                <th scope="col" style="width:30%;">Expediente</th>
+                                <th scope="col" style="width:10%; text-align:center;">Tipo</th>
+                                <th scope="col" style="width:25%;">Estado</th>
+                                <th scope="col" style="width:25%; text-align:center;">Importe</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-tabla-body"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- /MODAL DE ENTIDAD -->
+
+    <script src="js/navbar.js"></script>
+    <script src="js/modal-entidad.js"></script>
     <script src="js/solicitudes.js"></script>
 
 </body>

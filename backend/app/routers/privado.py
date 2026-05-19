@@ -5,7 +5,7 @@ from ..auth import hashear_password, verificar_password
 from ..db import get_db
 from ..dependencies import require_rol
 from ..models import Concesion, Solicitud, Convocatoria, Usuario, RefreshToken
-from ..schemas import CambiarPasswordIn, ResumenTablaOut, ResumenFilaTabla
+from ..schemas import CambiarNombreIn, CambiarPasswordIn, ResumenTablaOut, ResumenFilaTabla
 
 router = APIRouter(prefix="/privado", tags=["zona privada"])
 
@@ -16,9 +16,22 @@ def perfil(usuario: Usuario = Depends(require_rol("registrado"))):
     return {
         "id_usuario": usuario.id_usuario,
         "email": usuario.email,
+        "nombre": usuario.nombre,
         "rol": usuario.rol,
         "miembro_desde": usuario.created_at,
     }
+
+
+@router.put("/cambiar-nombre", status_code=status.HTTP_200_OK)
+def cambiar_nombre(
+    datos: CambiarNombreIn,
+    usuario: Usuario = Depends(require_rol("registrado")),
+    db: Session = Depends(get_db),
+):
+    """Establece o actualiza el nombre/alias del usuario autenticado."""
+    usuario.nombre = datos.nombre
+    db.commit()
+    return {"mensaje": "Nombre actualizado correctamente", "nombre": usuario.nombre}
 
 
 @router.put("/cambiar-contrasena", status_code=status.HTTP_200_OK)
