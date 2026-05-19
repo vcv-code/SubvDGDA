@@ -87,7 +87,7 @@
     </header>
 
 
-    <main id="contenido-principal">
+    <main id="contenido-principal" class="fondo-crema">
         <section class="seccion" aria-labelledby="buscador-titulo">
             <div class="contenedor">
 
@@ -279,14 +279,14 @@
 
                     <!-- ── Botones de acción ── -->
                     <div class="filtros__botones">
-                        <button type="submit" class="btn btn-primario" id="btn-buscar">
+                        <button type="submit" class="btn btn-primario btn--sm" id="btn-buscar">
                             Buscar
                         </button>
                         <!--
                             type="button": evita que este botón envíe el formulario.
                             Solo limpia los campos y recarga los resultados.
                         -->
-                        <button type="button" class="btn btn-secundario" id="btn-limpiar">
+                        <button type="button" class="btn btn-secundario btn--sm" id="btn-limpiar">
                             Limpiar filtros
                         </button>
                     </div>
@@ -339,7 +339,8 @@
                     <span class="badge-tramo">T3</span> &gt; 50.000 hab.
                 </div>
 
-                <div class="tabla-controles" id="tabla-controles" style="display:none;">
+                <div class="resultados-card" id="resultados-card" style="display:none;">
+                <div class="tabla-controles" id="tabla-controles">
                     <div id="info-resultados" class="info-resultados">
                         <!-- Actualizado por solicitudes.js -->
                     </div>
@@ -361,7 +362,7 @@
                         -->
                         <button
                             type="button"
-                            class="btn btn-secundario btn-csv"
+                            class="btn btn-secundario btn--sm btn-csv"
                             id="btn-descargar-csv"
                             title="Descargar resultados de esta página en formato CSV">
                             ↓ Descargar CSV
@@ -417,17 +418,18 @@
                         El formato del texto central es "Anterior | Página X de Y | Siguiente"
                         según el wireframe pagFiltros.png.
                     -->
-                    <button class="btn btn-secundario" id="btn-anterior" disabled>
+                    <button class="btn btn-secundario btn--sm" id="btn-anterior" disabled>
                         Anterior
                     </button>
 
                     <span id="pagina-info">Página 1</span>
 
-                    <button class="btn btn-secundario" id="btn-siguiente" disabled>
+                    <button class="btn btn-secundario btn--sm" id="btn-siguiente" disabled>
                         Siguiente
                     </button>
 
                 </div><!-- /paginacion -->
+                </div><!-- /resultados-card -->
 
             </div><!-- /contenedor -->
         </section>
@@ -457,7 +459,7 @@
                target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
     </footer>
@@ -519,10 +521,11 @@
                     <table class="modal-historico-tabla" aria-label="Histórico de solicitudes de la entidad">
                         <thead>
                             <tr>
-                                <th scope="col">Año</th>
-                                <th scope="col">Tipo</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col" style="text-align:right;">Importe</th>
+                                <th scope="col" style="width:10%; text-align:center;">Año</th>
+                                <th scope="col" style="width:30%;">Expediente</th>
+                                <th scope="col" style="width:10%; text-align:center;">Tipo</th>
+                                <th scope="col" style="width:25%;">Estado</th>
+                                <th scope="col" style="width:25%; text-align:center;">Importe</th>
                             </tr>
                         </thead>
                         <tbody id="modal-tabla-body"></tbody>
@@ -531,16 +534,6 @@
 
             </div>
 
-            <!-- Pie -->
-            <div class="modal-pie">
-                <a
-                    id="modal-btn-ficha"
-                    href="#"
-                    class="btn btn-verde"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >Ver ficha completa →</a>
-            </div>
 
         </div>
     </div>

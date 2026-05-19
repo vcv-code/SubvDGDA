@@ -170,9 +170,8 @@
 
                 <!-- Columna izquierda: texto -->
                 <div class="portada-split__texto">
-                    <p class="portada-split__kicker">Sobre el proyecto</p>
                     <h1 class="portada-split__titulo" id="hero-titulo">
-                        Subvenciones de Bienestar Animal
+                        Sobre el proyecto
                     </h1>
                     <p class="portada-split__descripcion">
                         Este proyecto reúne y organiza información sobre subvenciones
@@ -182,6 +181,15 @@
                         ofrecer una visión clara, estructurada y accesible de las ayudas
                         concedidas, denegadas o en trámite, facilitando tanto la consulta
                         pública como el análisis técnico.
+                    </p>
+                    <p class="portada-split__descripcion">
+                        La gestión de animales abandonados y colonias felinas es una
+                        <strong>obligación legal</strong> de los ayuntamientos y mancomunidades,
+                        reforzada por la Ley 7/2023 de bienestar animal. No obtener la subvención
+                        no les exime de cumplirla. Cabe destacar que a las entidades locales
+                        se les adelanta el dinero, mientras que las protectoras —que asumen
+                        una labor que no les corresponde legalmente— lo cobran a año vencido
+                        (tienen que adelantarlo ellas).
                     </p>
                     <!--
                         Botón con clase "btn btn-primario" (definida en styles.css).
@@ -195,7 +203,7 @@
 
                 <!-- Columna derecha: imagen del gato -->
                 <div class="portada-split__imagen">
-                    <img src="assets/perro-y-gato.jpg" alt="Gato representando el bienestar animal"
+                    <img src="assets/homebdns.webp" alt="Gestora de bienestar animal en una plaza española, con perro y gato descansando en un banco"
                         class="portada-split__imagen-real">
                 </div>
 
@@ -262,19 +270,15 @@
 
                 </div>
 
-                <!-- Bloques de convocatorias por tipo -->
-                <div id="convocatorias-bloque" class="convocatorias-bloque" style="display:none;">
+            </div>
+        </section>
+
+        <!-- Sección convocatorias — oculta hasta que carga JS -->
+        <section id="seccion-convocatorias" style="display:none;">
+            <div class="contenedor">
+                <div id="convocatorias-bloque" class="convocatorias-bloque">
                     <h3 class="sub-bloque__titulo">Convocatorias</h3>
                     <div class="grid-2">
-                        <div>
-                            <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Locales (EELL)</h3>
-                            <div class="tabla-wrapper">
-                                <table class="tabla-convoc">
-                                    <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
-                                    <tbody id="convocatorias-eell"></tbody>
-                                </table>
-                            </div>
-                        </div>
                         <div>
                             <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Protectoras de Animales (EPA)</h3>
                             <div class="tabla-wrapper">
@@ -287,37 +291,47 @@
                                 * Período subvencionable de 6 meses (resto: 12 meses).
                             </p>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Resoluciones oficiales BOE -->
-                <div class="mt-xl">
-                    <h3 class="sub-bloque__titulo--centrado">Resoluciones oficiales</h3>
-                    <p class="sub-bloque__subtitulo">
-                        Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
-                    </p>
-                    <div class="grid-2">
-                        <div class="privado-docs__grupo">
-                            <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
-                            <ul class="privado-docs__lista" id="resoluciones-eell">
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
-                            </ul>
-                        </div>
-                        <div class="privado-docs__grupo">
-                            <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
-                            <ul class="privado-docs__lista" id="resoluciones-epa">
-                                <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
-                                <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Convocatoria</a></li>
-                            </ul>
+                        <div>
+                            <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Locales (EELL)</h3>
+                            <div class="tabla-wrapper">
+                                <table class="tabla-convoc">
+                                    <thead><tr><th>Año</th><th>Fecha de convocatoria (BOE)</th><th>Acceso rápido</th></tr></thead>
+                                    <tbody id="convocatorias-eell"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
+        <!-- Resoluciones oficiales BOE -->
+        <section class="seccion-resoluciones">
+            <div class="contenedor">
+                <h3 class="sub-bloque__titulo--centrado">Resoluciones oficiales</h3>
+                <p class="sub-bloque__subtitulo">
+                    Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
+                </p>
+                <div class="grid-2">
+                    <div class="privado-docs__grupo">
+                        <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
+                        <ul class="privado-docs__lista" id="resoluciones-epa">
+                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2021 — Resolución de concesión</a></li>
+                        </ul>
+                    </div>
+                    <div class="privado-docs__grupo">
+                        <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
+                        <ul class="privado-docs__lista" id="resoluciones-eell">
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
+                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -378,22 +392,22 @@
                             <canvas id="home-grafico-donut" role="img"
                                 aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
                         </div>
-                        <div class="leyenda-estados" id="home-leyenda-donut">
+                        <div class="leyenda-estados leyenda-estados--vertical" id="home-leyenda-donut">
                             <div class="leyenda-item">
                                 <span class="leyenda-item__color" aria-hidden="true" style="background-color:#2E7D32;"></span>
-                                Concedida
+                                <span><strong>Concedida:</strong> obtienen la subvención</span>
                             </div>
                             <div class="leyenda-item">
                                 <span class="leyenda-item__color" aria-hidden="true" style="background-color:#D97706;"></span>
-                                No beneficiaria
+                                <span><strong>No beneficiaria:</strong> puntuación válida, pero sin presupuesto suficiente</span>
                             </div>
                             <div class="leyenda-item">
                                 <span class="leyenda-item__color" aria-hidden="true" style="background-color:#C62828;"></span>
-                                Excluida
+                                <span><strong>Excluida:</strong> sin puntuación por problemas en la documentación</span>
                             </div>
                             <div class="leyenda-item">
                                 <span class="leyenda-item__color" aria-hidden="true" style="background-color:#6B7280;"></span>
-                                Desistida
+                                <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
                             </div>
                         </div>
                     </div>
@@ -421,16 +435,23 @@
                         </div>
                     </div>
 
-                    <!-- KPI tasa de éxito + enlace a estadísticas -->
+                    <!-- KPI tasa de éxito / fracaso + enlace a estadísticas -->
                     <div class="card-grafico card-grafico--col">
                         <div>
-                            <h3 class="card-grafico__titulo">
-                                Tasa de éxito global
-                            </h3>
-                            <p class="card-grafico__numero" id="home-tasa-exito">—</p>
-                            <p class="card-grafico__nota">
-                                Solicitudes concedidas sobre el total 2021–2025
-                            </p>
+                            <h3 class="card-grafico__titulo">Tasa de éxito/fracaso totales</h3>
+                            <p class="card-grafico__subtitulo">Solicitudes concedidas sobre el total 2021–2025</p>
+                        </div>
+
+                        <div class="tasa-kpi-grid">
+                            <div class="tasa-kpi-item">
+                                <p class="card-grafico__numero card-grafico__numero--exito" id="home-tasa-exito">—</p>
+                                <p class="card-grafico__nota">concedidas</p>
+                            </div>
+                            <div class="tasa-kpi-item">
+                                <p class="card-grafico__numero card-grafico__numero--fracaso" id="home-tasa-fracaso">—</p>
+                                <p class="card-grafico__nota">no concedidas</p>
+                                <p class="card-grafico__nota card-grafico__nota--xs">(no benef. + excluídas + desistidas)</p>
+                            </div>
                         </div>
 
                         <div class="card-grafico__pie">
@@ -443,38 +464,6 @@
                         </div>
                     </div>
 
-                    <div class="card-grafico">
-                        <div class="card-grafico__cabecera">
-                            <p class="card-grafico__titulo">Distribución por estado</p>
-                            <button class="btn-descargar-png" id="btn-dl-donut"
-                                    style="display:none;"
-                                    aria-label="Descargar gráfico de distribución como PNG">
-                                ↓ PNG
-                            </button>
-                        </div>
-                        <div class="chart-container chart-container--donut">
-                            <canvas id="home-grafico-donut" role="img"
-                                aria-label="Gráfico de donut: distribución de solicitudes por estado"></canvas>
-                        </div>
-                        <div class="leyenda-estados leyenda-estados--vertical" id="home-leyenda-donut">
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#2E7D32;"></span>
-                                <span><strong>Concedida:</strong> obtienen la subvención</span>
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#D97706;"></span>
-                                <span><strong>No beneficiaria:</strong> puntuación válida, pero sin presupuesto suficiente</span>
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#C62828;"></span>
-                                <span><strong>Excluida:</strong> sin puntuación por problemas en la documentación</span>
-                            </div>
-                            <div class="leyenda-item">
-                                <span class="leyenda-item__color" aria-hidden="true" style="background-color:#6B7280;"></span>
-                                <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
-                            </div>
-                        </div>
-                    </div>
 
             </div>
         </section>
@@ -493,14 +482,16 @@
                     ¿Por qué crear una cuenta?
                 </h2>
                 <p class="seccion-registro__subtitulo">
-                    Accede a funciones exclusivas pensadas para entidades,
-                    investigadores y gestores de subvenciones de bienestar animal.
+                    Accede a datos y análisis exclusivos sobre subvenciones de bienestar animal,
+                    pensados para entidades, protectoras y cualquier persona interesada en la
+                    transparencia de los fondos públicos.
                 </p>
 
                 <div class="seccion-registro__grid">
 
                     <div class="seccion-registro__card">
-                        <!-- Icono: gráfico de barras (análisis/informes) -->
+                        <span class="seccion-registro__badge-disponible">Disponible</span>
+                        <!-- Icono: gráfico de barras (resumen de datos) -->
                         <span class="seccion-registro__icono" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -509,31 +500,16 @@
                                 <rect x="17" y="3" width="4" height="18" rx="1"/>
                             </svg>
                         </span>
-                        <p class="seccion-registro__card-titulo">Informes personalizados</p>
+                        <p class="seccion-registro__card-titulo">Resumen de solicitudes</p>
                         <p class="seccion-registro__card-texto">
-                            Descarga informes filtrados por entidad, año o convocatoria
-                            en formato CSV o PDF directamente desde tu panel.
+                            Tabla completa de todas las convocatorias EPA y EELL
+                            con desglose por estado e importe concedido.
                         </p>
                     </div>
 
-                    <div class="seccion-registro__card">
-                        <!-- Icono: campana de notificación (alertas) -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Alertas de convocatorias</p>
-                        <p class="seccion-registro__card-texto">
-                            Recibe notificaciones cuando se publique una nueva convocatoria
-                            de EPA o EELL en el BOE que afecte a tu entidad.
-                        </p>
-                    </div>
-
-                    <div class="seccion-registro__card">
-                        <!-- Icono: lista con historial (solicitudes) -->
+                    <div class="seccion-registro__card seccion-registro__card--proximamente">
+                        <span class="seccion-registro__badge-prox">Próximamente</span>
+                        <!-- Icono: documento con análisis -->
                         <span class="seccion-registro__icono" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -543,10 +519,28 @@
                                 <line x1="9" y1="16" x2="13" y2="16"/>
                             </svg>
                         </span>
-                        <p class="seccion-registro__card-titulo">Historial de solicitudes</p>
+                        <p class="seccion-registro__card-titulo">Causas de exclusión frecuentes</p>
                         <p class="seccion-registro__card-texto">
-                            Consulta el historial completo de solicitudes de tu entidad
-                            y compara importes concedidos a lo largo de los años.
+                            Análisis de los motivos más comunes de exclusión
+                            por tipo de convocatoria.
+                        </p>
+                    </div>
+
+                    <div class="seccion-registro__card seccion-registro__card--proximamente">
+                        <span class="seccion-registro__badge-prox">Próximamente</span>
+                        <!-- Icono: diana / umbral -->
+                        <span class="seccion-registro__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="6"/>
+                                <circle cx="12" cy="12" r="2"/>
+                            </svg>
+                        </span>
+                        <p class="seccion-registro__card-titulo">Puntuación mínima por convocatoria</p>
+                        <p class="seccion-registro__card-texto">
+                            Umbral de puntuación a partir del cual se obtuvo
+                            concesión en cada año.
                         </p>
                     </div>
 
@@ -554,7 +548,7 @@
 
                 <a href="registro.html" class="seccion-registro__cta"
                    aria-label="Crear cuenta gratuita en la plataforma">
-                    Crear cuenta gratuita
+                    Regístrate
                 </a>
 
             </div>
@@ -601,7 +595,7 @@
                target="_blank" rel="noopener noreferrer">
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
-            y la <a href="https://www.mdsocialesa2030.gob.es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
             &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
         </div>
 

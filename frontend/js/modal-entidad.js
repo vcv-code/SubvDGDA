@@ -25,24 +25,22 @@
         return;
     }
 
-    const card          = backdrop.querySelector('.modal-card');
-    const btnCerrar     = backdrop.querySelector('#modal-cerrar');
-    const elNombre      = backdrop.querySelector('#modal-nombre');
-    const elCif         = backdrop.querySelector('#modal-cif');
-    const elCcaa        = backdrop.querySelector('#modal-ccaa');
+    const btnCerrar      = backdrop.querySelector('#modal-cerrar');
+    const elNombre       = backdrop.querySelector('#modal-nombre');
+    const elCif          = backdrop.querySelector('#modal-cif');
+    const elCcaa         = backdrop.querySelector('#modal-ccaa');
     const elTotalImporte = backdrop.querySelector('#modal-total-importe');
-    const elTotalSols   = backdrop.querySelector('#modal-total-sols');
-    const elCuerpo      = backdrop.querySelector('#modal-cuerpo');
-    const elEstado      = backdrop.querySelector('#modal-estado');
-    const elHistorico   = backdrop.querySelector('#modal-historico');
-    const elTablaBody   = backdrop.querySelector('#modal-tabla-body');
-    const elBtnFicha    = backdrop.querySelector('#modal-btn-ficha');
+    const elTotalSols    = backdrop.querySelector('#modal-total-sols');
+    const elEstado       = backdrop.querySelector('#modal-estado');
+    const elHistorico    = backdrop.querySelector('#modal-historico');
+    const elTablaBody    = backdrop.querySelector('#modal-tabla-body');
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     function fmtImporte(valor) {
         if (valor === null || valor === undefined) return '—';
-        return new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(parseFloat(valor)) + ' €';
+        const [ent, dec] = parseFloat(valor).toFixed(2).split('.');
+        return ent.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + dec + ' €';
     }
 
     function badgeEstado(estado) {
@@ -82,7 +80,11 @@
     function limpiarModal() {
         if (elNombre)      elNombre.textContent       = '—';
         if (elCif)         elCif.textContent           = '—';
-        if (elCcaa)        elCcaa.textContent          = '—';
+        if (elCcaa) {
+            elCcaa.textContent = '—';
+            const bloque = elCcaa.closest('.modal-dato');
+            if (bloque) bloque.style.display = '';
+        }
         if (elTotalImporte) elTotalImporte.textContent = '—';
         if (elTotalSols)   elTotalSols.textContent     = '—';
         if (elEstado) {
@@ -92,7 +94,6 @@
         }
         if (elHistorico)   elHistorico.style.display  = 'none';
         if (elTablaBody)   elTablaBody.innerHTML       = '';
-        if (elBtnFicha)    elBtnFicha.href             = '#';
     }
 
     function rellenarModal(solicitudes, cif) {
@@ -110,9 +111,13 @@
         if (elNombre) elNombre.textContent = primera.beneficiario.nombre || cif;
         if (elCif)    elCif.textContent    = primera.beneficiario.cif   || cif;
 
-        // CCAA (puede estar en beneficiario.ccaa o ccaa directamente)
+        // CCAA — solo disponible en EELL; se oculta si está vacía
         const ccaa = primera.beneficiario.ccaa || primera.ccaa || '—';
-        if (elCcaa) elCcaa.textContent = ccaa;
+        if (elCcaa) {
+            elCcaa.textContent = ccaa;
+            const bloque = elCcaa.closest('.modal-dato');
+            if (bloque) bloque.style.display = ccaa === '—' ? 'none' : '';
+        }
 
         // Totales
         const concedidas = solicitudes.filter(s => s.estado === 'concedida');
@@ -129,28 +134,28 @@
             elTotalSols.textContent = solicitudes.length;
         }
 
-        // Enlace ficha completa
-        if (elBtnFicha) {
-            elBtnFicha.href = `entidad.html?cif=${encodeURIComponent(cif)}`;
-        }
-
         // Histórico
         if (elTablaBody) {
-            elTablaBody.innerHTML = solicitudes.map(s => {
-                const anio     = s.convocatoria.anio_convocatoria;
-                const tipo     = s.convocatoria.tipo_convoc
+            const ordenadas = [...solicitudes].sort((a, b) =>
+                b.convocatoria.anio_convocatoria - a.convocatoria.anio_convocatoria
+            );
+            elTablaBody.innerHTML = ordenadas.map(s => {
+                const anio       = s.convocatoria.anio_convocatoria;
+                const expediente = s.num_expediente || '—';
+                const tipo       = s.convocatoria.tipo_convoc
                     ? s.convocatoria.tipo_convoc.toUpperCase()
                     : '—';
-                const importe  = s.estado === 'concedida' ? fmtImporte(s.importe) : '—';
-                const tramo    = s.tramo !== null && s.tramo !== undefined
+                const importe    = s.estado === 'concedida' ? fmtImporte(s.importe) : '—';
+                const tramo      = s.tramo !== null && s.tramo !== undefined
                     ? `<span class="badge-tramo">T${s.tramo}</span>`
                     : '';
 
                 return `<tr>
-                    <td>${anio}</td>
-                    <td>${tipo}</td>
+                    <td style="text-align:center;">${anio}</td>
+                    <td class="modal-tabla__expediente">${expediente}</td>
+                    <td style="text-align:center;">${tipo}</td>
                     <td>${badgeEstado(s.estado)} ${tramo}</td>
-                    <td style="text-align:right; font-variant-numeric:tabular-nums;">${importe}</td>
+                    <td style="text-align:center; font-variant-numeric:tabular-nums;">${importe}</td>
                 </tr>`;
             }).join('');
         }
