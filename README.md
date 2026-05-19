@@ -1055,7 +1055,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤768px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA · auditoría de seguridad completada**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1103,6 +1103,8 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
   · limpiar filtros borra también los parámetros de la URL
 ✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
+✔ auditoría de seguridad backend — bcrypt rounds=12 explícito · email_verificado default=0 coherente · índices BD en estado/provincia/ccaa · TTL access token 15 min · anti-enumeración en registro (201 siempre) · 197 tests pasando
+✔ navbar hamburguesa en ≤768px — menú desplegable con animación X, rayita ámbar en hover, cierre con Esc/click fuera/click en enlace; botón añadido en las 18 páginas HTML
 ✔ panel de admin restaurado — cabeceras rojas, badges de rol/estado, botones ghost, fondo pastel rojo
 ✔ zona privada restaurada — dos columnas, privado-card, fondo pastel morado, títulos verde oscuro
 ✔ sistema de color semántico — cuatro roles diferenciados:
@@ -1438,5 +1440,6 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 ## Pendientes
 
 - **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
-- **Navbar hamburguesa en móvil**: el navbar actual es funcional en ≥600px pero en pantallas muy pequeñas (320–375px) sería mejor un menú hamburguesa con toggle JS. Patrón estándar hoy; requiere unas 40 líneas entre HTML/CSS/JS + trampa de foco para accesibilidad.
+- **Auditoría backend (post-entrega)**: paginación en `/admin/usuarios`, retry en cron si BDNS no responde — el resto se corrigió o es solo relevante en producción real
+- **Trampa de foco en menú hamburguesa**: el menú cierra con Esc y click fuera, pero no implementa focus trap completo (Tab no cicla dentro del menú). Mejora de accesibilidad futura.
 - **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).

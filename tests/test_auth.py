@@ -27,6 +27,7 @@ def test_registro_exitoso(client):
 
 
 def test_registro_email_duplicado(client):
+    # Responde 201 aunque el email ya exista (anti-enumeración)
     with patch("backend.app.routers.auth.enviar_email_verificacion"):
         client.post("/auth/registro", json=USUARIO_VALIDO)
         response = client.post("/auth/registro", json=USUARIO_VALIDO)
