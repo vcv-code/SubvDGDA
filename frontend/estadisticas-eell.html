@@ -67,7 +67,7 @@
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="buscador.html">Buscador</a></li>
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html" class="activo" aria-current="page">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
@@ -139,7 +139,7 @@
                     </div>
 
                     <div class="card-kpi">
-                        <span class="card-kpi__label">CCAA con más concesiones</span>
+                        <span class="card-kpi__label">CCAA con mayor importe concedido</span>
                         <span class="card-kpi__numero" id="kpi-ccaa-top">—</span>
                         <span class="card-kpi__tag">2023–2025</span>
                     </div>
@@ -215,74 +215,10 @@
 
 
                 <!-- ─────────────────────────────────────────────────
-                     FILA 3: RANKING CCAA + NOTA SOBRE MAPA
-                     El mapa de CCAA está pendiente de decisión técnica.
-                     Se muestra como ranking de tabla hasta que el endpoint
-                     esté disponible y se decida la librería de mapas.
+                     FILA 3: TOP 5 CCAA — IMPORTE Y CONCESIONES
+                     Mapa choropleth disponible en exclusivo.html.
                      ───────────────────────────────────────────────── -->
-                <div class="grid-2">
-
-                    <!-- Ranking CCAA por importe -->
-                    <div class="card-grafico">
-                        <div class="card-grafico__cabecera">
-                            <div>
-                                <p class="card-grafico__titulo">Ranking CCAA por importe</p>
-                                <p class="card-grafico__subtitulo">
-                                    Importe concedido acumulado por comunidad autónoma
-                                </p>
-                            </div>
-                            
-                        </div>
-                        <!--
-                            Lista HTML generada por JS.
-                            Datos esperados: por_ccaa[{ ccaa, importe_total, num_concesiones }]
-                        -->
-                        <ul class="ranking-lista" id="ranking-ccaa"
-                            aria-label="Ranking de CCAA por importe EELL concedido">
-                            <!-- Se rellena desde estadisticas-eell.js -->
-                        </ul>
-                        <div class="ranking-pendiente" id="ranking-ccaa-pendiente">Cargando...</div>
-                    </div>
-
-                    <!-- Distribución geográfica (mapa) — pendiente de decisión técnica -->
-                    <div class="card-grafico">
-                        <div class="card-grafico__cabecera">
-                            <div>
-                                <p class="card-grafico__titulo">Distribución por CCAA</p>
-                                <p class="card-grafico__subtitulo">
-                                    Mapa de calor por comunidad autónoma
-                                </p>
-                            </div>
-                            
-                        </div>
-                        <!--
-                            El PDF define un mapa de España coloreado por importe
-                            con interacción hover y click.
-                            Implementación pendiente de:
-                              1. Disponibilidad del endpoint /estadisticas/eell
-                              2. Decisión técnica: SVG inline o librería de mapas
-                            Mientras tanto se muestra el aviso informativo.
-                        -->
-                        <div class="chart-container chart-container--centrado" id="mapa-ccaa-container">
-                            <div class="mapa-placeholder">
-                                <p class="mapa-placeholder__icono">🗺️</p>
-                                <p class="mapa-placeholder__texto">
-                                    Mapa de calor por comunidad autónoma pendiente de implementación.<br>
-                                    Los datos ya están disponibles — falta integrar la librería de mapas.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div><!-- /grid-2 fila 3 -->
-
-
-                <!-- ─────────────────────────────────────────────────
-                     FILA 4: TOP 5 CCAA — IMPORTE Y CONCESIONES
-                     Ambas listas calculadas en estadisticas-eell.js a
-                     partir de por_ccaa[] — no requieren nuevo endpoint.
-                     ───────────────────────────────────────────────── -->
-                <div class="grid-2 mt-xl">
+                <div class="grid-2 mb-lg">
 
                     <!-- Top 5 CCAA por importe concedido -->
                     <div class="card-grafico">

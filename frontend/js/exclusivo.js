@@ -179,13 +179,148 @@ async function cargarResumenTabla(token) {
 }
 
 
+// ─── MAPA CCAA ────────────────────────────────────────────────────────────────
+
+async function cargarMapaCCAA() {
+    try {
+        const [respEell, respStats] = await Promise.all([
+            fetch(`${API_URL}/estadisticas/eell`),
+            fetch(`${API_URL}/estadisticas/`),
+        ]);
+        if (!respEell.ok) return;
+        const datos = await respEell.json();
+
+        // Calcular rango de años EELL dinámicamente
+        if (respStats.ok) {
+            const stats   = await respStats.json();
+            const aniosEell = (stats.por_anio || [])
+                .filter(x => x.tipo === 'eell' && x.total > 0)
+                .map(x => x.anio);
+            if (aniosEell.length) {
+                const minA = Math.min(...aniosEell);
+                const maxA = Math.max(...aniosEell);
+                const subtitulo = document.getElementById('subtitulo-mapa-ccaa');
+                if (subtitulo) {
+                    subtitulo.textContent = `Importes concedidos por comunidades autónomas (${minA}–${maxA}). Pasa el cursor por las comunidades para ver el importe total y número de concesiones, y haz clic en ellas para ver el top 10 de municipios (salvo que tengan menos).`;
+                }
+            }
+        }
+
+        if (typeof pintarMapaCCAA === 'function') {
+            setTimeout(() => pintarMapaCCAA(datos.por_ccaa || [], abrirModalCCAA), 150);
+        }
+    } catch (e) {
+        console.error('cargarMapaCCAA:', e);
+    }
+}
+
+
+// ─── MODAL TOP 10 MUNICIPIOS ──────────────────────────────────────────────────
+
+function fmtEur(v) {
+    return Math.round(Number(v)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
+}
+
+async function abrirModalCCAA(nombre) {
+    const modal = document.getElementById('modal-ccaa');
+    if (!modal) return;
+
+    document.getElementById('modal-ccaa-titulo').textContent = 'Top municipios — ' + nombre;
+    document.getElementById('modal-lista-acum').innerHTML = '<li style="color:#999;padding:.5rem 0">Cargando...</li>';
+    document.getElementById('modal-lista-anio').innerHTML  = '';
+    modal.style.display = 'flex';
+
+    try {
+        const resp = await fetch(`${API_URL}/solicitudes/?ccaa=${encodeURIComponent(nombre)}&estado=concedida&limite=500`);
+        if (!resp.ok) throw new Error();
+        const datos = await resp.json();
+        const rows  = datos.resultados || [];
+
+        // Expandir agrupaciones: obtener miembros individuales con importe_asignado
+        const agrupaciones = rows.filter(r => r.es_agrupacion);
+        const miembrosMap  = {};
+        if (agrupaciones.length) {
+            const detalles = await Promise.all(
+                agrupaciones.map(r => fetch(`${API_URL}/agrupaciones/${r.id_solic}`).then(res => res.ok ? res.json() : null))
+            );
+            detalles.forEach((det, i) => {
+                if (det && det.miembros) {
+                    miembrosMap[agrupaciones[i].id_solic] = {
+                        anio:     agrupaciones[i].convocatoria.anio_convocatoria,
+                        miembros: det.miembros,
+                    };
+                }
+            });
+        }
+
+        const acum = {}, porAnio = {};
+        rows.forEach(function(r) {
+            const anio = r.convocatoria.anio_convocatoria;
+            if (r.es_agrupacion && miembrosMap[r.id_solic]) {
+                // Distribuir entre municipios miembro
+                miembrosMap[r.id_solic].miembros.forEach(function(m) {
+                    const key = m.nombre;
+                    const imp = Number(m.importe_asignado) || 0;
+                    acum[key] = (acum[key] || 0) + imp;
+                    if (!porAnio[anio]) porAnio[anio] = {};
+                    porAnio[anio][key] = (porAnio[anio][key] || 0) + imp;
+                });
+            } else {
+                const key = r.beneficiario.nombre;
+                const imp = Number(r.importe) || 0;
+                acum[key] = (acum[key] || 0) + imp;
+                if (!porAnio[anio]) porAnio[anio] = {};
+                porAnio[anio][key] = (porAnio[anio][key] || 0) + imp;
+            }
+        });
+
+        const anios   = rows.map(r => r.convocatoria.anio_convocatoria);
+        const minAnio = anios.length ? String(Math.min(...anios)) : '—';
+        const maxAnio = anios.length ? String(Math.max(...anios)) : '—';
+        document.getElementById('modal-anio-min').textContent = minAnio;
+        document.getElementById('modal-anio-max').textContent = maxAnio;
+        document.getElementById('modal-anio-ult').textContent = maxAnio;
+
+        function top10html(obj) {
+            return Object.entries(obj)
+                .sort((a, b) => b[1] - a[1]).slice(0, 10)
+                .map(([nom, imp], i) => {
+                    const n = nom.replace(/^AYUNTAMIENTO\s+(DE\s+|DEL?\s+)?/i, '');
+                    return `<li><span class="modal-ccaa__pos">${i+1}</span>` +
+                           `<span class="modal-ccaa__nombre">${n}</span>` +
+                           `<span class="modal-ccaa__importe">${fmtEur(imp)}</span></li>`;
+                }).join('') || '<li style="color:#999">Sin datos</li>';
+        }
+
+        const listaAcum = Object.entries(acum).sort((a,b) => b[1]-a[1]);
+        const listaAnio = Object.entries(porAnio[maxAnio] || {}).sort((a,b) => b[1]-a[1]);
+
+        const notaFmt = n => `Top ${Math.min(10, n)} de ${n} municipio${n !== 1 ? 's' : ''}.`;
+        document.getElementById('modal-nota-acum').textContent = notaFmt(listaAcum.length);
+        document.getElementById('modal-nota-anio').textContent = notaFmt(listaAnio.length);
+
+        document.getElementById('modal-lista-acum').innerHTML = top10html(acum);
+        document.getElementById('modal-lista-anio').innerHTML  = top10html(porAnio[maxAnio] || {});
+
+    } catch(e) {
+        const err = '<li style="color:#c00">Error al cargar datos</li>';
+        document.getElementById('modal-lista-acum').innerHTML = err;
+        document.getElementById('modal-lista-anio').innerHTML = err;
+    }
+}
+
+function cerrarModalCCAA() {
+    const modal = document.getElementById('modal-ccaa');
+    if (modal) modal.style.display = 'none';
+}
+
+
 // ─── PUNTO DE ENTRADA ─────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
     const btnCerrar = document.getElementById('btn-cerrar-sesion');
     if (btnCerrar) btnCerrar.addEventListener('click', cerrarSesion);
 
-    // Mismo patrón que privado.js: intentar renovar ANTES de hacer peticiones
     let token = localStorage.getItem('token');
     if (!token) {
         token = await intentarRenovarToken();
@@ -196,10 +331,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Verificar que el token es válido (también redirige si está expirado)
     const perfil = await fetchAutenticado('/privado/perfil', token);
     if (!perfil) return;
 
-    // Cargar la tabla en paralelo (no bloquea si falla)
     cargarResumenTabla(token);
+    cargarMapaCCAA();
+
+    const btnCerrarModal = document.querySelector('.modal-ccaa__cerrar');
+    if (btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarModalCCAA);
+    const modalOverlay = document.getElementById('modal-ccaa');
+    if (modalOverlay) modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) cerrarModalCCAA(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModalCCAA(); });
 });
