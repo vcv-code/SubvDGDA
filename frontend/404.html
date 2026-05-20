@@ -18,7 +18,7 @@
     <meta name="description" content="La página que buscas no existe o ha sido movida.">
     <meta name="robots" content="noindex">
 
-    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
                 <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
@@ -55,31 +55,27 @@
     </header>
 
     <main id="contenido-principal" class="auth-fondo">
-        <div class="auth-page" style="text-align:center;">
+        <div class="auth-page auth-page--centrado">
 
-            <div class="auth-card auth-card--simple"
-                 style="max-width:950px; margin:0 auto;"
-                 role="main" aria-label="Página no encontrada">
+            <div class="pagina-error pagina-404" role="main" aria-label="Página no encontrada">
 
-                <div class="auth-card__formulario" style="padding:0.75rem 2rem 2rem;">
-
+                <div class="pagina-404__imagen">
                     <img src="assets/img/error404.webp"
-                         alt="Un perro y un gato han desconectado el cable — página no encontrada"
-                         style="width:100%; max-width:620px; margin:0 auto 0.4rem; display:block;">
+                         alt="Un perro y un gato han desconectado el cable — página no encontrada">
+                </div>
 
-                    <p class="auth-card__subtitulo" style="margin-bottom:0.2rem;">
+                <div class="pagina-404__contenido">
+                    <p class="auth-card__subtitulo pagina-404__texto">
                         La dirección que has introducido no existe o ha sido movida.
                     </p>
-                    <p class="auth-card__subtitulo" style="margin-bottom:1.25rem;">
+                    <p class="auth-card__subtitulo pagina-404__texto">
                         Por favor, comprueba la URL o usa el menú de navegación.
                     </p>
-
-                    <a href="index.html" class="btn btn-verde btn-auth"
-                       style="max-width:260px; margin:0 auto;">
+                    <a href="index.html" class="btn btn-verde pagina-error__btn">
                         Volver al inicio
                     </a>
-
                 </div>
+
             </div>
 
         </div>
@@ -88,7 +84,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal"
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal"
                      width="33" height="36" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>

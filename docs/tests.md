@@ -4,13 +4,13 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 195 | pytest (sin Docker) |
+| Tests automáticos | 197 | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **247** | |
+| **Total** | **249** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de los 195 tests automáticos requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 179. Con Docker completo, pasan los 195.
+Nota sobre ejecución: 16 de los 197 tests automáticos requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 181. Con Docker completo, pasan los 197.
 
 ---
 

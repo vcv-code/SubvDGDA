@@ -963,12 +963,12 @@ table tbody tr:hover {
    Bloque blanco con título centrado y tres tarjetas verdes.
    ============================================================ */
 .seccion-datos {
-    padding: var(--espacio-xl) 0;
+    padding: var(--espacio-lg) 0;
     background-color: var(--color-blanco);
 }
 
 .seccion-datos__titulo {
-    font-size: 2.2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--color-verde-btn);
     text-align: center;
@@ -1331,6 +1331,9 @@ canvas {
 .auth-page {
     width: 100%;
     max-width: 920px;
+}
+.auth-page--centrado {
+    text-align: center;
 }
 
 /* Enlace de contexto encima de la card — ancla institucional */
@@ -1727,7 +1730,7 @@ canvas {
 .fondo-stats {
     background-color: var(--color-fondo-verde);
     min-height: calc(100vh - var(--altura-nav));
-    padding-bottom: var(--espacio-xl);
+    padding: var(--espacio-lg) 0;
     overflow-x: hidden;
 }
 
@@ -2459,14 +2462,14 @@ canvas {
 /* Contenedor de avisos — fondo verde para integrarse con el hero */
 #avisos-banner {
     background-color: #DFF0E1;
-    padding: 0;
+    padding: 0.5rem 2rem;
 }
 
 #avisos-banner .aviso-banner {
-    margin: 0;
-    border-radius: 0;
+    max-width: 70%;
+    border-radius: 6px;
     border-left-width: 5px;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    margin: 0.4rem 0;
 }
 
 /* Banner de avisos: convocatorias en tramitación (sin resolución aún) */
@@ -3379,7 +3382,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     max-width: 1200px;
     margin: 0 auto;
     padding: 0;
-    grid-template-columns: 55fr 45fr;
+    grid-template-columns: 50fr 50fr;
     gap: 0;
     align-items: center;
 }
@@ -3403,14 +3406,14 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 .pagina-inicio .portada-split__titulo {
     color: var(--texto-hero);
-    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
     line-height: 1.1;
     margin-bottom: var(--espacio-sm);
 }
 
 .pagina-inicio .portada-split__descripcion {
     color: #4A5650;
-    font-size: 1.02rem;
+    font-size: 0.95rem;
     line-height: 1.75;
     margin-bottom: var(--espacio-md);
 }
@@ -3423,8 +3426,8 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .pagina-inicio .portada-split__texto .btn-primario {
     background-color: var(--color-verde-btn);
     border-radius: 50px;
-    padding: 14px 36px;
-    font-size: 1rem;
+    padding: 9px 24px;
+    font-size: 0.95rem;
     font-weight: 700;
     color: #FFFFFF;
     align-self: flex-start;
@@ -3447,7 +3450,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* ─── 33.5 IMAGEN DEL HERO — gato-portada.jpeg ──── */
 /*
-   Técnica: la imagen se carga en HTML con <img src="assets/gato-portada.jpeg">.
+   Técnica: la imagen se carga en HTML con <img src="assets/img/home/gato-portada.jpg">.
    El contenedor actúa solo como wrapper con overflow: hidden.
    La <img> usa object-fit: cover y object-position: center 10%
    para encuadrar la cabeza/torso del gato. clip-path: none — bordes limpios.
@@ -3495,6 +3498,9 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     background-color: #DFF0E1;
     min-height: auto;
 }
+.pagina-inicio .fondo-stats .seccion {
+    padding: 0;
+}
 
 /* ─── 33.9 TARJETAS DE GRÁFICOS — radio mayor, sombra cálida ────── */
 .pagina-inicio .card-grafico {
@@ -3507,7 +3513,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
    No se necesita override por .pagina-inicio. */
 
 /* ─── 33.11 RESPONSIVE HERO ──────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .pagina-inicio .portada-split__contenedor {
         grid-template-columns: 1fr;
         padding: 0;
@@ -3534,6 +3540,10 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
     .pagina-inicio .portada-split__titulo {
         font-size: 2.1rem;
+    }
+
+    .pagina-inicio .portada-split__descripcion {
+        max-width: 100%;
     }
 
     .pagina-inicio .portada-split__texto .btn-primario {
@@ -3571,6 +3581,78 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 }
 
 
+/* ─── 34.2 PÁGINAS DE ERROR (404 y 50x) ────────────────────────── */
+.pagina-error {
+    background: var(--color-blanco);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    overflow: hidden;
+    margin: 0 auto;
+    text-align: center;
+}
+.pagina-error__btn {
+    display: block;
+    width: fit-content;
+    margin: 0.75rem auto 0;
+    padding: 0.5rem 1.75rem;
+}
+
+/* ─── 34.3 PÁGINA 404 ──────────────────────────────────────────── */
+.pagina-404 {
+    max-width: 560px;
+}
+.pagina-404__imagen {
+    padding: 0 2.5rem;
+}
+.pagina-404__imagen img {
+    width: 100%;
+    display: block;
+}
+.pagina-404__contenido {
+    padding: 0.6rem 2rem 1.2rem;
+}
+.pagina-404__texto {
+    margin-bottom: 0.1rem;
+    line-height: 1.3;
+}
+
+/* ─── 34.4 PÁGINA 50x ──────────────────────────────────────────── */
+.pagina-50x {
+    max-width: 720px;
+}
+.pagina-50x__contenido {
+    padding: 2rem 1.5rem 1.75rem;
+}
+.pagina-50x__imagen {
+    width: 100%;
+    max-width: 320px;
+    display: block;
+    margin: 0.5rem auto;
+    border-radius: 12px;
+}
+.pagina-50x__titulo {
+    font-size: 1.65rem;
+    margin-bottom: 0.5rem;
+}
+.pagina-50x__texto {
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+    font-size: 1.05rem;
+}
+.pagina-50x__simpatico {
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    color: var(--color-verde-btn);
+    font-size: 1.05rem;
+}
+.pagina-50x__botones {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
 /* ─── 34.2 SECCIÓN "POR QUÉ REGISTRARSE" (index.html) ──────────── */
 /*
    Sección compacta entre los gráficos y el footer.
@@ -3579,7 +3661,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 */
 .seccion-registro {
     background-color: var(--hero-crema, #FAF4EE);
-    padding: var(--espacio-lg) 0;      /* compacto: lg en vez de xl */
+    padding: var(--espacio-lg) 0;
 }
 
 .seccion-registro__contenedor {
@@ -3590,7 +3672,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 }
 
 .seccion-registro__titulo {
-    font-size: clamp(1.3rem, 2.5vw, 1.65rem);
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--texto-hero, #132D1F);
     margin-bottom: 6px;
@@ -3601,7 +3683,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     font-size: 0.93rem;
     line-height: 1.55;
     margin-bottom: var(--espacio-md);
-    max-width: 560px;
+    max-width: 720px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -3837,14 +3919,14 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* Título principal H1/H2 dentro del bloque-intro */
 .bloque-titulo {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--color-negro);
 }
 
 /* Variante de bloque-titulo en tamaño medio (secciones internas) */
 .bloque-titulo--md {
-    font-size: 1.6rem;
+    font-size: 1.75rem;
 }
 
 /* Subtítulo descriptivo bajo el título */
@@ -3866,8 +3948,11 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* Bloque de convocatorias centrado (display:none gestionado por JS) */
 .convocatorias-bloque {
-    margin-top: var(--espacio-lg);
+    margin-top: 0;
     text-align: center;
+}
+.convocatorias-subtitulo {
+    margin-bottom: var(--espacio-md);
 }
 
 /* Variante de card-grafico__titulo con texto centrado */
@@ -3897,14 +3982,14 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* Título de sub-bloque (convocatorias, resoluciones…) */
 .sub-bloque__titulo {
-    font-size: 1.35rem;
+    font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: var(--espacio-sm);
 }
 
 /* Versión centrada del sub-bloque__titulo */
 .sub-bloque__titulo--centrado {
-    font-size: 1.35rem;
+    font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
     text-align: center;
@@ -3925,12 +4010,12 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 #seccion-convocatorias {
     background-color: #DFF0E1;
-    padding: var(--espacio-xl) 0;
+    padding: var(--espacio-lg) 0;
 }
 
 .seccion-resoluciones {
     background-color: var(--hero-crema, #FAF4EE);
-    padding: var(--espacio-xl) 0;
+    padding: var(--espacio-lg) 0;
 }
 
 /* Número grande en tarjeta resumen (ej. total concedido) */

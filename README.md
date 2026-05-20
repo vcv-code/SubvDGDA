@@ -111,7 +111,7 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
-- `assets/` — logotipo, imágenes y wireframes en PDF
+- `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
 
@@ -691,7 +691,9 @@ bash install.sh   # responde 's' para continuar
 
 El script detecta la BD existente, aplica las migraciones pendientes y reconstruye el backend. Los datos no se tocan.
 
-> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual), volver a ejecutar `bash install.sh` lo regenera automáticamente.
+> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
+>
+> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — solo existe el usuario demo `admin@demo.com` / `Admin1234!` que crea el script. Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
 
 **Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
 
@@ -1144,7 +1146,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · Verde (`#DFF0E1`): hero, convocatorias, visión general
   · Crema (`#FAF4EE`): métricas, resoluciones, registro
   · Buscador y estadísticas: fondo crema (`fondo-crema`)
-✔ imagen hero generada con IA (`homebdns.webp`, 280KB) — plaza española, gestora con chaleco, perro y gato
+✔ imagen hero (`handcat.webp`) — mano acercándose a un gato callejero; alternativas disponibles en `assets/img/home/`
 ✔ gráficas unificadas — colores `#1A3429` / `#2DC26C` en home.js, estadisticas-epas.js y estadisticas-eell.js
 ✔ formatter manual de importes — separador de miles garantizado independiente del locale del navegador
 ✔ modal de entidad en buscador (`solicitudes.html`)
@@ -1230,7 +1232,9 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · `privado.html` — zona exclusiva con control de acceso JWT
   · `admin.html` — panel de administración exclusivo para rol `admin`
 ✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
-✔ CORS habilitado en el backend para desarrollo local
+✔ CORS configurable mediante variable de entorno `CORS_ORIGINS` en `docker/.env`
+  · Desarrollo: `CORS_ORIGINS=*` (permite cualquier origen)
+  · Producción: `CORS_ORIGINS=https://mi-dominio.com` (sin tocar código)
 ✔ clave JWT segura configurada en variables de entorno (`.env`)
 ✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
 ✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF, badges de estado, desglose agrupación EELL
@@ -1328,6 +1332,24 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · eliminados enlaces "Documentación" y "Contacto" (rotos; sin página de destino real)
   · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`
   · estructura uniforme en las 18 páginas HTML: GitHub · Aviso legal · Privacidad
+✔ reorganización de assets en subcarpetas (`img/`, `img/home/`, `img/logos/`, `wireframes/`, `guia-estilo/`)
+  · todas las rutas actualizadas en los 19 HTML y en `styles.css`
+  · referencia rota a `animales-login.png` corregida; extensión `gato-portada.jpeg` → `.jpg` corregida
+✔ mejoras visuales del home (rama 18)
+  · títulos de sección unificados a `1.75rem` en toda la página
+  · paddings entre secciones revisados y uniformes (identificados con DevTools)
+  · breakpoint del hero ampliado a `1024px` para evitar texto demasiado estrecho en pantallas medias
+  · banners de avisos limitados al 70% del ancho (antes ocupaban el 100%)
+  · columnas del hero cambiadas a 50/50 (antes 55/45)
+  · subtítulo explicativo añadido a la sección "Convocatorias"
+✔ páginas de error rediseñadas
+  · `404.html`: estructura propia (`pagina-404__imagen` / `pagina-404__contenido`) para controlar el tamaño de la imagen independientemente del contenedor
+  · `50x.html`: rutas convertidas a absolutas para funcionar desde cualquier URL de la API; nuevo diseño con frase simpática, imagen y botón "Reintentar"
+  · clase base compartida `.pagina-error` extraída en `styles.css`; eliminados todos los inline styles
+✔ CSS refactorizado (rama 18)
+  · clases `.pagina-404`, `.pagina-50x` y base `.pagina-error` añadidas a `styles.css`
+  · modificador `.auth-page--centrado` extraído del HTML a CSS
+  · `.convocatorias-subtitulo` añadida para gestionar el margen desde CSS
 
 ---
 
@@ -1337,7 +1359,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
 - El botón "Cerrar sesión" del navbar usa la clase `btn-login` (igual que "Acceder"). Antes tenía `btn-login btn-texto` o inline `background:none` que eliminaban el fondo verde pero dejaban el texto blanco, haciéndolo invisible. Corregido usando solo `btn-login` con `border: none` y `font-family: inherit` en el CSS para cubrir los defaults del elemento `<button>`.
-- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó.
+- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se anuló con `min-height: auto` en el override de `.pagina-inicio .fondo-stats`.
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
 - CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido — el ranking aparecía sin formato hasta entonces.
 
@@ -1457,7 +1479,7 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
 - **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
-- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
+- **CORS con dominio específico**: cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno).
 
 ---
 
