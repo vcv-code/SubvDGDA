@@ -25,7 +25,7 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 
 > **Nota:** La paleta actual es provisional y puede revisarse durante la maquetación.
 
-![Paleta de colores](./assets/colores.png)
+![Paleta de colores](../assets/guia-estilo/colores.png)
 
 ### Colores principales
 
@@ -57,7 +57,7 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 ## 2. Tipografía
 
 **Inter** (Google Fonts) como fuente principal, con **Segoe UI** como fallback en Windows. Ideal para dashboards y tablas.
-![Tipografía](./assets/tipografia.png)
+![Tipografía](../assets/guia-estilo/tipografia.png)
 
 ### Jerarquía tipográfica
 
@@ -74,7 +74,7 @@ A continuación se presenta el logotipo provisional utilizado para el proyecto d
 
 El diseño combina un escudo dividido en dos mitades: la izquierda con un edificio institucional (referencia a la administración pública) y la derecha con las siluetas de un perro y un gato (referencia al bienestar animal). La composición en blanco y negro transmite seriedad y carácter oficial.
 
-![Logo del proyecto](./assets/logo.png)
+![Logo del proyecto](../assets/img/logo.png)
 
 ## Variantes previstas
 
@@ -182,7 +182,7 @@ Elementos clave:
 - Bloque de transparencia con KPIs secundarios.  
 - Footer institucional.
 
-![Home](./assets/home.png)  
+![Home](../assets/wireframes/home.png)  
 
 ---
 
@@ -200,7 +200,7 @@ Elementos clave:
 - Paginación inferior.  
 - Diseño orientado a lectura rápida y comparación.
 
-![Página Filtros](./assets/pagFiltros.png)
+![Página Filtros](../assets/wireframes/pagFiltros.png)
 
 ---
 
@@ -222,7 +222,7 @@ Elementos clave:
   - Líneas: evolución anual.  
 - Estructura tipo dashboard, clara y analítica.
 
-![Estadísticas](./assets/estadisticas.png)
+![Estadísticas](../assets/wireframes/estadisticas.png)
 
 ---
 
@@ -238,8 +238,8 @@ Elementos clave:
 - Enlace “Crear cuenta”.  
 - Estética minimalista y coherente con el resto del sistema.
 
-![Login](./assets/login.png)
-![Registro](./assets/registro.png)
+![Login](../assets/wireframes/login.png)
+![Registro](../assets/wireframes/registro.png)
 
 > **Nota:** Los wireframes incluyen botones de acceso con Google y GitHub. Esta funcionalidad (OAuth) no está implementada en el backend actual y se reserva como **mejora futura**. La implementación real usa únicamente email y contraseña.
 
@@ -289,7 +289,7 @@ Elementos clave:
 
 Los wireframes completos se encuentran en el documento PDF original:
 
-**`/frontend/assets/wireframes_subvenciones_bienestar_animal.pdf`**
+**`/frontend/assets/guia-estilo/wireframes_subvenciones_bienestar_animal.pdf`**
 
 ---
 

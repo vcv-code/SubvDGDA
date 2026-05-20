@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 
 from fastapi import FastAPI, Request, status
@@ -19,11 +20,12 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# En desarrollo permite llamadas desde cualquier origen (Live Server, file://, etc.).
-# En producción con dominio propio, sustituir "*" por la URL del dominio.
+# Orígenes permitidos desde variable de entorno (separados por coma).
+# Desarrollo: CORS_ORIGINS=* en .env. Producción: CORS_ORIGINS=https://mi-dominio.com
+_cors_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",")]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -27,7 +27,7 @@
 ## 1. Justificación de la stack tecnológica
 
 ### Stack elegida
-El frontend se ha construido con **HTML5 + CSS3 + JavaScript Vanilla** y se prevé añadir **Bootstrap** (diseño responsivo adicional) y **Chart.js** (gráficos) en la issue 7C.
+El frontend se ha construido con **HTML5 + CSS3 + JavaScript Vanilla** y **Chart.js** (gráficos). Bootstrap se descartó — el diseño responsive se implementó íntegramente con CSS Grid, Flexbox y variables CSS propias.
 
 ### ¿Por qué no se usa React, Vue ni Angular?
 
@@ -49,9 +49,9 @@ Esta decisión se tomó deliberadamente por tres razones:
 | Compatibilidad universal | Funciona en cualquier navegador moderno sin transpilación |
 | Mantenimiento sencillo | No hay `node_modules` que actualizar ni versiones de framework |
 
-### Bootstrap y Chart.js (issue 7C)
+### Chart.js (issue 7C)
 
-Estas dos librerías se importan desde CDN (Content Delivery Network) directamente en el HTML, sin necesidad de instalación local. Son herramientas ampliamente usadas en el sector profesional y reconocibles en la defensa del proyecto.
+Chart.js se importa desde CDN directamente en los HTML que la necesitan, sin instalación local. Bootstrap se evaluó pero se descartó: el diseño responsive se resolvió con CSS Grid y Flexbox propios, evitando dependencias externas innecesarias.
 
 ---
 
@@ -76,11 +76,13 @@ frontend/
 │   └── reset-password.js        → Validación y envío de la nueva contraseña
 │
 ├── assets/
-│   ├── logo.png                → Logotipo del proyecto (también usado como favicon)
-│   ├── perro-gato.png          → Foto para la portada (portada-split)
-│   ├── animales-login.png      → Foto decorativa en login.html
-│   ├── animales-registro.png   → Foto decorativa en registro.html
-│   └── wireframes_...pdf       → Wireframes de referencia (issue 7A)
+│   ├── img/
+│   │   ├── logo.png            → Logotipo del proyecto (favicon y navbar)
+│   │   ├── error404.webp       → Imagen ilustrativa de la página 404
+│   │   ├── home/               → Imágenes de portada (handcat.webp y alternativas)
+│   │   └── logos/              → Logos de entidades (recursos.html)
+│   ├── wireframes/             → Capturas de diseño por pantalla (PNG)
+│   └── guia-estilo/            → Paleta, tipografía y PDF de wireframes completos
 │
 ├── index.html               → Página de inicio (Home) — métricas + gráficos generales
 ├── solicitudes.html         → Buscador de solicitudes con filtros
@@ -1752,7 +1754,7 @@ Neutralizado en la sesión de unificación: todos los estilos se migraron a **Se
 - Botón CTA: `border-radius: 50px`, `padding: 14px 36px`, verde brillante.
 
 #### 33.5 — Imagen del hero (`<img>` HTML directo, sin clip-path)
-La imagen se carga mediante una etiqueta `<img>` real en el HTML: `<img src="assets/gato-portada.jpeg">`. El contenedor `.portada-split__imagen` **no usa** `background-image` en CSS — la imagen es visible y semánticamente accesible. `object-fit: cover` con `object-position: center 10%` encuadra la cabeza/torso del gato. `clip-path: none` — bordes limpios sin recorte. `opacity: 1` — la imagen es completamente visible.
+La imagen se carga mediante una etiqueta `<img>` real en el HTML: `<img src="assets/img/home/handcat.webp">`. El contenedor `.portada-split__imagen` **no usa** `background-image` en CSS — la imagen es visible y semánticamente accesible. `object-fit: cover` mantiene la proporción sin deformar. Las imágenes alternativas están disponibles en `assets/img/home/`.
 
 #### 33.6–33.9 — Secciones y tarjetas
 - Sección datos: fondo `#FDFAF5` (crema suave).
