@@ -2211,7 +2211,7 @@ canvas {
 }
 
 .privado-seccion__titulo {
-    font-size: 1.15rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--nav-oscuro);
     margin: 0 0 0.4rem;
@@ -2250,67 +2250,77 @@ canvas {
 .privado-banner__volver {
     display: inline-block;
     margin-top: var(--espacio-sm);
-    padding: .4rem 1rem;
-    color: rgba(255, 255, 255, 0.9);
+    padding: .4rem 1.1rem;
+    color: #fff;
     text-decoration: none;
-    border: 1.5px solid rgba(255, 255, 255, .4);
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.55);
     border-radius: 20px;
     font-size: .85rem;
-    font-weight: 500;
-    transition: background 0.2s ease;
+    font-weight: 600;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .privado-banner__volver:hover {
-    background: rgba(255, 255, 255, .15);
-    color: #fff;
+    background:   rgba(255,255,255,0.32);
+    border-color: rgba(255,255,255,0.85);
+    color:        #fff;
 }
 
 /* Tarjeta de acceso al área de contenido exclusivo */
 .privado-acceso-exclusivo {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    background: #fff;
-    border: 2px solid var(--banner-privado);
-    border-radius: 10px;
-    padding: 1.2rem 1.5rem;
+    display:         flex;
+    align-items:     center;
+    gap:             1.2rem;
+    background:      var(--color-fondo-verde);
+    border:          2px solid var(--color-verde-btn);
+    border-radius:   10px;
+    padding:         1.2rem 1.5rem;
     text-decoration: none;
-    color: var(--color-negro);
-    transition: background 0.15s, box-shadow 0.15s;
-    margin-bottom: 0.5rem;
+    color:           var(--color-negro);
+    box-shadow:      0 2px 8px rgba(46,125,50,0.12);
+    transition:      background 0.18s, box-shadow 0.18s, border-color 0.18s;
+    margin-bottom:   0.5rem;
 }
 
 .privado-acceso-exclusivo:hover {
-    background: var(--hover-privado);
-    box-shadow: 0 2px 8px rgba(139,46,22,0.15);
+    background:   #c8efc8;
+    border-color: var(--nav-oscuro);
+    box-shadow:   0 4px 16px rgba(46,125,50,0.22);
 }
 
 .privado-acceso-exclusivo__icono {
-    font-size: 2rem;
+    font-size:  2rem;
     flex-shrink: 0;
 }
 
 .privado-acceso-exclusivo__texto {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex:            1;
+    display:         flex;
+    flex-direction:  column;
+    gap:             4px;
 }
 
 .privado-acceso-exclusivo__texto strong {
     font-size: 1rem;
-    color: var(--nav-oscuro);
+    color:     var(--nav-oscuro);
+    font-weight: 700;
 }
 
 .privado-acceso-exclusivo__texto span {
     font-size: 0.875rem;
-    color: var(--color-gris-texto);
+    color:     var(--color-gris-texto);
 }
 
 .privado-acceso-exclusivo__flecha {
-    font-size: 1.4rem;
-    color: var(--color-verde-btn);
+    font-size:   1.4rem;
+    color:       var(--color-verde-btn);
     flex-shrink: 0;
+    transition:  transform 0.2s ease;
+}
+
+.privado-acceso-exclusivo:hover .privado-acceso-exclusivo__flecha {
+    transform: translateX(5px);
 }
 
 /* Mensaje de éxito al cambiar contraseña */
@@ -2343,7 +2353,7 @@ canvas {
 }
 
 .resumen-tabla th {
-    background: var(--color-verde-tabla);
+    background: var(--nav-oscuro);
     color: #fff;
     font-weight: 600;
     font-size: 0.82rem;
@@ -2778,20 +2788,23 @@ canvas {
 }
 
 .admin-banner__volver {
-    display: inline-block;
-    margin-top: var(--espacio-sm);
-    font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.85);
+    display:         inline-block;
+    margin-top:      var(--espacio-sm);
+    font-size:       0.88rem;
+    font-weight:     600;
+    color:           #fff;
     text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    padding: 4px 14px;
-    border-radius: var(--radio-btn);
-    transition: background-color 0.2s;
+    background:      rgba(255, 255, 255, 0.15);
+    border:          1px solid rgba(255, 255, 255, 0.45);
+    padding:         4px 14px;
+    border-radius:   var(--radio-btn);
+    transition:      background 0.2s, border-color 0.2s;
 }
 
 .admin-banner__volver:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: var(--color-blanco);
+    background:   rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.8);
+    color:        #fff;
 }
 
 /* ── Cuerpo: fondo gris claro ── */
@@ -3739,6 +3752,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 /* Variante de card para contenido próximo */
 .seccion-registro__card--proximamente {
     border-top-color: var(--color-gris-texto);
+    
     opacity: 0.75;
     position: relative;
 }
@@ -3779,8 +3793,8 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     background-color: var(--color-acento);
     color: #FFFFFF;
     font-weight: 700;
-    font-size: 0.95rem;
-    padding: 12px 40px;
+    font-size: 1.1rem;
+    padding: 9px 40px;
     border-radius: 50px;
     text-decoration: none;
     letter-spacing: 0.01em;
@@ -3836,10 +3850,10 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* ═══════════════════════════════════════════════════════════════════
    SECCIÓN 35 — REFACTOR INLINE STYLES (Tarea 13.2)
-   Clases extraídas de atributos style="" de solicitudes.html e index.html.
+   Clases extraídas de atributos style="" de buscador.html e index.html.
    ─────────────────────────────────────────────────────────────────── */
 
-/* 35.0 solicitudes.html — buscador de entidades */
+/* 35.0 buscador.html — buscador de entidades */
 
 /* Campo de búsqueda de entidad: ocupa más espacio que los demás filtros */
 .form-grupo--entidad {
@@ -4116,7 +4130,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* ═══════════════════════════════════════════════════════════════════
    SECCIÓN 36 — MODAL DE ENTIDAD
-   Ficha resumen de entidad abierta desde solicitudes.html.
+   Ficha resumen de entidad abierta desde buscador.html.
    Backdrop semitransparente + card centrada + animación fade+scale.
    ─────────────────────────────────────────────────────────────────── */
 
@@ -4207,7 +4221,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .modal-cerrar:hover,
 .modal-cerrar:focus-visible {
     color: var(--color-texto);
-    background-color: var(--color-fondo);
+    background-color: var(--color-fondo-verde);
     outline: 2px solid var(--color-verde);
     outline-offset: 2px;
 }
@@ -4306,7 +4320,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     justify-content: flex-end;
     gap: var(--espacio-sm);
     flex-shrink: 0;
-    background-color: var(--color-fondo);
+    background-color: var(--color-fondo-verde);
 }
 
 /* 36.10 Responsive: móvil */
@@ -4327,4 +4341,237 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     .modal-pie {
         padding: var(--espacio-sm);
     }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SECCIÓN 37 — MAPA DE CALOR CCAA
+   estadisticas-eell.html — choropleth Leaflet + GeoJSON
+   ═══════════════════════════════════════════════════════════════ */
+
+.mapa-ccaa-wrapper {
+    position: relative;
+    width:    100%;
+}
+
+#mapa-ccaa {
+    height:           640px;
+    width:            100%;
+    border-radius:    8px;
+    background-color: var(--color-fondo-verde);
+}
+
+.mapa-leyenda {
+    background-color: var(--color-blanco);
+    padding:          10px 14px;
+    border-radius:    6px;
+    box-shadow:       0 2px 8px rgba(0, 0, 0, 0.14);
+    font-family:      'Inter', sans-serif;
+    font-size:        0.78rem;
+    line-height:      1.5;
+    color:            var(--color-gris-texto);
+}
+
+.mapa-leyenda__titulo {
+    font-weight:    600;
+    font-size:      0.74rem;
+    margin:         0 0 6px 0;
+    color:          var(--color-negro);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mapa-leyenda__fila {
+    display:       flex;
+    align-items:   center;
+    gap:           8px;
+    margin-bottom: 3px;
+}
+
+.mapa-leyenda__color {
+    display:       inline-block;
+    width:         14px;
+    height:        14px;
+    border-radius: 3px;
+    flex-shrink:   0;
+    border:        1px solid rgba(0, 0, 0, 0.08);
+}
+
+.leaflet-tooltip {
+    font-family:      'Inter', sans-serif;
+    font-size:        0.82rem;
+    line-height:      1.5;
+    border:           none !important;
+    border-radius:    6px;
+    box-shadow:       0 2px 10px rgba(0, 0, 0, 0.16);
+    padding:          8px 12px;
+    color:            var(--color-negro);
+    background-color: var(--color-blanco);
+}
+
+.leaflet-tooltip::before {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    #mapa-ccaa { height: 400px; }
+}
+
+@media (max-width: 480px) {
+    #mapa-ccaa { height: 320px; border-radius: 6px; }
+}
+
+/* Etiquetas de nombre sobre las CCAA del mapa */
+.mapa-label {
+    pointer-events: none;
+    transform:      translate(-50%, -50%);
+    text-align:     center;
+}
+.mapa-label-badge {
+    display:          inline-block;
+    font-family:      'Inter', sans-serif;
+    font-size:        0.65rem;
+    font-weight:      600;
+    color:            #1A1A1A;
+    white-space:      nowrap;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding:          1px 5px;
+    border-radius:    3px;
+    box-shadow:       0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Eliminar artefactos de bordes entre tiles al hacer zoom en Leaflet */
+.leaflet-tile {
+    border: none;
+    outline: none;
+}
+.leaflet-tile-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+/* Indicador de nivel de zoom del mapa */
+.mapa-zoom-indicator {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding:          4px 8px;
+    border-radius:    4px;
+    font-family:      'Inter', sans-serif;
+    font-size:        0.72rem;
+    font-weight:      600;
+    color:            var(--color-gris-texto);
+    box-shadow:       0 1px 4px rgba(0,0,0,0.15);
+    pointer-events:   none;
+}
+
+/* Fix agresivo para líneas entre tiles Leaflet */
+.leaflet-container {
+    background: #e8e0d4;
+}
+.leaflet-tile-pane img {
+    margin: -1px;
+    padding: 1px;
+}
+
+/* Eliminar outline de foco al clicar polígonos Leaflet */
+.leaflet-interactive:focus {
+    outline: none;
+}
+
+/* Modal top 10 municipios (exclusivo.html) */
+.modal-ccaa {
+    position:        fixed;
+    inset:           0;
+    background:      rgba(0,0,0,0.5);
+    z-index:         2000;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    padding:         1rem;
+}
+.modal-ccaa__panel {
+    background:    var(--color-blanco);
+    border-radius: 16px;
+    box-shadow:    0 8px 40px rgba(0,0,0,0.2);
+    width:         100%;
+    max-width:     680px;
+    max-height:    80vh;
+    overflow-y:    auto;
+}
+.modal-ccaa__cabecera {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    padding:         1.25rem 1.5rem 0.75rem;
+    border-bottom:   1px solid var(--color-gris-claro);
+}
+.modal-ccaa__titulo {
+    font-size:   1.1rem;
+    font-weight: 700;
+    color:       var(--nav-oscuro);
+    margin:      0;
+}
+.modal-ccaa__cerrar {
+    background: none;
+    border:     none;
+    font-size:  1.4rem;
+    cursor:     pointer;
+    color:      var(--color-gris-texto);
+    line-height: 1;
+    padding:    0 0.25rem;
+}
+.modal-ccaa__cerrar:hover { color: var(--color-negro); }
+.modal-ccaa__cuerpo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:     1.5rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+.modal-ccaa__col-titulo {
+    font-size:     0.78rem;
+    font-weight:   700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color:         var(--color-gris-texto);
+    margin:        0 0 0.75rem;
+}
+.modal-ccaa__lista {
+    list-style: none;
+    margin:     0;
+    padding:    0;
+}
+.modal-ccaa__lista li {
+    display:       flex;
+    align-items:   baseline;
+    gap:           0.5rem;
+    padding:       0.35rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size:     0.85rem;
+}
+.modal-ccaa__lista li:last-child { border-bottom: none; }
+.modal-ccaa__pos {
+    font-size:   0.72rem;
+    font-weight: 700;
+    color:       var(--color-gris-texto);
+    min-width:   1.2rem;
+}
+.modal-ccaa__nombre {
+    flex:        1;
+    color:       var(--color-negro);
+    font-size:   0.82rem;
+}
+.modal-ccaa__importe {
+    font-weight: 600;
+    color:       var(--color-verde-btn);
+    white-space: nowrap;
+}
+
+.modal-ccaa__col-nota {
+    font-size:  0.73rem;
+    color:      var(--color-gris-texto);
+    margin:     -0.25rem 0 0.5rem;
+    font-style: italic;
+}
+
+.seccion-registro__card-titulo--spaced {
+    margin-top: 1rem;
 }

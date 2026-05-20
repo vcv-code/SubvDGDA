@@ -80,8 +80,7 @@ const graficoTopProvincias   = document.getElementById('grafico-top-provincias')
 const concentracionPendiente = document.getElementById('concentracion-pendiente');
 const graficoConcentracion   = document.getElementById('grafico-concentracion');
 
-const rankingCcaa            = document.getElementById('ranking-ccaa');
-const rankingCcaaPendiente   = document.getElementById('ranking-ccaa-pendiente');
+// ranking-ccaa movido a exclusivo.html — estos elementos ya no existen en esta página
 
 
 // ─────────────────────────────────────────────────────────────
@@ -120,7 +119,6 @@ async function cargarEstadisticasEell() {
         poblarKpis(datos);
         poblarGraficoTopProvincias(datos.top_provincias   || []);
         poblarGraficoConcentracion(datos.concentracion    || {});
-        poblarRankingCcaa(datos.por_ccaa                  || []);
         poblarTop5Ccaa(datos.por_ccaa                     || []);
         poblarTop5Concesiones(datos.por_ccaa              || []);
 
@@ -285,49 +283,7 @@ function poblarGraficoConcentracion(concentracion) {
 }
 
 
-// ─────────────────────────────────────────────────────────────
-// FUNCIÓN: poblarRankingCcaa
-// Lista HTML: ranking de CCAA por importe concedido.
-// ─────────────────────────────────────────────────────────────
-/**
- * poblarRankingCcaa(porCcaa)
- * Ordena el array por importe_total y construye un <li> por CCAA.
- * Muestra posición, nombre e importe.
- *
- * @param {Array} porCcaa - [{ ccaa, importe_total, num_concesiones }, ...]
- */
-function poblarRankingCcaa(porCcaa) {
-    if (!porCcaa.length || !rankingCcaa) return;
-    if (rankingCcaaPendiente) rankingCcaaPendiente.style.display = 'none';
-
-    const ordenadas = [...porCcaa]
-        .sort((a, b) => b.importe_total - a.importe_total)
-        .slice(0, 10);
-
-    rankingCcaa.innerHTML = '';
-
-    ordenadas.forEach((d, i) => {
-        const li = document.createElement('li');
-        li.className = 'ranking-item';
-
-        const posicion = document.createElement('span');
-        posicion.className   = 'ranking-item__posicion';
-        posicion.textContent = `${i + 1}`;
-
-        const nombre = document.createElement('span');
-        nombre.className   = 'ranking-item__nombre';
-        nombre.textContent = d.ccaa;
-
-        const importe = document.createElement('span');
-        importe.className   = 'ranking-item__valor';
-        importe.textContent = formatearEuros(d.importe_total);
-
-        li.appendChild(posicion);
-        li.appendChild(nombre);
-        li.appendChild(importe);
-        rankingCcaa.appendChild(li);
-    });
-}
+// poblarRankingCcaa eliminada — el ranking CCAA se muestra en exclusivo.html
 
 
 // ─────────────────────────────────────────────────────────────
