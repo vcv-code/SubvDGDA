@@ -3447,7 +3447,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 /* ─── 33.5 IMAGEN DEL HERO — gato-portada.jpeg ──── */
 /*
-   Técnica: la imagen se carga en HTML con <img src="assets/gato-portada.jpeg">.
+   Técnica: la imagen se carga en HTML con <img src="assets/img/home/gato-portada.jpg">.
    El contenedor actúa solo como wrapper con overflow: hidden.
    La <img> usa object-fit: cover y object-position: center 10%
    para encuadrar la cabeza/torso del gato. clip-path: none — bordes limpios.
@@ -3570,6 +3570,37 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     padding: 0.5rem 1.75rem 1.75rem !important;
 }
 
+
+/* ─── 34.2 PÁGINA 404 ──────────────────────────────────────────── */
+.pagina-404 {
+    background: var(--color-blanco);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    overflow: hidden;
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+}
+.pagina-404__imagen {
+    padding: 0 1.5rem;
+}
+.pagina-404__imagen img {
+    width: 100%;
+    display: block;
+}
+.pagina-404__contenido {
+    padding: 0.6rem 2rem 1.2rem;
+}
+.pagina-404__texto {
+    margin-bottom: 0.1rem;
+    line-height: 1.3;
+}
+.pagina-404__btn {
+    display: block;
+    width: fit-content;
+    margin: 0.75rem auto 0;
+    padding: 0.4rem 1.25rem;
+}
 
 /* ─── 34.2 SECCIÓN "POR QUÉ REGISTRARSE" (index.html) ──────────── */
 /*
