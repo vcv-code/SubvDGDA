@@ -685,7 +685,7 @@ async function cargarConvocatorias() {
                     const pendiente  = c.fecha_resolucion === null && c.fecha_convocatoria !== null;
                     const accion     = pendiente
                         ? `<span class="convoc-pendiente">Pendiente de resolución</span>`
-                        : `<a href="solicitudes.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm">Ver →</a>`;
+                        : `<a href="buscador.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm">Ver →</a>`;
                     return `<tr>
                         <td>${c.anio_convocatoria}${asterisco}</td>
                         <td>${fechaStr}</td>
