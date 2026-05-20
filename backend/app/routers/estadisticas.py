@@ -19,8 +19,9 @@ router = APIRouter(prefix="/estadisticas", tags=["estadisticas"])
 @router.get("/", response_model=EstadisticasOut)
 def get_estadisticas(response: Response, db: Session = Depends(get_db)):
     """
-    Devuelve totales agregados por año y tipo para los gráficos del frontend.
-    Incluye conteos por estado e importe total concedido.
+    Totales por año y tipo (EPA/EELL): conteo por estado e importe concedido.
+    Usado por los gráficos de home.js y por las páginas de estadísticas.
+    Cache-Control: 1 hora — los datos cambian como mucho 1-2 veces al año.
     """
     response.headers["Cache-Control"] = "public, max-age=3600"
     filas = (

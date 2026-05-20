@@ -43,6 +43,9 @@ confirmar() {
 
 # Espera hasta que MariaDB esté lista (máx. 60 s).
 esperar_db() {
+    # Polling cada 2 s hasta que MariaDB acepte conexiones (máx. 60 s).
+    # Se usa SELECT 1 en lugar de mysqladmin ping porque el contenedor
+    # mariadb:11 no incluye mysqladmin en su imagen slim.
     local intentos=0
     local max=30
     echo -ne "     Esperando a la base de datos"
@@ -236,6 +239,7 @@ MYSQL_DATABASE=bdns_dgda
 MYSQL_USER=bdns_user
 MYSQL_PASSWORD=bdns_pass
 SECRET_KEY=${SECRET_KEY_GENERADA}
+CORS_ORIGINS=*
 EOF
 
     ok ".env creado"
