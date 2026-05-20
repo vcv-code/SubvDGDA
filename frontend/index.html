@@ -117,7 +117,7 @@
             -->
             <ul class="navbar__links">
                 <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
-                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="buscador.html">Buscador</a></li>
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
@@ -201,7 +201,7 @@
                         El uso de clases reutilizables evita repetir estilos en cada
                         botón de todas las páginas.
                     -->
-                    <a href="solicitudes.html" class="btn btn-primario">
+                    <a href="buscador.html" class="btn btn-primario">
                         Ir al buscador
                     </a>
                 </div>
@@ -495,36 +495,15 @@
                 <div class="seccion-registro__grid">
 
                     <div class="seccion-registro__card">
-                        <span class="seccion-registro__badge-disponible">Disponible</span>
-                        <!-- Icono: gráfico de barras (resumen de datos) -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="12" width="4" height="9" rx="1"/>
-                                <rect x="10" y="7" width="4" height="14" rx="1"/>
-                                <rect x="17" y="3" width="4" height="18" rx="1"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Resumen de solicitudes</p>
-                        <p class="seccion-registro__card-texto">
-                            Tabla completa de todas las convocatorias EPA y EELL
-                            con desglose por estado e importe concedido.
-                        </p>
+                        <span class="seccion-registro__badge-disponible">⭐ Disponible</span>
+                        <p class="seccion-registro__card-titulo seccion-registro__card-titulo--spaced">— Tabla resumen desglosada</p>
+                        <p class="seccion-registro__card-titulo">— Mapa de calor EELL por comunidades</p>
+                        <p class="seccion-registro__card-titulo">— Top de municipios beneficiados</p>
                     </div>
 
                     <div class="seccion-registro__card seccion-registro__card--proximamente">
                         <span class="seccion-registro__badge-prox">Próximamente</span>
-                        <!-- Icono: documento con análisis -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                                <rect x="9" y="3" width="6" height="4" rx="1"/>
-                                <line x1="9" y1="12" x2="15" y2="12"/>
-                                <line x1="9" y1="16" x2="13" y2="16"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Causas de exclusión frecuentes</p>
+                        <p class="seccion-registro__card-titulo seccion-registro__card-titulo--spaced">Causas de exclusión frecuentes</p>
                         <p class="seccion-registro__card-texto">
                             Análisis de los motivos más comunes de exclusión
                             por tipo de convocatoria.
@@ -533,16 +512,7 @@
 
                     <div class="seccion-registro__card seccion-registro__card--proximamente">
                         <span class="seccion-registro__badge-prox">Próximamente</span>
-                        <!-- Icono: diana / umbral -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="12" r="6"/>
-                                <circle cx="12" cy="12" r="2"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Puntuación mínima por convocatoria</p>
+                        <p class="seccion-registro__card-titulo seccion-registro__card-titulo--spaced">Puntuación mínima por convocatoria</p>
                         <p class="seccion-registro__card-texto">
                             Umbral de puntuación a partir del cual se obtuvo
                             concesión en cada año.
