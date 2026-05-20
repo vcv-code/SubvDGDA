@@ -3594,7 +3594,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     display: block;
     width: fit-content;
     margin: 0.75rem auto 0;
-    padding: 0.4rem 1.25rem;
+    padding: 0.5rem 1.75rem;
 }
 
 /* ─── 34.3 PÁGINA 404 ──────────────────────────────────────────── */
@@ -3602,7 +3602,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     max-width: 560px;
 }
 .pagina-404__imagen {
-    padding: 0 1.5rem;
+    padding: 0 2.5rem;
 }
 .pagina-404__imagen img {
     width: 100%;
@@ -3621,32 +3621,36 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     max-width: 720px;
 }
 .pagina-50x__contenido {
-    padding: 2rem 2.5rem 1.75rem;
+    padding: 2rem 1.5rem 1.75rem;
 }
-.pagina-50x__icono {
-    font-size: 4rem;
-    line-height: 1;
-    margin: 0.5rem 0;
+.pagina-50x__imagen {
+    width: 100%;
+    max-width: 320px;
+    display: block;
+    margin: 0.5rem auto;
+    border-radius: 12px;
 }
 .pagina-50x__titulo {
-    font-size: 1.4rem;
+    font-size: 1.65rem;
     margin-bottom: 0.5rem;
 }
 .pagina-50x__texto {
     margin-bottom: 0.25rem;
     line-height: 1.4;
+    font-size: 1.05rem;
 }
 .pagina-50x__simpatico {
     font-style: italic;
     margin-bottom: 0.5rem;
     color: var(--color-verde-btn);
+    font-size: 1.05rem;
 }
 .pagina-50x__botones {
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 0.75rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 /* ─── 34.2 SECCIÓN "POR QUÉ REGISTRARSE" (index.html) ──────────── */
