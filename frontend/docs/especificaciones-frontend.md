@@ -85,7 +85,7 @@ frontend/
 │   └── guia-estilo/            → Paleta, tipografía y PDF de wireframes completos
 │
 ├── index.html               → Página de inicio (Home) — métricas + gráficos generales
-├── solicitudes.html         → Buscador de solicitudes con filtros
+├── buscador.html         → Buscador de solicitudes con filtros
 ├── estadisticas-epas.html   → Estadísticas de Entidades Protectoras de Animales (Issue 7D)
 ├── estadisticas-eell.html   → Estadísticas de Entidades Locales / Ayuntamientos (Issue 7D)
 ├── recursos.html            → Directorio de organizaciones y sitios de interés (Issue 7D)
@@ -204,7 +204,7 @@ El botón "Acceder" / "Cerrar sesión" tiene estilo pill (`border-radius: 50px`,
 | Posición | Enlace | Destino | Clase especial |
 |---|---|---|---|
 | 1 | Inicio | `index.html` | `activo` en home |
-| 2 | Buscador | `solicitudes.html` | `activo` en buscador |
+| 2 | Buscador | `buscador.html` | `activo` en buscador |
 | 3 | EPAs | `estadisticas-epas.html` | `activo` en EPAs |
 | 4 | EELL | `estadisticas-eell.html` | `activo` en EELL |
 | 5 | Recursos | `recursos.html` | `activo` en recursos |
@@ -318,7 +318,7 @@ En `registro.html`, cuatro elementos `.password-req` muestran si cada requisito 
 
 Todas las páginas que realizan peticiones `fetch` tienen un spinner visual que aparece antes de la petición y desaparece en el bloque `finally`.
 
-**HTML** (presente en `solicitudes.html`, `entidad.html`, `index.html`, `recursos.html`, `estadisticas-epas.html` y `estadisticas-eell.html`):
+**HTML** (presente en `buscador.html`, `entidad.html`, `index.html`, `recursos.html`, `estadisticas-epas.html` y `estadisticas-eell.html`):
 
 ```html
 <div id="spinner" class="spinner"></div>
@@ -362,7 +362,7 @@ async function cargarDatos() {
 
 Cuando el backend devuelve un código de error HTTP (401, 403, 404, 422, 500), el frontend muestra una caja de error estructurada con los campos `mensaje` y `sugerencia` del JSON de error del backend.
 
-**HTML** (presente en `solicitudes.html`, `entidad.html`, `index.html`, `recursos.html`, `estadisticas-epas.html` y `estadisticas-eell.html`):
+**HTML** (presente en `buscador.html`, `entidad.html`, `index.html`, `recursos.html`, `estadisticas-epas.html` y `estadisticas-eell.html`):
 
 ```html
 <div id="error-box" class="error-box" style="display:none;">
@@ -419,7 +419,7 @@ El backend devuelve siempre este formato en caso de error:
 - Favicon configurado con `<link rel="icon" href="assets/logo.png">`.
 - Metadatos Open Graph (`og:title`, `og:description`, `og:image`) añadidos en el `<head>`.
 - KPI "Entidades únicas" conectado con el dato real de la API (`datos.entidades_unicas`).
-- Botón hero renombrado a "Ir al buscador" enlazando a `solicitudes.html`.
+- Botón hero renombrado a "Ir al buscador" enlazando a `buscador.html`.
 - Spinner de carga sobre las métricas.
 - Caja de error visual si el backend no responde.
 - **Nueva sección de gráficos** con fondo verde (`fondo-stats`), usando el endpoint existente `GET /estadisticas/`.
@@ -446,7 +446,7 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 
 **Archivo JS:** `js/home.js` — tres funciones asíncronas independientes: `cargarDatos()` (métricas + gráficos desde `/estadisticas/`), `cargarAvisos()` (banner desde `/avisos/`) y `cargarConvocatorias()` (bloque convocatorias desde `/convocatorias/`).
 
-### 5.2 Buscador — `solicitudes.html`
+### 5.2 Buscador — `buscador.html`
 
 **Propósito:** Filtrar y consultar las solicitudes de subvención de la base de datos.
 
@@ -488,7 +488,7 @@ La búsqueda por nombre se realiza server-side. El backend implementa el paráme
 
 **Enlace a ficha:** al hacer clic en cualquier fila se navega a `entidad.html?cif=...`.
 
-**Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos se escriben como parámetros en la URL de la página (`solicitudes.html?tipo=eell&anio=2025&estado=concedida`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `solicitudes.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento.
+**Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos se escriben como parámetros en la URL de la página (`buscador.html?tipo=eell&anio=2025&estado=concedida`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `buscador.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento.
 
 La página también acepta parámetros en la URL al llegar desde enlaces externos (`?anio=2025`, `?tipo=eell`, etc.) — compatible con los enlaces de la Home.
 
@@ -567,7 +567,7 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 ```
 
 **Flujo de navegación:**
-1. El usuario hace clic en una fila de `solicitudes.html`.
+1. El usuario hace clic en una fila de `buscador.html`.
 2. El JS redirige a `entidad.html?cif=XXXXXXXXX`.
 3. `entidad.js` lee el parámetro `cif` y llama a `GET /solicitudes/?cif=`.
 4. Se pinta la tabla con todas las solicitudes de esa entidad.
@@ -797,44 +797,41 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
 ### 5.7 Estadísticas EELL — `estadisticas-eell.html` + `js/estadisticas-eell.js` (Issue 7D)
 
-**Propósito:** Análisis específico de las convocatorias de Entidades de la Administración Local (ayuntamientos): % de ayuntamientos con ayuda, importe medio EELL, ratio de exclusión, top provincias por importe, concentración top 10% vs resto, ranking de CCAA y distribución geográfica (mapa pendiente).
+**Propósito:** Análisis específico de las convocatorias de Entidades de la Administración Local (ayuntamientos): % de ayuntamientos con ayuda, importe medio EELL, ratio de exclusión, top provincias por importe, concentración top 10% vs resto y top 5 CCAA. Estructura simétrica a `estadisticas-epas.html` (4 gráficas en 2 filas de 2).
 
-**Estado:** Completamente implementada y conectada al backend. Endpoint `GET /estadisticas/eell` disponible.
+**Estado:** Completamente implementada. El mapa choropleth CCAA se movió a `exclusivo.html` — ver sección 5.9.
 
 **Fondo visual:** usa la clase `.fondo-stats`. Enlace "→ Ver estadísticas EPAs" en la cabecera.
 
-**Estructura HTML:**
+**Estructura HTML (4 gráficas):**
 
 | Bloque | ID | Descripción |
 |---|---|---|
-| Spinner | `#spinner` | Patrón estándar del proyecto |
-| Caja de error | `#error-box` | Patrón estándar del proyecto |
 | KPIs | `.grid-4` | 4 tarjetas de métricas EELL |
-| Top provincias | `#grafico-top-provincias` | Canvas oculto + placeholder |
-| Concentración top 10% | `#grafico-concentracion` | Canvas donut oculto + placeholder |
-| Ranking CCAA | `#ranking-ccaa` | `<ul>` rellenable por JS + `#ranking-ccaa-pendiente` |
-| Mapa CCAA | `#mapa-ccaa-container` | Placeholder con 🗺️ — pendiente de decisión técnica |
+| Top provincias | `#grafico-top-provincias` | Barras horizontales por importe |
+| Concentración top 10% | `#grafico-concentracion` | Donut top 10% vs resto |
+| Top 5 CCAA por subvención | `#top5-ccaa-lista` | Lista top 5 por importe |
+| Top 5 CCAA por ayuntamientos | `#top5-concesiones-lista` | Lista top 5 por número de concesiones |
 
-**KPIs (pendientes de datos):**
+**KPIs:**
 
-| ID | Label | Dato esperado |
+| ID | Label | Dato |
 |---|---|---|
 | `#kpi-pct-ayuntamientos` | % Ayuntamientos con ayuda | `datos.pct_ayuntamientos_con_ayuda` |
 | `#kpi-importe-medio-eell` | Importe medio EELL | `datos.importe_medio` |
-| `#kpi-ratio-exclusion` | Ratio de exclusión | `datos.ratio_exclusion` (0–1, se muestra × 100 %) |
-| `#kpi-ccaa-top` | CCAA con más concesiones | `datos.ccaa_top` |
+| `#kpi-ratio-exclusion` | Ratio de exclusión | `datos.ratio_exclusion` |
+| `#kpi-ccaa-top` | CCAA con mayor importe concedido | `datos.ccaa_top` |
 
-**Gráficos preparados en `estadisticas-eell.js`:**
+**Funciones en `estadisticas-eell.js`:**
 
-| Función | Tipo Chart.js | Canvas | Datos |
+| Función | Tipo | Elemento | Datos |
 |---|---|---|---|
-| `poblarGraficoTopProvincias(topProvincias)` | `bar` horizontal (`indexAxis: 'y'`), top 15 | `grafico-top-provincias` | `[{provincia, importe_total}]` |
-| `poblarGraficoConcentracion(concentracion)` | `doughnut`, `cutout: '62%'`, leyenda abajo | `grafico-concentracion` | `{top_10_pct, resto_pct}` |
-| `poblarRankingCcaa(porCcaa)` | Lista HTML (hasta 19: 17 CCAA + Ceuta + Melilla) | `#ranking-ccaa` | `[{ccaa, importe_total, num_concesiones}]` |
+| `poblarGraficoTopProvincias` | `bar` horizontal | `#grafico-top-provincias` | `top_provincias[]` |
+| `poblarGraficoConcentracion` | `doughnut` | `#grafico-concentracion` | `concentracion{}` |
+| `poblarTop5Ccaa` | Lista HTML | `#top5-ccaa-lista` | `por_ccaa[]` |
+| `poblarTop5Concesiones` | Lista HTML | `#top5-concesiones-lista` | `por_ccaa[]` |
 
-**Mapa CCAA — pendiente:**
-
-El diseño en PDF define un mapa de calor de España por comunidad autónoma, con interacción hover y click. Queda en espera de decisión sobre la librería de mapas (SVG inline, Leaflet, D3-geo…). Mientras tanto se muestra el ranking CCAA como alternativa funcional.
+> **Nota:** `poblarRankingCcaa` fue eliminada — el ranking completo de CCAA se muestra en `exclusivo.html` junto al mapa.
 
 **Endpoint `GET /estadisticas/eell`:**
 
@@ -911,6 +908,47 @@ El diseño en PDF define un mapa de calor de España por comunidad autónoma, co
 **Botones sociales (Google, GitHub):** Eliminados del HTML. El backend no implementa OAuth y la inclusión de botones deshabilitados generaba confusión en el usuario.
 
 ### 5.9 Zona exclusiva — `privado.html` + `js/privado.js`
+
+**Propósito:** Perfil del usuario: cambio de contraseña, nombre/alias y acceso a `exclusivo.html`.
+
+---
+
+### 5.10 Contenido exclusivo — `exclusivo.html` + `js/exclusivo.js`
+
+**Propósito:** Contenido reservado para usuarios registrados. Incluye tabla resumen de solicitudes por convocatoria, mapa choropleth interactivo de CCAA y modal de top municipios por CCAA.
+
+**Control de acceso:** igual que `privado.html` — token JWT en localStorage, redirección a login si falta o expira.
+
+**Secciones:**
+
+| Sección | Descripción |
+|---|---|
+| Resumen de solicitudes | Tabla EPA + EELL + total global con desglose por estado e importe. Endpoint: `GET /privado/resumen-tabla` |
+| Mapa choropleth CCAA | Mapa Leaflet 1.9.4 coloreado por importe concedido. Ver detalle abajo. |
+| Próximamente | Causas de exclusión frecuentes y puntuación mínima por convocatoria (pendiente) |
+
+**Mapa choropleth (`js/mapa-ccaa.js`):**
+
+- Librería: Leaflet 1.9.4 + CartoDB Positron sin etiquetas
+- GeoJSON: `assets/geojson/ccaa.geojson` (19 features, ~600 KB, nombres alineados con la API)
+- Paleta: 4 bandas de tonos tierra (beige → caramelo → marrón) + rojo para CCAA sin subvenciones EELL
+- Escala: cuartiles reales del dataset (p25/p50/p75) redondeados a valores "bonitos"
+- Hover: oscurece el color propio del polígono (función `oscurecer(hex, factor)`)
+- Clic: abre modal con top 10 municipios (ver abajo)
+- Año mínimo/máximo detectado dinámicamente desde `GET /estadisticas/`
+- El mapa acepta un callback `onClickCCAA` como segundo parámetro para desacoplar la lógica del modal
+
+**Modal top 10 municipios (`exclusivo.js → abrirModalCCAA`):**
+
+- Fetch: `GET /solicitudes/?ccaa=X&estado=concedida&limite=500`
+- Para solicitudes con `es_agrupacion=true`: expande a municipios individuales via `GET /agrupaciones/{id_solic}`
+- Dos columnas: acumulado todos los años / último año con resolución (detectado como `max(anio)`)
+- Nota "Top N de M municipios" calculada dinámicamente
+- Cierre: botón ×, clic en overlay o tecla Esc
+
+---
+
+### 5.11 Zona privada — `privado.html` + `js/privado.js` (renumerada)
 
 **Propósito:** Contenido reservado para usuarios registrados.
 
@@ -1263,7 +1301,7 @@ Los valores elegidos superan el ratio de contraste WCAG AA (4.5:1) sobre fondo b
 
 Ambas páginas tienen `<meta name="robots" content="noindex">` para excluirlas de los motores de búsqueda (igual que `admin.html`). Incluyen navbar y footer completos con los mismos enlaces que el resto del proyecto.
 
-**Footer actualizado en:** `index.html`, `login.html`, `registro.html`, `solicitudes.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `entidad.html`, `privado.html`, `admin.html`, `recursos.html`, `recuperar-password.html`, `reset-password.html`. Se añadieron los enlaces "Aviso legal" y "Privacidad" al `<nav>` del footer usando el separador `footer-principal__sep` ya existente.
+**Footer actualizado en:** `index.html`, `login.html`, `registro.html`, `buscador.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `entidad.html`, `privado.html`, `admin.html`, `recursos.html`, `recuperar-password.html`, `reset-password.html`. Se añadieron los enlaces "Aviso legal" y "Privacidad" al `<nav>` del footer usando el separador `footer-principal__sep` ya existente.
 
 **Relación con backend:** Ninguna. Contenido estático puro.  
 **Eliminado de "Pendientes":** El punto "Política de privacidad y aviso legal" que figuraba en la sección de pendientes del documento queda completado.
@@ -1984,7 +2022,7 @@ La Section 31.5 del CSS contenía `.pagina-inicio .footer-principal { background
 
 ---
 
-### 12.33 Tarea 13.1 — Modal de entidad en solicitudes.html (Sesión 2026-05-17)
+### 12.33 Tarea 13.1 — Modal de entidad en buscador.html (Sesión 2026-05-17)
 
 Implementación completa del modal de ficha de entidad. Al hacer clic en una fila del buscador, en lugar de navegar a `entidad.html?cif=…`, se abre un modal en página con la ficha resumida.
 
@@ -1994,7 +2032,7 @@ Implementación completa del modal de ficha de entidad. Al hacer clic en una fil
 |---|---|
 | `css/styles.css` | Section 36 añadida (`.modal-backdrop`, `.modal-card`, `.modal-cabecera`, `.modal-cuerpo`, `.modal-pie`, `.modal-historico-tabla`, responsive ≤600 px) |
 | `js/modal-entidad.js` | Nuevo. Expone `window.abrirModalEntidad(cif, nombre, openerEl)`. Fetch a `GET /solicitudes/?cif=`, rellena ficha, gestiona apertura/cierre (X, backdrop click, ESC), trampa de foco WCAG 2.4.3 |
-| `solicitudes.html` | HTML del modal (`#modal-entidad`) añadido antes de los scripts. `<script src="js/modal-entidad.js">` añadido |
+| `buscador.html` | HTML del modal (`#modal-entidad`) añadido antes de los scripts. `<script src="js/modal-entidad.js">` añadido |
 | `js/solicitudes.js` | `crearFila()`: reemplazado `window.location.href = entidad.html?cif=…` por `window.abrirModalEntidad(cif, nombre, tr)` |
 
 **Comportamiento del modal:**
@@ -2016,16 +2054,16 @@ Extracción de estilos de layout, tipografía y color desde atributos `style=""`
 
 | Clase | Propósito | Páginas |
 |---|---|---|
-| `.form-grupo--entidad` | `flex:2; min-width:200px` para campo de búsqueda de entidad | `solicitudes.html` |
-| `.filtros__botones` | Flex row con gap y margin-top para botones de acción | `solicitudes.html` |
-| `.leyenda-tramos` | Tipografía y color de la leyenda de tramos EELL | `solicitudes.html`, `entidad.html` |
+| `.form-grupo--entidad` | `flex:2; min-width:200px` para campo de búsqueda de entidad | `buscador.html` |
+| `.filtros__botones` | Flex row con gap y margin-top para botones de acción | `buscador.html` |
+| `.leyenda-tramos` | Tipografía y color de la leyenda de tramos EELL | `buscador.html`, `entidad.html` |
 | `.leyenda-tramos--entidad` | Variante con `margin-bottom:1rem` para entidad.html | `entidad.html` |
-| `.info-resultados` | Tamaño y color del contador de resultados | `solicitudes.html` |
-| `.tabla-controles__derecha` | Flex row para zona derecha de controles | `solicitudes.html` |
-| `.form-grupo--orden` | Flex row sin margen para selector de orden | `solicitudes.html` |
-| `.label-orden` | Tipografía compacta de la etiqueta del selector | `solicitudes.html` |
-| `.select-orden` | `min-width:180px` para el select de orden | `solicitudes.html` |
-| `.btn-csv` | `white-space:nowrap; font-size:0.88rem` para botón CSV | `solicitudes.html` |
+| `.info-resultados` | Tamaño y color del contador de resultados | `buscador.html` |
+| `.tabla-controles__derecha` | Flex row para zona derecha de controles | `buscador.html` |
+| `.form-grupo--orden` | Flex row sin margen para selector de orden | `buscador.html` |
+| `.label-orden` | Tipografía compacta de la etiqueta del selector | `buscador.html` |
+| `.select-orden` | `min-width:180px` para el select de orden | `buscador.html` |
+| `.btn-csv` | `white-space:nowrap; font-size:0.88rem` para botón CSV | `buscador.html` |
 | `.metricas-carga` | `grid-column:1/-1` en spinner de métricas | `index.html` |
 | `.bloque-intro` | `margin-bottom:var(--espacio-lg)` para cabeceras de sección | `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html` |
 | `.bloque-titulo` | Tipografía `2rem/700/negro` de título de sección | `estadisticas-epas.html`, `estadisticas-eell.html` |
@@ -2060,7 +2098,7 @@ Extracción de estilos de layout, tipografía y color desde atributos `style=""`
 | `css/styles.css` | Sections 35 (refactor inline) y 36 (modal de entidad) añadidas |
 | `js/modal-entidad.js` | Creado (modal de ficha de entidad) |
 | `js/solicitudes.js` | `crearFila()`: navegación reemplazada por apertura de modal |
-| `solicitudes.html` | HTML del modal añadido; clases refactorizadas; scripts actualizados |
+| `buscador.html` | HTML del modal añadido; clases refactorizadas; scripts actualizados |
 | `index.html` | Clases refactorizadas (metricas-carga, bloques de gráficos) |
 | `estadisticas-epas.html` | Cabecera y grids refactorizados (`.bloque-intro`, `.mb-lg`) |
 | `estadisticas-eell.html` | Cabecera, grids y mapa placeholder refactorizados |
@@ -2069,9 +2107,9 @@ Extracción de estilos de layout, tipografía y color desde atributos `style=""`
 
 ### 12.36 Correcciones puntuales — Sesión 2026-05-18
 
-**Archivos modificados:** `solicitudes.html`, `admin.html`, `css/styles.css`
+**Archivos modificados:** `buscador.html`, `admin.html`, `css/styles.css`
 
-#### Bug botón CSV (`solicitudes.html`)
+#### Bug botón CSV (`buscador.html`)
 El botón `#btn-descargar-csv` tenía duplicado el atributo `class=""` (uno con `btn btn-secundario` y otro con `btn-csv`). Unificados en un único atributo: `class="btn btn-secundario btn-csv"`.
 
 #### Inline styles en `<h2>` de admin.html
@@ -2093,7 +2131,7 @@ Ningún otro badge ni color fue modificado. Las clases `.badge-no-beneficiaria` 
 
 Las siguientes tareas están planificadas pero no implementadas. Cada una tiene su especificación aquí y su referencia en el changelog cuando se complete.
 
-### 13.1 Modal de entidad en solicitudes.html *(completada — 2026-05-17)*
+### 13.1 Modal de entidad en buscador.html *(completada — 2026-05-17)*
 
 Ver implementación completa en [§ 12.33](#1233-tarea-131--modal-de-entidad-en-solicitudeshtml-sesión-2026-05-17).
 

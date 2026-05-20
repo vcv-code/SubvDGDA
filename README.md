@@ -113,7 +113,7 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
 
 #### Scripts de desarrollo (`frontend/scripts/`)
 
@@ -1149,7 +1149,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ imagen hero (`handcat.webp`) — mano acercándose a un gato callejero; alternativas disponibles en `assets/img/home/`
 ✔ gráficas unificadas — colores `#1A3429` / `#2DC26C` en home.js, estadisticas-epas.js y estadisticas-eell.js
 ✔ formatter manual de importes — separador de miles garantizado independiente del locale del navegador
-✔ modal de entidad en buscador (`solicitudes.html`)
+✔ modal de entidad en buscador (`buscador.html`)
   · reemplaza la navegación a `entidad.html` por un modal inline sin salir del buscador
   · muestra nombre, CIF, CCAA (solo si disponible), total recibido, nº solicitudes e histórico con expediente
   · histórico ordenado de más reciente a más antiguo; importes con separador de miles garantizado
@@ -1223,7 +1223,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
   · `index.html` — portada con métricas dinámicas, spinners y banner de avisos activos
-  · `solicitudes.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
+  · `buscador.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
   · `estadisticas-epas.html` — análisis de EPAs: importe medio, mediana, distribución, nuevos vs recurrentes, top beneficiarios
   · `estadisticas-eell.html` — análisis de EELL: % ayuntamientos con ayuda, top provincias, concentración, ranking CCAA
   · `recursos.html` — directorio de organizaciones de protección animal y campañas actuales (contenido estático)
@@ -1350,11 +1350,39 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · clases `.pagina-404`, `.pagina-50x` y base `.pagina-error` añadidas a `styles.css`
   · modificador `.auth-page--centrado` extraído del HTML a CSS
   · `.convocatorias-subtitulo` añadida para gestionar el margen desde CSS
+✔ Mapa choropleth CCAA — mapa de calor interactivo con Leaflet 1.9.4
+  · Movido de `estadisticas-eell.html` a `exclusivo.html` (contenido premium para usuarios registrados)
+  · `estadisticas-eell.html` queda con 4 gráficas simétricas como `estadisticas-epas.html`
+  · GeoJSON de alta resolución en `assets/geojson/ccaa.geojson` (19 CCAA, ~600 KB)
+  · Paleta de tonos tierra (beige → caramelo → marrón oscuro); rojo para CCAA sin subvenciones
+  · Hover: oscurece el color propio del polígono (función `oscurecer` en `mapa-ccaa.js`)
+  · Escala de cuartiles reales (p25/p50/p75) redondeados a valores "bonitos"
+  · Zoom con rueda, indicador de nivel en esquina, tile sin etiquetas (CartoDB nolabels)
+  · Función extraída a `js/mapa-ccaa.js` independiente; acepta callback `onClickCCAA`
+✔ Modal top 10 municipios (clic en CCAA del mapa)
+  · Dos columnas: acumulado todos los años / último año con resolución (detectado automáticamente)
+  · Agrupaciones EELL expandidas: llama a `GET /agrupaciones/{id_solic}` para mostrar municipios individuales en lugar del nombre de la agrupación
+  · Subtítulo del mapa con rango de años dinámico desde `GET /estadisticas/`
+  · CSS: `.modal-ccaa__*` en `styles.css`; cierra con Esc, clic fuera o botón ×
+✔ CORS configurable por variable de entorno `CORS_ORIGINS` en `docker/.env`
+  · Sin cambio de comportamiento en desarrollo (`*` por defecto)
+  · En producción: cambiar a `CORS_ORIGINS=https://dominio.com` sin tocar código
+✔ Renombrado `solicitudes.html` → `buscador.html`
+  · URL del buscador cambiada a `/buscador.html` en todos los HTML, JS y CSS
+  · `solicitudes.html` se conserva como legacy (cualquier enlace externo antiguo sigue funcionando)
+  · `solicitudes.js` conserva su nombre (es el script, no la página)
+✔ Mejoras visuales zona privada y exclusiva
+  · Badges "ZONA PRIVADA" y "MI CUENTA" eliminados — redundantes con el contexto
+  · Botones "Volver a mi perfil" y "← Volver al perfil" (admin): fondo semitransparente visible en reposo, hover más sólido
+  · Card de acceso a contenido exclusivo: fondo verde suave, borde verde, sombra y flecha animada al hover
+  · Cabeceras de tablas `resumen-tabla` actualizadas al verde oscuro institucional (`--nav-oscuro`)
+  · Título "Área exclusiva" ampliado a 1.6rem; texto de descripción actualizado con contenido real
 
 ---
 
 ## Notas técnicas
 
+- `solicitudes.html` se conserva intencionalmente aunque la URL pública es ahora `buscador.html`. Actúa como redirección de compatibilidad para cualquier enlace externo o marcador guardado antes del renombrado. No es un archivo huérfano: es legacy deliberado.
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
@@ -1480,6 +1508,7 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 - **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **CORS con dominio específico**: cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno).
+- **Logs de cron en panel admin**: mostrar `bdns_check.log` y `health_check.log` en el panel de administración. Requiere: (1) montar `../logs/cron:/app/logs/cron` en el contenedor backend; (2) dos endpoints nuevos en `admin.py` (`GET /admin/logs/cron-bdns` y `GET /admin/logs/cron-health`); (3) dos secciones nuevas en `admin.html` y `admin.js`.
 
 ---
 
@@ -1489,8 +1518,6 @@ Mejoras identificadas pero no planificadas para el desarrollo actual:
 
 ## Pendientes
 
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
+- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
 - **Auditoría backend (post-entrega)**: paginación en `/admin/usuarios`, retry en cron si BDNS no responde — el resto se corrigió o es solo relevante en producción real.
 - **Trampa de foco en menú hamburguesa**: el menú cierra con Esc y click fuera, pero no implementa focus trap completo (Tab no cicla dentro del menú). Mejora de accesibilidad futura.
-- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
-- **Logs de cron en panel admin**: mostrar `bdns_check.log` y `health_check.log` en el panel de administración con el mismo estilo que los logs de acceso y error actuales. Requiere: (1) montar `../logs/cron:/app/logs/cron` en el contenedor backend y añadir `LOG_CRON_DIR: /app/logs/cron` en `docker-compose.yml`; (2) dos endpoints nuevos en `backend/app/routers/admin.py` (`GET /admin/logs/cron-bdns` y `GET /admin/logs/cron-health`); (3) dos secciones nuevas en `frontend/admin.html` y sus funciones correspondientes en `frontend/js/admin.js`.

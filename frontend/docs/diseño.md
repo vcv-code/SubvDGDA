@@ -368,7 +368,7 @@ frontend/
 │  
 ├── index.html
 ├── estadisticas.html
-├── solicitudes.html
+├── buscador.html
 ├── login.html
 ├── privado.html
 └── diseño.md
