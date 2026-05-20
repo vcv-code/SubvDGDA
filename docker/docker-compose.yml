@@ -40,6 +40,7 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
+      CORS_ORIGINS: ${CORS_ORIGINS}
       LOG_DIR: /app/logs
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
