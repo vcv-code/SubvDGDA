@@ -1022,12 +1022,14 @@ El proyecto sigue un flujo basado en main + dev + feature/*, un modelo híbrido 
 
 ### Estructura
 
+```text
 main (producción, estable)
  │
  └── dev (desarrollo)
        │
        ├── feature/*(funcionalidad)
        └── feature/*(funcionalidad)
+```
 
 ### Orden
 
