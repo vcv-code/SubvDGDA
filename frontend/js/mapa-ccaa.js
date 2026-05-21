@@ -95,10 +95,16 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         return;
     }
 
+    // pointer:coarse = dedo es el puntero principal (móvil/tablet puro)
+    // pointer:fine   = ratón o trackpad (laptop, aunque tenga pantalla táctil)
+    var esTactilPrimario = window.matchMedia('(pointer: coarse)').matches;
     _mapaInstancia = L.map('mapa-ccaa', {
         center: [40.2, -3.5], zoom: 5.8,
         zoomControl: true, scrollWheelZoom: true, attributionControl: true,
+        doubleClickZoom: !esTactilPrimario,
     });
+    // Subir el pane del tooltip por encima de los controles (zoom, leyenda)
+    _mapaInstancia.getPane('tooltipPane').style.zIndex = 1050;
     setTimeout(function() { _mapaInstancia.invalidateSize(true); }, 400);
 
     // Indicador de nivel de zoom
@@ -150,17 +156,97 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         var html   = datos
             ? '<strong>' + nombre + '</strong><br>Importe: ' + fmtEuro(datos.importe_total) + '<br>Concesiones: ' + datos.num_concesiones.toLocaleString('es-ES')
             : '<strong>' + nombre + '</strong><br>Sin subvenciones';
-        capa.bindTooltip(html, { sticky: true, direction: 'top', offset: [0, -4] });
+        capa.bindTooltip(html, { sticky: true, direction: 'auto', offset: [0, -4] });
         capa.on({
             mouseover: onMouseOver,
             mouseout:  function() { capaGeojson.resetStyle(capa); },
-            click:     function()  { if (typeof onClickCCAA === 'function') onClickCCAA(nombre); },
+            click:     function() {
+                // En touch el modal lo gestiona el timer del touchstart
+                if (esTactilPrimario) return;
+                if (typeof onClickCCAA === 'function') onClickCCAA(nombre);
+            },
         });
     }
 
     capaGeojson = L.geoJSON(geojsonData, {
         style: estiloFeature, onEachFeature: onEachFeature,
     }).addTo(_mapaInstancia);
+
+    // En móvil ajustar vista para que España quepa completa
+    if (window.innerWidth <= 768) {
+        _mapaInstancia.fitBounds(capaGeojson.getBounds(), { padding: [8, 8] });
+    }
+
+    // En móvil quitamos los tooltips de Leaflet — usamos el div propio
+    if (esTactilPrimario) {
+        capaGeojson.eachLayer(function(l) { l.unbindTooltip(); });
+    }
+
+    // Solo móvil: 1 toque = info centrada; 2 toques = modal
+    if (esTactilPrimario) {
+        var hintEl   = document.querySelector('.mapa-ccaa-hint');
+        var hintBase = hintEl ? hintEl.textContent : '';
+        var ultimoToque = { layer: null, tiempo: 0 };
+        var timerInfo = null;
+        var DOBLE_TOQUE_MS = 400;
+
+        // Caja de info centrada — reemplaza el tooltip de Leaflet en móvil
+        var infoBox = document.createElement('div');
+        infoBox.className = 'mapa-info-central';
+        infoBox.style.display = 'none';
+        var wrapper = document.getElementById('mapa-ccaa').parentElement;
+        wrapper.appendChild(infoBox);
+
+        function mostrarInfo(layer, datos) {
+            infoBox.innerHTML = datos
+                ? '<strong>' + layer.feature.properties.name + '</strong><br>'
+                  + 'Importe: ' + fmtEuro(datos.importe_total) + '<br>'
+                  + 'Concesiones: ' + datos.num_concesiones.toLocaleString('es-ES')
+                : '<strong>' + layer.feature.properties.name + '</strong><br>Sin subvenciones';
+            infoBox.style.display = 'block';
+        }
+
+        function ocultarInfo() {
+            infoBox.style.display = 'none';
+        }
+
+        capaGeojson.eachLayer(function(layer) {
+            var el = layer.getElement();
+            if (!el) return;
+            var layerNombre = layer.feature.properties.name;
+            var datosCCAA   = lookup[layerNombre];
+
+            el.addEventListener('touchend', function() {
+                var ahora   = Date.now();
+                var esDoble = ultimoToque.layer === layer &&
+                              (ahora - ultimoToque.tiempo) < DOBLE_TOQUE_MS;
+
+                if (esDoble) {
+                    clearTimeout(timerInfo);
+                    ocultarInfo();
+                    capaGeojson.resetStyle(layer);
+                    ultimoToque = { layer: null, tiempo: 0 };
+                    if (hintEl) hintEl.textContent = hintBase;
+                    if (typeof onClickCCAA === 'function') onClickCCAA(layerNombre);
+                } else {
+                    if (ultimoToque.layer && ultimoToque.layer !== layer) {
+                        capaGeojson.resetStyle(ultimoToque.layer);
+                    }
+                    clearTimeout(timerInfo);
+                    onMouseOver({ target: layer });
+                    mostrarInfo(layer, datosCCAA);
+                    if (hintEl) hintEl.textContent = 'Doble toque para ver el top de municipios.';
+                    ultimoToque = { layer: layer, tiempo: ahora };
+                    timerInfo = setTimeout(function() {
+                        ocultarInfo();
+                        capaGeojson.resetStyle(layer);
+                        ultimoToque = { layer: null, tiempo: 0 };
+                        if (hintEl) hintEl.textContent = hintBase;
+                    }, 8000);
+                }
+            }, { passive: true });
+        });
+    }
 
 
     // Leyenda
