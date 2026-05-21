@@ -2382,6 +2382,32 @@ canvas {
     }
 }
 
+/* Skeleton de carga — simula la forma de la tabla mientras llegan los datos */
+.skeleton-tabla {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--sombra-card);
+    margin-bottom: var(--espacio-lg);
+}
+
+.skeleton-tabla__cabecera {
+    background: var(--nav-oscuro);
+    height: 42px;
+}
+
+.skeleton-tabla__fila {
+    height: 46px;
+    background: linear-gradient(90deg, #e8f3ea 30%, #cce5d0 50%, #e8f3ea 70%);
+    background-size: 400% 100%;
+    animation: shimmer-verde 1.4s ease-in-out infinite;
+    border-bottom: 1px solid #d4e8d8;
+}
+
+@keyframes shimmer-verde {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
 .resumen-tabla {
     width: 100%;
     border-collapse: collapse;
@@ -2391,8 +2417,12 @@ canvas {
 .resumen-tabla th,
 .resumen-tabla td {
     padding: 10px 14px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.resumen-tabla td:first-child {
+    text-align: left;
 }
 
 .resumen-tabla th {

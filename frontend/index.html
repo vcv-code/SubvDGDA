@@ -209,7 +209,7 @@
                 <!-- Columna derecha: imagen del gato -->
                 <div class="portada-split__imagen">
                     <img src="assets/img/home/handcat.webp" alt="Mano acariciando un gato"
-                        class="portada-split__imagen-real">
+                        class="portada-split__imagen-real" fetchpriority="high">
                 </div>
 
             </div>
@@ -587,11 +587,11 @@
          nada. Al colocarlo al final, el HTML ya está en
          memoria cuando el script se ejecuta.
          ===================================================== -->
-    <script src="js/navbar.js"></script>
-    <!-- Chart.js debe cargarse ANTES que home.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
-    <script src="js/modal-grafica.js"></script>
-    <script src="js/home.js"></script>
+    <script src="js/navbar.js" defer></script>
+    <!-- Chart.js debe cargarse ANTES que home.js — defer preserva el orden -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous" defer></script>
+    <script src="js/modal-grafica.js" defer></script>
+    <script src="js/home.js" defer></script>
 
 </body>
 

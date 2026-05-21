@@ -45,7 +45,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **195 tests automáticos** distribuidos en 18 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
+El proyecto incluye **197 tests automáticos** distribuidos en 18 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
 
 ### Cómo funcionan
 
