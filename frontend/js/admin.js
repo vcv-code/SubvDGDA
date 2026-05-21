@@ -43,22 +43,62 @@ function formatearFecha(isoStr) {
 
 // ── Verificación de acceso ────────────────────────────────────────────────────
 
-async function verificarAcceso() {
-    const t = token();
-    if (!t) {
-        sessionStorage.setItem('redirect_post_login', window.location.href);
-        window.location.href = 'login.html';
-        return false;
-    }
-
+async function intentarRenovarToken() {
+    const rt = localStorage.getItem('refresh_token');
+    if (!rt) return null;
     try {
-        const r = await fetch(`${API_URL}/privado/perfil`, { headers: authHeaders() });
-        if (r.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('refresh_token');
+        const r = await fetch(`${API_URL}/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh_token: rt }),
+        });
+        if (!r.ok) { localStorage.removeItem('refresh_token'); return null; }
+        const d = await r.json();
+        localStorage.setItem('token', d.access_token);
+        localStorage.setItem('refresh_token', d.refresh_token);
+        return d.access_token;
+    } catch { return null; }
+}
+
+async function verificarAcceso() {
+    let t = token();
+    if (!t) {
+        t = await intentarRenovarToken();
+        if (!t) {
             sessionStorage.setItem('redirect_post_login', window.location.href);
             window.location.href = 'login.html';
             return false;
+        }
+    }
+
+    try {
+        const r = await fetch(`${API_URL}/privado/perfil`, {
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${t}` },
+        });
+        if (r.status === 401) {
+            // Token expirado — intentar renovar y reintentar una sola vez
+            const nuevoToken = await intentarRenovarToken();
+            if (!nuevoToken) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('refresh_token');
+                sessionStorage.setItem('redirect_post_login', window.location.href);
+                window.location.href = 'login.html';
+                return false;
+            }
+            const r2 = await fetch(`${API_URL}/privado/perfil`, {
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${nuevoToken}` },
+            });
+            if (!r2.ok) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('refresh_token');
+                sessionStorage.setItem('redirect_post_login', window.location.href);
+                window.location.href = 'login.html';
+                return false;
+            }
+            const p2 = await r2.json();
+            if (p2.rol !== 'admin') { window.location.href = 'privado.html'; return false; }
+            document.getElementById('admin-meta').textContent = `Sesión: ${p2.email}`;
+            return true;
         }
         const perfil = await r.json();
         if (perfil.rol !== 'admin') {
