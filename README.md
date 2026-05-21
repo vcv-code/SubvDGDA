@@ -631,6 +631,14 @@ bash install.sh
 
 El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL, levanta los contenedores y carga el dataset. Guía paso a paso con confirmación antes de cada acción que requiere permisos o modifica el sistema.
 
+Para desinstalar y limpiar todo el entorno:
+
+```bash
+bash uninstall.sh
+```
+
+El script explica en lenguaje llano qué elimina en cada paso (contenedores, volúmenes con los datos, imagen Docker, `/etc/hosts`, `.env`, `venv/`) y pide confirmación antes de cada operación irreversible. En WSL2 avisa que también hay que editar el `hosts` de Windows.
+
 #### Primeros pasos tras la instalación
 
 1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
@@ -696,6 +704,8 @@ El script detecta la BD existente, aplica las migraciones pendientes y reconstru
 > **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
 >
 > **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — solo existe el usuario demo `admin@demo.com` / `Admin1234!` que crea el script. Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
+>
+> **Desinstalar:** `bash uninstall.sh` elimina los contenedores, volúmenes (BD y datos), certificado SSL, `docker/.env` y opcionalmente la imagen Docker y el `venv/`. También elimina la entrada de `/etc/hosts` (con confirmación, requiere sudo). La operación es irreversible para los datos.
 
 **Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
 
@@ -944,6 +954,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
+| `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
 
 ### Windows
 
@@ -1087,7 +1098,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones con textos reales · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤900px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero (Pixabay, licencia libre) · auditoría de seguridad completada · ordenación server-side en buscador · auditoría responsive móvil completada · mapa táctil con doble toque · navbar con Exclusivo y Mi perfil**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones con textos reales · instalación y desinstalación automatizadas (install.sh + uninstall.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤900px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero (Pixabay, licencia libre) · auditoría de seguridad completada · ordenación server-side en buscador · auditoría responsive móvil completada · mapa táctil con doble toque · navbar con Exclusivo y Mi perfil**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1323,6 +1334,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ Makefile con targets para el día a día: `start`, `stop`, `restart`, `build`, `reset-db`, `cargar`, `test`, `logs`, `backup`, `shell-db`, `mailpit`
 ✔ optimización de imágenes Docker: `backend/Dockerfile` migrado de `python:3.11` a `python:3.11-slim` (~700 MB menos); `pandas` eliminado de `requeriments.txt` (no se usaba)
 ✔ script de instalación automática (`install.sh`): comprueba prerequisitos por OS, crea `.env` con SECRET_KEY aleatoria, genera certificado SSL, añade dominio a `/etc/hosts` con confirmación, detecta instalaciones existentes y no sobreescribe datos, carga el dataset en primera instalación
+✔ script de desinstalación (`uninstall.sh`): elimina contenedores, volúmenes (BD y datos), imagen Docker, certificado SSL, `.env`, `venv/` y la entrada de `/etc/hosts`; explica en lenguaje llano qué hace cada paso y pide confirmación antes de cada operación irreversible; aviso específico para WSL2
 ✔ revisión de accesibilidad WCAG 2.2 (Bloque A–C)
   · `--color-foco: #2E6B4F` (~5.1:1 en blanco) sustituye `--color-primario` en hover/focus interactivos (Issue 14)
   · `aria-hidden="true"` en manchas de color decorativas de las leyendas (rosco y barras)

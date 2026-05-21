@@ -9,7 +9,7 @@
 
 .PHONY: start stop restart build build-cron reload-nginx \
         reset-db cargar test logs logs-cron logs-nginx \
-        backup shell-db mailpit
+        backup shell-db mailpit uninstall
 
 # ── Docker ────────────────────────────────────────────────────────────────────
 
@@ -79,3 +79,6 @@ mailpit:
 	@which xdg-open >/dev/null 2>&1 && xdg-open http://localhost:8025 || \
 	 which open       >/dev/null 2>&1 && open       http://localhost:8025 || \
 	 echo "(Ábrelo manualmente en el navegador)"
+
+uninstall:
+	bash uninstall.sh
