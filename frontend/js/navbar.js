@@ -28,6 +28,11 @@
         linkPerfil.className = 'navbar__user-link';
         linkPerfil.textContent = 'Mi perfil';
 
+        const linkExclusivo = document.createElement('a');
+        linkExclusivo.href = 'exclusivo.html';
+        linkExclusivo.className = 'navbar__user-link';
+        linkExclusivo.textContent = 'Exclusivo';
+
         const btnCerrar = document.createElement('button');
         btnCerrar.type = 'button';
         btnCerrar.className = 'btn-login';
@@ -35,7 +40,7 @@
         btnCerrar.addEventListener('click', cerrarSesion);
 
         li.className = 'navbar__user-controls';
-        li.replaceChildren(linkPerfil, btnCerrar);
+        li.replaceChildren(linkPerfil, linkExclusivo, btnCerrar);
     }
 
     function iniciarHamburguesa() {

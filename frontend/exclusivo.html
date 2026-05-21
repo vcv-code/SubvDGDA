@@ -30,7 +30,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 </head>
 
 <body>
@@ -51,6 +51,8 @@
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="privado.html">Mi perfil</a></li>
+                <li><a href="exclusivo.html" aria-current="page" class="activo">Exclusivo</a></li>
                 <li>
                     <button type="button" id="btn-cerrar-sesion" class="btn-login">
                         Cerrar sesión
@@ -109,9 +111,9 @@
                     <div class="card-grafico__cabecera">
                         <div>
                             <p class="card-grafico__titulo">Mapa de calor por CCAA</p>
-                            <p class="card-grafico__subtitulo">Escala de quintiles sobre importe total concedido</p>
                         </div>
                     </div>
+                    <p class="mapa-ccaa-hint">Toca para ver el importe · Doble toque para ver el top de municipios.</p>
                     <div class="mapa-ccaa-wrapper">
                         <div id="mapa-ccaa"
                              role="img"
@@ -196,8 +198,9 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
     <script src="js/mapa-ccaa.js"></script>
+    <script src="js/navbar.js"></script>
     <script src="js/exclusivo.js"></script>
 
 </body>
