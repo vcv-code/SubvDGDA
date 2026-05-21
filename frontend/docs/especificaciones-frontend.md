@@ -491,6 +491,8 @@ La búsqueda por nombre se realiza server-side. El backend implementa el paráme
 
 **Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos —incluido el criterio de orden— se escriben como parámetros en la URL de la página (`buscador.html?tipo=eell&anio=2025&estado=concedida&orden=importe-desc`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `buscador.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento. El criterio `entidad-az` (por defecto) no se escribe en la URL para no añadir ruido.
 
+`sincronizarUrl()` usa `history.replaceState` (no `pushState`) para evitar añadir entradas duplicadas al historial del navegador — con `pushState`, llegar al buscador desde un enlace de convocatoria requería pulsar Atrás dos veces para volver a Home.
+
 La página también acepta parámetros en la URL al llegar desde enlaces externos (`?anio=2025`, `?tipo=eell`, etc.) — compatible con los enlaces de la Home.
 
 **Archivo JS:** `js/solicitudes.js`.
@@ -1758,9 +1760,18 @@ Todas las páginas contenían `href="https://github.com"` en el footer. Se actua
 | `.modal-grafica` | Overlay posicionado en `fixed`, `display:none` por defecto |
 | `.modal-grafica--visible` | Clase activa: `display:flex` |
 | `.modal-grafica__backdrop` | Fondo semi-opaco, cierra al hacer clic |
-| `.modal-grafica__panel` | Panel centrado `min(90vw, 680px)` |
+| `.modal-grafica__panel` | Panel centrado `min(90vw, 720px)`, `max-height: 82vh` |
 | `.modal-grafica__fondo` | PNG del gráfico como imagen de fondo tenue (`opacity:0.08`) |
 | `.modal-grafica__cerrar` | Botón ✕ con `focus` automático al abrir |
+| `.modal-grafica__titulo-tag` | Span `"— Conclusiones"` en gris dentro del `<h3>` del título |
+| `.modal-grafica__texto p/ul/li` | Espaciado de párrafos y listas dentro del cuerpo |
+| `.modal-grafica__fuentes` | Bloque de fuentes con borde superior, fuente 0.8rem |
+
+**Actualización del contenido (2026-05-21):**
+
+- Los textos de conclusiones pasaron de `textContent` (cadena plana) a `innerHTML` con HTML completo (`<p>`, `<ul>`, `<li>`, `<a>`). Los 9 modales tienen ahora textos analíticos de varios párrafos escritos por la autora.
+- El título del modal muestra `"[Nombre gráfica] — Conclusiones"` con el sufijo en gris (`modal-grafica__titulo-tag`), eliminando la etiqueta `CONCLUSIONES` separada que había antes.
+- El modal de "Evolución del importe" incluye una sección `.modal-grafica__fuentes` con 3 enlaces externos a fuentes verificadas.
 
 ---
 
@@ -2125,6 +2136,112 @@ Las variables de color de estado (en `:root`) se habían asignado de forma inver
 | `--estado-excluida` | `#B45309` (ámbar) | `#C62828` (rojo) |
 
 Ningún otro badge ni color fue modificado. Las clases `.badge-no-beneficiaria` y `.badge-excluida` consumen las variables — no requirieron cambios.
+
+---
+
+### 12.37 Ajustes finales de contenido, responsive y correcciones — 2026-05-21
+
+**Archivos modificados:** `css/styles.css`, `js/home.js`, `js/estadisticas-epas.js`, `js/estadisticas-eell.js`, `js/modal-grafica.js`, `js/mapa-ccaa.js`, `js/solicitudes.js`, `privado.html`, `exclusivo.html`, `admin.html`, `backend/app/routers/estadisticas.py`, `backend/app/routers/solicitudes.py`
+
+#### Navbar — tamaño de fuente unificado
+
+- Fuente de `.navbar__links a` subida a `1.15rem` (antes `0.95rem`)
+- `.navbar__user-link` (Mi perfil) ya no tiene `font-size` propio — hereda del selector general
+- `.btn-login` (Acceder / Cerrar sesión) recibe `font-size: 1.15rem` explícito (los `<button>` no heredan de los `<a>`)
+- Nuevo breakpoint `@media (max-width: 1024px) and (min-width: 769px)` reduce ambos a `1rem` para evitar solapamiento en pantallas medianas
+
+#### Modal de conclusiones — contenido HTML completo
+
+- `modal-grafica.js` cambia de `textContent` a `innerHTML`; el contenedor `.modal-grafica__texto` pasa de `<p>` a `<div>`
+- El título muestra `"Título — Conclusiones"` con el sufijo en un `<span class="modal-grafica__titulo-tag">` en gris; se elimina la etiqueta `CONCLUSIONES` separada
+- Nuevas reglas CSS: `.modal-grafica__texto p`, `ul`, `li`, `.modal-grafica__fuentes` (fuentes con borde superior)
+- Panel ampliado a `720px` / `82vh`; fuente del cuerpo a `1rem` / line-height `1.65`
+- Los 9 modales de conclusiones tienen ahora textos reales de varios párrafos
+
+#### Distribución de importes EPA — corrección de rangos
+
+- Eliminado el rango `> 10.000 €`: verificado en BD que el importe máximo real es exactamente 10.000 €
+- Los 8 registros con importe = 10.000 € reclasificados al bucket `8.000–10.000 €` ajustando el límite superior a `10_001`
+- `GET /estadisticas/epas` devuelve ahora 5 rangos en lugar de 6
+
+#### Ordenación server-side en buscador
+
+- `GET /solicitudes/` acepta nuevo parámetro `?orden=` con valores `entidad-az` (defecto), `importe-desc`, `importe-asc`
+- El backend aplica `ORDER BY` en SQL mediante subconsulta correlacionada sobre `concesiones.importe`, antes del `OFFSET`/`LIMIT`
+- El frontend pasa `?orden=` en cada petición; cambiar el select de orden lanza nueva búsqueda desde página 1
+- El criterio de orden se incluye en la URL persistida (excepto `entidad-az` por defecto)
+- Antes: la ordenación era client-side sobre los 50 resultados de la página activa (bug)
+
+#### Reordenación de gráficas en Home
+
+| Posición | Antes | Después |
+|---|---|---|
+| Fila 1 izquierda | Evolución (línea) | Evolución (línea) |
+| Fila 1 derecha | Distribución (rosco) | EPA vs EELL (barras) |
+| Fila 2 izquierda | EPA vs EELL (barras) | Distribución (rosco) |
+| Fila 2 derecha | Tasa éxito (KPI) | Tasa éxito (KPI) |
+
+#### Auditoría responsive móvil — 8 correcciones
+
+**Hamburguesa tras login (JS):**
+`navbar.js` no estaba incluido en `privado.html`, `exclusivo.html` ni `admin.html`. Al no haber event listeners, el botón hamburguesa no funcionaba en esas páginas tras hacer login. Se añade `<script src="js/navbar.js">` en los tres archivos. `actualizarNavbar()` devuelve early (no encuentra `a.btn-login`) sin tocar el DOM; `iniciarHamburguesa()` registra los listeners correctamente.
+
+**Mapa táctil:**
+En dispositivos touch, `mouseover` no se dispara. Al tocar una CCAA, ahora se muestra el tooltip (nombre + importe, 900 ms) antes de abrir el modal de top municipios.
+
+**Footer links en móvil:**
+Añadido `align-items: center` y `justify-content: center` a la zona y nav del footer en `@media (max-width: 600px)`.
+
+**Tabla resultados buscador — alineación en móvil:**
+Los valores de la tabla de resultados (modo card en ≤600px) tienen ahora `text-align: right` uniforme; el label `::before` mantiene `text-align: left`. Cambiado `align-items: center` → `flex-start` para nombres largos que ocupan varias líneas.
+
+**Tablas admin — scroll horizontal en móvil:**
+`@media (max-width: 768px)`: `.admin-seccion { overflow: visible }` y `.admin-seccion__cuerpo { overflow-x: auto }`. Antes, `overflow: hidden` en `.admin-seccion` bloqueaba el scroll de la tabla interior.
+
+**Tabla resumen exclusivo — scroll horizontal en móvil:**
+`@media (max-width: 768px)`: `.resumen-tabla-card { overflow: visible }` y `.resumen-tabla { table-layout: auto !important; min-width: 520px }`. El inline `style="table-layout:fixed"` del JS comprimía las columnas en lugar de forzar scroll.
+
+**Badge DISPONIBLE / PRÓXIMAMENTE:**
+Añadido `padding-top: calc(var(--espacio-sm) + 1.6rem)` a `.seccion-registro__card` en ≤768px para que el badge `position: absolute` no solape el primer ítem del listado.
+
+**Filtros buscador:**
+Añadido `text-align: left` explícito a `.filtros__fila .form-grupo` y sus labels en `@media (max-width: 600px)`. Botones centrados con `justify-content: center`.
+
+#### Navbar — mejoras de navegación (segunda ronda)
+
+- Breakpoint hamburguesa subido de `768px` a `900px` — el navbar ya tiene demasiados items para caber inline en pantallas intermedias
+- Rango `901–1024px` mantiene `1rem`; solo `>1024px` usa `1.15rem`
+- Link **"Exclusivo"** añadido: `navbar.js` lo inyecta en `actualizarNavbar()` como `<a class="navbar__user-link" href="exclusivo.html">`; pre-renderizado en `privado.html`, `exclusivo.html` (con `aria-current="page"`) y `admin.html`
+- Link **"Mi perfil"** añadido en `exclusivo.html` (con `aria-current="page"`) y `privado.html`
+- `navbar__user-controls`: `gap` cambiado a `var(--espacio-lg)` = 32px para igualar separación con otros links; `align-items: baseline` para alineación tipográfica correcta con otros enlaces
+- Navbar `z-index` 1000→1200 — Leaflet fija sus controles a z-index 1000, el menú hamburguesa quedaba por debajo
+- Hamburguesa `z-index` 999→1001
+- Botón "Cerrar sesión" en hamburguesa: `font-size: 1rem` (igualado al resto); separador entre "Mi perfil" y "Exclusivo" con `border-top`; `width: 100%` en `navbar__user-link` para que el borde ocupe el ancho completo
+
+#### Mapa de calor CCAA — interacción táctil completa
+
+**Problema previo:** `mouseover` no se dispara en touch; el tooltip de Leaflet quedaba por debajo de controles (z-index 650 del pane vs 1000 de los controles).
+
+**Solución implementada:**
+
+- `doubleClickZoom: false` en touch (para usar doble toque propio)
+- `unbindTooltip()` en todos los layers en touch — se sustituye por `.mapa-info-central`
+- Tooltip pane subido a `z-index: 1050` vía `_mapaInstancia.getPane('tooltipPane').style.zIndex`
+- **Un toque** (touchend): muestra `.mapa-info-central` (div absoluto centrado, z-index 1200) con nombre, importe y concesiones; resalta el polígono con hover
+- **Doble toque** (≤400ms entre toques): cierra info, resetea estilo, abre modal top municipios
+- **Auto-cierre** del info box tras 8s sin doble toque
+- Hint contextual `.mapa-ccaa-hint` (solo móvil, `display: none` en desktop): texto inicial → "Doble toque para ver el top de municipios" al tocar → vuelve al original
+- `fitBounds(capaGeojson.getBounds(), { padding: [8, 8] })` en `window.innerWidth <= 768` para ajustar automáticamente la vista a España
+- Leyenda reducida en ≤768px: `font-size: 0.68rem`, `padding: 6px 8px`, cuadros de 10px
+- Eliminado subtítulo "Escala de quintiles sobre importe total concedido" de la card del mapa
+
+**Desktop:** sin cambios — `sticky: true`, `mouseover`/`mouseout`/`click` como siempre.
+
+#### Modal conclusiones — fixes de calidad
+
+- Título construido con `textContent + appendChild` en lugar de `innerHTML` (evita XSS con caracteres especiales en el título)
+- `.modal-grafica__cuerpo` con `flex: 1; min-height: 0` para que el scroll interno funcione correctamente en flex containers con `max-height`
+- Modal top municipios CCAA: `grid-template-columns: 1fr` en `≤768px` (antes `600px`) — en pantallas de 640-768px las dos columnas quedaban muy estrechas
 
 ---
 

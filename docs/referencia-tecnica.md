@@ -42,7 +42,7 @@ Datos concretos del sistema para consulta rápida.
 
 ### Pipeline de datos
 
-```
+```text
 Fuentes externas (API / PDF / XML / XLSX)
         ↓
   scripts/parsers → data/processed/  (9 JSON por año y tipo)
@@ -103,10 +103,21 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 ### Rate limiting (Nginx)
 
-| Endpoint | Límite | Burst |
+| Endpoint | Límite | Burst | Motivo |
+|---|---|---|---|
+| `POST /auth/login` | 10 req/min por IP | 5 | Previene fuerza bruta de contraseñas |
+| `POST /auth/registro` | 5 req/min por IP | 3 | Previene creación masiva de cuentas |
+| `POST /auth/recuperar` | 3 req/min por IP | 2 | Previene spam de emails de recuperación |
+
+Los tres devuelven HTTP 429 directamente desde Nginx sin llegar al backend cuando se supera el límite.
+
+### Límites de datos en la API
+
+| Endpoint | Límite | Motivo |
 |---|---|---|
-| `POST /auth/login` | 10 req/min por IP | 5 |
-| `POST /auth/registro` | 5 req/min por IP | 3 |
+| `GET /solicitudes/` `?buscar=` | Máx. 200 caracteres | Previene queries LIKE muy largas en BD |
+| `GET /solicitudes/` `?limite=` | Entre 1 y 500 | Previene peticiones de millones de filas |
+| `GET /solicitudes/export` | Máx. 5.000 resultados | Previene exportaciones masivas sin filtros; devuelve 400 si se supera |
 
 ### Otras medidas
 
@@ -120,6 +131,7 @@ Fuentes externas (API / PDF / XML / XLSX)
 | Panel de admin | Solo accesible para usuarios con `rol = 'admin'` |
 | Sesión activa en login/registro | Si hay token en `localStorage`, `login.html` y `registro.html` redirigen automáticamente a `privado.html` sin mostrar el formulario |
 | Navbar en páginas públicas | `js/navbar.js` detecta el token en `localStorage` y reemplaza el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin necesidad de petición al servidor |
+| SRI en recursos CDN | Atributos `integrity="sha384-..."` y `crossorigin="anonymous"` en los 5 recursos externos (Chart.js ×3, Leaflet JS, Leaflet CSS); el navegador verifica el hash antes de ejecutar/aplicar el recurso |
 
 ---
 
@@ -338,6 +350,54 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 | `test_rate_limiting.py` | Configuración de zonas de rate limiting en `nginx/default.conf` |
 | `test_parser_epa2025.py` | Funciones puras del parser XML de EPAs 2025 |
 | `test_unificar_datasets.py` | Script de unificación EPA/EELL en `dataset_unificado.json` |
+
+---
+
+## Deuda técnica conocida — mejoras de BD
+
+Estas mejoras se identificaron durante la auditoría final pero no se aplicaron porque requieren migraciones SQL sobre la BD existente. Quedan documentadas aquí para cuando se retome el proyecto.
+
+### 1. `SmallInteger` → `Boolean` en campos lógicos
+
+**Tablas afectadas:** `usuarios` (columnas `activo`, `email_verificado`)  
+**Estado actual:** `Column(SmallInteger)` — funciona porque MariaDB guarda BOOLEAN como TINYINT(1), pero el tipo ORM no valida que solo entren `True/False`.  
+**Mejora:** cambiar a `Column(Boolean)` en `backend/app/models.py`.  
+**Migración necesaria:**
+
+```sql
+ALTER TABLE usuarios MODIFY activo TINYINT(1) NOT NULL DEFAULT 1;
+ALTER TABLE usuarios MODIFY email_verificado TINYINT(1) NOT NULL DEFAULT 0;
+```
+
+No cambia datos, solo el tipo declarado. Compatible con el esquema existente.
+
+### 2. Índices en tablas de tokens
+
+**Tablas afectadas:** `refresh_tokens`, `reset_tokens`, `verificacion_tokens`  
+**Columna sin índice:** `token` (se busca por este campo en cada login, logout y verificación)  
+**Estado actual:** sin índice → MariaDB escanea todas las filas en cada búsqueda.  
+**Impacto actual:** despreciable con pocos usuarios. Problemático a escala.  
+**Mejora:** añadir índice único en `models.py`:
+
+```python
+# En cada modelo de token:
+__table_args__ = (UniqueConstraint('token', name='uq_refresh_tokens_token'),)
+```
+
+**Migración necesaria:**
+
+```sql
+ALTER TABLE refresh_tokens ADD UNIQUE INDEX ix_refresh_token (token);
+ALTER TABLE reset_tokens ADD UNIQUE INDEX ix_reset_token (token);
+ALTER TABLE verificacion_tokens ADD UNIQUE INDEX ix_verificacion_token (token);
+```
+
+### 3. Duplicación de `cerrarSesion()` en tres archivos JS
+
+**Archivos:** `js/navbar.js`, `js/privado.js`, `js/exclusivo.js`  
+**Causa:** las páginas con navbar pre-renderizado (privado, exclusivo, admin) necesitaban su propio logout antes de que `navbar.js` se añadiese a esas páginas. Al añadirlo, se mantuvieron las implementaciones existentes para no romper nada.  
+**Mejora:** crear `js/utils-auth.js` con la función compartida e importarla en los tres HTML antes de los scripts propios.  
+**Riesgo si se hace:** bajo, pero requiere asegurarse de que los tres HTML cargan `utils-auth.js` antes de sus scripts propios.
 
 ---
 
