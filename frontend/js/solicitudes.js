@@ -174,7 +174,7 @@ function sincronizarUrl(filtros, pagina) {
     if (orden && orden !== 'entidad-az') params.set('orden', orden);
     if (pagina > 1)        params.set('pagina',    pagina);
     const qs = params.toString();
-    history.pushState({}, '', qs ? `?${qs}` : window.location.pathname);
+    history.replaceState({}, '', qs ? `?${qs}` : window.location.pathname);
 }
 
 function cargarFiltrosDesdeUrl() {
