@@ -219,8 +219,13 @@ function poblarGraficoTopProvincias(topProvincias) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-provincias', 'top-provincias-eell.png');
-    configurarModal(instancia, 'Top provincias por importe EELL',
-        'Las cinco provincias con mayor importe concentran buena parte del total distribuido. Castilla-La Mancha encabeza por importe total, mientras Andalucía lidera por número de ayuntamientos beneficiados. Esta diferencia refleja que algunas provincias tienen pocos municipios pero con importes unitarios más altos por pertenecer al Tramo 1 o Tramo 2.');
+    configurarModal(instancia, 'Top provincias por importe EELL', `
+<p>Las provincias y comunidades con mayor importe concedido concentran una parte importante de las ayudas, aunque esto no parece deberse únicamente al tamaño poblacional o a la existencia de grandes ciudades.</p>
+<p>Castilla-La Mancha encabeza el importe total concedido, mientras Andalucía lidera en número de ayuntamientos beneficiados. Sin embargo, los datos muestran que muchas ayudas relevantes recaen en municipios pequeños y medianos —especialmente mediante agrupaciones— y no únicamente en grandes capitales.</p>
+<p>De hecho, entre las entidades con mayores importes aparecen numerosos municipios de Tramo 1 y Tramo 2, así como agrupaciones municipales creadas para poder afrontar conjuntamente costes de gestión, esterilización o control de colonias felinas.</p>
+<p>Esto sugiere que factores como la capacidad técnica para presentar proyectos, el grado de implicación institucional o la voluntad política local influyen tanto o más que la población total a la hora de acceder a estas subvenciones.</p>
+<p>El buscador público permite consultar y filtrar ayudas por comunidades, provincias y municipios, y analizar agrupaciones y tramos. Además, los usuarios registrados pueden acceder a mapas interactivos, rankings y tablas avanzadas para analizar con más detalle la distribución territorial y evolución de las subvenciones.</p>
+`);
 }
 
 
@@ -278,8 +283,12 @@ function poblarGraficoConcentracion(concentracion) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-concentracion', 'concentracion-eell.png');
-    configurarModal(instancia, 'Concentración del importe EELL',
-        'El 10 % de las entidades con mayor subvención acapara más de la mitad del importe total. Este nivel de concentración es habitual en convocatorias por tramos de población: los municipios del Tramo 1 (mayor población) reciben importes base más altos, lo que genera una asimetría natural en el reparto.');
+    configurarModal(instancia, 'Concentración del importe EELL', `
+<p>El 10&nbsp;% de las entidades con mayor subvención concentra una parte muy significativa del importe total concedido. Sin embargo, esta concentración no responde únicamente a grandes ciudades, sino también al funcionamiento por tramos y a la existencia de agrupaciones municipales.</p>
+<p>Muchos de los importes más altos corresponden a municipios pequeños o medianos que presentan proyectos conjuntos para poder asumir costes veterinarios, campañas de esterilización o gestión de colonias felinas de forma coordinada.</p>
+<p>Aun así, la distribución sigue reflejando importantes desigualdades territoriales. Mientras algunas comunidades y ayuntamientos muestran una participación activa y capacidad para acceder a ayudas, otros territorios continúan teniendo poca presencia, ya sea por falta de medios técnicos, escasa prioridad política o dificultades administrativas.</p>
+<p>Los usuarios registrados pueden explorar además rankings, mapas de calor y estadísticas avanzadas que permiten identificar qué territorios concentran una mayor parte de los fondos y cómo evoluciona el reparto entre convocatorias.</p>
+`);
 }
 
 
