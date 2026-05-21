@@ -26,6 +26,129 @@ Datos concretos del sistema para consulta rápida.
 | 1025 | Mailpit | Puerto SMTP |
 | 8080 | Adminer | Interfaz web de administración de BD |
 
+El backend (`bdns_api`, puerto 8000) **no expone ningún puerto al host** — solo es accesible desde dentro de la red Docker interna. Nginx actúa como única puerta de entrada.
+
+---
+
+## docker-compose.yml — decisiones de configuración
+
+### Arranque ordenado con healthcheck
+
+MariaDB tarda unos segundos en inicializarse completamente tras arrancar el proceso. Sin control de orden, el backend podría intentar conectarse antes de que la BD esté lista.
+
+```yaml
+db:
+  healthcheck:
+    test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+    interval: 10s
+    retries: 5
+
+backend:
+  depends_on:
+    db:
+      condition: service_healthy   # espera a que el healthcheck pase
+```
+
+`service_healthy` es más fiable que `service_started` (que solo espera a que el proceso arranque, no a que esté listo para recibir conexiones). `adminer` y `cron` también dependen de `db` con `service_healthy`.
+
+### Red interna Docker y DNS automático
+
+Docker Compose crea una red privada para todos los servicios. Cada servicio es accesible por su nombre desde cualquier otro contenedor:
+
+```yaml
+backend:
+  environment:
+    DB_HOST: db          # resuelve al contenedor bdns_dgda_db
+    SMTP_HOST: mailpit   # resuelve al contenedor bdns_mailpit
+
+cron:
+  environment:
+    BACKEND_INTERNAL_URL: http://backend:8000   # accede al backend sin pasar por Nginx
+```
+
+El cron se comunica con el backend directamente por HTTP interno, no a través de Nginx/HTTPS.
+
+### Volúmenes y bind mounts
+
+```yaml
+db:
+  volumes:
+    - db_data:/var/lib/mysql          # volumen nombrado: persiste entre down/up
+    - ./init/modelo-fisico.sql:/docker-entrypoint-initdb.d/modelo-fisico.sql
+    #  └── MariaDB aplica este SQL automáticamente la primera vez que el volumen está vacío
+
+nginx:
+  volumes:
+    - ./nginx:/etc/nginx/conf.d:ro    # config de Nginx (read-only)
+    - ./ssl:/etc/nginx/ssl:ro         # certificado SSL (read-only)
+    - ../frontend:/usr/share/nginx/html:ro  # frontend como bind mount (read-only)
+    - ../logs/nginx:/var/log/nginx    # logs accesibles desde el host
+
+backend:
+  volumes:
+    - ../logs/app:/app/logs           # logs del backend accesibles desde el host
+```
+
+El frontend se monta como bind mount directo en Nginx. Cualquier cambio en `frontend/` se refleja inmediatamente sin reconstruir la imagen ni reiniciar el contenedor.
+
+El volumen nombrado `db_data` garantiza que los datos de MariaDB sobreviven a `docker compose down` (solo se pierden con `docker compose down -v`).
+
+### restart: unless-stopped
+
+Todos los servicios tienen `restart: unless-stopped`. El contenedor se reinicia automáticamente si falla o si Docker Desktop arranca con el sistema, **excepto** si se paró explícitamente con `docker compose down`. Útil en un entorno de desarrollo que se usa a diario.
+
+### Variables de entorno y .env
+
+Ningún secreto está hardcodeado en `docker-compose.yml`. Todos los valores sensibles se leen de `docker/.env`:
+
+```text
+${MYSQL_ROOT_PASSWORD}   ${MYSQL_USER}   ${MYSQL_PASSWORD}
+${MYSQL_DATABASE}        ${SECRET_KEY}   ${CORS_ORIGINS}
+```
+
+`docker/.env` se genera automáticamente en `install.sh` con contraseñas aleatorias y no se versiona (`.gitignore`). Cada instalación tiene sus propias credenciales.
+
+---
+
+## Dockerfiles
+
+### Backend (`backend/Dockerfile`)
+
+```dockerfile
+FROM python:3.11-slim          # imagen mínima: ~75 MB vs ~900 MB de la completa
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+# └── requirements antes que el código: Docker cachea esta capa y no repite
+#     pip install si solo cambia el código de la aplicación
+
+COPY app ./app                 # solo se re-ejecuta si cambia el código
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+`--no-cache-dir` evita que pip almacene la caché de descarga dentro de la imagen, reduciendo su tamaño final.
+
+### Cron (`docker/cron/Dockerfile`)
+
+```dockerfile
+FROM python:3.12-slim
+
+RUN pip install --no-cache-dir requests pymysql
+# Solo dos dependencias: no necesita FastAPI, SQLAlchemy ni nada del backend
+
+RUN mkdir -p /app/logs/cron /app/scripts
+
+COPY scripts/     /app/scripts/
+COPY scheduler.py /app/scheduler.py
+
+CMD ["python3", "/app/scheduler.py"]
+```
+
+El cron usa `python:3.12-slim` (versión independiente del backend) y solo instala lo que necesita. Sin imagen base compartida: si una imagen falla, la otra sigue funcionando.
+
 ---
 
 ## Fuentes de datos y pipeline
@@ -57,6 +180,65 @@ Fuentes externas (API / PDF / XML / XLSX)
 - `data/processed/epas/` → 5 archivos (2021–2025)
 - `data/processed/eell/` → 3 archivos (2023–2025)
 - `data/final/dataset_unificado.json` → dataset completo normalizado
+
+---
+
+## Endpoints de la API
+
+La documentación interactiva completa (Swagger UI) está en `/docs` — accesible en `https://subvencionesDGDA.local/docs` con Docker levantado, o en `http://localhost:8000/docs` en modo desarrollo.
+
+### Públicos (sin autenticación)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/health` | Estado del servidor |
+| `GET` | `/convocatorias/` | Lista de convocatorias · `Cache-Control: 1 día` |
+| `GET` | `/solicitudes/` | Solicitudes con filtros: `anio`, `tipo`, `estado`, `cif`, `buscar`, `ccaa`, `provincia`, `linea`, `orden`, `limite`, `offset` |
+| `GET` | `/solicitudes/export` | Exportación CSV (máx. 5.000 filas) |
+| `GET` | `/estadisticas/` | Métricas globales · `Cache-Control: 1 hora` |
+| `GET` | `/estadisticas/epas` | Análisis de protectoras |
+| `GET` | `/estadisticas/eell` | Análisis de ayuntamientos |
+| `GET` | `/agrupaciones/{id_solic}` | Municipios miembro de una agrupación EELL |
+| `GET` | `/avisos/` | Convocatorias del año en curso sin resolución |
+
+### Autenticación (sin token)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `POST` | `/auth/registro` | Crear cuenta · devuelve 201 · inicia verificación de email |
+| `GET` | `/auth/verificar` | Confirmar email con `?token=...` |
+| `POST` | `/auth/reenviar-verificacion` | Reenviar email de verificación |
+| `POST` | `/auth/login` | Login · devuelve `access_token` (15 min) + `refresh_token` (30 días) |
+| `POST` | `/auth/refresh` | Renovar access token · rota el refresh token |
+| `POST` | `/auth/logout` | Revocar refresh token |
+| `POST` | `/auth/recuperar` | Solicitar enlace de reset · respuesta idéntica exista o no el email |
+| `POST` | `/auth/reset` | Restablecer contraseña con token · revoca todos los refresh tokens |
+
+### Zona privada (rol: `registrado`)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/privado/perfil` | Datos del usuario en sesión (`id_usuario`, `email`, `rol`, `nombre`) |
+| `PUT` | `/privado/cambiar-nombre` | Actualizar alias |
+| `PUT` | `/privado/cambiar-contrasena` | Cambiar contraseña · revoca todos los refresh tokens |
+| `GET` | `/privado/resumen-exclusivo` | Datos para el mapa choropleth CCAA |
+| `GET` | `/privado/resumen-tabla` | Tabla resumen de solicitudes por convocatoria |
+
+### Panel de administración (rol: `admin`)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/admin/estado` | Estado del sistema: número de usuarios, solicitudes y convocatorias |
+| `GET` | `/admin/usuarios` | Lista completa de usuarios |
+| `PATCH` | `/admin/usuarios/{id}/rol` | Cambiar rol (`registrado` ↔ `admin`) |
+| `PATCH` | `/admin/usuarios/{id}/activo` | Activar o desactivar cuenta |
+| `DELETE` | `/admin/usuarios/{id}` | Eliminar usuario |
+| `GET` | `/admin/avisos` | Lista de avisos activos |
+| `PATCH` | `/admin/avisos/{id}/desactivar` | Desactivar aviso |
+| `PATCH` | `/admin/avisos/{id}/reactivar` | Reactivar aviso |
+| `DELETE` | `/admin/avisos/{id}` | Eliminar convocatoria sin resolución (409 si tiene solicitudes) |
+| `GET` | `/admin/logs` | Últimas N líneas del log de acceso |
+| `GET` | `/admin/logs/errores` | Últimas N líneas del log de errores |
 
 ---
 
@@ -94,7 +276,7 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 | Elemento | Valor |
 |---|---|
-| Access token (JWT) | Expira en **60 minutos** |
+| Access token (JWT) | Expira en **15 minutos** |
 | Refresh token | Expira en **30 días** |
 | Token recuperación de contraseña | Expira en **15 minutos** (un solo uso) |
 | Token verificación de email | Expira en **24 horas** (un solo uso) |
@@ -110,6 +292,26 @@ Fuentes externas (API / PDF / XML / XLSX)
 | `POST /auth/recuperar` | 3 req/min por IP | 2 | Previene spam de emails de recuperación |
 
 Los tres devuelven HTTP 429 directamente desde Nginx sin llegar al backend cuando se supera el límite.
+
+#### Algoritmo token bucket
+
+Nginx implementa rate limiting con el algoritmo **token bucket** (cubo de tokens):
+
+- El cubo tiene capacidad para `burst + 1` tokens.
+- Los tokens se reponen al ritmo del `rate` (10r/m = 1 token cada 6 segundos).
+- Cada petición consume un token. Si el cubo está vacío → 429.
+
+Con `rate=10r/m` y `burst=5`:
+
+- Se permiten **6 peticiones inmediatas** (1 del rate + 5 del burst).
+- A partir de la 7ª petición en el mismo instante → 429.
+- En un minuto completo no se pueden superar ~10 peticiones sostenidas.
+
+**Metáfora:** un grifo llena un vaso a ritmo de 10 gotas por minuto. El vaso tiene capacidad para 6 gotas. Puedes beber las 6 de golpe (burst), pero tienes que esperar a que el grifo lo vuelva a llenar antes de poder beber más. El rate sostenido no cambia.
+
+**Por qué 429 y no 503:** 503 significa "servicio no disponible". 429 significa "el servidor está bien, pero tú estás enviando demasiadas peticiones". Son situaciones distintas y el código de error correcto es el 429.
+
+**Por qué `/auth/refresh` y `/auth/logout` no tienen rate limiting:** estos endpoints requieren presentar un refresh token válido de 64 caracteres aleatorios — sin ese token previo no hay nada que atacar por fuerza bruta. Limitarlos penalizaría usuarios legítimos (por ejemplo, múltiples pestañas renovando sesión a la vez) sin añadir protección real.
 
 ### Límites de datos en la API
 
@@ -132,6 +334,53 @@ Los tres devuelven HTTP 429 directamente desde Nginx sin llegar al backend cuand
 | Sesión activa en login/registro | Si hay token en `localStorage`, `login.html` y `registro.html` redirigen automáticamente a `privado.html` sin mostrar el formulario |
 | Navbar en páginas públicas | `js/navbar.js` detecta el token en `localStorage` y reemplaza el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin necesidad de petición al servidor |
 | SRI en recursos CDN | Atributos `integrity="sha384-..."` y `crossorigin="anonymous"` en los 5 recursos externos (Chart.js ×3, Leaflet JS, Leaflet CSS); el navegador verifica el hash antes de ejecutar/aplicar el recurso |
+
+---
+
+## Rendimiento de carga del frontend
+
+### Caché de assets estáticos (Nginx)
+
+`docker/nginx/default.conf` define dos location blocks para cachear assets:
+
+```nginx
+location ~* \.(webp|png|jpg|jpeg|svg|gif|ico|woff2|woff|ttf|otf)$ {
+    expires 1y;      # → Cache-Control: max-age=31536000
+    try_files $uri =404;
+}
+
+location ~* \.(css|js)$ {
+    expires 1h;      # → Cache-Control: max-age=3600
+    try_files $uri =404;
+}
+```
+
+- **Imágenes y fuentes** — 1 año: raramente cambian, el navegador no vuelve a pedirlas entre sesiones.
+- **CSS y JS** — 1 hora: tiempo suficiente para evitar peticiones redundantes pero corto para que los cambios lleguen en el mismo día de trabajo.
+- Las cabeceras de seguridad del servidor (`X-Frame-Options`, `X-Content-Type-Options`, etc.) siguen aplicando a estos bloques porque usan `expires`, no `add_header`, y la herencia de `add_header` no se rompe.
+
+**Nota:** sin un sistema de cache busting (hash en el nombre del archivo), usar `expires` muy largo en CSS/JS haría que los cambios no llegaran hasta que expire la caché del navegador. La duración de 1 hora es el compromiso entre rendimiento y actualización en un entorno de desarrollo y demo.
+
+### Scripts con `defer`
+
+Todos los `<script src="...">` del proyecto usan el atributo `defer`:
+
+```html
+<script src="js/home.js" defer></script>
+<script src="https://cdn.jsdelivr.net/.../chart.js" defer></script>
+```
+
+`defer` indica al navegador que descargue el script en paralelo mientras parsea el HTML, y que lo ejecute en orden después de que el parsing termine. Equivale a mover el script al final del `<body>` pero con descarga anticipada. Compatible con `DOMContentLoaded` porque los scripts diferidos ejecutan justo antes de que ese evento dispare.
+
+El orden de ejecución se preserva: si `chart.js` viene antes que `home.js` en el documento, `chart.js` siempre ejecuta primero, aunque ambos estén diferidos.
+
+### `fetchpriority` en la imagen hero
+
+```html
+<img src="assets/img/home/handcat.webp" fetchpriority="high">
+```
+
+El atributo `fetchpriority="high"` en la imagen hero de `index.html` indica al navegador que priorice su descarga frente a otros recursos de igual importancia. Mejora el LCP (Largest Contentful Paint) — la métrica que mide cuándo el usuario ve el contenido principal de la página.
 
 ---
 

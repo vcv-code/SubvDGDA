@@ -44,6 +44,23 @@ const API_URL = '';
  * tokens de corta duración con refresh tokens. Para el nivel de este
  * proyecto, borrar el token del cliente es suficiente.
  */
+async function intentarRenovarToken() {
+    const rt = localStorage.getItem('refresh_token');
+    if (!rt) return null;
+    try {
+        const r = await fetch(`${API_URL}/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh_token: rt }),
+        });
+        if (!r.ok) { localStorage.removeItem('refresh_token'); return null; }
+        const d = await r.json();
+        localStorage.setItem('token', d.access_token);
+        localStorage.setItem('refresh_token', d.refresh_token);
+        return d.access_token;
+    } catch { return null; }
+}
+
 async function cerrarSesion() {
     const refreshToken = localStorage.getItem('refresh_token');
     if (refreshToken) {
@@ -89,7 +106,14 @@ async function fetchAutenticado(ruta, token) {
     });
 
     if (respuesta.status === 401) {
-        // Token expirado o inválido → guardar deeplink y redirigir
+        // Token expirado — intentar renovar antes de ir al login
+        const nuevoToken = await intentarRenovarToken();
+        if (nuevoToken) {
+            const reintento = await fetch(`${API_URL}${ruta}`, {
+                headers: { 'Authorization': `Bearer ${nuevoToken}`, 'Content-Type': 'application/json' },
+            });
+            if (reintento.ok) return reintento.json();
+        }
         localStorage.removeItem('token');
         sessionStorage.setItem('redirect_post_login', window.location.href);
         window.location.href = 'login.html';

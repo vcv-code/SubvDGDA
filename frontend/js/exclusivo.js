@@ -58,6 +58,14 @@ async function fetchAutenticado(ruta, token) {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
     });
     if (respuesta.status === 401) {
+        // Token expirado — intentar renovar antes de ir al login
+        const nuevoToken = await intentarRenovarToken();
+        if (nuevoToken) {
+            const reintento = await fetch(`${API_URL}${ruta}`, {
+                headers: { 'Authorization': `Bearer ${nuevoToken}`, 'Content-Type': 'application/json' },
+            });
+            if (reintento.ok) return reintento.json();
+        }
         localStorage.removeItem('token');
         sessionStorage.setItem('redirect_post_login', window.location.href);
         window.location.href = 'login.html';
@@ -334,7 +342,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const perfil = await fetchAutenticado('/privado/perfil', token);
     if (!perfil) return;
 
-    cargarResumenTabla(token);
+    await cargarResumenTabla(token);
     cargarMapaCCAA();
 
     const btnCerrarModal = document.querySelector('.modal-ccaa__cerrar');

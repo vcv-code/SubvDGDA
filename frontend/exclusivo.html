@@ -96,7 +96,20 @@
                 </p>
 
                 <div id="resumen-tabla-contenedor">
-                    <div class="privado-item privado-item--cargando privado-item--cargando-tabla" aria-hidden="true"></div>
+                    <div class="skeleton-tabla" aria-hidden="true">
+                        <div class="skeleton-tabla__cabecera"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                    </div>
+                    <div class="skeleton-tabla" aria-hidden="true">
+                        <div class="skeleton-tabla__cabecera"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                    </div>
                 </div>
 
                 <hr class="privado-divisor">
@@ -198,10 +211,10 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
-    <script src="js/mapa-ccaa.js"></script>
-    <script src="js/navbar.js"></script>
-    <script src="js/exclusivo.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous" defer></script>
+    <script src="js/mapa-ccaa.js" defer></script>
+    <script src="js/navbar.js" defer></script>
+    <script src="js/exclusivo.js" defer></script>
 
 </body>
 </html>
