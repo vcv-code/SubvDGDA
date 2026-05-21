@@ -139,18 +139,16 @@ function leerFiltros() {
 function construirUrl(filtros, pagina) {
     const params = new URLSearchParams();
 
-    // Solo añadimos el parámetro si tiene valor (no está vacío)
-    if (filtros.anio)   params.set('anio',   filtros.anio);
-    if (filtros.tipo)   params.set('tipo',   filtros.tipo);
-    if (filtros.estado) params.set('estado', filtros.estado);
-    // búsqueda por nombre (server-side) - modificación
-    if (filtros.nombre) params.set('buscar', filtros.nombre);
-    // NUEVO
-    if (filtros.ccaa)      params.set('ccaa', filtros.ccaa);
-    if (filtros.provincia) params.set('provincia', filtros.provincia);
-    if (filtros.linea)     params.set('linea', filtros.linea);
+    if (filtros.anio)      params.set('anio',      filtros.anio);
+    if (filtros.tipo)      params.set('tipo',       filtros.tipo);
+    if (filtros.estado)    params.set('estado',     filtros.estado);
+    if (filtros.nombre)    params.set('buscar',     filtros.nombre);
+    if (filtros.ccaa)      params.set('ccaa',       filtros.ccaa);
+    if (filtros.provincia) params.set('provincia',  filtros.provincia);
+    if (filtros.linea)     params.set('linea',      filtros.linea);
 
-    // Paginación: siempre se envían
+    const orden = ordenSelect ? ordenSelect.value : 'entidad-az';
+    params.set('orden',  orden);
     params.set('limite', LIMITE);
     params.set('pagina', pagina);
 
@@ -172,9 +170,11 @@ function sincronizarUrl(filtros, pagina) {
     if (filtros.ccaa)      params.set('ccaa',      filtros.ccaa);
     if (filtros.provincia) params.set('provincia', filtros.provincia);
     if (filtros.linea)     params.set('linea',     filtros.linea);
+    const orden = ordenSelect ? ordenSelect.value : '';
+    if (orden && orden !== 'entidad-az') params.set('orden', orden);
     if (pagina > 1)        params.set('pagina',    pagina);
     const qs = params.toString();
-    history.pushState({}, '', qs ? `?${qs}` : window.location.pathname);
+    history.replaceState({}, '', qs ? `?${qs}` : window.location.pathname);
 }
 
 function cargarFiltrosDesdeUrl() {
@@ -188,6 +188,7 @@ function cargarFiltrosDesdeUrl() {
     if (params.get('provincia'))
         document.getElementById('filtro-provincia').value = params.get('provincia');
     if (params.get('linea'))     filtroLinea.value     = params.get('linea');
+    if (params.get('orden') && ordenSelect) ordenSelect.value = params.get('orden');
     actualizarFiltrosCondicionales();
     return parseInt(params.get('pagina')) || 1;
 }
@@ -255,24 +256,7 @@ async function buscarSolicitudes(pagina = 1) {
 // Ordena el array según el select de orden antes de pintarlo.
 // ─────────────────────────────────────────────────────────────
 function ordenarSolicitudes(solicitudes) {
-    const criterio = ordenSelect ? ordenSelect.value : '';
-
-    // Clonamos para no mutar el array original recibido de la API
-    const copia = [...solicitudes];
-
-    switch (criterio) {
-        case 'importe-desc':
-            return copia.sort((a, b) => (b.importe ?? -1) - (a.importe ?? -1));
-        case 'importe-asc':
-            return copia.sort((a, b) => (a.importe ?? Infinity) - (b.importe ?? Infinity));
-        case 'entidad-az':
-            return copia.sort((a, b) =>
-                (a.beneficiario.nombre || '').localeCompare(b.beneficiario.nombre || '', 'es'));
-        default:
-            // Por defecto: orden alfabético A→Z
-            return copia.sort((a, b) =>
-                (a.beneficiario.nombre || '').localeCompare(b.beneficiario.nombre || '', 'es'));
-    }
+    return solicitudes;
 }
 
 
@@ -631,8 +615,8 @@ filtroAnio.addEventListener('change', actualizarFiltrosCondicionales);
  */
 if (ordenSelect) {
     ordenSelect.addEventListener('change', () => {
-        if (ultimasSolicitudes.length > 0) {
-            pintarTabla(ultimasSolicitudes);
+        if (estado.totalResultados > 0) {
+            buscarSolicitudes(1);
         }
     });
 }

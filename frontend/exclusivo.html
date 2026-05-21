@@ -20,16 +20,17 @@
     <title>Contenido exclusivo — Subvenciones Bienestar Animal</title>
     <meta name="description" content="Datos exclusivos de subvenciones para usuarios registrados.">
 
-    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
     <meta property="og:title" content="Contenido exclusivo — Subvenciones Bienestar Animal">
     <meta property="og:description" content="Análisis avanzados y resoluciones BOE para usuarios registrados.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:image" content="assets/img/logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 </head>
 
 <body>
@@ -41,15 +42,17 @@
     <header>
         <nav class="navbar" role="navigation" aria-label="Navegación principal">
             <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
                 <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
             <ul class="navbar__links">
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="buscador.html">Buscador</a></li>
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
+                <li><a href="privado.html">Mi perfil</a></li>
+                <li><a href="exclusivo.html" aria-current="page" class="activo">Exclusivo</a></li>
                 <li>
                     <button type="button" id="btn-cerrar-sesion" class="btn-login">
                         Cerrar sesión
@@ -70,7 +73,7 @@
         <!-- BANNER -->
         <div class="privado-banner" aria-labelledby="excl-titulo">
             <div class="contenedor">
-                <span class="privado-banner__badge">Zona Privada</span>
+
                 <h1 class="privado-banner__titulo" id="excl-titulo">Contenido exclusivo</h1>
                 <p class="privado-banner__meta">
                     ← <a href="privado.html" class="privado-banner__volver">Volver a mi perfil</a>
@@ -94,6 +97,29 @@
 
                 <div id="resumen-tabla-contenedor">
                     <div class="privado-item privado-item--cargando privado-item--cargando-tabla" aria-hidden="true"></div>
+                </div>
+
+                <hr class="privado-divisor">
+
+                <!-- Mapa choropleth CCAA -->
+                <h2 class="privado-seccion__titulo">Distribución geográfica de subvenciones EELL</h2>
+                <p class="privado-seccion__subtitulo" id="subtitulo-mapa-ccaa">
+                    Importes concedidos por comunidades autónomas (2023–2025). Pasa el cursor por las comunidades para ver el importe total y número de concesiones, y haz clic en ellas para ver el top 10 de municipios (salvo que tengan menos).
+                </p>
+
+                <div class="card-grafico mb-lg">
+                    <div class="card-grafico__cabecera">
+                        <div>
+                            <p class="card-grafico__titulo">Mapa de calor por CCAA</p>
+                        </div>
+                    </div>
+                    <p class="mapa-ccaa-hint">Toca para ver el importe · Doble toque para ver el top de municipios.</p>
+                    <div class="mapa-ccaa-wrapper">
+                        <div id="mapa-ccaa"
+                             role="img"
+                             aria-label="Mapa de calor de subvenciones EELL por comunidad autónoma">
+                        </div>
+                    </div>
                 </div>
 
                 <hr class="privado-divisor">
@@ -129,7 +155,7 @@
     <footer class="footer-principal">
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
                 <span><strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026</span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
@@ -150,6 +176,31 @@
         </div>
     </footer>
 
+    <!-- Modal top 10 municipios -->
+    <div id="modal-ccaa" class="modal-ccaa" role="dialog" aria-modal="true" aria-labelledby="modal-ccaa-titulo" style="display:none;">
+        <div class="modal-ccaa__panel">
+            <div class="modal-ccaa__cabecera">
+                <h3 class="modal-ccaa__titulo" id="modal-ccaa-titulo"></h3>
+                <button class="modal-ccaa__cerrar" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-ccaa__cuerpo">
+                <div class="modal-ccaa__col">
+                    <p class="modal-ccaa__col-titulo">Acumulado <span id="modal-anio-min"></span>–<span id="modal-anio-max"></span></p>
+                    <p class="modal-ccaa__col-nota" id="modal-nota-acum"></p>
+                    <ol class="modal-ccaa__lista" id="modal-lista-acum"></ol>
+                </div>
+                <div class="modal-ccaa__col">
+                    <p class="modal-ccaa__col-titulo">Último año con resolución (<span id="modal-anio-ult"></span>)</p>
+                    <p class="modal-ccaa__col-nota" id="modal-nota-anio"></p>
+                    <ol class="modal-ccaa__lista" id="modal-lista-anio"></ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+    <script src="js/mapa-ccaa.js"></script>
+    <script src="js/navbar.js"></script>
     <script src="js/exclusivo.js"></script>
 
 </body>

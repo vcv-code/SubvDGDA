@@ -1,8 +1,11 @@
+import logging
 import os
 import secrets
 import smtplib
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
+
+logger = logging.getLogger(__name__)
 
 import bcrypt
 from jose import jwt
@@ -80,8 +83,11 @@ def enviar_email_verificacion(email_destino: str, token: str) -> None:
         f"Subvenciones DGDA"
     )
 
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as servidor:
-        servidor.send_message(msg)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as servidor:
+            servidor.send_message(msg)
+    except smtplib.SMTPException as e:
+        logger.error("Error enviando email de verificación a %s: %s", email_destino, e)
 
 
 def enviar_email_recuperacion(email_destino: str, token: str) -> None:
@@ -101,5 +107,8 @@ def enviar_email_recuperacion(email_destino: str, token: str) -> None:
         f"Subvenciones DGDA"
     )
 
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as servidor:
-        servidor.send_message(msg)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as servidor:
+            servidor.send_message(msg)
+    except smtplib.SMTPException as e:
+        logger.error("Error enviando email de recuperación a %s: %s", email_destino, e)

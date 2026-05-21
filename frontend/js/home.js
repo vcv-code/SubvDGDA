@@ -423,8 +423,23 @@ function crearGraficoLinea(porAnio) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-linea', 'evolucion-importe.png');
-    configurarModal(instancia, 'Evolución del importe por año',
-        'El importe total creció de forma constante entre 2021 y 2025. La incorporación de las EELL en 2023 generó un salto significativo: el presupuesto disponible casi se duplicó respecto a los años anteriores, que solo cubrían protectoras. El ejercicio 2025 es el de mayor volumen de toda la serie.');
+    configurarModal(instancia, 'Evolución del importe por año', `
+<p>4 millones para protección animal en toda España (2 millones para protectoras y 2 millones para administraciones), pueden parecer mucho… hasta que los comparas.</p>
+<p>El gasto público estatal supera actualmente los 200.000 millones de euros anuales. Eso significa que esta partida representa aprox. un 0,0019&nbsp;% del gasto: unos 0,08&nbsp;€ por habitante al año.</p>
+<p>Solo la Comunidad de Madrid ha destinado 7,2 millones de dinero público a tauromaquia en 2026. En 2025 aprobó además 1,7 millones para la «Fiesta del Toro». Un tribunal anuló posteriormente un convenio previo de 1,4 millones al considerarlo una subvención concedida «a dedo».</p>
+<p>4 millones es:</p>
+<ul>
+<li>menos que el caché anual de algunos futbolistas de primera,</li>
+<li>menos que muchas campañas institucionales de publicidad,</li>
+<li>menos que el coste de algunas rotondas o reformas urbanas concretas,</li>
+<li>menos que el presupuesto anual de fiestas de bastantes ciudades medianas,</li>
+<li>menos que algunos rescates a empresas privadas o sobrecostes públicos aislados.</li>
+</ul>
+<p>Mientras tanto, protectoras saturadas, colonias felinas sin recursos y miles de animales abandonados dependen de donaciones y de voluntariado agotado física, psicológica y económicamente.</p>
+<p>Es positivo que exista financiación estatal. Pero sigue siendo insuficiente para un problema estructural que afecta al bienestar animal, la salud pública y la convivencia.</p>
+<p>Invertir en protección animal no es gasto simbólico: es prevención social, sanitaria y administrativa.</p>
+<p class="modal-grafica__fuentes"><strong>Fuentes:</strong> <a href="https://www.lamoncloa.gob.es/consejodeministros/resumenes/paginas/2025/181125-rueda-de-prensa-ministros.aspx" target="_blank" rel="noopener noreferrer">Consejo de Ministros (nov. 2025)</a> · <a href="https://www.animanaturalis.org/n/47065/andalucia-aumenta-al-80-las-subvenciones-publicas-a-municipios-taurinos-y-el-dinero-publico-a-la-tauromaquia-bate-records-en-toda-espana" target="_blank" rel="noopener noreferrer">Animanaturalis: subvenciones a tauromaquia</a> · <a href="https://www.comunidad.madrid/noticias/2025/03/26/comunidad-madrid-aprueba-17-millones-euros-fiesta-toro-2025" target="_blank" rel="noopener noreferrer">Comunidad de Madrid: 1,7&nbsp;M€ Fiesta del Toro (2025)</a></p>
+`);
 }
 
 
@@ -485,8 +500,13 @@ function crearGraficoDonut(datos) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-donut', 'distribucion-estados.png');
-    configurarModal(instancia, 'Distribución por estado',
-        'Algo más del 40 % de las solicitudes acaban concedidas. El grupo "No beneficiaria" —igual de numeroso— recoge entidades que cumplen todos los requisitos pero quedan fuera por falta de presupuesto. Esto refleja una demanda estructuralmente mayor que los fondos disponibles cada año.');
+    configurarModal(instancia, 'Distribución por estado', `
+<p>Algo más del 40&nbsp;% de las solicitudes terminan concedidas. Sin embargo, un porcentaje muy similar corresponde a entidades «No beneficiarias»: protectoras y ayuntamientos que cumplen los requisitos y obtienen puntuación válida, pero quedan fuera únicamente por falta de presupuesto.</p>
+<p>Esto refleja que la demanda real de recursos para protección animal es estructuralmente muy superior a los fondos disponibles cada año.</p>
+<p>La gráfica también muestra otro problema importante: una parte de las solicitudes queda excluida o desistida por cuestiones burocráticas, documentación o plazos. Muchas protectoras y pequeños ayuntamientos funcionan con voluntariado, escasos recursos administrativos y una carga de trabajo enorme, por lo que afrontar procedimientos complejos y cambiantes resulta especialmente difícil.</p>
+<p>Aunque desde la administración se ofrecen charlas y apoyo técnico —algo positivo y necesario—, los requisitos y criterios suelen modificarse con frecuencia y no siempre simplifican el proceso.</p>
+<p>En la práctica, la protección animal sigue dependiendo en gran medida del esfuerzo económico y humano de asociaciones, ayuntamientos y voluntariado que sostienen servicios de interés público con recursos muy limitados.</p>
+`);
 }
 
 
@@ -566,8 +586,13 @@ function crearGraficoBarras(porAnio) {
         },
     });
     configurarDescarga(instancia, 'btn-dl-barras', 'epa-vs-eell.png');
-    configurarModal(instancia, 'EPA vs EELL por año',
-        'Desde 2023, las subvenciones a ayuntamientos (EELL) superan en volumen económico a las de protectoras (EPA). Esto no significa que haya más ayuntamientos beneficiados, sino que los importes individuales son mucho más altos: un ayuntamiento gestiona más animales y recibe en consecuencia.');
+    configurarModal(instancia, 'EPA vs EELL por año (M€)', `
+<p>La evolución del presupuesto muestra un avance importante respecto a 2021: las ayudas casi se cuadruplicaron hasta alcanzar cerca de 4 millones de euros anuales desde 2023.</p>
+<p>Sin embargo, también se observa que el crecimiento se ha estancado. Desde entonces, la financiación permanece prácticamente congelada pese al aumento de solicitudes, las nuevas obligaciones legales y la creciente presión sobre protectoras y ayuntamientos.</p>
+<p>Las protectoras continúan sosteniendo una parte esencial del sistema mediante rescates, acogidas, atención veterinaria y trabajo voluntario. Al mismo tiempo, muchas administraciones pequeñas y medianas se encuentran sobrepasadas por el volumen de trabajo y las exigencias burocráticas asociadas a la nueva normativa estatal.</p>
+<p>No obstante, parte del problema no parece deberse únicamente a falta de medios. En muchos casos también existe escasa implicación institucional y poco interés real en aplicar las obligaciones de bienestar animal vigentes desde hace más de 3 años y medio, lo que provoca grandes diferencias entre territorios: mientras algunos ayuntamientos intentan adaptarse, otros continúan incumpliendo o retrasando medidas básicas sin apenas consecuencias ni mecanismos efectivos de control.</p>
+<p>En cualquier caso, el principal problema de estas subvenciones sigue siendo su escasa magnitud. Aunque el presupuesto actual supone un avance, continúa siendo insuficiente para cubrir de forma estructural las necesidades existentes de protección animal en todo el territorio.</p>
+`);
 }
 
 
@@ -685,7 +710,7 @@ async function cargarConvocatorias() {
                     const pendiente  = c.fecha_resolucion === null && c.fecha_convocatoria !== null;
                     const accion     = pendiente
                         ? `<span class="convoc-pendiente">Pendiente de resolución</span>`
-                        : `<a href="solicitudes.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm">Ver →</a>`;
+                        : `<a href="buscador.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm">Ver →</a>`;
                     return `<tr>
                         <td>${c.anio_convocatoria}${asterisco}</td>
                         <td>${fechaStr}</td>

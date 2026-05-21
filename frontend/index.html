@@ -54,11 +54,11 @@
     <meta name="description"
         content="Consulta y analiza subvenciones de bienestar animal y colonias felinas (BDNS/DGDA 2021–2025).">
 
-    <link rel="icon" href="assets/logo.png" type="image/png">
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
     <meta property="og:title" content="Subvenciones Bienestar Animal — Inicio">
     <meta property="og:description" content="Plataforma de consulta y análisis de subvenciones públicas de bienestar animal en España (2021–2025). Datos de BDNS y DGDA.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:image" content="assets/img/logo.png">
 
     <!--
         Google Fonts — Fuente Inter
@@ -105,7 +105,7 @@
 
             <!-- Logo + nombre del proyecto -->
             <a class="navbar__logo" href="index.html" aria-label="Ir a la página de inicio">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
                 <span class="navbar__logo-text">Subvenciones DGDA</span>
             </a>
 
@@ -117,7 +117,7 @@
             -->
             <ul class="navbar__links">
                 <li><a href="index.html" class="activo" aria-current="page">Inicio</a></li>
-                <li><a href="solicitudes.html">Buscador</a></li>
+                <li><a href="buscador.html">Buscador</a></li>
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
@@ -201,14 +201,14 @@
                         El uso de clases reutilizables evita repetir estilos en cada
                         botón de todas las páginas.
                     -->
-                    <a href="solicitudes.html" class="btn btn-primario">
+                    <a href="buscador.html" class="btn btn-primario">
                         Ir al buscador
                     </a>
                 </div>
 
                 <!-- Columna derecha: imagen del gato -->
                 <div class="portada-split__imagen">
-                    <img src="assets/homebdns.webp" alt="Gestora de bienestar animal en una plaza española, con perro y gato descansando en un banco"
+                    <img src="assets/img/home/handcat.webp" alt="Mano acariciando un gato"
                         class="portada-split__imagen-real">
                 </div>
 
@@ -283,6 +283,7 @@
             <div class="contenedor">
                 <div id="convocatorias-bloque" class="convocatorias-bloque">
                     <h3 class="sub-bloque__titulo">Convocatorias</h3>
+                    <p class="bloque-subtitulo convocatorias-subtitulo">Información de las convocatorias publicadas en la actualidad y acceso directo a las resoluciones según el tipo de entidad y año.</p>
                     <div class="grid-2">
                         <div>
                             <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Protectoras de Animales (EPA)</h3>
@@ -386,6 +387,29 @@
 
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
+                            <div>
+                                <h3 class="card-grafico__titulo">EPA vs EELL por año (M€)</h3>
+                                <p class="card-grafico__subtitulo">Importe concedido por tipo de convocatoria</p>
+                            </div>
+                            <button class="btn-descargar-png" id="btn-dl-barras"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico EPA vs EELL como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="home-grafico-barras" role="img"
+                                aria-label="Gráfico de barras: comparativa EPA vs EELL por año"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Fila 2: rosco distribución + tasa de éxito -->
+                <div class="grid-2">
+
+                    <div class="card-grafico">
+                        <div class="card-grafico__cabecera">
                             <h3 class="card-grafico__titulo">Distribución por estado</h3>
                             <button class="btn-descargar-png" id="btn-dl-donut"
                                     style="display:none;"
@@ -414,29 +438,6 @@
                                 <span class="leyenda-item__color" aria-hidden="true" style="background-color:#6B7280;"></span>
                                 <span><strong>Desistida:</strong> no completaron el trámite en plazo</span>
                             </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Fila 2: barras EPA vs EELL -->
-                <div class="grid-2">
-
-                    <div class="card-grafico">
-                        <div class="card-grafico__cabecera">
-                            <div>
-                                <h3 class="card-grafico__titulo">EPA vs EELL por año (M€)</h3>
-                                <p class="card-grafico__subtitulo">Importe concedido por tipo de convocatoria</p>
-                            </div>
-                            <button class="btn-descargar-png" id="btn-dl-barras"
-                                    style="display:none;"
-                                    aria-label="Descargar gráfico EPA vs EELL como PNG">
-                                ↓ PNG
-                            </button>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="home-grafico-barras" role="img"
-                                aria-label="Gráfico de barras: comparativa EPA vs EELL por año"></canvas>
                         </div>
                     </div>
 
@@ -488,43 +489,21 @@
                 </h2>
                 <p class="seccion-registro__subtitulo">
                     Accede a datos y análisis exclusivos sobre subvenciones de bienestar animal,
-                    pensados para entidades, protectoras y cualquier persona interesada en la
-                    transparencia de los fondos públicos.
+                    pensados para entidades y cualquier persona interesada en la transparencia de los fondos públicos.
                 </p>
 
                 <div class="seccion-registro__grid">
 
                     <div class="seccion-registro__card">
-                        <span class="seccion-registro__badge-disponible">Disponible</span>
-                        <!-- Icono: gráfico de barras (resumen de datos) -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="12" width="4" height="9" rx="1"/>
-                                <rect x="10" y="7" width="4" height="14" rx="1"/>
-                                <rect x="17" y="3" width="4" height="18" rx="1"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Resumen de solicitudes</p>
-                        <p class="seccion-registro__card-texto">
-                            Tabla completa de todas las convocatorias EPA y EELL
-                            con desglose por estado e importe concedido.
-                        </p>
+                        <span class="seccion-registro__badge-disponible">⭐ Disponible</span>
+                        <p class="seccion-registro__card-titulo seccion-registro__card-titulo--spaced">— Tabla resumen desglosada</p>
+                        <p class="seccion-registro__card-titulo">— Mapa de calor EELL por comunidades</p>
+                        <p class="seccion-registro__card-titulo">— Top de municipios beneficiados</p>
                     </div>
 
                     <div class="seccion-registro__card seccion-registro__card--proximamente">
                         <span class="seccion-registro__badge-prox">Próximamente</span>
-                        <!-- Icono: documento con análisis -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                                <rect x="9" y="3" width="6" height="4" rx="1"/>
-                                <line x1="9" y1="12" x2="15" y2="12"/>
-                                <line x1="9" y1="16" x2="13" y2="16"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Causas de exclusión frecuentes</p>
+                        <p class="seccion-registro__card-titulo seccion-registro__card-titulo--spaced">Causas de exclusión frecuentes</p>
                         <p class="seccion-registro__card-texto">
                             Análisis de los motivos más comunes de exclusión
                             por tipo de convocatoria.
@@ -533,16 +512,7 @@
 
                     <div class="seccion-registro__card seccion-registro__card--proximamente">
                         <span class="seccion-registro__badge-prox">Próximamente</span>
-                        <!-- Icono: diana / umbral -->
-                        <span class="seccion-registro__icono" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="12" r="6"/>
-                                <circle cx="12" cy="12" r="2"/>
-                            </svg>
-                        </span>
-                        <p class="seccion-registro__card-titulo">Puntuación mínima por convocatoria</p>
+                        <p class="seccion-registro__card-titulo seccion-registro__card-titulo--spaced">Puntuación mínima por convocatoria</p>
                         <p class="seccion-registro__card-texto">
                             Umbral de puntuación a partir del cual se obtuvo
                             concesión en cada año.
@@ -577,7 +547,7 @@
         <div class="footer-principal__zona">
 
             <div class="footer-principal__marca">
-                <img src="assets/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
                 <span>
                     <strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026
                 </span>
@@ -619,7 +589,7 @@
          ===================================================== -->
     <script src="js/navbar.js"></script>
     <!-- Chart.js debe cargarse ANTES que home.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
     <script src="js/modal-grafica.js"></script>
     <script src="js/home.js"></script>
 

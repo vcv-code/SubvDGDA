@@ -1,6 +1,9 @@
+import logging
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
+
+logger = logging.getLogger(__name__)
 from sqlalchemy.orm import Session
 
 from ..auth import (hashear_password, verificar_password, crear_token,
@@ -63,6 +66,7 @@ def registro(datos: RegistroIn, db: Session = Depends(get_db)):
 def login(datos: LoginIn, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.email == datos.email).first()
     if not usuario or not verificar_password(datos.password, usuario.password):
+        logger.warning("Intento de login fallido para: %s", datos.email)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email o contraseña incorrectos",
@@ -182,5 +186,9 @@ def reset_password(datos: ResetPasswordIn, db: Session = Depends(get_db)):
     usuario.password         = hashear_password(datos.contrasena_nueva)
     usuario.email_verificado = True
     rt.usado = True
+    db.query(RefreshToken).filter(
+        RefreshToken.id_usuario == usuario.id_usuario,
+        RefreshToken.revocado == False,
+    ).update({"revocado": True})
     db.commit()
     return {"mensaje": "Contraseña actualizada correctamente"}
