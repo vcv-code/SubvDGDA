@@ -64,7 +64,6 @@ Frontend
 
 ## Modelo de datos (comparativa diagramas ER)
 
-```html
 <table align="center">
   <tr>
     <th>Original</th>
@@ -75,7 +74,6 @@ Frontend
     <td><img src="docs/img/Modelo-ER-Def.jpg" width="400" alt="Diagrama ER definitivo"></td>
   </tr>
 </table>
-```
 
 ---
 
