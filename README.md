@@ -13,6 +13,47 @@ Proyecto desarrollado por:
 
 ---
 
+## Índice
+
+- **Proyecto**
+  - [Objetivos del proyecto](#objetivos-del-proyecto)
+  - [Tecnologías](#tecnologías)
+  - [Estructura del proyecto](#estructura-del-proyecto)
+  - [Documentación técnica](#documentación-técnica)
+  - [Arquitectura del sistema](#arquitectura-del-sistema)
+- **Datos**
+  - [Fuentes de datos analizadas](#fuentes-de-datos-analizadas)
+  - [Fuentes oficiales DGDA (BOE)](#fuentes-oficiales-dgda-boe)
+  - [Pipeline de datos](#pipeline-de-datos)
+  - [Scripts de datos](#scripts-de-datos)
+  - [Validación de datos](#validación-de-datos)
+  - [Dataset final](#dataset-final)
+- **Aplicación**
+  - [Descripción general del proyecto](#descripción-general-del-proyecto)
+    - [Base de datos](#base-de-datos)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+- **Instalación y uso**
+  - [Desarrollo](#desarrollo)
+  - [Entorno de trabajo](#entorno-de-trabajo)
+  - [Docker — arrancar el sistema](#docker--arrancar-el-sistema)
+    - [Nginx — qué hace exactamente](#nginx--qué-hace-exactamente)
+    - [Tamaño de las imágenes Docker](#tamaño-de-las-imágenes-docker)
+  - [Makefile — atajos para el día a día](#makefile--atajos-para-el-día-a-día)
+  - [Tests](#tests)
+    - [Automáticos (pytest)](#ejecutar-todos-los-tests)
+    - [Manuales — integración E2E](#pruebas-de-integración-end-to-end-manuales)
+- **Proceso y estado**
+  - [Flujo de trabajo](#flujo-de-trabajo)
+  - [Gestión del proyecto](#gestión-del-proyecto)
+  - [Estado actual](#estado-actual)
+- **Apéndices**
+  - [Notas técnicas](#notas-técnicas)
+  - [Limitaciones conocidas del dato de origen](#limitaciones-conocidas-del-dato-de-origen)
+  - [Mejoras futuras](#mejoras-futuras)
+
+---
+
 ## Objetivos del proyecto
 
 El proyecto consiste en el desarrollo de una **plataforma web para analizar subvenciones públicas relacionadas con bienestar animal en España**, centralizando información actualmente dispersa y permitiendo su consulta, filtrado y visualización a partir de datos abiertos y documentos oficiales.
@@ -35,47 +76,44 @@ El proyecto busca facilitar el análisis y comprensión de las políticas públi
 La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 
 - [Referencia técnica](docs/referencia-tecnica.md) — arquitectura, seguridad, HTTPS, cron, logs, tests y comandos
+- [Pipeline de datos](docs/pipeline-datos.md) — API BDNS, parsers, herramientas, problemas resueltos y organización del dataset
 - [Modelo de datos](docs/modelo-datos.md) — esquema de la BD y relaciones
+- [Sistema de autenticación](docs/autenticacion.md) — JWT, access/refresh token, rotación, verificación email, honeypot
 - [Tests automáticos](docs/tests.md) — cobertura y técnicas
-- [API BDNS externa](docs/api-bdns.md) — endpoints y estructura de la fuente de datos
 - [Especificaciones del frontend](frontend/docs/especificaciones-frontend.md) — componentes, páginas y decisiones de diseño
 - [Diseño del frontend](frontend/docs/diseño.md) — paleta, tipografía y guía visual
+- [Patrones JavaScript](frontend/docs/patrones.md) — URLSearchParams, history, fetch, auth cliente, delegación de eventos
 - [Historial de implementación](docs/historial-implementacion.md) — registro completo de funcionalidades desarrolladas
 
 ---
 
 ## Arquitectura del sistema
 
-El sistema sigue una arquitectura cliente–servidor basada en una API REST:
+El sistema sigue una arquitectura cliente–servidor basada en una API REST. Todos los servicios corren en contenedores Docker orquestados con `docker compose`.
 
 ```text
-API externa BDNS + PDFs oficiales
-      ↓
-Backend Python
-      ↓
-Base de datos MySQL / MariaDB
-      ↓
-API propia (FastAPI)
-      ↓
-Nginx (proxy inverso, puerto 80 → redirige a 443 HTTPS)
-      ↓
-Frontend
+API externa BDNS + PDFs/XML BOE
+          ↓  (scripts de parseo, se ejecutan una vez)
+    Base de datos MariaDB
+          ↓
+    Backend FastAPI  ←──── Cron (sincronización automática con BDNS)
+          ↓
+    Nginx (puerto 443 HTTPS)
+     ├── /api/*  → proxy al backend (puerto 8000 interno)
+     └── /*      → archivos estáticos del frontend
+          ↓
+    Navegador (HTML + CSS + JS vanilla)
 ```
 
----
+**Flujo de una petición típica:**
 
-## Modelo de datos (comparativa diagramas ER)
+1. El navegador carga `buscador.html` desde Nginx (archivo estático)
+2. El JS hace `fetch('/solicitudes/?tipo=epa&...')` al mismo dominio
+3. Nginx redirige la petición al backend FastAPI
+4. FastAPI consulta MariaDB y devuelve JSON
+5. El JS pinta los resultados en la tabla
 
-<table align="center">
-  <tr>
-    <th>Original</th>
-    <th>Revisado</th>
-  </tr>
-  <tr>
-    <td><img src="docs/img/modelo-datos-er-v1.png" width="400" alt="Diagrama ER original"></td>
-    <td><img src="docs/img/Modelo-ER-Def.jpg" width="400" alt="Diagrama ER definitivo"></td>
-  </tr>
-</table>
+**Cron:** contenedor independiente que cada pocos días comprueba la API de BDNS para detectar nuevas convocatorias y actualizar la `fecha_resolucion` de las convocatorias pendientes cuando BDNS la publica (hace desaparecer el aviso de la home automáticamente). El contenido de las resoluciones —beneficiarios e importes— no se descarga automáticamente: requiere ejecutar los parsers del BOE manualmente.
 
 ---
 
@@ -94,72 +132,49 @@ Frontend
 
 ---
 
-## Descripción general del proyecto
+## Estructura del proyecto
 
-- **backend/** → lógica del servidor y API  
-- **frontend/** → interfaz web  
-- **data/** → datos descargados o procesados  
-- **scripts/** → scripts de obtención y procesamiento de datos  
-- **docs/** → documentación técnica del proyecto  
-- **docker/** → configuración de contenedores  
-
-### Frontend
-
-Interfaz web para explorar los datos mediante filtros y visualizaciones. La carpeta `frontend/` contiene:
-
-- `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
-- `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
-- `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
-- `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
-- `scripts/` — utilidades de desarrollo (ver abajo)
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido
-- `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
-- `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
-
-#### Scripts de desarrollo (`frontend/scripts/`)
-
-- **`color-privado.sh`** — cambia los colores del banner y fondo de `privado.html` y `exclusivo.html` sin tocar el código a mano. Edita las variables CSS `--banner-privado`, `--fondo-privado` y `--hover-privado` en `styles.css`.
-
-  ```bash
-  # Interactivo (pregunta los colores uno a uno)
-  ./frontend/scripts/color-privado.sh
-
-  # Con argumentos directos
-  ./frontend/scripts/color-privado.sh "#2D6A4F" "#FAF4EE" "#E8F2EC"
-
-  # Solo cambiar el banner, dejar el resto igual
-  ./frontend/scripts/color-privado.sh "#1A3429" "" ""
-  ```
-
-#### Variables CSS de la zona privada
-
-Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `:root` (editables con el script o a mano):
-
-| Variable | Valor actual | Uso |
-|---|---|---|
-| `--banner-privado` | `#2D6A4F` | Fondo del banner superior |
-| `--fondo-privado` | `#FAF4EE` | Fondo del cuerpo de la página |
-| `--hover-privado` | `#E8F2EC` | Hover de la tarjeta de acceso a exclusivo |
-
-### Backend
-
-Responsable de:
-
-- consultar APIs externas  
-- procesar los datos  
-- almacenarlos en base de datos  
-- exponerlos mediante API  
-
-### Base de datos
-
-Almacena:
-
-- convocatorias  
-- concesiones  
-- beneficiarios  
-- importes  
-- metadatos  
+```text
+analisis-bdns-dgda/
+├── .gitignore              ← archivos excluidos del repositorio (venv, .env, SSL, datos raw…)
+├── install.sh              ← instalación automática
+├── uninstall.sh            ← desinstalación guiada
+├── Makefile                ← atajos de desarrollo
+├── requeriments.txt        ← dependencias Python para scripts locales (parsers, carga de datos)
+│
+├── backend/
+│   ├── app/
+│   │   ├── routers/        ← endpoints FastAPI
+│   │   ├── models.py       ← ORM SQLAlchemy
+│   │   ├── schemas.py      ← validación Pydantic
+│   │   └── auth.py         ← JWT y funciones de autenticación
+│   └── requirements.txt    ← dependencias del contenedor Docker (FastAPI, SQLAlchemy…)
+│
+├── frontend/
+│   ├── css/styles.css      ← hoja de estilos compartida
+│   ├── js/                 ← un archivo JS por página
+│   ├── assets/             ← imágenes, logos, wireframes
+│   ├── docs/               ← especificaciones y diseño frontend
+│   └── *.html              ← páginas de la aplicación
+│
+├── docker/
+│   ├── docker-compose.yml  ← define los 6 servicios, red interna y volúmenes
+│   ├── nginx/default.conf  ← proxy inverso + HTTPS + rate limiting
+│   ├── cron/               ← scheduler Python
+│   └── init/               ← SQL inicial y migraciones
+│
+├── data/
+│   ├── raw/                ← XMLs y PDFs del BOE descargados
+│   ├── processed/          ← JSONs intermedios por año
+│   └── final/dataset_unificado.json
+│
+├── scripts/
+│   ├── data_processing/    ← parsers EPA y EELL, carga de BD
+│   └── ingestion/          ← cliente API BDNS
+│
+├── docs/                   ← referencia técnica, modelo datos, tests
+└── tests/                  ← 197 tests pytest
+```
 
 ---
 
@@ -191,213 +206,76 @@ Esto obliga a usar los documentos oficiales del BOE (XML y PDF) como fuente prin
 
 ---
 
-## PDFs oficiales (DGDA)
+## Fuentes oficiales DGDA (BOE)
 
-Contienen:
+Las resoluciones de concesión no aparecen en la API BDNS — se obtienen directamente de los documentos oficiales publicados en el BOE.
 
-- beneficiarios  
-- puntuaciones  
-- importes  
-- estados  
+### Datos de protectoras (EPA) — XML BOE
 
-### Datos de asociaciones (EPA)
+| Campo | Descripción |
+|-------|-------------|
+| CIF | Identificador fiscal de la entidad |
+| Expediente | Número de expediente de la solicitud |
+| Entidad | Nombre de la protectora |
+| Puntuación | Puntuación obtenida en la evaluación |
+| Importe | Importe concedido (€) |
+| Estado | Concedida / No beneficiaria / Excluida / Desistida |
 
-- CIF  
-- expediente  
-- entidad  
-- puntuación  
-- importe  
+### Datos de ayuntamientos (EELL) — PDF (2023–2024) y XML+Excel (2025)
 
-### Datos de entidades locales (EELL)
+| Campo | Descripción |
+|-------|-------------|
+| NIF / CIF | Identificador fiscal del ayuntamiento |
+| Expediente | Número de expediente |
+| Entidad | Nombre del ayuntamiento o mancomunidad |
+| Puntuación | Puntuación obtenida |
+| Importe | Importe concedido (€) |
+| Estado | Concedida / No beneficiaria / Excluida / Desistida |
+| Tramo | Tramo poblacional (T1/T2/T3) — solo EELL 2025 |
 
-- NIF  
-- expediente  
-- entidad  
-- puntuación  
-- importe  
-
-Existen agrupaciones de entidades sin desglose individual de importe.
+**Agrupaciones municipales:** varios ayuntamientos pueden presentarse conjuntamente. En ese caso el importe aparece a nombre del representante, pero en EELL 2025 el Excel complementario incluye el desglose individual por municipio miembro (`agrupacion_miembros`), con el importe asignado a cada uno.
 
 ---
 
-## Estrategia técnica
+## Pipeline de datos
+
+La API BDNS proporciona convocatorias pero no incluye los beneficiarios reales de las subvenciones de la DGDA. Los datos de concesiones se obtienen de documentos oficiales del BOE (XML, PDF, Excel) y se procesan mediante un pipeline de parseo, normalización y carga:
 
 ```text
-API BDNS
-↓
-Convocatorias
-↓
-Relación con PDFs
-↓
-Datos completos
-```
-
-Nota:
-La API BDNS proporciona información de convocatorias, pero no incluye los beneficiarios reales de las subvenciones de la DGDA.  
-Por ello, se utiliza un pipeline adicional basado en PDFs oficiales para reconstruir los datos completos de concesiones.
-
-### Pipeline real implementado
-
-```text
-XML / PDF BOE (DGDA) + Excel manual (EELL 2025)
-↓
-Parsing (pdfplumber / BeautifulSoup / openpyxl)
-↓
+XML / PDF / Excel BOE (DGDA)
+      ↓  pdfplumber · BeautifulSoup · openpyxl
 JSON por año (data/processed/)
-  · EELL 2025: incluye es_agrupacion y municipios_agrupacion
-    (leído de las hojas Entidades_beneficiarias y Municipios del xlsx)
-↓
-Unificación y normalización de estados (unificar_datasets.py)
-↓
-Dataset unificado (data/final/dataset_unificado.json)
-↓
-Carga en base de datos (cargar_dataset.py)
-  · 6 pasos: convocatorias → beneficiarios → solicitudes
-             → concesiones → agrupaciones → agrupacion_miembros
-  · Los municipios miembro sin registro propio en el dataset
-    se insertan en beneficiarios en el paso 2
+      ↓  unificar_datasets.py
+data/final/dataset_unificado.json
+      ↓  cargar_dataset.py
+MariaDB — 6 pasos: convocatorias → beneficiarios → solicitudes
+          → concesiones → agrupaciones → agrupacion_miembros
 ```
 
----
+Fuentes por tipo:
 
-## Procesamiento de datos
+- **EPA** (protectoras) — XML BOE · 2021–2025 · parser base + parser 2025 separado por cambio de cabeceras
+- **EELL** (ayuntamientos) — PDF 2023–2024 + XML y Excel 2025 (tablas publicadas como imagen en el BOE)
 
-### Entidades Locales (EELL)
-
-- 2023 → PDF (pdfplumber, diseño en dos pasadas para celdas multilinea)
-- 2024 → PDF (pdfplumber, misma arquitectura)
-- 2025 → XML BOE + Excel manual (beneficiarias publicadas como imagen)
-
-Scripts:
-
-- `parser_eell_PDF_base.py` → EELL 2023 y 2024
-- `parser_eell_BOE_2025.py` → EELL 2025
-
-> La resolución EELL 2025 publica las tablas de entidades beneficiarias como imágenes incrustadas en el BOE, lo que impide extraerlas directamente del XML. Los datos se obtuvieron de un Excel complementario (`eell_2025_beneficiarias.xlsx`) leído con `openpyxl`.
+Los principales problemas técnicos resueltos (parsers inconsistentes entre años, duplicados cross-year, derivación de provincia/CCAA desde CIF, periodo semestral EPA 2023–2024) están documentados en detalle en [docs/pipeline-datos.md](docs/pipeline-datos.md).
 
 ---
 
-### Entidades de Protección Animal (EPA)
+## Scripts de datos
 
-- 2021 → XML BOE
-- 2022 → XML BOE
-- 2023 → XML BOE
-- 2024 → XML BOE
-- 2025 → XML BOE
+Los scripts transforman los datos crudos (XMLs, PDFs, Excel del BOE) en el dataset unificado que después se carga en la base de datos. El pipeline completo se describe en [docs/pipeline-datos.md](docs/pipeline-datos.md).
 
-Scripts:
+### BDNS
 
-- `parser_EPAs_BOE_base.py` → EPA 2021–2024 (lógica común)
-- `parser_EPAs_BOE_2025.py` → EPA 2025 (estructura diferente)
+`scripts/ingestion/bdns_client.py` — consulta la API pública de BDNS para obtener convocatorias y comprobar si se ha publicado la fecha de resolución de convocatorias pendientes.
 
-> En la resolución EPA 2025 las cabeceras de las columnas cambian respecto a años anteriores: aparece "Cuantía concedida a la entidad" (que contiene la palabra *entidad*) y la cabecera de puntuación varía entre anexos. Esto rompe el mapeo por palabras clave del parser base. El parser 2025 usa extracción heurística por contenido de celda: importes > 100 para el campo importe, valores entre 0 y 100 para puntuación.
+### Extracción de datos
 
----
+`scripts/data_extractor/` — descarga los documentos del BOE (XML y PDF) con los datos de concesiones.
 
-## Herramientas de extracción
+### Procesamiento
 
-Se utiliza:
-
-- `pdfplumber` → extracción de tablas desde PDF
-- `BeautifulSoup` → parsing de XML del BOE
-- `openpyxl` → lectura de Excel (correcciones manuales EELL 2025)
-
-Alternativas evaluadas para PDF:
-
-- `tabula-py`
-- `camelot`
-
----
-
-## Problemas encontrados y soluciones
-
-### Problemas generales
-
-1. Datos incompletos en BDNS → uso de PDFs  
-2. PDFs inconsistentes → parsers separados  
-3. Saltos de línea → normalización  
-4. Múltiples CIF → selección del primero válido  
-5. Puntuaciones no numéricas → `NULL`  
-6. Importes europeos → conversión a `float`  
-7. Filas partidas → reconstrucción  
-
----
-
-### Problemas específicos EELL
-
-#### Parsing 2023–2024
-
-Problemas: filas partidas, importes mal parseados y valores null  
-Soluciones: limpieza de texto, normalización y conversión de datos  
-
-#### XML BOE 2025
-
-Problemas: sin importes, inconsistencia nif/cif y sin estado  
-Soluciones: parsing con BeautifulSoup, unificación de campo `cif` y `"estado": "concedida"`  
-
-#### Integración Excel
-
-Problema: importes manuales  
-Solución: Excel + merge por expediente  
-
-#### CIF
-
-Problemas: `"None"` como string y ausencias  
-Solución: `limpiar_cif()` y normalización a `null`  
-
-#### Estado
-
-Problema: valores null  
-Solución: inclusión en parsers y normalización  
-
----
-
-### Problemas del proceso de unificación (unificar_datasets.py)
-
-#### Duplicados cross-year (mismo número de expediente en años distintos)
-
-Situación detectada: cuatro expedientes aparecían en más de un año del dataset.
-
-- **SUBV2022021** — mismo código de expediente en el BOE de 2021 (Amores Perros Cádiz) y 2022 (Can Terrassa). Probablemente error del BOE al reutilizar el número.
-- **SUBV2022271** — la protectora Peludosos aparece dos veces dentro del JSON de 2022 (concedida con importe y denegada sin importe). Publicada en dos anexos distintos del BOE. Se conserva la concedida (prioridad al registro con importe > 0).
-- **SUBV2022659** — La Sexta Huella aparece en 2022 como excluida y en 2023 como concedida. Desistió en 2022 y volvió a solicitar en 2023.
-- **2023B628** — Amibichos aparece en 2023 como excluida y en 2024 como concedida. Mismo caso.
-
-**Problema adicional detectado:** el campo `anio` en los JSON de origen refleja el año del número de expediente (ej: SUBV2022659 → anio=2022), no el año de la convocatoria. Con la tolerancia ±1 original, los registros cross-year colapsaban bajo el mismo año aunque estuvieran en ficheros distintos.
-
-Solución implementada:
-
-- Se cambia la clave de deduplicación de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`.
-- El campo `anio` del registro se fija siempre al año del fichero fuente (`anio_fallback`), no al que trae el JSON. Esto garantiza que el mismo expediente en distintas convocatorias tenga años diferentes.
-- Resultado: SUBV2022271 (intra-año 2022) se deduplica conservando la concedida; los otros tres conservan ambos registros en años distintos.
-- Regla de prioridad intra-año: cuando dos registros compiten por la misma clave, se prefiere el que tiene importe > 0 sobre el que tiene importe = 0. Si ambos tienen o ambos no tienen importe, prevalece el último procesado.
-
-#### Periodo subvencionable semestral en EPAs 2023 y 2024
-
-Las convocatorias EPA de 2023 y 2024 cubrieron un periodo semestral (6 meses) en lugar del anual habitual. Esto no afecta a la estructura del dataset pero sí al análisis comparativo de importes entre años.
-
-Solución: se añade el campo `periodo_meses` a todos los registros (6 para EPA 2023/2024, 12 para el resto de EPA y para todos los EELL).
-
-Contexto normativo relevante: el 17 de mayo de 2024 se modifica la Orden sobre las Bases de las subvenciones para EPAs (publicada en BOE el 29 de mayo 2024). Entre otros cambios, se crean dos líneas diferenciadas: animales abandonados y gestión de colonias felinas. Estas líneas aparecen por primera vez en la resolución de 2025.
-
-#### Derivación de provincia y CCAA para EELL desde el CIF
-
-El CIF de las entidades locales españolas codifica la provincia en sus posiciones 1–2 (ej: `P3802200J` → código `38` → Santa Cruz de Tenerife). Se implementó una función de extracción que permite añadir los campos `provincia` y `ccaa` a todos los registros EELL.
-
-Casos especiales gestionados:
-
-- **Mancomunidades y Consells Comarcals** con códigos de provincia no estándar (56, 64, 67, 53, 79): se resuelven mediante un diccionario de overrides manuales por CIF completo. Ejemplos:
-  - P5606301I (Mancomunidad Cijara, Extremadura)
-  - P6400601H (Mancomunidad Los Pedroches, Córdoba/Andalucía)
-  - P6700008C (Consell Comarcal Alt Empordà, Girona/Cataluña)
-  - S7900010E (Ciudad Autónoma de Melilla)
-  - G79458618 (Mancomunidad El Molar, Madrid)
-- **Asociaciones (G-type CIF)** en el dataset EELL: corresponden a entidades que desistieron o fueron excluidas. Se dejan con `provincia=null` y `ccaa=null`.
-- **Mancomunidades que cruzan varias provincias**: `provincia=null` pero `ccaa` asignada.
-
-Para las EPAs (asociaciones con CIF tipo G), la provincia no es derivable del CIF de forma estándar. Se deja como mejora futura (`null`).
-
-11 registros EELL permanecen sin provincia (0,4% del total EELL): 7 asociaciones desistidas/excluidas + 1 empresa + 1 asociación excluida + 2 más con CIF no resoluble.
+`scripts/data_processing/` — parsers para cada tipo de fuente (EPA XML, EELL PDF/Excel), normalización de estados, unificación del dataset y carga en la base de datos (`cargar_dataset.py`).
 
 ---
 
@@ -457,129 +335,176 @@ Características:
 
 ---
 
-## Organización del proyecto y pipeline de datos
+## Descripción general del proyecto
 
-Se ha reorganizado el proyecto siguiendo una arquitectura típica de ingeniería de datos:
+### Base de datos
 
-```text
-data/
-  raw/        → datos originales
-  processed/  → datos transformados
-  final/      → dataset unificado
+**Motor:** MariaDB 11 en contenedor Docker. El esquema se crea automáticamente al instalar (`docker/init/modelo-fisico.sql`). SQLAlchemy actúa como ORM entre Python y la BD.
+
+**Tablas principales:**
+
+| Grupo | Tablas |
+|-------|--------|
+| Datos de subvenciones | `convocatorias`, `beneficiarios`, `solicitudes`, `concesiones` |
+| Agrupaciones EELL | `agrupaciones`, `agrupacion_miembros` |
+| Usuarios y autenticación | `usuarios`, `refresh_tokens`, `reset_tokens`, `verificacion_tokens` |
+
+**Acceso en desarrollo:**
+
+```bash
+make shell-db          # consola MariaDB dentro del contenedor
+http://localhost:8080  # Adminer (interfaz web, usuario/contraseña en docker/.env)
 ```
 
-Separación por fuentes:
+Ver el esquema completo con relaciones en [docs/modelo-datos.md](docs/modelo-datos.md).
 
-- `eell/` → entidades locales  
-- `epas/` → protección animal  
-- `convBDNS/` → API BDNS  
+#### Diagramas ER
 
-Esto permite:
+<table>
+  <tr>
+    <th>Original</th>
+    <th>Revisado</th>
+  </tr>
+  <tr>
+    <td><img src="docs/img/modelo-datos-er-v1.png" width="360" alt="Diagrama ER original"></td>
+    <td><img src="docs/img/Modelo-ER-Def.jpg" width="360" alt="Diagrama ER definitivo"></td>
+  </tr>
+</table>
 
-- evitar mezclar fuentes  
-- facilitar debugging  
-- mejorar trazabilidad  
+### Backend
 
----
+API REST construida con **FastAPI** (Python), **SQLAlchemy** como ORM y **MariaDB** como base de datos. Se sirve con `uvicorn` dentro de un contenedor Docker; Nginx actúa como proxy inverso y punto de entrada HTTPS.
 
-## Estructura del proyecto
+**Autenticación y sesión:**
+JWT con doble token: `access_token` de corta duración (15 min) para cada petición y `refresh_token` persistente (30 días) para renovarlo sin volver a hacer login. Las contraseñas se hashean con `bcrypt` directamente (sin passlib). El registro valida mínimo 8 caracteres, mayúscula, minúscula y número. Cambiar o restablecer la contraseña revoca todos los refresh tokens activos del usuario.
 
-```text
-data/
-  raw/
-    eell/
-    epas/
-    convBDNS/
-  processed/
-    eell/
-    epas/
-  final/
-    dataset_unificado.json
+**Seguridad:**
 
-scripts/
-    ingestion/
-    data_extractor/
-    data_processing/
+- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/registro` (5 req/min, burst 3), `POST /auth/recuperar` (3 req/min, burst 2)
+- Cabeceras de seguridad en todas las respuestas: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
+- SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
+- Cabeceras `Cache-Control`: `/convocatorias/` (1 día) y `/estadisticas/` (1 hora)
+- Parámetros de búsqueda validados (`buscar` máx. 200 caracteres, `limite` entre 1 y 500); exportación CSV limitada a 5.000 registros
+- Honeypot en el registro: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin crear cuenta
+- Anti-enumeración en registro: intentar crear una cuenta con un email ya existente devuelve `201` sin crear duplicado — igual que `/auth/recuperar`, la respuesta no revela si el email estaba registrado
+- Verificación de email obligatoria: cuentas nuevas con `email_verificado=0`; el login bloquea con 403 hasta confirmar
 
-backend/
-frontend/
-docs/
-docker/
-```
+**Estructura:**
 
----
+| Archivo | Función |
+|---------|---------|
+| `models.py` | Tablas de la BD como clases Python (ORM SQLAlchemy) |
+| `schemas.py` | Forma de los datos devueltos (Pydantic v2) |
+| `auth.py` | Hashing bcrypt y generación/validación JWT |
+| `dependencies.py` | `get_current_user` y `require_rol` |
+| `routers/` | Un router por dominio: convocatorias, solicitudes, estadísticas, agrupaciones, avisos, auth, privado, admin |
 
-## Scripts principales
+**Roles y acceso:**
 
-### BDNS
+| Rol | Quién es | Páginas y rutas accesibles |
+|-----|----------|---------------------------|
+| Sin token | Usuario no registrado | Home, buscador, estadísticas, recursos · API: `/convocatorias/`, `/solicitudes/`, `/estadisticas/*`, `/avisos/` |
+| `registrado` | Cuenta verificada | Todo lo anterior + `privado.html`, `exclusivo.html` · API: `/privado/*` |
+| `admin` | Administrador | Todo lo anterior + `admin.html` · API: `/admin/*` |
 
-`scripts/ingestion/bdns_client.py`
-
-### Extracción de datos
-
-`scripts/data_extractor/`
-
-### Procesamiento
-
-`scripts/data_processing/`
-
-### Backend (API)
-
-```text
-backend/app/
-  db.py              → conexión SQLAlchemy: motor, sesiones y get_db
-  models.py          → tablas de la BD como clases Python (ORM)
-  schemas.py         → forma de los datos que devuelve la API (Pydantic)
-  auth.py            → hashing de contraseñas (bcrypt) y generación/validación de tokens JWT
-  dependencies.py    → dependencias FastAPI: get_current_user y require_rol
-  main.py            → aplicación FastAPI con los routers registrados y manejadores de error personalizados
-  routers/
-    convocatorias.py → GET /convocatorias/
-    solicitudes.py   → GET /solicitudes/  (filtros: anio, tipo, estado, cif, buscar, ccaa, provincia, línea; paginación con total)
-    estadisticas.py  → GET /estadisticas/ · GET /estadisticas/epas · GET /estadisticas/eell
-    agrupaciones.py  → GET /agrupaciones/{id_solic} (desglose de municipios miembro de una agrupación EELL)
-    avisos.py        → GET /avisos/ (convocatorias del año en curso sin resolución; usadas para el banner de la web)
-    auth.py          → POST /auth/registro · GET /auth/verificar · POST /auth/login · POST /auth/refresh · POST /auth/logout · POST /auth/recuperar · POST /auth/reset
-    privado.py       → GET /privado/perfil · PUT /privado/cambiar-nombre · PUT /privado/cambiar-contrasena · GET /privado/resumen-exclusivo · GET /privado/resumen-tabla
-```
-
-La documentación interactiva de la API (generada automáticamente por FastAPI) está disponible en `http://localhost:8000/docs` con el servidor arrancado.
-
-#### Autenticación
-
-El sistema usa JWT (JSON Web Tokens) con tres niveles de acceso:
-
-| Nivel | Rutas accesibles |
-|-------|-----------------|
-| Sin token | `/convocatorias/`, `/solicitudes/`, `/estadisticas/*`, `/avisos/` |
-| `registrado` | Todo lo anterior + `/privado/*` |
-| `admin` | Todo lo anterior + gestión de usuarios |
-
-Flujo: el cliente hace POST a `/auth/login` → recibe un `access_token` (60 min) y un `refresh_token` (30 días) → envía el access token en la cabecera `Authorization: Bearer <token>`. Cuando el access token caduca, puede renovarlo con POST `/auth/refresh` sin volver a hacer login. POST `/auth/logout` revoca el refresh token en el servidor. Cambiar la contraseña también revoca todos los refresh tokens activos del usuario.
-
-Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene problemas de compatibilidad con versiones recientes de bcrypt). El registro valida que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número.
-
-El endpoint `POST /auth/reset` revoca todos los refresh tokens activos del usuario al restablecer la contraseña, igual que hace `PUT /privado/cambiar-contrasena`.
-
-#### Manejadores de error personalizados
-
-Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar del detalle genérico de FastAPI:
+**Errores personalizados:** los errores HTTP devuelven siempre JSON estructurado con tres campos:
 
 ```json
-{
-  "error": 404,
-  "mensaje": "Recurso no encontrado",
-  "sugerencia": "Comprueba la URL o los parámetros de la petición"
-}
+{ "error": 404, "mensaje": "Recurso no encontrado", "sugerencia": "Comprueba la URL o los parámetros de la petición" }
 ```
 
-| Código | Cuándo ocurre |
-|--------|--------------|
-| 401 | Petición a ruta protegida sin token o con token inválido |
+| Código | Cuándo |
+|--------|--------|
+| 401 | Sin token o token inválido |
 | 403 | Token válido pero sin permisos suficientes |
 | 404 | Ruta o recurso inexistente |
 | 422 | Datos de entrada que no superan la validación Pydantic |
 | 500 | Error interno no controlado |
+
+**Páginas de error HTML (Nginx):** `404.html` y `50x.html` se sirven directamente desde Nginx con `error_page` — funcionan aunque el backend esté caído. El middleware registra cada petición en `logs/`.
+
+Ver listado completo de endpoints en [docs/referencia-tecnica.md](docs/referencia-tecnica.md) · Flujo JWT y tokens en [docs/autenticacion.md](docs/autenticacion.md).
+
+### Frontend
+
+Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin frameworks). Se sirve directamente desde Nginx como archivos estáticos; toda la lógica de datos viene de la API.
+
+**Páginas principales:**
+
+| Página | Descripción |
+|--------|-------------|
+| `index.html` | Home con métricas, gráficas de evolución e información de convocatorias activas |
+| `buscador.html` | Buscador de solicitudes con filtros, paginación, exportación CSV y ordenación server-side |
+| `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
+| `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
+| `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
+| `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
+| `admin.html` | Panel de administración: gestión de usuarios, avisos y logs (solo rol `admin`) |
+| `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF |
+| `recursos.html` | Directorio de organizaciones de protección animal y campañas |
+| `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
+| `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
+| `aviso-legal.html` · `privacidad.html` | Páginas legales: aviso legal y política de privacidad |
+| `404.html` · `50x.html` | Páginas de error personalizadas servidas por Nginx |
+
+**Estados de carga:**
+Las páginas con peticiones asíncronas muestran feedback visual mientras esperan la respuesta: spinner giratorio (home, estadísticas, buscador, ficha de entidad) y skeleton loader animado en verde para la tabla de `exclusivo.html` — barras con shimmer que simulan la forma de la tabla antes de que lleguen los datos.
+
+**Optimización de carga:**
+
+- `defer` en todos los `<script>` — los scripts se descargan en paralelo con el HTML y ejecutan en orden después del parsing, sin bloquear el renderizado. Compatible con `DOMContentLoaded`.
+- `fetchpriority="high"` en la imagen hero de `index.html` — prioriza la descarga de la imagen más visible (LCP) frente al resto de recursos.
+- Caché de assets en Nginx: imágenes y fuentes (`expires 1y`), CSS y JS (`expires 1h`) — el navegador reutiliza los archivos estáticos entre páginas sin consultar al servidor.
+
+**Arquitectura JS:**
+Un archivo JS por página, sin bundler ni framework. La comunicación con la API usa `fetch` con `async/await`. En las páginas protegidas se verifica el `access_token` al cargar; si ha caducado se renueva con `/auth/refresh` antes de redirigir al login. La navegación usa `history.replaceState` (no `pushState`) para evitar entradas duplicadas al pulsar "atrás" desde páginas con filtros en la URL.
+
+**Responsive:**
+Una sola hoja de estilos compartida (`styles.css`) con variables CSS para colores, espaciado y tipografía. Breakpoints en 600px (grid 2→1 columna), 768px (modales y tablas) y 900px (menú hamburguesa). El navbar tiene z-index 1200 para quedar por encima de los controles de Leaflet (z-index 1000 por defecto).
+
+**Visualizaciones:**
+
+- **Chart.js** — gráficas de barras, líneas, donut y distribución en las páginas de estadísticas. Cada gráfica abre un modal con conclusiones en HTML (`<p>`, `<ul>`, `<a>`).
+- **Leaflet + GeoJSON** — mapa choropleth por CCAA en `exclusivo.html`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
+
+Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-frontend.md](frontend/docs/especificaciones-frontend.md) · Paleta, tipografía y guía visual en [frontend/docs/diseño.md](frontend/docs/diseño.md).
+
+La carpeta `frontend/` contiene:
+
+- `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
+- `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
+- `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
+- `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
+- `scripts/` — utilidades de desarrollo (ver abajo)
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
+- `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
+- `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
+
+#### Scripts de desarrollo (`frontend/scripts/`)
+
+- **`color-privado.sh`** — cambia los colores del banner y fondo de `privado.html` y `exclusivo.html` sin tocar el código a mano. Edita las variables CSS `--banner-privado`, `--fondo-privado` y `--hover-privado` en `styles.css`.
+
+  ```bash
+  # Interactivo (pregunta los colores uno a uno)
+  ./frontend/scripts/color-privado.sh
+
+  # Con argumentos directos
+  ./frontend/scripts/color-privado.sh "#2D6A4F" "#FAF4EE" "#E8F2EC"
+
+  # Solo cambiar el banner, dejar el resto igual
+  ./frontend/scripts/color-privado.sh "#1A3429" "" ""
+  ```
+
+#### Variables CSS de la zona privada
+
+Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `:root` (editables con el script o a mano):
+
+| Variable | Valor actual | Uso |
+|---|---|---|
+| `--banner-privado` | `#2D6A4F` | Fondo del banner superior |
+| `--fondo-privado` | `#FAF4EE` | Fondo del cuerpo de la página |
+| `--hover-privado` | `#E8F2EC` | Hover de la tarjeta de acceso a exclusivo |
 
 ---
 
@@ -729,6 +654,17 @@ git pull
 
 ## Entorno de trabajo
 
+`venv/` es un **entorno virtual Python** aislado que se crea en la máquina de desarrollo. Permite instalar las librerías de los scripts (parsers, carga de datos) sin mezclarlas con el Python del sistema ni con el de otros proyectos.
+
+**Solo es necesario para:**
+
+- Ejecutar los scripts de parseo de datos (`scripts/data_processing/`)
+- Ejecutar los tests con `pytest` (`make test`)
+
+**No es necesario para usar la aplicación web** — el backend corre dentro de Docker con su propio entorno aislado (`backend/requirements.txt` se instala en el contenedor). Un usuario que solo quiera arrancar y usar la app puede saltarse este paso.
+
+`venv/` no se versiona (está en `.gitignore`) porque es específico de cada máquina y pesa ~50 MB. `install.sh` lo crea automáticamente si se necesita.
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -764,22 +700,57 @@ El proyecto incluye `.vscode/extensions.json` con extensiones recomendadas. Al a
 
 El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-compose.yml`:
 
-| Servicio   | Imagen              | Función                                                   | Puerto externo    |
-|------------|---------------------|-----------------------------------------------------------|-------------------|
-| `db`       | mariadb:11          | Base de datos MariaDB con el dataset cargado              | 3307              |
-| `backend`  | Python 3.11-slim (build) | API FastAPI                                          | ninguno (interno) |
-| `nginx`    | nginx:alpine        | Proxy inverso, punto de entrada                           | 80, 443           |
-| `cron`     | Python (scheduler)  | Tareas programadas: comprobación BDNS y health check      | ninguno           |
-| `mailpit`  | axllent/mailpit     | Servidor SMTP de desarrollo — atrapa emails sin enviarlos | 1025 (SMTP), 8025 (web UI) |
-| `adminer`  | adminer             | Interfaz web para explorar la BD                          | 8080              |
+| Servicio  | Contenedor       | Imagen                   | Función                                                   | Puerto externo         |
+|-----------|------------------|--------------------------|-----------------------------------------------------------|------------------------|
+| `db`      | `bdns_dgda_db`   | mariadb:11               | Base de datos MariaDB con el dataset cargado              | 3307 (interno: 3306)   |
+| `backend` | `bdns_api`       | python:3.11-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
+| `nginx`   | `bdns_nginx`     | nginx:alpine             | Proxy inverso, HTTPS, archivos estáticos                  | 80 (HTTP), 443 (HTTPS) |
+| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS y health check               | ninguno                |
+| `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 (SMTP), 8025 (UI) |
+| `adminer` | `bdns_adminer`   | adminer                  | Interfaz web para explorar la BD                          | 8080                   |
 
-El backend no expone su puerto al exterior — solo Nginx y el cron pueden acceder a él dentro de la red Docker.
+El backend no expone su puerto al exterior — solo Nginx y el cron pueden acceder a él dentro de la red Docker interna.
 
-Mailpit está disponible en `http://localhost:8025`. Cualquier email que el backend "envíe" (recuperación de contraseña) queda atrapado aquí sin llegar a ningún destinatario real.
+**Acceso en desarrollo** (con Docker levantado):
 
-El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) que implementa la misma lógica que un crontab sin depender de binarios externos: registra todo en stdout (visible con `docker logs bdns_cron`) y hereda las variables de entorno del `docker-compose.yml`. Sus logs se persisten en `logs/cron/`.
+| Qué | URL |
+|-----|-----|
+| Aplicación web | `https://subvencionesDGDA.local` o `http://localhost` |
+| API — Swagger UI | `https://subvencionesDGDA.local/docs` (Docker) · `http://localhost:8000/docs` (dev) |
+| Adminer — explorador de BD | `http://localhost:8080` · Sistema: MySQL · Servidor: `db` |
+| Mailpit — bandeja de emails | `http://localhost:8025` |
 
-Adminer está disponible en `http://localhost:8080` con Docker levantado. En el formulario de acceso: **Sistema** → MySQL · **Servidor** → `db` · usuario y contraseña según el `.env`.
+Mailpit intercepta todos los emails que el backend intenta enviar (recuperación de contraseña, verificación) sin que lleguen a ningún destinatario real.
+
+El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta dos tareas:
+
+- **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
+- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. La frecuencia varía según el mes: cada 2 días en abril–mayo (época de publicación de la DGDA) y cada 4 días el resto del año. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva.
+
+Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron puede lanzarse manualmente con `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
+
+### Nginx — qué hace exactamente
+
+Nginx gestiona todo el tráfico de entrada y cumple cuatro funciones en un solo proceso:
+
+- **Terminador SSL** — recibe HTTPS del navegador, descifra el tráfico TLS (1.2/1.3) y lo reenvía al backend por HTTP interno. El backend no necesita saber nada de certificados.
+- **Servidor de archivos estáticos** — sirve directamente `frontend/*.html`, `css/`, `js/` y `assets/` sin pasar por Python. Las páginas de error `404.html` y `50x.html` se sirven incluso si el backend está caído.
+- **Proxy inverso** — las rutas `/auth`, `/solicitudes`, `/estadisticas`, `/privado`, `/admin`, etc. se redirigen al contenedor `bdns_api` (puerto 8000, no expuesto al exterior).
+- **Rate limiting** — tres zonas definidas con `limit_req_zone` al inicio de `default.conf`. Al superarse el límite, Nginx devuelve HTTP 429 directamente sin consumir recursos del backend.
+
+Editar `default.conf` no recarga la config automáticamente: hay que ejecutar `docker exec bdns_nginx nginx -s reload` (o `make reload-nginx`). Antes de recargar conviene verificar la sintaxis con `docker exec bdns_nginx nginx -t`.
+
+### Tamaño de las imágenes Docker
+
+Las imágenes están optimizadas para reducir el peso del entorno (~700 MB menos respecto a imágenes base completas):
+
+| Imagen base | Tamaño | En lugar de | Ahorro |
+|-------------|--------|-------------|--------|
+| `python:3.11-slim` (backend) | ~75 MB | `python:3.11` (~900 MB) | ~825 MB |
+| `python:3.12-slim` (cron) | ~75 MB | `python:3.12` (~900 MB) | ~825 MB |
+| `nginx:alpine` | ~11 MB | `nginx` (~190 MB) | ~180 MB |
+
+Además, ambos Dockerfiles usan `pip install --no-cache-dir` para no almacenar la caché de pip dentro de la imagen, y copian `requirements.txt` antes que el código de la aplicación — así Docker solo repite el `pip install` cuando cambian las dependencias, no en cada cambio de código.
 
 ### Modo desarrollo (día a día)
 
@@ -1065,8 +1036,32 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones con textos reales · instalación y desinstalación automatizadas (install.sh + uninstall.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤900px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero (Pixabay, licencia libre) · auditoría de seguridad completada · ordenación server-side en buscador · auditoría responsive móvil completada · mapa táctil con doble toque · navbar con Exclusivo y Mi perfil**
+### Infraestructura y despliegue
 
+- HTTPS activo (TLS 1.2/1.3, certificado autofirmado, redirección HTTP→HTTPS)
+- Docker: Nginx + FastAPI + MariaDB + cron + Mailpit en contenedores
+- Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile)
+
+### API y autenticación
+
+- Autenticación completa: JWT · refresh token · verificación email · recuperación contraseña
+- Caché y rate limiting activos (Nginx); medidas anti-bots
+- Cron con auto-detección de resoluciones BDNS
+- Auditoría de seguridad completada (parámetros, SRI, SMTP, logs de acceso)
+
+### Interfaz web
+
+- Buscador con ordenación server-side; exportación CSV
+- Panel de administración completo con visor de logs
+- Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
+- Modal de conclusiones con textos reales en las 9 gráficas
+- Navbar responsive (hamburguesa ≤900px) · sistema de color coherente · imagen hero
+- Auditoría responsive móvil completada
+
+### Calidad del código
+
+- CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
+- 197 tests automáticos (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1078,10 +1073,12 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
-- El botón "Cerrar sesión" del navbar usa la clase `btn-login` (igual que "Acceder"). Antes tenía `btn-login btn-texto` o inline `background:none` que eliminaban el fondo verde pero dejaban el texto blanco, haciéndolo invisible. Corregido usando solo `btn-login` con `border: none` y `font-family: inherit` en el CSS para cubrir los defaults del elemento `<button>`.
-- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se anuló con `min-height: auto` en el override de `.pagina-inicio .fondo-stats`.
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
-- CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido — el ranking aparecía sin formato hasta entonces.
+- `history.replaceState` vs `pushState` en el buscador: al usar `pushState` cada cambio de filtro añadía una entrada al historial. Al hacer clic en una convocatoria y pulsar "Atrás", el navegador volvía al estado anterior del filtro en lugar de salir del buscador, obligando a pulsar "Atrás" varias veces. Cambiado a `replaceState` — actualiza la URL sin añadir entradas al historial.
+- Mapa choropleth (`exclusivo.html`) parpadeaba al cargar: Leaflet inicializaba el mapa antes de que llegaran los datos de la tabla, que al inyectarse empujaban el mapa hacia abajo causando un salto visual. Corregido con `await cargarResumenTabla(token)` antes de `cargarMapaCCAA()` — el mapa solo se inicializa cuando el DOM ya tiene su posición definitiva.
+- GeoJSON de CCAA: el archivo original era una versión muy simplificada (~5 KB) en la que los bordes de las comunidades quedaban irregulares y poco precisos. Se sustituyó por un GeoJSON de mayor resolución (~618 KB), lo que mejoró visiblemente la forma de los polígonos en el mapa choropleth.
+- `activo` y `email_verificado` en `models.py` están definidos como `Column(SmallInteger)` en lugar de `Column(Boolean)`. Funcionan igual porque MariaDB almacena `BOOLEAN` como `TINYINT(1)` internamente, pero el tipo semántico es incorrecto: el ORM no valida que solo entren `True`/`False`. Cambiarlo requeriría un `ALTER TABLE` en la BD existente — no justificado en este entorno.
+- La función `cerrarSesion` está definida en `navbar.js`, `privado.js`, `exclusivo.js` y `admin.js`. La duplicación es conocida: `navbar.js` la necesita para páginas donde el botón se inyecta dinámicamente, mientras los otros tres tenían su propia implementación antes de que se añadiera `navbar.js` a esas páginas. La solución limpia sería un `utils-auth.js` compartido, pero introducirlo al final del proyecto supone un riesgo innecesario.
 
 ---
 
@@ -1114,10 +1111,6 @@ return {"email": usuario.email, "rol": usuario.rol, "miembro_desde": usuario.cre
 # Después
 return {"id_usuario": usuario.id_usuario, "email": usuario.email, "rol": usuario.rol, "miembro_desde": usuario.created_at}
 ```
-
-**3. `cargarAvisos` en `admin.js` no comprobaba `r.ok`** *(menor)*
-
-Si el token caducaba en mitad de una sesión larga (el access token dura 60 minutos), la respuesta del backend sería un JSON de error `{"detail": "Token inválido o expirado"}` en lugar de un array. Sin comprobar `r.ok`, el código intentaba iterar sobre ese objeto, no encontraba `length` y mostraba "No hay avisos activos" en lugar de un mensaje de error. Corregido añadiendo `if (!r.ok) return` antes de parsear el JSON.
 
 ---
 
@@ -1176,11 +1169,17 @@ Afecta a todos los endpoints que usan `@field_validator`: registro, cambiar cont
 
 Para mockear `enviar_email_recuperacion` en los tests de recuperación de contraseña, hay que parchear la referencia en el router (`backend.app.routers.auth.enviar_email_recuperacion`), no la función original en `backend.app.auth`. Cuando el router hace `from ..auth import enviar_email_recuperacion`, crea su propia referencia local a la función. Si se parchea la función en su módulo de origen, el router sigue usando su referencia local sin parchear. Regla general: parchear siempre en el módulo que usa la función, no en el que la define.
 
+#### Sesión expirada no renovaba automáticamente — el refresh token se ignoraba
+
+Las páginas protegidas (`privado.html`, `exclusivo.html`, `admin.html`) verificaban el access token al cargar. Si el token existía en `localStorage` pero había caducado (15 min), el código lo usaba directamente, recibía 401 y redirigía al login **sin intentar el refresh token** — este solo se usaba cuando el `localStorage` estaba completamente vacío.
+
+Síntoma: el usuario se autenticaba, cambiaba de página después de 15 minutos y era expulsado aunque su refresh token (30 días) siguiera siendo válido.
+
+Solución: el manejador de 401 en `fetchAutenticado` y `verificarAcceso` ahora llama a `intentarRenovarToken()` antes de redirigir. Si la renovación tiene éxito, reintenta la petición con el token nuevo. Solo redirige al login si el refresh token también ha caducado o fue revocado. Ver [docs/autenticacion.md](docs/autenticacion.md) para el flujo completo.
+
 #### Respuesta idéntica en `/auth/recuperar` independientemente de si el email existe
 
 El endpoint devuelve exactamente el mismo mensaje tanto si el email está registrado como si no: `"Si ese email está registrado, recibirás un enlace en breve"`. Esto es una decisión de seguridad deliberada para evitar la enumeración de usuarios: si la respuesta fuera diferente según si el email existe, un atacante podría automatizar peticiones con listas de emails y descubrir qué cuentas están registradas en el sistema. La misma respuesta en ambos casos no filtra ninguna información.
-
----
 
 ---
 
