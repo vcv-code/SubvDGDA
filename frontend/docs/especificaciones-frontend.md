@@ -265,10 +265,11 @@ Junto con el badge, aparece una **leyenda de tramos** encima de la tabla (oculta
 ### 4.5 Grids
 
 Se usan dos grids CSS para distribuir tarjetas:
-- **`.grid-3`** — 3 columnas en escritorio, 2 en tablet, 1 en móvil.
-- **`.grid-2`** — 2 columnas en escritorio y tablet, 1 en móvil.
 
-Los breakpoints son 900px (tablet) y 600px (móvil).
+- **`.grid-3`** — 3 columnas en escritorio, 2 en tablet (≤900px), 1 en móvil (≤600px).
+- **`.grid-2`** — 2 columnas en escritorio, 1 columna en tablet y móvil (≤768px).
+
+Los breakpoints son: 900px (tablet para `.grid-3`), 768px (tablet/móvil para `.grid-2`) y 600px (móvil para `.grid-3`). `.grid-2` colapsa antes que `.grid-3` para evitar que dos columnas de contenido denso (tablas, tarjetas anchas) queden aplastadas en dispositivos medianos.
 
 ### 4.6 Auth Page (páginas de autenticación)
 
@@ -431,7 +432,7 @@ El backend devuelve siempre este formato en caso de error:
 | Portada partida | Título "Sobre el proyecto" + descripción + foto de animales + botón "Ir al buscador" | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
 | Convocatorias | Dos bloques (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador filtrado; pendientes sin `fecha_resolucion` muestran estado | API `/convocatorias/` |
-| Gráficos | Evolución importe por año (línea), distribución estados (donut), EPA vs EELL por año (barras agrupadas), KPI tasa de éxito | API `/estadisticas/` |
+| Gráficos | Fila 1: Evolución importe por año (línea) + EPA vs EELL por año (barras agrupadas). Fila 2: Distribución estados (donut) + KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
 
@@ -480,7 +481,7 @@ La búsqueda por nombre se realiza server-side. El backend implementa el paráme
 | Estado | `s.estado` | Badge de color (verde/rojo/naranja/morado) |
 | Importe (€) | `s.importe` | `—` si es null |
 
-**Control de orden:** encima de la tabla aparece `.tabla-controles` con el recuento de resultados a la izquierda y a la derecha el selector de orden y el botón de exportación. Opciones de orden: Entidad (A → Z), Importe mayor → menor, Importe menor → mayor. La ordenación es client-side sobre los resultados de la página actual.
+**Control de orden:** encima de la tabla aparece `.tabla-controles` con el recuento de resultados a la izquierda y a la derecha el selector de orden y el botón de exportación. Opciones de orden: Entidad (A → Z), Importe mayor → menor, Importe menor → mayor. La ordenación es **server-side**: el parámetro `?orden=` se envía al backend, que aplica `ORDER BY` en SQL antes del `OFFSET`/`LIMIT`, garantizando que el orden sea correcto a través de todas las páginas. Cambiar el selector relanza la búsqueda desde la página 1.
 
 **Exportación CSV:** el botón "↓ Descargar CSV" construye la URL `/solicitudes/export` con todos los filtros activos (`buscar`, `tipo`, `anio`, `estado`, `ccaa`, `provincia`, `linea`) —sin `pagina` ni `limite`— y redirige con `window.location.href`. El backend genera y sirve el fichero CSV completo. No hay lógica de generación CSV en el cliente. El CSV incluye la columna `tramo` (rama 10a).
 
@@ -488,7 +489,7 @@ La búsqueda por nombre se realiza server-side. El backend implementa el paráme
 
 **Enlace a ficha:** al hacer clic en cualquier fila se navega a `entidad.html?cif=...`.
 
-**Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos se escriben como parámetros en la URL de la página (`buscador.html?tipo=eell&anio=2025&estado=concedida`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `buscador.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento.
+**Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos —incluido el criterio de orden— se escriben como parámetros en la URL de la página (`buscador.html?tipo=eell&anio=2025&estado=concedida&orden=importe-desc`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `buscador.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento. El criterio `entidad-az` (por defecto) no se escribe en la URL para no añadir ruido.
 
 La página también acepta parámetros en la URL al llegar desde enlaces externos (`?anio=2025`, `?tipo=eell`, etc.) — compatible con los enlaces de la Home.
 
@@ -790,7 +791,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 - La mediana se calcula en Python con `statistics.median` (MariaDB no tiene función nativa equivalente).
 - `nuevas_entidades` = beneficiarios cuya primera concesión es el año más reciente con datos.
 - `nuevos`/`recurrentes` por año se calculan comparando contra el primer año de concesión histórico de cada beneficiario.
-- Rangos de distribución: `< 5.000 €`, `5.000–15.000 €`, `15.000–30.000 €`, `30.000–60.000 €`, `> 60.000 €`.
+- Rangos de distribución (EPA): `< 2.000 €`, `2.000–4.000 €`, `4.000–6.000 €`, `6.000–8.000 €`, `8.000–10.000 €`. El rango `> 10.000 €` se eliminó al verificar que el importe máximo real en BD es exactamente 10.000 €; los 8 registros con ese importe se reclasificaron al rango anterior.
 - Colores de gráficos: tonos verdes (`verdeOscuro #2E7D32`, `verdeMedio #66BB6A`, `verdeClaro #A5D6A7`) para EPAs; el top beneficiarios usa azul.
 
 ---

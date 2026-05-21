@@ -678,9 +678,14 @@ table tbody tr:hover {
 }
 
 
-@media (max-width: 600px) {
-    .grid-3,
+@media (max-width: 768px) {
     .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-3 {
         grid-template-columns: 1fr;
     }
 }

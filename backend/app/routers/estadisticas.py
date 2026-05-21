@@ -131,8 +131,7 @@ def get_estadisticas_epas(response: Response, db: Session = Depends(get_db)):
         ("2.000–4.000 €",  2_000,  4_000),
         ("4.000–6.000 €",  4_000,  6_000),
         ("6.000–8.000 €",  6_000,  8_000),
-        ("8.000–10.000 €", 8_000, 10_000),
-        ("> 10.000 €",    10_000, float("inf")),
+        ("8.000–10.000 €", 8_000, 10_001),
     ]
     distribucion = [
         RangoImporte(

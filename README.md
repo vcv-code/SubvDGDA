@@ -1085,7 +1085,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤768px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA · auditoría de seguridad completada**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤768px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA · auditoría de seguridad completada · ordenación server-side en buscador · responsive mejorado en grid-2**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1102,7 +1102,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic, primeros endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
+  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; ordenación server-side (`?orden=entidad-az|importe-desc|importe-asc`); respuesta paginada con `total` y `resultados`
   · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
   · GET /estadisticas/epas  → análisis EPA: importe medio, mediana, distribución de importes, nuevos vs recurrentes, top beneficiarios por año
   · GET /estadisticas/eell  → análisis EELL: % ayuntamientos con ayuda, ranking CCAA, top provincias, concentración del importe
@@ -1377,6 +1377,24 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · Card de acceso a contenido exclusivo: fondo verde suave, borde verde, sombra y flecha animada al hover
   · Cabeceras de tablas `resumen-tabla` actualizadas al verde oscuro institucional (`--nav-oscuro`)
   · Título "Área exclusiva" ampliado a 1.6rem; texto de descripción actualizado con contenido real
+✔ Responsive `.grid-2` mejorado
+  · Breakpoint de colapso de `.grid-2` subido de 600px a 768px (independiente de `.grid-3`)
+  · Evita que dos tablas o tarjetas densas queden aplastadas en tablets y móviles grandes
+  · `.grid-3` mantiene su breakpoint original (600px) sin cambios
+✔ Ordenación server-side en el buscador
+  · Nuevo parámetro `?orden=` en `GET /solicitudes/`: `entidad-az` (defecto), `importe-desc`, `importe-asc`
+  · El backend aplica `ORDER BY` en SQL (subconsulta correlacionada sobre `concesiones.importe`) antes del `OFFSET`/`LIMIT`, garantizando orden correcto a través de todas las páginas
+  · El frontend pasa `orden` al backend; cambiar el selector relanza la búsqueda desde página 1
+  · El criterio de orden se persiste en la URL (excepto `entidad-az` por defecto)
+  · Antes: ordenación client-side sobre los 50 resultados de la página actual (bug)
+✔ Distribución de importes EPA corregida
+  · Eliminado el rango `> 10.000 €`: verificado en BD que el importe máximo real es exactamente 10.000 €
+  · Los 8 registros con importe = 10.000 € reclasificados al rango `8.000–10.000 €` (ajuste del límite superior a 10.001 en el backend)
+  · Gráfico en `estadisticas-epas.html` muestra ahora 5 barras sin la barra fantasma
+✔ Reordenación de gráficas en Home
+  · Fila 1: Evolución del importe por año (línea) + EPA vs EELL por año (barras agrupadas)
+  · Fila 2: Distribución por estado (rosco) + Tasa de éxito/fracaso (KPI)
+  · Antes: línea + rosco arriba, barras + KPI abajo
 
 ---
 
