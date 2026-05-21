@@ -30,8 +30,9 @@ def listar_solicitudes(
     provincia: Optional[str] = Query(None, description="Provincia (solo EELL)"),
     ccaa:     Optional[str] = Query(None, description="Comunidad autónoma (solo EELL)"),
     cif:      Optional[str] = Query(None, description="CIF exacto del beneficiario"),
-    buscar:   Optional[str] = Query(None, description="Búsqueda parcial por nombre de entidad (stopwords ignoradas)"),
-    limite: int           = Query(100,  description="Máximo de resultados por página"),
+    buscar:   Optional[str] = Query(None, max_length=200, description="Búsqueda parcial por nombre de entidad (stopwords ignoradas)"),
+    orden:  Optional[str] = Query("entidad-az", description="Orden: entidad-az, importe-desc, importe-asc"),
+    limite: int           = Query(100, ge=1, le=500, description="Máximo de resultados por página"),
     pagina: int           = Query(1,    description="Número de página (empieza en 1)"),
     db: Session = Depends(get_db),
 ):
@@ -71,6 +72,20 @@ def listar_solicitudes(
 
     total = consulta.count()
     offset = (pagina - 1) * limite
+
+    if orden in ("importe-desc", "importe-asc"):
+        importe_subq = (
+            db.query(Concesion.importe)
+            .filter(Concesion.id_solic == Solicitud.id_solic)
+            .correlate(Solicitud)
+            .scalar_subquery()
+        )
+        consulta = consulta.order_by(
+            importe_subq.desc() if orden == "importe-desc" else importe_subq.asc()
+        )
+    else:
+        consulta = consulta.order_by(Beneficiario.nombre.asc())
+
     solicitudes = consulta.offset(offset).limit(limite).all()
 
     resultado = []
@@ -137,6 +152,13 @@ def exportar_csv(
     if buscar:
         for palabra in _palabras_clave(buscar):
             consulta = consulta.filter(Beneficiario.nombre.ilike(f"%{palabra}%"))
+
+    total_export = consulta.count()
+    if total_export > 5000:
+        raise HTTPException(
+            status_code=400,
+            detail="Demasiados resultados para exportar. Aplica filtros para reducirlos.",
+        )
 
     solicitudes = consulta.all()
 

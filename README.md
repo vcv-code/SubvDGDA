@@ -111,8 +111,36 @@ Interfaz web para explorar los datos mediante filtros y visualizaciones. La carp
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
-- `assets/` — logotipo, imágenes y wireframes en PDF
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `solicitudes.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas implementadas
+- `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
+- `scripts/` — utilidades de desarrollo (ver abajo)
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido
+- `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
+- `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
+
+#### Scripts de desarrollo (`frontend/scripts/`)
+
+- **`color-privado.sh`** — cambia los colores del banner y fondo de `privado.html` y `exclusivo.html` sin tocar el código a mano. Edita las variables CSS `--banner-privado`, `--fondo-privado` y `--hover-privado` en `styles.css`.
+
+  ```bash
+  # Interactivo (pregunta los colores uno a uno)
+  ./frontend/scripts/color-privado.sh
+
+  # Con argumentos directos
+  ./frontend/scripts/color-privado.sh "#2D6A4F" "#FAF4EE" "#E8F2EC"
+
+  # Solo cambiar el banner, dejar el resto igual
+  ./frontend/scripts/color-privado.sh "#1A3429" "" ""
+  ```
+
+#### Variables CSS de la zona privada
+
+Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `:root` (editables con el script o a mano):
+
+| Variable | Valor actual | Uso |
+|---|---|---|
+| `--banner-privado` | `#2D6A4F` | Fondo del banner superior |
+| `--fondo-privado` | `#FAF4EE` | Fondo del cuerpo de la página |
+| `--hover-privado` | `#E8F2EC` | Hover de la tarjeta de acceso a exclusivo |
 
 ### Backend
 
@@ -565,6 +593,8 @@ Flujo: el cliente hace POST a `/auth/login` → recibe un `access_token` (60 min
 
 Las contraseñas se hashean con `bcrypt` directamente (sin `passlib`, que tiene problemas de compatibilidad con versiones recientes de bcrypt). El registro valida que la contraseña tenga al menos 8 caracteres, una mayúscula, una minúscula y un número.
 
+El endpoint `POST /auth/reset` revoca todos los refresh tokens activos del usuario al restablecer la contraseña, igual que hace `PUT /privado/cambiar-contrasena`.
+
 #### Manejadores de error personalizados
 
 Los errores HTTP devuelven siempre un JSON estructurado con tres campos en lugar del detalle genérico de FastAPI:
@@ -600,6 +630,14 @@ bash install.sh
 ```
 
 El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL, levanta los contenedores y carga el dataset. Guía paso a paso con confirmación antes de cada acción que requiere permisos o modifica el sistema.
+
+Para desinstalar y limpiar todo el entorno:
+
+```bash
+bash uninstall.sh
+```
+
+El script explica en lenguaje llano qué elimina en cada paso (contenedores, volúmenes con los datos, imagen Docker, `/etc/hosts`, `.env`, `venv/`) y pide confirmación antes de cada operación irreversible. En WSL2 avisa que también hay que editar el `hosts` de Windows.
 
 #### Primeros pasos tras la instalación
 
@@ -663,7 +701,11 @@ bash install.sh   # responde 's' para continuar
 
 El script detecta la BD existente, aplica las migraciones pendientes y reconstruye el backend. Los datos no se tocan.
 
-> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual), volver a ejecutar `bash install.sh` lo regenera automáticamente.
+> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
+>
+> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — solo existe el usuario demo `admin@demo.com` / `Admin1234!` que crea el script. Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
+>
+> **Desinstalar:** `bash uninstall.sh` elimina los contenedores, volúmenes (BD y datos), certificado SSL, `docker/.env` y opcionalmente la imagen Docker y el `venv/`. También elimina la entrada de `/etc/hosts` (con confirmación, requiere sudo). La operación es irreversible para los datos.
 
 **Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
 
@@ -912,6 +954,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
+| `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
 
 ### Windows
 
@@ -1055,7 +1098,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ## Estado actual
 
-Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones en gráficas · instalación automatizada (install.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤768px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero generada con IA · auditoría de seguridad completada**
+Fase: **backend completado · HTTPS activo · cron con auto-detección de resoluciones · caché y rate limiting activos · autenticación completa (JWT · refresh token · verificación email · recuperación contraseña) · Mailpit activo · frontend integrado · panel de administración completo con visor de logs · zona privada con nombre/alias editable · medidas anti-bots activas · modal de conclusiones con textos reales · instalación y desinstalación automatizadas (install.sh + uninstall.sh + Makefile) · revisión accesibilidad WCAG 2.2 completada · CSS limpio y consolidado en styles.css · navbar responsive con hamburguesa ≤900px · modal de entidad unificado · sistema de color coherente (verde/crema/morado/ámbar) · imagen hero (Pixabay, licencia libre) · auditoría de seguridad completada · ordenación server-side en buscador · auditoría responsive móvil completada · mapa táctil con doble toque · navbar con Exclusivo y Mi perfil**
 
 ✔ parsing XML BOE (EPAs 2021–2025)
 ✔ parsing PDF (EELL 2023–2024)
@@ -1072,7 +1115,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic, primeros endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
-  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; respuesta paginada con `total` y `resultados`
+  · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; ordenación server-side (`?orden=entidad-az|importe-desc|importe-asc`); respuesta paginada con `total` y `resultados`
   · GET /estadisticas/      → totales por año y tipo para gráficos (14.835.479,86 € globales)
   · GET /estadisticas/epas  → análisis EPA: importe medio, mediana, distribución de importes, nuevos vs recurrentes, top beneficiarios por año
   · GET /estadisticas/eell  → análisis EELL: % ayuntamientos con ayuda, ranking CCAA, top provincias, concentración del importe
@@ -1103,7 +1146,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · al volver con el botón "Volver al buscador" o con Atrás, los resultados se restauran
   · limpiar filtros borra también los parámetros de la URL
 ✔ bug corregido en exportación CSV: los filtros `provincia` y `linea` no se enviaban al backend
-✔ auditoría de seguridad backend — bcrypt rounds=12 explícito · email_verificado default=0 coherente · índices BD en estado/provincia/ccaa · TTL access token 15 min · anti-enumeración en registro (201 siempre) · 197 tests pasando
+✔ auditoría de seguridad backend — bcrypt rounds=12 explícito · email_verificado default=0 coherente · índices BD en estado/provincia/ccaa · TTL access token 15 min · anti-enumeración en registro (201 siempre) · 195 tests pasando (2 HTTPS dependen del CN del cert del entorno)
 ✔ navbar hamburguesa en ≤768px — menú desplegable con animación X, rayita ámbar en hover, cierre con Esc/click fuera/click en enlace; botón añadido en las 18 páginas HTML
 ✔ panel de admin restaurado — cabeceras rojas, badges de rol/estado, botones ghost, fondo pastel rojo
 ✔ zona privada restaurada — dos columnas, privado-card, fondo pastel morado, títulos verde oscuro
@@ -1116,10 +1159,10 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · Verde (`#DFF0E1`): hero, convocatorias, visión general
   · Crema (`#FAF4EE`): métricas, resoluciones, registro
   · Buscador y estadísticas: fondo crema (`fondo-crema`)
-✔ imagen hero generada con IA (`homebdns.webp`, 280KB) — plaza española, gestora con chaleco, perro y gato
+✔ imagen hero (`handcat.webp`) — mano acercándose a un gato callejero; descargada de Pixabay (licencia libre); alternativas disponibles en `assets/img/home/`
 ✔ gráficas unificadas — colores `#1A3429` / `#2DC26C` en home.js, estadisticas-epas.js y estadisticas-eell.js
 ✔ formatter manual de importes — separador de miles garantizado independiente del locale del navegador
-✔ modal de entidad en buscador (`solicitudes.html`)
+✔ modal de entidad en buscador (`buscador.html`)
   · reemplaza la navegación a `entidad.html` por un modal inline sin salir del buscador
   · muestra nombre, CIF, CCAA (solo si disponible), total recibido, nº solicitudes e histórico con expediente
   · histórico ordenado de más reciente a más antiguo; importes con separador de miles garantizado
@@ -1148,7 +1191,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (197 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración)
+✔ tests automáticos con pytest (197 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración; 195 pasan en todos los entornos; 2 de HTTPS dependen del CN del certificado generado)
   · — Pipeline de datos —
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025
@@ -1170,7 +1213,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · test_logging.py (5): middleware de logging y configuración del logger
   · test_https_config.py (9): certificado SSL, configuración Nginx HTTPS y seguridad TLS
   · test_cache_headers.py (4): cabeceras Cache-Control en /convocatorias/ y /estadisticas/
-  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login y /auth/registro
+  · test_rate_limiting.py (7): configuración de rate limiting en Nginx para /auth/login, /auth/registro y /auth/recuperar
   · BD de prueba SQLite en memoria (no requiere Docker)
 ✔ manejadores de error personalizados (401, 403, 404, 422, 500)
   · JSON estructurado con campos error, mensaje y sugerencia
@@ -1193,7 +1236,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ diseño del frontend: wireframes, guía de estilos, logo y estructura de páginas (`frontend/`)
 ✔ maquetación HTML + CSS: estructura completa de todas las páginas con diseño responsive
   · `index.html` — portada con métricas dinámicas, spinners y banner de avisos activos
-  · `solicitudes.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
+  · `buscador.html` — buscador con filtros, tabla paginada, columna Año, badges de estado, botón CSV
   · `estadisticas-epas.html` — análisis de EPAs: importe medio, mediana, distribución, nuevos vs recurrentes, top beneficiarios
   · `estadisticas-eell.html` — análisis de EELL: % ayuntamientos con ayuda, top provincias, concentración, ranking CCAA
   · `recursos.html` — directorio de organizaciones de protección animal y campañas actuales (contenido estático)
@@ -1202,7 +1245,9 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · `privado.html` — zona exclusiva con control de acceso JWT
   · `admin.html` — panel de administración exclusivo para rol `admin`
 ✔ integración JS con la API REST: fetch a todos los endpoints, paginación, autenticación con Bearer token
-✔ CORS habilitado en el backend para desarrollo local
+✔ CORS configurable mediante variable de entorno `CORS_ORIGINS` en `docker/.env`
+  · Desarrollo: `CORS_ORIGINS=*` (permite cualquier origen)
+  · Producción: `CORS_ORIGINS=https://mi-dominio.com` (sin tocar código)
 ✔ clave JWT segura configurada en variables de entorno (`.env`)
 ✔ filtros avanzados CCAA, provincia y línea conectados al backend en el buscador
 ✔ ficha de entidad (`entidad.html`): historial de solicitudes por CIF, badges de estado, desglose agrupación EELL
@@ -1248,10 +1293,11 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · GET /convocatorias/ → `Cache-Control: public, max-age=86400` (1 día; datos cambian 1-2 veces al año)
   · GET /estadisticas/  → `Cache-Control: public, max-age=3600`  (1 hora)
   · implementado en los routers FastAPI mediante parámetro `Response`
-✔ rate limiting en Nginx para prevenir fuerza bruta y creación masiva de cuentas
+✔ rate limiting en Nginx para prevenir fuerza bruta, spam y abuso
   · zona `login:10m rate=10r/m` — 10 peticiones/minuto por IP en `/auth/login` (burst=5)
   · zona `registro:10m rate=5r/m` — 5 peticiones/minuto por IP en `/auth/registro` (burst=3)
-  · ambos con `limit_req_status 429`; el resto de la API no está limitada
+  · zona `recuperar:10m rate=3r/m` — 3 peticiones/minuto por IP en `/auth/recuperar` (burst=2) — previene spam de emails de recuperación
+  · todos con `limit_req_status 429`; Nginx rechaza sin llegar al backend
 ✔ panel de administración (`admin.html` + `js/admin.js`)
   · acceso exclusivo para usuarios con rol `admin`; redirige a login o privado si no procede
   · GET /admin/estado → salud del sistema, conteo de convocatorias/solicitudes/usuarios, última convocatoria detectada
@@ -1288,6 +1334,7 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
 ✔ Makefile con targets para el día a día: `start`, `stop`, `restart`, `build`, `reset-db`, `cargar`, `test`, `logs`, `backup`, `shell-db`, `mailpit`
 ✔ optimización de imágenes Docker: `backend/Dockerfile` migrado de `python:3.11` a `python:3.11-slim` (~700 MB menos); `pandas` eliminado de `requeriments.txt` (no se usaba)
 ✔ script de instalación automática (`install.sh`): comprueba prerequisitos por OS, crea `.env` con SECRET_KEY aleatoria, genera certificado SSL, añade dominio a `/etc/hosts` con confirmación, detecta instalaciones existentes y no sobreescribe datos, carga el dataset en primera instalación
+✔ script de desinstalación (`uninstall.sh`): elimina contenedores, volúmenes (BD y datos), imagen Docker, certificado SSL, `.env`, `venv/` y la entrada de `/etc/hosts`; explica en lenguaje llano qué hace cada paso y pide confirmación antes de cada operación irreversible; aviso específico para WSL2
 ✔ revisión de accesibilidad WCAG 2.2 (Bloque A–C)
   · `--color-foco: #2E6B4F` (~5.1:1 en blanco) sustituye `--color-primario` en hover/focus interactivos (Issue 14)
   · `aria-hidden="true"` en manchas de color decorativas de las leyendas (rosco y barras)
@@ -1300,16 +1347,133 @@ Fase: **backend completado · HTTPS activo · cron con auto-detección de resolu
   · eliminados enlaces "Documentación" y "Contacto" (rotos; sin página de destino real)
   · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`
   · estructura uniforme en las 18 páginas HTML: GitHub · Aviso legal · Privacidad
+✔ reorganización de assets en subcarpetas (`img/`, `img/home/`, `img/logos/`, `wireframes/`, `guia-estilo/`)
+  · todas las rutas actualizadas en los 19 HTML y en `styles.css`
+  · referencia rota a `animales-login.png` corregida; extensión `gato-portada.jpeg` → `.jpg` corregida
+✔ mejoras visuales del home (rama 18)
+  · títulos de sección unificados a `1.75rem` en toda la página
+  · paddings entre secciones revisados y uniformes (identificados con DevTools)
+  · breakpoint del hero ampliado a `1024px` para evitar texto demasiado estrecho en pantallas medias
+  · banners de avisos limitados al 70% del ancho (antes ocupaban el 100%)
+  · columnas del hero cambiadas a 50/50 (antes 55/45)
+  · subtítulo explicativo añadido a la sección "Convocatorias"
+✔ páginas de error rediseñadas
+  · `404.html`: estructura propia (`pagina-404__imagen` / `pagina-404__contenido`) para controlar el tamaño de la imagen independientemente del contenedor
+  · `50x.html`: rutas convertidas a absolutas para funcionar desde cualquier URL de la API; nuevo diseño con frase simpática, imagen y botón "Reintentar"
+  · clase base compartida `.pagina-error` extraída en `styles.css`; eliminados todos los inline styles
+✔ CSS refactorizado (rama 18)
+  · clases `.pagina-404`, `.pagina-50x` y base `.pagina-error` añadidas a `styles.css`
+  · modificador `.auth-page--centrado` extraído del HTML a CSS
+  · `.convocatorias-subtitulo` añadida para gestionar el margen desde CSS
+✔ Mapa choropleth CCAA — mapa de calor interactivo con Leaflet 1.9.4
+  · Movido de `estadisticas-eell.html` a `exclusivo.html` (contenido premium para usuarios registrados)
+  · `estadisticas-eell.html` queda con 4 gráficas simétricas como `estadisticas-epas.html`
+  · GeoJSON de alta resolución en `assets/geojson/ccaa.geojson` (19 CCAA, ~600 KB)
+  · Paleta de tonos tierra (beige → caramelo → marrón oscuro); rojo para CCAA sin subvenciones
+  · Hover: oscurece el color propio del polígono (función `oscurecer` en `mapa-ccaa.js`)
+  · Escala de cuartiles reales (p25/p50/p75) redondeados a valores "bonitos"
+  · Zoom con rueda, indicador de nivel en esquina, tile sin etiquetas (CartoDB nolabels)
+  · Función extraída a `js/mapa-ccaa.js` independiente; acepta callback `onClickCCAA`
+✔ Modal top 10 municipios (clic en CCAA del mapa)
+  · Dos columnas: acumulado todos los años / último año con resolución (detectado automáticamente)
+  · Agrupaciones EELL expandidas: llama a `GET /agrupaciones/{id_solic}` para mostrar municipios individuales en lugar del nombre de la agrupación
+  · Subtítulo del mapa con rango de años dinámico desde `GET /estadisticas/`
+  · CSS: `.modal-ccaa__*` en `styles.css`; cierra con Esc, clic fuera o botón ×
+✔ CORS configurable por variable de entorno `CORS_ORIGINS` en `docker/.env`
+  · Sin cambio de comportamiento en desarrollo (`*` por defecto)
+  · En producción: cambiar a `CORS_ORIGINS=https://dominio.com` sin tocar código
+✔ Renombrado `solicitudes.html` → `buscador.html`
+  · URL del buscador cambiada a `/buscador.html` en todos los HTML, JS y CSS
+  · `solicitudes.html` se conserva como legacy (cualquier enlace externo antiguo sigue funcionando)
+  · `solicitudes.js` conserva su nombre (es el script, no la página)
+✔ Mejoras visuales zona privada y exclusiva
+  · Badges "ZONA PRIVADA" y "MI CUENTA" eliminados — redundantes con el contexto
+  · Botones "Volver a mi perfil" y "← Volver al perfil" (admin): fondo semitransparente visible en reposo, hover más sólido
+  · Card de acceso a contenido exclusivo: fondo verde suave, borde verde, sombra y flecha animada al hover
+  · Cabeceras de tablas `resumen-tabla` actualizadas al verde oscuro institucional (`--nav-oscuro`)
+  · Título "Área exclusiva" ampliado a 1.6rem; texto de descripción actualizado con contenido real
+✔ Responsive `.grid-2` mejorado
+  · Breakpoint de colapso de `.grid-2` subido de 600px a 768px (independiente de `.grid-3`)
+  · Evita que dos tablas o tarjetas densas queden aplastadas en tablets y móviles grandes
+  · `.grid-3` mantiene su breakpoint original (600px) sin cambios
+✔ Ordenación server-side en el buscador
+  · Nuevo parámetro `?orden=` en `GET /solicitudes/`: `entidad-az` (defecto), `importe-desc`, `importe-asc`
+  · El backend aplica `ORDER BY` en SQL (subconsulta correlacionada sobre `concesiones.importe`) antes del `OFFSET`/`LIMIT`, garantizando orden correcto a través de todas las páginas
+  · El frontend pasa `orden` al backend; cambiar el selector relanza la búsqueda desde página 1
+  · El criterio de orden se persiste en la URL (excepto `entidad-az` por defecto)
+  · Antes: ordenación client-side sobre los 50 resultados de la página actual (bug)
+✔ Distribución de importes EPA corregida
+  · Eliminado el rango `> 10.000 €`: verificado en BD que el importe máximo real es exactamente 10.000 €
+  · Los 8 registros con importe = 10.000 € reclasificados al rango `8.000–10.000 €` (ajuste del límite superior a 10.001 en el backend)
+  · Gráfico en `estadisticas-epas.html` muestra ahora 5 barras sin la barra fantasma
+✔ Reordenación de gráficas en Home
+  · Fila 1: Evolución del importe por año (línea) + EPA vs EELL por año (barras agrupadas)
+  · Fila 2: Distribución por estado (rosco) + Tasa de éxito/fracaso (KPI)
+  · Antes: línea + rosco arriba, barras + KPI abajo
+✔ Modal de conclusiones — contenido HTML completo
+  · 9 modales con textos analíticos reales de varios párrafos escritos por la autora
+  · Renderizado con `innerHTML` (soporte de `<p>`, `<ul>`, `<li>`, `<a>`)
+  · Título muestra "Gráfica — Conclusiones" con el sufijo en gris; etiqueta CONCLUSIONES separada eliminada
+  · Modal de Evolución incluye sección de fuentes con 3 enlaces externos verificados
+  · Panel ampliado a 720px / 82vh; fuente a 1rem
+✔ Navbar — fuente unificada y responsive mejorado
+  · Todos los enlaces del navbar a 1.15rem (antes 0.95rem); Mi perfil y Cerrar sesión al mismo tamaño
+  · Nuevo breakpoint 769–1024px reduce a 1rem para evitar solapamiento en pantallas medianas
+✔ Auditoría responsive móvil — 8 correcciones
+  · Hamburguesa: navbar.js añadido a privado.html, exclusivo.html y admin.html — no tenía event listeners tras login
+  · Footer: links centrados en móvil (align-items: center + justify-content: center)
+  · Tabla buscador: valores siempre alineados a la derecha en modo card (text-align: right + align-items: flex-start)
+  · Tablas admin: overflow-x: auto en móvil (overflow: hidden del panel lo bloqueaba)
+  · Tabla resumen exclusivo: table-layout: auto + min-width: 520px en móvil para forzar scroll horizontal
+  · Badge DISPONIBLE/PRÓXIMAMENTE: padding-top extra en móvil para no solapar el primer elemento
+  · Filtros buscador: text-align: left explícito en móvil; botones centrados
+  · Modal top municipios CCAA: una columna en ≤768px (antes dos columnas muy estrechas)
+✔ Navbar — mejoras de navegación y responsive
+  · Link "Exclusivo" añadido: navbar.js lo inyecta al iniciar sesión; pre-renderizado en privado.html, exclusivo.html y admin.html
+  · Link "Mi perfil" añadido en exclusivo.html y privado.html con aria-current="page" cuando es la página activa
+  · Breakpoint hamburguesa subido de 768px a 900px — necesario por el aumento de items en navbar
+  · Rango 901–1024px mantiene font-size 1rem; >1024px usa 1.15rem
+  · navbar__user-controls: gap cambiado a var(--espacio-lg) = 32px para igualar separación con otros links; align-items: baseline para alineación tipográfica correcta
+  · Navbar z-index 1000→1200 — los controles de Leaflet (z-index 1000 por defecto) tapaban el menú
+  · Hamburguesa z-index 999→1001 — por encima de controles Leaflet
+  · Botón "Cerrar sesión" en hamburguesa: font-size 1rem (antes 0.85rem), separador entre "Mi perfil" y "Exclusivo"
+  · Modal top municipios: columna única en ≤768px
+✔ Mapa de calor CCAA — interacción táctil completa
+  · Un toque: muestra caja de info centrada con nombre, importe y concesiones (reemplaza tooltip de Leaflet)
+  · Doble toque: abre modal top municipios (doubleClickZoom deshabilitado en touch)
+  · Tooltips de Leaflet desenlazados en móvil (unbindTooltip) — sustituidos por div propio `.mapa-info-central` con z-index 1200
+  · Hint contextual sobre el mapa: texto inicial → cambia a "Doble toque para ver el top" al tocar → vuelve tras 8s
+  · Auto-cierre del info box tras 8 segundos sin doble toque
+  · Tooltip pane de Leaflet subido a z-index 1050 via JS (encima de controles Leaflet)
+  · fitBounds sobre el GeoJSON en móvil para mostrar España completa en el viewport
+  · Leyenda reducida en móvil: font-size 0.68rem, padding 6px 8px, cuadros 10px
+  · Hint text `.mapa-ccaa-hint`: display none en desktop, visible en ≤768px en cursiva gris
+  · Eliminado subtítulo "Escala de quintiles sobre importe total concedido"
+✔ Modal conclusiones — fixes de calidad
+  · Título construido con DOM API (textContent + appendChild) en lugar de innerHTML para evitar XSS
+  · Cuerpo con flex: 1 + min-height: 0 para que el scroll interno funcione correctamente en modales largos
+  · Modal de top municipios: columna única en ≤768px
+✔ Auditoría de código — fixes aplicados tras revisión exhaustiva
+  · Backend: `buscar` con `max_length=200` y `limite` con `ge=1, le=500` — un usuario podía pedir `?limite=999999` y forzar una consulta de un millón de filas
+  · Backend: `GET /solicitudes/export` limitado a 5.000 resultados — sin filtros intentaba exportar los ~6.400 registros completos en memoria
+  · Nginx: rate limiting en `POST /auth/recuperar` (3 req/min) — sin límite era posible mandar emails de recuperación en bucle a cualquier usuario
+  · Backend: funciones SMTP envueltas en try/except con `logger.error` (antes podían silenciar errores de envío)
+  · Backend: login fallido registra `logger.warning` con el email (auditoría de intentos de acceso)
+  · Test: `test_epas_distribucion_tiene_todos_los_rangos` actualizado de 6 a 5 rangos (coherente con corrección de datos)
+  · README: páginas utilitarias `404.html`, `50x.html`, `aviso-legal.html` y `privacidad.html` añadidas a la lista
+  · SRI (Subresource Integrity): atributos `integrity` y `crossorigin` añadidos a los 5 recursos CDN externos — Chart.js (3 páginas) y Leaflet JS + CSS (exclusivo.html); si el CDN fuese comprometido el navegador rechaza el recurso en lugar de ejecutarlo
+  · Buscador — doble entrada en historial al llegar desde enlace de convocatoria: `history.pushState` cambiado a `history.replaceState` en `sincronizarUrl()`; antes había que pulsar Atrás dos veces para volver a Home
 
 ---
 
 ## Notas técnicas
 
+- `solicitudes.html` se conserva intencionalmente aunque la URL pública es ahora `buscador.html`. Actúa como redirección de compatibilidad para cualquier enlace externo o marcador guardado antes del renombrado. No es un archivo huérfano: es legacy deliberado.
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
 - El botón "Cerrar sesión" del navbar usa la clase `btn-login` (igual que "Acceder"). Antes tenía `btn-login btn-texto` o inline `background:none` que eliminaban el fondo verde pero dejaban el texto blanco, haciéndolo invisible. Corregido usando solo `btn-login` con `border: none` y `font-family: inherit` en el CSS para cubrir los defaults del elemento `<button>`.
-- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se eliminó.
+- `min-height: calc(100vh - var(--altura-nav))` en `.fondo-stats` causaba un espacio vacío grande antes del footer cuando el contenido no llenaba la pantalla — se anuló con `min-height: auto` en el override de `.pagina-inicio .fondo-stats`.
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
 - CSS: las clases del ranking CCAA en `estadisticas-eell.js` usaban `ranking-lista__item` (BEM incorrecto) mientras el CSS definía `.ranking-item`. Corregido — el ranking aparecía sin formato hasta entonces.
 
@@ -1414,32 +1578,38 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 
 ---
 
-## Mejoras futuras
-
-Mejoras identificadas pero no planificadas para el desarrollo actual:
-
-- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando la web de infosubvenciones.es para cada convocatoria. No afecta a ninguna funcionalidad actual.
-- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
-- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
-- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL, por lo que requieren un parser específico.
-- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
-- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
-- **Login con terceros (OAuth)** - integración con Google.
-- **CAPTCHA en registro** *(mejora de producción avanzada)*: reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto.
-- **Blocklist de dominios desechables** *(mejora de producción avanzada)*: bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente — coste de mantenimiento muy alto para el beneficio obtenido.
-- **Puerto de base de datos**: en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
-- **Dominio real y certificado Let's Encrypt**: sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
-- **CORS con dominio específico**: sustituir `allow_origins=["*"]` en `main.py` por el dominio real una vez definido.
-
----
-
 ## Limitaciones conocidas del dato de origen
 
 - **Punto final en nombres de entidades**: la BDNS registra los nombres tal cual los declararon las entidades en su momento. Algunas incluyen punto final ("ASOCIACIÓN GATO AYUD.") y otras no. Es una inconsistencia de la fuente, no un bug. No se normaliza en el frontend para no crear divergencias con el CSV exportado y la API.
 
-## Pendientes
+---
 
-- **Mapa de calor CCAA** en `estadisticas-eell.html`: datos disponibles en `GET /estadisticas/eell`; falta integrar Leaflet/D3-geo + GeoJSON (Miyuki, rama 16 en progreso).
-- **Auditoría backend (post-entrega)**: paginación en `/admin/usuarios`, retry en cron si BDNS no responde — el resto se corrigió o es solo relevante en producción real
-- **Trampa de foco en menú hamburguesa**: el menú cierra con Esc y click fuera, pero no implementa focus trap completo (Tab no cicla dentro del menú). Mejora de accesibilidad futura.
-- **Conclusiones en modales de gráficas**: revisar y ajustar los textos interpretativos (Vero).
+## Mejoras futuras
+
+Mejoras identificadas durante el desarrollo, no planificadas para la entrega actual. Agrupadas por ámbito.
+
+### Datos y análisis
+
+- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando infosubvenciones.es. No afecta a ninguna funcionalidad actual.
+- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
+- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
+- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL; requieren un parser específico.
+- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
+
+### Funcionalidades y UX
+
+- **Paginación en `/admin/usuarios`** — la tabla de usuarios no pagina; con pocos usuarios actuales no es problema pero escalaría mal.
+- **Retry en cron si BDNS API no responde** — el cron falla silenciosamente si BDNS devuelve error; añadir reintentos con backoff exponencial.
+- **Logs de cron en panel admin** — mostrar `bdns_check.log` y `health_check.log` en el panel. Requiere: montar `../logs/cron` en el contenedor backend, dos endpoints nuevos en `admin.py` y dos secciones en `admin.html` / `admin.js`.
+- **Trampa de foco en menú hamburguesa** — el menú cierra con Esc y click fuera, pero Tab no cicla dentro del menú abierto. Mejora de accesibilidad WCAG 2.4.3 pendiente.
+- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
+- **Login con terceros (OAuth)** — integración con Google.
+- **Conclusiones en modales EELL/home** — los textos de los modales de estadísticas EELL podrían ampliarse con análisis comparativos entre convocatorias.
+
+### Producción y seguridad
+
+- **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+- **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
+- **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
+- **CAPTCHA en registro** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto en su estado actual.
+- **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido.

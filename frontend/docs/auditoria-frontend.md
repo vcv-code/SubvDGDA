@@ -22,7 +22,7 @@
 | Archivo | Propósito | Verificado |
 |---|---|---|
 | `index.html` | Portada / KPIs generales | [ ] |
-| `solicitudes.html` | Buscador de solicitudes | [ ] |
+| `buscador.html` | Buscador de solicitudes | [ ] |
 | `estadisticas-epas.html` | Estadísticas EPAs | [ ] |
 | `estadisticas-eell.html` | Estadísticas EELL | [ ] |
 | `recursos.html` | Recursos y enlaces útiles | [ ] |
@@ -150,7 +150,7 @@
 | `GET /estadisticas/home` | `index.html` | [ ] |
 | `GET /estadisticas/epas` | `estadisticas-epas.html` | [ ] |
 | `GET /estadisticas/eell` | `estadisticas-eell.html` | [ ] |
-| `GET /solicitudes` (con filtros) | `solicitudes.html` | [ ] |
+| `GET /solicitudes` (con filtros) | `buscador.html` | [ ] |
 | `GET /entidades/:cif` | `entidad.html` | [ ] |
 | `GET /privado/perfil` | `privado.html` | [ ] |
 | `GET /privado/contenido-exclusivo` | `exclusivo.html` | [ ] |
@@ -236,7 +236,7 @@
 
 - [ ] En todas las páginas: Tab hasta el skip-nav → Enter → foco salta al contenido principal
 - [ ] En `login.html`: completar formulario solo con teclado → enviar → redirigir a privado
-- [ ] En `solicitudes.html`: usar los filtros y el botón "Buscar" solo con teclado
+- [ ] En `buscador.html`: usar los filtros y el botón "Buscar" solo con teclado
 
 ---
 

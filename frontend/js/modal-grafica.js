@@ -35,8 +35,7 @@
                         <button class="modal-grafica__cerrar" aria-label="Cerrar">&#x2715;</button>
                     </div>
                     <div class="modal-grafica__cuerpo">
-                        <p class="modal-grafica__etiqueta">Conclusiones</p>
-                        <p class="modal-grafica__texto" id="modal-grafica-texto"></p>
+                        <div class="modal-grafica__texto" id="modal-grafica-texto"></div>
                     </div>
                 </div>
             </div>`;
@@ -72,10 +71,14 @@
             const titEl = document.getElementById('modal-grafica-titulo');
             const texEl = document.getElementById('modal-grafica-texto');
 
-            fondo.src         = instanciaChart.toBase64Image('image/png', 1);
-            fondo.alt         = titulo;
+            fondo.src        = instanciaChart.toBase64Image('image/png', 1);
+            fondo.alt        = titulo;
             titEl.textContent = titulo;
-            texEl.textContent = conclusion;
+            const tag = document.createElement('span');
+            tag.className = 'modal-grafica__titulo-tag';
+            tag.textContent = ' — Conclusiones';
+            titEl.appendChild(tag);
+            texEl.innerHTML  = conclusion;
 
             modal.classList.add('modal-grafica--visible');
             modal.setAttribute('aria-hidden', 'false');

@@ -4,13 +4,13 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 195 | pytest (sin Docker) |
+| Tests automáticos | 197 | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **247** | |
+| **Total** | **249** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de los 195 tests automáticos requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 179. Con Docker completo, pasan los 195.
+Nota sobre ejecución: 16 de los 197 tests automáticos requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 181. Con Docker completo, pasan los 197.
 
 ---
 
@@ -370,7 +370,7 @@ Las pruebas manuales se realizaron navegando por la aplicación en `http://local
 
 **Causa:** los atributos `value` de las opciones del `<select>` usaban claves internas sin tildes ni espacios (ej: `"valencia"`, `"madrid"`, `"castilla_la_mancha"`), mientras que la base de datos almacena los nombres oficiales completos (ej: `"Comunidad Valenciana"`, `"Comunidad de Madrid"`, `"Castilla-La Mancha"`). El backend hace una comparación exacta, por lo que nunca coincidían.
 
-**Corrección:** se actualizaron los 17 `value` del select en `solicitudes.html` para que coincidan exactamente con los valores de la BD. Algunos casos especiales:
+**Corrección:** se actualizaron los 17 `value` del select en `buscador.html` para que coincidan exactamente con los valores de la BD. Algunos casos especiales:
 
 | Valor anterior | Valor corregido |
 |---|---|
@@ -516,8 +516,8 @@ Realizadas con Docker levantado en `https://localhost`.
 | 17 | Ficha entidad | Entidad miembro de agrupación EELL | "Entidad representante" muestra el nombre correcto (no `[object Object]`); importes asignados visibles para cada miembro | ✔ |
 | 18 | Buscador | Buscar con filtros → clic en una fila → botón "Volver al buscador" | Los filtros y resultados se restauran exactamente igual que antes de entrar en la ficha | ✔ |
 | 19 | Buscador | Abrir ficha desde una búsqueda → pulsar Atrás del navegador | Mismo comportamiento que el botón "Volver al buscador" | ✔ |
-| 20 | Buscador | Limpiar filtros | La URL vuelve a `solicitudes.html` sin parámetros | ✔ |
-| 21 | Ficha entidad | Acceder directamente a `entidad.html?cif=X` sin historial previo | El botón "Volver al buscador" redirige a `solicitudes.html` | ✔ |
+| 20 | Buscador | Limpiar filtros | La URL vuelve a `buscador.html` sin parámetros | ✔ |
+| 21 | Ficha entidad | Acceder directamente a `entidad.html?cif=X` sin historial previo | El botón "Volver al buscador" redirige a `buscador.html` | ✔ |
 | 22 | Buscador | Descargar CSV con filtros de provincia y línea activos | El archivo CSV contiene solo los registros filtrados (bug previo: estos filtros se ignoraban en la exportación) | ✔ |
 | 23 | Buscador | Verificar campo `tramo` en la respuesta de la API | `curl -sk "https://localhost/solicitudes/?tipo=eell&anio=2025&estado=concedida&limite=1" \| python3 -c "import sys,json; d=json.load(sys.stdin); print(d['resultados'][0]['tramo'])"` → imprime `1`, `2` o `3` | ✔ |
 | 24 | Home | Cargar `index.html` con Docker levantado | Aparece el bloque "Convocatorias" debajo de los KPIs con dos columnas: EELL y EPA, cada una con sus años, fechas y botones "Ver →" | ✔ |

@@ -190,7 +190,8 @@ def test_epas_top_beneficiarios(db_epas, client):
 def test_epas_distribucion_tiene_todos_los_rangos(db_epas, client):
     data = client.get("/estadisticas/epas").json()
     rangos = [d["rango"] for d in data["distribucion_importes"]]
-    assert len(rangos) == 6
+    # 5 rangos desde la corrección que eliminó "> 10.000 €" (importe máximo real = 10.000 €)
+    assert len(rangos) == 5
     # Test data: 1000, 2000, 3000, 4000, 5000 €
     # < 2.000: 1000 → 1; 2.000–4.000: 2000,3000 → 2; 4.000–6.000: 4000,5000 → 2
     rango_menor = next(d for d in data["distribucion_importes"] if d["rango"].startswith("<"))
