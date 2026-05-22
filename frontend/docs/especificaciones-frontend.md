@@ -483,11 +483,16 @@ La búsqueda por nombre se realiza server-side. El backend implementa el paráme
 
 **Control de orden:** encima de la tabla aparece `.tabla-controles` con el recuento de resultados a la izquierda y a la derecha el selector de orden y el botón de exportación. Opciones de orden: Entidad (A → Z), Importe mayor → menor, Importe menor → mayor. La ordenación es **server-side**: el parámetro `?orden=` se envía al backend, que aplica `ORDER BY` en SQL antes del `OFFSET`/`LIMIT`, garantizando que el orden sea correcto a través de todas las páginas. Cambiar el selector relanza la búsqueda desde la página 1.
 
-**Exportación CSV:** el botón "↓ Descargar CSV" construye la URL `/solicitudes/export` con todos los filtros activos (`buscar`, `tipo`, `anio`, `estado`, `ccaa`, `provincia`, `linea`) —sin `pagina` ni `limite`— y redirige con `window.location.href`. El backend genera y sirve el fichero CSV completo. No hay lógica de generación CSV en el cliente. El CSV incluye la columna `tramo` (rama 10a).
+**Exportación CSV:** el botón "↓ Descargar CSV" llama a `GET /solicitudes/export` con todos los filtros activos (`buscar`, `tipo`, `anio`, `estado`, `ccaa`, `provincia`, `linea`) —sin `pagina` ni `limite`—. El backend genera el CSV completo; el frontend lo recibe como `Blob` y dispara la descarga mediante un `<a download>` temporal con un nombre de archivo dinámico que refleja los filtros activos:
+
+- Sin filtros → `solicitudes.csv`
+- Con filtros → `solicitudes_[tipo]_[anio]_[estado]_[ccaa].csv` (ej: `solicitudes_epa_2024_concedida.csv`)
+
+La CCAA se normaliza (sin tildes, espacios como guión bajo). Si el backend devuelve 400 (demasiados resultados), se muestra el mensaje de error en la tabla en lugar de redirigir a una página en blanco. El CSV incluye la columna `tramo` (rama 10a).
 
 **Paginación:** 50 resultados por página. Parámetros `limite` y `pagina` en la URL de la API.
 
-**Enlace a ficha:** al hacer clic en cualquier fila se navega a `entidad.html?cif=...`.
+**Modal de entidad:** al hacer clic en cualquier fila se abre un modal inline (`modal-entidad.js`) con la ficha resumida de la entidad (nombre, CIF, CCAA, total recibido, nº solicitudes e histórico por año) sin abandonar el buscador. El pie del modal incluye el enlace "Ver página completa →" que abre `entidad.html?cif=...` en una pestaña nueva, permitiendo compartir o guardar la URL de una entidad concreta.
 
 **Persistencia de filtros en URL** (rama 10a): al ejecutar una búsqueda, los filtros activos —incluido el criterio de orden— se escriben como parámetros en la URL de la página (`buscador.html?tipo=eell&anio=2025&estado=concedida&orden=importe-desc`). Al volver desde la ficha de entidad, el botón "Volver al buscador" usa `history.back()`, lo que restaura la URL con parámetros y relanza la búsqueda automáticamente. Al limpiar filtros, la URL vuelve a `buscador.html` sin parámetros. El evento `popstate` (botón Atrás del navegador) tiene el mismo comportamiento. El criterio `entidad-az` (por defecto) no se escribe en la URL para no añadir ruido.
 
@@ -518,7 +523,7 @@ La página también acepta parámetros en la URL al llegar desde enlaces externo
 
 ### 5.4 Ficha de entidad — `entidad.html` + `js/entidad.js`
 
-**Propósito:** Mostrar el historial completo de participación de una entidad en todas las convocatorias.
+**Propósito:** Mostrar el historial completo de participación de una entidad en todas las convocatorias. Accesible desde el enlace "Ver página completa →" del modal del buscador o directamente por URL (`entidad.html?cif=...`), lo que permite compartir o marcar como favorito la ficha de una entidad concreta.
 
 **Cambios en Issue 7D:** desglose de municipios para solicitudes que pertenecen a una agrupación EELL.
 
@@ -1142,10 +1147,13 @@ Si el script se cargara en el `<head>`, se ejecutaría antes de que el navegador
 
 ### ¿Por qué el CSV se genera en el backend y no en el cliente?
 
-La exportación CSV se delega completamente al backend (`GET /solicitudes/export`) en lugar de generarla con `Blob` + `URL.createObjectURL` en el cliente. Razones:
-- El backend puede exportar **todos** los registros que coinciden con los filtros, sin limitarse a los 50 de la página actual.
+La generación del CSV se delega al backend (`GET /solicitudes/export`). Razones:
+
+- El backend exporta **todos** los registros que coinciden con los filtros, sin limitarse a los 50 de la página actual.
 - No se necesita tener los datos cargados en memoria del navegador.
 - El formato, la codificación (UTF-8 con BOM) y el separador los controla el backend de forma centralizada.
+
+La **descarga** sí ocurre en el cliente: el frontend recibe la respuesta como `Blob` y usa `URL.createObjectURL` + `<a download>` para disparar el guardado con un nombre de archivo dinámico. Esto combina lo mejor de ambos enfoques: el backend genera el contenido, el frontend controla el nombre del archivo.
 
 ---
 
