@@ -95,12 +95,10 @@ const graficoTop            = document.getElementById('grafico-top-beneficiarios
  *
  * Patrón idéntico al del resto de páginas del proyecto:
  *   1. Mostrar spinner
- *   2. Fetch al endpoint (comentado — pendiente de backend)
+ *   2. Fetch a /estadisticas/epas
  *   3. Si !ok → mostrar error-box con mensaje y sugerencia
  *   4. Si ok  → poblar KPIs y gráficos
  *   5. Ocultar spinner en finally (siempre)
- *
- * TODO: conectar con endpoint real cuando backend lo implemente.
  */
 async function cargarEstadisticasEpas() {
     spinner.style.display = 'block';

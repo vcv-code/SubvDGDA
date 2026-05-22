@@ -357,6 +357,9 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · Título construido con DOM API (textContent + appendChild) en lugar de innerHTML para evitar XSS
   · Cuerpo con flex: 1 + min-height: 0 para que el scroll interno funcione correctamente en modales largos
   · Modal de top municipios: columna única en ≤768px
+✔ Error-box en estadísticas EPAs y EELL ante fallos de red
+  · El bloque `error-box` ya se mostraba en errores HTTP, pero los errores de red (fetch lanzando excepción) dejaban la página en blanco con solo `console.error`
+  · El catch ahora muestra el error-box con mensaje fallback ("No se pudo conectar con el servidor") si no había uno previo del backend
 ✔ Saludo neutro y visibilidad de rol en zona privada
   · Saludo cambiado de "Bienvenida" (femenino) a "Hola," (neutro) — compatible con cualquier género
   · Rol mostrado solo si es `admin` ("Rol: administrador"); usuarios registrados ven solo la fecha de alta
