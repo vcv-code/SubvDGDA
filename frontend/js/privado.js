@@ -135,7 +135,7 @@ async function fetchAutenticado(ruta, token) {
 /**
  * mostrarSaludo(mensaje)
  * Actualiza el título H1 con el mensaje de bienvenida del servidor.
- * Ejemplo del backend: "Bienvenida, usuario@email.com"
+ * Ejemplo: "Hola, Usuario Demo" o "Hola, usuario@email.com"
  *
  * @param {string} mensaje
  */
@@ -163,7 +163,9 @@ function mostrarPerfil(perfil) {
         year: 'numeric',
     }).format(fecha);
 
-    el.textContent = `Cuenta activa desde el ${fechaFormateada} · Rol: ${perfil.rol}`;
+    el.textContent = perfil.rol === 'admin'
+        ? `Cuenta activa desde el ${fechaFormateada} · Rol: administrador`
+        : `Cuenta activa desde el ${fechaFormateada}`;
 }
 
 
@@ -235,7 +237,7 @@ async function cargarZonaPrivada() {
         if (!perfil) return;
 
         // ── Paso 3: Renderizar ────────────────────────────────────────────
-        mostrarSaludo(`Bienvenida, ${perfil.nombre ?? perfil.email}`);
+        mostrarSaludo(`Hola, ${perfil.nombre ?? perfil.email}`);
         mostrarPerfil(perfil);
 
         const campoNombre = document.getElementById('nombre-nuevo');
@@ -290,7 +292,7 @@ async function manejarCambiarNombre(evento) {
         }
 
         const datos = await respuesta.json();
-        mostrarSaludo(`Bienvenida, ${datos.nombre}`);
+        mostrarSaludo(`Hola, ${datos.nombre}`);
         ok.style.display = 'block';
 
     } catch {

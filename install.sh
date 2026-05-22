@@ -404,6 +404,13 @@ VALUES (
     '\$2b\$12\$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
     'admin', 1, 1, NOW()
 );
+INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
+VALUES (
+    'usuario@demo.com',
+    'Usuario Demo',
+    '\$2b\$12\$K3FLihBDEI.eWcMsxP8yfeVgNkRjRtNyKKSk84ajrilYAaElnoCYq',
+    'registrado', 1, 1, NOW()
+);
 " 2>/dev/null && ok "Esquema al día" || aviso "Migración omitida (BD vacía, se aplicará en el primer arranque)"
 
 FILAS=$(docker exec bdns_dgda_db mariadb \
@@ -487,9 +494,9 @@ fi
 echo -e "  ${NEGRITA}→ Mailpit:${RESET}  http://localhost:8025"
 echo -e "  ${NEGRITA}→ Adminer:${RESET}  http://localhost:8080"
 echo
-echo "  Cuenta de administrador:"
-echo -e "  ${NEGRITA}→ Email:${RESET}     admin@demo.com"
-echo -e "  ${NEGRITA}→ Contraseña:${RESET} Admin1234!"
+echo "  Cuentas de demo:"
+echo -e "  ${NEGRITA}→ Admin:${RESET}    admin@demo.com   /  Admin1234!"
+echo -e "  ${NEGRITA}→ Usuario:${RESET}  usuario@demo.com /  User1234!"
 echo
 echo "  Comandos útiles:"
 echo "    make start      — levantar contenedores"

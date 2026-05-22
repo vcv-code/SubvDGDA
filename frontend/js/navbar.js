@@ -1,3 +1,12 @@
+/**
+ * navbar.js — Navbar dinámica compartida por todas las páginas
+ *
+ * Cuando hay token en localStorage, sustituye el botón "Login" por
+ * un enlace "Mi perfil" y un botón de cierre de sesión.
+ * También gestiona el menú hamburguesa en móvil (≤900px).
+ *
+ * Endpoint: POST /auth/logout  (fire-and-forget al cerrar sesión)
+ */
 (function () {
     'use strict';
 
