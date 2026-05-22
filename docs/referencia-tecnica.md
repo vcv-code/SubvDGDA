@@ -51,6 +51,59 @@ backend:
 
 `service_healthy` es más fiable que `service_started` (que solo espera a que el proceso arranque, no a que esté listo para recibir conexiones). `adminer` y `cron` también dependen de `db` con `service_healthy`.
 
+### Healthchecks de runtime (backend y nginx)
+
+Más allá del arranque ordenado, `backend` y `nginx` tienen healthchecks que se ejecutan continuamente para detectar **cuelgues que no matarían el proceso** (deadlocks, bucles infinitos, conexiones agotadas). Sin healthcheck, `restart: unless-stopped` no actúa porque el proceso sigue "vivo" desde el punto de vista de Docker, aunque no responda.
+
+```yaml
+backend:
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 20s
+
+nginx:
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost/healthz"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 5s
+```
+
+`docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio en la columna STATUS. El resumen:
+
+| Servicio | Healthcheck | Comando | Motivo |
+|---|---|---|---|
+| `db` | Sí (oficial MariaDB) | `healthcheck.sh --connect --innodb_initialized` | Asegura arranque ordenado del backend |
+| `backend` | Sí (propio) | `curl -f http://localhost:8000/health` | Detecta cuelgues que no matan el proceso |
+| `nginx` | Sí (propio) | `curl -f http://localhost/healthz` | Verifica que Nginx responde a HTTP independientemente del backend |
+| `cron` | No | — | No expone HTTP. Su salud se ve en `logs/cron/health_check.log` y `restart: unless-stopped` cubre los crashes |
+| `mailpit` | Sí (de fábrica) | Heredado de la imagen oficial | No lo configuramos nosotros |
+| `adminer` | No | — | Herramienta de desarrollo, no crítica |
+
+**Sobre `/healthz` en Nginx:** es un endpoint propio definido en `docker/nginx/default.conf` dentro del bloque HTTP (puerto 80). Devuelve `200 "ok"` directamente sin pasar por el backend y **sin redirigir a HTTPS** — de ese modo el healthcheck verifica que Nginx vive aunque el backend esté caído.
+
+```nginx
+server {
+    listen 80;
+    location = /healthz {
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 "ok\n";
+    }
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+**Sobre `curl` en lugar de `wget`:** la imagen `nginx:alpine` trae ambos, pero el `wget` de BusyBox resuelve `localhost` a IPv6 (`::1`) y Nginx solo escucha en IPv4 → el healthcheck fallaba con `Connection refused`. Usar `curl` (que prueba IPv4 correctamente) es además consistente con el healthcheck del backend.
+
+**Sobre `curl` en el backend:** se instala en `backend/Dockerfile` con `apt-get install -y --no-install-recommends curl` (~6 MB sobre la imagen slim). Además del healthcheck, queda disponible para depurar la conexión backend↔BD desde dentro del contenedor (`docker exec bdns_api curl -v http://db:3306`).
+
 ### Red interna Docker y DNS automático
 
 Docker Compose crea una red privada para todos los servicios. Cada servicio es accesible por su nombre desde cualquier otro contenedor:
