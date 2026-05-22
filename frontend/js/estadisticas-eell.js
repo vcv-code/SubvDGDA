@@ -124,6 +124,11 @@ async function cargarEstadisticasEell() {
 
     } catch (error) {
         console.error('Error al cargar estadísticas EELL:', error);
+        if (!errorMensaje.textContent) {
+            errorMensaje.textContent    = 'No se pudo conectar con el servidor.';
+            errorSugerencia.textContent = 'Comprueba que el backend está activo.';
+        }
+        errorBox.style.display = 'block';
     } finally {
         spinner.style.display = 'none';
     }

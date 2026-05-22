@@ -4,6 +4,8 @@
  * Se invoca desde solicitudes.js cuando el usuario hace clic en una fila.
  * Abre un modal con la ficha resumida de la entidad (nombre, CIF, CCAA,
  * importes totales e histórico de solicitudes) sin navegar fuera del buscador.
+ * El pie del modal incluye el enlace "Ver página completa →" que abre
+ * entidad.html?cif=... en una pestaña nueva para compartir o guardar la URL.
  *
  * API que expone al resto del código:
  *   abrirModalEntidad(cif, nombre)  → abre el modal y carga los datos
@@ -34,6 +36,7 @@
     const elEstado       = backdrop.querySelector('#modal-estado');
     const elHistorico    = backdrop.querySelector('#modal-historico');
     const elTablaBody    = backdrop.querySelector('#modal-tabla-body');
+    const elEnlacePagina = backdrop.querySelector('#modal-enlace-pagina');
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -199,9 +202,9 @@
         if (!cif) return;
         backdrop._openerEl = openerEl || null;
         limpiarModal();
-        // Muestra nombre provisional en cabecera mientras carga
         if (elNombre) elNombre.textContent = nombre || cif;
         if (elCif)    elCif.textContent    = cif;
+        if (elEnlacePagina) elEnlacePagina.href = `entidad.html?cif=${encodeURIComponent(cif)}`;
         abrirModal();
         cargarEntidad(cif);
     };

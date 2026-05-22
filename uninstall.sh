@@ -118,7 +118,7 @@ echo -e "${NEGRITA}[4/4] Archivos generados por install.sh...${RESET}"
 # .env
 if [ -f "${DOCKER_DIR}/.env" ]; then
     echo "  docker/.env contiene las contraseñas generadas al instalar (base de datos, clave JWT)."
-    echo "  Si reinstalaas, el script las genera de nuevo automáticamente."
+    echo "  Si reinstalas, el script las genera de nuevo automáticamente."
     if confirmar "¿Eliminar docker/.env?"; then
         rm "${DOCKER_DIR}/.env" && ok "docker/.env eliminado"
     else
@@ -137,8 +137,8 @@ fi
 
 # Entorno virtual Python
 if [ -d "venv" ]; then
-    echo "  venv/ es el entorno Python que usa el script de carga de datos (~500 MB)."
-    echo "  Si reinstalaas, se crea de nuevo en unos segundos."
+    echo "  venv/ es el entorno Python que usa el script de carga de datos (~50 MB)."
+    echo "  Si reinstalas, se crea de nuevo en unos segundos."
     if confirmar "¿Eliminar venv/?"; then
         rm -rf venv && ok "venv/ eliminado"
     else
