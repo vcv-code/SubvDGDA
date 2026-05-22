@@ -775,12 +775,13 @@ Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron pue
 
 ### Nginx — qué hace exactamente
 
-Nginx gestiona todo el tráfico de entrada y cumple cuatro funciones en un solo proceso:
+Nginx gestiona todo el tráfico de entrada y cumple cinco funciones en un solo proceso:
 
 - **Terminador SSL** — recibe HTTPS del navegador, descifra el tráfico TLS (1.2/1.3) y lo reenvía al backend por HTTP interno. El backend no necesita saber nada de certificados.
 - **Servidor de archivos estáticos** — sirve directamente `frontend/*.html`, `css/`, `js/` y `assets/` sin pasar por Python. Las páginas de error `404.html` y `50x.html` se sirven incluso si el backend está caído.
 - **Proxy inverso** — las rutas `/auth`, `/solicitudes`, `/estadisticas`, `/privado`, `/admin`, etc. se redirigen al contenedor `bdns_api` (puerto 8000, no expuesto al exterior).
 - **Rate limiting** — tres zonas definidas con `limit_req_zone` al inicio de `default.conf`. Al superarse el límite, Nginx devuelve HTTP 429 directamente sin consumir recursos del backend.
+- **Healthcheck propio** — sirve `GET /healthz` con un 200 "ok" fijo (sin pasar por el backend y sin redirigir a HTTPS). Lo consume el healthcheck de Docker para saber si Nginx está vivo independientemente de que el backend lo esté.
 
 Editar `default.conf` no recarga la config automáticamente: hay que ejecutar `docker exec bdns_nginx nginx -s reload` (o `make reload-nginx`). Antes de recargar conviene verificar la sintaxis con `docker exec bdns_nginx nginx -t`.
 
@@ -795,6 +796,8 @@ Las imágenes están optimizadas para reducir el peso del entorno (~700 MB menos
 | `nginx:alpine` | ~11 MB | `nginx` (~190 MB) | ~180 MB |
 
 Además, ambos Dockerfiles usan `pip install --no-cache-dir` para no almacenar la caché de pip dentro de la imagen, y copian `requirements.txt` antes que el código de la aplicación — así Docker solo repite el `pip install` cuando cambian las dependencias, no en cada cambio de código.
+
+El backend instala además `curl` (~6 MB) sobre la imagen slim: lo usa el healthcheck de Docker para verificar `/health` y queda disponible para depurar la conectividad desde dentro del contenedor (`docker exec bdns_api curl http://db:3306`). El resto de la optimización slim se mantiene; tras la instalación se borra la caché de apt (`rm -rf /var/lib/apt/lists/*`) para no dejar ~30 MB residuales dentro de la imagen.
 
 ### Modo desarrollo (día a día)
 
@@ -1148,6 +1151,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 ### Calidad y mantenibilidad
 
 - **218 funciones de test automáticas** (316 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron
+- **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
 - **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
