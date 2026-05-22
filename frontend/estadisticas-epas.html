@@ -317,7 +317,8 @@
     </footer>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous" defer></script>
+    <!-- Chart.js — primario CDN con SRI, fallback local en /assets/vendor/ vía onerror -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous" defer onerror="this.onerror=null; var s=document.createElement('script'); s.src='/assets/vendor/chart.umd.min.js'; s.defer=true; document.head.appendChild(s);"></script>
     <script src="js/modal-grafica.js" defer></script>
     <script src="js/navbar.js" defer></script>
     <script src="js/estadisticas-epas.js" defer></script>

@@ -555,7 +555,7 @@ Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `
 | **Espacio en disco** | ~1,5 GB | ~1 GB imágenes Docker (primera descarga) + ~10 MB dataset + ~50 MB venv opcional |
 | **RAM** | 4 GB mínimo recomendado | MariaDB + FastAPI + Nginx corren en paralelo dentro de Docker |
 | **Editor** | VS Code recomendado | El proyecto incluye `.vscode/extensions.json` con extensiones preconfiguradas. Cualquier editor funciona |
-| **Conexión a internet** | Solo en la primera instalación | Para descargar las imágenes Docker (~300–400 MB) y los recursos CDN (Chart.js, Leaflet, Google Fonts). Después la app funciona completamente offline, salvo que el navegador no tenga los CDN en caché (los gráficos y el mapa no renderizarían hasta reconectar) |
+| **Conexión a internet** | Solo en la primera instalación | Para descargar las imágenes Docker (~300–400 MB). Después la app funciona completamente offline: Chart.js y Leaflet tienen fallback local en `frontend/assets/vendor/` que se carga automáticamente vía `onerror` si los CDN no responden. Google Fonts es el único recurso CDN sin fallback local — sin conexión y sin caché, la tipografía cae al `font-family` de sistema por defecto, sin romper la app |
 
 ### Instalación automática (recomendada)
 
@@ -1156,6 +1156,68 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
 - **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
 - **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones; sin estilos inline
+
+### Contingencia ante fallos externos
+
+Mecanismos que mantienen el sistema operativo (o degradado de forma controlada) ante caídas de servicios externos o internos.
+
+**Resumen rápido:**
+
+| Qué puede fallar | Mecanismo | Resultado para el usuario |
+|---|---|---|
+| API BDNS no responde | Retry con backoff (2s → 4s → 8s) en el cron | La web sigue intacta (los datos están en MariaDB local); el cron reintenta en su próximo ciclo |
+| Backend FastAPI se cuelga sin morir | Healthcheck Docker cada 30s | `docker compose ps` muestra `(unhealthy)`; visibilidad inmediata del problema |
+| Backend FastAPI cae | `restart: unless-stopped` + `error_page` Nginx | El contenedor se reinicia automáticamente; mientras tanto el usuario ve `50x.html` amable, no pantalla en blanco |
+| MariaDB cae | `restart: unless-stopped` + `depends_on: service_healthy` | El contenedor se reinicia y el backend espera a que la BD esté lista antes de aceptar peticiones |
+| Nginx cae | `restart: unless-stopped` | Docker reinicia el contenedor automáticamente |
+| CDN externo (`jsdelivr`, `unpkg`) caído o lento | Fallback local en `assets/vendor/` vía `onerror` | Las gráficas y el mapa siguen renderizando con los archivos locales |
+| CDN sirve archivo manipulado | SRI (`integrity`) en los 5 recursos CDN | El navegador rechaza el archivo y dispara el fallback local |
+| Mailpit/SMTP caído | `try/except` no bloqueante en envío de emails | El registro y la recuperación funcionan igual; solo no llega el email (el usuario puede pedir reenvío) |
+| Sesión del usuario caduca | Refresh token automático | El usuario sigue navegando sin volver a hacer login |
+| Datos perdidos por error | `make backup` + volúmenes Docker persistentes | La BD se restaura desde un `.sql` fechado |
+
+A continuación, el detalle por dominio.
+
+#### Datos
+
+- **Dataset versionado en el repositorio** (`data/final/dataset_unificado.json`, 6.398 registros): la web funciona sin necesidad de la API BDNS ni del BOE en runtime. Las consultas del usuario van a MariaDB local, no a servicios externos.
+- **`make backup` + volúmenes Docker persistentes**: la BD sobrevive a `docker compose down` y se puede restaurar desde un `.sql` fechado.
+
+#### API BDNS (servicio externo)
+
+- **Calendario del cron extendido a noviembre–enero**: las resoluciones DGDA se publican en esa ventana y antes el cron estaba dormido. Ahora se detectan automáticamente y el banner de aviso de la home desaparece sin intervención manual.
+- **Reintentos con backoff exponencial (2s → 4s → 8s)**: el helper `_get_bdns_con_retry` absorbe blips puntuales de BDNS de hasta ~15s. Sin retry, una sola incidencia hacía perder hasta 4 días hasta el siguiente ciclo del cron.
+- **Timeout de 30s por petición** y captura explícita de `requests.RequestException`: el cron nunca queda colgado en una llamada ni se rompe por errores de red.
+
+#### Servicios Docker
+
+- **`restart: unless-stopped`** en los 6 contenedores: auto-recuperación tras crash o reinicio del sistema. No revive contenedores parados a mano con `docker compose down`.
+- **Healthchecks** en `db`, `backend` y `nginx`: detectan cuelgues que no matarían el proceso (deadlocks, conexiones agotadas), donde el restart no actúa. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía logs.
+- **`depends_on: service_healthy`**: el backend espera a que MariaDB esté lista antes de arrancar; el cron espera al backend. Evita errores de conexión en el arranque ordenado.
+
+#### Nginx y backend
+
+- **Páginas `404.html` y `50x.html`** servidas por Nginx con `error_page`: se siguen viendo aunque el backend esté caído. Sin JavaScript, sin llamadas a la API.
+- **Endpoint `/healthz` propio de Nginx** (fuera de la redirección HTTPS): permite verificar que Nginx vive independientemente de que el backend esté disponible.
+
+#### Frontend (peticiones, errores y CDN)
+
+- **Todos los `fetch` con `try/catch`**: si la API devuelve 4xx/5xx o no responde, se muestra `error-box` con mensaje y sugerencia en lugar del spinner colgado indefinidamente.
+- **Mapa CCAA degrada a "Mapa no disponible"** si la inicialización de Leaflet falla.
+- **Recursos CDN con SRI (`integrity`)**: el navegador rechaza ficheros modificados o corruptos, evitando ataques de cadena de suministro.
+- **Fallback local de CDN** (`frontend/assets/vendor/chart.umd.min.js`, `leaflet.js`, `leaflet.css`): si `cdn.jsdelivr.net` o `unpkg.com` están caídos, el atributo `onerror` del `<script>` o `<link>` carga el archivo desde el propio dominio. Las versiones locales se descargaron con los mismos hashes SHA-384 que los SRI declarados, verificación criptográfica de integridad. Coste: ~370 KB añadidos al repositorio.
+
+#### Autenticación
+
+- **SMTP envuelto en `try/except` no bloqueante**: si Mailpit/SMTP cae, el registro y la recuperación de contraseña funcionan igual; solo no llega el email. La cuenta queda creada con `email_verificado=0`, y se puede desbloquear desde el panel de administración o reenviando el email.
+- **Refresh token automático**: si el access token de 15 min caduca, el JS lo renueva en background con el refresh token (30 días) sin pedir al usuario que vuelva a hacer login.
+
+#### Tests de contingencia
+
+- **SQLite en memoria** como sustituto de MariaDB en los tests originales (mock de BD).
+- **`unittest.mock.patch`** para mockear envíos de email (mock de SMTP).
+- **Tests parametrizados del scheduler** del cron (21 funciones / 119 ejecuciones) verifican el calendario completo sin esperar a noviembre.
+- **Tests del retry de BDNS con backoff** (5 funciones) mockean `requests.get` y `time.sleep` para reproducir los 4 escenarios de fallo sin tocar la API real.
 
 ### UX y experiencia de uso
 
