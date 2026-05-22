@@ -571,7 +571,7 @@
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
             y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
-            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+            &nbsp;·&nbsp; © 2026 Verónica Corpa y Miyuki Salvador · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
         </div>
 
     </footer>
@@ -589,7 +589,8 @@
          ===================================================== -->
     <script src="js/navbar.js" defer></script>
     <!-- Chart.js debe cargarse ANTES que home.js — defer preserva el orden -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous" defer></script>
+    <!-- Primario: CDN con SRI. Fallback local en /assets/vendor/ si el CDN no responde (onerror). -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous" defer onerror="this.onerror=null; var s=document.createElement('script'); s.src='/assets/vendor/chart.umd.min.js'; s.defer=true; document.head.appendChild(s);"></script>
     <script src="js/modal-grafica.js" defer></script>
     <script src="js/home.js" defer></script>
 
