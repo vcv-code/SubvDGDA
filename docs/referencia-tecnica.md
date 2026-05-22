@@ -433,7 +433,14 @@ El contenedor `bdns_cron` ejecuta `scheduler.py` con dos tareas:
 | `check_bdns.py` (abril–mayo) | Cada 2 días a las 08:00 UTC |
 | `check_bdns.py` (junio) | Cada 4 días a las 08:00 UTC |
 
-La frecuencia mayor en abril–mayo es porque es cuando suelen publicarse las convocatorias de la DGDA.
+### Criterio de selección de frecuencias
+
+La frecuencia se diseñó a partir del histórico de publicaciones de la DGDA:
+
+- **Convocatorias:** los años analizados (2021–2025) muestran que la DGDA publica las convocatorias EPA y EELL entre marzo y mayo. Comprobar cada 2 días en abril–mayo garantiza que el banner de aviso aparece en la home en menos de 48 horas tras la publicación oficial.
+- **Resoluciones:** se publican con más variabilidad (normalmente en noviembre–diciembre para EPA y EELL del mismo año). El cron las comprueba en cada ejecución —independientemente del mes— porque la fase de detección de resoluciones siempre corre.
+- **Cada 4 días fuera de temporada (marzo y junio):** suficiente para detectar publicaciones tardías o adelantadas sin generar peticiones innecesarias a la API de BDNS.
+- **No se comprueba julio–febrero:** la DGDA no ha publicado convocatorias en esos meses en ninguno de los años analizados. El cron se puede ampliar fácilmente si eso cambia.
 
 `check_bdns.py` ejecuta dos fases en cada llamada:
 
@@ -667,7 +674,7 @@ ALTER TABLE verificacion_tokens ADD UNIQUE INDEX ix_verificacion_token (token);
 | **Desistida** | Estado de una solicitud abandonada por la entidad (no completó el trámite en plazo). |
 | **Agrupación** | Concesión EELL presentada conjuntamente por varios ayuntamientos; el importe no se desglosa por municipio. |
 | **JWT** | JSON Web Token. Formato estándar para transmitir la identidad del usuario de forma segura y sin estado en servidor. |
-| **Access token** | Token de corta duración (60 min) que autoriza cada petición a la API. |
+| **Access token** | Token de corta duración (15 min) que autoriza cada petición a la API. |
 | **Refresh token** | Token de larga duración (30 días) que permite obtener un nuevo access token sin volver a hacer login. |
 | **ORM** | Object-Relational Mapper. Capa que traduce entre objetos Python y filas de la BD (aquí: SQLAlchemy). |
 | **ASGI** | Interfaz estándar entre servidor web y aplicación Python asíncrona (aquí: uvicorn + FastAPI). |

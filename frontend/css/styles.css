@@ -4430,7 +4430,19 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     background-color: var(--color-fondo-verde);
 }
 
-/* 36.10 Responsive: móvil */
+/* 36.10 Enlace a la ficha completa */
+.modal-enlace-pagina {
+    font-size: 0.85rem;
+    color: var(--color-verde-btn);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.modal-enlace-pagina:hover {
+    text-decoration: underline;
+}
+
+/* 36.11 Responsive: móvil */
 @media (max-width: 600px) {
     .modal-card {
         max-height: 92vh;

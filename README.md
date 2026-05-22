@@ -8,8 +8,8 @@ Proyecto intermodular de **2º FPGS Desarrollo de Aplicaciones Web (DAW)**.
 
 Proyecto desarrollado por:
 
-- Miyuki Salvador
-- Verónica Corpa
+- [Miyuki Salvador](https://github.com/ImiuCreative)
+- [Verónica Corpa](https://github.com/vcv-code)
 
 ---
 
@@ -33,8 +33,11 @@ Proyecto desarrollado por:
     - [Base de datos](#base-de-datos)
     - [Backend](#backend)
     - [Frontend](#frontend)
+      - [Capturas](#capturas)
+      - [Compatibilidad de navegadores](#compatibilidad-de-navegadores)
 - **Instalación y uso**
   - [Desarrollo](#desarrollo)
+    - [Requisitos del sistema](#requisitos-del-sistema)
   - [Entorno de trabajo](#entorno-de-trabajo)
   - [Docker — arrancar el sistema](#docker--arrancar-el-sistema)
     - [Nginx — qué hace exactamente](#nginx--qué-hace-exactamente)
@@ -47,6 +50,7 @@ Proyecto desarrollado por:
   - [Flujo de trabajo](#flujo-de-trabajo)
   - [Gestión del proyecto](#gestión-del-proyecto)
   - [Estado actual](#estado-actual)
+  - [Buenas prácticas aplicadas](#buenas-prácticas-aplicadas)
 - **Apéndices**
   - [Notas técnicas](#notas-técnicas)
   - [Limitaciones conocidas del dato de origen](#limitaciones-conocidas-del-dato-de-origen)
@@ -173,6 +177,7 @@ analisis-bdns-dgda/
 │   └── ingestion/          ← cliente API BDNS
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
+│   └── img/                ← diagramas ER y capturas de pantalla (README)
 └── tests/                  ← 197 tests pytest
 ```
 
@@ -434,13 +439,13 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | Página | Descripción |
 |--------|-------------|
 | `index.html` | Home con métricas, gráficas de evolución e información de convocatorias activas |
-| `buscador.html` | Buscador de solicitudes con filtros, paginación, exportación CSV y ordenación server-side |
+| `buscador.html` | Buscador de solicitudes con filtros, paginación, ordenación server-side y exportación CSV con nombre de archivo dinámico según filtros activos |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
 | `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
 | `admin.html` | Panel de administración: gestión de usuarios, avisos y logs (solo rol `admin`) |
-| `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF |
+| `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas |
 | `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
 | `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
@@ -468,6 +473,35 @@ Una sola hoja de estilos compartida (`styles.css`) con variables CSS para colore
 - **Leaflet + GeoJSON** — mapa choropleth por CCAA en `exclusivo.html`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
 
 Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-frontend.md](frontend/docs/especificaciones-frontend.md) · Paleta, tipografía y guía visual en [frontend/docs/diseño.md](frontend/docs/diseño.md).
+
+#### Capturas
+
+![Página de inicio](docs/img/screenshots/home-intro.webp)
+*Página de inicio: banners de convocatorias activas, descripción del proyecto y métricas principales*
+
+![Gráficas de análisis](docs/img/screenshots/home-graficas.webp)
+*Evolución del importe por año, comparativa EPA vs EELL, distribución por estado y tasa de éxito*
+
+![Buscador de solicitudes](docs/img/screenshots/buscador.webp)
+*Buscador con filtros, badges de estado, tramos EELL, ordenación y exportación CSV*
+
+![Mapa de calor por CCAA](docs/img/screenshots/exclusivo-mapa.webp)
+*Contenido exclusivo: mapa choropleth interactivo por comunidad autónoma (solo usuarios registrados)*
+
+#### Compatibilidad de navegadores
+
+La aplicación usa APIs modernas (ES2017+, `fetch`, CSS custom properties, `URLSearchParams`, `URL.createObjectURL`). No es compatible con Internet Explorer.
+
+| Navegador | Compatibilidad | Notas |
+|-----------|---------------|-------|
+| **Chrome 80+** | ✅ Completa | Recomendado. Probado en desarrollo |
+| **Edge 80+** | ✅ Completa | Mismo motor que Chrome (Chromium) |
+| **Firefox 75+** | ✅ Completa | |
+| **Safari 14+** | ✅ Con matiz | El certificado autofirmado puede requerir añadirlo manualmente al llavero del sistema (Acceso a Llaveros) antes de que Safari lo acepte |
+| **Navegadores móviles** | ✅ Completa | Diseño responsive verificado. El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle) |
+| **Internet Explorer** | ❌ No soportado | Sin soporte de `fetch`, `async/await` ni CSS variables |
+
+**Nota sobre el certificado autofirmado:** todos los navegadores mostrarán un aviso de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
 
 La carpeta `frontend/` contiene:
 
@@ -510,6 +544,19 @@ Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `
 
 ## Desarrollo
 
+### Requisitos del sistema
+
+| Requisito | Valor | Notas |
+|-----------|-------|-------|
+| **Sistema operativo** | Linux · macOS · Windows con WSL2 | En Windows se requiere WSL2 + Docker Desktop con integración WSL2 activa |
+| **Docker** | 24+ con `docker compose` v2 | Imprescindible. Incluye todos los servicios (BD, backend, Nginx, cron) |
+| **Python** | 3.10+ | Solo necesario para ejecutar tests y scripts de parseo. La app web funciona sin él |
+| **openssl** | Cualquier versión reciente | Para generar el certificado SSL autofirmado en la instalación |
+| **Espacio en disco** | ~1,5 GB | ~1 GB imágenes Docker (primera descarga) + ~10 MB dataset + ~50 MB venv opcional |
+| **RAM** | 4 GB mínimo recomendado | MariaDB + FastAPI + Nginx corren en paralelo dentro de Docker |
+| **Editor** | VS Code recomendado | El proyecto incluye `.vscode/extensions.json` con extensiones preconfiguradas. Cualquier editor funciona |
+| **Conexión a internet** | Solo en la primera instalación | Para descargar las imágenes Docker (~300–400 MB) y los recursos CDN (Chart.js, Leaflet, Google Fonts). Después la app funciona completamente offline, salvo que el navegador no tenga los CDN en caché (los gráficos y el mapa no renderizarían hasta reconectar) |
+
 ### Instalación automática (recomendada)
 
 Clona el repositorio y ejecuta el script de instalación:
@@ -534,9 +581,7 @@ El script explica en lenguaje llano qué elimina en cada paso (contenedores, vol
 
 1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
 2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
-3. Para acceder al panel de administración, inicia sesión con:
-   - Email: `admin@demo.com`
-   - Contraseña: `Admin1234!`
+3. El script crea dos cuentas de demo (ver tabla de credenciales más abajo). Para el panel de administración usa `admin@demo.com` / `Admin1234!`.
 
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
@@ -566,15 +611,14 @@ Antes de continuar el script detecta si ya existen recursos y los reutiliza sin 
 | `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
 | Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
 
-El script crea también un **usuario administrador de demo** si no existe ninguno:
+El script crea dos usuarios de demo si no existen:
 
-| Campo | Valor |
-|-------|-------|
-| Email | `admin@demo.com` |
-| Contraseña | `Admin1234!` |
-| Rol | `admin` |
+| Rol | Email | Contraseña | Acceso |
+|-----|-------|------------|--------|
+| `admin` | `admin@demo.com` | `Admin1234!` | Panel de administración + zona privada + contenido exclusivo |
+| `registrado` | `usuario@demo.com` | `User1234!` | Zona privada + contenido exclusivo |
 
-Este usuario permite acceder al panel de administración en cualquier instalación limpia. Si ya existe una cuenta con ese email (instalaciones previas), `INSERT IGNORE` lo omite sin error.
+Si ya existen (instalaciones previas), `INSERT IGNORE` los omite sin error.
 
 Además, **siempre** (sin importar si hay datos o no):
 
@@ -594,7 +638,7 @@ El script detecta la BD existente, aplica las migraciones pendientes y reconstru
 
 > **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
 >
-> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — solo existe el usuario demo `admin@demo.com` / `Admin1234!` que crea el script. Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
+> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — existen los dos usuarios demo que crea el script (`admin@demo.com` y `usuario@demo.com`). Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
 >
 > **Desinstalar:** `bash uninstall.sh` elimina los contenedores, volúmenes (BD y datos), certificado SSL, `docker/.env` y opcionalmente la imagen Docker y el `venv/`. También elimina la entrada de `/etc/hosts` (con confirmación, requiere sudo). La operación es irreversible para los datos.
 
@@ -1067,6 +1111,59 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ---
 
+## Buenas prácticas aplicadas
+
+Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de la funcionalidad básica.
+
+### Seguridad
+
+- **Contraseñas** — hash bcrypt con `rounds=12`; validación de fortaleza en registro y cambio (mínimo 8 caracteres, mayúscula, minúscula, número)
+- **Sesión** — doble token JWT: access token de 15 min + refresh token de 30 días con rotación en cada uso; revocación en cascada al cambiar contraseña
+- **Rate limiting** — Nginx bloquea con HTTP 429 antes de llegar al backend: login (10 req/min), registro (5 req/min), recuperar contraseña (3 req/min)
+- **Cabeceras de seguridad** — `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
+- **SRI** — atributo `integrity` en los 5 recursos CDN externos (Chart.js ×3, Leaflet JS y CSS); el navegador verifica el hash antes de ejecutarlos
+- **Honeypot** — campo oculto `sitio_web` en el registro; si llega relleno (bot), se devuelve éxito falso sin crear cuenta
+- **Anti-enumeración** — registro y recuperación de contraseña devuelven siempre la misma respuesta, exista o no el email
+- **Validación de parámetros** — `buscar` máx. 200 caracteres, `limite` entre 1 y 500, exportación CSV limitada a 5.000 filas
+- **Verificación de email** — cuentas nuevas con `email_verificado=0`; login bloqueado hasta verificar
+- **HTTPS** — TLS 1.2/1.3 únicamente; certificado autofirmado con `subjectAltName` (requisito Chrome/Firefox)
+
+### Accesibilidad (WCAG 2.1 AA)
+
+- **Skip navigation** — enlace "Saltar al contenido" en las 19 páginas; foco visible con contraste 12:1
+- **Roles ARIA** — `role="navigation"`, `aria-label` en todos los `<nav>`, `role="img"` en todos los `<canvas>`, `aria-live` en mensajes de error y éxito
+- **Formularios** — todos los campos con `<label>` explícito (`for` + `id`); errores con `role="alert"`, confirmaciones con `role="status"`
+- **Foco de teclado** — trampa de foco en modales (Tab/Shift+Tab ciclan dentro); cierre con Esc; foco devuelto al elemento que abrió el modal al cerrar
+- **Responsive y táctil** — diseño verificado en Chrome DevTools; mapa choropleth con interacción táctil específica (un toque = info, doble toque = detalle)
+
+### Rendimiento
+
+- **`defer`** en todos los `<script>` — descarga en paralelo, ejecución ordenada tras el parsing; sin bloqueo del renderizado
+- **`fetchpriority="high"`** en la imagen hero — mejora el LCP (Largest Contentful Paint)
+- **`loading="lazy"`** en todas las imágenes fuera del viewport inicial
+- **Caché Nginx** — imágenes y fuentes: `expires 1y`; CSS y JS: `expires 1h`
+- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora
+- **Imágenes Docker slim** — `python:3.11-slim` (~75 MB vs ~900 MB de la imagen completa); `--no-cache-dir` en pip
+
+### Calidad y mantenibilidad
+
+- **197 tests automáticos** — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs)
+- **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
+- **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
+- **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
+- **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones; sin estilos inline
+
+### UX y experiencia de uso
+
+- **Estados de carga** — spinner en peticiones de datos; skeleton loader animado en tabla de contenido exclusivo
+- **Feedback de errores** — mensajes de error visibles en tabla/formulario cuando la API falla o el servidor no responde
+- **Persistencia de filtros** — los filtros del buscador se guardan en la URL; compartible, marcable y restaurado al pulsar "Atrás"
+- **Deep link post-login** — si el usuario accede a una página protegida sin sesión, se redirige al login y vuelve automáticamente a la página original tras autenticarse
+- **Exportación CSV con nombre dinámico** — el nombre del archivo refleja los filtros activos (ej: `solicitudes_epa_2024_concedida.csv`)
+- **Renovación automática de sesión** — el access token se renueva silenciosamente con el refresh token sin que el usuario tenga que volver a hacer login
+
+---
+
 ## Notas técnicas
 
 - `solicitudes.html` se conserva intencionalmente aunque la URL pública es ahora `buscador.html`. Actúa como redirección de compatibilidad para cualquier enlace externo o marcador guardado antes del renombrado. No es un archivo huérfano: es legacy deliberado.
@@ -1190,9 +1287,11 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 - **Expedientes con resolución tardía — aparecen en dos convocatorias**: algunas entidades presentaron solicitud en un año pero la resolución se publicó en el BOE del año siguiente. El pipeline las registra en ambas convocatorias porque cada dataset se procesa de forma independiente. Casos identificados:
   - **EPA** — *La Sexta Huella* (`SUBV2022659`): excluida en 2022, concedida en 2023; aparece dos veces en EPA 2023, lo que infla ligeramente su importe acumulado en estadísticas (~9.130 € en vez de ~4.446 €).
   - **EPA** — *Amibichos* (`2023B628`): excluida en 2023, concedida en 2024; aparece dos veces en EPA 2024.
-  - **EELL** — *Casavieja* y *Castilforte*: ambas `no_beneficiaria` en 2023, sin impacto económico.
+  - **EELL** — *Casavieja* (`EXP2023/008788`, `EXP2025/011681`) y *Castilforte* (`EXP2023/008510`, `EXP2024/007382`): `no_beneficiaria` en todos sus años, sin impacto económico. Castilforte aparece en 2023 y 2024; Casavieja en 2023 y 2025.
   - El número de expediente puede variar en formato entre años (`SUBV…`, `2023B…`, sin prefijo), lo que dificulta la deduplicación automática cross-year.
   - Causa raíz: `cargar_dataset.py` asigna cada solicitud a la convocatoria de su dataset sin comprobar si el expediente ya existe en otra convocatoria. La corrección requeriría lógica adicional en el pipeline de carga.
+
+- **Formatos de expediente heterogéneos en EELL 2025**: el BOE XML de 2025 usa el formato `EXP/NNNNN` (sin año) para 23 entidades, mientras que el Excel principal usa `EXP2025/NNNNN`. No se trata de duplicados de las mismas entidades — son registros distintos que el BOE referencia con diferente esquema de numeración. Todas son `excluida` o `no_beneficiaria`, sin impacto económico. La deduplicación no puede unirlas automáticamente porque los números no coinciden entre fuentes.
 
 ---
 
@@ -1210,13 +1309,14 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Funcionalidades y UX
 
+- **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Paginación en `/admin/usuarios`** — la tabla de usuarios no pagina; con pocos usuarios actuales no es problema pero escalaría mal.
 - **Retry en cron si BDNS API no responde** — el cron falla silenciosamente si BDNS devuelve error; añadir reintentos con backoff exponencial.
 - **Logs de cron en panel admin** — mostrar `bdns_check.log` y `health_check.log` en el panel. Requiere: montar `../logs/cron` en el contenedor backend, dos endpoints nuevos en `admin.py` y dos secciones en `admin.html` / `admin.js`.
 - **Trampa de foco en menú hamburguesa** — el menú cierra con Esc y click fuera, pero Tab no cicla dentro del menú abierto. Mejora de accesibilidad WCAG 2.4.3 pendiente.
 - **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
 - **Login con terceros (OAuth)** — integración con Google.
-- **Conclusiones en modales EELL/home** — los textos de los modales de estadísticas EELL podrían ampliarse con análisis comparativos entre convocatorias.
+- **Conclusiones comparativas en modales EELL** — los dos modales de estadísticas EELL ("Top provincias" y "Concentración del importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si la concentración aumenta) añadiría valor analítico. Los modales de home y EPA ya tienen conclusiones completas.
 
 ### Producción y seguridad
 
