@@ -51,6 +51,59 @@ backend:
 
 `service_healthy` es más fiable que `service_started` (que solo espera a que el proceso arranque, no a que esté listo para recibir conexiones). `adminer` y `cron` también dependen de `db` con `service_healthy`.
 
+### Healthchecks de runtime (backend y nginx)
+
+Más allá del arranque ordenado, `backend` y `nginx` tienen healthchecks que se ejecutan continuamente para detectar **cuelgues que no matarían el proceso** (deadlocks, bucles infinitos, conexiones agotadas). Sin healthcheck, `restart: unless-stopped` no actúa porque el proceso sigue "vivo" desde el punto de vista de Docker, aunque no responda.
+
+```yaml
+backend:
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 20s
+
+nginx:
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost/healthz"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 5s
+```
+
+`docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio en la columna STATUS. El resumen:
+
+| Servicio | Healthcheck | Comando | Motivo |
+|---|---|---|---|
+| `db` | Sí (oficial MariaDB) | `healthcheck.sh --connect --innodb_initialized` | Asegura arranque ordenado del backend |
+| `backend` | Sí (propio) | `curl -f http://localhost:8000/health` | Detecta cuelgues que no matan el proceso |
+| `nginx` | Sí (propio) | `curl -f http://localhost/healthz` | Verifica que Nginx responde a HTTP independientemente del backend |
+| `cron` | No | — | No expone HTTP. Su salud se ve en `logs/cron/health_check.log` y `restart: unless-stopped` cubre los crashes |
+| `mailpit` | Sí (de fábrica) | Heredado de la imagen oficial | No lo configuramos nosotros |
+| `adminer` | No | — | Herramienta de desarrollo, no crítica |
+
+**Sobre `/healthz` en Nginx:** es un endpoint propio definido en `docker/nginx/default.conf` dentro del bloque HTTP (puerto 80). Devuelve `200 "ok"` directamente sin pasar por el backend y **sin redirigir a HTTPS** — de ese modo el healthcheck verifica que Nginx vive aunque el backend esté caído.
+
+```nginx
+server {
+    listen 80;
+    location = /healthz {
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 "ok\n";
+    }
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+```
+
+**Sobre `curl` en lugar de `wget`:** la imagen `nginx:alpine` trae ambos, pero el `wget` de BusyBox resuelve `localhost` a IPv6 (`::1`) y Nginx solo escucha en IPv4 → el healthcheck fallaba con `Connection refused`. Usar `curl` (que prueba IPv4 correctamente) es además consistente con el healthcheck del backend.
+
+**Sobre `curl` en el backend:** se instala en `backend/Dockerfile` con `apt-get install -y --no-install-recommends curl` (~6 MB sobre la imagen slim). Además del healthcheck, queda disponible para depurar la conexión backend↔BD desde dentro del contenedor (`docker exec bdns_api curl -v http://db:3306`).
+
 ### Red interna Docker y DNS automático
 
 Docker Compose crea una red privada para todos los servicios. Cada servicio es accesible por su nombre desde cualquier otro contenedor:
@@ -432,20 +485,33 @@ El contenedor `bdns_cron` ejecuta `scheduler.py` con dos tareas:
 | `check_bdns.py` (marzo) | Cada 4 días a las 08:00 UTC |
 | `check_bdns.py` (abril–mayo) | Cada 2 días a las 08:00 UTC |
 | `check_bdns.py` (junio) | Cada 4 días a las 08:00 UTC |
+| `check_bdns.py` (noviembre–diciembre) | Cada 2 días a las 08:00 UTC |
+| `check_bdns.py` (enero) | Cada 4 días a las 08:00 UTC |
 
 ### Criterio de selección de frecuencias
 
 La frecuencia se diseñó a partir del histórico de publicaciones de la DGDA:
 
 - **Convocatorias:** los años analizados (2021–2025) muestran que la DGDA publica las convocatorias EPA y EELL entre marzo y mayo. Comprobar cada 2 días en abril–mayo garantiza que el banner de aviso aparece en la home en menos de 48 horas tras la publicación oficial.
-- **Resoluciones:** se publican con más variabilidad (normalmente en noviembre–diciembre para EPA y EELL del mismo año). El cron las comprueba en cada ejecución —independientemente del mes— porque la fase de detección de resoluciones siempre corre.
-- **Cada 4 días fuera de temporada (marzo y junio):** suficiente para detectar publicaciones tardías o adelantadas sin generar peticiones innecesarias a la API de BDNS.
-- **No se comprueba julio–febrero:** la DGDA no ha publicado convocatorias en esos meses en ninguno de los años analizados. El cron se puede ampliar fácilmente si eso cambia.
+- **Resoluciones:** las resoluciones EPA y EELL del año en curso se publican habitualmente en noviembre–diciembre (a veces se cierran en enero del año siguiente, como ocurrió con EELL 2023). Comprobar cada 2 días en noviembre–diciembre garantiza que la `fecha_resolucion` se actualice en la BD —y el banner de aviso de la home desaparezca— en menos de 48 horas tras la publicación oficial.
+- **Cada 4 días en meses laterales (marzo, junio, enero):** suficiente para detectar publicaciones adelantadas o tardías sin generar peticiones innecesarias a la API de BDNS.
+- **No se ejecuta entre febrero y octubre (salvo marzo–junio):** la DGDA no ha publicado ni convocatorias ni resoluciones en esa franja en ninguno de los años analizados. El cron se puede ampliar fácilmente si eso cambia.
 
 `check_bdns.py` ejecuta dos fases en cada llamada:
 
 1. **Detección de resoluciones** (siempre): consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion = NULL` del año actual. Si BDNS ya publica la fecha, la actualiza en la BD y el banner de la home desaparece automáticamente.
 2. **Detección de nuevas convocatorias** (solo si faltan): busca nuevas convocatorias DGDA del año actual en la API BDNS por palabras clave del título. Si encuentra una nueva, la inserta con `fecha_resolucion = NULL`.
+
+### Reintentos con backoff exponencial
+
+Ambas fases consultan la API BDNS a través del helper interno `_get_bdns_con_retry(url, params)`, que aplica **3 intentos con backoff exponencial (2s → 4s → 8s)** ante errores transitorios. Cubre dos tipos de fallo:
+
+- **Errores de red** (timeout, conexión rechazada, DNS): captura `requests.RequestException`.
+- **Respuestas HTTP != 200** (5xx puntuales, 429 si saturamos): cuenta como intento fallido.
+
+Justificación: con el calendario de cron actual (~75 ejecuciones al año concentradas en marzo–junio y noviembre–enero), un único fallo puntual de BDNS hacía perder hasta 4 días hasta el siguiente ciclo. Con 3 intentos y backoff, el cron absorbe blips de hasta ~15 s de duración. Si los 3 intentos fallan, la función devuelve `None` y el cron sigue con la siguiente convocatoria o abandona la búsqueda de forma controlada (loguea el error, no rompe el proceso).
+
+El timeout por petición sigue siendo 30 s, así que el peor caso por convocatoria es `30s × 3 intentos + 2s + 4s = 96 s` (extremo improbable). En el caso medio (BDNS responde a la primera) la ejecución es idéntica a la versión anterior. Cubierto por `tests/test_check_bdns.py`.
 
 Los títulos que devuelve la API BDNS son los títulos oficiales del BOE, que pueden ser muy largos (p. ej. *"Subvenciones a entidades locales destinadas a mejorar e impulsar el control poblacional de colonias felinas, correspondiente al año 2026"*). El cron normaliza el título antes de insertarlo usando un diccionario interno, de forma que todos los registros mantengan el mismo formato corto independientemente de lo que devuelva la API.
 
@@ -538,14 +604,27 @@ En instalaciones posteriores las imágenes ya están cacheadas localmente — ar
 | **pytest** | 9.0.3 | Framework de tests. |
 | **httpx** | 0.28.1 | Cliente HTTP que simula peticiones a la API en los tests (`TestClient`). |
 
-### Librerías del frontend (CDN)
+### Librerías del frontend (CDN con fallback local)
 
 No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
-| Librería | Versión | Usado en | Para qué |
-|---|---|---|---|
-| **Chart.js** | 4.4.0 | `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html` | Gráficas de línea, barras y donut. |
-| **Google Fonts (Inter)** | — | Todos los HTML | Tipografía: pesos 400, 600 y 700. |
+| Librería | Versión | Usado en | Para qué | Fallback |
+|---|---|---|---|---|
+| **Chart.js** | 4.4.0 | `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html` | Gráficas de línea, barras y donut | `assets/vendor/chart.umd.min.js` |
+| **Leaflet** (JS + CSS) | 1.9.4 | `exclusivo.html` | Mapa choropleth por CCAA con tiles de OpenStreetMap | `assets/vendor/leaflet.js` + `leaflet.css` |
+| **Google Fonts (Inter)** | — | Todos los HTML | Tipografía: pesos 400, 600 y 700 | Sin fallback local (cae al `font-family` de sistema) |
+
+**Cómo funciona el fallback de CDN:**
+
+Los recursos cargados desde CDN llevan tres atributos:
+
+- `integrity="sha384-..."`: el navegador verifica el hash antes de ejecutar/aplicar el recurso (SRI).
+- `crossorigin="anonymous"`: requerido por SRI.
+- `onerror="..."`: si el CDN no responde o el SRI falla, el handler crea dinámicamente un `<script>` o `<link>` apuntando a `/assets/vendor/`.
+
+Las versiones locales en `frontend/assets/vendor/` se descargaron del mismo CDN y se verificaron comparando su hash SHA-384 con el `integrity` declarado en los HTMLs. La verificación criptográfica garantiza que los archivos locales son idénticos a los oficiales.
+
+Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la fuente Inter (se usa el `font-family` de sistema). Bundlear Inter localmente añadiría ~150 KB de WOFF2 al repositorio, no justificado para una degradación tan menor.
 
 ### Librerías de los scripts de datos (parsers)
 
@@ -584,7 +663,7 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 197 tests pasando, 0 fallando (actualizado 2026-05-15)
+- **Total:** 223 funciones de test / 321 ejecuciones pasando, 0 fallando (actualizado 2026-05-22)
 
 | Archivo | Qué testea |
 |---|---|

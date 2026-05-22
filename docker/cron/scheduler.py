@@ -4,10 +4,15 @@ scheduler.py — Scheduler de tareas cron para el servicio BDNS/DGDA.
 
 Implementa la misma lógica que el crontab original:
   · health_check.py — 0 */6 * * *    (00:00, 06:00, 12:00, 18:00 UTC)
-  · check_bdns.py   — 0 8 */4 3 *    (marzo: días 1,5,9,…)
-                      0 8 */2 4 *    (abril: días 1,3,5,…)
-                      0 8 */2 5 *    (mayo:  días 1,3,5,…)
-                      0 8 */4 6 *    (junio: días 1,5,9,…)
+  · check_bdns.py   — Temporada convocatorias (marzo–junio):
+                      0 8 */4 3 *    (marzo:   días 1,5,9,…)
+                      0 8 */2 4 *    (abril:   días 1,3,5,…)
+                      0 8 */2 5 *    (mayo:    días 1,3,5,…)
+                      0 8 */4 6 *    (junio:   días 1,5,9,…)
+                      Temporada resoluciones (noviembre–enero):
+                      0 8 */2 11 *   (noviembre: días 1,3,5,…)
+                      0 8 */2 12 *   (diciembre: días 1,3,5,…)
+                      0 8 */4 1 *    (enero:     días 1,5,9,…)
 """
 import logging
 import signal
@@ -37,11 +42,17 @@ def _jobs_for(dt: datetime) -> list[str]:
 
     # 0 8 */N M *  →  08:00 UTC en días (d-1)%N==0 del mes M
     if m == 0 and h == 8:
+        # Temporada convocatorias (marzo–junio): pico en abril–mayo
         if mo == 3 and (d - 1) % 4 == 0:
             jobs.append("check_bdns.py")
         elif mo in (4, 5) and (d - 1) % 2 == 0:
             jobs.append("check_bdns.py")
         elif mo == 6 and (d - 1) % 4 == 0:
+            jobs.append("check_bdns.py")
+        # Temporada resoluciones (noviembre–enero): pico en noviembre–diciembre
+        elif mo in (11, 12) and (d - 1) % 2 == 0:
+            jobs.append("check_bdns.py")
+        elif mo == 1 and (d - 1) % 4 == 0:
             jobs.append("check_bdns.py")
 
     return jobs

@@ -1,0 +1,82 @@
+Análisis de subvenciones de bienestar animal (BDNS + DGDA)
+Copyright (c) 2026 Verónica Corpa y Miyuki Salvador
+
+Todos los derechos reservados.
+
+Este repositorio se compone de dos partes con regímenes de licencia distintos:
+
+────────────────────────────────────────────────────────────────────
+1. CÓDIGO FUENTE (todos los archivos .py, .js, .css, .html, .yml,
+   .sql, scripts de instalación, ficheros Docker y de configuración)
+────────────────────────────────────────────────────────────────────
+
+"All Rights Reserved" — Reservados todos los derechos.
+
+El código fuente NO se publica bajo una licencia de software libre.
+Está sujeto al derecho de autor por defecto previsto en la legislación
+española (Real Decreto Legislativo 1/1996, de 12 de abril, Ley de
+Propiedad Intelectual) y a los tratados internacionales aplicables.
+
+Sin permiso escrito de los titulares (Verónica Corpa y Miyuki Salvador):
+
+  · NO se permite copiar, distribuir, ejecutar públicamente, modificar,
+    redistribuir, sublicenciar ni crear obras derivadas de este código.
+  · NO se permite el uso comercial, total o parcial.
+  · NO se permite incorporar el código en otros proyectos.
+
+Sí se permite, exclusivamente y de forma no transferible:
+
+  · Consultar el código con fines educativos y de evaluación académica
+    por parte del tribunal evaluador y del centro educativo (IES) en el
+    marco del Proyecto Intermodular de 2º DAW (curso 2025-2026).
+  · Clonar el repositorio localmente para ejecutarlo en un entorno de
+    desarrollo y verificar su funcionamiento, sin redistribuir.
+
+Cualquier otro uso requiere autorización expresa por escrito de los
+titulares. Contacto: a través del repositorio (GitHub Issues) o de los
+canales facilitados por el centro educativo.
+
+────────────────────────────────────────────────────────────────────
+2. CONTENIDO Y DOCUMENTACIÓN (README.md, archivos .md de la carpeta
+   docs/ y frontend/docs/, textos visibles en la interfaz web,
+   memoria, diagramas, capturas de pantalla y demás material de
+   acompañamiento)
+────────────────────────────────────────────────────────────────────
+
+Licencia Creative Commons Reconocimiento-NoComercial-SinObraDerivada
+4.0 Internacional (CC BY-NC-ND 4.0).
+
+Texto completo: https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es
+
+Resumen (no sustituye al texto oficial):
+
+  · BY (Reconocimiento): cualquier uso debe acreditar la autoría de
+    Verónica Corpa y Miyuki Salvador y enlazar a esta licencia.
+  · NC (NoComercial): no se permite el uso comercial.
+  · ND (SinObraDerivada): no se permite remezclar, transformar ni
+    crear obras derivadas. Solo se puede compartir la obra original
+    sin modificaciones.
+
+────────────────────────────────────────────────────────────────────
+3. DATOS Y MARCAS DE TERCEROS
+────────────────────────────────────────────────────────────────────
+
+Los datos de convocatorias, concesiones, beneficiarios e importes
+proceden de fuentes oficiales públicas:
+
+  · Base de Datos Nacional de Subvenciones (BDNS) — Ministerio de
+    Hacienda y Función Pública.
+  · Dirección General de Derechos de los Animales (DGDA) — boletines
+    del BOE.
+
+Estos datos son de acceso público y se rigen por sus respectivos
+términos de uso oficiales. La presente licencia no afecta a la
+titularidad ni al régimen jurídico de dichos datos.
+
+Los logos y marcas de las entidades mencionadas en la página de
+recursos pertenecen a sus titulares respectivos y se reproducen
+exclusivamente con fines informativos.
+
+Las librerías de terceros utilizadas (Chart.js, Leaflet, FastAPI,
+SQLAlchemy, etc.) se rigen por sus propias licencias originales,
+conservadas íntegras en sus respectivos paquetes.

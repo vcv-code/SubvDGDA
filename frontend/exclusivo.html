@@ -30,7 +30,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+    <!-- Leaflet CSS — primario CDN con SRI, fallback local en /assets/vendor/ vía onerror -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous" onerror="this.onerror=null; var l=document.createElement('link'); l.rel='stylesheet'; l.href='/assets/vendor/leaflet.css'; document.head.appendChild(l);">
 </head>
 
 <body>
@@ -185,7 +186,7 @@
                target="_blank" rel="noopener noreferrer">Base de Datos Nacional de Subvenciones (BDNS)</a>
             y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones"
                target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
-            &nbsp;·&nbsp; © 2026 · Proyecto educativo sin fines comerciales
+            &nbsp;·&nbsp; © 2026 Verónica Corpa y Miyuki Salvador · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
         </div>
     </footer>
 
@@ -211,7 +212,8 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous" defer></script>
+    <!-- Leaflet JS — primario CDN con SRI, fallback local en /assets/vendor/ vía onerror -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous" defer onerror="this.onerror=null; var s=document.createElement('script'); s.src='/assets/vendor/leaflet.js'; s.defer=true; document.head.appendChild(s);"></script>
     <script src="js/mapa-ccaa.js" defer></script>
     <script src="js/navbar.js" defer></script>
     <script src="js/exclusivo.js" defer></script>

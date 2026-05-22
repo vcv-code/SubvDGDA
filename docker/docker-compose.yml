@@ -51,6 +51,14 @@ services:
         condition: service_healthy
       mailpit:
         condition: service_started
+    healthcheck:
+      # Verifica que FastAPI responde en /health. Detecta cuelgues que
+      # no matarían el proceso (deadlocks, bucles), donde restart no actúa.
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
   nginx:
     image: nginx:alpine
@@ -66,6 +74,16 @@ services:
       - ../logs/nginx:/var/log/nginx
     depends_on:
       - backend
+    healthcheck:
+      # /healthz es un endpoint propio de Nginx (no pasa por el backend),
+      # responde 200 "ok" sin redirigir a HTTPS. Verifica que Nginx vive.
+      # Usamos curl en vez de wget porque el wget de BusyBox en alpine
+      # resuelve "localhost" a IPv6 y Nginx solo escucha en IPv4.
+      test: ["CMD", "curl", "-f", "http://localhost/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
   cron:
     build:
