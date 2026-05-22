@@ -4,13 +4,29 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 197 | pytest (sin Docker) |
+| Tests automáticos | 223 funciones / 321 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **249** | |
+| **Total** | **275 funciones / 373 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de los 197 tests automáticos requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 181. Con Docker completo, pasan los 197.
+Nota sobre ejecución: 16 de las 321 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 305. Con Docker completo, pasan las 321.
+
+---
+
+## Sobre el conteo de tests
+
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (321) es mayor que el número de **funciones de test** escritas (223). Ejemplo:
+
+```python
+@pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
+def test_check_bdns_corre_en_marzo_cada_4_dias(day):
+    assert "check_bdns.py" in _jobs_for(_dt(2026, 3, day, 8, 0))
+```
+
+Esa es **una función**, pero pytest la ejecuta 8 veces (una por cada día) y reporta 8 PASSED. `@pytest.mark.parametrize` es una técnica estándar de pytest para evitar duplicar código de test cuando solo cambian los datos de entrada.
+
+Solo `test_scheduler.py` usa `parametrize`. Los otros 18 archivos tienen una correspondencia 1:1 entre funciones de test y ejecuciones.
 
 ---
 
@@ -45,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **197 tests automáticos** distribuidos en 18 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché y la configuración de rate limiting.
+El proyecto incluye **223 funciones de test automáticas** (321 ejecuciones con pytest) distribuidas en 20 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
 
 ### Cómo funcionan
 
@@ -220,6 +236,32 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 189 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs` devuelve una lista (aunque esté vacía) |
 | 190 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs/errores` devuelve una lista (aunque esté vacía) |
 | 191 | `test_admin.py` | Seguridad | Blanca | `GET /admin/logs/errores` con rol `registrado` devuelve 403 |
+| 192 | `test_scheduler.py` | Unitario | Blanca | `health_check.py` se ejecuta a las 00:00, 06:00, 12:00 y 18:00 UTC |
+| 193 | `test_scheduler.py` | Unitario | Blanca | `health_check.py` no se ejecuta a horas fuera del calendario cada-6h |
+| 194 | `test_scheduler.py` | Unitario | Blanca | `health_check.py` solo se ejecuta en el minuto 0 (no a las 06:30) |
+| 195 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en marzo los días 1, 5, 9, 13, 17, 21, 25, 29 a las 08:00 UTC |
+| 196 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en marzo los días intermedios (2, 3, 4, 6, 7, 8) |
+| 197 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en abril cada 2 días (días 1, 3, 5, 7, …, 29) |
+| 198 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en mayo cada 2 días (días 1, 3, 5, …, 31) |
+| 199 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en mayo los días pares (2, 4, 6, …) |
+| 200 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en junio cada 4 días (días 1, 5, 9, …, 29) |
+| 201 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en noviembre cada 2 días (días 1, 3, 5, …, 29) |
+| 202 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en noviembre los días pares (2, 4, 6, …) |
+| 203 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en diciembre cada 2 días (días 1, 3, 5, …, 31) |
+| 204 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en enero cada 4 días (días 1, 5, 9, …, 29) |
+| 205 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en enero los días intermedios (2, 3, 4, 6, 7, 8) |
+| 206 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no se ejecuta fuera de temporada (febrero, julio–octubre) ningún día del mes |
+| 207 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` solo se ejecuta a las 08:00 UTC, no a otras horas aunque el día sea válido |
+| 208 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` solo se ejecuta en el minuto 0 (no a las 08:30) |
+| 209 | `test_scheduler.py` | Unitario | Blanca | A medianoche en un día válido para `check_bdns` solo se ejecuta `health_check.py` |
+| 210 | `test_scheduler.py` | Unitario | Blanca | A las 08:00 en un día válido para `check_bdns` solo se ejecuta `check_bdns.py` (no `health_check`) |
+| 211 | `test_scheduler.py` | Unitario | Blanca | A las 08:00 en un día NO válido para `check_bdns` no se ejecuta ningún job |
+| 212 | `test_scheduler.py` | Unitario | Blanca | En julio el `check_bdns.py` no se ejecuta nunca; el `health_check.py` sí continúa cada 6h |
+| 213 | `test_check_bdns.py` | Unitario | Blanca | `_get_bdns_con_retry` devuelve la response al primer intento si BDNS responde 200 (sin sleeps) |
+| 214 | `test_check_bdns.py` | Unitario | Blanca | Si BDNS falla en el 1.er intento y responde 200 en el 2.º, la función reintenta con sleep de 2s y devuelve la response |
+| 215 | `test_check_bdns.py` | Unitario | Blanca | Si los 3 intentos fallan por error de red, la función devuelve None y hace 2 sleeps (entre intentos) |
+| 216 | `test_check_bdns.py` | Unitario | Blanca | Si BDNS responde 500 las 3 veces, la función devuelve None tras 3 intentos |
+| 217 | `test_check_bdns.py` | Unitario | Blanca | Los tiempos de espera entre reintentos siguen el patrón exponencial 2s → 4s (no constante ni lineal) |
 
 ### Descripción por módulo
 
@@ -299,6 +341,24 @@ Cubre el flujo completo de verificación de email en el registro: el usuario se 
 #### test_admin.py
 
 Cubre el panel de administración completo: control de acceso (401 sin token, 403 con rol `registrado`), lectura del estado del sistema, CRUD de usuarios con las protecciones anti-autoedición (400 al intentar modificar la propia cuenta), gestión completa de avisos (listar, desactivar, reactivar, eliminar, protección 409 si hay solicitudes asociadas), y visor de logs de acceso y de error (`GET /admin/logs` y `GET /admin/logs/errores`). Detectó dos diferencias entre SQLite y MariaDB durante el desarrollo: `date(2025, 1, 1)` como tipo Python en lugar de string para columnas DATE, y `tipo_benef="asociacion"` (valor ENUM válido) en lugar de `"epa"`.
+
+#### test_check_bdns.py
+
+Verifica el helper `_get_bdns_con_retry` del script `docker/cron/scripts/check_bdns.py`, que centraliza los reintentos con backoff exponencial (2s → 4s → 8s) en las llamadas a la API BDNS. Cubre cinco casos: primer intento OK (sin sleeps), recuperación tras un fallo puntual, abandono tras 3 errores de red, abandono tras 3 respuestas 500 y verificación de que el patrón de espera es exponencial.
+
+Los tests mockean `requests.get` y `time.sleep` para no esperar tiempo real ni golpear la API. El módulo se carga con `importlib.util` porque `docker/cron/scripts/` no es un paquete Python y porque tiene side effects al importarse (creación de logs en `/app/logs/cron` y llamada a `logging.basicConfig`) que se neutralizan con `unittest.mock.patch`. Además, `pymysql` se sustituye en `sys.modules` por un mock porque solo se instala en el contenedor cron, no en el venv local.
+
+#### test_scheduler.py
+
+Verifica el calendario completo del scheduler del cron (`docker/cron/scheduler.py`), que antes no tenía cobertura. Comprueba que `_jobs_for(dt)` devuelve los scripts correctos en función de la fecha y hora UTC. Cubre tres bloques:
+
+- **`health_check.py`**: corre cada 6 horas (00:00, 06:00, 12:00, 18:00) los 365 días del año, y nunca fuera del minuto 0.
+- **`check_bdns.py` — temporada convocatorias (marzo–junio)**: marzo y junio cada 4 días; abril y mayo cada 2 días; siempre a las 08:00 UTC.
+- **`check_bdns.py` — temporada resoluciones (noviembre–enero)**: noviembre y diciembre cada 2 días; enero cada 4 días.
+
+Incluye además casos negativos (fuera de temporada, horas distintas a 08:00, días no múltiplos del intervalo) y combinaciones realistas (un mismo instante puede activar `health_check`, `check_bdns` o ninguno).
+
+Es el primer archivo del proyecto que usa `@pytest.mark.parametrize`: 21 funciones de test se expanden a 119 ejecuciones independientes, una por cada fecha probada. Carga el módulo con `importlib.util` porque `docker/cron/` no es un paquete Python (sin `__init__.py`).
 
 #### test_unificar_datasets.py
 

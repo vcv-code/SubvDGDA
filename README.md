@@ -178,7 +178,7 @@ analisis-bdns-dgda/
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 197 tests pytest
+└── tests/                  ← 223 funciones de test pytest (321 ejecuciones)
 ```
 
 ---
@@ -555,7 +555,7 @@ Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `
 | **Espacio en disco** | ~1,5 GB | ~1 GB imágenes Docker (primera descarga) + ~10 MB dataset + ~50 MB venv opcional |
 | **RAM** | 4 GB mínimo recomendado | MariaDB + FastAPI + Nginx corren en paralelo dentro de Docker |
 | **Editor** | VS Code recomendado | El proyecto incluye `.vscode/extensions.json` con extensiones preconfiguradas. Cualquier editor funciona |
-| **Conexión a internet** | Solo en la primera instalación | Para descargar las imágenes Docker (~300–400 MB) y los recursos CDN (Chart.js, Leaflet, Google Fonts). Después la app funciona completamente offline, salvo que el navegador no tenga los CDN en caché (los gráficos y el mapa no renderizarían hasta reconectar) |
+| **Conexión a internet** | Solo en la primera instalación | Para descargar las imágenes Docker (~300–400 MB). Después la app funciona completamente offline: Chart.js y Leaflet tienen fallback local en `frontend/assets/vendor/` que se carga automáticamente vía `onerror` si los CDN no responden. Google Fonts es el único recurso CDN sin fallback local — sin conexión y sin caché, la tipografía cae al `font-family` de sistema por defecto, sin romper la app |
 
 ### Instalación automática (recomendada)
 
@@ -769,18 +769,19 @@ Mailpit intercepta todos los emails que el backend intenta enviar (recuperación
 El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta dos tareas:
 
 - **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
-- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. La frecuencia varía según el mes: cada 2 días en abril–mayo (época de publicación de la DGDA) y cada 4 días el resto del año. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva.
+- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva.
 
 Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron puede lanzarse manualmente con `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
 
 ### Nginx — qué hace exactamente
 
-Nginx gestiona todo el tráfico de entrada y cumple cuatro funciones en un solo proceso:
+Nginx gestiona todo el tráfico de entrada y cumple cinco funciones en un solo proceso:
 
 - **Terminador SSL** — recibe HTTPS del navegador, descifra el tráfico TLS (1.2/1.3) y lo reenvía al backend por HTTP interno. El backend no necesita saber nada de certificados.
 - **Servidor de archivos estáticos** — sirve directamente `frontend/*.html`, `css/`, `js/` y `assets/` sin pasar por Python. Las páginas de error `404.html` y `50x.html` se sirven incluso si el backend está caído.
 - **Proxy inverso** — las rutas `/auth`, `/solicitudes`, `/estadisticas`, `/privado`, `/admin`, etc. se redirigen al contenedor `bdns_api` (puerto 8000, no expuesto al exterior).
 - **Rate limiting** — tres zonas definidas con `limit_req_zone` al inicio de `default.conf`. Al superarse el límite, Nginx devuelve HTTP 429 directamente sin consumir recursos del backend.
+- **Healthcheck propio** — sirve `GET /healthz` con un 200 "ok" fijo (sin pasar por el backend y sin redirigir a HTTPS). Lo consume el healthcheck de Docker para saber si Nginx está vivo independientemente de que el backend lo esté.
 
 Editar `default.conf` no recarga la config automáticamente: hay que ejecutar `docker exec bdns_nginx nginx -s reload` (o `make reload-nginx`). Antes de recargar conviene verificar la sintaxis con `docker exec bdns_nginx nginx -t`.
 
@@ -795,6 +796,8 @@ Las imágenes están optimizadas para reducir el peso del entorno (~700 MB menos
 | `nginx:alpine` | ~11 MB | `nginx` (~190 MB) | ~180 MB |
 
 Además, ambos Dockerfiles usan `pip install --no-cache-dir` para no almacenar la caché de pip dentro de la imagen, y copian `requirements.txt` antes que el código de la aplicación — así Docker solo repite el `pip install` cuando cambian las dependencias, no en cada cambio de código.
+
+El backend instala además `curl` (~6 MB) sobre la imagen slim: lo usa el healthcheck de Docker para verificar `/health` y queda disponible para depurar la conectividad desde dentro del contenedor (`docker exec bdns_api curl http://db:3306`). El resto de la optimización slim se mantiene; tras la instalación se borra la caché de apt (`rm -rf /var/lib/apt/lists/*`) para no dejar ~30 MB residuales dentro de la imagen.
 
 ### Modo desarrollo (día a día)
 
@@ -949,11 +952,11 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **275 pruebas en total**: 223 funciones de test automáticas con pytest (321 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 197 | pytest (sin Docker) |
+| Automáticos | 223 funciones / 321 ejecuciones | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -998,8 +1001,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-181 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-197 passed   # suite completa con Docker levantado
+305 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+321 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -1105,7 +1108,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 197 tests automáticos (pytest)
+- 223 funciones de test automáticas / 321 ejecuciones (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1147,11 +1150,74 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **197 tests automáticos** — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs)
+- **223 funciones de test automáticas** (321 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
 - **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
-- **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones; sin estilos inline
+- **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones. Los `style=` inline que quedan son principalmente `display:none` para toggle por JavaScript (~60 ocurrencias); las ~30 restantes (tipografía y márgenes puntuales) están identificadas como mejora pendiente
+
+### Contingencia ante fallos externos
+
+Mecanismos que mantienen el sistema operativo (o degradado de forma controlada) ante caídas de servicios externos o internos.
+
+**Resumen rápido:**
+
+| Qué puede fallar | Mecanismo | Resultado para el usuario |
+|---|---|---|
+| API BDNS no responde | Retry con backoff (2s → 4s → 8s) en el cron | La web sigue intacta (los datos están en MariaDB local); el cron reintenta en su próximo ciclo |
+| Backend FastAPI se cuelga sin morir | Healthcheck Docker cada 30s | `docker compose ps` muestra `(unhealthy)`; visibilidad inmediata del problema |
+| Backend FastAPI cae | `restart: unless-stopped` + `error_page` Nginx | El contenedor se reinicia automáticamente; mientras tanto el usuario ve `50x.html` amable, no pantalla en blanco |
+| MariaDB cae | `restart: unless-stopped` + `depends_on: service_healthy` | El contenedor se reinicia y el backend espera a que la BD esté lista antes de aceptar peticiones |
+| Nginx cae | `restart: unless-stopped` | Docker reinicia el contenedor automáticamente |
+| CDN externo (`jsdelivr`, `unpkg`) caído o lento | Fallback local en `assets/vendor/` vía `onerror` | Las gráficas y el mapa siguen renderizando con los archivos locales |
+| CDN sirve archivo manipulado | SRI (`integrity`) en los 5 recursos CDN | El navegador rechaza el archivo y dispara el fallback local |
+| Mailpit/SMTP caído | `try/except` no bloqueante en envío de emails | El registro y la recuperación funcionan igual; solo no llega el email (el usuario puede pedir reenvío) |
+| Sesión del usuario caduca | Refresh token automático | El usuario sigue navegando sin volver a hacer login |
+| Datos perdidos por error | `make backup` + volúmenes Docker persistentes | La BD se restaura desde un `.sql` fechado |
+
+A continuación, el detalle por dominio.
+
+#### Datos
+
+- **Dataset versionado en el repositorio** (`data/final/dataset_unificado.json`, 6.398 registros): la web funciona sin necesidad de la API BDNS ni del BOE en runtime. Las consultas del usuario van a MariaDB local, no a servicios externos.
+- **`make backup` + volúmenes Docker persistentes**: la BD sobrevive a `docker compose down` y se puede restaurar desde un `.sql` fechado.
+
+#### API BDNS (servicio externo)
+
+- **Calendario del cron extendido a noviembre–enero**: las resoluciones DGDA se publican en esa ventana y antes el cron estaba dormido. Ahora se detectan automáticamente y el banner de aviso de la home desaparece sin intervención manual.
+- **Reintentos con backoff exponencial (2s → 4s → 8s)**: el helper `_get_bdns_con_retry` absorbe blips puntuales de BDNS de hasta ~15s. Sin retry, una sola incidencia hacía perder hasta 4 días hasta el siguiente ciclo del cron.
+- **Timeout de 30s por petición** y captura explícita de `requests.RequestException`: el cron nunca queda colgado en una llamada ni se rompe por errores de red.
+
+#### Servicios Docker
+
+- **`restart: unless-stopped`** en los 6 contenedores: auto-recuperación tras crash o reinicio del sistema. No revive contenedores parados a mano con `docker compose down`.
+- **Healthchecks** en `db`, `backend` y `nginx`: detectan cuelgues que no matarían el proceso (deadlocks, conexiones agotadas), donde el restart no actúa. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía logs.
+- **`depends_on: service_healthy`**: el backend espera a que MariaDB esté lista antes de arrancar; el cron espera al backend. Evita errores de conexión en el arranque ordenado.
+
+#### Nginx y backend
+
+- **Páginas `404.html` y `50x.html`** servidas por Nginx con `error_page`: se siguen viendo aunque el backend esté caído. Sin JavaScript, sin llamadas a la API.
+- **Endpoint `/healthz` propio de Nginx** (fuera de la redirección HTTPS): permite verificar que Nginx vive independientemente de que el backend esté disponible.
+
+#### Frontend (peticiones, errores y CDN)
+
+- **Todos los `fetch` con `try/catch`**: si la API devuelve 4xx/5xx o no responde, se muestra `error-box` con mensaje y sugerencia en lugar del spinner colgado indefinidamente.
+- **Mapa CCAA degrada a "Mapa no disponible"** si la inicialización de Leaflet falla.
+- **Recursos CDN con SRI (`integrity`)**: el navegador rechaza ficheros modificados o corruptos, evitando ataques de cadena de suministro.
+- **Fallback local de CDN** (`frontend/assets/vendor/chart.umd.min.js`, `leaflet.js`, `leaflet.css`): si `cdn.jsdelivr.net` o `unpkg.com` están caídos, el atributo `onerror` del `<script>` o `<link>` carga el archivo desde el propio dominio. Las versiones locales se descargaron con los mismos hashes SHA-384 que los SRI declarados, verificación criptográfica de integridad. Coste: ~370 KB añadidos al repositorio.
+
+#### Autenticación
+
+- **SMTP envuelto en `try/except` no bloqueante**: si Mailpit/SMTP cae, el registro y la recuperación de contraseña funcionan igual; solo no llega el email. La cuenta queda creada con `email_verificado=0`, y se puede desbloquear desde el panel de administración o reenviando el email.
+- **Refresh token automático**: si el access token de 15 min caduca, el JS lo renueva en background con el refresh token (30 días) sin pedir al usuario que vuelva a hacer login.
+
+#### Tests de contingencia
+
+- **SQLite en memoria** como sustituto de MariaDB en los tests originales (mock de BD).
+- **`unittest.mock.patch`** para mockear envíos de email (mock de SMTP).
+- **Tests parametrizados del scheduler** del cron (21 funciones / 119 ejecuciones) verifican el calendario completo sin esperar a noviembre.
+- **Tests del retry de BDNS con backoff** (5 funciones) mockean `requests.get` y `time.sleep` para reproducir los 4 escenarios de fallo sin tocar la API real.
 
 ### UX y experiencia de uso
 
@@ -1325,3 +1391,27 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
 - **CAPTCHA en registro** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto en su estado actual.
 - **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido.
+
+---
+
+## Licencia
+
+Este repositorio se compone de **dos partes con regímenes distintos**, por convención: las licencias de software libre (MIT, Apache, GPL) y las Creative Commons cubren ámbitos diferentes y no es buena práctica aplicar Creative Commons al código fuente. Texto íntegro y vinculante en el archivo [LICENSE](LICENSE) en la raíz del repositorio.
+
+### Código fuente — All Rights Reserved
+
+Todos los archivos de código del proyecto (`.py`, `.js`, `.css`, `.html`, `.yml`, `.sql`, scripts de instalación, ficheros Docker, configuración) están sujetos al derecho de autor por defecto de la legislación española. **Reservados todos los derechos.**
+
+Sin permiso escrito de los titulares no se permite copiar, redistribuir, modificar, sublicenciar, incorporar en otros proyectos ni usar comercialmente. Sí se permite consultar y ejecutar localmente con fines educativos y de evaluación académica (tribunal y centro educativo) en el marco del Proyecto Intermodular de 2º DAW.
+
+### Contenido y documentación — CC BY-NC-ND 4.0
+
+El README, los archivos `.md` de `docs/` y `frontend/docs/`, los textos visibles en la interfaz web, la memoria, los diagramas y las capturas se publican bajo **Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional** ([CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es)):
+
+- **BY** — cualquier uso debe acreditar a Verónica Corpa y Miyuki Salvador y enlazar a la licencia.
+- **NC** — no se permite el uso comercial.
+- **ND** — no se permite remezclar, transformar ni crear obras derivadas. Solo compartir la obra original tal cual.
+
+### Datos y marcas de terceros
+
+Los datos de convocatorias, concesiones, beneficiarios e importes proceden de fuentes oficiales públicas (BDNS del Ministerio de Hacienda y DGDA del BOE). Son de acceso público y se rigen por sus respectivos términos oficiales — esta licencia no afecta a la titularidad ni al régimen jurídico de los datos. Los logos de las entidades de protección animal que aparecen en `recursos.html` pertenecen a sus titulares respectivos. Las librerías de terceros (Chart.js, Leaflet, FastAPI, SQLAlchemy, etc.) se rigen por sus propias licencias originales.
