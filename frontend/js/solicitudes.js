@@ -512,22 +512,30 @@ function mostrarError(mensaje) {
 
 
 // ─────────────────────────────────────────────────────────────
-// FUNCIÓN: descargarCSV
-// Redirige al endpoint de exportación del backend con los
-// filtros activos. El backend genera y sirve el archivo CSV.
 // ─────────────────────────────────────────────────────────────
-/**
- * Construye la URL de /solicitudes/export con los mismos filtros
- * que la búsqueda activa, excluyendo pagina y orden (el backend
- * exporta todos los resultados que coinciden con los filtros).
- *
- * Filtros incluidos: buscar, tipo, ccaa, anio, estado.
- * Filtros excluidos: pagina, limite, orden.
- *
- * La descarga se dispara con window.location.href, lo que hace
- * que el navegador reciba el fichero CSV directamente del servidor.
- */
-function descargarCSV() {
+// FUNCIÓN: descargarCSV
+// Descarga el CSV con un nombre de archivo que refleja los
+// filtros activos (ej: solicitudes_epa_2024_concedida.csv).
+// ─────────────────────────────────────────────────────────────
+
+function _slugify(texto) {
+    return texto
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+}
+
+function _nombreCSV(filtros) {
+    const partes = ['solicitudes'];
+    if (filtros.tipo)   partes.push(filtros.tipo);
+    if (filtros.anio)   partes.push(filtros.anio);
+    if (filtros.estado) partes.push(filtros.estado);
+    if (filtros.ccaa)   partes.push(_slugify(filtros.ccaa));
+    return partes.join('_') + '.csv';
+}
+
+async function descargarCSV() {
     const filtros = leerFiltros();
     const params  = new URLSearchParams();
 
@@ -540,7 +548,23 @@ function descargarCSV() {
     if (filtros.linea)     params.set('linea',     filtros.linea);
 
     const url = `${API_URL}/solicitudes/export?${params.toString()}`;
-    window.location.href = url;
+
+    try {
+        const resp = await fetch(url);
+        if (!resp.ok) {
+            const cuerpo = await resp.json().catch(() => ({}));
+            mostrarError(cuerpo.mensaje ?? 'No se pudo generar el CSV.');
+            return;
+        }
+        const blob   = await resp.blob();
+        const enlace = document.createElement('a');
+        enlace.href     = URL.createObjectURL(blob);
+        enlace.download = _nombreCSV(filtros);
+        enlace.click();
+        URL.revokeObjectURL(enlace.href);
+    } catch {
+        mostrarError('No se pudo conectar con el servidor. Comprueba que el backend está activo.');
+    }
 }
 
 

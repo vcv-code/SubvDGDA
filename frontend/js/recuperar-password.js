@@ -1,3 +1,12 @@
+/**
+ * recuperar-password.js — Solicitud de recuperación de contraseña
+ *
+ * Gestiona el formulario de recuperar-password.html.
+ * Envía el email al backend; la respuesta es siempre positiva
+ * para no revelar si el email está registrado (anti-enumeración).
+ *
+ * Endpoint: POST /auth/recuperar
+ */
 const API_URL = '/auth';
 
 const form    = document.getElementById('form-recuperar');

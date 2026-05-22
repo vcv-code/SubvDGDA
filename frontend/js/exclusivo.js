@@ -15,12 +15,6 @@ const API_URL = '';
 
 // ─── CONTROL DE ACCESO ────────────────────────────────────────────────────────
 
-function obtenerToken() {
-    const token = localStorage.getItem('token');
-    if (!token) { window.location.href = 'login.html'; return null; }
-    return token;
-}
-
 async function intentarRenovarToken() {
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) return null;
@@ -96,10 +90,10 @@ async function cargarResumenTabla(token) {
         </colgroup>`;
 
         const cabecera = `<tr>
-            <th>Tipo</th><th>Año</th><th>Total</th>
-            <th class="col-sep">Concedidas</th>
-            <th>No benef.</th><th>Excluidas</th><th>Desistidas</th>
-            <th class="col-sep">Importe concedido</th>
+            <th scope="col">Tipo</th><th scope="col">Año</th><th scope="col">Total</th>
+            <th scope="col" class="col-sep">Concedidas</th>
+            <th scope="col">No benef.</th><th scope="col">Excluidas</th><th scope="col">Desistidas</th>
+            <th scope="col" class="col-sep">Importe concedido</th>
         </tr>`;
 
         const renderFila = (f) => {

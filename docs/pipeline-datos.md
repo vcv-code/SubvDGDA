@@ -149,6 +149,13 @@ Soluciones: limpieza de texto, normalización y conversión de datos
 Problemas: sin importes, inconsistencia nif/cif y sin estado
 Soluciones: parsing con BeautifulSoup, unificación de campo `cif` y `"estado": "concedida"`
 
+**Formato de expediente heterogéneo:** el XML del BOE 2025 incluye dos esquemas de numeración para los expedientes EELL:
+
+- `EXP2025/NNNNN` — formato estándar con año, presente en el Excel principal
+- `EXP/NNNNN` — formato sin año, usado por 23 entidades que aparecen solo en el XML (no en el Excel), todas con estado `excluida` o `no_beneficiaria`
+
+No son duplicados de las mismas entidades: los números no coinciden entre formatos. El parser acepta ambos (`if exp.startswith("EXP")`). Sin impacto económico. Si el BOE de años futuros vuelve a usar este formato mixto, habrá que verificar que no aparezca la misma entidad con ambos identificadores en el mismo año.
+
 #### Integración Excel
 
 Problema: importes manuales

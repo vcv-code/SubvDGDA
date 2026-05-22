@@ -207,19 +207,19 @@ Los botones del panel de administración usan atributos `data-*` para transporta
 
 ## Persistencia de filtros entre página y ficha
 
-Flujo en el buscador cuando el usuario hace clic en una entidad:
+Al hacer clic en una fila del buscador se abre un **modal inline** sin abandonar `buscador.html` — la URL del buscador no cambia, los filtros siguen visibles y el usuario puede cerrar el modal y seguir navegando sin perder nada.
+
+Desde el pie del modal, el enlace **"Ver página completa →"** abre `entidad.html?cif=...` en una **pestaña nueva**. El CIF va en la URL, lo que permite guardar o compartir el enlace a una entidad concreta.
+
+Los filtros del buscador se guardan en la URL del buscador (no en `localStorage`):
 
 ```text
-1. Usuario aplica filtros → URL: /buscador.html?tipo=epa&anio=2025
-2. Hace clic en una entidad → navega a entidad.html?cif=G12345678
-3. Pulsa "Atrás" en entidad.html
-4. El navegador vuelve a buscador.html?tipo=epa&anio=2025
-5. buscador.html lee los parámetros de la URL y restaura los filtros automáticamente
+/buscador.html?tipo=epa&anio=2025&estado=concedida
 ```
 
-El punto clave: los filtros NO se guardan en `localStorage` — se guardan en la URL. Esto tiene ventajas:
+Ventajas:
 - La URL con filtros es compartible y marcable como favorito
-- "Atrás" del navegador restaura el estado correctamente
+- Si el usuario navega fuera y vuelve, el botón "Atrás" restaura exactamente los mismos filtros
 - Sin código extra de serialización/deserialización
 
 ---

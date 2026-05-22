@@ -1,3 +1,12 @@
+/**
+ * reset-password.js — Restablecimiento de contraseña
+ *
+ * Gestiona reset-password.html. Lee el token de la URL (?token=),
+ * valida que exista antes de mostrar el formulario y envía la nueva
+ * contraseña al backend. El token se revoca tras el primer uso.
+ *
+ * Endpoint: POST /auth/reset
+ */
 const API_URL = '/auth';
 
 const form      = document.getElementById('form-reset');
