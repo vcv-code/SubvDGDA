@@ -432,15 +432,17 @@ El contenedor `bdns_cron` ejecuta `scheduler.py` con dos tareas:
 | `check_bdns.py` (marzo) | Cada 4 días a las 08:00 UTC |
 | `check_bdns.py` (abril–mayo) | Cada 2 días a las 08:00 UTC |
 | `check_bdns.py` (junio) | Cada 4 días a las 08:00 UTC |
+| `check_bdns.py` (noviembre–diciembre) | Cada 2 días a las 08:00 UTC |
+| `check_bdns.py` (enero) | Cada 4 días a las 08:00 UTC |
 
 ### Criterio de selección de frecuencias
 
 La frecuencia se diseñó a partir del histórico de publicaciones de la DGDA:
 
 - **Convocatorias:** los años analizados (2021–2025) muestran que la DGDA publica las convocatorias EPA y EELL entre marzo y mayo. Comprobar cada 2 días en abril–mayo garantiza que el banner de aviso aparece en la home en menos de 48 horas tras la publicación oficial.
-- **Resoluciones:** se publican con más variabilidad (normalmente en noviembre–diciembre para EPA y EELL del mismo año). El cron las comprueba en cada ejecución —independientemente del mes— porque la fase de detección de resoluciones siempre corre.
-- **Cada 4 días fuera de temporada (marzo y junio):** suficiente para detectar publicaciones tardías o adelantadas sin generar peticiones innecesarias a la API de BDNS.
-- **No se comprueba julio–febrero:** la DGDA no ha publicado convocatorias en esos meses en ninguno de los años analizados. El cron se puede ampliar fácilmente si eso cambia.
+- **Resoluciones:** las resoluciones EPA y EELL del año en curso se publican habitualmente en noviembre–diciembre (a veces se cierran en enero del año siguiente, como ocurrió con EELL 2023). Comprobar cada 2 días en noviembre–diciembre garantiza que la `fecha_resolucion` se actualice en la BD —y el banner de aviso de la home desaparezca— en menos de 48 horas tras la publicación oficial.
+- **Cada 4 días en meses laterales (marzo, junio, enero):** suficiente para detectar publicaciones adelantadas o tardías sin generar peticiones innecesarias a la API de BDNS.
+- **No se ejecuta entre febrero y octubre (salvo marzo–junio):** la DGDA no ha publicado ni convocatorias ni resoluciones en esa franja en ninguno de los años analizados. El cron se puede ampliar fácilmente si eso cambia.
 
 `check_bdns.py` ejecuta dos fases en cada llamada:
 
@@ -584,7 +586,7 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 197 tests pasando, 0 fallando (actualizado 2026-05-15)
+- **Total:** 218 funciones de test / 316 ejecuciones pasando, 0 fallando (actualizado 2026-05-22)
 
 | Archivo | Qué testea |
 |---|---|

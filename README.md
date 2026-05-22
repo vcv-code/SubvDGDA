@@ -178,7 +178,7 @@ analisis-bdns-dgda/
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 197 tests pytest
+└── tests/                  ← 218 funciones de test pytest (316 ejecuciones)
 ```
 
 ---
@@ -769,7 +769,7 @@ Mailpit intercepta todos los emails que el backend intenta enviar (recuperación
 El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta dos tareas:
 
 - **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
-- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. La frecuencia varía según el mes: cada 2 días en abril–mayo (época de publicación de la DGDA) y cada 4 días el resto del año. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva.
+- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva.
 
 Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron puede lanzarse manualmente con `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
 
@@ -949,11 +949,11 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **249 pruebas en total**: 197 automáticas con pytest y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **270 pruebas en total**: 218 funciones de test automáticas con pytest (316 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 197 | pytest (sin Docker) |
+| Automáticos | 218 funciones / 316 ejecuciones | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -998,8 +998,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-181 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-197 passed   # suite completa con Docker levantado
+300 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+316 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -1105,7 +1105,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 197 tests automáticos (pytest)
+- 218 funciones de test automáticas / 316 ejecuciones (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1147,7 +1147,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **197 tests automáticos** — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs)
+- **218 funciones de test automáticas** (316 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
 - **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
