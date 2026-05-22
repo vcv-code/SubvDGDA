@@ -3279,24 +3279,30 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
    El modal se inyecta dinámicamente en el DOM por modal-grafica.js.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Trigger: botón que abre el modal desde la tarjeta de gráfica */
+/* Trigger: botón que abre el modal desde la tarjeta de gráfica.
+   Fondo verde claro desde el principio + texto verde oscuro: se ve
+   como elemento interactivo sin necesidad de hover. Contenido
+   centrado (el botón se estira al ancho de la tarjeta por el flex
+   layout del padre). En hover el verde se intensifica. */
 .card-grafico__trigger {
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     margin-top: auto;
-    padding: 0.4rem 0.9rem;
-    background: none;
-    border: 1px solid var(--color-gris-medio);
+    padding: 0.45rem 0.95rem;
+    background: var(--color-fondo-verde);
+    border: 1px solid var(--color-foco);
     border-radius: 20px;
     font-size: 0.82rem;
-    color: var(--color-gris-texto);
+    color: var(--color-foco);
     cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s;
 }
 
 .card-grafico__trigger:hover,
 .card-grafico__trigger:focus-visible {
-    border-color: var(--color-foco);
-    color: var(--color-foco);
+    background: var(--color-foco);
+    color: var(--color-blanco);
     outline: 2px solid var(--color-foco);
     outline-offset: 2px;
 }
@@ -3552,13 +3558,17 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     align-self: flex-start;
     letter-spacing: 0.01em;
     margin-top: var(--espacio-md);
-    transition: background-color 0.2s ease, transform 0.15s ease;
+    transition: background-color 0.2s ease;
 }
 
+/* El hover anterior incluía `transform: translateY(-1px)` para dar un
+   efecto sutil de elevación. Eliminado porque el desplazamiento de 1 px
+   durante la transición producía subpixel rendering del texto blanco
+   y el botón se veía momentáneamente borroso. El cambio de color ya
+   aporta affordance suficiente. */
 .pagina-inicio .portada-split__texto .btn-primario:hover {
     background-color: #245c27;
     color: #FFFFFF;
-    transform: translateY(-1px);
 }
 
 .pagina-inicio .portada-split__texto .btn-primario:focus-visible {
@@ -4750,4 +4760,16 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 .seccion-registro__card-titulo--spaced {
     margin-top: 1rem;
+}
+
+/* ============================================================
+   PÁGINAS LEGALES (aviso-legal.html, privacidad.html)
+   ============================================================ */
+
+/* Enlace "← Volver al inicio" en la cabecera de las páginas legales.
+   Azul institucional (en lugar del verde primario del resto del sitio)
+   para que el lector identifique inmediatamente el enlace de retorno. */
+.legal-back-link {
+    color:     var(--color-azul);
+    font-size: 0.9rem;
 }
