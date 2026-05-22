@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 218 funciones / 316 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 223 funciones / 321 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **270 funciones / 368 ejecuciones** | |
+| **Total** | **275 funciones / 373 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de las 316 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 300. Con Docker completo, pasan las 316.
+Nota sobre ejecución: 16 de las 321 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 305. Con Docker completo, pasan las 321.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (316) es mayor que el número de **funciones de test** escritas (218). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (321) es mayor que el número de **funciones de test** escritas (223). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **218 funciones de test automáticas** (316 ejecuciones con pytest) distribuidas en 19 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting y el scheduler del cron.
+El proyecto incluye **223 funciones de test automáticas** (321 ejecuciones con pytest) distribuidas en 20 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
 
 ### Cómo funcionan
 
@@ -257,6 +257,11 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 | 210 | `test_scheduler.py` | Unitario | Blanca | A las 08:00 en un día válido para `check_bdns` solo se ejecuta `check_bdns.py` (no `health_check`) |
 | 211 | `test_scheduler.py` | Unitario | Blanca | A las 08:00 en un día NO válido para `check_bdns` no se ejecuta ningún job |
 | 212 | `test_scheduler.py` | Unitario | Blanca | En julio el `check_bdns.py` no se ejecuta nunca; el `health_check.py` sí continúa cada 6h |
+| 213 | `test_check_bdns.py` | Unitario | Blanca | `_get_bdns_con_retry` devuelve la response al primer intento si BDNS responde 200 (sin sleeps) |
+| 214 | `test_check_bdns.py` | Unitario | Blanca | Si BDNS falla en el 1.er intento y responde 200 en el 2.º, la función reintenta con sleep de 2s y devuelve la response |
+| 215 | `test_check_bdns.py` | Unitario | Blanca | Si los 3 intentos fallan por error de red, la función devuelve None y hace 2 sleeps (entre intentos) |
+| 216 | `test_check_bdns.py` | Unitario | Blanca | Si BDNS responde 500 las 3 veces, la función devuelve None tras 3 intentos |
+| 217 | `test_check_bdns.py` | Unitario | Blanca | Los tiempos de espera entre reintentos siguen el patrón exponencial 2s → 4s (no constante ni lineal) |
 
 ### Descripción por módulo
 
@@ -336,6 +341,12 @@ Cubre el flujo completo de verificación de email en el registro: el usuario se 
 #### test_admin.py
 
 Cubre el panel de administración completo: control de acceso (401 sin token, 403 con rol `registrado`), lectura del estado del sistema, CRUD de usuarios con las protecciones anti-autoedición (400 al intentar modificar la propia cuenta), gestión completa de avisos (listar, desactivar, reactivar, eliminar, protección 409 si hay solicitudes asociadas), y visor de logs de acceso y de error (`GET /admin/logs` y `GET /admin/logs/errores`). Detectó dos diferencias entre SQLite y MariaDB durante el desarrollo: `date(2025, 1, 1)` como tipo Python en lugar de string para columnas DATE, y `tipo_benef="asociacion"` (valor ENUM válido) en lugar de `"epa"`.
+
+#### test_check_bdns.py
+
+Verifica el helper `_get_bdns_con_retry` del script `docker/cron/scripts/check_bdns.py`, que centraliza los reintentos con backoff exponencial (2s → 4s → 8s) en las llamadas a la API BDNS. Cubre cinco casos: primer intento OK (sin sleeps), recuperación tras un fallo puntual, abandono tras 3 errores de red, abandono tras 3 respuestas 500 y verificación de que el patrón de espera es exponencial.
+
+Los tests mockean `requests.get` y `time.sleep` para no esperar tiempo real ni golpear la API. El módulo se carga con `importlib.util` porque `docker/cron/scripts/` no es un paquete Python y porque tiene side effects al importarse (creación de logs en `/app/logs/cron` y llamada a `logging.basicConfig`) que se neutralizan con `unittest.mock.patch`. Además, `pymysql` se sustituye en `sys.modules` por un mock porque solo se instala en el contenedor cron, no en el venv local.
 
 #### test_scheduler.py
 

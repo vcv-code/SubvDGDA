@@ -22,6 +22,7 @@ import json
 import logging
 import os
 import sys
+import time
 from datetime import datetime
 
 import pymysql
@@ -38,6 +39,10 @@ DB_PORT     = int(os.environ.get("DB_PORT", 3306))
 DB_NAME     = os.environ.get("DB_NAME", "bdns_dgda")
 DB_USER     = os.environ.get("DB_USER", "bdns_user")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "bdns_pass")
+
+# Reintentos para llamadas a la API BDNS — backoff exponencial 2s, 4s, 8s
+MAX_INTENTOS_BDNS = 3
+BACKOFF_INICIAL   = 2
 
 os.makedirs(LOG_DIR, exist_ok=True)
 logging.basicConfig(
@@ -145,6 +150,42 @@ def parsear_fecha(fecha_str):
     return None
 
 
+def _get_bdns_con_retry(url, params=None):
+    """
+    Hace GET a la API BDNS con reintentos y backoff exponencial.
+
+    BDNS puede tener fallos transitorios (502 momentáneo, timeout puntual).
+    Sin retry, una sola incidencia hace perder hasta 4 días hasta el
+    siguiente ciclo del cron. Con 3 intentos y backoff (2s, 4s, 8s) la
+    función absorbe blips de hasta ~15 segundos.
+
+    Devuelve la response si tuvo éxito (HTTP 200), None si todos los
+    intentos fallaron (errores de red o status != 200).
+    """
+    for intento in range(1, MAX_INTENTOS_BDNS + 1):
+        try:
+            resp = requests.get(url, params=params, timeout=30)
+            if resp.status_code == 200:
+                return resp
+            log.warning(
+                "BDNS devolvió %d en intento %d/%d para %s",
+                resp.status_code, intento, MAX_INTENTOS_BDNS, url,
+            )
+        except requests.RequestException as e:
+            log.warning(
+                "Intento %d/%d fallido para %s: %s",
+                intento, MAX_INTENTOS_BDNS, url, e,
+            )
+
+        if intento < MAX_INTENTOS_BDNS:
+            espera = BACKOFF_INICIAL * (2 ** (intento - 1))  # 2, 4, 8
+            log.info("Esperando %ds antes de reintentar...", espera)
+            time.sleep(espera)
+
+    log.error("BDNS no respondió tras %d intentos: %s", MAX_INTENTOS_BDNS, url)
+    return None
+
+
 def consultar_resolucion_bdns(num_convoc):
     """
     Consulta el detalle de una convocatoria en la API BDNS y devuelve
@@ -154,19 +195,13 @@ def consultar_resolucion_bdns(num_convoc):
     ya tiene resolución registrada en BDNS (habitualmente 1-2 días
     después de la publicación en el BOE).
     """
-    try:
-        resp = requests.get(
-            f"{BDNS_API}/convocatorias/{num_convoc}", timeout=30
-        )
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        # Intentar los dos nombres de campo que usa la API BDNS
-        fecha_str = data.get("fechaResolucion") or data.get("fechaPublicacionResolucion")
-        return parsear_fecha(fecha_str)
-    except requests.RequestException as e:
-        log.error("Error consultando detalle BDNS para convocatoria %s: %s", num_convoc, e)
+    resp = _get_bdns_con_retry(f"{BDNS_API}/convocatorias/{num_convoc}")
+    if resp is None:
         return None
+    data = resp.json()
+    # Intentar los dos nombres de campo que usa la API BDNS
+    fecha_str = data.get("fechaResolucion") or data.get("fechaPublicacionResolucion")
+    return parsear_fecha(fecha_str)
 
 
 def comprobar_resoluciones(conn):
@@ -226,15 +261,13 @@ def buscar_en_bdns(termino_busqueda):
             "fechaHasta": datetime.now().strftime("%d/%m/%Y"),
             "tipoAdministracion": "C",
         }
-        try:
-            resp = requests.get(
-                f"{BDNS_API}/convocatorias/busqueda", params=params, timeout=30
-            )
-            resp.raise_for_status()
-            data = resp.json()
-        except requests.RequestException as e:
-            log.error("Error al consultar BDNS (%s): %s", termino_busqueda, e)
+        resp = _get_bdns_con_retry(
+            f"{BDNS_API}/convocatorias/busqueda", params=params
+        )
+        if resp is None:
+            log.error("Búsqueda BDNS abandonada para %s tras reintentos", termino_busqueda)
             break
+        data = resp.json()
 
         for c in data.get("content", []):
             nivel3 = (c.get("nivel3") or "").upper()
