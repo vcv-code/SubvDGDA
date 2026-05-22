@@ -1391,3 +1391,27 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
 - **CAPTCHA en registro** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto en su estado actual.
 - **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido.
+
+---
+
+## Licencia
+
+Este repositorio se compone de **dos partes con regímenes distintos**, por convención: las licencias de software libre (MIT, Apache, GPL) y las Creative Commons cubren ámbitos diferentes y no es buena práctica aplicar Creative Commons al código fuente. Texto íntegro y vinculante en el archivo [LICENSE](LICENSE) en la raíz del repositorio.
+
+### Código fuente — All Rights Reserved
+
+Todos los archivos de código del proyecto (`.py`, `.js`, `.css`, `.html`, `.yml`, `.sql`, scripts de instalación, ficheros Docker, configuración) están sujetos al derecho de autor por defecto de la legislación española. **Reservados todos los derechos.**
+
+Sin permiso escrito de los titulares no se permite copiar, redistribuir, modificar, sublicenciar, incorporar en otros proyectos ni usar comercialmente. Sí se permite consultar y ejecutar localmente con fines educativos y de evaluación académica (tribunal y centro educativo) en el marco del Proyecto Intermodular de 2º DAW.
+
+### Contenido y documentación — CC BY-NC-ND 4.0
+
+El README, los archivos `.md` de `docs/` y `frontend/docs/`, los textos visibles en la interfaz web, la memoria, los diagramas y las capturas se publican bajo **Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional** ([CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es)):
+
+- **BY** — cualquier uso debe acreditar a Verónica Corpa y Miyuki Salvador y enlazar a la licencia.
+- **NC** — no se permite el uso comercial.
+- **ND** — no se permite remezclar, transformar ni crear obras derivadas. Solo compartir la obra original tal cual.
+
+### Datos y marcas de terceros
+
+Los datos de convocatorias, concesiones, beneficiarios e importes proceden de fuentes oficiales públicas (BDNS del Ministerio de Hacienda y DGDA del BOE). Son de acceso público y se rigen por sus respectivos términos oficiales — esta licencia no afecta a la titularidad ni al régimen jurídico de los datos. Los logos de las entidades de protección animal que aparecen en `recursos.html` pertenecen a sus titulares respectivos. Las librerías de terceros (Chart.js, Leaflet, FastAPI, SQLAlchemy, etc.) se rigen por sus propias licencias originales.
