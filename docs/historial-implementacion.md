@@ -166,11 +166,11 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
 ✔ servicio cron como contenedor independiente en docker-compose (`docker/cron/`)
   · `scheduler.py` — scheduler Python puro que orquesta las tareas sin binarios externos
   · `check_bdns.py` — lógica en dos pasos en cada ejecución:
-      1. **Detección de resoluciones**: para cada convocatoria del año con `fecha_resolucion=NULL`,
+      1. Detección de resoluciones: para cada convocatoria del año con `fecha_resolucion=NULL`,
          consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` en la API BDNS buscando el campo
          `fechaResolucion`. Si ya está publicada, actualiza la BD → el banner desaparece
          automáticamente sin intervención manual (BDNS suele actualizarse 1-2 días tras el BOE).
-      2. **Detección de nuevas convocatorias**: si aún no se han registrado EELL y/o EPA del año
+      2. Detección de nuevas convocatorias: si aún no se han registrado EELL y/o EPA del año
          actual, busca en la API BDNS por "protección animal" y "colonias felinas", detecta el tipo
          por palabras clave del título (`detectar_tipo`) y las inserta con `fecha_resolucion=NULL`.
          Estado persistido en `logs/cron/estado_YYYY.json`.
@@ -216,7 +216,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · GET /admin/logs?n=100 → últimas N líneas de `logs/app/access.log` (máx. 500)
   · GET /admin/logs/errores?n=100 → últimas N líneas de `logs/app/error.log` (máx. 500)
   · `/admin/` añadido al proxy Nginx junto al resto de rutas de la API
-✔ **medidas anti-bots y seguridad en registro**
+✔ medidas anti-bots y seguridad en registro
   · rate limiting `POST /auth/registro`: zona `registro:10m rate=5r/m`, `burst=3 nodelay`
   · honeypot: campo `sitio_web` oculto; si llega relleno → éxito falso sin crear cuenta
   · verificación de email al registrarse: tabla `verificacion_tokens`, `GET /auth/verificar`, bloqueo login con 403
@@ -265,7 +265,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · `404.html`: estructura propia (`pagina-404__imagen` / `pagina-404__contenido`) para controlar el tamaño de la imagen independientemente del contenedor
   · `50x.html`: rutas convertidas a absolutas para funcionar desde cualquier URL de la API; nuevo diseño con frase simpática, imagen y botón "Reintentar"
   · clase base compartida `.pagina-error` extraída en `styles.css`; eliminados todos los inline styles
-✔ CSS refactorizado (rama 18)
+✔ CSS refactorizado
   · clases `.pagina-404`, `.pagina-50x` y base `.pagina-error` añadidas a `styles.css`
   · modificador `.auth-page--centrado` extraído del HTML a CSS
   · `.convocatorias-subtitulo` añadida para gestionar el margen desde CSS
@@ -357,6 +357,31 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · Título construido con DOM API (textContent + appendChild) en lugar de innerHTML para evitar XSS
   · Cuerpo con flex: 1 + min-height: 0 para que el scroll interno funcione correctamente en modales largos
   · Modal de top municipios: columna única en ≤768px
+✔ Saludo neutro y visibilidad de rol en zona privada
+  · Saludo cambiado de "Bienvenida" (femenino) a "Hola," (neutro) — compatible con cualquier género
+  · Rol mostrado solo si es `admin` ("Rol: administrador"); usuarios registrados ven solo la fecha de alta
+✔ Accesibilidad — scope en cabeceras de tabla
+  · `scope="col"` añadido en todas las `<th>` de `index.html` (tablas de convocatorias), `entidad.html` (historial y agrupación) y la tabla dinámica de `exclusivo.js`
+  · Completa WCAG 1.3.1 (relaciones en tablas) para lectores de pantalla
+✔ Nombre de archivo dinámico en la exportación CSV del buscador
+  · El botón "↓ Descargar CSV" genera el nombre a partir de los filtros activos: `solicitudes_[tipo]_[anio]_[estado]_[ccaa].csv` (ej: `solicitudes_epa_2024_concedida.csv`); sin filtros → `solicitudes.csv`
+  · Cambiado de `window.location.href` a `fetch + Blob + <a download>` para poder controlar el nombre sin tocar el backend
+  · Mejora añadida: si el backend devuelve 400 (demasiados resultados), el mensaje de error ahora aparece en la tabla en lugar de mostrar el JSON en blanco en el navegador
+✔ Enlace "Ver página completa →" en el modal de entidad del buscador
+  · Pie del modal (`modal-pie`) con enlace a `entidad.html?cif=...` en pestaña nueva
+  · `modal-entidad.js` actualiza el `href` con el CIF codificado al abrir el modal
+  · CSS `.modal-enlace-pagina` añadido a `styles.css`; `.modal-pie` ya existía pero no estaba conectado al HTML
+  · `entidad.html` deja de ser una página huérfana — accesible desde la UI sin necesidad de construir la URL manualmente
+✔ Reorganización de imágenes de `assets/img/`
+  · `gato500.webp` y `perro-gato.png` movidos de `assets/img/home/` a `assets/img/`
+  · `home/` queda exclusivamente con las alternativas del hero (`handcat.webp` y reservas)
+  · Referencias actualizadas en `50x.html`, `login.html` y `registro.html`
+  · `onerror` circular en `registro.html` corregido (apuntaba a sí misma en el fallback)
+✔ Correcciones de accesibilidad en `privado.html`
+  · `role="status"` y `aria-live="polite"` añadidos a los mensajes de éxito `#cambiar-nombre-ok` y `#cambiar-password-ok` — antes eran `<p>` sin semántica ARIA
+✔ Limpieza de código muerto y cabeceras JSDoc
+  · `obtenerToken()` eliminada de `exclusivo.js` — función definida pero nunca llamada; la renovación de token ya la gestiona `intentarRenovarToken()`
+  · Cabeceras JSDoc añadidas a los 4 archivos JS que carecían de ellas: `navbar.js`, `utils.js`, `recuperar-password.js`, `reset-password.js`
 ✔ Auditoría de código — fixes aplicados tras revisión exhaustiva
   · Backend: `buscar` con `max_length=200` y `limite` con `ge=1, le=500` — un usuario podía pedir `?limite=999999` y forzar una consulta de un millón de filas
   · Backend: `GET /solicitudes/export` limitado a 5.000 resultados — sin filtros intentaba exportar los ~6.400 registros completos en memoria
@@ -367,4 +392,3 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · README: páginas utilitarias `404.html`, `50x.html`, `aviso-legal.html` y `privacidad.html` añadidas a la lista
   · SRI (Subresource Integrity): atributos `integrity` y `crossorigin` añadidos a los 5 recursos CDN externos — Chart.js (3 páginas) y Leaflet JS + CSS (exclusivo.html); si el CDN fuese comprometido el navegador rechaza el recurso en lugar de ejecutarlo
   · Buscador — doble entrada en historial al llegar desde enlace de convocatoria: `history.pushState` cambiado a `history.replaceState` en `sincronizarUrl()`; antes había que pulsar Atrás dos veces para volver a Home
-

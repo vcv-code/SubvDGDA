@@ -8,22 +8,93 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 
 ## Índice
 
-1. Paleta de colores  
-2. Tipografía
-3. Logo del proyecto
-4. Sistema de espaciado  
-5. Componentes base  
-6. Wireframes
-7. Fuentes de inspiración de diseño
-8. Accesibilidad  
-9. Estructura del frontend  
+1. Estructura del frontend  
+2. Paleta de colores  
+3. Tipografía
+4. Logo del proyecto
+5. Sistema de espaciado  
+6. Componentes base  
+7. Wireframes
+8. Fuentes de inspiración de diseño
+9. Accesibilidad  
 10. Referencias
 
 ---
 
-## 1. Paleta de colores
+## 1. Estructura del frontend
 
-> **Nota:** La paleta actual es provisional y puede revisarse durante la maquetación.
+```text
+frontend/
+├── docs/                               ← documentación del proyecto
+│   ├── auditoria-frontend.md
+│   ├── diseño.md                       ← este documento
+│   ├── especificaciones-frontend.md
+│   └── patrones.md
+├── css/
+│   └── styles.css
+├── js/
+│   ├── admin.js
+│   ├── auth.js
+│   ├── entidad.js
+│   ├── estadisticas-eell.js
+│   ├── estadisticas-epas.js
+│   ├── exclusivo.js
+│   ├── home.js
+│   ├── mapa-ccaa.js
+│   ├── modal-entidad.js
+│   ├── modal-grafica.js
+│   ├── navbar.js
+│   ├── privado.js
+│   ├── recuperar-password.js
+│   ├── reset-password.js
+│   ├── solicitudes.js
+│   └── utils.js
+├── assets/
+│   ├── geojson/
+│   │   └── ccaa.geojson
+│   ├── guia-estilo/
+│   │   ├── colores.png
+│   │   ├── tipografia.png
+│   │   └── wireframes_subvenciones_bienestar_animal.pdf
+│   ├── img/
+│   │   ├── home/                       ← imágenes alternativas del hero (portada)
+│   │   ├── logos/                      ← logos de entidades y organizaciones
+│   │   ├── error404.webp               ← imagen página 404
+│   │   ├── gato500.webp                ← imagen página 50x
+│   │   ├── perro-gato.png              ← imagen login y registro
+│   │   └── logo.png
+│   └── wireframes/
+│       ├── estadisticas.png
+│       ├── home.png
+│       ├── login.png
+│       ├── pagFiltros.png
+│       └── registro.png
+├── scripts/
+│   └── color-privado.sh
+├── index.html                          ← Home
+├── buscador.html                       ← Buscador avanzado
+├── solicitudes.html                    ← Listado de solicitudes con filtros
+├── estadisticas-epas.html              ← Dashboard EPAs
+├── estadisticas-eell.html              ← Dashboard EELL
+├── entidad.html                        ← Ficha de entidad
+├── exclusivo.html                      ← Contenido exclusivo (zona privada)
+├── privado.html                        ← Perfil de usuario (zona privada)
+├── admin.html                          ← Panel de administración
+├── login.html
+├── registro.html
+├── recuperar-password.html
+├── reset-password.html
+├── verificar-email.html
+├── recursos.html                       ← Recursos y organizaciones
+├── aviso-legal.html
+├── privacidad.html
+├── 404.html
+└── 50x.html
+```
+
+---
+
+## 2. Paleta de colores
 
 ![Paleta de colores](../assets/guia-estilo/colores.png)
 
@@ -32,11 +103,15 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 - **Verde naturaleza (primario)** — `#47C079`  
 - **Verde claro (hover / acentos)** — `#52E38E`  
 - **Verde suave (fondos)** — `#E8F5E9`
+- **Verde botones** — `#2E7D32`  
+- **Verde cabeceras de tabla** — `#2E6B4F`  
+- **Verde institucional oscuro (navbar)** — `#1A3429`
 
 ### Colores secundarios
 
 - **Azul institucional** — `#1565C0`  
 - **Azul claro** — `#42A5F5`
+- **Ámbar (botón login / acento navbar)** — `#D97706`
 
 ### Neutros para tablas y UI
 
@@ -44,6 +119,14 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 - **Gris medio** — `#E0E0E0`  
 - **Gris texto** — `#616161`  
 - **Negro suave** — `#212121`
+
+### Zona privada
+
+Colores exclusivos de `privado.html` y `exclusivo.html`. Editables con `scripts/color-privado.sh` sin tocar el código.
+
+- **Banner superior** (`--banner-privado`) — `#2D6A4F`  
+- **Fondo del cuerpo** (`--fondo-privado`) — `#FAF4EE`  
+- **Hover tarjeta exclusivo** (`--hover-privado`) — `#E8F2EC`
 
 ### Estados
 
@@ -54,7 +137,7 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 
 ---
 
-## 2. Tipografía
+## 3. Tipografía
 
 **Inter** (Google Fonts) como fuente principal, con **Segoe UI** como fallback en Windows. Ideal para dashboards y tablas.
 ![Tipografía](../assets/guia-estilo/tipografia.png)
@@ -68,42 +151,40 @@ Este documento recoge la guía visual, los wireframes, los componentes y la estr
 
 ---
 
-## 3. Logo del proyecto
+## 4. Logo del proyecto
 
-A continuación se presenta el logotipo provisional utilizado para el proyecto de análisis de subvenciones para protección animal y gestión de colonias felinas. Representa visualmente la misión del sistema: la transparencia institucional y el bienestar animal.
+A continuación se presenta el logotipo utilizado para el proyecto de análisis de subvenciones para protección animal y gestión de colonias felinas. Representa visualmente la misión del sistema: la transparencia institucional y el bienestar animal.
 
 El diseño combina un escudo dividido en dos mitades: la izquierda con un edificio institucional (referencia a la administración pública) y la derecha con las siluetas de un perro y un gato (referencia al bienestar animal). La composición en blanco y negro transmite seriedad y carácter oficial.
 
 ![Logo del proyecto](../assets/img/logo.png)
 
-## Variantes previstas
-
-Aunque este logotipo puede evolucionar durante el desarrollo, se contemplan las siguientes variantes:
+### Variantes previstas
 
 - Versión monocromática en negro (principal, la actual)  
 - Versión invertida (blanco sobre fondo oscuro)  
 - Versión a color (posible mejora futura, con la paleta verde del proyecto)  
 
-## Usos recomendados
+### Usos recomendados
 
 - Encabezado (header) de la aplicación web  
 - Documentación del proyecto  
 - Material de presentación  
 
-## Usos no recomendados
+### Usos no recomendados
 
 - Reducir el logotipo por debajo de 32px  
 - Colocarlo sobre fondos con poco contraste  
 - Alterar proporciones o disposición  
 - Añadir sombras o efectos no contemplados en el diseño original  
 
-## Área de seguridad
+### Área de seguridad
 
 Se recomienda mantener un margen mínimo equivalente al 20% del ancho del escudo alrededor del logotipo para asegurar su correcta legibilidad en cualquier contexto.
 
 ---
 
-## 4. Sistema de espaciado
+## 5. Sistema de espaciado
 
 Escala basada en múltiplos de 8:
 
@@ -117,7 +198,7 @@ Escala de referencia: **8 / 16 / 24 / 32 / 48 px**
 
 ---
 
-## 5. Componentes base
+## 6. Componentes base
 
 ### Botón primario
 
@@ -157,20 +238,21 @@ Escala de referencia: **8 / 16 / 24 / 32 / 48 px**
 
 ### Barra de navegación
 
-- Fondo blanco  
+- Fondo: `#1A3429` (verde institucional oscuro)  
+- Botón de login: fondo ámbar `#D97706`  
 - Sombra inferior  
 - Altura: 80 px  
 
 ---
 
-## 6. Wireframes del sistema
+## 7. Wireframes del sistema
 
 Los siguientes wireframes representan la estructura visual inicial del proyecto
 según el documento PDF de referencia.
 
 ---
 
-### 6.1 Home (Página principal)
+### 7.1 Home (Página principal)
 
 Elementos clave:
 
@@ -186,7 +268,7 @@ Elementos clave:
 
 ---
 
-### 6.2 Buscador / Página de solicitudes (Listado + filtros)
+### 7.2 Buscador / Página de solicitudes (Listado + filtros)
 
 Elementos clave:
 
@@ -204,7 +286,9 @@ Elementos clave:
 
 ---
 
-### 6.3 Estadísticas (Dashboard)
+### 7.3 Estadísticas (Dashboard)
+
+Implementado en dos páginas separadas: `estadisticas-epas.html` (Entidades Privadas de Animales) y `estadisticas-eell.html` (Entidades Locales).
 
 Elementos clave:
 
@@ -226,7 +310,7 @@ Elementos clave:
 
 ---
 
-### 6.4 Login / Registro
+### 7.4 Login / Registro
 
 Elementos clave:
 
@@ -234,8 +318,8 @@ Elementos clave:
 - Campos:
   - Email  
   - Contraseña  
-- Botón “Entrar”.  
-- Enlace “Crear cuenta”.  
+- Botón "Entrar".  
+- Enlace "Crear cuenta".  
 - Estética minimalista y coherente con el resto del sistema.
 
 ![Login](../assets/wireframes/login.png)
@@ -245,47 +329,46 @@ Elementos clave:
 
 ---
 
-### 6.5 Perfil de usuario
+### 7.5 Perfil de usuario
 
-Parte de `privado.html` (requiere sesión iniciada). Ver también sección 6.7 para el contenido exclusivo de la zona privada.
+Página `privado.html` (requiere sesión iniciada). Ver también sección 7.7 para el contenido exclusivo de la zona privada.
 
 Elementos clave:
 
-- Datos básicos del usuario (email, rol).  
-- Botones:
-  - Cambiar contraseña *(pendiente de implementar en el backend)*  
-  - Cerrar sesión  
+- Datos básicos del usuario (email, rol, fecha de alta).  
+- Formulario para cambiar nombre o alias (`PUT /privado/cambiar-nombre`).  
+- Formulario para cambiar contraseña (`PUT /privado/cambiar-contrasena`).  
+- Botón "Cerrar sesión".  
+- Acceso directo a `exclusivo.html` (solo usuarios con sesión activa).
 
 ---
 
-### 6.6 Páginas de error
+### 7.6 Páginas de error
 
-Páginas visuales para los errores HTTP que el backend ya gestiona: 401 (no autenticado), 403 (sin permisos), 404 (no encontrado), 422 (datos inválidos) y 500 (error interno). El backend devuelve JSON estructurado con `error`, `mensaje` y `sugerencia`; el frontend mostrará esos campos de forma visual.
+`404.html` y `50x.html` son páginas **estáticas** servidas directamente por Nginx con la directiva `error_page`. Funcionan aunque el backend esté caído.
 
 Elementos clave:
 
 - Mensaje claro y centrado.  
 - Botones de acción:
   - Volver al inicio  
-  - Reintentar (en 500)  
+  - Reintentar (en 50x)  
 - Diseño simple y accesible.  
 
 ---
 
-### 6.7 Zona privada
+### 7.7 Zona privada
 
-Página `privado.html`, accesible solo con sesión iniciada (token JWT válido). Agrupa el perfil de usuario (6.5) y el resumen exclusivo. Corresponde a las rutas `/privado/perfil` y `/privado/resumen-exclusivo` del backend.
+Dividida en dos páginas separadas, ambas accesibles solo con sesión iniciada (token JWT válido):
 
-Elementos clave:
+- **`privado.html`** — Perfil del usuario autenticado (email, rol, botón "Cerrar sesión"). Corresponde a la ruta `/privado/perfil`.  
+- **`exclusivo.html`** — Resumen exclusivo con KPIs restringidos (importe total concedido, nº de beneficiarios únicos, convocatorias activas). Corresponde a la ruta `/privado/resumen-exclusivo`.
 
-- Datos del usuario autenticado (email, rol).  
-- Resumen exclusivo: KPIs restringidos (importe total concedido, nº de beneficiarios únicos, convocatorias activas).  
-- Botón "Cerrar sesión".  
-- Redirección automática a login si el token es inválido o ha expirado.
+Ambas páginas redirigen automáticamente a login si el token es inválido o ha expirado.
 
 ---
 
-### 6.8 Referencia visual
+### 7.8 Referencia visual
 
 Los wireframes completos se encuentran en el documento PDF original:
 
@@ -293,13 +376,13 @@ Los wireframes completos se encuentran en el documento PDF original:
 
 ---
 
-##  7. Fuentes de inspiración de diseño
+## 8. Fuentes de inspiración de diseño
 
 El diseño del frontend se ha desarrollado tomando como referencia plataformas y organizaciones que destacan por su claridad visual, accesibilidad y capacidad para presentar grandes volúmenes de datos de forma comprensible. Estas fuentes no se han utilizado para replicar interfaces, sino para identificar patrones de diseño efectivos y buenas prácticas aplicables al proyecto.
 
 ### 1. Datos.gob.es  
 
-https://datos.gob.es/  
+<https://datos.gob.es/>  
 
 Referencias:
 
@@ -309,7 +392,7 @@ Referencias:
 
 ### 2. PACMA  
 
-https://pacma.es/  
+<https://pacma.es/>  
 
 Referencias:
 
@@ -318,7 +401,7 @@ Referencias:
 
 ### 3. WWF España  
 
-https://www.wwf.es/ 
+<https://www.wwf.es/>  
 
 Referencias:
 
@@ -328,7 +411,7 @@ Referencias:
 
 ### 4. Booking.com  
 
-https://www.booking.com/  
+<https://www.booking.com/>  
 
 Referencias:
 
@@ -343,7 +426,7 @@ Referencias:
 
 ---
 
-## 8. Accesibilidad
+## 9. Accesibilidad
 
 Cumplimiento WCAG 2.1 AA:
 
@@ -352,26 +435,6 @@ Cumplimiento WCAG 2.1 AA:
 - Tamaños escalables  
 - Navegación por teclado  
 - Etiquetas ARIA  
-
----
-
-## 9. Estructura del frontend
-
-frontend/
-├── css/
-│
-├── js/
-│  
-├── assets/
-│   ├── img.png
-│   ├── wireframes_subvenciones_bienestar_animal.pdf
-│  
-├── index.html
-├── estadisticas.html
-├── buscador.html
-├── login.html
-├── privado.html
-└── diseño.md
 
 ---
 
