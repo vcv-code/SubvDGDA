@@ -604,14 +604,27 @@ En instalaciones posteriores las imágenes ya están cacheadas localmente — ar
 | **pytest** | 9.0.3 | Framework de tests. |
 | **httpx** | 0.28.1 | Cliente HTTP que simula peticiones a la API en los tests (`TestClient`). |
 
-### Librerías del frontend (CDN)
+### Librerías del frontend (CDN con fallback local)
 
 No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
-| Librería | Versión | Usado en | Para qué |
-|---|---|---|---|
-| **Chart.js** | 4.4.0 | `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html` | Gráficas de línea, barras y donut. |
-| **Google Fonts (Inter)** | — | Todos los HTML | Tipografía: pesos 400, 600 y 700. |
+| Librería | Versión | Usado en | Para qué | Fallback |
+|---|---|---|---|---|
+| **Chart.js** | 4.4.0 | `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html` | Gráficas de línea, barras y donut | `assets/vendor/chart.umd.min.js` |
+| **Leaflet** (JS + CSS) | 1.9.4 | `exclusivo.html` | Mapa choropleth por CCAA con tiles de OpenStreetMap | `assets/vendor/leaflet.js` + `leaflet.css` |
+| **Google Fonts (Inter)** | — | Todos los HTML | Tipografía: pesos 400, 600 y 700 | Sin fallback local (cae al `font-family` de sistema) |
+
+**Cómo funciona el fallback de CDN:**
+
+Los recursos cargados desde CDN llevan tres atributos:
+
+- `integrity="sha384-..."`: el navegador verifica el hash antes de ejecutar/aplicar el recurso (SRI).
+- `crossorigin="anonymous"`: requerido por SRI.
+- `onerror="..."`: si el CDN no responde o el SRI falla, el handler crea dinámicamente un `<script>` o `<link>` apuntando a `/assets/vendor/`.
+
+Las versiones locales en `frontend/assets/vendor/` se descargaron del mismo CDN y se verificaron comparando su hash SHA-384 con el `integrity` declarado en los HTMLs. La verificación criptográfica garantiza que los archivos locales son idénticos a los oficiales.
+
+Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la fuente Inter (se usa el `font-family` de sistema). Bundlear Inter localmente añadiría ~150 KB de WOFF2 al repositorio, no justificado para una degradación tan menor.
 
 ### Librerías de los scripts de datos (parsers)
 
