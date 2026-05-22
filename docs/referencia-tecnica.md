@@ -502,6 +502,17 @@ La frecuencia se diseñó a partir del histórico de publicaciones de la DGDA:
 1. **Detección de resoluciones** (siempre): consulta `GET /bdnstrans/api/convocatorias/{num_convoc}` para cada convocatoria con `fecha_resolucion = NULL` del año actual. Si BDNS ya publica la fecha, la actualiza en la BD y el banner de la home desaparece automáticamente.
 2. **Detección de nuevas convocatorias** (solo si faltan): busca nuevas convocatorias DGDA del año actual en la API BDNS por palabras clave del título. Si encuentra una nueva, la inserta con `fecha_resolucion = NULL`.
 
+### Reintentos con backoff exponencial
+
+Ambas fases consultan la API BDNS a través del helper interno `_get_bdns_con_retry(url, params)`, que aplica **3 intentos con backoff exponencial (2s → 4s → 8s)** ante errores transitorios. Cubre dos tipos de fallo:
+
+- **Errores de red** (timeout, conexión rechazada, DNS): captura `requests.RequestException`.
+- **Respuestas HTTP != 200** (5xx puntuales, 429 si saturamos): cuenta como intento fallido.
+
+Justificación: con el calendario de cron actual (~75 ejecuciones al año concentradas en marzo–junio y noviembre–enero), un único fallo puntual de BDNS hacía perder hasta 4 días hasta el siguiente ciclo. Con 3 intentos y backoff, el cron absorbe blips de hasta ~15 s de duración. Si los 3 intentos fallan, la función devuelve `None` y el cron sigue con la siguiente convocatoria o abandona la búsqueda de forma controlada (loguea el error, no rompe el proceso).
+
+El timeout por petición sigue siendo 30 s, así que el peor caso por convocatoria es `30s × 3 intentos + 2s + 4s = 96 s` (extremo improbable). En el caso medio (BDNS responde a la primera) la ejecución es idéntica a la versión anterior. Cubierto por `tests/test_check_bdns.py`.
+
 Los títulos que devuelve la API BDNS son los títulos oficiales del BOE, que pueden ser muy largos (p. ej. *"Subvenciones a entidades locales destinadas a mejorar e impulsar el control poblacional de colonias felinas, correspondiente al año 2026"*). El cron normaliza el título antes de insertarlo usando un diccionario interno, de forma que todos los registros mantengan el mismo formato corto independientemente de lo que devuelva la API.
 
 Detección de tipo por palabras clave en el título:
@@ -639,7 +650,7 @@ No hay bundler ni Node.js. Todo es HTML + CSS + JS vanilla servido por Nginx.
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 218 funciones de test / 316 ejecuciones pasando, 0 fallando (actualizado 2026-05-22)
+- **Total:** 223 funciones de test / 321 ejecuciones pasando, 0 fallando (actualizado 2026-05-22)
 
 | Archivo | Qué testea |
 |---|---|
