@@ -1155,7 +1155,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
 - **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
-- **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones; sin estilos inline
+- **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones. Los `style=` inline que quedan son principalmente `display:none` para toggle por JavaScript (~60 ocurrencias); las ~30 restantes (tipografía y márgenes puntuales) están identificadas como mejora pendiente
 
 ### Contingencia ante fallos externos
 

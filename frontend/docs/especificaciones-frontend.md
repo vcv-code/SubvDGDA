@@ -123,7 +123,7 @@ Definida como **Custom Properties CSS** en `:root` para que un solo cambio de va
 | `--color-hover` | `#52E38E` | Verde claro — estado hover de links |
 | `--color-fondo-verde` | `#E8F5E9` | Verde suave — fondos de secciones |
 | `--color-verde-btn` | `#2E7D32` | Verde oscuro — botones primarios, títulos |
-| `--color-azul` | `#1565C0` | Azul institucional — badge Agrupación, spinner |
+| `--color-azul` | `#1565C0` | Azul institucional — badge Agrupación, spinner, enlace "← Volver al inicio" de páginas legales |
 | `--color-gris-claro` | `#F5F5F5` | Fondos de tabla, alternado de filas |
 | `--color-gris-medio` | `#E0E0E0` | Bordes de inputs, separadores |
 | `--color-gris-texto` | `#616161` | Texto secundario, labels |
@@ -1311,6 +1311,8 @@ Los valores elegidos superan el ratio de contraste WCAG AA (4.5:1) sobre fondo b
 - `privacidad.html`: datos recogidos (email + contraseña bcrypt + tokens de sesión), finalidad, derechos del usuario, seguridad (HTTPS TLS 1.2/1.3, bcrypt, tokens revocables) y nota sobre datos públicos.
 
 Ambas páginas tienen `<meta name="robots" content="noindex">` para excluirlas de los motores de búsqueda (igual que `admin.html`). Incluyen navbar y footer completos con los mismos enlaces que el resto del proyecto.
+
+**Enlace "← Volver al inicio"** (en ambas páginas): usa la clase CSS `.legal-back-link` (definida en `styles.css` bajo la sección "PÁGINAS LEGALES"), no estilo inline. Color azul institucional (`var(--color-azul)`, `#1565C0`) en lugar del verde primario del resto del sitio — el azul es la convención web tradicional para enlaces de retorno y el lector lo identifica al instante. Tamaño `0.9rem`, ligeramente menor que el texto del cuerpo, para que actúe como elemento de navegación secundaria sin competir con el título de la página.
 
 **Footer actualizado en:** `index.html`, `login.html`, `registro.html`, `buscador.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `entidad.html`, `privado.html`, `admin.html`, `recursos.html`, `recuperar-password.html`, `reset-password.html`. Se añadieron los enlaces "Aviso legal" y "Privacidad" al `<nav>` del footer usando el separador `footer-principal__sep` ya existente.
 
