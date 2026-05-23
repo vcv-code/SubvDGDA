@@ -4099,6 +4099,19 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     color: var(--color-gris-texto);
 }
 
+/* Enlaces dentro de la nota (Bases reguladoras): azul institucional
+   coherente con el resto de enlaces externos del sitio. Subrayado por
+   convención web; se quita en hover para dar feedback. */
+.convocatorias-nota a {
+    color: var(--color-azul);
+    text-decoration: underline;
+}
+
+.convocatorias-nota a:hover,
+.convocatorias-nota a:focus-visible {
+    text-decoration: none;
+}
+
 /* Utilidad: margin-bottom lg en contenedores de grid */
 .mb-lg {
     margin-bottom: var(--espacio-lg);

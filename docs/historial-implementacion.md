@@ -395,3 +395,9 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · README: páginas utilitarias `404.html`, `50x.html`, `aviso-legal.html` y `privacidad.html` añadidas a la lista
   · SRI (Subresource Integrity): atributos `integrity` y `crossorigin` añadidos a los 5 recursos CDN externos — Chart.js (3 páginas) y Leaflet JS + CSS (exclusivo.html); si el CDN fuese comprometido el navegador rechaza el recurso en lugar de ejecutarlo
   · Buscador — doble entrada en historial al llegar desde enlace de convocatoria: `history.pushState` cambiado a `history.replaceState` en `sincronizarUrl()`; antes había que pulsar Atrás dos veces para volver a Home
+✔ Enlaces a las bases reguladoras en la sección "Convocatorias" de la home
+  · Bajo la tabla EPA: enlaces a las bases reguladoras de 2021 (BOE-A-2021-16021) y a la modificación de 2024 publicada por la DGDA
+  · Bajo la tabla EELL: enlace a las bases reguladoras de 2023 publicadas por la DGDA
+  · Reutilizada la clase `.convocatorias-nota` ya existente (mismo tamaño y color discreto que el asterisco del período subvencionable)
+  · Nueva regla CSS `.convocatorias-nota a` con color azul institucional (`--color-azul`) coherente con el enlace "Volver al inicio" de las páginas legales, subrayado por convención web (se quita en hover)
+  · Atributos `target="_blank" rel="noopener noreferrer"` y `aria-label` descriptivo en cada enlace (incluye el formato del documento y el origen — BOE o DGDA)

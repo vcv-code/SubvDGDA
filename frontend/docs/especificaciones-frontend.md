@@ -2253,9 +2253,28 @@ Añadido `text-align: left` explícito a `.filtros__fila .form-grupo` y sus labe
 - `.modal-grafica__cuerpo` con `flex: 1; min-height: 0` para que el scroll interno funcione correctamente en flex containers con `max-height`
 - Modal top municipios CCAA: `grid-template-columns: 1fr` en `≤768px` (antes `600px`) — en pantallas de 640-768px las dos columnas quedaban muy estrechas
 
----
+### 12.38 Enlaces a bases reguladoras en la sección "Convocatorias" de la home — 2026-05-23
 
-## 13. Mejoras pendientes y roadmap
+**Archivos modificados:** `index.html`, `css/styles.css`
+
+**Problema:** la sección "Convocatorias" de la home muestra para cada año (2021–2026) la fecha de publicación en el BOE y un enlace directo a la resolución, pero **no** ofrecía acceso a las **bases reguladoras** — el documento normativo que define cómo se evalúan las solicitudes y cómo se reparten los importes. Para un proyecto de análisis de subvenciones, la base reguladora es la fuente legal de referencia.
+
+**Solución:** se añade una línea breve bajo cada una de las dos tablas (EPA y EELL) con enlaces directos a los PDFs oficiales. Tres documentos en total:
+
+| Tabla | Documento | Origen |
+|---|---|---|
+| EPA | Bases reguladoras EPAs 2021 | BOE (`BOE-A-2021-16021`) |
+| EPA | Modificación bases EPAs 2024 | DGDA (web institucional) |
+| EELL | Bases reguladoras EELL 2023 | DGDA (web institucional) |
+
+**Implementación técnica:**
+
+- Reutilizada la clase `.convocatorias-nota` ya existente (misma usada por el asterisco *"Período subvencionable de 6 meses"*). Mismo tamaño (`0.8rem`) y mismo color de texto (`--color-gris-texto`), por lo que no compite visualmente con la tabla.
+- Nueva regla CSS `.convocatorias-nota a` con color `var(--color-azul)` (`#1565C0`) y `text-decoration: underline`, coherente con el enlace "Volver al inicio" de las páginas legales. El hover quita el subrayado como feedback visual. El verde primario heredado por defecto tenía poco contraste sobre el fondo verde claro de la sección.
+- Atributos `target="_blank"` y `rel="noopener noreferrer"` en los tres enlaces (no exponen `window.opener`).
+- `aria-label` descriptivo en cada enlace que indica el formato del documento (PDF) y su origen (BOE o DGDA), para lectores de pantalla.
+
+**Relación con backend:** ninguna. Contenido estático puro.
 
 Las siguientes tareas están planificadas pero no implementadas. Cada una tiene su especificación aquí y su referencia en el changelog cuando se complete.
 

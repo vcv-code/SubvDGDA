@@ -236,6 +236,85 @@ Fuentes externas (API / PDF / XML / XLSX)
 
 ---
 
+## Recursos y URLs externas
+
+Listado consolidado de todos los servicios y documentos externos a los que el proyecto se conecta o referencia.
+
+### APIs públicas — BDNS
+
+El sistema BDNS (Base de Datos Nacional de Subvenciones), gestionado por la IGAE del Ministerio de Hacienda, se expone en **dos dominios públicos distintos**:
+
+| Tipo | Dominio | Uso en el proyecto |
+|---|---|---|
+| **Portal público (UI web)** | `https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index` | Enlace en el footer de la web (referencia visible para el usuario final) |
+| **API REST (JSON)** | `https://www.infosubvenciones.es/bdnstrans/api` | Endpoint que consulta el cron (`check_bdns.py`) y el cliente de ingesta (`bdns_client.py`) |
+
+Endpoints concretos de la API que el proyecto usa:
+
+| Recurso | URL completa | Uso |
+|---|---|---|
+| Búsqueda paginada de convocatorias | `https://www.infosubvenciones.es/bdnstrans/api/convocatorias/busqueda` | Detección de nuevas convocatorias DGDA |
+| Detalle de una convocatoria | `https://www.infosubvenciones.es/bdnstrans/api/convocatorias/{num_convoc}` | Comprobación del campo `fechaResolucion` cuando BDNS publica la resolución |
+
+### Bases reguladoras (PDF)
+
+Enlazadas desde la sección "Convocatorias" de la home (bajo cada tabla).
+
+| Documento | URL | Origen |
+|---|---|---|
+| Bases reguladoras EPAs 2021 | [`BOE-A-2021-16021.pdf`](https://www.boe.es/boe/dias/2021/10/01/pdfs/BOE-A-2021-16021.pdf) | BOE |
+| Modificación bases EPAs 2024 | [`Modificacion-BBRR.pdf`](https://www.dsca.gob.es/sites/default/files/derechos-sociales/derechos-animales/docs/Modificacion-BBRR.pdf) | DGDA |
+| Bases reguladoras EELL 2023 | [`bases-reguladoras.pdf`](https://www.dsca.gob.es/sites/default/files/derechos-sociales/bases-reguladoras.pdf) | DGDA |
+
+### Resoluciones oficiales (BOE)
+
+Enlazadas desde la sección "Resoluciones oficiales" de la home (8 enlaces hardcodeados en `index.html` con `target="_blank"`).
+
+| Año | Tipo | URL |
+|---|---|---|
+| 2025 | EPA | [`BOE-A-2025-27109`](https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109) |
+| 2024 | EPA | [`BOE-A-2024-23749`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749) |
+| 2023 | EPA | [`BOE-A-2023-23529`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529) |
+| 2022 | EPA | [`BOE-A-2022-22122`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122) |
+| 2021 | EPA | [`BOE-A-2022-602`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602) (publicada en enero 2022) |
+| 2025 | EELL | [`BOE-A-2025-27204`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204) |
+| 2024 | EELL | [`BOE-A-2024-24205`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205) |
+| 2023 | EELL | [`BOE-A-2024-662`](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662) (publicada en enero 2024) |
+
+Las resoluciones EPA/EELL 2025 también se obtienen en formato XML para el parseo de beneficiarios (`https://www.boe.es/diario_boe/xml.php?id=BOE-A-AAAA-NNNNN`). Las de 2023 y 2024 se parsean del PDF original con `pdfplumber`.
+
+### Web institucional DGDA
+
+| URL | Uso |
+|---|---|
+| `https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones` | Página oficial DGDA sobre las subvenciones; enlazada desde el footer, aviso legal y privacidad |
+
+### Recursos del frontend cargados de CDN
+
+Detalle completo (versión, propósito, fallback) más abajo en la sección "Librerías del frontend (CDN con fallback local)" dentro del bloque "Librerías del backend". Resumen de URLs:
+
+| Librería | URL CDN | Fallback local |
+|---|---|---|
+| Chart.js 4.4.0 | `https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js` | `frontend/assets/vendor/chart.umd.min.js` |
+| Leaflet 1.9.4 (JS) | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` | `frontend/assets/vendor/leaflet.js` |
+| Leaflet 1.9.4 (CSS) | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.css` | `frontend/assets/vendor/leaflet.css` |
+| Google Fonts (Inter) | `https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap` | Sin fallback local (degrada a `font-family` de sistema) |
+
+### Servicios de mapas
+
+| Servicio | URL | Uso |
+|---|---|---|
+| OpenStreetMap tiles | `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png` | Capa base del mapa choropleth en `exclusivo.html` (consumido por Leaflet) |
+
+### Repositorios y desarrollo
+
+| Recurso | URL | Uso |
+|---|---|---|
+| Repositorio GitHub | `https://github.com/vcv-code/analisis-bdns-dgda` | Código fuente, issues y PRs del proyecto |
+| Texto oficial CC BY-NC-ND 4.0 | `https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es` | Licencia del contenido (footer y `LICENSE`) |
+
+---
+
 ## Endpoints de la API
 
 La documentación interactiva completa (Swagger UI) está en `/docs` — accesible en `https://subvencionesDGDA.local/docs` con Docker levantado, o en `http://localhost:8000/docs` en modo desarrollo.
@@ -434,6 +513,44 @@ El orden de ejecución se preserva: si `chart.js` viene antes que `home.js` en e
 ```
 
 El atributo `fetchpriority="high"` en la imagen hero de `index.html` indica al navegador que priorice su descarga frente a otros recursos de igual importancia. Mejora el LCP (Largest Contentful Paint) — la métrica que mide cuándo el usuario ve el contenido principal de la página.
+
+---
+
+## Breakpoints responsive del frontend
+
+Todo el responsive del proyecto se hace con `@media (max-width: ...)` (mobile-first invertido) en una única hoja `frontend/css/styles.css`. No hay frameworks ni utilidades tipo Bootstrap; los breakpoints están definidos a mano y se aplican selectivamente a los componentes que los necesitan.
+
+### Breakpoints principales
+
+| Breakpoint | Frecuencia de uso | Aplica principalmente a |
+|---|---|---|
+| **900 px** | 4 reglas | Navbar: cambio a menú hamburguesa (≤900px). Grid de 3 columnas → 2 columnas. Se subió de 768 a 900 porque a 768 los items del navbar quedaban demasiado apretados |
+| **768 px** | 9 reglas | Es el breakpoint más usado. `.grid-2` (cabeceras y bloques de dos columnas) colapsa a 1 columna. Ajustes de tipografía y padding en tablas, modales y tarjetas |
+| **600 px** | 7 reglas | Móvil. `.grid-3` → 1 columna. **Crítico:** transformación de `.tabla-wrapper` del buscador a vista de tarjetas (`data-label` + `::before { content: attr(data-label) }`) para no obligar a scroll horizontal en pantallas estrechas |
+| **480 px** | 4 reglas | Móvil pequeño. Reduce tamaños y márgenes en tarjetas de la home y elementos de hero |
+
+### Breakpoints puntuales
+
+| Breakpoint | Uso |
+|---|---|
+| `1024 px` con `min-width: 901 px` | Zona intermedia para evitar solapamiento del navbar en pantallas medianas: `.navbar__links a` baja a `1rem` |
+| `1024 px` | Ajustes puntuales de espaciado en el hero |
+| `680 px`, `640 px` | Ajustes específicos del modal de gráfica y del modal top-municipios (donde 600/768 producían diseño incómodo) |
+
+### Filosofía aplicada
+
+- **`.grid-2` colapsa antes que `.grid-3`** — dos columnas de contenido denso (tablas, tarjetas anchas) se aplastan más rápido que tres columnas de tarjetas pequeñas. Por eso `.grid-2` salta a 1 col en 768 px y `.grid-3` aguanta hasta 600 px.
+- **Mismo breakpoint para varios componentes** — cuando un mismo punto (p. ej. 600 px) se usa para el grid y para la tabla del buscador, se reduce la cantidad de breakpoints distintos que el usuario percibe al redimensionar.
+- **`pointer: coarse`** — para diferenciar interacción táctil de cursor, el mapa de CCAA en `exclusivo.html` usa la media query `(pointer: coarse)` además del breakpoint de tamaño. Un toque muestra tooltip; doble toque abre modal.
+
+### Comprobar todos los breakpoints en CSS
+
+```bash
+grep -E "@media \(max-width: [0-9]+px\)|@media \(min-width: [0-9]+px\)" \
+    frontend/css/styles.css | sort | uniq -c | sort -rn
+```
+
+Devuelve el conteo y la lista de breakpoints únicos usados en el proyecto.
 
 ---
 
