@@ -438,7 +438,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 
 | Página | Descripción |
 |--------|-------------|
-| `index.html` | Home con métricas, gráficas de evolución e información de convocatorias activas |
+| `index.html` | Home con métricas, gráficas de evolución, información de convocatorias activas, enlaces a las **bases reguladoras** oficiales (BOE y DGDA) y a las **resoluciones de concesión** publicadas en el BOE de cada año |
 | `buscador.html` | Buscador de solicitudes con filtros, paginación, ordenación server-side y exportación CSV con nombre de archivo dinámico según filtros activos |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
@@ -1242,6 +1242,7 @@ A continuación, el detalle por dominio.
 - GeoJSON de CCAA: el archivo original era una versión muy simplificada (~5 KB) en la que los bordes de las comunidades quedaban irregulares y poco precisos. Se sustituyó por un GeoJSON de mayor resolución (~618 KB), lo que mejoró visiblemente la forma de los polígonos en el mapa choropleth.
 - `activo` y `email_verificado` en `models.py` están definidos como `Column(SmallInteger)` en lugar de `Column(Boolean)`. Funcionan igual porque MariaDB almacena `BOOLEAN` como `TINYINT(1)` internamente, pero el tipo semántico es incorrecto: el ORM no valida que solo entren `True`/`False`. Cambiarlo requeriría un `ALTER TABLE` en la BD existente — no justificado en este entorno.
 - La función `cerrarSesion` está definida en `navbar.js`, `privado.js`, `exclusivo.js` y `admin.js`. La duplicación es conocida: `navbar.js` la necesita para páginas donde el botón se inyecta dinámicamente, mientras los otros tres tenían su propia implementación antes de que se añadiera `navbar.js` a esas páginas. La solución limpia sería un `utils-auth.js` compartido, pero introducirlo al final del proyecto supone un riesgo innecesario.
+- Enlaces a documentos oficiales hardcodeados en `index.html`: las URLs de las **bases reguladoras** (3 enlaces) y de las **resoluciones de concesión del BOE** (8 enlaces, EPA 2021–2025 + EELL 2023–2025) están escritas directamente como `<a href="...">` en el HTML. No es ideal desde la perspectiva de mantenimiento, pero es una decisión deliberada y proporcionada: son datos estáticos que cambian como máximo una vez al año (cuando se publica una nueva resolución), no dependen del usuario, no requieren paginación ni filtros, y la frecuencia de cambio no justifica la complejidad de moverlos a un JSON externo o a la BD. La actualización anual se hace editando 1-3 líneas en `index.html`. Cuando el número de enlaces crezca o se necesite multi-idioma, conviene migrarlos a `frontend/data/resoluciones.json` (ver Mejoras futuras).
 
 ---
 
@@ -1372,6 +1373,7 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
 - **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL; requieren un parser específico.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
+- **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
 
 ### Funcionalidades y UX
 
