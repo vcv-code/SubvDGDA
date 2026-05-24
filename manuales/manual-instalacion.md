@@ -133,11 +133,20 @@ Deberías ver seis contenedores en estado `running` o `healthy`:
 Verifica también que los datos se han cargado correctamente:
 
 ```bash
-docker exec bdns_dgda_db mariadb -uroot -proot bdns_dgda \
+docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
   -e "SELECT COUNT(*) AS solicitudes FROM solicitudes;"
 ```
 
 El resultado debería ser **6398**.
+
+Comprueba que las convocatorias vigentes están registradas (necesarias para los avisos de la home):
+
+```bash
+docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
+  -e "SELECT tipo_convoc, anio_convocatoria, fecha_resolucion FROM convocatorias WHERE anio_convocatoria=2026;"
+```
+
+Deben aparecer dos filas (EPA y EELL 2026) con `fecha_resolucion` en `NULL`. Eso hace que la página de inicio muestre los dos avisos de convocatorias pendientes de resolución. Si no aparecen, vuelve a ejecutar `bash install.sh` — el script las inserta automáticamente.
 
 ---
 
@@ -291,12 +300,31 @@ cp -r /mnt/c/Users/TU_USUARIO/Desktop/analisis-bdns-dgda-main ~/
 cd ~/analisis-bdns-dgda-main
 ```
 
-Verifica que estás en la ruta correcta:
+> **Problema habitual — carpeta doble:** cuando descargas el ZIP desde GitHub y lo descomprimes en Windows, suele quedar una carpeta dentro de otra con el mismo nombre:
+> ```
+> analisis-bdns-dgda-main/
+> └── analisis-bdns-dgda-main/   ← aquí están los archivos reales
+>     ├── install.sh
+>     ├── docker/
+>     └── ...
+> ```
+> Si copias la carpeta exterior, después de `cd ~/analisis-bdns-dgda-main` el `ls` no muestra `install.sh` sino otra carpeta con el mismo nombre. La solución es entrar un nivel más:
+> ```bash
+> cd ~/analisis-bdns-dgda-main/analisis-bdns-dgda-main
+> ```
+> O mejor, copiar directamente la carpeta interior:
+> ```bash
+> cp -r "/mnt/c/Users/TU_USUARIO/Desktop/analisis-bdns-dgda-main/analisis-bdns-dgda-main" ~/
+> ```
+
+Verifica que estás en la ruta correcta — `install.sh` debe ser visible:
 
 ```bash
 pwd
 # debe devolver: /home/TU_USUARIO/analisis-bdns-dgda-main
 # NO: /mnt/c/...
+
+ls install.sh   # debe existir; si no, estás un nivel por encima
 ```
 
 ### Paso 4 — Abrir VS Code desde WSL
