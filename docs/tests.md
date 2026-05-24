@@ -26,7 +26,7 @@ def test_check_bdns_corre_en_marzo_cada_4_dias(day):
 
 Esa es **una función**, pero pytest la ejecuta 8 veces (una por cada día) y reporta 8 PASSED. `@pytest.mark.parametrize` es una técnica estándar de pytest para evitar duplicar código de test cuando solo cambian los datos de entrada.
 
-Solo `test_scheduler.py` usa `parametrize`. Los otros 18 archivos tienen una correspondencia 1:1 entre funciones de test y ejecuciones.
+Solo `test_scheduler.py` usa `parametrize`. Los otros 20 archivos tienen una correspondencia 1:1 entre funciones de test y ejecuciones.
 
 ---
 
