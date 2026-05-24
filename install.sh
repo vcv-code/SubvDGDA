@@ -82,7 +82,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Limpia metadatos de zona de Windows (se generan al descomprimir ZIPs en Windows y copiar a WSL2)
-find . -name "*.Zone.Identifier" -delete 2>/dev/null || true
+find . -name "*:Zone.Identifier" -delete 2>/dev/null || true
 
 # =============================================================================
 # FASE 1 — Sistema operativo
@@ -180,7 +180,7 @@ if command -v python3 >/dev/null 2>&1; then
         elif ! python3 -c "import ensurepip" >/dev/null 2>&1; then
             error "El módulo ensurepip no está disponible — necesario para crear entornos virtuales."
             info "En Ubuntu/Debian ejecuta:"
-            info "  sudo apt install python${PY_VER}-venv"
+            echo -e "${AMARILLO}    sudo apt install python${PY_VER}-venv${RESET}"
             FALTAN=$((FALTAN + 1))
         fi
     else
@@ -406,12 +406,6 @@ UPDATE convocatorias SET fecha_convocatoria='2025-05-05' WHERE tipo_convoc='epa'
 UPDATE convocatorias SET fecha_convocatoria='2023-05-19' WHERE tipo_convoc='eell' AND anio_convocatoria=2023 AND fecha_convocatoria IS NULL;
 UPDATE convocatorias SET fecha_convocatoria='2024-05-31' WHERE tipo_convoc='eell' AND anio_convocatoria=2024 AND fecha_convocatoria IS NULL;
 UPDATE convocatorias SET fecha_convocatoria='2025-03-27' WHERE tipo_convoc='eell' AND anio_convocatoria=2025 AND fecha_convocatoria IS NULL;
-INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria)
-SELECT 'Subvenciones a entidades de protección animal 2026','epa',2026,'904714',12,'2026-05-11'
-WHERE NOT EXISTS (SELECT 1 FROM convocatorias WHERE tipo_convoc='epa' AND anio_convocatoria=2026);
-INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria)
-SELECT 'Subvenciones a entidades locales para protección animal 2026','eell',2026,'897468',12,'2026-04-08'
-WHERE NOT EXISTS (SELECT 1 FROM convocatorias WHERE tipo_convoc='eell' AND anio_convocatoria=2026);
 UPDATE convocatorias SET titulo_convoc=CONCAT('Subvenciones a entidades locales para protección animal ', anio_convocatoria)
 WHERE tipo_convoc='eell' AND LENGTH(titulo_convoc) > 60;
 UPDATE convocatorias SET fecha_resolucion='2022-01-14' WHERE tipo_convoc='epa'  AND anio_convocatoria=2021 AND fecha_resolucion IS NULL;
@@ -443,6 +437,21 @@ FILAS=$(docker exec bdns_dgda_db mariadb \
     -sNe "SELECT COUNT(*) FROM solicitudes" 2>/dev/null || echo "0")
 if [ "${FILAS:-0}" -gt 0 ]; then TIENE_DATOS=true; fi
 
+# Función auxiliar: asegura que las convocatorias vigentes sin resolución están en BD.
+# Se ejecuta siempre (primera instalación y reinstalación) para que los avisos aparezcan.
+insertar_convocatorias_vigentes() {
+    docker exec bdns_dgda_db mariadb \
+        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
+        -e "
+INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria)
+SELECT 'Subvenciones a entidades de protección animal 2026','epa',2026,'904714',12,'2026-05-11'
+WHERE NOT EXISTS (SELECT 1 FROM convocatorias WHERE tipo_convoc='epa' AND anio_convocatoria=2026);
+INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria)
+SELECT 'Subvenciones a entidades locales para protección animal 2026','eell',2026,'897468',12,'2026-04-08'
+WHERE NOT EXISTS (SELECT 1 FROM convocatorias WHERE tipo_convoc='eell' AND anio_convocatoria=2026);
+" 2>/dev/null && ok "Convocatorias vigentes al día" || aviso "No se pudieron insertar las convocatorias 2026"
+}
+
 if $TIENE_DATOS; then
     ok "Base de datos existente con $FILAS solicitudes — no se sobreescribirá"
     aviso "Para reinstalar la BD desde cero: make reset-db"
@@ -450,6 +459,7 @@ if $TIENE_DATOS; then
     info "Actualizando imágenes y levantando todos los contenedores..."
     info "(El backend se reconstruye para que el código esté siempre actualizado)"
     (cd docker && docker compose up --build -d)
+    insertar_convocatorias_vigentes
 else
     info "Primera instalación — construyendo imágenes y descargando dependencias..."
     info "(Puede tardar varios minutos la primera vez)"
@@ -470,6 +480,7 @@ else
     venv/bin/python3 -m scripts.data_processing.cargar_dataset
     echo
     ok "Dataset cargado correctamente"
+    insertar_convocatorias_vigentes
 fi
 
 # =============================================================================

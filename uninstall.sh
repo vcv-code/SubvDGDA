@@ -156,6 +156,9 @@ else
     ok "venv/ no existe — nada que eliminar"
 fi
 
+# ── Limpieza final ────────────────────────────────────────────────────────────
+find . -name "*:Zone.Identifier" -delete 2>/dev/null || true
+
 # ── Fin ───────────────────────────────────────────────────────────────────────
 echo
 echo -e "${VERDE}${NEGRITA}  Desinstalación completada.${RESET}"
