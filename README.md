@@ -550,7 +550,7 @@ Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `
 |-----------|-------|-------|
 | **Sistema operativo** | Linux · macOS · Windows con WSL2 | En Windows se requiere WSL2 + Docker Desktop con integración WSL2 activa |
 | **Docker** | 24+ con `docker compose` v2 | Imprescindible. Incluye todos los servicios (BD, backend, Nginx, cron) |
-| **Python** | 3.10+ | Solo necesario para ejecutar tests y scripts de parseo. La app web funciona sin él |
+| **Python** | 3.10+ | Solo necesario para ejecutar tests y scripts de parseo. La app web funciona sin él. En Ubuntu/Debian instala también `python3.X-venv` (ej. `sudo apt install python3.12-venv`) |
 | **openssl** | Cualquier versión reciente | Para generar el certificado SSL autofirmado en la instalación |
 | **Espacio en disco** | ~1,5 GB | ~1 GB imágenes Docker (primera descarga) + ~10 MB dataset + ~50 MB venv opcional |
 | **RAM** | 4 GB mínimo recomendado | MariaDB + FastAPI + Nginx corren en paralelo dentro de Docker |
@@ -864,9 +864,20 @@ docker compose down -v       # para y borra el volumen (reset total de la BD)
 docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
 ```
 
-#### Solución de problemas en WSL2 (Windows)
+#### Instalación en Windows con WSL2
 
-Si el contenedor `bdns_nginx` no arranca con el error `failed to create shim task` o `no such file or directory` al montar volúmenes, es un problema conocido de Docker Desktop + WSL2 con bind mounts de archivos individuales. La solución es recrear los contenedores desde cero:
+La guía completa paso a paso está en [manuales/manual-instalacion.md](manuales/manual-instalacion.md#instalación-en-windows-con-wsl2). Resumen de los puntos críticos:
+
+- **Software necesario:** WSL2 + Ubuntu, Docker Desktop, VS Code con la extensión WSL.
+- **Docker Desktop:** activar la integración WSL2 en Settings → Resources → WSL Integration → Ubuntu. Sin este paso, `docker ps` falla dentro de WSL.
+- **Distro por defecto:** ejecutar `wsl --set-default Ubuntu` en PowerShell para que `wsl` abra Ubuntu y no `docker-desktop`.
+- **Filesystem Linux:** trabajar SIEMPRE desde `/home/...`, NUNCA desde `/mnt/c/...`. Los bind mounts de Docker, VS Code Remote WSL y los permisos de scripts funcionan correctamente solo en el filesystem Linux.
+- **CRLF:** si el proyecto viene de Windows, los `.sh` pueden tener finales de línea Windows y fallar con `bad interpreter`. Solución: `sudo apt install dos2unix -y && dos2unix install.sh uninstall.sh`.
+- **Contraseña sudo:** es la contraseña del usuario Linux, no la de Windows.
+
+#### Solución de problemas en WSL2
+
+Si algún contenedor falla al arrancar con `failed to create shim task` o errores de bind mounts, recrear los contenedores suele solucionarlo:
 
 ```bash
 cd docker

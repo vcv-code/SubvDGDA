@@ -95,7 +95,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · tabla `reset_tokens` en BD con campo `usado` y FK con CASCADE
   · páginas `recuperar-password.html` y `reset-password.html` con formularios y feedback
   · respuesta idéntica si el email existe o no (evita enumeración de usuarios)
-✔ tests automáticos con pytest (197 tests — smoke, funcionales, unitarios, seguridad, rendimiento, configuración; 195 pasan en todos los entornos; 2 de HTTPS dependen del CN del certificado generado)
+✔ tests automáticos con pytest (223 funciones / 321 ejecuciones — smoke, funcionales, unitarios, seguridad, rendimiento, configuración; 305 pasan sin Docker; 16 requieren Docker+Nginx levantados para la suite completa)
   · — Pipeline de datos —
   · test_unificar_datasets.py (21): funciones de normalización del pipeline de datos
   · test_parser_epa2025.py (22): helpers y flujo completo del parser EPA 2025

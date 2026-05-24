@@ -206,6 +206,9 @@ data/raw/epas/
 # Archivo de contexto local (no se versiona)
 contexto.txt
 
+# Metadatos de zona de Windows (se generan al descomprimir ZIPs descargados de internet)
+*.Zone.Identifier
+
 # Certificado y clave SSL — se generan localmente, nunca se versionan
 # (cert y key deben ser del mismo par; si uno cambia el otro deja de funcionar)
 docker/ssl/server.crt
