@@ -3,7 +3,7 @@
 #
 # Revierte lo que hizo install.sh:
 #   1. Para y elimina los contenedores Docker (con sus volúmenes y datos)
-#   2. Elimina la imagen Docker del backend
+#   2. Elimina las imágenes Docker del backend y del cron
 #   3. Elimina la entrada de /etc/hosts  (requiere sudo)
 #   4. Elimina los archivos generados: docker/.env, docker/ssl/, venv/
 #
@@ -51,7 +51,7 @@ echo -e "${ROJO}  ADVERTENCIA: esta operación es irreversible.${RESET}"
 echo    "  Se eliminarán los contenedores, volúmenes (BD y datos) y archivos generados."
 echo
 
-if ! confirmar "¿Segura de que quieres desinstalar?"; then
+if ! confirmar "¿Seguro/a de que quieres desinstalar?"; then
     echo
     echo "  Desinstalación cancelada."
     exit 0
@@ -69,22 +69,30 @@ else
     aviso "No se encontró docker-compose.yml — se omite este paso"
 fi
 
-# ── 2. Imagen Docker del backend (opcional) ───────────────────────────────────
+# ── 2. Imágenes Docker del proyecto (opcionales) ──────────────────────────────
 echo
-echo -e "${NEGRITA}[2/4] Imagen Docker del backend...${RESET}"
+echo -e "${NEGRITA}[2/4] Imágenes Docker del proyecto...${RESET}"
 
-if docker image inspect docker-backend >/dev/null 2>&1; then
-    echo "  La imagen Docker es una copia compilada del servidor backend."
-    echo "  Si no vas a volver a usar este proyecto, puedes eliminarla (libera ~200 MB)."
-    echo "  Si la conservas, una futura reinstalación será más rápida."
-    if confirmar "¿Eliminar la imagen Docker del backend?"; then
-        docker rmi docker-backend 2>/dev/null && ok "Imagen eliminada" \
-            || aviso "No se pudo eliminar la imagen"
+IMAGENES_EXISTEN=false
+docker image inspect docker-backend >/dev/null 2>&1 && IMAGENES_EXISTEN=true
+docker image inspect docker-cron    >/dev/null 2>&1 && IMAGENES_EXISTEN=true
+
+if $IMAGENES_EXISTEN; then
+    echo "  Las imágenes Docker son copias compiladas del backend (~360 MB) y el cron (~195 MB)."
+    echo "  Si no vas a volver a usar este proyecto, puedes eliminarlas para liberar espacio."
+    echo "  Si las conservas, una futura reinstalación será más rápida."
+    if confirmar "¿Eliminar las imágenes Docker del proyecto?"; then
+        docker image inspect docker-backend >/dev/null 2>&1 && \
+            { docker rmi docker-backend 2>/dev/null && ok "Imagen docker-backend eliminada" \
+              || aviso "No se pudo eliminar docker-backend"; }
+        docker image inspect docker-cron >/dev/null 2>&1 && \
+            { docker rmi docker-cron 2>/dev/null && ok "Imagen docker-cron eliminada" \
+              || aviso "No se pudo eliminar docker-cron"; }
     else
-        aviso "Imagen conservada"
+        aviso "Imágenes conservadas"
     fi
 else
-    ok "La imagen docker-backend no existe — nada que eliminar"
+    ok "Las imágenes del proyecto no existen — nada que eliminar"
 fi
 
 # ── 3. Entrada en /etc/hosts ──────────────────────────────────────────────────
@@ -102,7 +110,7 @@ if grep -q "${DOMAIN}" /etc/hosts 2>/dev/null; then
         # Aviso WSL2 para el hosts de Windows
         if grep -qi microsoft /proc/version 2>/dev/null; then
             aviso "WSL2: recuerda eliminar también la línea de:"
-            aviso "      C:\\Windows\\System32\\drivers\\etc\\hosts"
+            aviso "      C:\\Windows\\System32\\drivers\\\\etc\\hosts"
         fi
     else
         aviso "Entrada en /etc/hosts conservada"
