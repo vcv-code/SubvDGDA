@@ -41,13 +41,18 @@ confirmar() {
     [[ "$resp" =~ ^[sS]$ ]]
 }
 
-# Espera hasta que MariaDB esté lista (máx. 60 s).
+# Espera hasta que MariaDB esté lista (180 s + 1 reintento opcional de 60 s).
 esperar_db() {
-    # Polling cada 2 s hasta que MariaDB acepte conexiones (máx. 60 s).
+    # Polling cada 2 s hasta que MariaDB acepte conexiones.
+    # - Primer intento: 180 s (cubre primera instalación en WSL2 lento, donde MariaDB
+    #   crea su datadir desde cero y puede tardar hasta 2-3 minutos).
+    # - En reinstalaciones suele tardar 20-30 s.
+    # - Si se agota, ofrece esperar 60 s más antes de abortar.
     # Se usa SELECT 1 en lugar de mysqladmin ping porque el contenedor
     # mariadb:11 no incluye mysqladmin en su imagen slim.
     local intentos=0
-    local max=30
+    local max=90
+    local total=180
     echo -ne "     Esperando a la base de datos"
     while ! docker exec bdns_dgda_db mariadb \
             -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
@@ -55,9 +60,22 @@ esperar_db() {
         intentos=$((intentos + 1))
         if [ "$intentos" -ge "$max" ]; then
             echo
-            error "La base de datos no respondió en 60 s."
-            error "Comprueba los logs con: docker logs bdns_dgda_db"
-            exit 1
+            aviso "La base de datos no ha respondido en ${total} s."
+            info  "En reinstalación esto suele tardar 20-30 s. En primera"
+            info  "instalación con WSL2 lento puede llegar a 2-3 minutos"
+            info  "porque MariaDB crea su datadir desde cero."
+            if confirmar "¿Esperar 60 segundos más? Si pulsas Enter o 'n' se aborta"; then
+                intentos=0
+                max=30
+                total=$((total + 60))
+                echo -ne "     Esperando 60 s más"
+            else
+                echo
+                error "Abortado. La base de datos seguirá arrancando en segundo plano."
+                info  "Espera 1-2 minutos y vuelve a ejecutar: bash install.sh"
+                info  "Si el problema persiste, comprueba los logs: docker logs bdns_dgda_db"
+                exit 1
+            fi
         fi
         echo -ne "."
         sleep 2

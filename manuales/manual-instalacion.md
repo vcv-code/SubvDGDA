@@ -6,6 +6,52 @@
 
 ---
 
+## Comandos rápidos (TL;DR)
+
+Si ya tienes los prerrequisitos preparados (WSL2 + Docker Desktop + VS Code + Python con `venv`) y el proyecto en `~/analisis-bdns-dgda-main/`:
+
+### Instalar
+
+```bash
+wsl
+cd ~/analisis-bdns-dgda-main
+code .
+bash install.sh
+```
+
+### Primera vez en este sistema (Ubuntu/Debian sin `venv`)
+
+```bash
+sudo apt install python3.12-venv   # sustituye 3.12 por tu versión
+bash install.sh
+```
+
+### Guardar BD antes de reinstalar
+
+```bash
+docker exec bdns_dgda_db mariadb-dump -ubdns_user -pbdns_pass bdns_dgda > /tmp/backup.sql
+# o con make:
+make backup
+```
+
+### Restaurar BD tras reinstalar
+
+```bash
+docker exec -i bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda < /tmp/backup.sql
+# o con make:
+make restore FILE=backup_20260525_120000.sql
+```
+
+### Desinstalar
+
+```bash
+bash uninstall.sh
+```
+
+> **Nota sobre el arranque de la BD:** en primera instalación con WSL2 lento, MariaDB puede tardar hasta 2-3 minutos en crear su `datadir`. El script espera 180 s y, si se agota, ofrece esperar 60 s más antes de abortar. En reinstalaciones suele tardar 20-30 s.
+
+---
+
 ## Requisitos previos
 
 Antes de instalar la aplicación, asegúrate de tener instaladas las siguientes herramientas en tu sistema:

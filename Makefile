@@ -9,7 +9,7 @@
 
 .PHONY: start stop restart build build-cron reload-nginx \
         reset-db cargar test logs logs-cron logs-nginx \
-        backup shell-db mailpit uninstall
+        backup restore shell-db mailpit uninstall
 
 # ── Docker ────────────────────────────────────────────────────────────────────
 
@@ -67,12 +67,17 @@ logs-nginx:
 # ── Utilidades ────────────────────────────────────────────────────────────────
 
 backup:
-	docker exec bdns_dgda_db mariadb-dump -uroot -proot bdns_dgda \
+	docker exec bdns_dgda_db mariadb-dump -ubdns_user -pbdns_pass bdns_dgda \
 		> backup_$$(date +%Y%m%d_%H%M%S).sql
 	@echo "Backup guardado en el directorio actual."
 
+restore:
+	@test -n "$(FILE)" || (echo "Uso: make restore FILE=backup_YYYYMMDD_HHMMSS.sql"; exit 1)
+	docker exec -i bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda < $(FILE)
+	@echo "Backup $(FILE) restaurado."
+
 shell-db:
-	docker exec -it bdns_dgda_db mariadb -uroot -proot bdns_dgda
+	docker exec -it bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda
 
 mailpit:
 	@echo "Mailpit disponible en http://localhost:8025"
