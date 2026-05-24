@@ -18,6 +18,12 @@ Antes de instalar la aplicación, asegúrate de tener instaladas las siguientes 
 
 *No es imprescindible para el funcionamiento de la aplicación.
 
+> **Ubuntu/Debian:** el módulo `venv` de Python viene en un paquete separado. Si usas Python 3.12, instala también:
+> ```bash
+> sudo apt install python3.12-venv
+> ```
+> Si usas otra versión, sustituye `3.12` por tu versión (`python3 --version`). El script de instalación detecta si falta este paquete y te lo indica antes de continuar.
+
 **Plataformas compatibles:** Linux, macOS, Windows con WSL2 y Docker Desktop.
 
 ### Verificar los requisitos
@@ -118,11 +124,11 @@ Deberías ver seis contenedores en estado `running` o `healthy`:
 | Contenedor | Estado esperado |
 |------------|----------------|
 | bdns_dgda_db | healthy |
-| bdns_api | running |
-| bdns_nginx | running |
-| bdns_cron | running |
-| bdns_mailpit | running |
-| bdns_adminer | running |
+| bdns_api | healthy |
+| bdns_nginx | healthy |
+| bdns_cron | Up (sin healthcheck) |
+| bdns_mailpit | healthy |
+| bdns_adminer | Up (sin healthcheck) |
 
 Verifica también que los datos se han cargado correctamente:
 
@@ -227,24 +233,130 @@ La documentación de la API estará disponible en `http://localhost:8000/docs`.
 
 ## Instalación en Windows con WSL2
 
-Si usas Windows, el entorno recomendado es WSL2 con Docker Desktop:
+Windows requiere WSL2 como capa de compatibilidad Linux. Sigue estos pasos en orden — saltarse alguno es la causa más frecuente de que Docker no funcione.
 
-1. Instala Docker Desktop para Windows con la integración WSL2 activada.
-2. Abre una terminal WSL2 (Ubuntu u otra distribución Linux).
-3. Navega a la carpeta del proyecto dentro del sistema de archivos de Linux (no desde `/mnt/c/...`).
-4. Sigue los pasos de instalación normales con `bash install.sh`.
+### Paso 0 — Software necesario
 
-**Nota sobre el dominio en Windows:** Si añades `subvencionesDGDA.local` al `/etc/hosts` de WSL2, también tendrás que añadirlo al archivo `hosts` de Windows para acceder desde el navegador de Windows:
+Instala todo esto antes de empezar:
+
+| Software | Dónde obtenerlo |
+|----------|----------------|
+| **WSL2** | `wsl --install` en PowerShell como administrador (instala Ubuntu por defecto) |
+| **Docker Desktop** | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/) — versión para Windows |
+| **Visual Studio Code** | [code.visualstudio.com](https://code.visualstudio.com/) |
+| **Extensión WSL** (VS Code) | Busca "WSL" en el panel de extensiones de VS Code e instálala |
+
+### Paso 1 — Activar la integración WSL2 en Docker Desktop
+
+Sin este paso, Docker no funciona dentro de WSL y `docker ps` dará errores.
+
+1. Abre Docker Desktop
+2. Ve a **Settings → Resources → WSL Integration**
+3. Activa el interruptor de **Ubuntu**
+4. Haz clic en **Apply & Restart**
+
+Comprobación desde Ubuntu (WSL):
+
+```bash
+docker ps
+```
+
+Debe responder aunque no haya contenedores activos. Si da error, repite el paso anterior.
+
+### Paso 2 — Establecer Ubuntu como distro WSL por defecto
+
+Desde PowerShell (Windows):
+
+```powershell
+wsl --set-default Ubuntu
+```
+
+Esto garantiza que el comando `wsl` sin argumentos abre Ubuntu y no otra distro (como `docker-desktop`, que es interna de Docker).
+
+### Paso 3 — Copiar el proyecto al sistema de archivos Linux
+
+> **Regla crítica:** trabaja SIEMPRE desde el sistema de archivos Linux (`/home/...`), NUNCA desde la ruta montada de Windows (`/mnt/c/...`).
+
+Por qué importa:
+
+- Los bind mounts de Docker funcionan correctamente
+- VS Code Remote WSL funciona sin problemas
+- Sin errores de permisos en scripts
+- Velocidad de I/O mucho mayor
+
+Si tienes el proyecto descargado en Windows (por ejemplo en el Escritorio), cópialo al home de Linux desde una terminal Ubuntu:
+
+```bash
+cp -r /mnt/c/Users/TU_USUARIO/Desktop/analisis-bdns-dgda-main ~/
+cd ~/analisis-bdns-dgda-main
+```
+
+Verifica que estás en la ruta correcta:
+
+```bash
+pwd
+# debe devolver: /home/TU_USUARIO/analisis-bdns-dgda-main
+# NO: /mnt/c/...
+```
+
+### Paso 4 — Abrir VS Code desde WSL
+
+Desde la terminal Ubuntu, dentro de la carpeta del proyecto:
+
+```bash
+code .
+```
+
+VS Code se abre en modo remoto WSL. Comprueba que en la esquina inferior izquierda aparece **WSL: Ubuntu**. Si aparece solo el nombre del proyecto sin "WSL:", no está en modo remoto — ciérralo y ábrelo de nuevo con `code .` desde la terminal Ubuntu.
+
+### Paso 5 — Arreglar finales de línea (si el proyecto viene de Windows)
+
+Si descargaste el ZIP desde Windows o clonaste en una máquina Windows, los archivos `.sh` pueden tener finales de línea CRLF en lugar de LF. En ese caso `bash install.sh` falla con un error críptico:
+
+```
+bash: ./install.sh: /usr/bin/env: bad interpreter: No such file or directory
+```
+
+Instala `dos2unix` y conviértelos:
+
+```bash
+sudo apt install dos2unix -y
+dos2unix install.sh uninstall.sh
+```
+
+Luego ya puedes ejecutar normalmente:
+
+```bash
+bash install.sh
+```
+
+### Paso 6 — Contraseña sudo
+
+Cuando el script pide contraseña de administrador (para `/etc/hosts`), es la contraseña de tu **usuario Linux** (la que pusiste al instalar Ubuntu en WSL). No es la contraseña de Windows ni la de root.
+
+Si no recuerdas cuál es o nunca la configuraste:
+
+```bash
+passwd
+```
+
+### Nota sobre el dominio en Windows
+
+Si añades `subvencionesDGDA.local` al `/etc/hosts` de WSL2, el navegador de Windows usará su propio archivo `hosts` y no el de WSL, así que también tendrás que añadirlo en Windows. Abre **Notepad como administrador** y edita:
 
 ```
 C:\Windows\System32\drivers\etc\hosts
 ```
 
-Añade la línea: `127.0.0.1 subvencionesDGDA.local`
+Añade al final:
 
-Este archivo requiere abrirlo como administrador para poder editarlo.
+```
+127.0.0.1 subvencionesDGDA.local
+```
 
-**Solución a problemas con bind mounts en WSL2:** Si algún contenedor falla al arrancar con errores relacionados con volúmenes o archivos, ejecuta:
+### Solución a problemas con bind mounts en WSL2
+
+Si algún contenedor falla al arrancar con errores de volúmenes o archivos, recrear los contenedores suele solucionarlo:
 
 ```bash
 cd docker
@@ -272,8 +384,8 @@ source venv/bin/activate && pytest tests/ -q
 
 **Resultado esperado:**
 
-- Sin Docker: `181 passed`
-- Con Docker y Nginx levantados: `197 passed`
+- Sin Docker (excluye tests de HTTPS y rate limiting): `305 passed`
+- Con Docker y Nginx levantados (suite completa): `321 passed`
 
 ---
 
@@ -325,3 +437,18 @@ Accede a Mailpit en `http://localhost:8025`. Todos los emails enviados por la ap
 **Los tests fallan con errores de base de datos**
 
 Los tests usan SQLite en memoria y no requieren Docker. Si fallan, asegúrate de que el entorno virtual está activado y las dependencias están instaladas con `pip install -r requeriments.txt`.
+
+**Error "ensurepip is not available" al crear el entorno virtual**
+
+Ocurre en Ubuntu/Debian cuando falta el paquete `python3.X-venv`. El script de instalación lo detecta en la Fase 2 y muestra el comando exacto, pero si te ocurre manualmente:
+
+```bash
+# Consulta tu versión de Python
+python3 --version   # ej. Python 3.12.x
+
+# Instala el paquete correspondiente
+sudo apt install python3.12-venv   # sustituye 3.12 por tu versión
+
+# Vuelve a ejecutar el script de instalación
+bash install.sh
+```

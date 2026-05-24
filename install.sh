@@ -81,6 +81,9 @@ echo
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
+# Limpia metadatos de zona de Windows (se generan al descomprimir ZIPs en Windows y copiar a WSL2)
+find . -name "*.Zone.Identifier" -delete 2>/dev/null || true
+
 # =============================================================================
 # FASE 1 — Sistema operativo
 # =============================================================================
@@ -167,10 +170,17 @@ if command -v python3 >/dev/null 2>&1; then
     PY_MINOR=$(echo "$PY_VER" | cut -d. -f2)
     if [ "$PY_MAJOR" -ge 3 ] && [ "$PY_MINOR" -ge 10 ]; then
         ok "Python $PY_VER"
-        # Comprueba que el módulo venv esté disponible (en Ubuntu es paquete aparte)
+        # Comprueba venv y ensurepip por separado: en Ubuntu/Debian con Python 3.12+
+        # el módulo venv existe pero ensurepip viene en un paquete aparte (python3.X-venv).
+        # python3 -m venv --help pasa aunque ensurepip no esté; hay que importarlo explícitamente.
         if ! python3 -m venv --help >/dev/null 2>&1; then
             error "El módulo venv de Python no está disponible."
-            info "Instálalo con: sudo apt install python3-venv"
+            info "Instálalo con: sudo apt install python${PY_VER}-venv"
+            FALTAN=$((FALTAN + 1))
+        elif ! python3 -c "import ensurepip" >/dev/null 2>&1; then
+            error "El módulo ensurepip no está disponible — necesario para crear entornos virtuales."
+            info "En Ubuntu/Debian ejecuta:"
+            info "  sudo apt install python${PY_VER}-venv"
             FALTAN=$((FALTAN + 1))
         fi
     else
@@ -266,12 +276,27 @@ if [ -f "$CERT" ] && [ -f "$KEY" ]; then
 else
     info "Generando certificado autofirmado para $DOMAIN..."
     mkdir -p "$SSL_DIR"
+    # Se usa un fichero de config temporal para compatibilidad con LibreSSL (macOS)
+    # y versiones antiguas de OpenSSL que no admiten -addext.
+    _SSL_CONF=$(mktemp)
+    cat > "$_SSL_CONF" <<SSLCONF
+[req]
+distinguished_name = req_dn
+x509_extensions    = v3_req
+prompt             = no
+[req_dn]
+CN = ${DOMAIN}
+O  = DAW
+C  = ES
+[v3_req]
+subjectAltName = DNS:${DOMAIN},DNS:localhost
+SSLCONF
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -keyout "$KEY" \
         -out "$CERT" \
-        -subj "/CN=${DOMAIN}/O=DAW/C=ES" \
-        -addext "subjectAltName=DNS:${DOMAIN},DNS:localhost" \
+        -config "$_SSL_CONF" \
         2>/dev/null
+    rm -f "$_SSL_CONF"
     ok "Certificado generado (válido 1 año)"
     aviso "El navegador mostrará un aviso de 'No seguro' — es normal con certificados autofirmados."
     aviso "Acepta la excepción en el navegador para acceder."
@@ -299,7 +324,7 @@ else
         if grep -qi microsoft /proc/version 2>/dev/null; then
             aviso "WSL2: el navegador Windows usa su propio fichero de hosts."
             aviso "      Añade también esta línea (como administrador) en Windows:"
-            aviso "      C:\\Windows\\System32\\drivers\\etc\\hosts"
+            aviso "      C:\\Windows\\System32\\drivers\\\\etc\\hosts"
             aviso "          127.0.0.1  ${DOMAIN}"
         fi
     else
