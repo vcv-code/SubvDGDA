@@ -59,15 +59,18 @@ Antes de instalar la aplicación, asegúrate de tener instaladas las siguientes 
 | Herramienta | Versión mínima | Para qué se usa |
 |-------------|---------------|-----------------|
 | **Docker** con `docker compose` v2 | Docker 24+ | Orquestación de todos los servicios |
-| **Python** | 3.10+ | Entorno virtual para scripts de datos y tests* |
+| **Python** | 3.10+ | Carga inicial del dataset y entorno virtual para tests/scripts |
+| **python3-venv** | igual que Python | Crear el entorno virtual. En Ubuntu/Debian es un paquete aparte (p. ej. `sudo apt install python3.12-venv`) |
 | **openssl** | Cualquier versión reciente | Generación del certificado SSL |
 
-*No es imprescindible para el funcionamiento de la aplicación.
+Python y `python3-venv` son necesarios en la primera instalación, porque el script crea un entorno virtual con PyMySQL para cargar el dataset en MariaDB. Una vez instalada, la aplicación web funciona en Docker sin necesidad de Python en el host.
 
 > **Ubuntu/Debian:** el módulo `venv` de Python viene en un paquete separado. Si usas Python 3.12, instala también:
+>
 > ```bash
 > sudo apt install python3.12-venv
 > ```
+>
 > Si usas otra versión, sustituye `3.12` por tu versión (`python3 --version`). El script de instalación detecta si falta este paquete y te lo indica antes de continuar.
 
 **Plataformas compatibles:** Linux, macOS, Windows con WSL2 y Docker Desktop.
@@ -78,6 +81,7 @@ Antes de instalar la aplicación, asegúrate de tener instaladas las siguientes 
 docker --version          # Docker version 24.x.x o superior
 docker compose version    # Docker Compose version v2.x.x
 python3 --version         # Python 3.10 o superior
+python3 -m venv --help    # Comprueba que el módulo venv está disponible
 openssl version           # OpenSSL 1.x o superior
 ```
 
@@ -108,7 +112,7 @@ El script guía el proceso paso a paso con explicaciones en lenguaje llano. Hace
 
 **Pregunta 1 — Confirmación inicial**
 
-```
+```text
 ¿Continuar? [s/N]:
 ```
 
@@ -116,21 +120,21 @@ Escribe `s` para continuar. Si pulsas Enter sin escribir nada, el script se canc
 
 **Pregunta 2 — Dominio local (opcional pero recomendado)**
 
-```
+```text
 ¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]:
 ```
 
 - Si escribes `s`: la app estará disponible en `https://subvencionesDGDA.local` con HTTPS completo. Esta opción requiere contraseña de administrador (`sudo`).
 - Si pulsas Enter: la app estará disponible en `http://localhost` sin HTTPS. Algunas funcionalidades relacionadas con las cookies seguras pueden no funcionar correctamente en esta modalidad.
 
-**Pregunta 3 — Entorno virtual Python (opcional)**
+**Pregunta 3 — Entorno virtual Python**
 
-```
+```text
 ¿Crear entorno virtual Python (venv)? (solo para tests y scripts) [s/N]:
 ```
 
-- Si escribes `s`: se crea el entorno virtual (~50 MB) necesario para ejecutar los tests automáticos y los scripts de procesamiento de datos.
-- Si pulsas Enter: no se crea. **La aplicación web funciona igualmente sin el venv.** Solo es necesario si quieres ejecutar `make test` o los parsers de datos manualmente.
+- Si escribes `s`: se crea el entorno virtual (~50 MB) con todas las dependencias del proyecto, necesario para ejecutar los tests automáticos y los scripts de procesamiento de datos.
+- Si pulsas Enter: el script no preinstala el entorno completo. **Aun así, en una primera instalación el venv se creará automáticamente más adelante**, porque la carga del dataset en MariaDB necesita PyMySQL. La diferencia es que en ese caso solo se instalan las dependencias estrictamente necesarias para la carga y no quedará listo para ejecutar `make test`.
 
 ### Paso 3 — Esperar a que termine
 
@@ -347,18 +351,23 @@ cd ~/analisis-bdns-dgda-main
 ```
 
 > **Problema habitual — carpeta doble:** cuando descargas el ZIP desde GitHub y lo descomprimes en Windows, suele quedar una carpeta dentro de otra con el mismo nombre:
-> ```
+>
+> ```text
 > analisis-bdns-dgda-main/
 > └── analisis-bdns-dgda-main/   ← aquí están los archivos reales
 >     ├── install.sh
 >     ├── docker/
 >     └── ...
 > ```
+>
 > Si copias la carpeta exterior, después de `cd ~/analisis-bdns-dgda-main` el `ls` no muestra `install.sh` sino otra carpeta con el mismo nombre. La solución es entrar un nivel más:
+>
 > ```bash
 > cd ~/analisis-bdns-dgda-main/analisis-bdns-dgda-main
 > ```
+>
 > O mejor, copiar directamente la carpeta interior:
+>
 > ```bash
 > cp -r "/mnt/c/Users/TU_USUARIO/Desktop/analisis-bdns-dgda-main/analisis-bdns-dgda-main" ~/
 > ```
@@ -387,7 +396,7 @@ VS Code se abre en modo remoto WSL. Comprueba que en la esquina inferior izquier
 
 Si descargaste el ZIP desde Windows o clonaste en una máquina Windows, los archivos `.sh` pueden tener finales de línea CRLF en lugar de LF. En ese caso `bash install.sh` falla con un error críptico:
 
-```
+```text
 bash: ./install.sh: /usr/bin/env: bad interpreter: No such file or directory
 ```
 
@@ -418,13 +427,13 @@ passwd
 
 Si añades `subvencionesDGDA.local` al `/etc/hosts` de WSL2, el navegador de Windows usará su propio archivo `hosts` y no el de WSL, así que también tendrás que añadirlo en Windows. Abre **Notepad como administrador** y edita:
 
-```
+```text
 C:\Windows\System32\drivers\etc\hosts
 ```
 
 Añade al final:
 
-```
+```text
 127.0.0.1 subvencionesDGDA.local
 ```
 
