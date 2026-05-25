@@ -668,10 +668,10 @@ cd analisis-bdns-dgda
 bash install.sh
 ```
 
-**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
+**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · `python3-venv` (paquete aparte en Ubuntu/Debian: `sudo apt install python3.X-venv`) · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows requiere Docker Desktop con integración WSL2)
-**Descarga primera vez:** ~300-400 MB de imágenes Docker
-**Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv (solo necesario para tests y scripts de parseo)
+**Descarga primera vez:** ~1,3 GB de imágenes Docker
+**Espacio en disco:** ~1,5 GB total — desglose: backend ~360 MB · cron ~195 MB · MariaDB ~460 MB · Adminer ~170 MB · Nginx alpine ~90 MB · Mailpit ~50 MB · dataset + datos en BD ~50 MB · venv Python ~50 MB (opcional, solo para tests y scripts)
 
 El script detecta instalaciones existentes y no sobreescribe datos. Si la BD ya tiene solicitudes, solo levanta los contenedores. Para reinstalar desde cero: `make reset-db`.
 
