@@ -8,7 +8,9 @@
 
 ## Comandos rápidos (TL;DR)
 
-Si ya tienes los prerrequisitos preparados (WSL2 + Docker Desktop + VS Code + Python con `venv`) y el proyecto en `~/analisis-bdns-dgda-main/`:
+> Esta sección asume **Windows con WSL2** (entorno habitual del proyecto). Si usas Linux o macOS, omite `wsl` y `code .` — el resto de comandos funcionan igual. Los prerrequisitos universales (Docker, Python, openssl) están en la sección [Requisitos previos](#requisitos-previos).
+
+Si ya tienes los prerrequisitos preparados (en Windows: WSL2 + Docker Desktop + VS Code; en Linux/macOS: Docker + Python con `venv`) y el proyecto en `~/analisis-bdns-dgda-main/`:
 
 ### Instalar
 
@@ -87,9 +89,18 @@ openssl version           # OpenSSL 1.x o superior
 
 ### Espacio en disco necesario
 
-- ~400 MB para las imágenes Docker (primera descarga)
-- ~50 MB para el entorno virtual Python (opcional, solo para tests y scripts)
-- ~10 MB para el dataset de subvenciones
+**Total estimado: ~1,5 GB** (de los cuales las imágenes Docker ocupan ~1,3 GB).
+
+Desglose:
+
+- Backend (Docker): ~360 MB
+- Cron (Docker): ~195 MB
+- MariaDB (imagen oficial): ~460 MB
+- Adminer: ~170 MB
+- Nginx alpine: ~90 MB
+- Mailpit: ~50 MB
+- Dataset + datos cargados en BD: ~50 MB
+- Entorno virtual Python (`venv/`): ~50 MB (opcional, solo si se ejecutan tests/scripts)
 
 ---
 

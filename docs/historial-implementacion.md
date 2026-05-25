@@ -401,3 +401,24 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · Reutilizada la clase `.convocatorias-nota` ya existente (mismo tamaño y color discreto que el asterisco del período subvencionable)
   · Nueva regla CSS `.convocatorias-nota a` con color azul institucional (`--color-azul`) coherente con el enlace "Volver al inicio" de las páginas legales, subrayado por convención web (se quita en hover)
   · Atributos `target="_blank" rel="noopener noreferrer"` y `aria-label` descriptivo en cada enlace (incluye el formato del documento y el origen — BOE o DGDA)
+✔ Mecanismos de contingencia ante fallos externos
+  · Calendario del cron extendido a noviembre–enero (publicación de resoluciones): cada 2 días en noviembre y diciembre, cada 4 días en enero — antes solo cubría marzo–junio
+  · Helper `_get_bdns_con_retry` en `check_bdns.py` con backoff exponencial 2 s → 4 s → 8 s; tras 3 fallos consecutivos registra el error y reintenta en la siguiente ejecución programada
+  · Healthchecks Docker (curl) en `db`, `backend`, `nginx` y `mailpit` con `restart: unless-stopped`; backend espera `service_healthy` de MariaDB antes de arrancar
+  · Fallback local de CDN: `frontend/assets/vendor/` con `chart.umd.min.js`, `leaflet.js` y `leaflet.css` verificados por hash SHA-384 contra el `integrity` del CDN; atributo `onerror` carga la copia local si `cdn.jsdelivr.net` o `unpkg.com` no responden
+  · Tests añadidos: `test_scheduler.py` (119 casos parametrizados sobre calendario y ventana horaria) y `test_check_bdns.py` (helper de retry)
+✔ Robustez del script de instalación
+  · Timeout de espera de MariaDB ampliado de 60 s a 180 s + opción interactiva de extender 60 s más antes de abortar (WSL2 lento puede tardar 2-3 min en crear el datadir)
+  · Convocatorias 2026 (EPA y EELL) insertadas también en reinstalaciones, no solo en la primera instalación — necesarias para los avisos de la home
+  · Detección explícita de `python3-venv` y `ensurepip` en la Fase 2 con mensaje claro indicando el paquete a instalar (`sudo apt install python3.X-venv`)
+  · Si la usuaria responde "N" a crear el venv pero la BD está vacía, el script crea igualmente un venv mínimo en la fase de carga porque `cargar_dataset.py` necesita PyMySQL
+✔ LICENSE dual y footer
+  · `LICENSE` en raíz con doble régimen: código "All Rights Reserved" + contenido (memoria, documentación, capturas) bajo Creative Commons BY-NC-ND 4.0
+  · Footer de los 19 HTMLs actualizado con la mención dual y enlace a `LICENSE`
+✔ Makefile — backup y restore de BD
+  · `make backup`: genera `backup_YYYYMMDD_HHMMSS.sql` con `mariadb-dump` desde el contenedor
+  · `make restore FILE=<archivo>`: restaura un dump previo, útil entre reinstalaciones
+✔ Manuales reescritos y consolidados
+  · `manuales/manual-usuario.md` y `manuales/manual-instalacion.md` reorganizados con TL;DR, requisitos previos coherentes con el script (incluye `python3-venv` y aviso Windows/Linux/macOS), verificación post-instalación con queries SQL, comandos make, modo desarrollo, instalación detallada en WSL2 (dos2unix, carpeta doble) y resolución de problemas
+  · Bloques markdown con lenguaje (`text`, `bash`) en todos los fences; blockquotes corregidos
+  · Tabla de espacio en disco actualizada con el desglose real por imagen Docker (~1,5 GB total)
