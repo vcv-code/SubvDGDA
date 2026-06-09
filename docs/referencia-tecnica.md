@@ -9,8 +9,8 @@ Datos concretos del sistema para consulta rápida.
 | Contenedor | Imagen | Función |
 |---|---|---|
 | `bdns_nginx` | nginx:alpine | Proxy inverso: sirve el frontend estático y redirige las rutas `/api` al backend. Gestiona HTTPS y rate limiting. |
-| `bdns_api` | python:3.11-slim (build local) | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
-| `bdns_dgda_db` | mariadb:11 | Base de datos principal. |
+| `bdns_api` | python:3.12-slim (build local) | Backend FastAPI (uvicorn, puerto 8000 interno). Expone la API REST. |
+| `bdns_dgda_db` | mariadb:11.8 | Base de datos principal. |
 | `bdns_cron` | python:3.12-slim (build local) | Scheduler Python: comprueba periódicamente la API BDNS para detectar nuevas convocatorias. |
 | `bdns_mailpit` | axllent/mailpit | Servidor SMTP de desarrollo. Captura los emails enviados sin llegar a destino real. |
 | `bdns_adminer` | adminer | Interfaz web para administrar la BD directamente. Solo para desarrollo. |
@@ -27,6 +27,25 @@ Datos concretos del sistema para consulta rápida.
 | 8080 | Adminer | Interfaz web de administración de BD |
 
 El backend (`bdns_api`, puerto 8000) **no expone ningún puerto al host** — solo es accesible desde dentro de la red Docker interna. Nginx actúa como única puerta de entrada.
+
+---
+
+## Versiones de las tecnologías y por qué
+
+| Tecnología | Versión | Tipo de pin | Por qué esa elección |
+|---|---|---|---|
+| **Python** (backend y cron) | `3.12-slim` | Versión menor | Moderna y con soporte (oct 2023). `slim` reduce la imagen de ~900 MB a ~75 MB. Unificada entre backend y cron (antes el backend iba en 3.11) para coherencia y para que las librerías compartidas (`PyMySQL`, `bcrypt`) se comporten igual. Pin a menor recibe parches sin saltar a 3.13. |
+| **MariaDB** | `mariadb:11.8` | Versión menor | Serie actual de MariaDB. Pin a `11.8` da reproducibilidad (antes era `mariadb:11` flotante, que cambiaba en cada `build`). **No se eligió 11.4 LTS** porque MariaDB no permite arrancar una versión menor sobre datos creados por una mayor — pasar de 11.8 a 11.4 exigiría borrar el volumen y recargar el dataset. |
+| **Nginx** | `nginx:alpine` | Sin pin | La imagen `alpine` ya es mínima (~25 MB). Funcionalidad de proxy estable, sin riesgo en versión rolling. |
+| **Mailpit** | `axllent/mailpit` | Sin pin | Solo desarrollo, no crítico. |
+| **Adminer** | `adminer` | Sin pin | Solo desarrollo, no crítico. |
+
+### Principios de selección
+
+1. **Tamaño primero** en imágenes core (backend, cron, nginx): todas son `slim` o `alpine`. Python `slim` ahorra ~825 MB respecto a la completa.
+2. **Pin a versión menor** para Python y MariaDB: protege de saltos accidentales a la siguiente menor pero sigue recibiendo parches de seguridad de la actual.
+3. **Coherencia entre servicios de aplicación**: backend y cron usan la misma menor de Python para que las librerías comunes funcionen igual en ambos entornos.
+4. **Reciente y soportado**, no necesariamente LTS: para un proyecto académico, una serie actual y con soporte vigente basta. En producción, MariaDB 11.4 LTS (soportada hasta 2029) sería el siguiente paso natural, pero implica empezar el volumen desde cero.
 
 ---
 
@@ -150,6 +169,17 @@ El volumen nombrado `db_data` garantiza que los datos de MariaDB sobreviven a `d
 
 Todos los servicios tienen `restart: unless-stopped`. El contenedor se reinicia automáticamente si falla o si Docker Desktop arranca con el sistema, **excepto** si se paró explícitamente con `docker compose down`. Útil en un entorno de desarrollo que se usa a diario.
 
+### Recrear contenedores cuando algo va mal
+
+Dos patrones cubren la mayoría de incidencias en Docker Desktop + WSL2:
+
+| Síntoma | Comando | Por qué |
+|---|---|---|
+| Tras reiniciar Windows / WSL2 / Docker Desktop, algún contenedor falla por errores de volúmenes o bind mounts | `cd docker && docker compose down && docker compose up -d` | Los bind mounts de WSL2 usan rutas con hash que cambian al reiniciar. Los contenedores viejos referencian el hash antiguo. `down && up` los recrea con bind mounts frescos. Nunca `docker compose restart <servicio>` suelto en este escenario. |
+| Un contenedor está atascado pese a haberlo reiniciado: no responde, no recoge una imagen recién reconstruida, conexión persistente envenenada | `cd docker && docker compose up --force-recreate -d` | `up -d` solo recrea si detecta cambios en la configuración; si el problema es de estado interno (proceso colgado, capas obsoletas) no lo nota. `--force-recreate` ignora la comparación y mata + crea de nuevo cada contenedor. Reservar para casos puntuales — no usar como rutina. |
+
+Si ambos comandos fallan, el siguiente nivel es `docker compose down -v` (borra el volumen `db_data`, **pierdes los datos** de la BD) + `bash install.sh` para empezar desde cero.
+
 ### Variables de entorno y .env
 
 Ningún secreto está hardcodeado en `docker-compose.yml`. Todos los valores sensibles se leen de `docker/.env`:
@@ -168,7 +198,7 @@ ${MYSQL_DATABASE}        ${SECRET_KEY}   ${CORS_ORIGINS}
 ### Backend (`backend/Dockerfile`)
 
 ```dockerfile
-FROM python:3.11-slim          # imagen mínima: ~75 MB vs ~900 MB de la completa
+FROM python:3.12-slim          # imagen mínima: ~75 MB vs ~900 MB de la completa
 
 WORKDIR /app
 
@@ -200,7 +230,7 @@ COPY scheduler.py /app/scheduler.py
 CMD ["python3", "/app/scheduler.py"]
 ```
 
-El cron usa `python:3.12-slim` (versión independiente del backend) y solo instala lo que necesita. Sin imagen base compartida: si una imagen falla, la otra sigue funcionando.
+El cron usa `python:3.12-slim` — la misma versión menor que el backend (ver sección [Versiones de las tecnologías](#versiones-de-las-tecnologías-y-por-qué)). Cada Dockerfile construye su propia imagen: si una falla, la otra sigue funcionando.
 
 ---
 

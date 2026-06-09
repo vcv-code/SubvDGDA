@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:11
+    image: mariadb:11.8
     container_name: bdns_dgda_db
     restart: unless-stopped
     environment:
