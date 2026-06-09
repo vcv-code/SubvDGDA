@@ -260,7 +260,7 @@ MariaDB — 6 pasos: convocatorias → beneficiarios → solicitudes
 Fuentes por tipo:
 
 - **EPA** (protectoras) — XML BOE · 2021–2025 · parser base + parser 2025 separado por cambio de cabeceras
-- **EELL** (ayuntamientos) — PDF 2023–2024 + XML y Excel 2025 (tablas publicadas como imagen en el BOE)
+- **EELL** (ayuntamientos) — PDF 2023–2024 + XML y Excel 2025 (las tablas de beneficiarias se publicaron como imágenes en el BOE; se transcribieron manualmente a `eell_2025_beneficiarias.xlsx`)
 
 Los principales problemas técnicos resueltos (parsers inconsistentes entre años, duplicados cross-year, derivación de provincia/CCAA desde CIF, periodo semestral EPA 2023–2024) están documentados en detalle en [docs/pipeline-datos.md](docs/pipeline-datos.md).
 
@@ -273,6 +273,8 @@ Los scripts transforman los datos crudos (XMLs, PDFs, Excel del BOE) en el datas
 ### BDNS
 
 `scripts/ingestion/bdns_client.py` — consulta la API pública de BDNS para obtener convocatorias y comprobar si se ha publicado la fecha de resolución de convocatorias pendientes.
+
+`scripts/data_processing/bdns_lookup.py` — lee los snapshots descargados por `bdns_client.py` y proporciona `num_convoc`, `fecha_convocatoria` y `titulo_convoc` oficiales al paso de carga de convocatorias (`cargar_dataset.py`). Si BDNS no tiene una convocatoria concreta, los diccionarios `_FECHAS` y `_TITULO` de `cargar_dataset.py` actúan como fallback.
 
 ### Extracción de datos
 

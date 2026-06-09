@@ -70,7 +70,24 @@ Carga en base de datos (cargar_dataset.py)
              → concesiones → agrupaciones → agrupacion_miembros
   · Los municipios miembro sin registro propio en el dataset
     se insertan en beneficiarios en el paso 2
+  · Paso 1 (convocatorias): consulta los snapshots BDNS de
+    data/raw/convBDNS/ vía scripts/data_processing/bdns_lookup.py
+    para obtener num_convoc, fecha_convocatoria y titulo_convoc
+    oficiales. Los diccionarios _FECHAS y _TITULO de cargar_dataset.py
+    quedan como fallback para casos sin BDNS (típicamente años
+    futuros antes de que la DGDA publique en BDNS).
 ```
+
+### Integración con BDNS en la carga (`bdns_lookup.py`)
+
+El módulo `scripts/data_processing/bdns_lookup.py` actúa de **puente** entre los snapshots BDNS (descargados por `scripts/ingestion/bdns_client.py`, ver §API BDNS) y el paso 1 de `cargar_dataset.py`. Lee el snapshot más reciente de cada patrón (`*_convocatorias_proteccion_animal.json` y `*_convocatorias_colonias_felinas.json`), detecta el tipo (`epa` / `eell`) por palabras clave del título y devuelve un índice `{(anio, tipo): {num_convoc, fecha_convocatoria, titulo, bdns_id}}`.
+
+`cargar_convocatorias()` consulta primero el índice BDNS:
+
+- Si encuentra la `(anio, tipo)` → usa los datos oficiales y deja `_FECHAS` solo para validación cruzada (avisa si difieren).
+- Si no la encuentra → usa los diccionarios hardcodeados como fallback y deja `num_convoc` a `NULL`.
+
+Esto sustituye el flujo anterior, en el que las fechas y títulos se mantenían a mano en `_FECHAS` / `_TITULO` y `num_convoc` quedaba siempre vacío para las históricas — perdiéndose la trazabilidad a la ficha BDNS oficial.
 
 ---
 
@@ -87,7 +104,7 @@ Scripts:
 - `parser_eell_PDF_base.py` → EELL 2023 y 2024
 - `parser_eell_BOE_2025.py` → EELL 2025
 
-> La resolución EELL 2025 publica las tablas de entidades beneficiarias como imágenes incrustadas en el BOE, lo que impide extraerlas directamente del XML. Los datos se obtuvieron de un Excel complementario (`eell_2025_beneficiarias.xlsx`) leído con `openpyxl`.
+> La resolución EELL 2025 publica las tablas de entidades beneficiarias como imágenes incrustadas en el BOE, lo que impide extraerlas directamente del XML. Las tablas se **transcribieron manualmente** desde las imágenes a un Excel complementario (`eell_2025_beneficiarias.xlsx`) que el parser lee después con `openpyxl`. Este fichero es por tanto una entrada manual del pipeline, no un artefacto generado.
 
 ---
 
