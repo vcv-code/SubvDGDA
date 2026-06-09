@@ -220,7 +220,7 @@ async function cargarMapaCCAA() {
 // ─── MODAL TOP 10 MUNICIPIOS ──────────────────────────────────────────────────
 
 function fmtEur(v) {
-    return Math.round(Number(v)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
+    return Math.round(Number(v)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
 }
 
 async function abrirModalCCAA(nombre) {

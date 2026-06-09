@@ -74,7 +74,7 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
 
     function fmtEuro(valor) {
         const num = Math.round(Number(valor));
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
     }
 
     function fmtK(num) {

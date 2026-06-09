@@ -125,6 +125,37 @@ Scripts:
 
 ---
 
+### Formatos del `num_expediente` por año y tipo
+
+El identificador oficial del BOE para cada solicitud cambia entre años y entre tipos. Conservamos los valores exactos publicados en el BOE — no los unificamos — porque son la única forma de cruzar nuestro dataset con el documento original. Estado de los formatos verificado en el dataset:
+
+**EPA (asociaciones)** — formato cambia cada par de años:
+
+| Año | Formato dominante | Ejemplo | N | Notas |
+|---|---|---|---:|---|
+| 2021 | `SUBV` + 3 díg + año (4 díg) | `SUBV0012021` | 328 | Año al final |
+| 2022 | `SUBV` + año (4 díg) + 3 díg | `SUBV2022001` | 653 | Año al inicio — inversión |
+| 2023 | año + `B` + 3 díg | `2023B002` | 649 | Formato nuevo, ruptura |
+| 2023 | `SUBV2022659` (cross-year) | — | 1 | Resolución desplazada (entidad de 2022) |
+| 2023 | `2023PF01` | — | 1 | Caso único |
+| 2024 | año + `B` + 3 díg | `2024B651` | 881 | Mismo que 2023 |
+| 2025 | año + `B` + 3 díg | `2025B001` | 730 | Mismo |
+| 2025 | `SIN_EXP_2025_NNN` | `SIN_EXP_2025_001` | 110 | IDs **sintéticos** generados por `cargar_epas()` para excluidas que el BOE no numera |
+
+**EELL (entidades locales)** — más consistente, pero 23 casos sin año en 2025:
+
+| Año | Formato dominante | Ejemplo | N | Notas |
+|---|---|---|---:|---|
+| 2023 | `EXP` + año + `/` + 6 díg | `EXP2023/007446` | 592 | Estándar |
+| 2023 | `EXP2023/...SI` | `EXP2023/009021SI` | 1 | Sufijo único |
+| 2024 | `EXP` + año + `/` + 6 díg | `EXP2024/003873` | 1137 | Estándar |
+| 2025 | `EXP` + año + `/` + 6 díg | `EXP2025/008399` | 1292 | Estándar |
+| 2025 | `EXP/` + 5–6 díg **sin año** | `EXP/98789`, `EXP/100024` | 23 | Solo en `no_beneficiaria` (19) y `excluida` (4) — convención BOE |
+
+Implicación para la búsqueda: `GET /solicitudes/?buscar=...` admite tokens de **≥ 4 caracteres** sobre `num_expediente` además del nombre. Permite buscar por número exacto (`100024`, `EXP/100024`, `2024B651`) o por nombre, todo desde el mismo campo. Tokens más cortos solo se buscan en nombre para evitar explosión de resultados.
+
+---
+
 ## Herramientas de extracción
 
 Se utiliza:
@@ -236,6 +267,20 @@ Casos especiales gestionados:
 Para las EPAs (asociaciones con CIF tipo G), la provincia no es derivable del CIF de forma estándar. Se deja como mejora futura (`null`).
 
 11 registros EELL permanecen sin provincia (0,4% del total EELL): 7 asociaciones desistidas/excluidas + 1 empresa + 1 asociación excluida + 2 más con CIF no resoluble.
+
+#### Punto final tipográfico en nombres de entidad
+
+El BOE termina con `.` el 80 % de los nombres de entidad (2 478 de 3 103 únicos en el dataset de junio 2026) como convención tipográfica de tabla. Eso provoca apariciones inconsistentes ("ASOCIACIÓN X." en una resolución, "ASOCIACIÓN X" en otra) y ruido visual en la UI.
+
+Verificación SQL: cero nombres con punto solo en posición intermedia (`LIKE '%.%' AND NOT LIKE '%.'`). El punto es siempre final.
+
+Solución: `limpiar_entidad()` en `unificar_datasets.py` aplica `.rstrip('.').strip()`. La normalización es segura — no hay siglas legales como "S.L." que dependan del punto final, y la deduplicación de beneficiarios se hace por CIF, no por nombre.
+
+#### Escapes Unicode rotos en nombres de entidad
+
+Algunos parsers (PDF/XML) generan secuencias del tipo `uXXXX` sin la barra invertida — el carácter Unicode original quedó codificado como su escape Python (`Ç` para `Ç`) y en algún paso se perdió la barra. Ejemplos detectados: `PUu00C7OL`, `CADAQUu00C9S`, `MAu00C7ANET`, `ANIu00D1ON`, `VALLu00C8S`, `ASSOCIACIu00D3`. Total: 6 beneficiarios (todos catalanes/aragoneses/valencianos con `Ç`, `É`, `È`, `Ñ`, `Ó`).
+
+Solución: `_arreglar_escapes_unicode()` en `unificar_datasets.py` convierte `uXXXX` → carácter Unicode **solo dentro del rango Latin-1 Suplemento (U+00A0–U+00FF)**, que cubre los acentos y caracteres latinos comunes en castellano, catalán, gallego, etc. Esa restricción evita falsos positivos: nombres legítimos como `AYUNTAMIENTO DE UBEDA` (donde `UBEDA` es una secuencia "U" + 4 hex puramente casual) no se tocan porque `U+BEDA` cae fuera del rango protegido.
 
 ---
 

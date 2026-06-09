@@ -793,6 +793,32 @@ table tbody tr:hover {
     font-size: 1rem;
 }
 
+/* Empty state del buscador — extiende .estado-carga con icono SVG, texto en
+   dos líneas (título + sugerencia) y botón "Limpiar filtros" como CTA */
+.estado-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--espacio-sm);
+}
+
+.estado-vacio__icono {
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+}
+
+.estado-vacio__titulo {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.estado-vacio__sub {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
 .estado-error {
     text-align: center;
     padding: var(--espacio-lg);

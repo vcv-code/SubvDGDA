@@ -2,6 +2,7 @@ import csv
 import io
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
+from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 from typing import Optional
 from ..db import get_db
@@ -18,7 +19,13 @@ _STOPWORDS = {
 }
 
 def _palabras_clave(texto: str) -> list[str]:
-    return [p for p in texto.lower().split() if p not in _STOPWORDS and len(p) > 2]
+    # Se conservan tokens > 2 chars y dígitos (p.ej. "4" en "4 GATOS Y TU").
+    # Las stopwords siguen filtrándose; los tokens cortos no numéricos (tu, ti, lo)
+    # se descartan para evitar coincidencias triviales.
+    return [
+        p for p in texto.lower().split()
+        if p not in _STOPWORDS and (len(p) > 2 or p.isdigit())
+    ]
 
 
 @router.get("/", response_model=SolicitudesPageOut)
@@ -67,8 +74,22 @@ def listar_solicitudes(
     if cif:
         consulta = consulta.filter(Beneficiario.cif == cif)
     if buscar:
+        # Cada token debe aparecer en el nombre O (si tiene >=4 chars) en el
+        # num_expediente. El umbral evita que tokens cortos como "4" o "20"
+        # exploten los resultados al hacer match con casi cualquier expediente
+        # ("2024B...", "EXP/100040"...). Tokens largos como "100024", "B651"
+        # o "EXP/100024" sí buscan tambien en num_expediente.
         for palabra in _palabras_clave(buscar):
-            consulta = consulta.filter(Beneficiario.nombre.ilike(f"%{palabra}%"))
+            patron = f"%{palabra}%"
+            if len(palabra) >= 4:
+                consulta = consulta.filter(
+                    or_(
+                        Beneficiario.nombre.ilike(patron),
+                        Solicitud.num_expediente.ilike(patron),
+                    )
+                )
+            else:
+                consulta = consulta.filter(Beneficiario.nombre.ilike(patron))
 
     total = consulta.count()
     offset = (pagina - 1) * limite
@@ -150,8 +171,22 @@ def exportar_csv(
     if cif:
         consulta = consulta.filter(Beneficiario.cif == cif)
     if buscar:
+        # Cada token debe aparecer en el nombre O (si tiene >=4 chars) en el
+        # num_expediente. El umbral evita que tokens cortos como "4" o "20"
+        # exploten los resultados al hacer match con casi cualquier expediente
+        # ("2024B...", "EXP/100040"...). Tokens largos como "100024", "B651"
+        # o "EXP/100024" sí buscan tambien en num_expediente.
         for palabra in _palabras_clave(buscar):
-            consulta = consulta.filter(Beneficiario.nombre.ilike(f"%{palabra}%"))
+            patron = f"%{palabra}%"
+            if len(palabra) >= 4:
+                consulta = consulta.filter(
+                    or_(
+                        Beneficiario.nombre.ilike(patron),
+                        Solicitud.num_expediente.ilike(patron),
+                    )
+                )
+            else:
+                consulta = consulta.filter(Beneficiario.nombre.ilike(patron))
 
     total_export = consulta.count()
     if total_export > 5000:

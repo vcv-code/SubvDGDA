@@ -44,7 +44,24 @@ Notas sobre EELL 2023/2024 (PDF):
 
 import json
 import os
+import re
 from collections import Counter
+
+
+# Algunos parsers (PDF y XML) generan secuencias "uXXXX" sin barra invertida
+# para caracteres acentuados (p.ej. "PUu00C7OL" → "PUÇOL", "u00D3" → "Ó").
+# Solo aplicamos el arreglo en el rango Latin-1 Suplemento (U+00A0–U+00FF)
+# para evitar tocar texto legitimo que contenga la letra "u" seguida de hex.
+_UNICODE_ESCAPE_RX = re.compile(r'u([0-9A-Fa-f]{4})')
+
+
+def _arreglar_escapes_unicode(texto):
+    def repl(m):
+        code = int(m.group(1), 16)
+        if 0x00A0 <= code <= 0x00FF:
+            return chr(code)
+        return m.group(0)
+    return _UNICODE_ESCAPE_RX.sub(repl, texto)
 
 
 # =========================
@@ -188,10 +205,13 @@ def limpiar_puntuacion(valor):
 def limpiar_entidad(valor):
     if valor is None:
         return None
-    v = str(valor).strip()
+    # rstrip('.') quita el punto final tipográfico que el BOE añade a casi todos los
+    # nombres en sus tablas. No hay nombres con puntos solo en medio (verificado en
+    # el dataset de junio 2026: 2478/3103 con punto final, 0 con punto solo intermedio).
+    v = str(valor).strip().rstrip('.').strip()
     if v == "" or v.lower() == "none":
         return None
-    return v
+    return _arreglar_escapes_unicode(v)
 
 
 # =========================

@@ -508,7 +508,7 @@ function configurarDescarga(instanciaChart, btnId, nombreArchivo) {
 
 function formatearEuros(valor) {
     const num = Math.round(Number(valor));
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
 }
 
 function formatearEjeY(n) {
