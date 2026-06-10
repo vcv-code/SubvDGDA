@@ -26,6 +26,8 @@ import sys
 import pymysql
 import pymysql.cursors
 
+from scripts.data_processing import bdns_lookup
+
 
 # ──────────────────────────────────────────────
 # Conexión
@@ -92,11 +94,26 @@ _FECHAS = {
 # ──────────────────────────────────────────────
 
 def cargar_convocatorias(cursor, registros):
-    """Inserta una convocatoria por (anio, tipo). Devuelve dict {(anio,tipo): id_convoc}."""
+    """Inserta una convocatoria por (anio, tipo). Devuelve dict {(anio,tipo): id_convoc}.
+
+    Para `num_convoc`, `titulo_convoc` y `fecha_convocatoria` la fuente preferida
+    es el snapshot de BDNS (`bdns_lookup.cargar_indice_bdns()`). Si BDNS no tiene
+    el registro de esa convocatoria (caso tipico: anios futuros aun no publicados),
+    se usan los diccionarios hardcodeados `_TITULO` y `_FECHAS` como fallback.
+
+    `fecha_resolucion` no esta en los snapshots de BDNS, asi que siempre sale
+    de `_FECHAS` o queda NULL (el cron la rellenara cuando se publique).
+    """
     convocs = sorted(set((r["anio"], r["tipo"]) for r in registros))
+
+    # Cargar el indice de BDNS una sola vez.
+    indice_bdns = bdns_lookup.cargar_indice_bdns()
+    print(f"  Indice BDNS cargado: {len(indice_bdns)} convocatorias oficiales disponibles")
 
     # No hay UNIQUE KEY natural en convocatorias; usamos SELECT para evitar duplicados
     mapa = {}
+    fuentes = {"bdns": 0, "hardcoded": 0}
+    discrepancias = []
     for anio, tipo in convocs:
         cursor.execute(
             "SELECT id_convoc FROM convocatorias WHERE anio_convocatoria = %s AND tipo_convoc = %s",
@@ -107,18 +124,43 @@ def cargar_convocatorias(cursor, registros):
             mapa[(anio, tipo)] = fila["id_convoc"]
         else:
             periodo = _PERIODO.get((anio, tipo), 12)
-            titulo  = _TITULO.get((anio, tipo), f"Convocatoria {tipo.upper()} {anio}")
-            fecha_conv, fecha_resol = _FECHAS.get((anio, tipo), (None, None))
+            fecha_resol = _FECHAS.get((anio, tipo), (None, None))[1]
+
+            bdns = indice_bdns.get((anio, tipo))
+            if bdns:
+                fuentes["bdns"] += 1
+                titulo     = bdns["titulo"]
+                fecha_conv = bdns["fecha_convocatoria"]
+                num_convoc = bdns["num_convoc"]
+
+                # Validacion cruzada: avisar si la fecha hardcodeada difiere de BDNS.
+                # No falla la carga (la fuente oficial gana); solo lo registra para auditoria.
+                fecha_hc = _FECHAS.get((anio, tipo), (None, None))[0]
+                if fecha_hc and fecha_conv and str(fecha_conv) != fecha_hc:
+                    discrepancias.append(
+                        f"{tipo.upper()} {anio}: BDNS={fecha_conv} / hardcoded={fecha_hc}"
+                    )
+            else:
+                fuentes["hardcoded"] += 1
+                titulo     = _TITULO.get((anio, tipo), f"Convocatoria {tipo.upper()} {anio}")
+                fecha_conv = _FECHAS.get((anio, tipo), (None, None))[0]
+                num_convoc = None
+
             cursor.execute(
                 "INSERT INTO convocatorias "
-                "(titulo_convoc, tipo_convoc, anio_convocatoria, periodo_meses, "
+                "(num_convoc, titulo_convoc, tipo_convoc, anio_convocatoria, periodo_meses, "
                 " fecha_convocatoria, fecha_resolucion) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                (titulo, tipo, anio, periodo, fecha_conv, fecha_resol),
+                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (num_convoc, titulo, tipo, anio, periodo, fecha_conv, fecha_resol),
             )
             mapa[(anio, tipo)] = cursor.lastrowid
 
-    print(f"  Convocatorias: {len(mapa)} filas")
+    print(f"  Convocatorias: {len(mapa)} filas "
+          f"(BDNS: {fuentes['bdns']}, hardcoded: {fuentes['hardcoded']})")
+    if discrepancias:
+        print("  AVISO — fechas que difieren entre BDNS y hardcoded:")
+        for d in discrepancias:
+            print(f"    · {d}")
     return mapa
 
 

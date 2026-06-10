@@ -148,6 +148,8 @@ async function verificarAcceso() {
 
 **Navbar dinámico:** `navbar.js` detecta el token en `localStorage` y sustituye el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin hacer ninguna petición al servidor. Es solo lectura del `localStorage` — rápido y sin latencia.
 
+**Botón "volver arriba":** `scroll-arriba.js` es el otro componente compartido entre páginas (excepción a la regla "un JS por página"). Inyecta un botón flotante fijo que solo se muestra al superar 600px de scroll, así que en las páginas cortas nunca aparece aunque el script esté cargado. El listener de scroll es `passive` y agrupa el cálculo en un `requestAnimationFrame` para no penalizar el desplazamiento.
+
 ---
 
 ## Inserción segura de HTML con DOM API
@@ -253,6 +255,7 @@ Todos los `<script src="...">` del proyecto usan el atributo `defer`:
 ```html
 <!-- Scripts al final del body con defer -->
 <script src="js/navbar.js" defer></script>
+<script src="js/scroll-arriba.js" defer></script>
 <script src="https://cdn.jsdelivr.net/.../chart.js" defer></script>
 <script src="js/home.js" defer></script>
 ```

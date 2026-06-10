@@ -492,6 +492,7 @@ else
         python3 -m venv venv
         venv/bin/pip install --quiet --upgrade pip
         venv/bin/pip install --quiet -r requeriments.txt
+        venv/bin/pip install --quiet -r backend/requirements.txt
         ok "Entorno Python listo"
     fi
     info "Cargando dataset en la base de datos..."
@@ -511,18 +512,19 @@ if [ -d "venv" ]; then
 else
     echo
     echo "  El venv NO es necesario para usar la aplicación web — esta ya funciona."
-    echo "  Solo lo necesitas si vas a ejecutar los tests o los scripts de parseo de datos."
-    echo "  Ocupa ~50 MB."
+    echo "  Solo lo necesitas si vas a ejecutar los tests ('make test') o los scripts de parseo."
+    echo "  Ocupa ~175 MB (incluye pytest y dependencias del backend)."
     echo
 
     if confirmar "¿Crear entorno virtual Python (venv)? (solo para tests y scripts)"; then
         python3 -m venv venv
         venv/bin/pip install --quiet --upgrade pip
         venv/bin/pip install --quiet -r requeriments.txt
+        venv/bin/pip install --quiet -r backend/requirements.txt
         ok "venv creado con dependencias instaladas"
     else
         aviso "Venv omitido — la aplicación web funciona igualmente."
-        aviso "Para crearlo después: python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt"
+        aviso "Para crearlo después: python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt -r backend/requirements.txt"
     fi
 fi
 

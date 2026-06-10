@@ -468,7 +468,7 @@ El entorno virtual Python es necesario para ejecutar los tests:
 # Si no existe el venv, crearlo primero:
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requeriments.txt
+pip install -r requeriments.txt -r backend/requirements.txt
 
 # Ejecutar todos los tests:
 make test
@@ -497,7 +497,7 @@ El script pregunta antes de cada operación irreversible y explica en lenguaje s
 2. Imagen Docker del backend (libera ~75 MB, opcional)
 3. Entrada en `/etc/hosts` (requiere `sudo`, opcional)
 4. Archivos generados: `docker/.env`, certificado SSL
-5. Entorno virtual `venv/` (libera ~50 MB, opcional)
+5. Entorno virtual `venv/` (libera ~175 MB, opcional)
 
 Una vez completada la desinstalación, puedes eliminar la carpeta del proyecto si lo deseas:
 
@@ -520,6 +520,17 @@ El certificado es autofirmado y el navegador lo marca como no confiable. Busca l
 
 Comprueba que no hay otro servicio usando los puertos 80 o 443. Si reiniciaste Docker Desktop, ejecuta `make restart` para recrear los contenedores.
 
+**Un contenedor se comporta raro pese a `make restart`**
+
+Si tras un `make restart` (que hace `down && up -d`) un contenedor sigue dando problemas — no responde, no recoge una imagen recién pulleada, conexión persistente envenenada — fuerza la recreación:
+
+```bash
+cd docker
+docker compose up --force-recreate -d
+```
+
+A diferencia de `up -d`, `--force-recreate` ignora si la configuración del contenedor ha cambiado y mata + crea de nuevo cada uno. Reservalo para cuando algo está claramente "atascado" — no como rutina.
+
 **La página carga pero las gráficas no aparecen**
 
 Asegúrate de que el backend está en marcha (`docker compose ps`). Si el backend tardó en arrancar, recarga la página. Comprueba los logs con `make logs`.
@@ -530,7 +541,7 @@ Accede a Mailpit en `http://localhost:8025`. Todos los emails enviados por la ap
 
 **Los tests fallan con errores de base de datos**
 
-Los tests usan SQLite en memoria y no requieren Docker. Si fallan, asegúrate de que el entorno virtual está activado y las dependencias están instaladas con `pip install -r requeriments.txt`.
+Los tests usan SQLite en memoria y no requieren Docker. Si fallan, asegúrate de que el entorno virtual está activado y las dependencias están instaladas con `pip install -r requeriments.txt -r backend/requirements.txt` — el segundo fichero contiene `pytest` y el resto de dependencias del backend.
 
 **Error "ensurepip is not available" al crear el entorno virtual**
 

@@ -43,7 +43,7 @@
     function fmtImporte(valor) {
         if (valor === null || valor === undefined) return '—';
         const [ent, dec] = parseFloat(valor).toFixed(2).split('.');
-        return ent.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + dec + ' €';
+        return ent.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + dec + ' €';
     }
 
     function badgeEstado(estado) {

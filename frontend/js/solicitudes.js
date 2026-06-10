@@ -328,13 +328,16 @@ function crearFila(s) {
     const tipo        = s.convocatoria.tipo_convoc.toUpperCase(); // "epa" → "EPA"
     const badgeEstado = crearBadge(s.estado);
 
-    // Importe: null si la solicitud no fue concedida
+    // Importe: null si la solicitud no fue concedida.
+    // Se usa   (non-breaking space) entre cifra y € para evitar que el
+    // navegador parta la línea por el espacio cuando la columna queda justa
+    // (ej. "35.520,80" y "€" caían en líneas distintas).
     const importe = s.importe !== null
         ? new Intl.NumberFormat('es-ES', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
               useGrouping: true
-          }).format(Number(s.importe)) + ' €'
+          }).format(Number(s.importe)) + ' €'
         : '—';
 
     // ── Construir HTML de la fila ──────────────────────────────────
@@ -501,6 +504,9 @@ function mostrarEstadoCarga() {
 
 function mostrarSinResultados() {
     ocultarTodosEstados();
+    // El empty state vive dentro de #resultados-card; hay que reabrir la card
+    // padre, si no el contenido queda oculto pese a tabla-vacia.display = '';
+    if (resultadosCard) resultadosCard.style.display = '';
     tablaVacia.style.display = '';
 }
 
@@ -603,6 +609,13 @@ formFiltros.addEventListener('submit', () => {
 
 // Limpiar filtros
 btnLimpiar.addEventListener('click', limpiarFiltros);
+
+// El botón "Limpiar filtros" duplicado dentro del empty state hace lo mismo
+// que el de la barra de filtros. Se enlaza si existe (no romper si falta).
+const btnLimpiarVacio = document.getElementById('btn-limpiar-vacio');
+if (btnLimpiarVacio) {
+    btnLimpiarVacio.addEventListener('click', limpiarFiltros);
+}
 
 // Paginación: página anterior
 btnAnterior.addEventListener('click', () => {

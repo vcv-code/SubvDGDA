@@ -89,7 +89,7 @@ async function cargarHistorial(cif) {
 
             const importe = s.importe !== null
                 ? new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 })
-                    .format(parseFloat(s.importe)) + " €"
+                    .format(parseFloat(s.importe)) + " €"
                 : "—";
 
             const tramoBadge = s.tramo !== null && s.tramo !== undefined
@@ -163,7 +163,7 @@ async function cargarAgrupacion(idSolic) {
         (datos.miembros || []).forEach(m => {
             const importe = m.importe_asignado !== null && m.importe_asignado !== undefined
                 ? new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 })
-                    .format(parseFloat(m.importe_asignado)) + " €"
+                    .format(parseFloat(m.importe_asignado)) + " €"
                 : "—";
             const tr = document.createElement("tr");
             tr.innerHTML = `

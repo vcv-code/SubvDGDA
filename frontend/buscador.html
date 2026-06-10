@@ -146,7 +146,7 @@
                                 type="search"
                                 id="filtro-nombre"
                                 class="form-control"
-                                placeholder="Nombre de la entidad..."
+                                placeholder="Nombre o nº de expediente..."
                                 autocomplete="off">
                         </div>
 
@@ -403,10 +403,26 @@
                 </div><!-- /tabla-wrapper -->
 
                 <!-- Sin resultados (oculto por defecto) -->
-                <div class="estado-carga"
+                <div class="estado-carga estado-vacio"
                      id="tabla-vacia"
-                     style="display:none; color:var(--color-gris-texto);">
-                    No se encontraron solicitudes con esos filtros.
+                     style="display:none;">
+                    <svg class="estado-vacio__icono"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <p class="estado-vacio__titulo">No se han encontrado solicitudes</p>
+                    <p class="estado-vacio__sub">Prueba a cambiar los filtros o a buscar con otras palabras.</p>
+                    <button type="button" class="btn btn-secundario btn--sm" id="btn-limpiar-vacio">
+                        Limpiar filtros
+                    </button>
                 </div>
 
 
@@ -466,7 +482,7 @@
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
             y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
-            &nbsp;·&nbsp; © 2026 Verónica Corpa y Miyuki Salvador · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
+            &nbsp;·&nbsp; © 2026 Verónica Corpa · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
         </div>
     </footer>
 
@@ -556,6 +572,7 @@
     <!-- /MODAL DE ENTIDAD -->
 
     <script src="js/navbar.js" defer></script>
+    <script src="js/scroll-arriba.js" defer></script>
     <script src="js/modal-entidad.js" defer></script>
     <script src="js/solicitudes.js" defer></script>
 
