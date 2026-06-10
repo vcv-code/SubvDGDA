@@ -505,6 +505,14 @@ Con `rate=10r/m` y `burst=5`:
 
 ---
 
+## Modo mantenimiento (Nginx)
+
+Para paradas planificadas (despliegues, migraciones de BD, recargas de datos) hay un modo mantenimiento controlado por un **fichero-bandera** que Nginx comprueba en cada petición (sin reload):
+
+- Si existe `maintenance.on` en la raíz del frontend, Nginx devuelve **503** para todo el tráfico (`error_page 503 → mantenimiento.html`), salvo los assets, la propia página de mantenimiento y `/healthz` (para que la página renderice y el healthcheck de Docker siga viendo Nginx vivo).
+- El 503 de mantenimiento está **separado de `50x.html`** (que cubre 500/502/504). Los 503 que devuelve el backend (p. ej. SMTP caído en `/contacto/`) **no se interceptan** (`proxy_intercept_errors` desactivado) y llegan tal cual al cliente.
+- Activar/desactivar: `make mantenimiento-on` / `make mantenimiento-off` (crea/borra el fichero, ignorado en `.gitignore`). El cambio es inmediato; no reinicia ni recarga nada.
+
 ## Rendimiento de carga del frontend
 
 ### Caché de assets estáticos (Nginx)
@@ -734,6 +742,8 @@ En instalaciones posteriores las imágenes ya están cacheadas localmente — ar
 | Rebuild del backend | `cd docker && docker compose up --build -d backend` |
 | Recargar config nginx | `docker exec bdns_nginx nginx -s reload` |
 | Verificar config nginx | `docker exec bdns_nginx nginx -t` |
+| Activar modo mantenimiento | `make mantenimiento-on` |
+| Desactivar modo mantenimiento | `make mantenimiento-off` |
 | Rebuild backend + reiniciar | `cd docker && docker compose down && docker compose up -d` (tras reinicio WSL2) |
 | Ver logs nginx | `docker logs bdns_nginx --tail 50` |
 | Ejecutar tests | `source venv/bin/activate && python -m pytest tests/ -q` |
@@ -816,7 +826,7 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 232 funciones de test / 330 ejecuciones pasando, 0 fallando (actualizado 2026-06-10)
+- **Total:** 236 funciones de test / 334 ejecuciones pasando, 0 fallando (actualizado 2026-06-10)
 
 | Archivo | Qué testea |
 |---|---|

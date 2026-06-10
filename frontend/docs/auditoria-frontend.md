@@ -224,7 +224,7 @@
 | `docs/referencia-tecnica.md` | Endpoints de la API, configuración Docker, Nginx, SSL, logs y comandos de mantenimiento | [x] |
 | `docs/modelo-datos.md` | Esquema de BD, entidades principales (convocatorias, beneficiarios, solicitudes, concesiones, agrupaciones) y diagramas ER | [x] |
 | `docs/pipeline-datos.md` | Fuentes de datos (API BDNS, XML/PDF/Excel BOE), parsers por tipo y año, problemas resueltos y organización del dataset | [x] |
-| `docs/tests.md` | Estrategia de tests, tabla completa de los 232 tests automáticos (330 ejecuciones) y pruebas manuales E2E del frontend | [x] |
+| `docs/tests.md` | Estrategia de tests, tabla completa de los 236 tests automáticos (334 ejecuciones) y pruebas manuales E2E del frontend | [x] |
 | `docs/historial-implementacion.md` | Registro cronológico de todas las funcionalidades implementadas por rama | [x] |
 
 ### 9.3 Cabeceras en archivos de código
