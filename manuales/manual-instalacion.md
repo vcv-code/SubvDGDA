@@ -109,7 +109,7 @@ Desglose:
 ### Paso 1 — Clonar el repositorio
 
 ```bash
-git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+git clone git@github.com:vcv-code/SubvDGDA.git
 cd analisis-bdns-dgda
 ```
 

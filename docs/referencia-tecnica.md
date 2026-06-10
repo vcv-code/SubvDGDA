@@ -340,7 +340,7 @@ Detalle completo (versión, propósito, fallback) más abajo en la sección "Lib
 
 | Recurso | URL | Uso |
 |---|---|---|
-| Repositorio GitHub | `https://github.com/vcv-code/analisis-bdns-dgda` | Código fuente, issues y PRs del proyecto |
+| Repositorio GitHub | `https://github.com/vcv-code/SubvDGDA` | Código fuente, issues y PRs del proyecto |
 | Texto oficial CC BY-NC-ND 4.0 | `https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es` | Licencia del contenido (footer y `LICENSE`) |
 
 ---
@@ -375,6 +375,12 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `POST` | `/auth/logout` | Revocar refresh token |
 | `POST` | `/auth/recuperar` | Solicitar enlace de reset · respuesta idéntica exista o no el email |
 | `POST` | `/auth/reset` | Restablecer contraseña con token · revoca todos los refresh tokens |
+
+### Contacto (público)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `POST` | `/contacto/` | Envía un mensaje de contacto por email · honeypot antispam + rate limiting (3 req/min) · 503 si el SMTP falla |
 
 ### Zona privada (rol: `registrado`)
 
@@ -693,7 +699,7 @@ Sin estas actualizaciones la app funciona igualmente (el cron lo compensa), pero
 ## Instalación
 
 ```bash
-git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+git clone git@github.com:vcv-code/SubvDGDA.git
 cd analisis-bdns-dgda
 bash install.sh
 ```
@@ -810,7 +816,7 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 223 funciones de test / 321 ejecuciones pasando, 0 fallando (actualizado 2026-05-22)
+- **Total:** 232 funciones de test / 330 ejecuciones pasando, 0 fallando (actualizado 2026-06-10)
 
 | Archivo | Qué testea |
 |---|---|

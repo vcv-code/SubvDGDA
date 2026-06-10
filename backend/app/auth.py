@@ -20,6 +20,9 @@ VERIFICACION_EXPIRE_HORAS = 24
 SMTP_HOST = os.getenv("SMTP_HOST", "localhost")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "1025"))
 EMAIL_FROM = "noreply@subvencionesDGDA.local"
+# Buzón que recibe los mensajes del formulario de contacto. En producción se
+# configura con la dirección real vía env var; en dev cae en Mailpit como el resto.
+EMAIL_CONTACTO = os.getenv("EMAIL_CONTACTO", EMAIL_FROM)
 
 
 def hashear_password(password: str) -> str:
@@ -112,3 +115,26 @@ def enviar_email_recuperacion(email_destino: str, token: str) -> None:
             servidor.send_message(msg)
     except smtplib.SMTPException as e:
         logger.error("Error enviando email de recuperación a %s: %s", email_destino, e)
+
+
+def enviar_email_contacto(nombre: str, email_remitente: str, mensaje: str) -> None:
+    """Reenvía un mensaje del formulario de contacto al buzón de soporte.
+
+    A diferencia de los otros envíos (fire-and-forget), aquí propagamos el
+    error si el SMTP falla, para que el endpoint pueda avisar a la persona de
+    que su mensaje NO se ha enviado en vez de fingir éxito.
+    """
+    msg = EmailMessage()
+    msg["Subject"]  = f"Contacto web — {nombre or email_remitente}"
+    msg["From"]     = EMAIL_FROM
+    msg["To"]       = EMAIL_CONTACTO
+    msg["Reply-To"] = email_remitente  # responder va directo a quien escribió
+    msg.set_content(
+        f"Nuevo mensaje desde el formulario de contacto:\n\n"
+        f"Nombre: {nombre or '(no indicado)'}\n"
+        f"Email:  {email_remitente}\n\n"
+        f"Mensaje:\n{mensaje}\n"
+    )
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as servidor:
+        servidor.send_message(msg)

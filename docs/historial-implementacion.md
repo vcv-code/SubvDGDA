@@ -249,7 +249,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · CSS `.admin-*` y `.tarjeta`/`.agrupacion-detalle` migrados de inline/ausentes a `styles.css` (Secciones 29 y 30)
 ✔ footer limpio en todas las páginas
   · eliminados enlaces "Documentación" y "Contacto" (rotos; sin página de destino real)
-  · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`
+  · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/SubvDGDA`
   · estructura uniforme en las 18 páginas HTML: GitHub · Aviso legal · Privacidad
 ✔ reorganización de assets en subcarpetas (`img/`, `img/home/`, `img/logos/`, `wireframes/`, `guia-estilo/`)
   · todas las rutas actualizadas en los 19 HTML y en `styles.css`
@@ -457,3 +457,14 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · `z-index: 1100` para quedar por debajo de modales (2000/9999) y navbar (1200) sin taparlos
   · Documentado en `frontend/docs/especificaciones-frontend.md` (nueva sección 4.10) y `frontend/docs/patrones.md` (componentes compartidos y orden de scripts)
   · Autoría única: retirada la coautoría de los footers (21 HTML), `LICENSE`, `README.md` y este historial; ajustados los plurales del `LICENSE` a singular femenino (`la titular`)
+✔ Formulario de contacto y actualización del repositorio
+  · Nuevo endpoint `POST /contacto/` (`backend/app/routers/contacto.py`): reenvía el mensaje por email reutilizando el `smtplib` de `auth.py` (`enviar_email_contacto`, buzón configurable con la env `EMAIL_CONTACTO`). Antispam por capas: honeypot `sitio_web` (mismo patrón que el registro) + rate limiting en Nginx (zona `contacto`, 3 req/min, burst 2). Si el SMTP falla devuelve **503** con mensaje honesto (a diferencia del fire-and-forget del resto de envíos)
+  · Validación en `ContactoIn` (`schemas.py`): email (`EmailStr`) y mensaje (10–2000) obligatorios; nombre opcional (máx 100). En el formulario, email y mensaje van marcados con asterisco y leyenda "* Campos obligatorios". Página `contacto.html` (formulario centrado de una columna, layout propio `.contacto-card`, distinto de la "auth-card" de login) con checkbox de consentimiento y honeypot; `js/contacto.js` autocontenido; clase `.input-campo--area` para el `textarea`. Enlace **Contacto** añadido al footer de las 20 páginas. Nueva sección "Formulario de contacto" en `privacidad.html`
+  · `tests/test_contacto.py`: 9 tests (envío con mock SMTP, honeypot, validación ×3, 503, config Nginx ×2). Total **232 funciones / 330 ejecuciones** pasando
+  · Repositorio actualizado de `vcv-code/analisis-bdns-dgda` (viejo, a archivar) a **`vcv-code/SubvDGDA`** en todas las referencias: footers de los 21 HTML, comandos `git clone` del README y manuales, y enlaces en `referencia-tecnica.md`
+  · Documentado en `README.md`, `docs/tests.md`, `docs/referencia-tecnica.md` (endpoints), `frontend/docs/especificaciones-frontend.md` y `frontend/docs/auditoria-frontend.md`
+✔ De-academización e identidad de producción
+  · El proyecto deja de presentarse como trabajo académico y pasa a ser un proyecto personal independiente sin ánimo de lucro. Retirado el marco educativo del texto visible: `aviso-legal.html` (Titularidad → "proyecto independiente"; quitada "licencia educativa"; Contacto → formulario) y `privacidad.html` (Responsable del tratamiento → titular discreto contactable por el formulario, sin nombre ni asociación). Footers de los 21 HTML: "FP DAW 2026" → "independiente y sin ánimo de lucro". Limpiados los comentarios internos `Curso: 2º DAW` y la justificación "defendible en el TFG"
+  · Anonimato: la atribución de copyright pasa de "Verónica Corpa" a **«Recopilación y Análisis de Subvenciones DGDA»** en los footers, el `LICENSE` (copyright, titularidad y cláusula BY) y la sección de licencia del `README`. El `LICENSE` pierde también el marco académico (tribunal/IES/2º DAW) y remite al formulario de contacto
+  · `README`: intro reescrita reconociendo el origen (la idea venía de antes, tomó forma como proyecto de 2º FPGS DAW y se ha ampliado más allá de lo académico). La sección "Autora" mantiene el nombre por ahora (decisión de la titular)
+  · Política de privacidad: derechos de acceso/rectificación/supresión ejercitables a través del formulario de contacto
