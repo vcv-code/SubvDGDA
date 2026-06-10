@@ -1,5 +1,5 @@
 Análisis de subvenciones de bienestar animal (BDNS + DGDA)
-Copyright (c) 2026 Verónica Corpa y Miyuki Salvador
+Copyright (c) 2026 Verónica Corpa
 
 Todos los derechos reservados.
 
@@ -17,7 +17,7 @@ Está sujeto al derecho de autor por defecto previsto en la legislación
 española (Real Decreto Legislativo 1/1996, de 12 de abril, Ley de
 Propiedad Intelectual) y a los tratados internacionales aplicables.
 
-Sin permiso escrito de los titulares (Verónica Corpa y Miyuki Salvador):
+Sin permiso escrito de la titular (Verónica Corpa):
 
   · NO se permite copiar, distribuir, ejecutar públicamente, modificar,
     redistribuir, sublicenciar ni crear obras derivadas de este código.
@@ -32,8 +32,8 @@ Sí se permite, exclusivamente y de forma no transferible:
   · Clonar el repositorio localmente para ejecutarlo en un entorno de
     desarrollo y verificar su funcionamiento, sin redistribuir.
 
-Cualquier otro uso requiere autorización expresa por escrito de los
-titulares. Contacto: a través del repositorio (GitHub Issues) o de los
+Cualquier otro uso requiere autorización expresa por escrito de la
+titular. Contacto: a través del repositorio (GitHub Issues) o de los
 canales facilitados por el centro educativo.
 
 ────────────────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ Texto completo: https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es
 Resumen (no sustituye al texto oficial):
 
   · BY (Reconocimiento): cualquier uso debe acreditar la autoría de
-    Verónica Corpa y Miyuki Salvador y enlazar a esta licencia.
+    Verónica Corpa y enlazar a esta licencia.
   · NC (NoComercial): no se permite el uso comercial.
   · ND (SinObraDerivada): no se permite remezclar, transformar ni
     crear obras derivadas. Solo se puede compartir la obra original

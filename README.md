@@ -4,11 +4,10 @@ Proyecto intermodular de **2º FPGS Desarrollo de Aplicaciones Web (DAW)**.
 
 ---
 
-## Autores
+## Autora
 
 Proyecto desarrollado por:
 
-- [Miyuki Salvador](https://github.com/ImiuCreative)
 - [Verónica Corpa](https://github.com/vcv-code)
 
 ---
@@ -1423,7 +1422,7 @@ Sin permiso escrito de los titulares no se permite copiar, redistribuir, modific
 
 El README, los archivos `.md` de `docs/` y `frontend/docs/`, los textos visibles en la interfaz web, la memoria, los diagramas y las capturas se publican bajo **Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional** ([CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es)):
 
-- **BY** — cualquier uso debe acreditar a Verónica Corpa y Miyuki Salvador y enlazar a la licencia.
+- **BY** — cualquier uso debe acreditar a Verónica Corpa y enlazar a la licencia.
 - **NC** — no se permite el uso comercial.
 - **ND** — no se permite remezclar, transformar ni crear obras derivadas. Solo compartir la obra original tal cual.
 

@@ -77,7 +77,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · hero: imagen cubre altura del texto sin bandas verdes; centrado en desktop con max-width 1200px
   · aviso de convocatorias en ámbar más visible (#D97706)
   · tablas de convocatorias: cabecera verde, filas blancas, responsive correcto
-  · KPI cards de estadísticas: números verdes centrados restaurados (revertido refactor Miyuki)
+  · KPI cards de estadísticas: números verdes centrados restaurados (refactor revertido)
   · separador de miles en importes con formatter manual (independiente del locale del navegador)
   · URL de la DGDA en footer actualizada a dsca.gob.es en todos los ficheros HTML
 ✔ bloque "Convocatorias" en la Home (`index.html`)

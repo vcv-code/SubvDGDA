@@ -4812,3 +4812,68 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     color:     var(--color-azul);
     font-size: 0.9rem;
 }
+
+/* ============================================================
+   BOTÓN "VOLVER ARRIBA" (scroll-arriba.js)
+   ------------------------------------------------------------
+   Botón flotante fijo en la esquina inferior derecha. Oculto por
+   defecto; JS le añade .btn-subir--visible cuando hay scroll.
+   z-index por debajo de modales (2000/9999) y del navbar (1200)
+   para no taparlos, pero por encima del contenido normal.
+   ============================================================ */
+.btn-subir {
+    position:         fixed;
+    bottom:           1.5rem;
+    right:            1.5rem;
+    z-index:          1100;
+
+    display:          flex;
+    align-items:      center;
+    justify-content:  center;
+    width:            3rem;
+    height:           3rem;
+    padding:          0;
+
+    background-color: var(--color-verde-btn);
+    color:            var(--color-blanco);
+    border:           none;
+    border-radius:    50%;
+    box-shadow:       0 2px 8px rgba(0, 0, 0, 0.25);
+    cursor:           pointer;
+
+    /* Oculto y no interactivo hasta que haya scroll suficiente. */
+    opacity:          0;
+    visibility:       hidden;
+    transform:        translateY(0.5rem);
+    transition:       opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-subir--visible {
+    opacity:    1;
+    visibility: visible;
+    transform:  translateY(0);
+}
+
+.btn-subir:hover {
+    background-color: var(--color-primario);
+}
+
+.btn-subir:focus-visible {
+    outline:        3px solid var(--color-foco);
+    outline-offset: 2px;
+}
+
+.btn-subir__icono {
+    font-size:   1.5rem;
+    line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-subir {
+        transition: opacity 0.01ms, visibility 0.01ms;
+        transform:  none;
+    }
+    .btn-subir--visible {
+        transform: none;
+    }
+}
