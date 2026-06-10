@@ -2,14 +2,13 @@
 <!--
     index.html — Página de inicio (Home)
     Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
-    Curso: 2º DAW · Proyecto Final de Ciclo
 
     ¿Por qué HTML puro y no React o Vue?
     ─────────────────────────────────────
     El equipo tomó la decisión técnica de usar HTML + CSS + JS
     vanilla por tres razones:
-      1. Es coherente con el nivel del ciclo y fácilmente
-         defendible en la exposición oral del TFG.
+      1. Es sencillo de mantener y no añade complejidad
+         innecesaria para un sitio de este tamaño.
       2. No requiere compilador, bundler ni Node.js para
          funcionar: el frontend se sirve directamente con Nginx.
       3. Simplifica el flujo de ramas (feature → dev → main)
@@ -565,16 +564,18 @@
             <div class="footer-principal__marca">
                 <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
                 <span>
-                    <strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026
+                    <strong>Proyecto BDNS/DGDA</strong> — independiente y sin ánimo de lucro
                 </span>
             </div>
 
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
-                <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/vcv-code/SubvDGDA" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="aviso-legal.html">Aviso legal</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="privacidad.html">Privacidad</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="contacto.html">Contacto</a>
             </nav>
 
         </div>
@@ -587,7 +588,7 @@
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
             y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
-            &nbsp;·&nbsp; © 2026 Verónica Corpa · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
+            &nbsp;·&nbsp; © 2026 Recopilación y Análisis de Subvenciones DGDA · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
         </div>
 
     </footer>

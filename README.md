@@ -1,6 +1,6 @@
 # Análisis de subvenciones de bienestar animal (BDNS + DGDA)
 
-Proyecto intermodular de **2º FPGS Desarrollo de Aplicaciones Web (DAW)**.
+Proyecto independiente y sin ánimo de lucro de recopilación y análisis de subvenciones de bienestar animal en España (BDNS + DGDA). La idea venía de antes, pero tomó forma como proyecto intermodular de **2º FPGS Desarrollo de Aplicaciones Web (DAW)**; desde entonces se ha seguido mejorando y ampliando más allá del ámbito académico.
 
 ---
 
@@ -177,7 +177,7 @@ analisis-bdns-dgda/
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 223 funciones de test pytest (321 ejecuciones)
+└── tests/                  ← 232 funciones de test pytest (330 ejecuciones)
 ```
 
 ---
@@ -386,7 +386,7 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 
 **Seguridad:**
 
-- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/registro` (5 req/min, burst 3), `POST /auth/recuperar` (3 req/min, burst 2)
+- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/registro` (5 req/min, burst 3), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2)
 - Cabeceras de seguridad en todas las respuestas: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
 - SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
 - Cabeceras `Cache-Control`: `/convocatorias/` (1 día) y `/estadisticas/` (1 hora)
@@ -450,6 +450,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas |
 | `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
 | `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
+| `contacto.html` | Formulario de contacto (honeypot antispam + rate limiting); envía el mensaje por email |
 | `aviso-legal.html` · `privacidad.html` | Páginas legales: aviso legal y política de privacidad |
 | `404.html` · `50x.html` | Páginas de error personalizadas servidas por Nginx |
 
@@ -512,7 +513,7 @@ La carpeta `frontend/` contiene:
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y dos componentes compartidos por todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y dos componentes compartidos por todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
@@ -566,7 +567,7 @@ Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `
 Clona el repositorio y ejecuta el script de instalación:
 
 ```bash
-git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+git clone git@github.com:vcv-code/SubvDGDA.git
 cd analisis-bdns-dgda
 bash install.sh
 ```
@@ -687,7 +688,7 @@ python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.
 Clonar el repositorio:
 
 ```bash
-git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+git clone git@github.com:vcv-code/SubvDGDA.git
 cd analisis-bdns-dgda
 ```
 
@@ -966,11 +967,11 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **275 pruebas en total**: 223 funciones de test automáticas con pytest (321 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **284 pruebas en total**: 232 funciones de test automáticas con pytest (330 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 223 funciones / 321 ejecuciones | pytest (sin Docker) |
+| Automáticos | 232 funciones / 330 ejecuciones | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -1015,8 +1016,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-305 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-321 passed   # suite completa con Docker levantado
+314 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+330 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -1122,7 +1123,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 223 funciones de test automáticas / 321 ejecuciones (pytest)
+- 232 funciones de test automáticas / 330 ejecuciones (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1164,7 +1165,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **223 funciones de test automáticas** (321 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **232 funciones de test automáticas** (330 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
 - **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
@@ -1407,6 +1408,8 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
 - **CAPTCHA en registro** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto en su estado actual.
 - **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido.
+- **Analítica de visitas** — medir el uso real (páginas más vistas, búsquedas frecuentes, dispositivos). Decidir entre una analítica **sin cookies** (p. ej. Plausible o Matomo en modo cookieless), que evita el banner de consentimiento, o una con cookies (Google Analytics), que obligaría a banner. Preferencia: cookieless, para mantener la política actual de cero cookies de seguimiento.
+- **Auto-alojar fuentes y librerías de terceros** — actualmente Google Fonts (Inter) y Chart.js se cargan desde CDN; no ponen cookies, pero el navegador del visitante envía su IP a Google/jsdelivr. Servir las fuentes y los `.js` desde el propio dominio elimina esas peticiones a terceros (ya existe un fallback local para Chart.js en `assets/vendor/`). Mejora de privacidad, opcional.
 
 ---
 
@@ -1418,13 +1421,13 @@ Este repositorio se compone de **dos partes con regímenes distintos**, por conv
 
 Todos los archivos de código del proyecto (`.py`, `.js`, `.css`, `.html`, `.yml`, `.sql`, scripts de instalación, ficheros Docker, configuración) están sujetos al derecho de autor por defecto de la legislación española. **Reservados todos los derechos.**
 
-Sin permiso escrito de los titulares no se permite copiar, redistribuir, modificar, sublicenciar, incorporar en otros proyectos ni usar comercialmente. Sí se permite consultar y ejecutar localmente con fines educativos y de evaluación académica (tribunal y centro educativo) en el marco del Proyecto Intermodular de 2º DAW.
+Sin permiso escrito de la titularidad del proyecto no se permite copiar, redistribuir, modificar, sublicenciar, incorporar en otros proyectos ni usar comercialmente. Sí se permite consultar y ejecutar localmente para verificar su funcionamiento, sin redistribuir.
 
 ### Contenido y documentación — CC BY-NC-ND 4.0
 
 El README, los archivos `.md` de `docs/` y `frontend/docs/`, los textos visibles en la interfaz web, la memoria, los diagramas y las capturas se publican bajo **Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional** ([CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es)):
 
-- **BY** — cualquier uso debe acreditar a Verónica Corpa y enlazar a la licencia.
+- **BY** — cualquier uso debe acreditar a «Recopilación y Análisis de Subvenciones DGDA» y enlazar a la licencia.
 - **NC** — no se permite el uso comercial.
 - **ND** — no se permite remezclar, transformar ni crear obras derivadas. Solo compartir la obra original tal cual.
 

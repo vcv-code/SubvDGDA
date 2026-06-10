@@ -1714,6 +1714,71 @@ canvas {
     border-left: 4px solid var(--estado-no-beneficiaria);
 }
 
+/* Variante textarea (formulario de contacto): altura automática y
+   redimensionado solo vertical, con padding superior/inferior propio. */
+.input-campo--area {
+    height: auto;
+    min-height: 120px;
+    padding: var(--espacio-sm);
+    line-height: 1.5;
+    resize: vertical;
+}
+
+/* ============================================================
+   PÁGINA DE CONTACTO — formulario centrado de una columna
+   ------------------------------------------------------------
+   Layout propio (no la "auth-card" de login/registro): una tarjeta
+   blanca centrada sobre fondo gris claro, con los campos a lo ancho.
+   ============================================================ */
+.contacto-fondo {
+    background-color: var(--color-gris-claro);
+}
+
+.contacto-page {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+}
+
+.contacto-card {
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-gris-medio);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    padding: 2.5rem;
+}
+
+.contacto-card__titulo {
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    color: var(--color-negro);
+}
+
+.contacto-card__intro {
+    color: var(--color-gris-texto);
+    margin: 0 0 1.75rem;
+    line-height: 1.5;
+}
+
+/* Asterisco de campo obligatorio y su leyenda explicativa */
+.campo-obligatorio {
+    color: var(--estado-no-beneficiaria);
+    font-weight: 700;
+}
+
+.form-leyenda {
+    font-size: 0.85rem;
+    color: var(--color-gris-texto);
+    margin: 0 0 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .contacto-card {
+        padding: 1.5rem;
+    }
+}
+
 /* Mensaje de error bajo el campo */
 .campo-error {
     display: none;

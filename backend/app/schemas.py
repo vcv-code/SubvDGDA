@@ -196,6 +196,36 @@ class RegistroIn(BaseModel):
             raise ValueError("La contraseña debe contener al menos un número")
         return v
 
+
+class ContactoIn(BaseModel):
+    email:     EmailStr
+    mensaje:   str
+    nombre:    str = ""  # opcional
+    sitio_web: str = ""  # honeypot: debe llegar vacío en envíos legítimos
+
+    @field_validator("nombre")
+    @classmethod
+    def nombre_valido(cls, v: str) -> str:
+        v = v.strip()
+        if len(v) > 100:
+            raise ValueError("El nombre no puede superar los 100 caracteres")
+        return v
+
+    @field_validator("mensaje")
+    @classmethod
+    def mensaje_valido(cls, v: str) -> str:
+        v = v.strip()
+        if len(v) < 10:
+            raise ValueError("El mensaje debe tener al menos 10 caracteres")
+        if len(v) > 2000:
+            raise ValueError("El mensaje no puede superar los 2000 caracteres")
+        return v
+
+
+class ContactoOut(BaseModel):
+    mensaje: str
+
+
 class CambiarNombreIn(BaseModel):
     nombre: str
 
