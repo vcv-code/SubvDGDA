@@ -368,7 +368,7 @@ Para la implementación física de la base de datos se optó por **MariaDB 11** 
 - Es compatible al 100 % con MySQL en sintaxis SQL, por lo que el script `modelo-fisico.sql` funciona en ambos sistemas sin modificaciones.
 - Ofrece mejor rendimiento en operaciones de lectura intensiva y es de licencia totalmente libre.
 
-La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb:11`, expuesta en el puerto `3307` del host (para evitar conflictos con instalaciones locales de MySQL que usan el puerto 3306). El esquema se inicializa automáticamente al arrancar el contenedor a través del script `docker/init/modelo-fisico.sql`.
+La base de datos se despliega mediante **Docker Compose** con la imagen `mariadb:11.8`, expuesta en el puerto `3307` del host (para evitar conflictos con instalaciones locales de MySQL que usan el puerto 3306). El esquema se inicializa automáticamente al arrancar el contenedor a través del script `docker/init/modelo-fisico.sql`.
 
 ---
 

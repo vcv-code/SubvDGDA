@@ -709,8 +709,8 @@ El script detecta instalaciones existentes y no sobreescribe datos. Si la BD ya 
 
 | Imagen | Uso | Tamaño aproximado |
 |--------|-----|-------------------|
-| `mariadb:11` | Base de datos | ~120 MB |
-| `python:3.11-slim` | Backend y cron (compartida) | ~75 MB |
+| `mariadb:11.8` | Base de datos | ~120 MB |
+| `python:3.12-slim` | Backend y cron (compartida) | ~75 MB |
 | `nginx:alpine` | Proxy inverso | ~11 MB |
 | `adminer` | Interfaz web de BD | ~13 MB |
 | `axllent/mailpit` | SMTP de desarrollo | ~13 MB |

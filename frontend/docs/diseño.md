@@ -47,6 +47,7 @@ frontend/
 │   ├── privado.js
 │   ├── recuperar-password.js
 │   ├── reset-password.js
+│   ├── scroll-arriba.js
 │   ├── solicitudes.js
 │   └── utils.js
 ├── assets/

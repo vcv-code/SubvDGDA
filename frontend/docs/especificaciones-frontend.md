@@ -65,15 +65,22 @@ frontend/
 │
 ├── js/
 │   ├── home.js                  → Lógica de index.html (métricas + gráficos generales con GET /estadisticas/)
-│   ├── solicitudes.js           → Lógica del buscador
+│   ├── solicitudes.js           → Lógica del buscador (buscador.html / solicitudes.html)
 │   ├── estadisticas-epas.js     → Lógica de estadísticas EPAs (importe medio, distribución, nuevos vs recurrentes, top beneficiarios)
 │   ├── estadisticas-eell.js     → Lógica de estadísticas EELL (% ayuntamientos, top provincias, concentración, ranking CCAA)
-│   ├── recursos.js              → Lógica del directorio de recursos (pendiente de endpoint)
-│   ├── auth.js                  → Lógica de login y registro (JWT)
-│   ├── privado.js               → Control de acceso y contenido de zona privada
+│   ├── exclusivo.js             → Resumen por convocatoria y mapa CCAA (zona registrada)
+│   ├── mapa-ccaa.js             → Mapa choropleth por CCAA con Leaflet (usado por exclusivo.html)
 │   ├── entidad.js               → Lógica de la ficha de entidad
+│   ├── modal-entidad.js         → Modal de detalle de entidad desde el buscador
+│   ├── modal-grafica.js         → Modal de conclusiones de las gráficas
+│   ├── admin.js                 → Panel de administración (usuarios, avisos, logs)
+│   ├── privado.js               → Control de acceso y contenido de zona privada
+│   ├── auth.js                  → Lógica de login y registro (JWT)
 │   ├── recuperar-password.js    → Envío del email de recuperación
-│   └── reset-password.js        → Validación y envío de la nueva contraseña
+│   ├── reset-password.js        → Validación y envío de la nueva contraseña
+│   ├── navbar.js                → Navbar dinámica compartida por todas las páginas
+│   ├── scroll-arriba.js         → Botón flotante "volver arriba" (compartido)
+│   └── utils.js                 → Utilidades compartidas (formato de importes, helpers)
 │
 ├── assets/
 │   ├── img/
@@ -85,16 +92,22 @@ frontend/
 │   └── guia-estilo/            → Paleta, tipografía y PDF de wireframes completos
 │
 ├── index.html               → Página de inicio (Home) — métricas + gráficos generales
-├── buscador.html         → Buscador de solicitudes con filtros
+├── buscador.html            → Buscador de solicitudes con filtros
 ├── estadisticas-epas.html   → Estadísticas de Entidades Protectoras de Animales (Issue 7D)
 ├── estadisticas-eell.html   → Estadísticas de Entidades Locales / Ayuntamientos (Issue 7D)
 ├── recursos.html            → Directorio de organizaciones y sitios de interés (Issue 7D)
+├── exclusivo.html           → Resumen por convocatoria y mapa CCAA (solo usuarios registrados)
 ├── login.html               → Formulario de inicio de sesión
 ├── registro.html            → Formulario de creación de cuenta
-├── privado.html             → Zona exclusiva para usuarios registrados
+├── verificar-email.html     → Confirmación del enlace de verificación de email
+├── privado.html             → Zona privada / perfil del usuario registrado
+├── admin.html               → Panel de administración (solo rol admin)
 ├── entidad.html             → Ficha de entidad con historial y desglose de agrupaciones
 ├── recuperar-password.html  → Solicitar enlace de recuperación de contraseña por email
 ├── reset-password.html      → Establecer nueva contraseña desde el enlace del email
+├── aviso-legal.html         → Aviso legal
+├── privacidad.html          → Política de privacidad
+├── 404.html · 50x.html      → Páginas de error personalizadas servidas por Nginx
 └── docs/
     ├── diseño.md                    → Guía visual del proyecto (issue 7A)
     └── especificaciones-frontend.md → Este documento
@@ -407,6 +420,24 @@ El backend devuelve siempre este formato en caso de error:
   "sugerencia": "Comprueba la URL o los parámetros de la petición"
 }
 ```
+
+---
+
+### 4.10 Botón "volver arriba"
+
+Botón flotante (`js/scroll-arriba.js` + clase `.btn-subir`) que permite regresar al inicio en las páginas largas. Componente compartido, igual filosofía que el navbar: un único script cargado en las **12 páginas con navbar** (contenido), justo después de `navbar.js`.
+
+| Elemento | Valor |
+|---|---|
+| Posición | `position: fixed; bottom: 1.5rem; right: 1.5rem` |
+| Forma | Círculo de 3rem, fondo `var(--color-verde-btn)`, flecha ↑ blanca |
+| `z-index` | `1100` — por debajo de modales (2000/9999) y navbar (1200), por encima del contenido |
+| Visibilidad | Oculto por defecto (`opacity: 0; visibility: hidden`); `scroll-arriba.js` añade `.btn-subir--visible` al superar **600px** de scroll |
+| Scroll | `window.scrollTo({ top: 0 })`; el suavizado lo aporta `scroll-behavior: smooth` del `<html>` |
+
+**Por qué no hace falta decidir página por página:** como solo aparece tras 600px de scroll, en las páginas cortas (login, error, ficha de entidad…) nunca llega a mostrarse aunque el script esté cargado. El umbral se recalcula dentro de un `requestAnimationFrame` (listener de scroll `passive`) para no penalizar el desplazamiento.
+
+**Accesibilidad:** `aria-label="Volver al principio de la página"`, foco visible (`:focus-visible` con `outline` verde WCAG) y respeto de `prefers-reduced-motion` (sin transición ni desplazamiento del botón al aparecer).
 
 ---
 
@@ -1176,7 +1207,7 @@ La **descarga** sí ocurre en el cliente: el frontend recibe la respuesta como `
 | Navbar reorganizado a 6 enlaces Opción A: Inicio, Buscador, EPAs, EELL, Recursos, Acceder | ✔ Completado |
 | Columna "Año" en lugar de "Expediente" en la tabla del buscador | ✔ Completado |
 | Orden inicial A→Z y eliminación de "Por defecto" en el select | ✔ Completado |
-| Nueva página `recursos.html` + `js/recursos.js` con contenido estático real y pendiente dinámico | ✔ Completado |
+| Nueva página `recursos.html` con contenido estático real (sin `js/recursos.js`; el fetch dinámico queda pendiente) | ✔ Completado |
 | Gráficos generales integrados en `index.html` usando `GET /estadisticas/` | ✔ Completado |
 | Nueva página `estadisticas-epas.html` + `js/estadisticas-epas.js` (4 gráficos + 4 KPIs, conectados a `GET /estadisticas/epas`) | ✔ Completado |
 | Nueva página `estadisticas-eell.html` + `js/estadisticas-eell.js` (3 gráficos + ranking CCAA + 4 KPIs, conectados a `GET /estadisticas/eell`) | ✔ Completado |

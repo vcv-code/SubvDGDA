@@ -345,7 +345,7 @@ Características:
 
 ### Base de datos
 
-**Motor:** MariaDB 11 en contenedor Docker. El esquema se crea automáticamente al instalar (`docker/init/modelo-fisico.sql`). SQLAlchemy actúa como ORM entre Python y la BD.
+**Motor:** MariaDB 11.8 en contenedor Docker. El esquema se crea automáticamente al instalar (`docker/init/modelo-fisico.sql`). SQLAlchemy actúa como ORM entre Python y la BD.
 
 **Tablas principales:**
 
@@ -440,7 +440,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | Página | Descripción |
 |--------|-------------|
 | `index.html` | Home con métricas, gráficas de evolución, información de convocatorias activas, enlaces a las **bases reguladoras** oficiales (BOE y DGDA) y a las **resoluciones de concesión** publicadas en el BOE de cada año |
-| `buscador.html` | Buscador de solicitudes con filtros, paginación, ordenación server-side y exportación CSV con nombre de archivo dinámico según filtros activos |
+| `buscador.html` | Buscador de solicitudes con filtros, búsqueda por nombre de entidad o nº de expediente, paginación, ordenación server-side, estado vacío con sugerencias cuando no hay resultados y exportación CSV con nombre de archivo dinámico según filtros activos |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
 | `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
@@ -467,6 +467,9 @@ Un archivo JS por página, sin bundler ni framework. La comunicación con la API
 
 **Responsive:**
 Una sola hoja de estilos compartida (`styles.css`) con variables CSS para colores, espaciado y tipografía. Breakpoints en 600px (grid 2→1 columna), 768px (modales y tablas) y 900px (menú hamburguesa). El navbar tiene z-index 1200 para quedar por encima de los controles de Leaflet (z-index 1000 por defecto).
+
+**Botón "volver arriba":**
+Componente compartido (`js/scroll-arriba.js` + clase `.btn-subir`) cargado en las páginas con navbar, análogo a `navbar.js`. Botón flotante fijo en la esquina inferior derecha (z-index 1100) que solo aparece al superar 600px de scroll, así que en las páginas cortas no llega a mostrarse. Accesible (`aria-label`, foco visible) y respeta `prefers-reduced-motion`.
 
 **Visualizaciones:**
 
@@ -509,7 +512,7 @@ La carpeta `frontend/` contiene:
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `auth.js`, `privado.js`, `exclusivo.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `modal-grafica.js`, `utils.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y dos componentes compartidos por todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
@@ -747,8 +750,8 @@ El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-co
 
 | Servicio  | Contenedor       | Imagen                   | Función                                                   | Puerto externo         |
 |-----------|------------------|--------------------------|-----------------------------------------------------------|------------------------|
-| `db`      | `bdns_dgda_db`   | mariadb:11               | Base de datos MariaDB con el dataset cargado              | 3307 (interno: 3306)   |
-| `backend` | `bdns_api`       | python:3.11-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
+| `db`      | `bdns_dgda_db`   | mariadb:11.8             | Base de datos MariaDB con el dataset cargado              | 3307 (interno: 3306)   |
+| `backend` | `bdns_api`       | python:3.12-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
 | `nginx`   | `bdns_nginx`     | nginx:alpine             | Proxy inverso, HTTPS, archivos estáticos                  | 80 (HTTP), 443 (HTTPS) |
 | `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS y health check               | ninguno                |
 | `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 (SMTP), 8025 (UI) |
@@ -792,8 +795,7 @@ Las imágenes están optimizadas para reducir el peso del entorno (~700 MB menos
 
 | Imagen base | Tamaño | En lugar de | Ahorro |
 |-------------|--------|-------------|--------|
-| `python:3.11-slim` (backend) | ~75 MB | `python:3.11` (~900 MB) | ~825 MB |
-| `python:3.12-slim` (cron) | ~75 MB | `python:3.12` (~900 MB) | ~825 MB |
+| `python:3.12-slim` (backend y cron) | ~75 MB | `python:3.12` (~900 MB) | ~825 MB |
 | `nginx:alpine` | ~11 MB | `nginx` (~190 MB) | ~180 MB |
 
 Además, ambos Dockerfiles usan `pip install --no-cache-dir` para no almacenar la caché de pip dentro de la imagen, y copian `requirements.txt` antes que el código de la aplicación — así Docker solo repite el `pip install` cuando cambian las dependencias, no en cada cambio de código.
@@ -1114,7 +1116,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Panel de administración completo con visor de logs
 - Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
 - Modal de conclusiones con textos reales en las 9 gráficas
-- Navbar responsive (hamburguesa ≤900px) · sistema de color coherente · imagen hero
+- Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
 - Auditoría responsive móvil completada
 
 ### Calidad del código
@@ -1158,7 +1160,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **`loading="lazy"`** en todas las imágenes fuera del viewport inicial
 - **Caché Nginx** — imágenes y fuentes: `expires 1y`; CSS y JS: `expires 1h`
 - **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora
-- **Imágenes Docker slim** — `python:3.11-slim` (~75 MB vs ~900 MB de la imagen completa); `--no-cache-dir` en pip
+- **Imágenes Docker slim** — `python:3.12-slim` (~75 MB vs ~900 MB de la imagen completa); `--no-cache-dir` en pip
 
 ### Calidad y mantenibilidad
 
