@@ -3873,6 +3873,12 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     margin-top: 0.5rem;
 }
 
+/* ─── 34.5 PÁGINA DE MANTENIMIENTO ─────────────────────────────── */
+.pagina-mantenimiento__logo {
+    display: block;
+    margin: 0 auto 1rem;
+}
+
 /* ─── 34.2 SECCIÓN "POR QUÉ REGISTRARSE" (index.html) ──────────── */
 /*
    Sección compacta entre los gráficos y el footer.

@@ -8,6 +8,7 @@
 #           (3) copiar el comando directamente de cada target.
 
 .PHONY: start stop restart build build-cron reload-nginx \
+        mantenimiento-on mantenimiento-off \
         reset-db cargar test logs logs-cron logs-nginx \
         backup restore shell-db mailpit uninstall
 
@@ -30,6 +31,17 @@ build-cron:
 
 reload-nginx:
 	docker exec bdns_nginx nginx -s reload
+
+# Modo mantenimiento: crea/borra el fichero-bandera que Nginx comprueba en cada
+# petición (no necesita reload). Con la bandera presente, la web responde 503 con
+# mantenimiento.html. Útil para despliegues, migraciones de BD o recargas de datos.
+mantenimiento-on:
+	touch frontend/maintenance.on
+	@echo "Modo mantenimiento ACTIVADO — la web responde 503 con mantenimiento.html"
+
+mantenimiento-off:
+	rm -f frontend/maintenance.on
+	@echo "Modo mantenimiento DESACTIVADO — la web vuelve a estar disponible"
 
 # ── Base de datos ─────────────────────────────────────────────────────────────
 

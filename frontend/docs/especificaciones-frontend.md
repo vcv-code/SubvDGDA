@@ -110,6 +110,7 @@ frontend/
 ├── aviso-legal.html         → Aviso legal
 ├── privacidad.html          → Política de privacidad
 ├── 404.html · 50x.html      → Páginas de error personalizadas servidas por Nginx
+├── mantenimiento.html       → Página de mantenimiento programado (503, vía bandera en Nginx)
 └── docs/
     ├── diseño.md                    → Guía visual del proyecto (issue 7A)
     └── especificaciones-frontend.md → Este documento

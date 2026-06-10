@@ -177,7 +177,7 @@ analisis-bdns-dgda/
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 232 funciones de test pytest (330 ejecuciones)
+└── tests/                  ← 236 funciones de test pytest (334 ejecuciones)
 ```
 
 ---
@@ -453,6 +453,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `contacto.html` | Formulario de contacto (honeypot antispam + rate limiting); envía el mensaje por email |
 | `aviso-legal.html` · `privacidad.html` | Páginas legales: aviso legal y política de privacidad |
 | `404.html` · `50x.html` | Páginas de error personalizadas servidas por Nginx |
+| `mantenimiento.html` | Página de mantenimiento programado (503); Nginx la sirve cuando existe el fichero-bandera `maintenance.on` |
 
 **Estados de carga:**
 Las páginas con peticiones asíncronas muestran feedback visual mientras esperan la respuesta: spinner giratorio (home, estadísticas, buscador, ficha de entidad) y skeleton loader animado en verde para la tabla de `exclusivo.html` — barras con shimmer que simulan la forma de la tabla antes de que lleguen los datos.
@@ -943,6 +944,8 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make build` | Reconstruye la imagen del backend |
 | `make build-cron` | Reconstruye la imagen del cron |
 | `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
+| `make mantenimiento-on` | Activa el modo mantenimiento (la web responde 503 con `mantenimiento.html`) |
+| `make mantenimiento-off` | Desactiva el modo mantenimiento |
 | `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
 | `make cargar` | Recarga el dataset sin borrar el volumen |
 | `make test` | Ejecuta los tests con pytest |
@@ -967,11 +970,11 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **284 pruebas en total**: 232 funciones de test automáticas con pytest (330 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **288 pruebas en total**: 236 funciones de test automáticas con pytest (334 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 232 funciones / 330 ejecuciones | pytest (sin Docker) |
+| Automáticos | 236 funciones / 334 ejecuciones | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -1016,8 +1019,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-314 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-330 passed   # suite completa con Docker levantado
+318 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+334 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -1123,7 +1126,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 232 funciones de test automáticas / 330 ejecuciones (pytest)
+- 236 funciones de test automáticas / 334 ejecuciones (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1165,7 +1168,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **232 funciones de test automáticas** (330 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **236 funciones de test automáticas** (334 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
 - **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
