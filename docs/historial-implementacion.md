@@ -473,3 +473,9 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · Nginx (`docker/nginx/default.conf`): si existe el fichero-bandera `maintenance.on` en la raíz del frontend, devuelve **503** para todo (→ `error_page 503` → `mantenimiento.html`), salvo assets, la propia página y `/healthz` (para que renderice y Docker siga viendo Nginx vivo). El 503 se separa de `50x.html` (que pasa a cubrir solo 500/502/504); los 503 del backend (p. ej. SMTP caído en `/contacto/`) NO se interceptan y llegan tal cual al cliente
   · La bandera se lee en cada petición → activar/desactivar **no requiere reload**. Atajos `make mantenimiento-on` / `make mantenimiento-off` (touch/rm del fichero, ignorado en `.gitignore`)
   · `tests/test_mantenimiento.py`: 4 tests de configuración (bandera, `error_page 503`, separación del 50x, existencia de la página). Total **236 funciones / 334 ejecuciones**. `nginx -t` valida la sintaxis
+✔ Retoques de recursos y página de mantenimiento
+  · Imagen propia en `mantenimiento.html` (`assets/img/gati-manten.webp`) en lugar del logo provisional
+  · Los 4 bloques de `recursos.html` pasan de un único verde a un **tono pastel distinto por categoría**: protección (verde), colonias (azul), especializadas (lila), campañas (rosa)
+  · **CSS migrado**: el bloque `<style>` embebido en `recursos.html` se traslada a `styles.css` (sección "Página de recursos"), siguiendo la norma de no usar CSS dentro del HTML
+  · Nueva nota en recursos: si hay información incorrecta/desactualizada o una organización no quiere aparecer, puede escribir por el formulario de contacto del pie
+  · Footer (compartido por todas las páginas): cuando marca + enlaces no caben en una línea, ya no se parten a la izquierda (`space-between` con wrap) sino que se apilan y **centran**. Punto de quiebre del apilado subido de 600px a 850px en `styles.css`
