@@ -484,3 +484,10 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · **CSS migrado**: el bloque `<style>` embebido en `recursos.html` se traslada a `styles.css` (sección "Página de recursos"), siguiendo la norma de no usar CSS dentro del HTML
   · Nueva nota en recursos: si hay información incorrecta/desactualizada o una organización no quiere aparecer, puede escribir por el formulario de contacto del pie
   · Footer (compartido por todas las páginas): cuando marca + enlaces no caben en una línea, ya no se parten a la izquierda (`space-between` con wrap) sino que se apilan y **centran**. Punto de quiebre del apilado subido de 600px a 850px en `styles.css`
+✔ Home: enlaces oficiales en una tabla única por tipo de entidad
+  · `num_convoc` expuesto en `ConvocatoriaOut` (`GET /convocatorias/`) para poder enlazar a BDNS (+1 test en `test_convocatorias.py`)
+  · Se fusionan la tabla de "Convocatorias" y la sección "Resoluciones oficiales" en **una sola tabla por tipo** (EPA / EELL): Año · Fecha de convocatoria · Fecha de resolución · Acceso directo
+  · La **fecha de convocatoria** enlaza a la ficha oficial en **BDNS** (`infosubvenciones.es/.../convocatoria/{num_convoc}`, incluye BOE y PDFs); la **fecha de resolución** enlaza al **BOE** (URLs en un mapa en `home.js`). El botón **"Ver →"** (búsqueda filtrada) solo aparece cuando hay resolución (antes no hay datos)
+  · Detalles: el año se omite en las fechas si coincide con la columna Año; fechas-enlace subrayadas (`.tabla-convoc td a:not(.btn)`); las convocatorias sin resolver muestran "Pendiente" / "—"
+  · Separador sutil (`border-top`) entre las secciones de tablas y de gráficas (ambas verdes; antes las separaba la sección crema de resoluciones, ya fusionada)
+  · Total **246 funciones / 344 ejecuciones**

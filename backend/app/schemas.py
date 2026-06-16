@@ -9,6 +9,7 @@ from typing import Literal, Optional
 
 class ConvocatoriaOut(BaseModel):
     id_convoc:          int
+    num_convoc:         Optional[str]
     titulo_convoc:      str
     tipo_convoc:        str
     anio_convocatoria:  int

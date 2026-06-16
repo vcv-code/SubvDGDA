@@ -827,7 +827,7 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 245 funciones de test / 343 ejecuciones pasando, 0 fallando (actualizado 2026-06-16)
+- **Total:** 246 funciones de test / 344 ejecuciones pasando, 0 fallando (actualizado 2026-06-16)
 
 | Archivo | Qué testea |
 |---|---|

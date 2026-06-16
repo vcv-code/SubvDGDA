@@ -974,6 +974,19 @@ table tbody tr:hover {
     max-width: 520px;
 }
 
+/* Enlaces dentro del texto del hero (p. ej. Ley 7/2023): subrayados y en verde
+   para distinguirlos como enlace (los <a> globales no llevan subrayado). */
+.portada-split__descripcion a {
+    color: var(--color-verde-btn);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+}
+
+.portada-split__descripcion a:hover {
+    color: var(--color-hover);
+}
+
 .portada-split__imagen {
     /* La imagen ocupa la columna derecha */
     border-radius: var(--radio-card);
@@ -2296,6 +2309,20 @@ canvas {
 
 .tabla-convoc tbody tr:nth-child(even) td {
     background-color: #f5f7f6;
+}
+
+/* Fechas-enlace de las tablas (convocatoria→BDNS, resolución→BOE): subrayadas
+   para que se vean clicables, ya que los <a> globales no llevan subrayado.
+   Excluye el botón "Ver solicitudes" (.btn). */
+.tabla-convoc td a:not(.btn) {
+    color: var(--color-verde-btn);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+}
+
+.tabla-convoc td a:not(.btn):hover {
+    color: var(--color-hover);
 }
 
 
@@ -3736,6 +3763,9 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .pagina-inicio .fondo-stats {
     background-color: #DFF0E1;
     min-height: auto;
+    /* Separador sutil: convocatorias y gráficas comparten fondo verde; esta línea
+       las delimita (antes las separaba la sección crema de resoluciones, ya fusionada). */
+    border-top: 2px solid #BFE3C9;
 }
 .pagina-inicio .fondo-stats .seccion {
     padding: 0;
@@ -4194,6 +4224,12 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 }
 .convocatorias-subtitulo {
     margin-bottom: var(--espacio-md);
+}
+
+/* Dos subtítulos seguidos (descripción + nota de «Ver»): el segundo se pega al
+   primero en lugar de dejar el gap completo entre párrafos. */
+.convocatorias-subtitulo + .convocatorias-subtitulo {
+    margin-top: calc(0.25rem - var(--espacio-md));
 }
 
 /* Variante de card-grafico__titulo con texto centrado */
