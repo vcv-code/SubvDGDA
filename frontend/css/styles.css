@@ -1280,10 +1280,14 @@ table tbody tr:hover {
     color: var(--footer-texto);
 }
 
-@media (max-width: 600px) {
+/* Punto en el que marca + enlaces dejan de caber en una línea: en vez de
+   partirse a la izquierda (space-between con wrap), apilamos en columna y
+   centramos las dos líneas. */
+@media (max-width: 850px) {
     .footer-principal__zona {
         flex-direction: column;
         align-items: center;
+        text-align: center;
         gap: var(--espacio-sm);
     }
 
@@ -3873,12 +3877,6 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     margin-top: 0.5rem;
 }
 
-/* ─── 34.5 PÁGINA DE MANTENIMIENTO ─────────────────────────────── */
-.pagina-mantenimiento__logo {
-    display: block;
-    margin: 0 auto 1rem;
-}
-
 /* ─── 34.2 SECCIÓN "POR QUÉ REGISTRARSE" (index.html) ──────────── */
 /*
    Sección compacta entre los gráficos y el footer.
@@ -4947,4 +4945,107 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     .btn-subir--visible {
         transform: none;
     }
+}
+
+/* ============================================================
+   PÁGINA DE RECURSOS (recursos.html)
+   Migrado desde el <style> embebido del HTML. Cada bloque de
+   categoría lleva un tono pastel distinto, suave sobre el fondo
+   crema de la página.
+   ============================================================ */
+.recursos-bloque {
+    margin-bottom: var(--espacio-xl);
+    border-radius: 14px;
+    padding: var(--espacio-md);
+}
+
+.recursos-bloque--proteccion     { background: #E2F0E4; }  /* verde pastel */
+.recursos-bloque--colonias       { background: #E1EEF9; }  /* azul pastel */
+.recursos-bloque--especializadas { background: #ECE6F6; }  /* lila pastel */
+.recursos-bloque--campanas       { background: #FCE4EC; }  /* rosa pastel */
+
+.recursos-bloque__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--espacio-md);
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.recursos-bloque__titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+/* Tarjeta de entidad */
+.card-entidad {
+    background: #ffffff;
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+}
+
+.card-entidad a { order: 2; }
+
+.card-entidad img {
+    display: block;
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.card-entidad__nombre {
+    order: 1;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+.card-entidad__categoria {
+    display: none;
+}
+
+.card-entidad__descripcion {
+    order: 3;
+    font-size: 0.88rem;
+    color: var(--color-gris-texto);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Grid flexible de 3 columnas */
+.grid-recursos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--espacio-md);
+}
+
+@media (max-width: 900px) {
+    .grid-recursos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-recursos {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Nota al pie de la página de recursos */
+.recursos-nota {
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    margin-top: var(--espacio-lg);
+    padding-top: var(--espacio-sm);
+    border-top: 1px solid var(--color-gris-medio);
 }
