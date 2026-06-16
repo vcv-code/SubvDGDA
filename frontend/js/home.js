@@ -654,9 +654,12 @@ async function cargarAvisos() {
         if (!avisos.length) return;
 
         const etiquetas = { eell: 'Entidades Locales', epa: 'Entidades Privadas' };
+        // Etiqueta del estado del plazo de solicitud (lo calcula el backend en estado_plazo).
+        const etiquetasPlazo = { abierto: ' (plazo abierto)', cerrado: ' (plazo cerrado)', sin_fecha: '' };
 
         contenedor.innerHTML = avisos.map(aviso => {
             const tipo  = etiquetas[aviso.tipo_convoc] || aviso.tipo_convoc.toUpperCase();
+            const plazo = etiquetasPlazo[aviso.estado_plazo] ?? '';
             const fecha = aviso.fecha_convocatoria
                 ? new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
                 : 'fecha pendiente';
@@ -664,7 +667,7 @@ async function cargarAvisos() {
                 <div class="aviso-banner">
                     <span class="aviso-banner__icono" aria-hidden="true">📢</span>
                     <div class="aviso-banner__texto">
-                        <strong>Convocatoria ${aviso.anio_convocatoria} — ${tipo}</strong>
+                        <strong>Convocatoria ${aviso.anio_convocatoria}${plazo} — ${tipo}</strong>
                         <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
                     </div>
                 </div>`;

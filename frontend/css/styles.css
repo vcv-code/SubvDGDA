@@ -3089,6 +3089,21 @@ canvas {
 .admin-aviso__meta   { font-size: .8rem; color: #666; margin-top: .1rem; }
 .admin-aviso__acciones { display: flex; gap: .5rem; flex-shrink: 0; }
 .admin-acciones-td { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+
+/* Fila de gestión del plazo de solicitud dentro de cada aviso activo */
+.admin-aviso__plazo {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .5rem;
+}
+.admin-plazo-label { font-size: .8rem; color: #555; display: flex; align-items: center; gap: .35rem; }
+.admin-plazo-input { font-size: .8rem; padding: .2rem .4rem; border: 1px solid var(--color-gris-medio); border-radius: 6px; }
+.admin-plazo-badge { font-size: .72rem; font-weight: 700; padding: .12rem .5rem; border-radius: 999px; }
+.admin-plazo-badge--abierto { background: #E2F0E4; color: #2E6B4F; }
+.admin-plazo-badge--cerrado { background: #E0E0E0; color: #555; }
+.admin-plazo-badge--falta   { background: #FDECC8; color: #8A5A00; }
 .admin-aviso--resuelta .admin-aviso__titulo { color: #888; font-weight: 500; }
 .admin-aviso--resuelta .admin-aviso__meta   { color: #aaa; }
 

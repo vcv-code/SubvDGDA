@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, computed_field
 from datetime import date, datetime
 from typing import Literal, Optional
 
@@ -168,9 +168,25 @@ class AvisoOut(BaseModel):
     tipo_convoc:        str
     anio_convocatoria:  int
     fecha_convocatoria: Optional[date]
+    fecha_fin_plazo:    Optional[date]
     fecha_resolucion:   Optional[date]
 
     model_config = ConfigDict(from_attributes=True)
+
+    @computed_field
+    @property
+    def estado_plazo(self) -> str:
+        """Estado del plazo de solicitud calculado al vuelo:
+        'sin_fecha' si no se conoce el fin de plazo, 'abierto' si aún no ha
+        pasado y 'cerrado' si ya venció."""
+        if self.fecha_fin_plazo is None:
+            return "sin_fecha"
+        return "abierto" if date.today() <= self.fecha_fin_plazo else "cerrado"
+
+
+class FinPlazoIn(BaseModel):
+    """Cuerpo para fijar (o borrar, con null) la fecha de fin de plazo de una convocatoria."""
+    fecha_fin_plazo: Optional[date]
 
 
 # ──────────────────────────────────────────────

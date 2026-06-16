@@ -15,7 +15,7 @@ Cubre:
   - GET /admin/logs
 """
 
-from datetime import datetime, date, timezone
+from datetime import datetime, date, timedelta, timezone
 from unittest.mock import patch
 
 from backend.app.models import Convocatoria, Solicitud, Usuario
@@ -241,6 +241,68 @@ def test_desactivar_aviso(client, db):
     avisos = client.get("/admin/avisos", headers=_headers(token)).json()
     ids = [a["id_convoc"] for a in avisos]
     assert convoc.id_convoc not in ids
+
+
+def test_fin_plazo_fija_fecha_y_calcula_estado(client, db):
+    token = _token_admin(client, db)
+    convoc = _convocatoria(db, anio_convocatoria=date.today().year)
+    fin = (date.today() - timedelta(days=1)).isoformat()
+    r = client.patch(
+        f"/admin/avisos/{convoc.id_convoc}/fin-plazo",
+        json={"fecha_fin_plazo": fin},
+        headers=_headers(token),
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["fecha_fin_plazo"] == fin
+    assert body["estado_plazo"] == "cerrado"
+
+
+def test_fin_plazo_abierto(client, db):
+    token = _token_admin(client, db)
+    convoc = _convocatoria(db, anio_convocatoria=date.today().year)
+    fin = (date.today() + timedelta(days=5)).isoformat()
+    r = client.patch(
+        f"/admin/avisos/{convoc.id_convoc}/fin-plazo",
+        json={"fecha_fin_plazo": fin},
+        headers=_headers(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["estado_plazo"] == "abierto"
+
+
+def test_fin_plazo_borrar_con_null(client, db):
+    token = _token_admin(client, db)
+    convoc = _convocatoria(db, anio_convocatoria=date.today().year,
+                           fecha_fin_plazo=date.today())
+    r = client.patch(
+        f"/admin/avisos/{convoc.id_convoc}/fin-plazo",
+        json={"fecha_fin_plazo": None},
+        headers=_headers(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["fecha_fin_plazo"] is None
+    assert r.json()["estado_plazo"] == "sin_fecha"
+
+
+def test_fin_plazo_convocatoria_inexistente_404(client, db):
+    token = _token_admin(client, db)
+    r = client.patch(
+        "/admin/avisos/99999/fin-plazo",
+        json={"fecha_fin_plazo": "2026-06-15"},
+        headers=_headers(token),
+    )
+    assert r.status_code == 404
+
+
+def test_fin_plazo_requiere_admin(client, db):
+    token = _token_registrado(client, db)
+    r = client.patch(
+        "/admin/avisos/1/fin-plazo",
+        json={"fecha_fin_plazo": "2026-06-15"},
+        headers=_headers(token),
+    )
+    assert r.status_code == 403
 
 
 def test_eliminar_aviso_sin_solicitudes(client, db):

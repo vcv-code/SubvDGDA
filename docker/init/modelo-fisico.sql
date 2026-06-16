@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS convocatorias (
     tipo_convoc        ENUM('epa','eell') NOT NULL          COMMENT 'epa = protectoras, eell = entidades locales',
     anio_convocatoria  INT          NOT NULL                COMMENT 'Año de la convocatoria (2021-2025)',
     fecha_convocatoria DATE         NULL                    COMMENT 'Fecha de publicación de la convocatoria',
+    fecha_fin_plazo    DATE         NULL                    COMMENT 'Fecha de fin del plazo de solicitud (NULL hasta que se conoce)',
     fecha_resolucion   DATE         NULL                    COMMENT 'Fecha de resolución definitiva',
     periodo_meses      TINYINT      NOT NULL DEFAULT 12     COMMENT 'Duración del periodo subvencionable en meses. EPA 2023 y 2024 = 6; resto = 12',
     PRIMARY KEY (id_convoc)

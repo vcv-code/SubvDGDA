@@ -404,6 +404,7 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `GET` | `/admin/avisos` | Lista de avisos activos |
 | `PATCH` | `/admin/avisos/{id}/desactivar` | Desactivar aviso |
 | `PATCH` | `/admin/avisos/{id}/reactivar` | Reactivar aviso |
+| `PATCH` | `/admin/avisos/{id}/fin-plazo` | Fijar o borrar (null) la fecha de fin de plazo de solicitud |
 | `DELETE` | `/admin/avisos/{id}` | Eliminar convocatoria sin resolución (409 si tiene solicitudes) |
 | `GET` | `/admin/logs` | Últimas N líneas del log de acceso |
 | `GET` | `/admin/logs/errores` | Últimas N líneas del log de errores |
@@ -826,7 +827,7 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 236 funciones de test / 334 ejecuciones pasando, 0 fallando (actualizado 2026-06-10)
+- **Total:** 245 funciones de test / 343 ejecuciones pasando, 0 fallando (actualizado 2026-06-16)
 
 | Archivo | Qué testea |
 |---|---|

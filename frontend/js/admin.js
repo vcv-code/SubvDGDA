@@ -281,6 +281,11 @@ async function cargarAvisos() {
         if (!activas.length) {
             html += '<p class="admin-vacio">No hay avisos activos. El banner de inicio no se mostrará.</p>';
         } else {
+            const badgePlazo = {
+                abierto:   '<span class="admin-plazo-badge admin-plazo-badge--abierto">Plazo abierto</span>',
+                cerrado:   '<span class="admin-plazo-badge admin-plazo-badge--cerrado">Plazo cerrado</span>',
+                sin_fecha: '<span class="admin-plazo-badge admin-plazo-badge--falta">⚠ Falta fecha de plazo</span>',
+            };
             html += activas.map(a => `
                 <div class="admin-aviso" data-id="${a.id_convoc}">
                     <div class="admin-aviso__info">
@@ -288,6 +293,16 @@ async function cargarAvisos() {
                         <div class="admin-aviso__meta">
                             ${a.tipo_convoc.toUpperCase()} · ${a.anio_convocatoria}
                             ${a.fecha_convocatoria ? ' · BOE: ' + formatearFecha(a.fecha_convocatoria) : ''}
+                        </div>
+                        <div class="admin-aviso__plazo">
+                            ${badgePlazo[a.estado_plazo] || ''}
+                            <label class="admin-plazo-label">Fin de plazo:
+                                <input type="date" class="admin-plazo-input" value="${a.fecha_fin_plazo ?? ''}">
+                            </label>
+                            <button class="btn-accion btn-accion--gris" data-accion="guardar-plazo" data-id="${a.id_convoc}"
+                                    title="Guarda la fecha de fin de plazo de solicitud">
+                                Guardar plazo
+                            </button>
                         </div>
                     </div>
                     <div class="admin-aviso__acciones">
@@ -354,7 +369,15 @@ async function accionAviso(e) {
     btn.disabled = true;
     try {
         let r;
-        if (accion === 'desactivar') {
+        if (accion === 'guardar-plazo') {
+            const card  = btn.closest('.admin-aviso');
+            const fecha = card.querySelector('.admin-plazo-input').value || null;  // vacío → borra el plazo
+            r = await fetch(`${API_URL}/admin/avisos/${id}/fin-plazo`, {
+                method: 'PATCH',
+                headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fecha_fin_plazo: fecha }),
+            });
+        } else if (accion === 'desactivar') {
             r = await fetch(`${API_URL}/admin/avisos/${id}/desactivar`,
                 { method: 'PATCH', headers: authHeaders() });
         } else if (accion === 'reactivar') {
@@ -365,7 +388,7 @@ async function accionAviso(e) {
                 { method: 'DELETE', headers: authHeaders() });
         }
         if (r.ok) {
-            const mensajes = { desactivar: 'Convocatoria marcada como resuelta', reactivar: 'Aviso reactivado', eliminar: 'Convocatoria eliminada' };
+            const mensajes = { 'guardar-plazo': 'Fecha de plazo guardada', desactivar: 'Convocatoria marcada como resuelta', reactivar: 'Aviso reactivado', eliminar: 'Convocatoria eliminada' };
             mostrarToast(mensajes[accion]);
             await cargarAvisos();
             if (accion === 'eliminar') await cargarEstado();

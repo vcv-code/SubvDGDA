@@ -16,6 +16,7 @@ class Convocatoria(Base):
     tipo_convoc       = Column(Enum("epa", "eell"), nullable=False)
     anio_convocatoria = Column(Integer, nullable=False)
     fecha_convocatoria = Column(Date, nullable=True)
+    fecha_fin_plazo   = Column(Date, nullable=True)         # fin del plazo de solicitud; NULL hasta que se conoce
     fecha_resolucion  = Column(Date, nullable=True)         # NULL mientras la resolución está pendiente
     periodo_meses     = Column(SmallInteger, nullable=False, default=12)  # 6 para EPA 2023/2024
 
