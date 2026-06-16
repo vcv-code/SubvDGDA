@@ -478,3 +478,9 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · **Fase 2 — gestión:** endpoint `PATCH /admin/avisos/{id}/fin-plazo` (rol admin) para fijar o borrar (con null) la fecha. En el panel admin, cada aviso activo muestra un badge del estado del plazo (abierto/cerrado/⚠ falta fecha) + un input de fecha y botón "Guardar plazo". El cron (`check_bdns.py`) registra un **WARNING de acción requerida** cuando inserta una convocatoria nueva sin fecha de plazo, para que se rellene desde el panel
   · Auto-detección del plazo descartada: BDNS no da el fin de plazo de forma fiable y scrapear la web DGDA es frágil; para 2 convocatorias/año, el alta manual avisada por el cron es lo robusto
   · `tests/test_avisos.py` (+4: sin_fecha/abierto/cerrado/último día) y `tests/test_admin.py` (+5: fijar fecha, abierto, borrar con null, 404, requiere admin). Total **245 funciones / 343 ejecuciones**
+✔ Retoques de recursos y página de mantenimiento
+  · Imagen propia en `mantenimiento.html` (`assets/img/gati-manten.webp`) en lugar del logo provisional
+  · Los 4 bloques de `recursos.html` pasan de un único verde a un **tono pastel distinto por categoría**: protección (verde), colonias (azul), especializadas (lila), campañas (rosa)
+  · **CSS migrado**: el bloque `<style>` embebido en `recursos.html` se traslada a `styles.css` (sección "Página de recursos"), siguiendo la norma de no usar CSS dentro del HTML
+  · Nueva nota en recursos: si hay información incorrecta/desactualizada o una organización no quiere aparecer, puede escribir por el formulario de contacto del pie
+  · Footer (compartido por todas las páginas): cuando marca + enlaces no caben en una línea, ya no se parten a la izquierda (`space-between` con wrap) sino que se apilan y **centran**. Punto de quiebre del apilado subido de 600px a 850px en `styles.css`
