@@ -177,7 +177,7 @@ analisis-bdns-dgda/
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 245 funciones de test pytest (343 ejecuciones)
+└── tests/                  ← 246 funciones de test pytest (344 ejecuciones)
 ```
 
 ---
@@ -439,7 +439,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 
 | Página | Descripción |
 |--------|-------------|
-| `index.html` | Home con métricas, gráficas de evolución, información de convocatorias activas con su **estado de plazo** (abierto/cerrado), enlaces a las **bases reguladoras** oficiales (BOE y DGDA) y a las **resoluciones de concesión** publicadas en el BOE de cada año |
+| `index.html` | Home con métricas, gráficas de evolución y una tabla por tipo de entidad con cada convocatoria: **estado de plazo** (abierto/cerrado), enlace a la **convocatoria oficial en BDNS**, enlace a la **resolución en el BOE** y acceso directo a la búsqueda filtrada. Incluye enlaces a las **bases reguladoras** oficiales |
 | `buscador.html` | Buscador de solicitudes con filtros, búsqueda por nombre de entidad o nº de expediente, paginación, ordenación server-side, estado vacío con sugerencias cuando no hay resultados y exportación CSV con nombre de archivo dinámico según filtros activos |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
@@ -970,11 +970,11 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **297 pruebas en total**: 245 funciones de test automáticas con pytest (343 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **298 pruebas en total**: 246 funciones de test automáticas con pytest (344 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 245 funciones / 343 ejecuciones | pytest (sin Docker) |
+| Automáticos | 246 funciones / 344 ejecuciones | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -1019,8 +1019,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-327 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-343 passed   # suite completa con Docker levantado
+328 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+344 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -1127,7 +1127,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 245 funciones de test automáticas / 343 ejecuciones (pytest)
+- 246 funciones de test automáticas / 344 ejecuciones (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1169,7 +1169,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **245 funciones de test automáticas** (343 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **246 funciones de test automáticas** (344 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
 - **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
@@ -1398,6 +1398,7 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
+- **Botones "primera" y "última" página en el buscador** — junto a "Anterior"/"Siguiente" de la paginación de resultados, añadir accesos directos a la primera y última página (ocultos cuando ya se está en ellas). Toca `solicitudes.js` (la paginación) y `styles.css`.
 - **Paginación en `/admin/usuarios`** — la tabla de usuarios no pagina; con pocos usuarios actuales no es problema pero escalaría mal.
 - **Retry en cron si BDNS API no responde** — el cron falla silenciosamente si BDNS devuelve error; añadir reintentos con backoff exponencial.
 - **Logs de cron en panel admin** — mostrar `bdns_check.log` y `health_check.log` en el panel. Requiere: montar `../logs/cron` en el contenedor backend, dos endpoints nuevos en `admin.py` y dos secciones en `admin.html` / `admin.js`.
