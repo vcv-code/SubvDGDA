@@ -86,3 +86,48 @@ def test_avisos_no_incluye_convocatorias_resueltas(db_con_avisos, client):
     tipos = [a["tipo_convoc"] for a in data]
     # La EPA ya tiene fecha_resolucion → no debe aparecer
     assert "epa" not in tipos
+
+
+# ── Estado del plazo de solicitud (fecha_fin_plazo → estado_plazo) ──────────
+
+def _crear_pendiente(db, fin_plazo):
+    """Inserta una convocatoria EELL del año actual, sin resolución, con la
+    fecha de fin de plazo indicada. Devuelve nada; el aviso se consulta vía API."""
+    anio = date.today().year
+    db.add(Convocatoria(
+        num_convoc="BDNS-TEST-PLAZO",
+        titulo_convoc="Convocatoria de prueba de plazo",
+        tipo_convoc="eell",
+        anio_convocatoria=anio,
+        fecha_convocatoria=date(anio, 4, 1),
+        fecha_fin_plazo=fin_plazo,
+        fecha_resolucion=None,
+        periodo_meses=12,
+    ))
+    db.commit()
+
+
+def test_avisos_estado_plazo_sin_fecha(db_con_avisos, client):
+    """La convocatoria del fixture no tiene fecha_fin_plazo → 'sin_fecha'."""
+    aviso = client.get("/avisos/").json()[0]
+    assert "fecha_fin_plazo" in aviso
+    assert aviso["estado_plazo"] == "sin_fecha"
+
+
+def test_avisos_estado_plazo_abierto(db, client):
+    _crear_pendiente(db, date.today() + timedelta(days=10))
+    aviso = client.get("/avisos/").json()[0]
+    assert aviso["estado_plazo"] == "abierto"
+
+
+def test_avisos_estado_plazo_cerrado(db, client):
+    _crear_pendiente(db, date.today() - timedelta(days=1))
+    aviso = client.get("/avisos/").json()[0]
+    assert aviso["estado_plazo"] == "cerrado"
+
+
+def test_avisos_estado_plazo_hoy_es_abierto(db, client):
+    """El último día del plazo (hoy == fin) aún cuenta como abierto."""
+    _crear_pendiente(db, date.today())
+    aviso = client.get("/avisos/").json()[0]
+    assert aviso["estado_plazo"] == "abierto"

@@ -14,6 +14,7 @@ from ..schemas import (
     AvisoOut,
     CambiarActivoIn,
     CambiarRolIn,
+    FinPlazoIn,
     UsuarioOut,
 )
 
@@ -176,6 +177,24 @@ def reactivar_aviso(
             detail="La convocatoria ya está activa",
         )
     convoc.fecha_resolucion = None
+    db.commit()
+    db.refresh(convoc)
+    return convoc
+
+
+@router.patch("/avisos/{id_convoc}/fin-plazo", response_model=AvisoOut)
+def actualizar_fin_plazo(
+    id_convoc: int,
+    datos: FinPlazoIn,
+    _admin: Usuario = Depends(require_rol("admin")),
+    db: Session = Depends(get_db),
+):
+    """Fija o borra (con null) la fecha de fin de plazo de solicitud. El estado
+    'abierto/cerrado' del banner se calcula a partir de ella."""
+    convoc = db.query(Convocatoria).filter(Convocatoria.id_convoc == id_convoc).first()
+    if not convoc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Convocatoria no encontrada")
+    convoc.fecha_fin_plazo = datos.fecha_fin_plazo
     db.commit()
     db.refresh(convoc)
     return convoc

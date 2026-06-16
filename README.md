@@ -177,7 +177,7 @@ analisis-bdns-dgda/
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 236 funciones de test pytest (334 ejecuciones)
+└── tests/                  ← 245 funciones de test pytest (343 ejecuciones)
 ```
 
 ---
@@ -439,13 +439,13 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 
 | Página | Descripción |
 |--------|-------------|
-| `index.html` | Home con métricas, gráficas de evolución, información de convocatorias activas, enlaces a las **bases reguladoras** oficiales (BOE y DGDA) y a las **resoluciones de concesión** publicadas en el BOE de cada año |
+| `index.html` | Home con métricas, gráficas de evolución, información de convocatorias activas con su **estado de plazo** (abierto/cerrado), enlaces a las **bases reguladoras** oficiales (BOE y DGDA) y a las **resoluciones de concesión** publicadas en el BOE de cada año |
 | `buscador.html` | Buscador de solicitudes con filtros, búsqueda por nombre de entidad o nº de expediente, paginación, ordenación server-side, estado vacío con sugerencias cuando no hay resultados y exportación CSV con nombre de archivo dinámico según filtros activos |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
 | `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
-| `admin.html` | Panel de administración: gestión de usuarios, avisos y logs (solo rol `admin`) |
+| `admin.html` | Panel de administración: gestión de usuarios, avisos (incluida la **fecha de fin de plazo** de cada convocatoria) y logs (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas |
 | `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
@@ -775,7 +775,7 @@ Mailpit intercepta todos los emails que el backend intenta enviar (recuperación
 El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta dos tareas:
 
 - **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
-- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva.
+- **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva. Al insertar una convocatoria nueva (que entra sin fecha de fin de plazo, porque BDNS no la da de forma fiable), registra un **aviso de acción requerida** en su log para que se rellene la fecha desde el panel admin.
 
 Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron puede lanzarse manualmente con `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
 
@@ -970,11 +970,11 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **288 pruebas en total**: 236 funciones de test automáticas con pytest (334 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto tiene **297 pruebas en total**: 245 funciones de test automáticas con pytest (343 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 236 funciones / 334 ejecuciones | pytest (sin Docker) |
+| Automáticos | 245 funciones / 343 ejecuciones | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
@@ -1019,8 +1019,8 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-318 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-334 passed   # suite completa con Docker levantado
+327 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
+343 passed   # suite completa con Docker levantado
 ```
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
@@ -1117,7 +1117,8 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Interfaz web
 
 - Buscador con ordenación server-side; exportación CSV
-- Panel de administración completo con visor de logs
+- Banner de convocatorias con estado de plazo (abierto/cerrado) calculado automáticamente
+- Panel de administración completo con visor de logs y edición del fin de plazo de convocatorias
 - Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
 - Modal de conclusiones con textos reales en las 9 gráficas
 - Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
@@ -1126,7 +1127,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 236 funciones de test automáticas / 334 ejecuciones (pytest)
+- 245 funciones de test automáticas / 343 ejecuciones (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1168,7 +1169,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **236 funciones de test automáticas** (334 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **245 funciones de test automáticas** (343 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
 - **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas

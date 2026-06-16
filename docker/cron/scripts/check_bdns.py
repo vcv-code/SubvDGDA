@@ -347,6 +347,13 @@ def main():
                     "NUEVA convocatoria %s insertada: %s — '%s' (%s)",
                     tipo.upper(), num, titulo, fecha or "sin fecha",
                 )
+                # La convocatoria se inserta sin fecha de fin de plazo (BDNS no la da
+                # de forma fiable). Aviso para que se rellene desde el panel admin.
+                log.warning(
+                    "ACCIÓN REQUERIDA: la convocatoria %s (%s) se ha insertado SIN fecha de fin de plazo. "
+                    "Rellénala en el panel admin (Avisos / Banners) para que el banner muestre 'plazo abierto/cerrado'.",
+                    tipo.upper(), num,
+                )
                 state[tipo] = True
 
     finally:

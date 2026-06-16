@@ -88,6 +88,7 @@ Campos principales:
 - tipo_convoc — ENUM: `epa`, `eell`
 - anio_convocatoria
 - fecha_convocatoria
+- fecha_fin_plazo — fin del plazo de solicitud (NULL hasta que se conoce); el banner de la home muestra "plazo abierto/cerrado" según esta fecha
 - fecha_resolucion
 
 El campo `titulo_convoc` corresponde al campo **descripcion** devuelto por la API. El campo `anio_convocatoria` se añade de forma explícita para facilitar consultas estadísticas y la generación de gráficos de evolución temporal en el frontend.
