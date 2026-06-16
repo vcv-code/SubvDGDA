@@ -1,5 +1,5 @@
 Análisis de subvenciones de bienestar animal (BDNS + DGDA)
-Copyright (c) 2026 Verónica Corpa
+Copyright (c) 2026 Recopilación y Análisis de Subvenciones DGDA
 
 Todos los derechos reservados.
 
@@ -17,7 +17,7 @@ Está sujeto al derecho de autor por defecto previsto en la legislación
 española (Real Decreto Legislativo 1/1996, de 12 de abril, Ley de
 Propiedad Intelectual) y a los tratados internacionales aplicables.
 
-Sin permiso escrito de la titular (Verónica Corpa):
+Sin permiso escrito de la titularidad del proyecto:
 
   · NO se permite copiar, distribuir, ejecutar públicamente, modificar,
     redistribuir, sublicenciar ni crear obras derivadas de este código.
@@ -26,15 +26,13 @@ Sin permiso escrito de la titular (Verónica Corpa):
 
 Sí se permite, exclusivamente y de forma no transferible:
 
-  · Consultar el código con fines educativos y de evaluación académica
-    por parte del tribunal evaluador y del centro educativo (IES) en el
-    marco del Proyecto Intermodular de 2º DAW (curso 2025-2026).
-  · Clonar el repositorio localmente para ejecutarlo en un entorno de
-    desarrollo y verificar su funcionamiento, sin redistribuir.
+  · Consultar el código y clonar el repositorio localmente para
+    ejecutarlo en un entorno de desarrollo y verificar su
+    funcionamiento, sin redistribuir.
 
 Cualquier otro uso requiere autorización expresa por escrito de la
-titular. Contacto: a través del repositorio (GitHub Issues) o de los
-canales facilitados por el centro educativo.
+titularidad del proyecto. Contacto: a través del formulario de contacto
+del sitio web.
 
 ────────────────────────────────────────────────────────────────────
 2. CONTENIDO Y DOCUMENTACIÓN (README.md, archivos .md de la carpeta
@@ -51,7 +49,7 @@ Texto completo: https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es
 Resumen (no sustituye al texto oficial):
 
   · BY (Reconocimiento): cualquier uso debe acreditar la autoría de
-    Verónica Corpa y enlazar a esta licencia.
+    «Recopilación y Análisis de Subvenciones DGDA» y enlazar a esta licencia.
   · NC (NoComercial): no se permite el uso comercial.
   · ND (SinObraDerivada): no se permite remezclar, transformar ni
     crear obras derivadas. Solo se puede compartir la obra original

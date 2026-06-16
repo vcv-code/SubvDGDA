@@ -974,6 +974,19 @@ table tbody tr:hover {
     max-width: 520px;
 }
 
+/* Enlaces dentro del texto del hero (p. ej. Ley 7/2023): subrayados y en verde
+   para distinguirlos como enlace (los <a> globales no llevan subrayado). */
+.portada-split__descripcion a {
+    color: var(--color-verde-btn);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+}
+
+.portada-split__descripcion a:hover {
+    color: var(--color-hover);
+}
+
 .portada-split__imagen {
     /* La imagen ocupa la columna derecha */
     border-radius: var(--radio-card);
@@ -1280,10 +1293,14 @@ table tbody tr:hover {
     color: var(--footer-texto);
 }
 
-@media (max-width: 600px) {
+/* Punto en el que marca + enlaces dejan de caber en una línea: en vez de
+   partirse a la izquierda (space-between con wrap), apilamos en columna y
+   centramos las dos líneas. */
+@media (max-width: 850px) {
     .footer-principal__zona {
         flex-direction: column;
         align-items: center;
+        text-align: center;
         gap: var(--espacio-sm);
     }
 
@@ -1712,6 +1729,71 @@ canvas {
 /* Estado de error: borde izquierdo rojo */
 .input-campo.campo-invalido {
     border-left: 4px solid var(--estado-no-beneficiaria);
+}
+
+/* Variante textarea (formulario de contacto): altura automática y
+   redimensionado solo vertical, con padding superior/inferior propio. */
+.input-campo--area {
+    height: auto;
+    min-height: 120px;
+    padding: var(--espacio-sm);
+    line-height: 1.5;
+    resize: vertical;
+}
+
+/* ============================================================
+   PÁGINA DE CONTACTO — formulario centrado de una columna
+   ------------------------------------------------------------
+   Layout propio (no la "auth-card" de login/registro): una tarjeta
+   blanca centrada sobre fondo gris claro, con los campos a lo ancho.
+   ============================================================ */
+.contacto-fondo {
+    background-color: var(--color-gris-claro);
+}
+
+.contacto-page {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+}
+
+.contacto-card {
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-gris-medio);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    padding: 2.5rem;
+}
+
+.contacto-card__titulo {
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    color: var(--color-negro);
+}
+
+.contacto-card__intro {
+    color: var(--color-gris-texto);
+    margin: 0 0 1.75rem;
+    line-height: 1.5;
+}
+
+/* Asterisco de campo obligatorio y su leyenda explicativa */
+.campo-obligatorio {
+    color: var(--estado-no-beneficiaria);
+    font-weight: 700;
+}
+
+.form-leyenda {
+    font-size: 0.85rem;
+    color: var(--color-gris-texto);
+    margin: 0 0 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .contacto-card {
+        padding: 1.5rem;
+    }
 }
 
 /* Mensaje de error bajo el campo */
@@ -2227,6 +2309,20 @@ canvas {
 
 .tabla-convoc tbody tr:nth-child(even) td {
     background-color: #f5f7f6;
+}
+
+/* Fechas-enlace de las tablas (convocatoria→BDNS, resolución→BOE): subrayadas
+   para que se vean clicables, ya que los <a> globales no llevan subrayado.
+   Excluye el botón "Ver solicitudes" (.btn). */
+.tabla-convoc td a:not(.btn) {
+    color: var(--color-verde-btn);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+}
+
+.tabla-convoc td a:not(.btn):hover {
+    color: var(--color-hover);
 }
 
 
@@ -3024,6 +3120,21 @@ canvas {
 .admin-aviso__meta   { font-size: .8rem; color: #666; margin-top: .1rem; }
 .admin-aviso__acciones { display: flex; gap: .5rem; flex-shrink: 0; }
 .admin-acciones-td { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+
+/* Fila de gestión del plazo de solicitud dentro de cada aviso activo */
+.admin-aviso__plazo {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .5rem;
+}
+.admin-plazo-label { font-size: .8rem; color: #555; display: flex; align-items: center; gap: .35rem; }
+.admin-plazo-input { font-size: .8rem; padding: .2rem .4rem; border: 1px solid var(--color-gris-medio); border-radius: 6px; }
+.admin-plazo-badge { font-size: .72rem; font-weight: 700; padding: .12rem .5rem; border-radius: 999px; }
+.admin-plazo-badge--abierto { background: #E2F0E4; color: #2E6B4F; }
+.admin-plazo-badge--cerrado { background: #E0E0E0; color: #555; }
+.admin-plazo-badge--falta   { background: #FDECC8; color: #8A5A00; }
 .admin-aviso--resuelta .admin-aviso__titulo { color: #888; font-weight: 500; }
 .admin-aviso--resuelta .admin-aviso__meta   { color: #aaa; }
 
@@ -3652,6 +3763,9 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .pagina-inicio .fondo-stats {
     background-color: #DFF0E1;
     min-height: auto;
+    /* Separador sutil: convocatorias y gráficas comparten fondo verde; esta línea
+       las delimita (antes las separaba la sección crema de resoluciones, ya fusionada). */
+    border-top: 2px solid #BFE3C9;
 }
 .pagina-inicio .fondo-stats .seccion {
     padding: 0;
@@ -4110,6 +4224,12 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 }
 .convocatorias-subtitulo {
     margin-bottom: var(--espacio-md);
+}
+
+/* Dos subtítulos seguidos (descripción + nota de «Ver»): el segundo se pega al
+   primero en lugar de dejar el gap completo entre párrafos. */
+.convocatorias-subtitulo + .convocatorias-subtitulo {
+    margin-top: calc(0.25rem - var(--espacio-md));
 }
 
 /* Variante de card-grafico__titulo con texto centrado */
@@ -4876,4 +4996,107 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     .btn-subir--visible {
         transform: none;
     }
+}
+
+/* ============================================================
+   PÁGINA DE RECURSOS (recursos.html)
+   Migrado desde el <style> embebido del HTML. Cada bloque de
+   categoría lleva un tono pastel distinto, suave sobre el fondo
+   crema de la página.
+   ============================================================ */
+.recursos-bloque {
+    margin-bottom: var(--espacio-xl);
+    border-radius: 14px;
+    padding: var(--espacio-md);
+}
+
+.recursos-bloque--proteccion     { background: #E2F0E4; }  /* verde pastel */
+.recursos-bloque--colonias       { background: #E1EEF9; }  /* azul pastel */
+.recursos-bloque--especializadas { background: #ECE6F6; }  /* lila pastel */
+.recursos-bloque--campanas       { background: #FCE4EC; }  /* rosa pastel */
+
+.recursos-bloque__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--espacio-md);
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.recursos-bloque__titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+/* Tarjeta de entidad */
+.card-entidad {
+    background: #ffffff;
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+}
+
+.card-entidad a { order: 2; }
+
+.card-entidad img {
+    display: block;
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.card-entidad__nombre {
+    order: 1;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin: 0;
+}
+
+.card-entidad__categoria {
+    display: none;
+}
+
+.card-entidad__descripcion {
+    order: 3;
+    font-size: 0.88rem;
+    color: var(--color-gris-texto);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Grid flexible de 3 columnas */
+.grid-recursos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--espacio-md);
+}
+
+@media (max-width: 900px) {
+    .grid-recursos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-recursos {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Nota al pie de la página de recursos */
+.recursos-nota {
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    margin-top: var(--espacio-lg);
+    padding-top: var(--espacio-sm);
+    border-top: 1px solid var(--color-gris-medio);
 }

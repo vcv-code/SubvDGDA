@@ -2,14 +2,13 @@
 <!--
     index.html — Página de inicio (Home)
     Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
-    Curso: 2º DAW · Proyecto Final de Ciclo
 
     ¿Por qué HTML puro y no React o Vue?
     ─────────────────────────────────────
     El equipo tomó la decisión técnica de usar HTML + CSS + JS
     vanilla por tres razones:
-      1. Es coherente con el nivel del ciclo y fácilmente
-         defendible en la exposición oral del TFG.
+      1. Es sencillo de mantener y no añade complejidad
+         innecesaria para un sitio de este tamaño.
       2. No requiere compilador, bundler ni Node.js para
          funcionar: el frontend se sirve directamente con Nginx.
       3. Simplifica el flujo de ramas (feature → dev → main)
@@ -189,12 +188,12 @@
                     </p>
                     <p class="portada-split__descripcion">
                         La gestión de animales abandonados y colonias felinas es una
-                        <strong>obligación legal</strong> de los ayuntamientos y mancomunidades,
-                        reforzada por la Ley 7/2023 de bienestar animal. No obtener la subvención
-                        no les exime de cumplirla. Cabe destacar que a las entidades locales
-                        se les adelanta el dinero, mientras que las protectoras —que asumen
-                        una labor que no les corresponde legalmente— lo cobran a año vencido
-                        (tienen que adelantarlo ellas).
+                        <strong>obligación legal</strong> de los ayuntamientos y mancomunidades 
+                        (<a href="https://www.boe.es/boe/dias/2023/03/29/pdfs/BOE-A-2023-7936.pdf" target="_blank" rel="noopener noreferrer" aria-label="Ley 7/2023, PDF en el BOE (se abre en una pestaña nueva)">Ley 7/2023</a> y otras normativas). No obtener la subvención no les exime de cumplirla.
+                        Cabe destacar que a las entidades locales se les adelanta el dinero antes
+                        de producirse el gasto, sin embargo, las protectoras —que asumen una labor
+                        de forma altruista, sin obligación ninguna— lo cobran a año vencido (es decir, 
+                        tienen que adelantarlo).
                     </p>
                     <!--
                         Botón con clase "btn btn-primario" (definida en styles.css).
@@ -282,14 +281,15 @@
         <section id="seccion-convocatorias" style="display:none;">
             <div class="contenedor">
                 <div id="convocatorias-bloque" class="convocatorias-bloque">
-                    <h3 class="sub-bloque__titulo">Convocatorias</h3>
-                    <p class="bloque-subtitulo convocatorias-subtitulo">Información de las convocatorias publicadas en la actualidad y acceso directo a las resoluciones según el tipo de entidad y año.</p>
+                    <h3 class="sub-bloque__titulo">Convocatorias y resoluciones</h3>
+                    <p class="bloque-subtitulo convocatorias-subtitulo">Por tipo de entidad y año. Pulsa la fecha de convocatoria para verla en BDNS o la de resolución para el BOE.</p>
+                    <p class="bloque-subtitulo convocatorias-subtitulo">«Ver» abre la búsqueda filtrada con las solicitudes y concesiones de esa convocatoria.</p>
                     <div class="grid-2">
                         <div>
                             <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Protectoras de Animales (EPA)</h3>
                             <div class="tabla-wrapper">
                                 <table class="tabla-convoc">
-                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha de convocatoria (BOE)</th><th scope="col">Acceso rápido</th></tr></thead>
+                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha de convocatoria</th><th scope="col">Fecha de resolución</th><th scope="col">Acceso directo</th></tr></thead>
                                     <tbody id="convocatorias-epa"></tbody>
                                 </table>
                             </div>
@@ -311,7 +311,7 @@
                             <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Locales (EELL)</h3>
                             <div class="tabla-wrapper">
                                 <table class="tabla-convoc">
-                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha de convocatoria (BOE)</th><th scope="col">Acceso rápido</th></tr></thead>
+                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha de convocatoria</th><th scope="col">Fecha de resolución</th><th scope="col">Acceso directo</th></tr></thead>
                                     <tbody id="convocatorias-eell"></tbody>
                                 </table>
                             </div>
@@ -327,35 +327,6 @@
             </div>
         </section>
 
-        <!-- Resoluciones oficiales BOE -->
-        <section class="seccion-resoluciones">
-            <div class="contenedor">
-                <h3 class="sub-bloque__titulo--centrado">Resoluciones oficiales</h3>
-                <p class="sub-bloque__subtitulo">
-                    Acceso directo a las resoluciones publicadas en el BOE para cada convocatoria.
-                </p>
-                <div class="grid-2">
-                    <div class="privado-docs__grupo">
-                        <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades de Protección Animal (EPA)</h4>
-                        <ul class="privado-docs__lista" id="resoluciones-epa">
-                            <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2025 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2024 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2023 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2022 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EPA 2021 — Resolución de concesión</a></li>
-                        </ul>
-                    </div>
-                    <div class="privado-docs__grupo">
-                        <h4 class="privado-docs__subtitulo privado-docs__subtitulo--negro">Entidades Locales (EELL)</h4>
-                        <ul class="privado-docs__lista" id="resoluciones-eell">
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2025 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2024 — Resolución de concesión</a></li>
-                            <li><a href="https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662" target="_blank" rel="noopener noreferrer" title="Se abre en una pestaña nueva">EELL 2023 — Resolución de concesión</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
 
 
         <!-- ─────────────────────────────────────────────────
@@ -565,16 +536,18 @@
             <div class="footer-principal__marca">
                 <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
                 <span>
-                    <strong>Proyecto BDNS/DGDA</strong> — FP DAW 2026
+                    <strong>Proyecto BDNS/DGDA</strong> — independiente y sin ánimo de lucro
                 </span>
             </div>
 
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
-                <a href="https://github.com/vcv-code/analisis-bdns-dgda" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/vcv-code/SubvDGDA" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="aviso-legal.html">Aviso legal</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="privacidad.html">Privacidad</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="contacto.html">Contacto</a>
             </nav>
 
         </div>
@@ -587,7 +560,7 @@
                 Base de Datos Nacional de Subvenciones (BDNS)
             </a>
             y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones" target="_blank" rel="noopener noreferrer">Dirección General de Derechos de los Animales (DGDA)</a>.
-            &nbsp;·&nbsp; © 2026 Verónica Corpa · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
+            &nbsp;·&nbsp; © 2026 Recopilación y Análisis de Subvenciones DGDA · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
         </div>
 
     </footer>

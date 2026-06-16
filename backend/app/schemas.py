@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator, computed_field
 from datetime import date, datetime
 from typing import Literal, Optional
 
@@ -9,6 +9,7 @@ from typing import Literal, Optional
 
 class ConvocatoriaOut(BaseModel):
     id_convoc:          int
+    num_convoc:         Optional[str]
     titulo_convoc:      str
     tipo_convoc:        str
     anio_convocatoria:  int
@@ -168,9 +169,25 @@ class AvisoOut(BaseModel):
     tipo_convoc:        str
     anio_convocatoria:  int
     fecha_convocatoria: Optional[date]
+    fecha_fin_plazo:    Optional[date]
     fecha_resolucion:   Optional[date]
 
     model_config = ConfigDict(from_attributes=True)
+
+    @computed_field
+    @property
+    def estado_plazo(self) -> str:
+        """Estado del plazo de solicitud calculado al vuelo:
+        'sin_fecha' si no se conoce el fin de plazo, 'abierto' si aún no ha
+        pasado y 'cerrado' si ya venció."""
+        if self.fecha_fin_plazo is None:
+            return "sin_fecha"
+        return "abierto" if date.today() <= self.fecha_fin_plazo else "cerrado"
+
+
+class FinPlazoIn(BaseModel):
+    """Cuerpo para fijar (o borrar, con null) la fecha de fin de plazo de una convocatoria."""
+    fecha_fin_plazo: Optional[date]
 
 
 # ──────────────────────────────────────────────
@@ -195,6 +212,36 @@ class RegistroIn(BaseModel):
         if not any(c.isdigit() for c in v):
             raise ValueError("La contraseña debe contener al menos un número")
         return v
+
+
+class ContactoIn(BaseModel):
+    email:     EmailStr
+    mensaje:   str
+    nombre:    str = ""  # opcional
+    sitio_web: str = ""  # honeypot: debe llegar vacío en envíos legítimos
+
+    @field_validator("nombre")
+    @classmethod
+    def nombre_valido(cls, v: str) -> str:
+        v = v.strip()
+        if len(v) > 100:
+            raise ValueError("El nombre no puede superar los 100 caracteres")
+        return v
+
+    @field_validator("mensaje")
+    @classmethod
+    def mensaje_valido(cls, v: str) -> str:
+        v = v.strip()
+        if len(v) < 10:
+            raise ValueError("El mensaje debe tener al menos 10 caracteres")
+        if len(v) > 2000:
+            raise ValueError("El mensaje no puede superar los 2000 caracteres")
+        return v
+
+
+class ContactoOut(BaseModel):
+    mensaje: str
+
 
 class CambiarNombreIn(BaseModel):
     nombre: str

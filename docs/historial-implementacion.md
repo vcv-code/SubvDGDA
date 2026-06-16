@@ -249,7 +249,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · CSS `.admin-*` y `.tarjeta`/`.agrupacion-detalle` migrados de inline/ausentes a `styles.css` (Secciones 29 y 30)
 ✔ footer limpio en todas las páginas
   · eliminados enlaces "Documentación" y "Contacto" (rotos; sin página de destino real)
-  · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`
+  · URL de GitHub corregida al repositorio real: `https://github.com/vcv-code/SubvDGDA`
   · estructura uniforme en las 18 páginas HTML: GitHub · Aviso legal · Privacidad
 ✔ reorganización de assets en subcarpetas (`img/`, `img/home/`, `img/logos/`, `wireframes/`, `guia-estilo/`)
   · todas las rutas actualizadas en los 19 HTML y en `styles.css`
@@ -457,3 +457,37 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · `z-index: 1100` para quedar por debajo de modales (2000/9999) y navbar (1200) sin taparlos
   · Documentado en `frontend/docs/especificaciones-frontend.md` (nueva sección 4.10) y `frontend/docs/patrones.md` (componentes compartidos y orden de scripts)
   · Autoría única: retirada la coautoría de los footers (21 HTML), `LICENSE`, `README.md` y este historial; ajustados los plurales del `LICENSE` a singular femenino (`la titular`)
+✔ Formulario de contacto y actualización del repositorio
+  · Nuevo endpoint `POST /contacto/` (`backend/app/routers/contacto.py`): reenvía el mensaje por email reutilizando el `smtplib` de `auth.py` (`enviar_email_contacto`, buzón configurable con la env `EMAIL_CONTACTO`). Antispam por capas: honeypot `sitio_web` (mismo patrón que el registro) + rate limiting en Nginx (zona `contacto`, 3 req/min, burst 2). Si el SMTP falla devuelve **503** con mensaje honesto (a diferencia del fire-and-forget del resto de envíos)
+  · Validación en `ContactoIn` (`schemas.py`): email (`EmailStr`) y mensaje (10–2000) obligatorios; nombre opcional (máx 100). En el formulario, email y mensaje van marcados con asterisco y leyenda "* Campos obligatorios". Página `contacto.html` (formulario centrado de una columna, layout propio `.contacto-card`, distinto de la "auth-card" de login) con checkbox de consentimiento y honeypot; `js/contacto.js` autocontenido; clase `.input-campo--area` para el `textarea`. Enlace **Contacto** añadido al footer de las 20 páginas. Nueva sección "Formulario de contacto" en `privacidad.html`
+  · `tests/test_contacto.py`: 9 tests (envío con mock SMTP, honeypot, validación ×3, 503, config Nginx ×2). Total **232 funciones / 330 ejecuciones** pasando
+  · Repositorio actualizado de `vcv-code/analisis-bdns-dgda` (viejo, a archivar) a **`vcv-code/SubvDGDA`** en todas las referencias: footers de los 21 HTML, comandos `git clone` del README y manuales, y enlaces en `referencia-tecnica.md`
+  · Documentado en `README.md`, `docs/tests.md`, `docs/referencia-tecnica.md` (endpoints), `frontend/docs/especificaciones-frontend.md` y `frontend/docs/auditoria-frontend.md`
+✔ De-academización e identidad de producción
+  · El proyecto deja de presentarse como trabajo académico y pasa a ser un proyecto personal independiente sin ánimo de lucro. Retirado el marco educativo del texto visible: `aviso-legal.html` (Titularidad → "proyecto independiente"; quitada "licencia educativa"; Contacto → formulario) y `privacidad.html` (Responsable del tratamiento → titular discreto contactable por el formulario, sin nombre ni asociación). Footers de los 21 HTML: "FP DAW 2026" → "independiente y sin ánimo de lucro". Limpiados los comentarios internos `Curso: 2º DAW` y la justificación "defendible en el TFG"
+  · Anonimato: la atribución de copyright pasa de "Verónica Corpa" a **«Recopilación y Análisis de Subvenciones DGDA»** en los footers, el `LICENSE` (copyright, titularidad y cláusula BY) y la sección de licencia del `README`. El `LICENSE` pierde también el marco académico (tribunal/IES/2º DAW) y remite al formulario de contacto
+  · `README`: intro reescrita reconociendo el origen (la idea venía de antes, tomó forma como proyecto de 2º FPGS DAW y se ha ampliado más allá de lo académico). La sección "Autora" mantiene el nombre por ahora (decisión de la titular)
+  · Política de privacidad: derechos de acceso/rectificación/supresión ejercitables a través del formulario de contacto
+✔ Modo mantenimiento programado
+  · Nueva página `frontend/mantenimiento.html` (autónoma, sin navbar ni JS al backend, rutas absolutas, `noindex`) reutilizando las clases `.pagina-error`/`.pagina-50x`
+  · Nginx (`docker/nginx/default.conf`): si existe el fichero-bandera `maintenance.on` en la raíz del frontend, devuelve **503** para todo (→ `error_page 503` → `mantenimiento.html`), salvo assets, la propia página y `/healthz` (para que renderice y Docker siga viendo Nginx vivo). El 503 se separa de `50x.html` (que pasa a cubrir solo 500/502/504); los 503 del backend (p. ej. SMTP caído en `/contacto/`) NO se interceptan y llegan tal cual al cliente
+  · La bandera se lee en cada petición → activar/desactivar **no requiere reload**. Atajos `make mantenimiento-on` / `make mantenimiento-off` (touch/rm del fichero, ignorado en `.gitignore`)
+  · `tests/test_mantenimiento.py`: 4 tests de configuración (bandera, `error_page 503`, separación del 50x, existencia de la página). Total **236 funciones / 334 ejecuciones**. `nginx -t` valida la sintaxis
+✔ Estado del plazo de solicitud en el banner de convocatorias
+  · **Fase 1 — dato + banner:** nuevo campo `fecha_fin_plazo` en `convocatorias` (modelo ORM, `modelo-fisico.sql` y `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` en `install.sh` para BD ya existentes, sin borrar datos). `AvisoOut.estado_plazo` (computed field): `sin_fecha` / `abierto` (hoy ≤ fin) / `cerrado` (ya venció); `home.js` lo pinta como "Convocatoria 2026 (plazo cerrado) — …". Fechas 2026 cargadas en `install.sh` (INSERT + UPDATE idempotentes): EPA fin 2026-06-15, EELL fin 2026-06-10
+  · **Fase 2 — gestión:** endpoint `PATCH /admin/avisos/{id}/fin-plazo` (rol admin) para fijar o borrar (con null) la fecha. En el panel admin, cada aviso activo muestra un badge del estado del plazo (abierto/cerrado/⚠ falta fecha) + un input de fecha y botón "Guardar plazo". El cron (`check_bdns.py`) registra un **WARNING de acción requerida** cuando inserta una convocatoria nueva sin fecha de plazo, para que se rellene desde el panel
+  · Auto-detección del plazo descartada: BDNS no da el fin de plazo de forma fiable y scrapear la web DGDA es frágil; para 2 convocatorias/año, el alta manual avisada por el cron es lo robusto
+  · `tests/test_avisos.py` (+4: sin_fecha/abierto/cerrado/último día) y `tests/test_admin.py` (+5: fijar fecha, abierto, borrar con null, 404, requiere admin). Total **245 funciones / 343 ejecuciones**
+✔ Retoques de recursos y página de mantenimiento
+  · Imagen propia en `mantenimiento.html` (`assets/img/gati-manten.webp`) en lugar del logo provisional
+  · Los 4 bloques de `recursos.html` pasan de un único verde a un **tono pastel distinto por categoría**: protección (verde), colonias (azul), especializadas (lila), campañas (rosa)
+  · **CSS migrado**: el bloque `<style>` embebido en `recursos.html` se traslada a `styles.css` (sección "Página de recursos"), siguiendo la norma de no usar CSS dentro del HTML
+  · Nueva nota en recursos: si hay información incorrecta/desactualizada o una organización no quiere aparecer, puede escribir por el formulario de contacto del pie
+  · Footer (compartido por todas las páginas): cuando marca + enlaces no caben en una línea, ya no se parten a la izquierda (`space-between` con wrap) sino que se apilan y **centran**. Punto de quiebre del apilado subido de 600px a 850px en `styles.css`
+✔ Home: enlaces oficiales en una tabla única por tipo de entidad
+  · `num_convoc` expuesto en `ConvocatoriaOut` (`GET /convocatorias/`) para poder enlazar a BDNS (+1 test en `test_convocatorias.py`)
+  · Se fusionan la tabla de "Convocatorias" y la sección "Resoluciones oficiales" en **una sola tabla por tipo** (EPA / EELL): Año · Fecha de convocatoria · Fecha de resolución · Acceso directo
+  · La **fecha de convocatoria** enlaza a la ficha oficial en **BDNS** (`infosubvenciones.es/.../convocatoria/{num_convoc}`, incluye BOE y PDFs); la **fecha de resolución** enlaza al **BOE** (URLs en un mapa en `home.js`). El botón **"Ver →"** (búsqueda filtrada) solo aparece cuando hay resolución (antes no hay datos)
+  · Detalles: el año se omite en las fechas si coincide con la columna Año; fechas-enlace subrayadas (`.tabla-convoc td a:not(.btn)`); las convocatorias sin resolver muestran "Pendiente" / "—"
+  · Separador sutil (`border-top`) entre las secciones de tablas y de gráficas (ambas verdes; antes las separaba la sección crema de resoluciones, ya fusionada)
+  · Total **246 funciones / 344 ejecuciones**

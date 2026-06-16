@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+    mantenimiento.html — Página de mantenimiento programado
+
+    Nginx la sirve con estado 503 cuando existe el fichero-bandera
+    `maintenance.on` en la raíz del frontend (ver docker/nginx/default.conf).
+    Para activar/desactivar:  make mantenimiento-on  /  make mantenimiento-off
+
+    Rutas absolutas y SIN JS hacia el backend: debe cargar aunque el
+    backend esté caído. Tampoco lleva navbar/footer con enlaces, porque
+    durante el mantenimiento el resto del sitio no está disponible.
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>En mantenimiento — Subvenciones Bienestar Animal</title>
+    <meta name="description" content="Estamos aplicando mejoras. Volvemos pronto.">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" href="/assets/img/logo.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <main id="contenido-principal" class="auth-fondo">
+        <div class="auth-page auth-page--centrado">
+
+            <div class="pagina-error pagina-50x" aria-labelledby="mantenimiento-titulo">
+
+                <div class="pagina-50x__contenido">
+
+                    <img src="/assets/img/gati-manten.webp" alt="Estamos en mantenimiento"
+                         width="1536" height="1024" class="pagina-50x__imagen">
+
+                    <h1 class="auth-card__titulo pagina-50x__titulo" id="mantenimiento-titulo">
+                        Estamos haciendo mejoras
+                    </h1>
+                    <p class="auth-card__subtitulo pagina-50x__simpatico">
+                        Volvemos en cuanto podamos.
+                    </p>
+
+                    <p class="auth-card__subtitulo pagina-50x__texto">
+                        Estamos aplicando mejoras en la web.
+                    </p>
+                    <p class="auth-card__subtitulo pagina-50x__texto">
+                        Vuelve a intentarlo más tarde.
+                    </p>
+                    <p class="auth-card__subtitulo pagina-50x__texto">
+                        Gracias por tu paciencia.
+                    </p>
+
+                    <div class="pagina-50x__botones">
+                        <button type="button" onclick="window.location.reload()"
+                                class="btn btn-secundario pagina-error__btn">
+                            Reintentar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

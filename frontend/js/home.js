@@ -654,9 +654,12 @@ async function cargarAvisos() {
         if (!avisos.length) return;
 
         const etiquetas = { eell: 'Entidades Locales', epa: 'Entidades Privadas' };
+        // Etiqueta del estado del plazo de solicitud (lo calcula el backend en estado_plazo).
+        const etiquetasPlazo = { abierto: ' (plazo abierto)', cerrado: ' (plazo cerrado)', sin_fecha: '' };
 
         contenedor.innerHTML = avisos.map(aviso => {
             const tipo  = etiquetas[aviso.tipo_convoc] || aviso.tipo_convoc.toUpperCase();
+            const plazo = etiquetasPlazo[aviso.estado_plazo] ?? '';
             const fecha = aviso.fecha_convocatoria
                 ? new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
                 : 'fecha pendiente';
@@ -664,7 +667,7 @@ async function cargarAvisos() {
                 <div class="aviso-banner">
                     <span class="aviso-banner__icono" aria-hidden="true">📢</span>
                     <div class="aviso-banner__texto">
-                        <strong>Convocatoria ${aviso.anio_convocatoria} — ${tipo}</strong>
+                        <strong>Convocatoria ${aviso.anio_convocatoria}${plazo} — ${tipo}</strong>
                         <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
                     </div>
                 </div>`;
@@ -695,33 +698,67 @@ async function cargarConvocatorias() {
         });
 
         const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-        const fmtFecha = iso => {
+        // Si la fecha es del mismo año que la fila, se omite el año (redundante con
+        // la columna Año). Se conserva si difiere (p. ej. resolución en enero del año siguiente).
+        const fmtFecha = (iso, anioFila) => {
             if (!iso) return '—';
             const [y, m, d] = iso.split('-');
-            return `${parseInt(d)} ${meses[parseInt(m)-1]} ${y}`;
+            const base = `${parseInt(d)} ${meses[parseInt(m) - 1]}`;
+            return (anioFila && parseInt(y) === anioFila) ? base : `${base} ${y}`;
         };
 
-        const renderFilas = (lista) =>
-            lista
+        // URLs del BOE de las resoluciones (no las da la API; se mantienen aquí).
+        const RESOL_BOE = {
+            'epa-2025':  'https://www.boe.es/buscar/doc.php?id=BOE-A-2025-27109',
+            'epa-2024':  'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-23749',
+            'epa-2023':  'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-23529',
+            'epa-2022':  'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-22122',
+            'epa-2021':  'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2022-602',
+            'eell-2025': 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-27204',
+            'eell-2024': 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-24205',
+            'eell-2023': 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-662',
+        };
+        const BDNS_CONVOC = 'https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/';
+
+        // Una fila por convocatoria con todo: la fecha de convocatoria enlaza a la
+        // ficha BDNS (PDFs + BOE), la de resolución al BOE, y el botón "Ver solicitudes"
+        // (búsqueda filtrada) solo aparece cuando ya hay resolución (antes no hay datos).
+        const renderFila = (lista) =>
+            [...lista]
                 .sort((a, b) => b.anio_convocatoria - a.anio_convocatoria)
                 .map(c => {
-                    const asterisco  = c.periodo_meses === 6 ? ' *' : '';
-                    const fechaStr   = fmtFecha(c.fecha_convocatoria);
-                    const pendiente  = c.fecha_resolucion === null && c.fecha_convocatoria !== null;
-                    const accion     = pendiente
-                        ? `<span class="convoc-pendiente">Pendiente de resolución</span>`
-                        : `<a href="buscador.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm">Ver →</a>`;
+                    const asterisco = c.periodo_meses === 6 ? '&nbsp;*' : '';
+
+                    const convocTxt  = fmtFecha(c.fecha_convocatoria, c.anio_convocatoria);
+                    const convocCell = c.num_convoc
+                        ? `<a href="${BDNS_CONVOC}${c.num_convoc}" target="_blank" rel="noopener noreferrer" title="Ver la convocatoria ${c.anio_convocatoria} en BDNS (se abre en una pestaña nueva)">${convocTxt}</a>`
+                        : convocTxt;
+
+                    let resolCell, accesoCell;
+                    if (c.fecha_resolucion === null) {
+                        resolCell  = '<span class="convoc-pendiente">Pendiente</span>';
+                        accesoCell = '<span class="convoc-pendiente">—</span>';
+                    } else {
+                        const boe = RESOL_BOE[`${c.tipo_convoc}-${c.anio_convocatoria}`];
+                        const resolTxt = fmtFecha(c.fecha_resolucion, c.anio_convocatoria);
+                        resolCell = boe
+                            ? `<a href="${boe}" target="_blank" rel="noopener noreferrer" title="Resolución ${c.anio_convocatoria} en el BOE (se abre en una pestaña nueva)">${resolTxt}</a>`
+                            : resolTxt;
+                        accesoCell = `<a href="buscador.html?tipo=${c.tipo_convoc}&anio=${c.anio_convocatoria}" class="btn btn-secundario btn--sm" title="Ver las solicitudes y concesiones de esta convocatoria">Ver →</a>`;
+                    }
+
                     return `<tr>
                         <td>${c.anio_convocatoria}${asterisco}</td>
-                        <td>${fechaStr}</td>
-                        <td>${accion}</td>
+                        <td>${convocCell}</td>
+                        <td>${resolCell}</td>
+                        <td>${accesoCell}</td>
                     </tr>`;
                 }).join('');
 
         const tbodyEell = document.getElementById('convocatorias-eell');
         const tbodyEpa  = document.getElementById('convocatorias-epa');
-        if (tbodyEell) tbodyEell.innerHTML = renderFilas(porTipo.eell);
-        if (tbodyEpa)  tbodyEpa.innerHTML  = renderFilas(porTipo.epa);
+        if (tbodyEell) tbodyEell.innerHTML = renderFila(porTipo.eell);
+        if (tbodyEpa)  tbodyEpa.innerHTML  = renderFila(porTipo.epa);
 
         const haySeisMeses = convocatorias.some(c => c.periodo_meses === 6);
         const notaEl = document.getElementById('convocatorias-nota');
@@ -737,41 +774,8 @@ async function cargarConvocatorias() {
 }
 
 
-/**
- * cargarPendientesResoluciones()
- * Lee GET /avisos/ y añade dinámicamente una entrada "Resolución pendiente
- * de publicación" al principio de la lista de resoluciones BOE correspondiente
- * (EELL o EPA) para cada convocatoria sin resolución.
- * El estilo (⏳ gris itálica) lo aplica el CSS de .privado-docs__lista span.
- */
-async function cargarPendientesResoluciones() {
-    try {
-        const resp = await fetch(`${API_URL}/avisos/`);
-        if (!resp.ok) return;
-        const avisos = await resp.json();
-
-        const listas = {
-            eell: document.getElementById('resoluciones-eell'),
-            epa:  document.getElementById('resoluciones-epa'),
-        };
-
-        avisos.forEach(aviso => {
-            const lista = listas[aviso.tipo_convoc];
-            if (!lista) return;
-            const tipo  = aviso.tipo_convoc.toUpperCase();
-            const li    = document.createElement('li');
-            li.innerHTML = `<span>${tipo} ${aviso.anio_convocatoria} — Resolución pendiente de publicación</span>`;
-            lista.prepend(li);
-        });
-    } catch (_) {
-        // Sección informativa; si falla no interrumpimos la página
-    }
-}
-
-
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
     cargarAvisos();
     cargarConvocatorias();
-    cargarPendientesResoluciones();
 });

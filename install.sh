@@ -416,6 +416,7 @@ CREATE TABLE IF NOT EXISTS verificacion_tokens (
 );
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS nombre           VARCHAR(100) NULL       AFTER email;
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS email_verificado TINYINT(1)   NOT NULL DEFAULT 1 AFTER activo;
+ALTER TABLE convocatorias ADD COLUMN IF NOT EXISTS fecha_fin_plazo DATE NULL AFTER fecha_convocatoria;
 UPDATE convocatorias SET fecha_convocatoria='2021-10-26' WHERE tipo_convoc='epa'  AND anio_convocatoria=2021 AND fecha_convocatoria IS NULL;
 UPDATE convocatorias SET fecha_convocatoria='2022-08-24' WHERE tipo_convoc='epa'  AND anio_convocatoria=2022 AND fecha_convocatoria IS NULL;
 UPDATE convocatorias SET fecha_convocatoria='2023-05-19' WHERE tipo_convoc='epa'  AND anio_convocatoria=2023 AND fecha_convocatoria IS NULL;
@@ -434,6 +435,8 @@ UPDATE convocatorias SET fecha_resolucion='2025-12-30' WHERE tipo_convoc='epa'  
 UPDATE convocatorias SET fecha_resolucion='2024-01-11' WHERE tipo_convoc='eell' AND anio_convocatoria=2023 AND fecha_resolucion IS NULL;
 UPDATE convocatorias SET fecha_resolucion='2024-11-20' WHERE tipo_convoc='eell' AND anio_convocatoria=2024 AND fecha_resolucion IS NULL;
 UPDATE convocatorias SET fecha_resolucion='2025-12-31' WHERE tipo_convoc='eell' AND anio_convocatoria=2025 AND fecha_resolucion IS NULL;
+UPDATE convocatorias SET fecha_fin_plazo='2026-06-15' WHERE tipo_convoc='epa'  AND anio_convocatoria=2026 AND fecha_fin_plazo IS NULL;
+UPDATE convocatorias SET fecha_fin_plazo='2026-06-10' WHERE tipo_convoc='eell' AND anio_convocatoria=2026 AND fecha_fin_plazo IS NULL;
 INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
 VALUES (
     'admin@demo.com',
@@ -461,11 +464,11 @@ insertar_convocatorias_vigentes() {
     docker exec bdns_dgda_db mariadb \
         -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
         -e "
-INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria)
-SELECT 'Subvenciones a entidades de protección animal 2026','epa',2026,'904714',12,'2026-05-11'
+INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria, fecha_fin_plazo)
+SELECT 'Subvenciones a entidades de protección animal 2026','epa',2026,'904714',12,'2026-05-11','2026-06-15'
 WHERE NOT EXISTS (SELECT 1 FROM convocatorias WHERE tipo_convoc='epa' AND anio_convocatoria=2026);
-INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria)
-SELECT 'Subvenciones a entidades locales para protección animal 2026','eell',2026,'897468',12,'2026-04-08'
+INSERT INTO convocatorias (titulo_convoc, tipo_convoc, anio_convocatoria, num_convoc, periodo_meses, fecha_convocatoria, fecha_fin_plazo)
+SELECT 'Subvenciones a entidades locales para protección animal 2026','eell',2026,'897468',12,'2026-04-08','2026-06-10'
 WHERE NOT EXISTS (SELECT 1 FROM convocatorias WHERE tipo_convoc='eell' AND anio_convocatoria=2026);
 " 2>/dev/null && ok "Convocatorias vigentes al día" || aviso "No se pudieron insertar las convocatorias 2026"
 }

@@ -217,5 +217,8 @@ docker/ssl/server.key
 # Estado del cron (generado en runtime, varía por máquina)
 logs/cron/estado_*.json
 
+# Bandera del modo mantenimiento (se crea/borra con make mantenimiento-on/off)
+frontend/maintenance.on
+
 # Guía de estudio detallada del proyecto con especial detalle en el backend
 guia-estudio/

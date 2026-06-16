@@ -78,6 +78,7 @@ frontend/
 │   ├── auth.js                  → Lógica de login y registro (JWT)
 │   ├── recuperar-password.js    → Envío del email de recuperación
 │   ├── reset-password.js        → Validación y envío de la nueva contraseña
+│   ├── contacto.js              → Envío del formulario de contacto (POST /contacto/)
 │   ├── navbar.js                → Navbar dinámica compartida por todas las páginas
 │   ├── scroll-arriba.js         → Botón flotante "volver arriba" (compartido)
 │   └── utils.js                 → Utilidades compartidas (formato de importes, helpers)
@@ -105,9 +106,11 @@ frontend/
 ├── entidad.html             → Ficha de entidad con historial y desglose de agrupaciones
 ├── recuperar-password.html  → Solicitar enlace de recuperación de contraseña por email
 ├── reset-password.html      → Establecer nueva contraseña desde el enlace del email
+├── contacto.html            → Formulario de contacto (honeypot + rate limiting)
 ├── aviso-legal.html         → Aviso legal
 ├── privacidad.html          → Política de privacidad
 ├── 404.html · 50x.html      → Páginas de error personalizadas servidas por Nginx
+├── mantenimiento.html       → Página de mantenimiento programado (503, vía bandera en Nginx)
 └── docs/
     ├── diseño.md                    → Guía visual del proyecto (issue 7A)
     └── especificaciones-frontend.md → Este documento
@@ -1010,6 +1013,18 @@ Las dos peticiones se lanzan en paralelo con `Promise.all()` para minimizar el t
 
 ---
 
+### 5.12 Contacto — `contacto.html` + `js/contacto.js`
+
+Formulario de contacto público. **Diseño propio** (no la `auth-card` de login/registro): una sola columna centrada (`.contacto-page` → `.contacto-card`) sobre fondo gris claro, para que se lea como un formulario y no como una pantalla de acceso.
+
+**Campos:** nombre (opcional), correo electrónico y mensaje (obligatorios, marcados con asterisco `*` y leyenda "* Campos obligatorios"). El `textarea` usa la variante `.input-campo--area`. Checkbox de consentimiento de la política de privacidad obligatorio.
+
+**Envío (`contacto.js`):** validación cliente (email válido, mensaje ≥ 10, consentimiento marcado) y `POST /contacto/`. Muestra alerta de éxito o error reutilizando el patrón `.auth-alerta` / `.auth-alerta--ok`. Es autocontenido (no carga `auth.js`).
+
+**Antispam:** campo honeypot oculto `sitio_web` (mismo patrón que el registro) + rate limiting en Nginx (zona `contacto`, 3 req/min). El backend reenvía el mensaje por email (`POST /contacto/`); si el SMTP falla devuelve 503 y el formulario lo informa.
+
+---
+
 ## 6. Integración con la API REST
 
 ### Endpoints disponibles y su uso en el frontend
@@ -1787,7 +1802,7 @@ El enlace `<a href="estadisticas-epas.html" class="activo" aria-current="page">E
 El archivo acumuló 722 bytes nulos (posiciones 30901–31622) tras el script de reemplazo de URLs de GitHub. Se sanearon con Python (`data.rstrip(b'\x00')`). El archivo quedó en 30 901 bytes sin caracteres de control.
 
 **URLs de GitHub corregidas en 18 páginas HTML**  
-Todas las páginas contenían `href="https://github.com"` en el footer. Se actualizaron al repositorio real: `https://github.com/vcv-code/analisis-bdns-dgda`.
+Todas las páginas contenían `href="https://github.com"` en el footer. Se actualizaron al repositorio real: `https://github.com/vcv-code/SubvDGDA`.
 
 ---
 

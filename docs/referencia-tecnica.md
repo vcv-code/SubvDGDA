@@ -340,7 +340,7 @@ Detalle completo (versión, propósito, fallback) más abajo en la sección "Lib
 
 | Recurso | URL | Uso |
 |---|---|---|
-| Repositorio GitHub | `https://github.com/vcv-code/analisis-bdns-dgda` | Código fuente, issues y PRs del proyecto |
+| Repositorio GitHub | `https://github.com/vcv-code/SubvDGDA` | Código fuente, issues y PRs del proyecto |
 | Texto oficial CC BY-NC-ND 4.0 | `https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es` | Licencia del contenido (footer y `LICENSE`) |
 
 ---
@@ -376,6 +376,12 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `POST` | `/auth/recuperar` | Solicitar enlace de reset · respuesta idéntica exista o no el email |
 | `POST` | `/auth/reset` | Restablecer contraseña con token · revoca todos los refresh tokens |
 
+### Contacto (público)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `POST` | `/contacto/` | Envía un mensaje de contacto por email · honeypot antispam + rate limiting (3 req/min) · 503 si el SMTP falla |
+
 ### Zona privada (rol: `registrado`)
 
 | Método | Ruta | Descripción |
@@ -398,6 +404,7 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `GET` | `/admin/avisos` | Lista de avisos activos |
 | `PATCH` | `/admin/avisos/{id}/desactivar` | Desactivar aviso |
 | `PATCH` | `/admin/avisos/{id}/reactivar` | Reactivar aviso |
+| `PATCH` | `/admin/avisos/{id}/fin-plazo` | Fijar o borrar (null) la fecha de fin de plazo de solicitud |
 | `DELETE` | `/admin/avisos/{id}` | Eliminar convocatoria sin resolución (409 si tiene solicitudes) |
 | `GET` | `/admin/logs` | Últimas N líneas del log de acceso |
 | `GET` | `/admin/logs/errores` | Últimas N líneas del log de errores |
@@ -498,6 +505,14 @@ Con `rate=10r/m` y `burst=5`:
 | SRI en recursos CDN | Atributos `integrity="sha384-..."` y `crossorigin="anonymous"` en los 5 recursos externos (Chart.js ×3, Leaflet JS, Leaflet CSS); el navegador verifica el hash antes de ejecutar/aplicar el recurso |
 
 ---
+
+## Modo mantenimiento (Nginx)
+
+Para paradas planificadas (despliegues, migraciones de BD, recargas de datos) hay un modo mantenimiento controlado por un **fichero-bandera** que Nginx comprueba en cada petición (sin reload):
+
+- Si existe `maintenance.on` en la raíz del frontend, Nginx devuelve **503** para todo el tráfico (`error_page 503 → mantenimiento.html`), salvo los assets, la propia página de mantenimiento y `/healthz` (para que la página renderice y el healthcheck de Docker siga viendo Nginx vivo).
+- El 503 de mantenimiento está **separado de `50x.html`** (que cubre 500/502/504). Los 503 que devuelve el backend (p. ej. SMTP caído en `/contacto/`) **no se interceptan** (`proxy_intercept_errors` desactivado) y llegan tal cual al cliente.
+- Activar/desactivar: `make mantenimiento-on` / `make mantenimiento-off` (crea/borra el fichero, ignorado en `.gitignore`). El cambio es inmediato; no reinicia ni recarga nada.
 
 ## Rendimiento de carga del frontend
 
@@ -693,7 +708,7 @@ Sin estas actualizaciones la app funciona igualmente (el cron lo compensa), pero
 ## Instalación
 
 ```bash
-git clone git@github.com:vcv-code/analisis-bdns-dgda.git
+git clone git@github.com:vcv-code/SubvDGDA.git
 cd analisis-bdns-dgda
 bash install.sh
 ```
@@ -728,6 +743,8 @@ En instalaciones posteriores las imágenes ya están cacheadas localmente — ar
 | Rebuild del backend | `cd docker && docker compose up --build -d backend` |
 | Recargar config nginx | `docker exec bdns_nginx nginx -s reload` |
 | Verificar config nginx | `docker exec bdns_nginx nginx -t` |
+| Activar modo mantenimiento | `make mantenimiento-on` |
+| Desactivar modo mantenimiento | `make mantenimiento-off` |
 | Rebuild backend + reiniciar | `cd docker && docker compose down && docker compose up -d` (tras reinicio WSL2) |
 | Ver logs nginx | `docker logs bdns_nginx --tail 50` |
 | Ejecutar tests | `source venv/bin/activate && python -m pytest tests/ -q` |
@@ -810,7 +827,7 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 223 funciones de test / 321 ejecuciones pasando, 0 fallando (actualizado 2026-05-22)
+- **Total:** 246 funciones de test / 344 ejecuciones pasando, 0 fallando (actualizado 2026-06-16)
 
 | Archivo | Qué testea |
 |---|---|
