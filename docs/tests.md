@@ -84,6 +84,8 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 
 ### Tabla completa de tests
 
+> **Pendiente de actualizar:** esta tabla numerada es una foto que se quedó en 199 filas; la suite real ya tiene **347 funciones**. Falta regenerarla (y añadir, entre otros, los tests de tramos de importe y recurrencia EELL). Al hacerlo conviene automatizar la extracción desde `pytest --collect-only` para no volver a desincronizarla.
+
 | # | Archivo | Tipo | Caja | Qué comprueba |
 |---|---|---|---|---|
 | 1 | `test_smoke.py` | Smoke | Negra | `GET /` responde 200 con `{"mensaje": "API funcionando"}` |
@@ -281,7 +283,7 @@ Inserta 3 solicitudes de prueba con dos beneficiarios distintos (EPA/asociación
 
 #### test_estadisticas.py
 
-Cubre tres endpoints: el general `/estadisticas/` (4 tests) y los específicos `/estadisticas/epas` (10 tests) y `/estadisticas/eell` (10 tests). Para los dos nuevos, cada bloque incluye: respuesta 200, estructura del JSON, comportamiento con BD vacía (ceros sin error), corrección de cálculos con fixture, y cabecera `Cache-Control`. Los tests más importantes son los de cálculo: nuevos vs recurrentes en EPAs (una entidad solo cuenta como nueva la primera vez que aparece), ratio de exclusión en EELL, y la concentración top 10 % (los porcentajes deben sumar exactamente 100).
+Cubre tres endpoints: el general `/estadisticas/` (4 tests) y los específicos `/estadisticas/epas` (10 tests) y `/estadisticas/eell` (14 tests). Para los dos nuevos, cada bloque incluye: respuesta 200, estructura del JSON, comportamiento con BD vacía (ceros sin error), corrección de cálculos con fixture, y cabecera `Cache-Control`. Los tests más importantes son los de cálculo: nuevos vs recurrentes en EPAs (una entidad solo cuenta como nueva la primera vez que aparece), ratio de exclusión en EELL, la concentración top 10 % (los porcentajes deben sumar exactamente 100), la distribución por tramos de importe EELL y la recurrencia de entidades EELL (con un fixture multiaño donde una entidad repite en 2023 y 2024).
 
 #### test_auth.py
 

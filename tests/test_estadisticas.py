@@ -216,7 +216,9 @@ def test_eell_responde(client):
 def test_eell_estructura(client):
     data = client.get("/estadisticas/eell").json()
     for clave in ("pct_ayuntamientos_con_ayuda", "importe_medio", "ratio_exclusion",
-                  "ccaa_top", "por_ccaa", "top_provincias", "concentracion"):
+                  "ccaa_top", "por_ccaa", "top_provincias", "concentracion",
+                  "distribucion_importes", "recurrencia_por_anio",
+                  "entidades_repiten", "total_entidades"):
         assert clave in data
     assert "top_10_pct" in data["concentracion"]
     assert "resto_pct" in data["concentracion"]
@@ -228,6 +230,10 @@ def test_eell_sin_datos_devuelve_ceros(client):
     assert data["importe_medio"] == 0.0
     assert data["por_ccaa"] == []
     assert data["top_provincias"] == []
+    assert data["distribucion_importes"] == []
+    assert data["recurrencia_por_anio"] == []
+    assert data["entidades_repiten"] == 0
+    assert data["total_entidades"] == 0
 
 
 def test_eell_pct_ayuntamientos(db_eell, client):
@@ -278,3 +284,73 @@ def test_eell_concentracion_suma_100(db_eell, client):
 def test_eell_cache_header(client):
     r = client.get("/estadisticas/eell")
     assert "max-age" in r.headers.get("cache-control", "")
+
+
+def test_eell_distribucion_importes(db_eell, client):
+    # db_eell tiene dos concedidas de 10.000 y 20.000 € → ambas en el
+    # tramo 10.000–25.000 €; el resto de tramos a 0.
+    data = client.get("/estadisticas/eell").json()
+    tramos = {t["rango"]: t["cantidad"] for t in data["distribucion_importes"]}
+    assert tramos["10.000–25.000 €"] == 2
+    assert tramos["< 10.000 €"] == 0
+    assert tramos["≥ 75.000 €"] == 0
+    # La suma de los tramos coincide con el nº de concesiones
+    assert sum(tramos.values()) == 2
+
+
+def test_eell_recurrencia_un_solo_anio(db_eell, client):
+    # Un único año (2024): las 2 concedidas son nuevas, ninguna repite.
+    data = client.get("/estadisticas/eell").json()
+    assert data["entidades_repiten"] == 0
+    assert data["total_entidades"] == 2
+    rec = {r["anio"]: r for r in data["recurrencia_por_anio"]}
+    assert rec[2024]["nuevas"] == 2
+    assert rec[2024]["recurrentes"] == 0
+
+
+@pytest.fixture
+def db_eell_multianio(db):
+    """Dos convocatorias EELL (2023 y 2024) con una entidad que repite."""
+    c23 = Convocatoria(titulo_convoc="EELL 2023", tipo_convoc="eell", anio_convocatoria=2023, periodo_meses=12)
+    c24 = Convocatoria(titulo_convoc="EELL 2024", tipo_convoc="eell", anio_convocatoria=2024, periodo_meses=12)
+    db.add_all([c23, c24])
+    db.flush()
+
+    ba = Beneficiario(cif="P4100010A", nombre="Ayto. Repite",  tipo_benef="ayuntamiento")
+    bb = Beneficiario(cif="P4100011B", nombre="Ayto. Nuevo24",  tipo_benef="ayuntamiento")
+    db.add_all([ba, bb])
+    db.flush()
+
+    # ba concedida en 2023 y 2024 (repite); bb solo en 2024 (nueva ese año)
+    sa23 = Solicitud(id_convoc=c23.id_convoc, id_benef=ba.id_benef, estado="concedida",
+                     ccaa="Andalucía", provincia="Sevilla")
+    sa24 = Solicitud(id_convoc=c24.id_convoc, id_benef=ba.id_benef, estado="concedida",
+                     ccaa="Andalucía", provincia="Sevilla")
+    sb24 = Solicitud(id_convoc=c24.id_convoc, id_benef=bb.id_benef, estado="concedida",
+                     ccaa="Andalucía", provincia="Málaga")
+    db.add_all([sa23, sa24, sb24])
+    db.flush()
+
+    db.add_all([
+        Concesion(id_solic=sa23.id_solic, importe=50000.00),
+        Concesion(id_solic=sa24.id_solic, importe=60000.00),
+        Concesion(id_solic=sb24.id_solic, importe=30000.00),
+    ])
+    db.commit()
+
+
+def test_eell_recurrencia_multianio(db_eell_multianio, client):
+    data = client.get("/estadisticas/eell").json()
+    # Una entidad (ba) recibe ayuda en 2 años → repite
+    assert data["entidades_repiten"] == 1
+    assert data["total_entidades"] == 2
+    rec = {r["anio"]: r for r in data["recurrencia_por_anio"]}
+    # 2023: solo ba, primera vez → 1 nueva, 0 recurrentes
+    assert rec[2023]["nuevas"] == 1
+    assert rec[2023]["recurrentes"] == 0
+    # 2024: ba (recurrente) + bb (nueva) → 1 nueva, 1 recurrente
+    assert rec[2024]["nuevas"] == 1
+    assert rec[2024]["recurrentes"] == 1
+    # El recurrente de 2024 es la entidad que ya estaba en 2023 (ba)
+    assert rec[2024]["recurrentes_nombres"] == ["Ayto. Repite"]
+    assert rec[2023]["recurrentes_nombres"] == []

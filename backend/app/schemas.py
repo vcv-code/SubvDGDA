@@ -148,6 +148,12 @@ class ConcentracionItem(BaseModel):
     top_10_pct: float
     resto_pct:  float
 
+class EellAnioRecurrencia(BaseModel):
+    anio:                int
+    nuevas:              int
+    recurrentes:         int
+    recurrentes_nombres: list[str] = []
+
 class EstadisticasEellOut(BaseModel):
     pct_ayuntamientos_con_ayuda: float
     importe_medio:               float
@@ -156,6 +162,10 @@ class EstadisticasEellOut(BaseModel):
     por_ccaa:                    list[CcaaItem]
     top_provincias:              list[ProvinciaItem]
     concentracion:               ConcentracionItem
+    distribucion_importes:       list[RangoImporte]        = []
+    recurrencia_por_anio:        list[EellAnioRecurrencia] = []
+    entidades_repiten:           int                       = 0
+    total_entidades:             int                       = 0
 
 
 # ──────────────────────────────────────────────
