@@ -334,6 +334,13 @@ main {
     text-align: center;
 }
 
+/* El atributo hidden debe ocultar el botón: sin esta regla, el
+   display:inline-block de .btn (más específico) lo mantendría visible.
+   Se usa en los botones "Primera"/"Última" de la paginación. */
+.btn[hidden] {
+    display: none;
+}
+
 /* Botón principal: verde oscuro (igual que btn-verde) */
 .btn-primario {
     background-color: var(--color-verde-btn);
@@ -354,6 +361,21 @@ main {
 
 .btn-secundario:hover {
     background-color: var(--color-fondo-verde);
+}
+
+/* Botón con aspecto de enlace: sin recuadro ni fondo, texto en negro
+   y subrayado solo al pasar el ratón. Usado en "« Primera" / "Última »"
+   de la paginación para diferenciarlos de Anterior/Siguiente. */
+.btn-enlace {
+    background-color: transparent;
+    border: none;
+    color: var(--color-negro);
+    text-decoration: none;
+}
+
+.btn-enlace:hover {
+    background-color: transparent;
+    text-decoration: underline;
 }
 
 

@@ -491,3 +491,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · Detalles: el año se omite en las fechas si coincide con la columna Año; fechas-enlace subrayadas (`.tabla-convoc td a:not(.btn)`); las convocatorias sin resolver muestran "Pendiente" / "—"
   · Separador sutil (`border-top`) entre las secciones de tablas y de gráficas (ambas verdes; antes las separaba la sección crema de resoluciones, ya fusionada)
   · Total **246 funciones / 344 ejecuciones**
+✔ Buscador: accesos directos a primera y última página
+  · Botones **« Primera** / **Última »** en la paginación de `buscador.html` (y su alias `solicitudes.html`), a los lados de Anterior/Siguiente. Se **ocultan** (atributo `hidden`) cuando ya se está en esa página, en vez de deshabilitarse. Nuevos listeners en `js/solicitudes.js` que saltan a la página 1 y a la última
+  · Aspecto de enlace (nueva clase `.btn-enlace` en `styles.css`): sin recuadro ni fondo, texto negro y subrayado solo al hover, para distinguirlos de los botones verdes Anterior/Siguiente
+  · Regla `.btn[hidden]` en `styles.css`: sin ella, el `display:inline-block` de `.btn` (más específico que el `display:none` implícito del atributo) mantendría visibles los botones pese a `hidden`

@@ -76,8 +76,10 @@ let ultimasSolicitudes = [];
 const formFiltros    = document.getElementById('form-filtros');
 const btnBuscar      = document.getElementById('btn-buscar');
 const btnLimpiar     = document.getElementById('btn-limpiar');
+const btnPrimera     = document.getElementById('btn-primera');
 const btnAnterior    = document.getElementById('btn-anterior');
 const btnSiguiente   = document.getElementById('btn-siguiente');
+const btnUltima      = document.getElementById('btn-ultima');
 
 const filtraNombre   = document.getElementById('filtro-nombre');
 const filtroAnio     = document.getElementById('filtro-anio');
@@ -470,6 +472,10 @@ function actualizarPaginacion(pagina) {
     paginaInfo.textContent = `Página ${pagina} de ${totalPaginas}`;
     btnAnterior.disabled  = pagina === 1;
     btnSiguiente.disabled = pagina >= totalPaginas;
+    // "Primera"/"Última" se ocultan cuando ya se está en esa página
+    // (a diferencia de Anterior/Siguiente, que solo se deshabilitan).
+    btnPrimera.hidden = pagina === 1;
+    btnUltima.hidden  = pagina >= totalPaginas;
 }
 
 function actualizarInfoResultados(cantidad, pagina) {
@@ -631,6 +637,23 @@ btnAnterior.addEventListener('click', () => {
 btnSiguiente.addEventListener('click', () => {
     if (estado.paginaActual < Math.ceil(estado.totalResultados / LIMITE)) {
         buscarSolicitudes(estado.paginaActual + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+// Paginación: primera página
+btnPrimera.addEventListener('click', () => {
+    if (estado.paginaActual > 1) {
+        buscarSolicitudes(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+});
+
+// Paginación: última página
+btnUltima.addEventListener('click', () => {
+    const totalPaginas = Math.ceil(estado.totalResultados / LIMITE);
+    if (estado.paginaActual < totalPaginas) {
+        buscarSolicitudes(totalPaginas);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });
