@@ -11,6 +11,7 @@ from ..schemas import (
     EstadisticasOut, EstadisticaAnio,
     EstadisticasEpaOut, EpaAnio, TopBeneficiarioEpa, RangoImporte,
     EstadisticasEellOut, CcaaItem, ProvinciaItem, ConcentracionItem,
+    EellAnioRecurrencia,
 )
 
 router = APIRouter(prefix="/estadisticas", tags=["estadisticas"])
@@ -186,7 +187,8 @@ def get_estadisticas_epas(response: Response, db: Session = Depends(get_db)):
 def get_estadisticas_eell(response: Response, db: Session = Depends(get_db)):
     """
     Estadísticas detalladas de EELL: cobertura territorial, concentración
-    del importe por CCAA y provincia, y ratio de exclusión.
+    del importe por CCAA y provincia, ratio de exclusión, distribución por
+    tramos de importe y recurrencia de entidades (nuevas vs recurrentes).
     """
     response.headers["Cache-Control"] = "public, max-age=3600"
 
@@ -203,16 +205,19 @@ def get_estadisticas_eell(response: Response, db: Session = Depends(get_db)):
         .all()
     )
 
-    # Todas las concesiones EELL con datos geográficos
+    # Todas las concesiones EELL con datos geográficos, año y nombre
     concesiones = (
         db.query(
             Solicitud.id_benef,
             Solicitud.ccaa,
             Solicitud.provincia,
             Concesion.importe,
+            Convocatoria.anio_convocatoria,
+            Beneficiario.nombre,
         )
         .join(Solicitud, Solicitud.id_solic == Concesion.id_solic)
         .join(Convocatoria, Convocatoria.id_convoc == Solicitud.id_convoc)
+        .join(Beneficiario, Beneficiario.id_benef == Solicitud.id_benef)
         .filter(Convocatoria.tipo_convoc == "eell", Solicitud.estado == "concedida")
         .all()
     )
@@ -272,6 +277,49 @@ def get_estadisticas_eell(response: Response, db: Session = Depends(get_db)):
     n_top        = max(1, len(importes_ordenados) // 10)
     top_10_pct   = (sum(importes_ordenados[:n_top]) / total_global * 100) if total_global else 0.0
 
+    # Distribución de importes en tramos. Las EELL manejan importes mucho
+    # mayores y más dispersos que las EPA (de ~3.000 € a ~100.000 €), así
+    # que los tramos son más anchos que los de /estadisticas/epas.
+    RANGOS = [
+        ("< 10.000 €",       0,      10_000),
+        ("10.000–25.000 €",  10_000, 25_000),
+        ("25.000–50.000 €",  25_000, 50_000),
+        ("50.000–75.000 €",  50_000, 75_000),
+        ("≥ 75.000 €",       75_000, float("inf")),
+    ]
+    distribucion = [
+        RangoImporte(
+            rango=label,
+            cantidad=sum(1 for imp in importes if low <= imp < high),
+        )
+        for label, low, high in RANGOS
+    ]
+
+    # Recurrencia: cuántas entidades son nuevas (primera concesión ese año)
+    # frente a recurrentes (ya concedidas en un año anterior). Las EELL
+    # apenas repiten entre convocatorias, y ese propio hecho es el hallazgo.
+    primer_anio: dict[int, int] = {}
+    anios_por_benef: dict[int, set] = defaultdict(set)
+    anio_benef: dict[int, set] = defaultdict(set)
+    nombre_por_benef: dict[int, str] = {}
+    for c in concesiones:
+        anios_por_benef[c.id_benef].add(c.anio_convocatoria)
+        anio_benef[c.anio_convocatoria].add(c.id_benef)
+        nombre_por_benef[c.id_benef] = c.nombre
+        if c.id_benef not in primer_anio or c.anio_convocatoria < primer_anio[c.id_benef]:
+            primer_anio[c.id_benef] = c.anio_convocatoria
+
+    recurrencia = []
+    for anio, benefs in sorted(anio_benef.items()):
+        recurrentes_ids = [b for b in benefs if primer_anio[b] != anio]
+        recurrencia.append(EellAnioRecurrencia(
+            anio                = anio,
+            nuevas              = sum(1 for b in benefs if primer_anio[b] == anio),
+            recurrentes         = len(recurrentes_ids),
+            recurrentes_nombres = sorted(nombre_por_benef[b] for b in recurrentes_ids),
+        ))
+    entidades_repiten = sum(1 for anios in anios_por_benef.values() if len(anios) > 1)
+
     return EstadisticasEellOut(
         pct_ayuntamientos_con_ayuda = round(pct_con_ayuda, 1),
         importe_medio               = round(importe_medio, 2),
@@ -283,4 +331,8 @@ def get_estadisticas_eell(response: Response, db: Session = Depends(get_db)):
             top_10_pct = round(top_10_pct, 1),
             resto_pct  = round(100 - top_10_pct, 1),
         ),
+        distribucion_importes       = distribucion,
+        recurrencia_por_anio        = recurrencia,
+        entidades_repiten           = entidades_repiten,
+        total_entidades             = len(anios_por_benef),
     )

@@ -67,7 +67,7 @@ frontend/
 │   ├── home.js                  → Lógica de index.html (métricas + gráficos generales con GET /estadisticas/)
 │   ├── solicitudes.js           → Lógica del buscador (buscador.html / solicitudes.html)
 │   ├── estadisticas-epas.js     → Lógica de estadísticas EPAs (importe medio, distribución, nuevos vs recurrentes, top beneficiarios)
-│   ├── estadisticas-eell.js     → Lógica de estadísticas EELL (% ayuntamientos, top provincias, concentración, ranking CCAA)
+│   ├── estadisticas-eell.js     → Lógica de estadísticas EELL (% ayuntamientos, top provincias, tramos de importe, recurrencia, ranking CCAA)
 │   ├── exclusivo.js             → Resumen por convocatoria y mapa CCAA (zona registrada)
 │   ├── mapa-ccaa.js             → Mapa choropleth por CCAA con Leaflet (usado por exclusivo.html)
 │   ├── entidad.js               → Lógica de la ficha de entidad
@@ -839,21 +839,22 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
 ### 5.7 Estadísticas EELL — `estadisticas-eell.html` + `js/estadisticas-eell.js` (Issue 7D)
 
-**Propósito:** Análisis específico de las convocatorias de Entidades de la Administración Local (ayuntamientos): % de ayuntamientos con ayuda, importe medio EELL, ratio de exclusión, top provincias por importe, concentración top 10% vs resto y top 5 CCAA. Estructura simétrica a `estadisticas-epas.html` (4 gráficas en 2 filas de 2).
+**Propósito:** Análisis específico de las convocatorias de Entidades de la Administración Local (ayuntamientos): % de ayuntamientos con ayuda, importe medio EELL, ratio de exclusión, entidades que repiten, top provincias por importe, tramos de importe concedido y top 5 CCAA. Estructura simétrica a `estadisticas-epas.html`.
 
 **Estado:** Completamente implementada. El mapa choropleth CCAA se movió a `exclusivo.html` — ver sección 5.9.
 
 **Fondo visual:** usa la clase `.fondo-stats`. Enlace "→ Ver estadísticas EPAs" en la cabecera.
 
-**Estructura HTML (4 gráficas):**
+**Estructura HTML:**
 
 | Bloque | ID | Descripción |
 |---|---|---|
 | KPIs | `.grid-4` | 4 tarjetas de métricas EELL |
 | Top provincias | `#grafico-top-provincias` | Barras horizontales por importe |
-| Concentración top 10% | `#grafico-concentracion` | Donut top 10% vs resto |
+| Tramos de importe | `#grafico-tramos` | Barras verticales: nº concesiones por tramo |
 | Top 5 CCAA por subvención | `#top5-ccaa-lista` | Lista top 5 por importe |
 | Top 5 CCAA por ayuntamientos | `#top5-concesiones-lista` | Lista top 5 por número de concesiones |
+| Recurrencia | `#tabla-recurrencia-eell` | Tabla nuevas/recurrentes por año + nota |
 
 **KPIs:**
 
@@ -862,16 +863,17 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | `#kpi-pct-ayuntamientos` | % Ayuntamientos con ayuda | `datos.pct_ayuntamientos_con_ayuda` |
 | `#kpi-importe-medio-eell` | Importe medio EELL | `datos.importe_medio` |
 | `#kpi-ratio-exclusion` | Ratio de exclusión | `datos.ratio_exclusion` |
-| `#kpi-ccaa-top` | CCAA con mayor importe concedido | `datos.ccaa_top` |
+| `#kpi-eell-repiten` | Entidades que repiten | `datos.entidades_repiten` / `datos.total_entidades` |
 
 **Funciones en `estadisticas-eell.js`:**
 
 | Función | Tipo | Elemento | Datos |
 |---|---|---|---|
 | `poblarGraficoTopProvincias` | `bar` horizontal | `#grafico-top-provincias` | `top_provincias[]` |
-| `poblarGraficoConcentracion` | `doughnut` | `#grafico-concentracion` | `concentracion{}` |
+| `poblarGraficoTramos` | `bar` vertical | `#grafico-tramos` | `distribucion_importes[]` |
 | `poblarTop5Ccaa` | Lista HTML | `#top5-ccaa-lista` | `por_ccaa[]` |
 | `poblarTop5Concesiones` | Lista HTML | `#top5-concesiones-lista` | `por_ccaa[]` |
+| `poblarRecurrencia` | KPI + tabla | `#kpi-eell-repiten`, `#tabla-recurrencia-eell` | `recurrencia_por_anio[]`, `entidades_repiten`, `total_entidades` |
 
 > **Nota:** `poblarRankingCcaa` fue eliminada — el ranking completo de CCAA se muestra en `exclusivo.html` junto al mapa.
 
@@ -892,7 +894,15 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
   "concentracion": {
     "top_10_pct": number,
     "resto_pct":  number
-  }
+  },
+  "distribucion_importes": [
+    { "rango": string, "cantidad": number }, ...
+  ],
+  "recurrencia_por_anio": [
+    { "anio": number, "nuevas": number, "recurrentes": number, "recurrentes_nombres": [string, ...] }, ...
+  ],
+  "entidades_repiten": number,
+  "total_entidades":   number
 }
 ```
 
@@ -900,7 +910,9 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
 - `pct_ayuntamientos_con_ayuda` = beneficiarios con al menos una concesión / total beneficiarios que solicitaron × 100.
 - `ratio_exclusion` = (excluidas + desistidas) / total solicitudes EELL (valor 0–1; el frontend lo multiplica por 100 para mostrar %).
-- `concentracion.top_10_pct` = % del importe acaparado por el decil superior de beneficiarios por importe acumulado.
+- `concentracion.top_10_pct` = % del importe acaparado por el decil superior de beneficiarios por importe acumulado. Se sigue calculando aunque el donut se retiró en favor de los tramos de importe; `ccaa_top` idem (el KPI se sustituyó por el de recurrencia).
+- `distribucion_importes` = nº de concesiones por tramo de importe (5 tramos, de <10.000 € a ≥75.000 €).
+- `recurrencia_por_anio` / `entidades_repiten` = clasificación nuevas vs recurrentes según el primer año de concesión de cada beneficiario; `entidades_repiten` cuenta las beneficiarias presentes en más de un año.
 - Colores de gráficos: azul institucional (`#1565C0`, `#90CAF9`) para EELL.
 
 ---
@@ -1036,8 +1048,8 @@ Formulario de contacto público. **Diseño propio** (no la `auth-card` de login/
 | `/solicitudes/?cif=` | GET | `cif` | Ficha de entidad |
 | `/solicitudes/export` | GET | `anio`, `tipo`, `estado`, `buscar`, `ccaa` (sin `pagina` ni `limite`) | Buscador (botón CSV) |
 | `/agrupaciones/{id_solic}` | GET | — | Ficha de entidad (desglose de municipios) |
-| `/estadisticas/epas` | GET | — | Estadísticas EPAs (KPIs, distribución, media vs mediana, nuevos vs recurrentes, top) — **pendiente de backend** |
-| `/estadisticas/eell` | GET | — | Estadísticas EELL (KPIs, top provincias, concentración, ranking CCAA) — **pendiente de backend** |
+| `/estadisticas/epas` | GET | — | Estadísticas EPAs (KPIs, distribución, media vs mediana, nuevos vs recurrentes, top) |
+| `/estadisticas/eell` | GET | — | Estadísticas EELL (KPIs, top provincias, tramos de importe, recurrencia, ranking CCAA) |
 | `/recursos/` | GET | — | Recursos (tarjetas de directorio dinámico) — **pendiente de backend** |
 | `/auth/login` | POST | JSON `{ email, password }` | Login |
 | `/auth/registro` | POST | JSON `{ email, password }` | Registro |
@@ -1438,7 +1450,7 @@ En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atrib
 | `estadisticas-epas.html` | Nuevos vs recurrentes | `btn-dl-nuevos` | `nuevos-recurrentes-epa.png` |
 | `estadisticas-epas.html` | Top beneficiarios | `btn-dl-top` | `top-beneficiarios-epa.png` |
 | `estadisticas-eell.html` | Top provincias | `btn-dl-provincias` | `top-provincias-eell.png` |
-| `estadisticas-eell.html` | Concentración importe | `btn-dl-concentracion` | `concentracion-eell.png` |
+| `estadisticas-eell.html` | Tramos de importe | `btn-dl-tramos` | `tramos-importe-eell.png` |
 
 **Gráficos sin botón de descarga (justificado):**
 

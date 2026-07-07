@@ -6,9 +6,9 @@
  *   · % ayuntamientos con ayuda
  *   · Importe medio EELL
  *   · Ratio de exclusión
- *   · CCAA con más concesiones
+ *   · Entidades que repiten (KPI) + tabla nuevas/recurrentes por año
  *   · Top provincias por importe (barras horizontales)
- *   · Concentración top 10% vs resto (donut)
+ *   · Tramos de importe concedido (barras verticales)
  *   · Ranking CCAA por importe (lista HTML)
  *   · Mapa CCAA (pendiente de decisión técnica)
  *
@@ -30,8 +30,20 @@
  *     concentracion: {
  *       top_10_pct:  number,   // % del importe acaparado por el top 10%
  *       resto_pct:   number    // % del importe del resto (100 - top_10_pct)
- *     }
+ *     },
+ *     distribucion_importes: [
+ *       { rango: string, cantidad: number },   // tramos de importe
+ *       ...
+ *     ],
+ *     recurrencia_por_anio: [
+ *       { anio: number, nuevas: number, recurrentes: number },
+ *       ...
+ *     ],
+ *     entidades_repiten: number,   // beneficiarias con ayuda en >1 año
+ *     total_entidades:   number    // beneficiarias únicas (concedidas)
  *   }
+ *   Nota: ccaa_top y concentracion se siguen devolviendo pero ya no se
+ *   pintan en esta página (el donut se sustituyó por los tramos de importe).
  */
 
 
@@ -71,14 +83,15 @@ const errorSugerencia = document.getElementById('error-sugerencia');
 const kpiPctAyuntamientos = document.getElementById('kpi-pct-ayuntamientos');
 const kpiImporteMedioEell = document.getElementById('kpi-importe-medio-eell');
 const kpiRatioExclusion   = document.getElementById('kpi-ratio-exclusion');
-const kpiCcaaTop          = document.getElementById('kpi-ccaa-top');
+const kpiEellRepiten      = document.getElementById('kpi-eell-repiten');
+const kpiEellRepitenTag   = document.getElementById('kpi-eell-repiten-tag');
 
 // Canvas y placeholders
 const provinciasPendiente    = document.getElementById('provincias-pendiente');
 const graficoTopProvincias   = document.getElementById('grafico-top-provincias');
 
-const concentracionPendiente = document.getElementById('concentracion-pendiente');
-const graficoConcentracion   = document.getElementById('grafico-concentracion');
+const tramosPendiente        = document.getElementById('tramos-pendiente');
+const graficoTramos          = document.getElementById('grafico-tramos');
 
 // ranking-ccaa movido a exclusivo.html — estos elementos ya no existen en esta página
 
@@ -116,9 +129,10 @@ async function cargarEstadisticasEell() {
         const datos = await respuesta.json();
         poblarKpis(datos);
         poblarGraficoTopProvincias(datos.top_provincias   || []);
-        poblarGraficoConcentracion(datos.concentracion    || {});
+        poblarGraficoTramos(datos.distribucion_importes   || []);
         poblarTop5Ccaa(datos.por_ccaa                     || []);
         poblarTop5Concesiones(datos.por_ccaa              || []);
+        poblarRecurrencia(datos);
 
     } catch (error) {
         console.error('Error al cargar estadísticas EELL:', error);
@@ -159,9 +173,8 @@ function poblarKpis(datos) {
                 ? Math.round(datos.ratio_exclusion * 100) + ' %'
                 : '—';
     }
-    if (kpiCcaaTop) {
-        kpiCcaaTop.textContent = datos.ccaa_top || '—';
-    }
+    // El KPI de recurrencia (entidades que repiten) se rellena en
+    // poblarRecurrencia, junto a su tabla por año.
 }
 
 
@@ -233,65 +246,126 @@ function poblarGraficoTopProvincias(topProvincias) {
 
 
 // ─────────────────────────────────────────────────────────────
-// FUNCIÓN: poblarGraficoConcentracion
-// Donut: top 10% de entidades vs el resto del importe.
+// FUNCIÓN: poblarGraficoTramos
+// Barras verticales: nº de concesiones por tramo de importe.
 // ─────────────────────────────────────────────────────────────
 /**
- * @param {Object} concentracion - { top_10_pct: number, resto_pct: number }
+ * @param {Array} distribucion - [{ rango: string, cantidad: number }, ...]
  */
-function poblarGraficoConcentracion(concentracion) {
-    if (concentracion.top_10_pct == null) return;
+function poblarGraficoTramos(distribucion) {
+    if (!distribucion.length) return;
+    if (tramosPendiente) tramosPendiente.style.display = 'none';
+    if (graficoTramos)   graficoTramos.style.display   = 'block';
 
-    if (concentracionPendiente) concentracionPendiente.style.display = 'none';
-    if (graficoConcentracion)   graficoConcentracion.style.display   = 'block';
-
-    const instancia = new Chart(graficoConcentracion, {
-        type: 'doughnut',
+    const instancia = new Chart(graficoTramos, {
+        type: 'bar',
         data: {
-            labels: ['Top 10% de entidades', 'Resto de entidades'],
+            labels: distribucion.map(d => d.rango),
             datasets: [{
-                data: [
-                    Math.round(concentracion.top_10_pct),
-                    Math.round(concentracion.resto_pct),
-                ],
-                backgroundColor: [COLORES.azul, COLORES.azulClaro],
-                borderWidth:     2,
-                borderColor:     '#ffffff',
-                hoverOffset:     8,
+                label:           'Nº de concesiones',
+                data:            distribucion.map(d => d.cantidad),
+                backgroundColor: COLORES.azul,
+                borderRadius:    4,
+                borderSkipped:   false,
             }],
         },
         options: {
             ...OPCIONES_BASE,
-            cutout: '62%',
             plugins: {
-                legend: {
-                    display:  true,
-                    position: 'bottom',
-                    labels: {
-                        font:            { family: 'Inter', size: 11 },
-                        color:           COLORES.grisTexto,
-                        boxWidth:        12,
-                        boxHeight:       12,
-                        borderRadius:    3,
-                        useBorderRadius: true,
-                        padding:         12,
-                    },
-                },
+                ...OPCIONES_BASE.plugins,
                 tooltip: {
                     callbacks: {
-                        label: ctx => ` ${ctx.label}: ${ctx.parsed} % del importe total`,
+                        label: ctx => ` ${ctx.parsed.y.toLocaleString('es-ES')} concesiones`,
                     },
+                },
+            },
+            scales: {
+                x: {
+                    grid:  { display: false },
+                    ticks: { font: { family: 'Inter', size: 10 }, color: COLORES.grisTexto },
+                },
+                y: {
+                    beginAtZero: true,
+                    grid:  { color: COLORES.grisMedio },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
                 },
             },
         },
     });
-    configurarDescarga(instancia, 'btn-dl-concentracion', 'concentracion-eell.png');
-    configurarModal(instancia, 'Concentración del importe EELL', `
-<p>El 10&nbsp;% de las entidades con mayor subvención concentra una parte muy significativa del importe total concedido. Sin embargo, esta concentración no responde únicamente a grandes ciudades, sino también al funcionamiento por tramos y a la existencia de agrupaciones municipales.</p>
-<p>Muchos de los importes más altos corresponden a municipios pequeños o medianos que presentan proyectos conjuntos para poder asumir costes veterinarios, campañas de esterilización o gestión de colonias felinas de forma coordinada.</p>
-<p>Aun así, la distribución sigue reflejando importantes desigualdades territoriales. Mientras algunas comunidades y ayuntamientos muestran una participación activa y capacidad para acceder a ayudas, otros territorios continúan teniendo poca presencia, ya sea por falta de medios técnicos, escasa prioridad política o dificultades administrativas.</p>
-<p>Los usuarios registrados pueden explorar además rankings, mapas de calor y estadísticas avanzadas que permiten identificar qué territorios concentran una mayor parte de los fondos y cómo evoluciona el reparto entre convocatorias.</p>
+    configurarDescarga(instancia, 'btn-dl-tramos', 'tramos-importe-eell.png');
+    configurarModal(instancia, 'Tramos de importe concedido EELL', `
+<p>Las EELL manejan importes mucho mayores y más dispersos que las protectoras: van desde poco más de 3.000&nbsp;€ hasta cerca de 100.000&nbsp;€, con una media en torno a los 37.500&nbsp;€. La mayoría de las concesiones se concentra en los tramos intermedios (10.000–50.000&nbsp;€), mientras que los importes muy bajos y los muy altos son minoritarios.</p>
+<p>Esa dispersión no responde únicamente al tamaño de los municipios: buena parte de los importes más altos corresponde a municipios pequeños o medianos que se presentan en agrupación para asumir de forma conjunta costes veterinarios, campañas de esterilización o la gestión de colonias felinas.</p>
+<p>Aun así, un grupo reducido de entidades concentra una parte muy significativa del importe total concedido, lo que refleja desigualdades territoriales: mientras algunas comunidades y ayuntamientos participan activamente y tienen capacidad para acceder a las ayudas, otros territorios apenas aparecen, ya sea por falta de medios técnicos, escasa prioridad política o dificultades administrativas.</p>
+<p>El buscador público permite filtrar las ayudas por importe, comunidad, provincia y municipio, y los usuarios registrados disponen de rankings, mapas y tablas avanzadas para analizar cómo se reparten los fondos y cómo evoluciona ese reparto entre convocatorias.</p>
 `);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// FUNCIÓN: poblarRecurrencia
+// KPI "entidades que repiten" + tabla de nuevas/recurrentes por año.
+// ─────────────────────────────────────────────────────────────
+/**
+ * @param {Object} datos - respuesta completa de /estadisticas/eell:
+ *   { entidades_repiten, total_entidades,
+ *     recurrencia_por_anio: [{ anio, nuevas, recurrentes }, ...] }
+ */
+function poblarRecurrencia(datos) {
+    const repiten = datos.entidades_repiten || 0;
+    const total   = datos.total_entidades   || 0;
+
+    // KPI (sustituye al antiguo "CCAA con mayor importe concedido")
+    if (kpiEellRepiten) kpiEellRepiten.textContent = repiten.toLocaleString('es-ES');
+    if (kpiEellRepitenTag && total) {
+        kpiEellRepitenTag.textContent = `de ${total} beneficiarias`;
+    }
+
+    // Tabla por año
+    const porAnio = datos.recurrencia_por_anio || [];
+    const tabla   = document.getElementById('tabla-recurrencia-eell');
+    const nota    = document.getElementById('recurrencia-nota');
+    const detalle = document.getElementById('recurrencia-detalle');
+    const tbody   = tabla ? tabla.querySelector('tbody') : null;
+
+    if (!porAnio.length || !tbody) return;
+
+    // Los recurrentes (>0) se marcan con un asterisco que remite a la
+    // lista de ayuntamientos concretos bajo la nota.
+    tbody.innerHTML = porAnio.map(r => `
+        <tr>
+            <td>${r.anio}</td>
+            <td>${r.nuevas.toLocaleString('es-ES')}</td>
+            <td>${r.recurrentes.toLocaleString('es-ES')}${r.recurrentes > 0 ? ' *' : ''}</td>
+        </tr>`).join('');
+    tabla.style.display = 'table';
+
+    if (nota) {
+        const pct = total ? Math.round((repiten / total) * 100) : 0;
+        nota.textContent =
+            `Solo ${repiten} de ${total} entidades (${pct}%) han recibido ayuda en más de una ` +
+            `convocatoria: cada año entra mayoritariamente gente nueva, con muy poca continuidad ` +
+            `entre 2023 y 2025.`;
+    }
+
+    // Detalle: qué ayuntamientos concretos repiten cada año (los marcados
+    // con asterisco en la tabla). Nombres tal cual vienen de la API.
+    if (detalle) {
+        const partes = porAnio
+            .filter(r => r.recurrentes_nombres && r.recurrentes_nombres.length)
+            .map(r => `en ${r.anio}, ${formatearLista(r.recurrentes_nombres)}`);
+        detalle.textContent = partes.length ? `* Repiten: ${partes.join('; ')}.` : '';
+    }
+}
+
+
+/**
+ * formatearLista(items)
+ * Une una lista en lenguaje natural: "a, b y c".
+ */
+function formatearLista(items) {
+    if (items.length <= 1) return items.join('');
+    return items.slice(0, -1).join(', ') + ' y ' + items[items.length - 1];
 }
 
 

@@ -438,7 +438,13 @@
                         JS lo activa/desactiva según si hay página anterior/siguiente.
                         El formato del texto central es "Anterior | Página X de Y | Siguiente"
                         según el wireframe pagFiltros.png.
+                        "Primera"/"Última" se ocultan (atributo hidden) cuando ya
+                        se está en esa página, en lugar de deshabilitarse.
                     -->
+                    <button class="btn btn-enlace btn--sm" id="btn-primera" hidden>
+                        « Primera
+                    </button>
+
                     <button class="btn btn-secundario btn--sm" id="btn-anterior" disabled>
                         Anterior
                     </button>
@@ -447,6 +453,10 @@
 
                     <button class="btn btn-secundario btn--sm" id="btn-siguiente" disabled>
                         Siguiente
+                    </button>
+
+                    <button class="btn btn-enlace btn--sm" id="btn-ultima" hidden>
+                        Última »
                     </button>
 
                 </div><!-- /paginacion -->

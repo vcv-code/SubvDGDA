@@ -334,6 +334,13 @@ main {
     text-align: center;
 }
 
+/* El atributo hidden debe ocultar el botón: sin esta regla, el
+   display:inline-block de .btn (más específico) lo mantendría visible.
+   Se usa en los botones "Primera"/"Última" de la paginación. */
+.btn[hidden] {
+    display: none;
+}
+
 /* Botón principal: verde oscuro (igual que btn-verde) */
 .btn-primario {
     background-color: var(--color-verde-btn);
@@ -354,6 +361,21 @@ main {
 
 .btn-secundario:hover {
     background-color: var(--color-fondo-verde);
+}
+
+/* Botón con aspecto de enlace: sin recuadro ni fondo, texto en negro
+   y subrayado solo al pasar el ratón. Usado en "« Primera" / "Última »"
+   de la paginación para diferenciarlos de Anterior/Siguiente. */
+.btn-enlace {
+    background-color: transparent;
+    border: none;
+    color: var(--color-negro);
+    text-decoration: none;
+}
+
+.btn-enlace:hover {
+    background-color: transparent;
+    text-decoration: underline;
 }
 
 
@@ -2862,6 +2884,69 @@ canvas {
     white-space: nowrap;
     text-align: right;
     flex-shrink: 0;
+}
+
+
+/* ------------------------------------------------------------
+   Recurrencia EELL — tabla nuevas/recurrentes + nota lateral
+   (tarjeta de la página de estadísticas EELL)
+   ------------------------------------------------------------ */
+.recurrencia-eell {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espacio-lg);
+}
+
+.tabla-recurrencia {
+    border-collapse: collapse;
+    min-width: 260px;
+}
+
+.tabla-recurrencia th,
+.tabla-recurrencia td {
+    padding: 8px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.tabla-recurrencia thead th {
+    font-size: 0.85rem;
+    color: var(--color-blanco);
+    background-color: var(--color-verde-tabla);
+}
+
+.tabla-recurrencia thead th:first-child { border-top-left-radius: var(--radio-input); }
+.tabla-recurrencia thead th:last-child  { border-top-right-radius: var(--radio-input); }
+
+.tabla-recurrencia td {
+    font-size: 0.95rem;
+    color: var(--color-negro);
+}
+
+.tabla-recurrencia td:first-child { font-weight: 700; }
+
+.tabla-recurrencia tbody tr:last-child td { border-bottom: none; }
+
+.recurrencia-eell__texto {
+    flex: 1 1 260px;
+}
+
+.recurrencia-eell__nota {
+    font-size: 0.95rem;
+    color: var(--color-gris-texto);
+    line-height: 1.5;
+}
+
+.recurrencia-eell__detalle {
+    margin-top: var(--espacio-xs);
+    font-size: 0.85rem;
+    color: var(--color-gris-texto);
+    line-height: 1.5;
+}
+
+.recurrencia-eell__detalle:empty {
+    display: none;
 }
 
 

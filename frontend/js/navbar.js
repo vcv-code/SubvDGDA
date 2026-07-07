@@ -57,33 +57,74 @@
         const btn = document.querySelector('.navbar__hamburger');
         if (!nav || !btn) return;
 
+        // Elementos que pueden recibir foco dentro de la navbar (logo,
+        // enlaces del menú y el propio botón hamburguesa), en orden del
+        // DOM y solo los visibles. Se recalcula en cada uso porque el menú
+        // de usuario se genera dinámicamente al iniciar sesión y porque en
+        // móvil los enlaces solo son visibles con el menú abierto.
+        const SELECTOR_FOCO =
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        function elementosFocables() {
+            return Array.from(nav.querySelectorAll(SELECTOR_FOCO))
+                .filter(el => el.offsetParent !== null);
+        }
+
+        function cerrarMenu() {
+            nav.classList.remove('navbar--open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+
         btn.addEventListener('click', () => {
             const abierto = nav.classList.toggle('navbar--open');
             btn.setAttribute('aria-expanded', abierto);
+            // Al abrir, llevamos el foco al primer enlace del menú: el botón
+            // hamburguesa queda después en el DOM, así que sin esto el Tab
+            // saltaría directamente al contenido de la página.
+            if (abierto) {
+                const primerEnlace = nav.querySelector(
+                    '.navbar__links a, .navbar__links button');
+                if (primerEnlace) primerEnlace.focus();
+            }
         });
 
         // Cerrar al hacer click en un enlace
         nav.querySelectorAll('.navbar__links a, .navbar__links button').forEach(el => {
-            el.addEventListener('click', () => {
-                nav.classList.remove('navbar--open');
-                btn.setAttribute('aria-expanded', 'false');
-            });
+            el.addEventListener('click', cerrarMenu);
         });
 
         // Cerrar al hacer click fuera
         document.addEventListener('click', e => {
-            if (!nav.contains(e.target)) {
-                nav.classList.remove('navbar--open');
-                btn.setAttribute('aria-expanded', 'false');
-            }
+            if (!nav.contains(e.target)) cerrarMenu();
         });
 
-        // Cerrar con Escape
+        // Teclado: Escape cierra y devuelve el foco al botón. Mientras el
+        // menú está abierto, Tab queda atrapado dentro de la navbar y cicla
+        // entre sus elementos (trampa de foco, WCAG 2.4.3): así quien navega
+        // con teclado no se pierde en el contenido oculto tras el panel.
         document.addEventListener('keydown', e => {
+            // Solo actuamos si el menú está abierto: así Escape no roba el
+            // foco (p. ej. al cerrar un modal) ni interferimos con el Tab
+            // normal de la página cuando el menú está cerrado.
+            if (!nav.classList.contains('navbar--open')) return;
+
             if (e.key === 'Escape') {
-                nav.classList.remove('navbar--open');
-                btn.setAttribute('aria-expanded', 'false');
+                cerrarMenu();
                 btn.focus();
+                return;
+            }
+            if (e.key !== 'Tab') return;
+
+            const focables = elementosFocables();
+            if (focables.length === 0) return;
+            const primero = focables[0];
+            const ultimo  = focables[focables.length - 1];
+
+            if (e.shiftKey && document.activeElement === primero) {
+                e.preventDefault();
+                ultimo.focus();
+            } else if (!e.shiftKey && document.activeElement === ultimo) {
+                e.preventDefault();
+                primero.focus();
             }
         });
     }

@@ -138,9 +138,9 @@
                     </div>
 
                     <div class="card-kpi">
-                        <span class="card-kpi__label">CCAA con mayor importe concedido</span>
-                        <span class="card-kpi__numero" id="kpi-ccaa-top">—</span>
-                        <span class="card-kpi__tag">2023–2025</span>
+                        <span class="card-kpi__label">Entidades que repiten</span>
+                        <span class="card-kpi__numero" id="kpi-eell-repiten">—</span>
+                        <span class="card-kpi__tag" id="kpi-eell-repiten-tag">Beneficiarias en &gt;1 año</span>
                     </div>
 
                 </div><!-- /grid-4 KPIs -->
@@ -180,33 +180,32 @@
                         </div>
                     </div>
 
-                    <!-- Concentración: top 10% vs resto -->
+                    <!-- Tramos de importe concedido -->
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">Concentración del importe</p>
+                                <p class="card-grafico__titulo">Tramos de importe concedido</p>
                                 <p class="card-grafico__subtitulo">
-                                    % del importe total acaparado por el top 10% de entidades
+                                    Nº de concesiones EELL por tramo de importe
                                 </p>
                             </div>
-                            
-                            <button class="btn-descargar-png" id="btn-dl-concentracion"
+
+                            <button class="btn-descargar-png" id="btn-dl-tramos"
                                     style="display:none;"
-                                    aria-label="Descargar gráfico de concentración del importe como PNG">
+                                    aria-label="Descargar gráfico de tramos de importe como PNG">
                                 ↓ PNG
                             </button>
                         </div>
                         <!--
-                            Donut: proporción top 10% vs resto.
-                            Datos esperados: concentracion.top_10_pct y concentracion.resto_pct
+                            Barras verticales: tramo de importe en eje X, nº de
+                            concesiones en eje Y. Datos: distribucion_importes[{ rango, cantidad }]
                         -->
-                        <div class="chart-container"
-                             id="grafico-concentracion-container">
-                            <p class="estado-carga" id="concentracion-pendiente">
+                        <div class="chart-container" id="grafico-tramos-container">
+                            <p class="estado-carga" id="tramos-pendiente">
                                 Pendiente de endpoint <code>/estadisticas/eell</code>
                             </p>
-                            <canvas id="grafico-concentracion" role="img" style="display:none;"
-                                aria-label="Gráfico de concentración del importe EELL"></canvas>
+                            <canvas id="grafico-tramos" role="img" style="display:none;"
+                                aria-label="Gráfico de tramos de importe concedido EELL"></canvas>
                         </div>
                     </div>
 
@@ -268,6 +267,43 @@
                     </div>
 
                 </div><!-- /fila 4 top5 -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 5: RECURRENCIA — NUEVAS VS RECURRENTES POR AÑO
+                     ───────────────────────────────────────────────── -->
+                <div class="card-grafico mb-lg">
+                    <div class="card-grafico__cabecera">
+                        <div>
+                            <p class="card-grafico__titulo">Entidades nuevas y recurrentes</p>
+                            <p class="card-grafico__subtitulo">
+                                Cuántas EELL entran por primera vez y cuántas repiten en cada convocatoria
+                            </p>
+                        </div>
+                    </div>
+                    <!--
+                        Tabla generada por estadisticas-eell.js a partir de
+                        recurrencia_por_anio[{ anio, nuevas, recurrentes }].
+                        La nota lateral resume el hallazgo (apenas hay recurrencia).
+                    -->
+                    <div class="recurrencia-eell">
+                        <table class="tabla-recurrencia" id="tabla-recurrencia-eell" style="display:none;">
+                            <caption class="skip-nav">Entidades nuevas y recurrentes por año</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Año</th>
+                                    <th scope="col">Nuevas</th>
+                                    <th scope="col">Recurrentes</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- filas desde estadisticas-eell.js --></tbody>
+                        </table>
+                        <div class="recurrencia-eell__texto">
+                            <p class="recurrencia-eell__nota" id="recurrencia-nota">Cargando…</p>
+                            <p class="recurrencia-eell__detalle" id="recurrencia-detalle"></p>
+                        </div>
+                    </div>
+                </div><!-- /fila 5 recurrencia -->
 
             </div><!-- /contenedor -->
         </section>
