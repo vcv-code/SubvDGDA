@@ -1401,7 +1401,6 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **Paginación en `/admin/usuarios`** — la tabla de usuarios no pagina; con pocos usuarios actuales no es problema pero escalaría mal.
 - **Retry en cron si BDNS API no responde** — el cron falla silenciosamente si BDNS devuelve error; añadir reintentos con backoff exponencial.
 - **Logs de cron en panel admin** — mostrar `bdns_check.log` y `health_check.log` en el panel. Requiere: montar `../logs/cron` en el contenedor backend, dos endpoints nuevos en `admin.py` y dos secciones en `admin.html` / `admin.js`.
-- **Trampa de foco en menú hamburguesa** — el menú cierra con Esc y click fuera, pero Tab no cicla dentro del menú abierto. Mejora de accesibilidad WCAG 2.4.3 pendiente.
 - **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
 - **Login con terceros (OAuth)** — integración con Google.
 - **Conclusiones comparativas en modales EELL** — los dos modales de estadísticas EELL ("Top provincias" y "Concentración del importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si la concentración aumenta) añadiría valor analítico. Los modales de home y EPA ya tienen conclusiones completas.

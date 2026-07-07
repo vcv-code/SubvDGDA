@@ -495,3 +495,8 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · Botones **« Primera** / **Última »** en la paginación de `buscador.html` (y su alias `solicitudes.html`), a los lados de Anterior/Siguiente. Se **ocultan** (atributo `hidden`) cuando ya se está en esa página, en vez de deshabilitarse. Nuevos listeners en `js/solicitudes.js` que saltan a la página 1 y a la última
   · Aspecto de enlace (nueva clase `.btn-enlace` en `styles.css`): sin recuadro ni fondo, texto negro y subrayado solo al hover, para distinguirlos de los botones verdes Anterior/Siguiente
   · Regla `.btn[hidden]` en `styles.css`: sin ella, el `display:inline-block` de `.btn` (más específico que el `display:none` implícito del atributo) mantendría visibles los botones pese a `hidden`
+✔ Trampa de foco en el menú hamburguesa (WCAG 2.4.3)
+  · Con el menú abierto en móvil/tablet (≤900px), el foco del teclado queda **atrapado dentro de la navbar**: al tabular desde el último elemento vuelve al primero (y con Shift+Tab al revés), en lugar de escaparse al contenido oculto tras el panel. Todo en `js/navbar.js`, sin tocar el backend
+  · Al **abrir** el menú se lleva el foco al primer enlace: el botón hamburguesa está después en el DOM, así que sin esto el Tab saltaría directo a la página
+  · **Esc** cierra y devuelve el foco al botón; el handler de teclado ahora solo actúa con el menú abierto, para no robar el foco (p. ej. al cerrar un modal en otras páginas)
+  · Los elementos enfocables se recalculan en cada Tab (`offsetParent !== null` para coger solo los visibles), porque el menú de usuario se genera dinámicamente al iniciar sesión y en móvil los enlaces solo existen visibles con el menú abierto
