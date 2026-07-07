@@ -120,8 +120,11 @@ Scripts:
 
 - `parser_EPAs_BOE_base.py` → EPA 2021–2024 (lógica común)
 - `parser_EPAs_BOE_2025.py` → EPA 2025 (estructura diferente)
+- `parser_EPAs_admitidas_2024.py` → línea de subvención EPA 2024 (ver nota)
 
 > En la resolución EPA 2025 las cabeceras de las columnas cambian respecto a años anteriores: aparece "Cuantía concedida a la entidad" (que contiene la palabra *entidad*) y la cabecera de puntuación varía entre anexos. Esto rompe el mapeo por palabras clave del parser base. El parser 2025 usa extracción heurística por contenido de celda: importes > 100 para el campo importe, valores entre 0 y 100 para puntuación.
+
+> **Línea de subvención EPA 2024.** El BOE de concesión 2024 no desglosa la línea (colonias felinas / animales abandonados) por entidad, así que las concesiones quedaban con `linea = NULL`. La "relación definitiva de admitidas y excluidas" (PDF de la Sede, `data/raw/epas/2024/relacion-def-admitidas-EPA2024.pdf`) sí trae esa columna en el Anexo I. `parser_EPAs_admitidas_2024.py` la extrae por texto anclando el CIF (la línea es lo que va **después** del CIF, para no confundirse con nombres que contienen "COLONIAS") y `enriquecer_linea_epa2024.py` la añade a `epas_2024.json` cruzando por `num_expediente`. Cruce completo: 628/628 concedidas (627 con línea + 1 "No aplica" → NULL). Desde 2025 el XML sí incluye la línea directamente, sin este paso.
 
 ---
 

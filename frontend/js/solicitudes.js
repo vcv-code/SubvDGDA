@@ -419,7 +419,7 @@ function crearBadge(estado) {
  * Reglas:
  *   · Si Tipo = "eell" → mostrar CCAA y Provincia
  *   · Si Tipo ≠ "eell" → ocultar CCAA y Provincia
- *   · Si Tipo = "epa" Y Año = "2025" → mostrar Línea
+ *   · Si Tipo = "epa" Y Año con línea (2024, 2025) → mostrar Línea
  *   · En cualquier otro caso → ocultar Línea
  */
 function actualizarFiltrosCondicionales() {
@@ -445,20 +445,22 @@ function actualizarFiltrosCondicionales() {
         filtroAnio.value = '';
     }
 
-    const esEpa2025 = esEpa && filtroAnio.value === '2025';
+    // La línea de subvención se desglosa por entidad desde 2024 (EPA).
+    const aniosEpaConLinea = ['2024', '2025'];
+    const esEpaConLinea = esEpa && aniosEpaConLinea.includes(filtroAnio.value);
 
     // CCAA y Provincia: visibles solo para EELL
     grupoCcaa.style.display     = esEell ? '' : 'none';
     grupoProvincia.style.display = esEell ? '' : 'none';
 
-    // Línea de actuación: visible solo para EPA 2025
-    grupoLinea.style.display    = esEpa2025 ? '' : 'none';
+    // Línea de actuación: visible para EPA de los años con línea desglosada
+    grupoLinea.style.display    = esEpaConLinea ? '' : 'none';
 
     if (!esEell) {
         filtroCcaa.value = '';
         document.getElementById('filtro-provincia').value = '';
     }
-    if (!esEpa2025) {
+    if (!esEpaConLinea) {
         filtroLinea.value = '';
     }
 }
