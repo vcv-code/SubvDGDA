@@ -33,7 +33,7 @@ def listar_solicitudes(
     anio:   Optional[int] = Query(None, description="Año de la convocatoria (2021–2025)"),
     tipo:   Optional[str] = Query(None, description="Tipo: epa o eell"),
     estado: Optional[str] = Query(None, description="Estado: concedida, no_beneficiaria, excluida, desistida"),
-    linea:    Optional[str] = Query(None, description="Línea de actuación: animales_abandonados o colonias_felinas (solo EPA 2025)"),
+    linea:    Optional[str] = Query(None, description="Línea de actuación: animales_abandonados o colonias_felinas (EPA 2024 y 2025)"),
     provincia: Optional[str] = Query(None, description="Provincia (solo EELL)"),
     ccaa:     Optional[str] = Query(None, description="Comunidad autónoma (solo EELL)"),
     cif:      Optional[str] = Query(None, description="CIF exacto del beneficiario"),

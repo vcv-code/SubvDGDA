@@ -12,8 +12,8 @@
       1. Panel de filtros (parte superior)
          → El usuario elige los criterios de búsqueda.
          → Algunos filtros son condicionales: CCAA y Provincia
-           solo aparecen cuando el Tipo es "EELL", y Línea solo
-           cuando Tipo = "EPA" y Año = 2025.
+           solo aparecen cuando el Tipo es "EELL", y Línea
+           cuando Tipo = "EPA" y Año 2024 o 2025.
 
       2. Tabla de resultados (parte inferior)
          → Muestra las solicitudes que coinciden con los filtros.
@@ -203,13 +203,13 @@
                         valores de los filtros de la fila 1.
 
                         · CCAA y Provincia → solo visibles si Tipo = "eell"
-                        · Línea            → solo visible si Tipo = "epa" AND Año = "2025"
+                        · Línea            → solo visible si Tipo = "epa" AND Año = "2024" o "2025"
 
                         ¿Por qué esta lógica?
                         Las CCAA y Provincias solo tienen sentido para EELL (son ayuntamientos
                         con ubicación geográfica). Las EPA son protectoras que pueden ser de
                         cualquier municipio y no se clasifican igual. La Línea (animales
-                        abandonados / colonias felinas) solo existe en la convocatoria EPA 2025.
+                        abandonados / colonias felinas) se desglosa por entidad en las convocatorias EPA 2024 y 2025.
                     -->
                     <div class="filtros__fila" id="filtros-condicionales">
 
@@ -263,7 +263,7 @@
                             -->
                         </div>
 
-                        <!-- Filtro Línea (solo EPA 2025) -->
+                        <!-- Filtro Línea (EPA 2024 y 2025) -->
                         <div class="form-grupo" id="grupo-linea" style="display:none;">
                             <label for="filtro-linea">Línea de actuación</label>
                             <select id="filtro-linea" class="form-control">

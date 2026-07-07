@@ -6,7 +6,8 @@
     "cif": "G45844933",
     "puntuacion": null,
     "importe": 4028.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -15,7 +16,8 @@
     "cif": "G63133722",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -24,7 +26,8 @@
     "cif": "G54557574",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -33,7 +36,8 @@
     "cif": "G62509369",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -42,7 +46,8 @@
     "cif": "G91395160",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -51,7 +56,8 @@
     "cif": "G70047881",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -60,7 +66,8 @@
     "cif": "G86945136",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -69,7 +76,8 @@
     "cif": "G02119071",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -78,7 +86,8 @@
     "cif": "G04722476",
     "puntuacion": 100.0,
     "importe": 10000.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -87,7 +96,8 @@
     "cif": "G39217567",
     "puntuacion": 98.0,
     "importe": 9611.97,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -96,7 +106,8 @@
     "cif": "G73960122",
     "puntuacion": 97.5,
     "importe": 9516.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -105,7 +116,8 @@
     "cif": "G01560747",
     "puntuacion": 97.5,
     "importe": 9516.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -114,7 +126,8 @@
     "cif": "G92219237",
     "puntuacion": 95.0,
     "importe": 9044.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -123,7 +136,8 @@
     "cif": "G14496335",
     "puntuacion": 93.0,
     "importe": 8676.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -132,7 +146,8 @@
     "cif": "G72062110",
     "puntuacion": 93.0,
     "importe": 8676.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -141,7 +156,8 @@
     "cif": "G08977126",
     "puntuacion": 93.0,
     "importe": 8676.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -150,7 +166,8 @@
     "cif": "G98265705",
     "puntuacion": 92.5,
     "importe": 8585.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -159,7 +176,8 @@
     "cif": "G76782267",
     "puntuacion": 92.5,
     "importe": 8585.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -168,7 +186,8 @@
     "cif": "G55268346",
     "puntuacion": 92.5,
     "importe": 8585.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -177,7 +196,8 @@
     "cif": "G90085945",
     "puntuacion": 92.0,
     "importe": 8494.89,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -186,7 +206,8 @@
     "cif": "G40254955",
     "puntuacion": 91.0,
     "importe": 8315.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -195,7 +216,8 @@
     "cif": "G22141857",
     "puntuacion": 91.0,
     "importe": 8315.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -204,7 +226,8 @@
     "cif": "G38220455",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -213,7 +236,8 @@
     "cif": "G19776780",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -222,7 +246,8 @@
     "cif": "G44195733",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -231,7 +256,8 @@
     "cif": "G06275234",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -240,7 +266,8 @@
     "cif": "G65217416",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -249,7 +276,8 @@
     "cif": "G21271705",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -258,7 +286,8 @@
     "cif": "G01987007",
     "puntuacion": 90.0,
     "importe": 8138.21,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -267,7 +296,8 @@
     "cif": "G93474252",
     "puntuacion": 89.5,
     "importe": 8050.27,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -276,7 +306,8 @@
     "cif": "G72312416",
     "puntuacion": 88.5,
     "importe": 7875.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -285,7 +316,8 @@
     "cif": "G42504589",
     "puntuacion": 88.5,
     "importe": 7875.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -294,7 +326,8 @@
     "cif": "G02537181",
     "puntuacion": 88.5,
     "importe": 7875.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -303,7 +336,8 @@
     "cif": "G98907595",
     "puntuacion": 88.0,
     "importe": 7789.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -312,7 +346,8 @@
     "cif": "G25477191",
     "puntuacion": 88.0,
     "importe": 7789.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -321,7 +356,8 @@
     "cif": "G19769959",
     "puntuacion": 87.76,
     "importe": 7748.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -330,7 +366,8 @@
     "cif": "G18367151",
     "puntuacion": 87.5,
     "importe": 7703.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -339,7 +376,8 @@
     "cif": "G16549479",
     "puntuacion": 87.5,
     "importe": 7703.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -348,7 +386,8 @@
     "cif": "G65327553",
     "puntuacion": 87.5,
     "importe": 7703.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -357,7 +396,8 @@
     "cif": "G56021215",
     "puntuacion": 87.5,
     "importe": 7703.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -366,7 +406,8 @@
     "cif": "G87916169",
     "puntuacion": 87.5,
     "importe": 7703.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -375,7 +416,8 @@
     "cif": "G87640736",
     "puntuacion": 87.03,
     "importe": 7623.35,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -384,7 +426,8 @@
     "cif": "G45916665",
     "puntuacion": 87.0,
     "importe": 7617.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -393,7 +436,8 @@
     "cif": "G13980404",
     "puntuacion": 86.0,
     "importe": 7448.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -402,7 +446,8 @@
     "cif": "G67804617",
     "puntuacion": 86.0,
     "importe": 7448.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -411,7 +456,8 @@
     "cif": "G87065140",
     "puntuacion": 85.0,
     "importe": 7280.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -420,7 +466,8 @@
     "cif": "G72697410",
     "puntuacion": 85.0,
     "importe": 7280.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -429,7 +476,8 @@
     "cif": "G56693138",
     "puntuacion": 85.0,
     "importe": 7280.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -438,7 +486,8 @@
     "cif": "G72942592",
     "puntuacion": 85.0,
     "importe": 7280.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -447,7 +496,8 @@
     "cif": "G57659922",
     "puntuacion": 85.0,
     "importe": 7280.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -456,7 +506,8 @@
     "cif": "G42163592",
     "puntuacion": 85.0,
     "importe": 7280.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -465,7 +516,8 @@
     "cif": "G36982197",
     "puntuacion": 83.5,
     "importe": 7033.15,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -474,7 +526,8 @@
     "cif": "G63480024",
     "puntuacion": 83.0,
     "importe": 6951.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -483,7 +536,8 @@
     "cif": "G54824941",
     "puntuacion": 82.5,
     "importe": 6870.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -492,7 +546,8 @@
     "cif": "G05236989",
     "puntuacion": 82.5,
     "importe": 6870.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -501,7 +556,8 @@
     "cif": "G01908540",
     "puntuacion": 82.0,
     "importe": 6789.89,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -510,7 +566,8 @@
     "cif": "G23621972",
     "puntuacion": 81.5,
     "importe": 6709.79,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -519,7 +576,8 @@
     "cif": "G01665686",
     "puntuacion": 81.25,
     "importe": 6669.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -528,7 +586,8 @@
     "cif": "G67705392",
     "puntuacion": 81.0,
     "importe": 6630.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -537,7 +596,8 @@
     "cif": "G03842655",
     "puntuacion": 80.5,
     "importe": 6551.05,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -546,7 +606,8 @@
     "cif": "G72767387",
     "puntuacion": 80.5,
     "importe": 6551.05,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -555,7 +616,8 @@
     "cif": "G88522859",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -564,7 +626,8 @@
     "cif": "G36638955",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -573,7 +636,8 @@
     "cif": "G55772057",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -582,7 +646,8 @@
     "cif": "G09690611",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -591,7 +656,8 @@
     "cif": "G70030762",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -600,7 +666,8 @@
     "cif": "G98961378",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -609,7 +676,8 @@
     "cif": "G56566300",
     "puntuacion": 80.0,
     "importe": 6472.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -618,7 +686,8 @@
     "cif": "G11745213",
     "puntuacion": 79.8,
     "importe": 6441.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -627,7 +696,8 @@
     "cif": "G86315421",
     "puntuacion": 79.75,
     "importe": 6433.28,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -636,7 +706,8 @@
     "cif": "G92455310",
     "puntuacion": 79.5,
     "importe": 6394.26,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -645,7 +716,8 @@
     "cif": "G08346348",
     "puntuacion": 79.5,
     "importe": 6394.26,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -654,7 +726,8 @@
     "cif": "G56820194",
     "puntuacion": 79.5,
     "importe": 6394.26,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -663,7 +736,8 @@
     "cif": "G93281038",
     "puntuacion": 79.0,
     "importe": 6316.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -672,7 +746,8 @@
     "cif": "G33963919",
     "puntuacion": 79.0,
     "importe": 6316.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -681,7 +756,8 @@
     "cif": "G57019218",
     "puntuacion": 78.7,
     "importe": 6270.25,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -690,7 +766,8 @@
     "cif": "G26514026",
     "puntuacion": 78.5,
     "importe": 6239.44,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -699,7 +776,8 @@
     "cif": "G73912115",
     "puntuacion": 78.0,
     "importe": 6162.77,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -708,7 +786,8 @@
     "cif": "G42613042",
     "puntuacion": 77.87,
     "importe": 6142.73,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -717,7 +796,8 @@
     "cif": "G16626509",
     "puntuacion": 77.5,
     "importe": 6086.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -726,7 +806,8 @@
     "cif": "G87644613",
     "puntuacion": 77.38,
     "importe": 6068.37,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -735,7 +816,8 @@
     "cif": "G19785542",
     "puntuacion": 77.34,
     "importe": 6062.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -744,7 +826,8 @@
     "cif": "G30148472",
     "puntuacion": 77.23,
     "importe": 6044.89,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -753,7 +836,8 @@
     "cif": "G86802980",
     "puntuacion": 77.0,
     "importe": 6010.88,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -762,7 +846,8 @@
     "cif": "G65361941",
     "puntuacion": 76.2,
     "importe": 5890.79,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -771,7 +856,8 @@
     "cif": "G16458499",
     "puntuacion": 76.0,
     "importe": 5860.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -780,7 +866,8 @@
     "cif": "G14842629",
     "puntuacion": 76.0,
     "importe": 5860.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -789,7 +876,8 @@
     "cif": "G55593883",
     "puntuacion": 75.5,
     "importe": 5786.73,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -798,7 +886,8 @@
     "cif": "G98394018",
     "puntuacion": 75.0,
     "importe": 5713.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -807,7 +896,8 @@
     "cif": "G88313978",
     "puntuacion": 75.0,
     "importe": 5713.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -816,7 +906,8 @@
     "cif": "G72887516",
     "puntuacion": 75.0,
     "importe": 5713.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -825,7 +916,8 @@
     "cif": "G04951547",
     "puntuacion": 74.74,
     "importe": 5675.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -834,7 +926,8 @@
     "cif": "G12750121",
     "puntuacion": 74.65,
     "importe": 5661.2,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -843,7 +936,8 @@
     "cif": "G85278646",
     "puntuacion": 74.55,
     "importe": 5647.05,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -852,7 +946,8 @@
     "cif": "G34205187",
     "puntuacion": 74.5,
     "importe": 5639.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -861,7 +956,8 @@
     "cif": "G72289556",
     "puntuacion": 74.0,
     "importe": 5567.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -870,7 +966,8 @@
     "cif": "G57935819",
     "puntuacion": 73.7,
     "importe": 5523.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -879,7 +976,8 @@
     "cif": "G72313497",
     "puntuacion": 73.0,
     "importe": 5422.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -888,7 +986,8 @@
     "cif": "G61647236",
     "puntuacion": 73.0,
     "importe": 5422.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -897,7 +996,8 @@
     "cif": "G13379995",
     "puntuacion": 73.0,
     "importe": 5422.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -906,7 +1006,8 @@
     "cif": "G38609103",
     "puntuacion": 72.5,
     "importe": 5351.67,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -915,7 +1016,8 @@
     "cif": "G66598244",
     "puntuacion": 71.9,
     "importe": 5266.77,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -924,7 +1026,8 @@
     "cif": "G04242756",
     "puntuacion": 71.5,
     "importe": 5210.56,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -933,7 +1036,8 @@
     "cif": "G46100111",
     "puntuacion": 70.92,
     "importe": 5129.62,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -942,7 +1046,8 @@
     "cif": "G73851412",
     "puntuacion": 70.7,
     "importe": 5099.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -951,7 +1056,8 @@
     "cif": "G16922817",
     "puntuacion": 70.5,
     "importe": 5071.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -960,7 +1066,8 @@
     "cif": "G36328078",
     "puntuacion": 70.45,
     "importe": 5064.51,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -969,7 +1076,8 @@
     "cif": "G56225667",
     "puntuacion": 70.2,
     "importe": 5030.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -978,7 +1086,8 @@
     "cif": "B54999156",
     "puntuacion": 70.13,
     "importe": 5019.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -987,7 +1096,8 @@
     "cif": "G27753268",
     "puntuacion": 70.0,
     "importe": 5002.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -996,7 +1106,8 @@
     "cif": "G03660305",
     "puntuacion": 70.0,
     "importe": 5002.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1005,7 +1116,8 @@
     "cif": "G96702337",
     "puntuacion": 70.0,
     "importe": 5002.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1014,7 +1126,8 @@
     "cif": "G86981529",
     "puntuacion": 69.3,
     "importe": 4907.03,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1023,7 +1136,8 @@
     "cif": "G41457284",
     "puntuacion": 69.0,
     "importe": 4866.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1032,7 +1146,8 @@
     "cif": "G16183436",
     "puntuacion": 69.0,
     "importe": 4866.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1041,7 +1156,8 @@
     "cif": "G65152258",
     "puntuacion": 69.0,
     "importe": 4866.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1050,7 +1166,8 @@
     "cif": "G56419518",
     "puntuacion": 68.75,
     "importe": 4832.63,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1059,7 +1176,8 @@
     "cif": "G22183792",
     "puntuacion": 68.17,
     "importe": 4754.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1068,7 +1186,8 @@
     "cif": "G13589379",
     "puntuacion": 67.5,
     "importe": 4665.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1077,7 +1196,8 @@
     "cif": "G02858298",
     "puntuacion": 67.5,
     "importe": 4665.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1086,7 +1206,8 @@
     "cif": "G95277372",
     "puntuacion": 67.5,
     "importe": 4665.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1095,7 +1216,8 @@
     "cif": "G66816224",
     "puntuacion": 67.5,
     "importe": 4665.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1104,7 +1226,8 @@
     "cif": "G18904953",
     "puntuacion": 67.23,
     "importe": 4630.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1113,7 +1236,8 @@
     "cif": "G86635265",
     "puntuacion": 67.0,
     "importe": 4599.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1122,7 +1246,8 @@
     "cif": "G56419468",
     "puntuacion": 66.6,
     "importe": 4547.48,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1131,7 +1256,8 @@
     "cif": "G16595308",
     "puntuacion": 66.5,
     "importe": 4534.44,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1140,7 +1266,8 @@
     "cif": "G04952214",
     "puntuacion": 66.05,
     "importe": 4475.99,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1149,7 +1276,8 @@
     "cif": "G65986846",
     "puntuacion": 66.0,
     "importe": 4469.52,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1158,7 +1286,8 @@
     "cif": "G67737098",
     "puntuacion": 65.05,
     "importe": 4347.53,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1167,7 +1296,8 @@
     "cif": "G04856266",
     "puntuacion": 65.0,
     "importe": 4341.16,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1176,7 +1306,8 @@
     "cif": "G55601587",
     "puntuacion": 64.55,
     "importe": 4284.03,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1185,7 +1316,8 @@
     "cif": "G05120217",
     "puntuacion": 64.53,
     "importe": 4280.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1194,7 +1326,8 @@
     "cif": "G64021991",
     "puntuacion": 64.5,
     "importe": 4277.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1203,7 +1336,8 @@
     "cif": "G13685854",
     "puntuacion": 64.06,
     "importe": 4222.28,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1212,7 +1346,8 @@
     "cif": "G24202236",
     "puntuacion": 64.0,
     "importe": 4214.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1221,7 +1356,8 @@
     "cif": "G44233914",
     "puntuacion": 63.75,
     "importe": 4183.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1230,7 +1366,8 @@
     "cif": "G93097640",
     "puntuacion": 63.75,
     "importe": 4183.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1239,7 +1376,8 @@
     "cif": "G71405872",
     "puntuacion": 63.75,
     "importe": 4183.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1248,7 +1386,8 @@
     "cif": "G04749784",
     "puntuacion": 63.0,
     "importe": 4090.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1257,7 +1396,8 @@
     "cif": "G25378761",
     "puntuacion": 63.0,
     "importe": 4090.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1266,7 +1406,8 @@
     "cif": "G56322050",
     "puntuacion": 62.5,
     "importe": 4028.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1275,7 +1416,8 @@
     "cif": "G99160384",
     "puntuacion": 62.5,
     "importe": 4028.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1284,7 +1426,8 @@
     "cif": "G73418212",
     "puntuacion": 62.5,
     "importe": 4028.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1293,7 +1436,8 @@
     "cif": "G71311385",
     "puntuacion": 62.5,
     "importe": 4028.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1302,7 +1446,8 @@
     "cif": "G16813859",
     "puntuacion": 62.35,
     "importe": 4010.47,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1311,7 +1456,8 @@
     "cif": "G55009583",
     "puntuacion": 62.0,
     "importe": 3967.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1320,7 +1466,8 @@
     "cif": "G73919904",
     "puntuacion": 62.0,
     "importe": 3967.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1329,7 +1476,8 @@
     "cif": "G53870846",
     "puntuacion": 62.0,
     "importe": 3967.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1338,7 +1486,8 @@
     "cif": "G29810736",
     "puntuacion": 61.75,
     "importe": 3937.51,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1347,7 +1496,8 @@
     "cif": "G44715332",
     "puntuacion": 61.5,
     "importe": 3907.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1356,7 +1506,8 @@
     "cif": "G52035748",
     "puntuacion": 61.5,
     "importe": 3907.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1365,7 +1516,8 @@
     "cif": "G49302250",
     "puntuacion": 61.5,
     "importe": 3907.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1374,7 +1526,8 @@
     "cif": "G66911785",
     "puntuacion": 61.5,
     "importe": 3907.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1383,7 +1536,8 @@
     "cif": "G72283526",
     "puntuacion": 61.5,
     "importe": 3907.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1392,7 +1546,8 @@
     "cif": "G39858881",
     "puntuacion": 61.5,
     "importe": 3907.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1401,7 +1556,8 @@
     "cif": "G56703358",
     "puntuacion": 61.35,
     "importe": 3889.26,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1410,7 +1566,8 @@
     "cif": "G10979912",
     "puntuacion": 61.0,
     "importe": 3847.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1419,7 +1576,8 @@
     "cif": "G88069661",
     "puntuacion": 61.0,
     "importe": 3847.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1428,7 +1586,8 @@
     "cif": "G87732293",
     "puntuacion": 60.81,
     "importe": 3824.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1437,7 +1596,8 @@
     "cif": "G62312384",
     "puntuacion": 60.75,
     "importe": 3817.47,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1446,7 +1606,8 @@
     "cif": "G76155530",
     "puntuacion": 60.5,
     "importe": 3787.77,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1455,7 +1616,8 @@
     "cif": "G62618202",
     "puntuacion": 60.5,
     "importe": 3787.77,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1464,7 +1626,8 @@
     "cif": "G04118352",
     "puntuacion": 60.25,
     "importe": 3758.19,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1473,7 +1636,8 @@
     "cif": "G55669931",
     "puntuacion": 60.15,
     "importe": 3746.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1482,7 +1646,8 @@
     "cif": "G56579725",
     "puntuacion": 60.0,
     "importe": 3728.73,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1491,7 +1656,8 @@
     "cif": "G67752766",
     "puntuacion": 60.0,
     "importe": 3728.73,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1500,7 +1666,8 @@
     "cif": "G23454994",
     "puntuacion": 59.5,
     "importe": 3670.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1509,7 +1676,8 @@
     "cif": "G40549537",
     "puntuacion": 59.5,
     "importe": 3670.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1518,7 +1686,8 @@
     "cif": "G97186621",
     "puntuacion": 59.38,
     "importe": 3655.62,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1527,7 +1696,8 @@
     "cif": "G47800529",
     "puntuacion": 59.0,
     "importe": 3612.12,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1536,7 +1706,8 @@
     "cif": "G13899935",
     "puntuacion": 59.0,
     "importe": 3612.12,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1545,7 +1716,8 @@
     "cif": "G44738011",
     "puntuacion": 58.98,
     "importe": 3609.69,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1554,7 +1726,8 @@
     "cif": "G13694666",
     "puntuacion": 58.85,
     "importe": 3594.8,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1563,7 +1736,8 @@
     "cif": "G01821842",
     "puntuacion": 58.75,
     "importe": 3583.28,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1572,7 +1746,8 @@
     "cif": "G02548204",
     "puntuacion": 58.5,
     "importe": 3554.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1581,7 +1756,8 @@
     "cif": "G53141057",
     "puntuacion": 58.5,
     "importe": 3554.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1590,7 +1766,8 @@
     "cif": "G67691741",
     "puntuacion": 58.5,
     "importe": 3554.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1599,7 +1776,8 @@
     "cif": "G16661555",
     "puntuacion": 58.45,
     "importe": 3548.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1608,7 +1786,8 @@
     "cif": "G88405824",
     "puntuacion": 58.0,
     "importe": 3497.48,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1617,7 +1796,8 @@
     "cif": "G73583700",
     "puntuacion": 58.0,
     "importe": 3497.48,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1626,7 +1806,8 @@
     "cif": "G93705358",
     "puntuacion": 57.7,
     "importe": 3463.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1635,7 +1816,8 @@
     "cif": "G23756653",
     "puntuacion": 57.63,
     "importe": 3454.99,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1644,7 +1826,8 @@
     "cif": "G24660375",
     "puntuacion": 57.45,
     "importe": 3435.26,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1653,7 +1836,8 @@
     "cif": "G72338585",
     "puntuacion": 57.0,
     "importe": 3384.79,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1662,7 +1846,8 @@
     "cif": "G02678282",
     "puntuacion": 57.0,
     "importe": 3384.79,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1671,7 +1856,8 @@
     "cif": "G54952270",
     "puntuacion": 56.8,
     "importe": 3362.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1680,7 +1866,8 @@
     "cif": "G05553870",
     "puntuacion": 56.5,
     "importe": 3329.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1689,7 +1876,8 @@
     "cif": "G74371022",
     "puntuacion": 56.5,
     "importe": 3329.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1698,7 +1886,8 @@
     "cif": "G87026761",
     "puntuacion": 56.25,
     "importe": 3301.56,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1707,7 +1896,8 @@
     "cif": "G83733469",
     "puntuacion": 56.15,
     "importe": 3290.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1716,7 +1906,8 @@
     "cif": "G98657232",
     "puntuacion": 55.83,
     "importe": 3254.98,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1725,7 +1916,8 @@
     "cif": "G55194450",
     "puntuacion": 55.8,
     "importe": 3252.15,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1734,7 +1926,8 @@
     "cif": "G72340227",
     "puntuacion": 55.55,
     "importe": 3224.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1743,7 +1936,8 @@
     "cif": "G66168121",
     "puntuacion": 55.5,
     "importe": 3219.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1752,7 +1946,8 @@
     "cif": "G02860518",
     "puntuacion": 55.5,
     "importe": 3219.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1761,7 +1956,8 @@
     "cif": "G98972003",
     "puntuacion": 55.4,
     "importe": 3208.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1770,7 +1966,8 @@
     "cif": "G56150360",
     "puntuacion": 55.37,
     "importe": 3205.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1779,7 +1976,8 @@
     "cif": "G62884234",
     "puntuacion": 55.25,
     "importe": 3192.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1788,7 +1986,8 @@
     "cif": "G26457408",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1797,7 +1996,8 @@
     "cif": "G98004377",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1806,7 +2006,8 @@
     "cif": "G23701485",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1815,7 +2016,8 @@
     "cif": "G73567794",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1824,7 +2026,8 @@
     "cif": "G73770240",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1833,7 +2036,8 @@
     "cif": "G67356220",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1842,7 +2046,8 @@
     "cif": "G07735988",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1851,7 +2056,8 @@
     "cif": "G99140196",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1860,7 +2066,8 @@
     "cif": "G43853928",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1869,7 +2076,8 @@
     "cif": "G13521653",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1878,7 +2086,8 @@
     "cif": "G03436516",
     "puntuacion": 55.0,
     "importe": 3165.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1887,7 +2096,8 @@
     "cif": "G87513743",
     "puntuacion": 54.8,
     "importe": 3143.78,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1896,7 +2106,8 @@
     "cif": "G09932369",
     "puntuacion": 54.5,
     "importe": 3111.65,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1905,7 +2116,8 @@
     "cif": "G37473196",
     "puntuacion": 54.5,
     "importe": 3111.65,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1914,7 +2126,8 @@
     "cif": "G55284079",
     "puntuacion": 54.5,
     "importe": 3111.65,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1923,7 +2136,8 @@
     "cif": "G90288523",
     "puntuacion": 54.5,
     "importe": 3111.65,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1932,7 +2146,8 @@
     "cif": "G65952152",
     "puntuacion": 54.25,
     "importe": 3085.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1941,7 +2156,8 @@
     "cif": "G72400906",
     "puntuacion": 54.0,
     "importe": 3058.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1950,7 +2166,8 @@
     "cif": "G37503034",
     "puntuacion": 53.75,
     "importe": 3032.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1959,7 +2176,8 @@
     "cif": "G02837334",
     "puntuacion": 53.5,
     "importe": 3005.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1968,7 +2186,8 @@
     "cif": "G56158520",
     "puntuacion": 53.5,
     "importe": 3005.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1977,7 +2196,8 @@
     "cif": "G09099557",
     "puntuacion": 53.5,
     "importe": 3005.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -1986,7 +2206,8 @@
     "cif": "G16734071",
     "puntuacion": 53.5,
     "importe": 3005.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -1995,7 +2216,8 @@
     "cif": "G16387060",
     "puntuacion": 53.5,
     "importe": 3005.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2004,7 +2226,8 @@
     "cif": "G46248928",
     "puntuacion": 53.4,
     "importe": 2995.34,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2013,7 +2236,8 @@
     "cif": "G01375344",
     "puntuacion": 53.25,
     "importe": 2979.67,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2022,7 +2246,8 @@
     "cif": "G56395940",
     "puntuacion": 53.24,
     "importe": 2978.62,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2031,7 +2256,8 @@
     "cif": "G09568148",
     "puntuacion": 52.93,
     "importe": 2945.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2040,7 +2266,8 @@
     "cif": "G67544544",
     "puntuacion": 52.75,
     "importe": 2927.73,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2049,7 +2276,8 @@
     "cif": "G55225320",
     "puntuacion": 52.6,
     "importe": 2912.25,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2058,7 +2286,8 @@
     "cif": "G54912316",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2067,7 +2296,8 @@
     "cif": "G90235490",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2076,7 +2306,8 @@
     "cif": "G71149926",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2085,7 +2316,8 @@
     "cif": "G87280137",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2094,7 +2326,8 @@
     "cif": "G93575017",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2103,7 +2336,8 @@
     "cif": "G40571408",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2112,7 +2346,8 @@
     "cif": "G16590473",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2121,7 +2356,8 @@
     "cif": "G66191305",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2130,7 +2366,8 @@
     "cif": "G99497869",
     "puntuacion": 52.5,
     "importe": 2901.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2139,7 +2376,8 @@
     "cif": "G90352188",
     "puntuacion": 52.35,
     "importe": 2886.54,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2148,7 +2386,8 @@
     "cif": "G26561274",
     "puntuacion": 52.3,
     "importe": 2881.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2157,7 +2396,8 @@
     "cif": "G16962474",
     "puntuacion": 52.1,
     "importe": 2860.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2166,7 +2406,8 @@
     "cif": "G06870885",
     "puntuacion": 52.0,
     "importe": 2850.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2175,7 +2416,8 @@
     "cif": "G04794194",
     "puntuacion": 52.0,
     "importe": 2850.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2184,7 +2426,8 @@
     "cif": "G88448105",
     "puntuacion": 52.0,
     "importe": 2850.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2193,7 +2436,8 @@
     "cif": "G38724035",
     "puntuacion": 51.5,
     "importe": 2800.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2202,7 +2446,8 @@
     "cif": "G94082591",
     "puntuacion": 51.5,
     "importe": 2800.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2211,7 +2456,8 @@
     "cif": "G62269428",
     "puntuacion": 51.5,
     "importe": 2800.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2220,7 +2466,8 @@
     "cif": "G55655138",
     "puntuacion": 51.25,
     "importe": 2774.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2229,7 +2476,8 @@
     "cif": "G55657530",
     "puntuacion": 51.25,
     "importe": 2774.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2238,7 +2486,8 @@
     "cif": "G66894916",
     "puntuacion": 51.2,
     "importe": 2769.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2247,7 +2496,8 @@
     "cif": "G56559263",
     "puntuacion": 51.15,
     "importe": 2764.47,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2256,7 +2506,8 @@
     "cif": "G01841758",
     "puntuacion": 51.1,
     "importe": 2759.83,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2265,7 +2516,8 @@
     "cif": "G63844518",
     "puntuacion": 51.05,
     "importe": 2754.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2274,7 +2526,8 @@
     "cif": "G88604095",
     "puntuacion": 50.8,
     "importe": 2729.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2283,7 +2536,8 @@
     "cif": "G13565106",
     "puntuacion": 50.8,
     "importe": 2729.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2292,7 +2546,8 @@
     "cif": "G75203562",
     "puntuacion": 50.55,
     "importe": 2705.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2301,7 +2556,8 @@
     "cif": "G54935085",
     "puntuacion": 50.5,
     "importe": 2700.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2310,7 +2566,8 @@
     "cif": "G09904517",
     "puntuacion": 50.42,
     "importe": 2692.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2319,7 +2576,8 @@
     "cif": "G56870587",
     "puntuacion": 50.3,
     "importe": 2680.34,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2328,7 +2586,8 @@
     "cif": "G70682372",
     "puntuacion": 50.25,
     "importe": 2675.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2337,7 +2596,8 @@
     "cif": "G56036759",
     "puntuacion": 50.1,
     "importe": 2660.66,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2346,7 +2606,8 @@
     "cif": "G56914252",
     "puntuacion": 50.02,
     "importe": 2652.72,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2355,7 +2616,8 @@
     "cif": "G67715318",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2364,7 +2626,8 @@
     "cif": "G72532237",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2373,7 +2636,8 @@
     "cif": "G12955803",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2382,7 +2646,8 @@
     "cif": "G72406663",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2391,7 +2656,8 @@
     "cif": "G19519529",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2400,7 +2666,8 @@
     "cif": "G02858330",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2409,7 +2676,8 @@
     "cif": "G64864259",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2418,7 +2686,8 @@
     "cif": "G09546417",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2427,7 +2696,8 @@
     "cif": "G55675458",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2436,7 +2706,8 @@
     "cif": "G88527825",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2445,7 +2716,8 @@
     "cif": "G29952272",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2454,7 +2726,8 @@
     "cif": "G46388385",
     "puntuacion": 50.0,
     "importe": 2650.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2463,7 +2736,8 @@
     "cif": "G49160641",
     "puntuacion": 49.75,
     "importe": 2626.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2472,7 +2746,8 @@
     "cif": "G25801176",
     "puntuacion": 49.75,
     "importe": 2626.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2481,7 +2756,8 @@
     "cif": "G43311398",
     "puntuacion": 49.75,
     "importe": 2626.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2490,7 +2766,8 @@
     "cif": "G19307867",
     "puntuacion": 49.7,
     "importe": 2621.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2499,7 +2776,8 @@
     "cif": "G85595296",
     "puntuacion": 49.65,
     "importe": 2616.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2508,7 +2786,8 @@
     "cif": "G26075200",
     "puntuacion": 49.5,
     "importe": 2602.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2517,7 +2796,8 @@
     "cif": "G66736943",
     "puntuacion": 49.5,
     "importe": 2602.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2526,7 +2806,8 @@
     "cif": "G04880803",
     "puntuacion": 49.42,
     "importe": 2594.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2535,7 +2816,8 @@
     "cif": "G64766900",
     "puntuacion": 49.38,
     "importe": 2589.99,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2544,7 +2826,8 @@
     "cif": "G55391361",
     "puntuacion": 49.33,
     "importe": 2585.16,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2553,7 +2836,8 @@
     "cif": "G45916129",
     "puntuacion": 49.15,
     "importe": 2568.27,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2562,7 +2846,8 @@
     "cif": "G42556118",
     "puntuacion": 49.0,
     "importe": 2553.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2571,7 +2856,8 @@
     "cif": "G12935003",
     "puntuacion": 49.0,
     "importe": 2553.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2580,7 +2866,8 @@
     "cif": "G10487320",
     "puntuacion": 48.85,
     "importe": 2539.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2589,7 +2876,8 @@
     "cif": "G73832354",
     "puntuacion": 48.8,
     "importe": 2534.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2598,7 +2886,8 @@
     "cif": "G55383632",
     "puntuacion": 48.8,
     "importe": 2534.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2607,7 +2896,8 @@
     "cif": "G01952514",
     "puntuacion": 48.73,
     "importe": 2527.51,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2616,7 +2906,8 @@
     "cif": "G10779312",
     "puntuacion": 48.5,
     "importe": 2506.08,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2625,7 +2916,8 @@
     "cif": "G01873652",
     "puntuacion": 48.5,
     "importe": 2506.08,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2634,7 +2926,8 @@
     "cif": "G66561812",
     "puntuacion": 48.5,
     "importe": 2506.08,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2643,7 +2936,8 @@
     "cif": "G72263650",
     "puntuacion": 48.5,
     "importe": 2506.08,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2652,7 +2946,8 @@
     "cif": "G73786279",
     "puntuacion": 48.44,
     "importe": 2500.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2661,7 +2956,8 @@
     "cif": "G88318597",
     "puntuacion": 48.3,
     "importe": 2487.11,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2670,7 +2966,8 @@
     "cif": "G43091669",
     "puntuacion": 47.95,
     "importe": 2454.19,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2679,7 +2976,8 @@
     "cif": "G70651765",
     "puntuacion": 47.91,
     "importe": 2450.34,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2688,7 +2986,8 @@
     "cif": "G32497109",
     "puntuacion": 47.9,
     "importe": 2449.4,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2697,7 +2996,8 @@
     "cif": "G54981295",
     "puntuacion": 47.8,
     "importe": 2440.02,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2706,7 +3006,8 @@
     "cif": "G09949611",
     "puntuacion": 47.78,
     "importe": 2437.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2715,7 +3016,8 @@
     "cif": "G45884848",
     "puntuacion": 47.75,
     "importe": 2435.34,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2724,7 +3026,8 @@
     "cif": "G04894556",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2733,7 +3036,8 @@
     "cif": "G76301464",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2742,7 +3046,8 @@
     "cif": "G76252261",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2751,7 +3056,8 @@
     "cif": "G99486425",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2760,7 +3066,8 @@
     "cif": "G93549780",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2769,7 +3076,8 @@
     "cif": "G26560342",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2778,7 +3086,8 @@
     "cif": "G88200357",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2787,7 +3096,8 @@
     "cif": "G30921753",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2796,7 +3106,8 @@
     "cif": "G94138914",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2805,7 +3116,8 @@
     "cif": "G87397055",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2814,7 +3126,8 @@
     "cif": "G42627265",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2823,7 +3136,8 @@
     "cif": "G93405868",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2832,7 +3146,8 @@
     "cif": "G66262676",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2841,7 +3156,8 @@
     "cif": "G87226957",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2850,7 +3166,8 @@
     "cif": "G90251646",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2859,7 +3176,8 @@
     "cif": "G98852460",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2868,7 +3186,8 @@
     "cif": "G10480168",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2877,7 +3196,8 @@
     "cif": "G67625517",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2886,7 +3206,8 @@
     "cif": "G16625428",
     "puntuacion": 47.5,
     "importe": 2412.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2895,7 +3216,8 @@
     "cif": "G55069322",
     "puntuacion": 47.4,
     "importe": 2402.24,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2904,7 +3226,8 @@
     "cif": "G19186402",
     "puntuacion": 47.3,
     "importe": 2393.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2913,7 +3236,8 @@
     "cif": "G02559409",
     "puntuacion": 47.25,
     "importe": 2388.8,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2922,7 +3246,8 @@
     "cif": "G73610867",
     "puntuacion": 47.25,
     "importe": 2388.8,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2931,7 +3256,8 @@
     "cif": "G06886949",
     "puntuacion": 47.0,
     "importe": 2365.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2940,7 +3266,8 @@
     "cif": "G44630374",
     "puntuacion": 47.0,
     "importe": 2365.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2949,7 +3276,8 @@
     "cif": "G44622512",
     "puntuacion": 47.0,
     "importe": 2365.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2958,7 +3286,8 @@
     "cif": "G19664135",
     "puntuacion": 46.8,
     "importe": 2347.32,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2967,7 +3296,8 @@
     "cif": "G10626075",
     "puntuacion": 46.75,
     "importe": 2342.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -2976,7 +3306,8 @@
     "cif": "G04896916",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2985,7 +3316,8 @@
     "cif": "G98796386",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -2994,7 +3326,8 @@
     "cif": "G02707180",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3003,7 +3336,8 @@
     "cif": "G70859814",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3012,7 +3346,8 @@
     "cif": "G55130918",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3021,7 +3356,8 @@
     "cif": "G55574354",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3030,7 +3366,8 @@
     "cif": "G39768288",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3039,7 +3376,8 @@
     "cif": "G02903870",
     "puntuacion": 46.5,
     "importe": 2319.9,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3048,7 +3386,8 @@
     "cif": "G54780218",
     "puntuacion": 46.25,
     "importe": 2297.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3057,7 +3396,8 @@
     "cif": "G55666507",
     "puntuacion": 46.25,
     "importe": 2297.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3066,7 +3406,8 @@
     "cif": "G47533534",
     "puntuacion": 46.25,
     "importe": 2297.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3075,7 +3416,8 @@
     "cif": "G93718583",
     "puntuacion": 46.25,
     "importe": 2297.18,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3084,7 +3426,8 @@
     "cif": "G87817623",
     "puntuacion": 46.2,
     "importe": 2293.05,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3093,7 +3436,8 @@
     "cif": "G29598059",
     "puntuacion": 46.2,
     "importe": 2292.7,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3102,7 +3446,8 @@
     "cif": "G86977956",
     "puntuacion": 46.07,
     "importe": 2280.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3111,7 +3456,8 @@
     "cif": "G64857741",
     "puntuacion": 46.0,
     "importe": 2274.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3120,7 +3466,8 @@
     "cif": "G76593201",
     "puntuacion": 45.8,
     "importe": 2256.59,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3129,7 +3476,8 @@
     "cif": "G72254360",
     "puntuacion": 45.8,
     "importe": 2256.59,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3138,7 +3486,8 @@
     "cif": "G39817879",
     "puntuacion": 45.75,
     "importe": 2252.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3147,7 +3496,8 @@
     "cif": "G54875372",
     "puntuacion": 45.5,
     "importe": 2229.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3156,7 +3506,8 @@
     "cif": "G70491642",
     "puntuacion": 45.5,
     "importe": 2229.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3165,7 +3516,8 @@
     "cif": "G88407580",
     "puntuacion": 45.4,
     "importe": 2220.84,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3174,7 +3526,8 @@
     "cif": "G16307936",
     "puntuacion": 45.25,
     "importe": 2207.52,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3183,7 +3536,8 @@
     "cif": "G06801740",
     "puntuacion": 45.09,
     "importe": 2193.35,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3192,7 +3546,8 @@
     "cif": "G13709472",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3201,7 +3556,8 @@
     "cif": "G01758408",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3210,7 +3566,8 @@
     "cif": "G05540992",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3219,7 +3576,8 @@
     "cif": "G30304539",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3228,7 +3586,8 @@
     "cif": "G27515931",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3237,7 +3596,8 @@
     "cif": "G16535833",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3246,7 +3606,8 @@
     "cif": "G02794337",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3255,7 +3616,8 @@
     "cif": "G19814243",
     "puntuacion": 45.0,
     "importe": 2185.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3264,7 +3626,8 @@
     "cif": "G01993054",
     "puntuacion": 44.99,
     "importe": 2184.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3273,7 +3636,8 @@
     "cif": "G13377882",
     "puntuacion": 44.9,
     "importe": 2176.6,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3282,7 +3646,8 @@
     "cif": "G45875911",
     "puntuacion": 44.9,
     "importe": 2176.59,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3291,7 +3656,8 @@
     "cif": "G72672157",
     "puntuacion": 44.75,
     "importe": 2163.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3300,7 +3666,8 @@
     "cif": "G21607932",
     "puntuacion": 44.6,
     "importe": 2150.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3309,7 +3676,8 @@
     "cif": "G10631083",
     "puntuacion": 44.5,
     "importe": 2141.56,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3318,7 +3686,8 @@
     "cif": "G57382335",
     "puntuacion": 44.5,
     "importe": 2141.56,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3327,7 +3696,8 @@
     "cif": "G16367765",
     "puntuacion": 44.47,
     "importe": 2138.72,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3336,7 +3706,8 @@
     "cif": "G87267381",
     "puntuacion": 44.25,
     "importe": 2119.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3345,7 +3716,8 @@
     "cif": "G47701636",
     "puntuacion": 44.15,
     "importe": 2111.15,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3354,7 +3726,8 @@
     "cif": "G10940385",
     "puntuacion": 44.07,
     "importe": 2104.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3363,7 +3736,8 @@
     "cif": "G44269025",
     "puntuacion": 44.01,
     "importe": 2099.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3372,7 +3746,8 @@
     "cif": "G40267429",
     "puntuacion": 44.0,
     "importe": 2098.2,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3381,7 +3756,8 @@
     "cif": "G90347121",
     "puntuacion": 44.0,
     "importe": 2098.2,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3390,7 +3766,8 @@
     "cif": "G98372691",
     "puntuacion": 43.75,
     "importe": 2076.7,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3399,7 +3776,8 @@
     "cif": "G09661190",
     "puntuacion": 43.75,
     "importe": 2076.7,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3408,7 +3786,8 @@
     "cif": "G14928816",
     "puntuacion": 43.75,
     "importe": 2076.7,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3417,7 +3796,8 @@
     "cif": "G43649326",
     "puntuacion": 43.72,
     "importe": 2074.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3426,7 +3806,8 @@
     "cif": "G72585664",
     "puntuacion": 43.65,
     "importe": 2068.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3435,7 +3816,8 @@
     "cif": "G67926824",
     "puntuacion": 43.5,
     "importe": 2055.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3444,7 +3826,8 @@
     "cif": "G02691863",
     "puntuacion": 43.5,
     "importe": 2055.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3453,7 +3836,8 @@
     "cif": "G30906663",
     "puntuacion": 43.5,
     "importe": 2055.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3462,7 +3846,8 @@
     "cif": "G55118889",
     "puntuacion": 43.31,
     "importe": 2039.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3471,7 +3856,8 @@
     "cif": "G72544315",
     "puntuacion": 43.3,
     "importe": 2038.32,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3480,7 +3866,8 @@
     "cif": "G16832685",
     "puntuacion": 43.25,
     "importe": 2034.08,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3489,7 +3876,8 @@
     "cif": "G13897368",
     "puntuacion": 43.25,
     "importe": 2034.08,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3498,7 +3886,8 @@
     "cif": "G13591029",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3507,7 +3896,8 @@
     "cif": "G16422412",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3516,7 +3906,8 @@
     "cif": "G02723898",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3525,7 +3916,8 @@
     "cif": "G18939181",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3534,7 +3926,8 @@
     "cif": "G06890701",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3543,7 +3936,8 @@
     "cif": "G55136006",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3552,7 +3946,8 @@
     "cif": "G72266109",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3561,7 +3956,8 @@
     "cif": "G56230634",
     "puntuacion": 43.0,
     "importe": 2012.95,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3570,7 +3966,8 @@
     "cif": "G52529732",
     "puntuacion": 42.85,
     "importe": 2000.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3579,7 +3976,8 @@
     "cif": "G76580174",
     "puntuacion": 42.8,
     "importe": 1996.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3588,7 +3986,8 @@
     "cif": "G43849371",
     "puntuacion": 42.75,
     "importe": 1991.94,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3597,7 +3996,8 @@
     "cif": "G72370067",
     "puntuacion": 42.58,
     "importe": 1977.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3606,7 +4006,8 @@
     "cif": "G22399489",
     "puntuacion": 42.5,
     "importe": 1971.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3615,7 +4016,8 @@
     "cif": "G16336612",
     "puntuacion": 42.5,
     "importe": 1971.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3624,7 +4026,8 @@
     "cif": "G13885934",
     "puntuacion": 42.5,
     "importe": 1971.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3633,7 +4036,8 @@
     "cif": "G27020460",
     "puntuacion": 42.5,
     "importe": 1971.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3642,7 +4046,8 @@
     "cif": "G21475140",
     "puntuacion": 42.3,
     "importe": 1954.44,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3651,7 +4056,8 @@
     "cif": "G54796347",
     "puntuacion": 42.25,
     "importe": 1950.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3660,7 +4066,8 @@
     "cif": "G16438400",
     "puntuacion": 42.25,
     "importe": 1950.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3669,7 +4076,8 @@
     "cif": "G56833288",
     "puntuacion": 42.05,
     "importe": 1933.78,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3678,7 +4086,8 @@
     "cif": "G88430871",
     "puntuacion": 42.0,
     "importe": 1929.66,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3687,7 +4096,8 @@
     "cif": "G19582527",
     "puntuacion": 42.0,
     "importe": 1929.66,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3696,7 +4106,8 @@
     "cif": "G55204499",
     "puntuacion": 42.0,
     "importe": 1929.66,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3705,7 +4116,8 @@
     "cif": "G01614726",
     "puntuacion": 41.95,
     "importe": 1925.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3714,7 +4126,8 @@
     "cif": "G39859640",
     "puntuacion": 41.85,
     "importe": 1917.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3723,7 +4136,8 @@
     "cif": "G04670238",
     "puntuacion": 41.85,
     "importe": 1917.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3732,7 +4146,8 @@
     "cif": "G56929664",
     "puntuacion": 41.75,
     "importe": 1909.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3741,7 +4156,8 @@
     "cif": "G57890139",
     "puntuacion": 41.7,
     "importe": 1905.05,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3750,7 +4166,8 @@
     "cif": "G44559664",
     "puntuacion": 41.5,
     "importe": 1888.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3759,7 +4176,8 @@
     "cif": "G72567084",
     "puntuacion": 41.5,
     "importe": 1888.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3768,7 +4186,8 @@
     "cif": "G72602360",
     "puntuacion": 41.4,
     "importe": 1880.62,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3777,7 +4196,8 @@
     "cif": "G93559862",
     "puntuacion": 41.25,
     "importe": 1868.48,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3786,7 +4206,8 @@
     "cif": "G10868164",
     "puntuacion": 41.25,
     "importe": 1868.48,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3795,7 +4216,8 @@
     "cif": "G44698660",
     "puntuacion": 41.05,
     "importe": 1852.35,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3804,7 +4226,8 @@
     "cif": "G76812452",
     "puntuacion": 41.0,
     "importe": 1848.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3813,7 +4236,8 @@
     "cif": "G98107386",
     "puntuacion": 41.0,
     "importe": 1848.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3822,7 +4246,8 @@
     "cif": "G55504864",
     "puntuacion": 41.0,
     "importe": 1848.33,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3831,7 +4256,8 @@
     "cif": "G05447842",
     "puntuacion": 40.75,
     "importe": 1828.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3840,7 +4266,8 @@
     "cif": "G02980589",
     "puntuacion": 40.75,
     "importe": 1828.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3849,7 +4276,8 @@
     "cif": "G16429441",
     "puntuacion": 40.7,
     "importe": 1824.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3858,7 +4286,8 @@
     "cif": "G55693410",
     "puntuacion": 40.61,
     "importe": 1817.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3867,7 +4296,8 @@
     "cif": "G05520283",
     "puntuacion": 40.5,
     "importe": 1808.4,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3876,7 +4306,8 @@
     "cif": "G16693467",
     "puntuacion": 40.5,
     "importe": 1808.4,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3885,7 +4316,8 @@
     "cif": "G10997351",
     "puntuacion": 40.4,
     "importe": 1800.47,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3894,7 +4326,8 @@
     "cif": "G67025924",
     "puntuacion": 40.23,
     "importe": 1786.88,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3903,7 +4336,8 @@
     "cif": "G02707743",
     "puntuacion": 40.2,
     "importe": 1784.67,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3912,7 +4346,8 @@
     "cif": "G67798355",
     "puntuacion": 40.01,
     "importe": 1769.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3921,7 +4356,8 @@
     "cif": "G67877738",
     "puntuacion": 40.0,
     "importe": 1768.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3930,7 +4366,8 @@
     "cif": "G40580235",
     "puntuacion": 40.0,
     "importe": 1768.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3939,7 +4376,8 @@
     "cif": "G82017468",
     "puntuacion": 40.0,
     "importe": 1768.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3948,7 +4386,8 @@
     "cif": "G13768858",
     "puntuacion": 40.0,
     "importe": 1768.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3957,7 +4396,8 @@
     "cif": "G73955593",
     "puntuacion": 39.9,
     "importe": 1761.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3966,7 +4406,8 @@
     "cif": "G72320385",
     "puntuacion": 39.9,
     "importe": 1761.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3975,7 +4416,8 @@
     "cif": "G44891315",
     "puntuacion": 39.82,
     "importe": 1754.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -3984,7 +4426,8 @@
     "cif": "G01779131",
     "puntuacion": 39.75,
     "importe": 1749.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -3993,7 +4436,8 @@
     "cif": "G13733845",
     "puntuacion": 39.75,
     "importe": 1749.42,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4002,7 +4446,8 @@
     "cif": "G12529319",
     "puntuacion": 39.5,
     "importe": 1730.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4011,7 +4456,8 @@
     "cif": "G10917565",
     "puntuacion": 39.5,
     "importe": 1730.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4020,7 +4466,8 @@
     "cif": "G70194964",
     "puntuacion": 39.5,
     "importe": 1730.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4029,7 +4476,8 @@
     "cif": "G02677292",
     "puntuacion": 39.5,
     "importe": 1730.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4038,7 +4486,8 @@
     "cif": "G42633040",
     "puntuacion": 39.5,
     "importe": 1730.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4047,7 +4496,8 @@
     "cif": "G13597968",
     "puntuacion": 39.46,
     "importe": 1726.62,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4056,7 +4506,8 @@
     "cif": "G86942695",
     "puntuacion": 39.45,
     "importe": 1726.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4065,7 +4516,8 @@
     "cif": "G70529375",
     "puntuacion": 39.45,
     "importe": 1726.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4074,7 +4526,8 @@
     "cif": "G09604265",
     "puntuacion": 39.29,
     "importe": 1713.79,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4083,7 +4536,8 @@
     "cif": "G70459045",
     "puntuacion": 39.25,
     "importe": 1710.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4092,7 +4546,8 @@
     "cif": "G47760616",
     "puntuacion": 39.25,
     "importe": 1710.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4101,7 +4556,8 @@
     "cif": "G10511301",
     "puntuacion": 39.15,
     "importe": 1703.03,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4110,7 +4566,8 @@
     "cif": "G34286013",
     "puntuacion": 39.05,
     "importe": 1695.37,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4119,7 +4576,8 @@
     "cif": "G88223136",
     "puntuacion": 39.03,
     "importe": 1693.84,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4128,7 +4586,8 @@
     "cif": "G56886260",
     "puntuacion": 39.0,
     "importe": 1691.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4137,7 +4596,8 @@
     "cif": "G56504921",
     "puntuacion": 39.0,
     "importe": 1691.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4146,7 +4606,8 @@
     "cif": "G76307933",
     "puntuacion": 39.0,
     "importe": 1691.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4155,7 +4616,8 @@
     "cif": "G01626779",
     "puntuacion": 38.88,
     "importe": 1682.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4164,7 +4626,8 @@
     "cif": "G99533697",
     "puntuacion": 38.8,
     "importe": 1676.3,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4173,7 +4636,8 @@
     "cif": "G13777883",
     "puntuacion": 38.5,
     "importe": 1653.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4182,7 +4646,8 @@
     "cif": "G40598963",
     "puntuacion": 38.5,
     "importe": 1653.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4191,7 +4656,8 @@
     "cif": "G56961170",
     "puntuacion": 38.5,
     "importe": 1653.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4200,7 +4666,8 @@
     "cif": "G05548227",
     "puntuacion": 38.5,
     "importe": 1653.57,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4209,7 +4676,8 @@
     "cif": "G17929886",
     "puntuacion": 38.45,
     "importe": 1649.8,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4218,7 +4686,8 @@
     "cif": "G72608276",
     "puntuacion": 38.41,
     "importe": 1646.79,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4227,7 +4696,8 @@
     "cif": "G44250603",
     "puntuacion": 38.4,
     "importe": 1646.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4236,7 +4706,8 @@
     "cif": "G45871894",
     "puntuacion": 38.4,
     "importe": 1646.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4245,7 +4716,8 @@
     "cif": "G67910539",
     "puntuacion": 38.25,
     "importe": 1634.77,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4254,7 +4726,8 @@
     "cif": "G56306178",
     "puntuacion": 38.02,
     "importe": 1617.58,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4263,7 +4736,8 @@
     "cif": "G10676047",
     "puntuacion": 38.0,
     "importe": 1616.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4272,7 +4746,8 @@
     "cif": "G54934799",
     "puntuacion": 38.0,
     "importe": 1616.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4281,7 +4756,8 @@
     "cif": "G06916035",
     "puntuacion": 38.0,
     "importe": 1616.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4290,7 +4766,8 @@
     "cif": "G01878776",
     "puntuacion": 38.0,
     "importe": 1616.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4299,7 +4776,8 @@
     "cif": "G67453720",
     "puntuacion": 38.0,
     "importe": 1616.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4308,7 +4786,8 @@
     "cif": "G72918691",
     "puntuacion": 38.0,
     "importe": 1616.09,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4317,7 +4796,8 @@
     "cif": "G72364979",
     "puntuacion": 37.63,
     "importe": 1588.31,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4326,7 +4806,8 @@
     "cif": "G03945581",
     "puntuacion": 37.6,
     "importe": 1586.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4335,7 +4816,8 @@
     "cif": "G70969118",
     "puntuacion": 37.5,
     "importe": 1579.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4344,7 +4826,8 @@
     "cif": "G87501425",
     "puntuacion": 37.5,
     "importe": 1579.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4353,7 +4836,8 @@
     "cif": "G87158309",
     "puntuacion": 37.5,
     "importe": 1579.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4362,7 +4846,8 @@
     "cif": "G80572852",
     "puntuacion": 37.5,
     "importe": 1579.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4371,7 +4856,8 @@
     "cif": "G70822580",
     "puntuacion": 37.5,
     "importe": 1579.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4380,7 +4866,8 @@
     "cif": "G58223785",
     "puntuacion": 37.5,
     "importe": 1579.1,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4389,7 +4876,8 @@
     "cif": "G09644196",
     "puntuacion": 37.5,
     "importe": 1579.03,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4398,7 +4886,8 @@
     "cif": "G44987477",
     "puntuacion": 37.41,
     "importe": 1572.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4407,7 +4896,8 @@
     "cif": "G25073917",
     "puntuacion": 37.3,
     "importe": 1564.44,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4416,7 +4906,8 @@
     "cif": "G71308225",
     "puntuacion": 37.0,
     "importe": 1542.6,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4425,7 +4916,8 @@
     "cif": "G04809042",
     "puntuacion": 37.0,
     "importe": 1542.6,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4434,7 +4926,8 @@
     "cif": "G55241707",
     "puntuacion": 37.0,
     "importe": 1542.6,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4443,7 +4936,8 @@
     "cif": "G55681464",
     "puntuacion": 37.0,
     "importe": 1542.6,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4452,7 +4946,8 @@
     "cif": "G90283425",
     "puntuacion": 37.0,
     "importe": 1542.6,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4461,7 +4956,8 @@
     "cif": "G55351597",
     "puntuacion": 36.99,
     "importe": 1541.76,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4470,7 +4966,8 @@
     "cif": "G67908905",
     "puntuacion": 36.8,
     "importe": 1528.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4479,7 +4976,8 @@
     "cif": "G02765717",
     "puntuacion": 36.8,
     "importe": 1528.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4488,7 +4986,8 @@
     "cif": "G70630108",
     "puntuacion": 36.75,
     "importe": 1524.54,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4497,7 +4996,8 @@
     "cif": "G76763937",
     "puntuacion": 36.73,
     "importe": 1523.2,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4506,7 +5006,8 @@
     "cif": "G01613975",
     "puntuacion": 36.7,
     "importe": 1520.94,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4515,7 +5016,8 @@
     "cif": "G40618688",
     "puntuacion": 36.65,
     "importe": 1517.34,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4524,7 +5026,8 @@
     "cif": "G09644071",
     "puntuacion": 36.6,
     "importe": 1513.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4533,7 +5036,8 @@
     "cif": "G10948065",
     "puntuacion": 36.55,
     "importe": 1510.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4542,7 +5046,8 @@
     "cif": "G16843609",
     "puntuacion": 36.5,
     "importe": 1506.59,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4551,7 +5056,8 @@
     "cif": "G10422947",
     "puntuacion": 36.5,
     "importe": 1506.59,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4560,7 +5066,8 @@
     "cif": "G56365356",
     "puntuacion": 36.5,
     "importe": 1506.59,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4569,7 +5076,8 @@
     "cif": "G85613834",
     "puntuacion": 36.4,
     "importe": 1499.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4578,7 +5086,8 @@
     "cif": "G55365449",
     "puntuacion": 36.39,
     "importe": 1498.38,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4587,7 +5096,8 @@
     "cif": "G25566647",
     "puntuacion": 36.2,
     "importe": 1485.22,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4596,7 +5106,8 @@
     "cif": "G74277559",
     "puntuacion": 36.14,
     "importe": 1480.97,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4605,7 +5116,8 @@
     "cif": "G09803172",
     "puntuacion": 36.01,
     "importe": 1471.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4614,7 +5126,8 @@
     "cif": "G24389793",
     "puntuacion": 36.0,
     "importe": 1471.07,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4623,7 +5136,8 @@
     "cif": "G86712833",
     "puntuacion": 36.0,
     "importe": 1471.07,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4632,7 +5146,8 @@
     "cif": "G30933600",
     "puntuacion": 36.0,
     "importe": 1471.07,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4641,7 +5156,8 @@
     "cif": "G05493077",
     "puntuacion": 35.97,
     "importe": 1469.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4650,7 +5166,8 @@
     "cif": "G55709091",
     "puntuacion": 35.95,
     "importe": 1467.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4659,7 +5176,8 @@
     "cif": "G21572656",
     "puntuacion": 35.95,
     "importe": 1467.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4668,7 +5186,8 @@
     "cif": "G66285412",
     "puntuacion": 35.95,
     "importe": 1467.55,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4677,7 +5196,8 @@
     "cif": "G01671288",
     "puntuacion": 35.83,
     "importe": 1458.75,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4686,7 +5206,8 @@
     "cif": "G99415796",
     "puntuacion": 35.75,
     "importe": 1453.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4695,7 +5216,8 @@
     "cif": "G72317241",
     "puntuacion": 35.75,
     "importe": 1453.49,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4704,7 +5226,8 @@
     "cif": "G90187493",
     "puntuacion": 35.6,
     "importe": 1443.01,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4713,7 +5236,8 @@
     "cif": "G91041947",
     "puntuacion": 35.5,
     "importe": 1436.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4722,7 +5246,8 @@
     "cif": "G67418616",
     "puntuacion": 35.25,
     "importe": 1418.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4731,7 +5256,8 @@
     "cif": "G72711724",
     "puntuacion": 35.2,
     "importe": 1415.26,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4740,7 +5266,8 @@
     "cif": "G65257842",
     "puntuacion": 35.05,
     "importe": 1404.93,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4749,7 +5276,8 @@
     "cif": "G01695568",
     "puntuacion": 35.05,
     "importe": 1404.93,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4758,7 +5286,8 @@
     "cif": "G44535359",
     "puntuacion": 35.0,
     "importe": 1401.5,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4767,7 +5296,8 @@
     "cif": "G13584305",
     "puntuacion": 35.0,
     "importe": 1401.5,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4776,7 +5306,8 @@
     "cif": "G66851510",
     "puntuacion": 35.0,
     "importe": 1401.5,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4785,7 +5316,8 @@
     "cif": "G44513307",
     "puntuacion": 35.0,
     "importe": 1401.5,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4794,7 +5326,8 @@
     "cif": "G87230512",
     "puntuacion": 35.0,
     "importe": 1401.5,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4803,7 +5336,8 @@
     "cif": "G56723612",
     "puntuacion": 34.75,
     "importe": 1384.41,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4812,7 +5346,8 @@
     "cif": "G94108453",
     "puntuacion": 34.65,
     "importe": 1377.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4821,7 +5356,8 @@
     "cif": "G02987337",
     "puntuacion": 34.63,
     "importe": 1376.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4830,7 +5366,8 @@
     "cif": "G02728699",
     "puntuacion": 34.55,
     "importe": 1370.83,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4839,7 +5376,8 @@
     "cif": "G73945388",
     "puntuacion": 34.5,
     "importe": 1367.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4848,7 +5386,8 @@
     "cif": "G88612395",
     "puntuacion": 34.5,
     "importe": 1367.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4857,7 +5396,8 @@
     "cif": "G26529594",
     "puntuacion": 34.5,
     "importe": 1367.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4866,7 +5406,8 @@
     "cif": "G16374167",
     "puntuacion": 34.5,
     "importe": 1367.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4875,7 +5416,8 @@
     "cif": "G44886315",
     "puntuacion": 34.5,
     "importe": 1367.45,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4884,7 +5426,8 @@
     "cif": "G74467440",
     "puntuacion": 34.3,
     "importe": 1353.96,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4893,7 +5436,8 @@
     "cif": "G14858518",
     "puntuacion": 34.25,
     "importe": 1350.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4902,7 +5446,8 @@
     "cif": "G13625736",
     "puntuacion": 34.0,
     "importe": 1333.89,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4911,7 +5456,8 @@
     "cif": "G93719730",
     "puntuacion": 33.95,
     "importe": 1330.56,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4920,7 +5466,8 @@
     "cif": "G72233026",
     "puntuacion": 33.88,
     "importe": 1325.67,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4929,7 +5476,8 @@
     "cif": "G66540469",
     "puntuacion": 33.85,
     "importe": 1323.91,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4938,7 +5486,8 @@
     "cif": "G19842640",
     "puntuacion": 33.75,
     "importe": 1317.29,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4947,7 +5496,8 @@
     "cif": "G87672317",
     "puntuacion": 33.73,
     "importe": 1315.64,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4956,7 +5506,8 @@
     "cif": "G66348426",
     "puntuacion": 33.7,
     "importe": 1313.99,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4965,7 +5516,8 @@
     "cif": "G11941929",
     "puntuacion": 33.6,
     "importe": 1307.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -4974,7 +5526,8 @@
     "cif": "G93414399",
     "puntuacion": 33.5,
     "importe": 1300.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4983,7 +5536,8 @@
     "cif": "G02574564",
     "puntuacion": 33.25,
     "importe": 1284.46,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -4992,7 +5546,8 @@
     "cif": "G99534281",
     "puntuacion": 33.1,
     "importe": 1274.71,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5001,7 +5556,8 @@
     "cif": "G88646831",
     "puntuacion": 33.05,
     "importe": 1271.47,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5010,7 +5566,8 @@
     "cif": "G73975435",
     "puntuacion": 33.01,
     "importe": 1268.88,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5019,7 +5576,8 @@
     "cif": "G98939150",
     "puntuacion": 33.0,
     "importe": 1268.23,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5028,7 +5586,8 @@
     "cif": "G86761889",
     "puntuacion": 32.92,
     "importe": 1262.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5037,7 +5596,8 @@
     "cif": "G44807097",
     "puntuacion": 32.83,
     "importe": 1257.27,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5046,7 +5606,8 @@
     "cif": "G30859102",
     "puntuacion": 32.75,
     "importe": 1252.13,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5055,7 +5616,8 @@
     "cif": "G66665613",
     "puntuacion": 32.68,
     "importe": 1247.64,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5064,7 +5626,8 @@
     "cif": "G57517690",
     "puntuacion": 32.6,
     "importe": 1242.52,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5073,7 +5636,8 @@
     "cif": "G43766625",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5082,7 +5646,8 @@
     "cif": "G61156345",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5091,7 +5656,8 @@
     "cif": "G67861195",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5100,7 +5666,8 @@
     "cif": "G42935817",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5109,7 +5676,8 @@
     "cif": "G19553510",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5118,7 +5686,8 @@
     "cif": "G54940614",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5127,7 +5696,8 @@
     "cif": "G13755251",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5136,7 +5706,8 @@
     "cif": "G13559414",
     "puntuacion": 32.5,
     "importe": 1236.14,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5145,7 +5716,8 @@
     "cif": "G55660013",
     "puntuacion": 32.43,
     "importe": 1231.37,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5154,7 +5726,8 @@
     "cif": "G86596715",
     "puntuacion": 32.23,
     "importe": 1219.05,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5163,7 +5736,8 @@
     "cif": "G04422028",
     "puntuacion": 32.12,
     "importe": 1211.77,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5172,7 +5746,8 @@
     "cif": "G16732000",
     "puntuacion": 32.0,
     "importe": 1204.54,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5181,7 +5756,8 @@
     "cif": "G56076581",
     "puntuacion": 32.0,
     "importe": 1204.54,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5190,7 +5766,8 @@
     "cif": "G55452577",
     "puntuacion": 31.9,
     "importe": 1198.28,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5199,7 +5776,8 @@
     "cif": "G16393993",
     "puntuacion": 31.81,
     "importe": 1192.93,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5208,7 +5786,8 @@
     "cif": "G73947582",
     "puntuacion": 31.8,
     "importe": 1192.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5217,7 +5796,8 @@
     "cif": "G56976772",
     "puntuacion": 31.76,
     "importe": 1189.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5226,7 +5806,8 @@
     "cif": "G02572303",
     "puntuacion": 31.75,
     "importe": 1188.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5235,7 +5816,8 @@
     "cif": "G98994734",
     "puntuacion": 31.75,
     "importe": 1188.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5244,7 +5826,8 @@
     "cif": "G56116932",
     "puntuacion": 31.75,
     "importe": 1188.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5253,7 +5836,8 @@
     "cif": "G65494825",
     "puntuacion": 31.75,
     "importe": 1188.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5262,7 +5846,8 @@
     "cif": "G66638016",
     "puntuacion": 31.75,
     "importe": 1188.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5271,7 +5856,8 @@
     "cif": "G57902504",
     "puntuacion": 31.75,
     "importe": 1188.92,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5280,7 +5866,8 @@
     "cif": "G67916684",
     "puntuacion": 31.7,
     "importe": 1185.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5289,7 +5876,8 @@
     "cif": "G55699748",
     "puntuacion": 31.7,
     "importe": 1185.82,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5298,7 +5886,8 @@
     "cif": "G93385862",
     "puntuacion": 31.6,
     "importe": 1179.61,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5307,7 +5896,8 @@
     "cif": "G30928196",
     "puntuacion": 31.5,
     "importe": 1173.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5316,7 +5906,8 @@
     "cif": "G70566674",
     "puntuacion": 31.5,
     "importe": 1173.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5325,7 +5916,8 @@
     "cif": "G56601891",
     "puntuacion": 31.5,
     "importe": 1173.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5334,7 +5926,8 @@
     "cif": "G06795314",
     "puntuacion": 31.5,
     "importe": 1173.43,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5343,7 +5936,8 @@
     "cif": "G42756577",
     "puntuacion": 31.37,
     "importe": 1165.11,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5352,7 +5946,8 @@
     "cif": "G05336698",
     "puntuacion": 31.3,
     "importe": 1161.12,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5361,7 +5956,8 @@
     "cif": "G56548746",
     "puntuacion": 31.3,
     "importe": 1161.12,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5370,7 +5966,8 @@
     "cif": "G01815992",
     "puntuacion": 31.25,
     "importe": 1158.06,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5379,7 +5976,8 @@
     "cif": "G02749851",
     "puntuacion": 31.2,
     "importe": 1155.0,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5388,7 +5986,8 @@
     "cif": "G22393797",
     "puntuacion": 31.19,
     "importe": 1154.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5397,7 +5996,8 @@
     "cif": "G87370631",
     "puntuacion": 31.15,
     "importe": 1151.94,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5406,7 +6006,8 @@
     "cif": "G87577029",
     "puntuacion": 31.05,
     "importe": 1145.85,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5415,7 +6016,8 @@
     "cif": "G40576506",
     "puntuacion": 31.0,
     "importe": 1142.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5424,7 +6026,8 @@
     "cif": "G10514487",
     "puntuacion": 31.0,
     "importe": 1142.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5433,7 +6036,8 @@
     "cif": "G01708437",
     "puntuacion": 31.0,
     "importe": 1142.81,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5442,7 +6046,8 @@
     "cif": "G13694179",
     "puntuacion": 30.98,
     "importe": 1141.37,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5451,7 +6056,8 @@
     "cif": "G87376802",
     "puntuacion": 30.9,
     "importe": 1136.74,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5460,7 +6066,8 @@
     "cif": "G99517559",
     "puntuacion": 30.87,
     "importe": 1134.93,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5469,7 +6076,8 @@
     "cif": "G09832684",
     "puntuacion": 30.85,
     "importe": 1133.72,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5478,7 +6086,8 @@
     "cif": "G98983737",
     "puntuacion": 30.8,
     "importe": 1130.7,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5487,7 +6096,8 @@
     "cif": "G66757782",
     "puntuacion": 30.75,
     "importe": 1127.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5496,7 +6106,8 @@
     "cif": "G93724136",
     "puntuacion": 30.75,
     "importe": 1127.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5505,7 +6116,8 @@
     "cif": "G06659916",
     "puntuacion": 30.7,
     "importe": 1124.67,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5514,7 +6126,8 @@
     "cif": "G05358304",
     "puntuacion": 30.68,
     "importe": 1123.17,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5523,7 +6136,8 @@
     "cif": "G02383370",
     "puntuacion": 30.64,
     "importe": 1121.19,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5532,7 +6146,8 @@
     "cif": "G23350291",
     "puntuacion": 30.5,
     "importe": 1112.68,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5541,7 +6156,8 @@
     "cif": "G87599890",
     "puntuacion": 30.45,
     "importe": 1109.39,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5550,7 +6166,8 @@
     "cif": "G56139827",
     "puntuacion": 30.43,
     "importe": 1108.5,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5559,7 +6176,8 @@
     "cif": "G56658198",
     "puntuacion": 30.25,
     "importe": 1097.8,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5568,7 +6186,8 @@
     "cif": "G13591755",
     "puntuacion": 30.25,
     "importe": 1097.8,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5577,7 +6196,8 @@
     "cif": "G44706455",
     "puntuacion": 30.2,
     "importe": 1094.83,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5586,7 +6206,8 @@
     "cif": "G55178628",
     "puntuacion": 30.08,
     "importe": 1087.87,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5595,7 +6216,8 @@
     "cif": "G04385274",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5604,7 +6226,8 @@
     "cif": "G42607655",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5613,7 +6236,8 @@
     "cif": "G90337015",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5622,7 +6246,8 @@
     "cif": "G55693469",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5631,7 +6256,8 @@
     "cif": "G55750210",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5640,7 +6266,8 @@
     "cif": "G90322991",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5649,7 +6276,8 @@
     "cif": "G23489909",
     "puntuacion": 30.0,
     "importe": 1083.04,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5658,7 +6286,8 @@
     "cif": "Total",
     "puntuacion": null,
     "importe": null,
-    "estado": "concedida"
+    "estado": "concedida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -5667,7 +6296,8 @@
     "cif": "G55505028",
     "puntuacion": 25.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5676,7 +6306,8 @@
     "cif": "G42828137",
     "puntuacion": 18.05,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5685,7 +6316,8 @@
     "cif": "G55746143",
     "puntuacion": 21.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5694,7 +6326,8 @@
     "cif": "G51041895",
     "puntuacion": 26.8,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5703,7 +6336,8 @@
     "cif": "G44671782",
     "puntuacion": 27.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5712,7 +6346,8 @@
     "cif": "G13752928",
     "puntuacion": 25.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5721,7 +6356,8 @@
     "cif": "G86182235",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5730,7 +6366,8 @@
     "cif": "G91892000",
     "puntuacion": 25.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5739,7 +6376,8 @@
     "cif": "G09895319",
     "puntuacion": 24.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5748,7 +6386,8 @@
     "cif": "G02867281",
     "puntuacion": 29.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5757,7 +6396,8 @@
     "cif": "G98666464",
     "puntuacion": 17.05,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5766,7 +6406,8 @@
     "cif": "G30895866",
     "puntuacion": 28.35,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5775,7 +6416,8 @@
     "cif": "G40249849",
     "puntuacion": 28.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5784,7 +6426,8 @@
     "cif": "G66980566",
     "puntuacion": 15.21,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5793,7 +6436,8 @@
     "cif": "G62420674",
     "puntuacion": 29.4,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5802,7 +6446,8 @@
     "cif": "G10640563",
     "puntuacion": 19.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5811,7 +6456,8 @@
     "cif": "G25669052",
     "puntuacion": 27.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5820,7 +6466,8 @@
     "cif": "G02968592",
     "puntuacion": 23.95,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5829,7 +6476,8 @@
     "cif": "G55290787",
     "puntuacion": 28.33,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5838,7 +6486,8 @@
     "cif": "G16360240",
     "puntuacion": 17.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5847,7 +6496,8 @@
     "cif": "G67873083",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5856,7 +6506,8 @@
     "cif": "G16490286",
     "puntuacion": 15.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5865,7 +6516,8 @@
     "cif": "G72592199",
     "puntuacion": 24.97,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5874,7 +6526,8 @@
     "cif": "G01943216",
     "puntuacion": 23.83,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5883,7 +6536,8 @@
     "cif": "G67188235",
     "puntuacion": 16.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5892,7 +6546,8 @@
     "cif": "G56957749",
     "puntuacion": 14.6,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5901,7 +6556,8 @@
     "cif": "G99479222",
     "puntuacion": 24.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5910,7 +6566,8 @@
     "cif": "G72695950",
     "puntuacion": 29.9,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5919,7 +6576,8 @@
     "cif": "G25819087",
     "puntuacion": 14.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5928,7 +6586,8 @@
     "cif": "G05310057",
     "puntuacion": 28.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5937,7 +6596,8 @@
     "cif": "G10624377",
     "puntuacion": 14.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5946,7 +6606,8 @@
     "cif": "G10549673",
     "puntuacion": 27.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5955,7 +6616,8 @@
     "cif": "G72512965",
     "puntuacion": 22.01,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5964,7 +6626,8 @@
     "cif": "G72296254",
     "puntuacion": 25.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -5973,7 +6636,8 @@
     "cif": "G67810770",
     "puntuacion": 24.8,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5982,7 +6646,8 @@
     "cif": "G01681881",
     "puntuacion": 15.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -5991,7 +6656,8 @@
     "cif": "G10953388",
     "puntuacion": 22.02,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6000,7 +6666,8 @@
     "cif": "G12937660",
     "puntuacion": 27.9,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6009,7 +6676,8 @@
     "cif": "G38985487",
     "puntuacion": 25.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6018,7 +6686,8 @@
     "cif": "G25655200",
     "puntuacion": 27.55,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6027,7 +6696,8 @@
     "cif": "G19662402",
     "puntuacion": 21.15,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6036,7 +6706,8 @@
     "cif": "G98953805",
     "puntuacion": 28.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6045,7 +6716,8 @@
     "cif": "G13860242",
     "puntuacion": 26.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6054,7 +6726,8 @@
     "cif": "G67785683",
     "puntuacion": 12.45,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6063,7 +6736,8 @@
     "cif": "G06957047",
     "puntuacion": 20.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6072,7 +6746,8 @@
     "cif": "G37061470",
     "puntuacion": 27.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6081,7 +6756,8 @@
     "cif": "G56894223",
     "puntuacion": 16.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6090,7 +6766,8 @@
     "cif": "G56702566",
     "puntuacion": 14.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6099,7 +6776,8 @@
     "cif": "G74427261",
     "puntuacion": 26.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6108,7 +6786,8 @@
     "cif": "G67687012",
     "puntuacion": 19.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6117,7 +6796,8 @@
     "cif": "G65510943",
     "puntuacion": 25.56,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6126,7 +6806,8 @@
     "cif": "G66607193",
     "puntuacion": 21.17,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6135,7 +6816,8 @@
     "cif": "G13936760",
     "puntuacion": 13.18,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6144,7 +6826,8 @@
     "cif": "G02754448",
     "puntuacion": 21.65,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6153,7 +6836,8 @@
     "cif": "G93429934",
     "puntuacion": 26.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6162,7 +6846,8 @@
     "cif": "G70804059",
     "puntuacion": 25.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6171,7 +6856,8 @@
     "cif": "G45844933",
     "puntuacion": 29.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6180,7 +6866,8 @@
     "cif": "G45903572",
     "puntuacion": 29.9,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6189,7 +6876,8 @@
     "cif": "G43971480",
     "puntuacion": 27.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6198,7 +6886,8 @@
     "cif": "G55731103",
     "puntuacion": 15.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6207,7 +6896,8 @@
     "cif": "G56771157",
     "puntuacion": 23.83,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6216,7 +6906,8 @@
     "cif": "G72378573",
     "puntuacion": 16.86,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6225,7 +6916,8 @@
     "cif": "G09916867",
     "puntuacion": 22.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6234,7 +6926,8 @@
     "cif": "G67946921s",
     "puntuacion": 22.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6243,7 +6936,8 @@
     "cif": "G09867508",
     "puntuacion": 26.9,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6252,7 +6946,8 @@
     "cif": "G10182442",
     "puntuacion": 20.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6261,7 +6956,8 @@
     "cif": "G66791922",
     "puntuacion": 19.95,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6270,7 +6966,8 @@
     "cif": "G04889614",
     "puntuacion": 29.95,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6279,7 +6976,8 @@
     "cif": "G44822906",
     "puntuacion": 29.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6288,7 +6986,8 @@
     "cif": "G44750354",
     "puntuacion": 24.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6297,7 +6996,8 @@
     "cif": "G67511311",
     "puntuacion": 29.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6306,7 +7006,8 @@
     "cif": "G72722515",
     "puntuacion": 16.55,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6315,7 +7016,8 @@
     "cif": "G76106863",
     "puntuacion": 19.1,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6324,7 +7026,8 @@
     "cif": "G02765766",
     "puntuacion": 24.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6333,7 +7036,8 @@
     "cif": "G98932924",
     "puntuacion": 23.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6342,7 +7046,8 @@
     "cif": "G56744162",
     "puntuacion": 24.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6351,7 +7056,8 @@
     "cif": "G05414024",
     "puntuacion": 29.95,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6360,7 +7066,8 @@
     "cif": "G55445894",
     "puntuacion": 21.52,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6369,7 +7076,8 @@
     "cif": "G66549908",
     "puntuacion": 28.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6378,7 +7086,8 @@
     "cif": "G72472558",
     "puntuacion": 24.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6387,7 +7096,8 @@
     "cif": "G67453621",
     "puntuacion": 22.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6396,7 +7106,8 @@
     "cif": "G56452444",
     "puntuacion": 10.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6405,7 +7116,8 @@
     "cif": "G67811000",
     "puntuacion": 27.6,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6414,7 +7126,8 @@
     "cif": "G55453690",
     "puntuacion": 29.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6423,7 +7136,8 @@
     "cif": "G18767947",
     "puntuacion": 27.73,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6432,7 +7146,8 @@
     "cif": "G23763535",
     "puntuacion": 24.61,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6441,7 +7156,8 @@
     "cif": "G72432883",
     "puntuacion": 23.4,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6450,7 +7166,8 @@
     "cif": "G05345798",
     "puntuacion": 7.4,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6459,7 +7176,8 @@
     "cif": "G13867957",
     "puntuacion": 23.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6468,7 +7186,8 @@
     "cif": "G06930820",
     "puntuacion": 25.8,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6477,7 +7196,8 @@
     "cif": "G98796980",
     "puntuacion": 26.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6486,7 +7206,8 @@
     "cif": "G72978141",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6495,7 +7216,8 @@
     "cif": "G31981012",
     "puntuacion": 22.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6504,7 +7226,8 @@
     "cif": "G88576269",
     "puntuacion": 26.18,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6513,7 +7236,8 @@
     "cif": "G10699585",
     "puntuacion": 26.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6522,7 +7246,8 @@
     "cif": "G09643818",
     "puntuacion": 21.05,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6531,7 +7256,8 @@
     "cif": "G56400757",
     "puntuacion": 12.45,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6540,7 +7266,8 @@
     "cif": "G02668002",
     "puntuacion": 20.85,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6549,7 +7276,8 @@
     "cif": "G97002166",
     "puntuacion": 23.65,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6558,7 +7286,8 @@
     "cif": "G44534964",
     "puntuacion": 20.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6567,7 +7296,8 @@
     "cif": "G72655707",
     "puntuacion": 22.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6576,7 +7306,8 @@
     "cif": "G27484997",
     "puntuacion": 19.76,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6585,7 +7316,8 @@
     "cif": "G87846655",
     "puntuacion": 26.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6594,7 +7326,8 @@
     "cif": "G44638955",
     "puntuacion": 23.55,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6603,7 +7336,8 @@
     "cif": "G06778047",
     "puntuacion": 9.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6612,7 +7346,8 @@
     "cif": "G55398184",
     "puntuacion": 20.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6621,7 +7356,8 @@
     "cif": "G56037393",
     "puntuacion": 27.77,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6630,7 +7366,8 @@
     "cif": "G10751774",
     "puntuacion": 16.52,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6639,7 +7376,8 @@
     "cif": "G70707849",
     "puntuacion": 27.6,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6648,7 +7386,8 @@
     "cif": "G71488209",
     "puntuacion": 23.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6657,7 +7396,8 @@
     "cif": "G09948324",
     "puntuacion": 25.93,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6666,7 +7406,8 @@
     "cif": "G05473020",
     "puntuacion": 15.35,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6675,7 +7416,8 @@
     "cif": "G55660526",
     "puntuacion": 23.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6684,7 +7426,8 @@
     "cif": "G70989363",
     "puntuacion": 20.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6693,7 +7436,8 @@
     "cif": "G55666788",
     "puntuacion": 14.88,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6702,7 +7446,8 @@
     "cif": "G72745375",
     "puntuacion": 26.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6711,7 +7456,8 @@
     "cif": "G74351826",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6720,7 +7466,8 @@
     "cif": "G02784668",
     "puntuacion": 28.17,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6729,7 +7476,8 @@
     "cif": "G67232611",
     "puntuacion": 28.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6738,7 +7486,8 @@
     "cif": "G16841470",
     "puntuacion": 23.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6747,7 +7496,8 @@
     "cif": "G75229534",
     "puntuacion": 27.55,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6756,7 +7506,8 @@
     "cif": "G54889191",
     "puntuacion": 28.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6765,7 +7516,8 @@
     "cif": "G56589781",
     "puntuacion": 20.05,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6774,7 +7526,8 @@
     "cif": "G39611587",
     "puntuacion": 21.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6783,7 +7536,8 @@
     "cif": "G95808838",
     "puntuacion": 22.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6792,7 +7546,8 @@
     "cif": "G06295059",
     "puntuacion": 27.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6801,7 +7556,8 @@
     "cif": "G44737328",
     "puntuacion": 22.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6810,7 +7566,8 @@
     "cif": "G27825033",
     "puntuacion": 26.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6819,7 +7576,8 @@
     "cif": "G16970204",
     "puntuacion": 29.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6828,7 +7586,8 @@
     "cif": "G43965524",
     "puntuacion": 19.62,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6837,7 +7596,8 @@
     "cif": "G72584501",
     "puntuacion": 24.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6846,7 +7606,8 @@
     "cif": "G10680916",
     "puntuacion": 25.35,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6855,7 +7616,8 @@
     "cif": "G16814733",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6864,7 +7626,8 @@
     "cif": "G19893841",
     "puntuacion": 9.38,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6873,7 +7636,8 @@
     "cif": "G09813197",
     "puntuacion": 11.52,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6882,7 +7646,8 @@
     "cif": "G10934115",
     "puntuacion": 26.19,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6891,7 +7656,8 @@
     "cif": "G09968611",
     "puntuacion": 22.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6900,7 +7666,8 @@
     "cif": "G09739194",
     "puntuacion": 29.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6909,7 +7676,8 @@
     "cif": "G06886857",
     "puntuacion": 21.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6918,7 +7686,8 @@
     "cif": "G44533131",
     "puntuacion": 27.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6927,7 +7696,8 @@
     "cif": "G88347786",
     "puntuacion": 23.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6936,7 +7706,8 @@
     "cif": "G67789255",
     "puntuacion": 17.6,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6945,7 +7716,8 @@
     "cif": "G44547164",
     "puntuacion": 27.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6954,7 +7726,8 @@
     "cif": "G34229997",
     "puntuacion": 28.44,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -6963,7 +7736,8 @@
     "cif": "G67236398",
     "puntuacion": 22.85,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6972,7 +7746,8 @@
     "cif": "G13648753",
     "puntuacion": 28.14,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6981,7 +7756,8 @@
     "cif": "G72794886",
     "puntuacion": 12.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6990,7 +7766,8 @@
     "cif": "G55689566",
     "puntuacion": 22.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -6999,7 +7776,8 @@
     "cif": "G67912014",
     "puntuacion": 26.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7008,7 +7786,8 @@
     "cif": "G98888688",
     "puntuacion": 12.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7017,7 +7796,8 @@
     "cif": "G03862018",
     "puntuacion": 28.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7026,7 +7806,8 @@
     "cif": "G37561917",
     "puntuacion": 26.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7035,7 +7816,8 @@
     "cif": "G02639227",
     "puntuacion": 23.08,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7044,7 +7826,8 @@
     "cif": "G72890783",
     "puntuacion": 29.45,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7053,7 +7836,8 @@
     "cif": "G56705338",
     "puntuacion": 14.95,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7062,7 +7846,8 @@
     "cif": "G19778885",
     "puntuacion": 21.8,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7071,7 +7856,8 @@
     "cif": "G10597466",
     "puntuacion": 27.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7080,7 +7866,8 @@
     "cif": "G57290983",
     "puntuacion": 25.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7089,7 +7876,8 @@
     "cif": "G95817953",
     "puntuacion": 28.35,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7098,7 +7886,8 @@
     "cif": "G10701407",
     "puntuacion": 25.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7107,7 +7896,8 @@
     "cif": "G88031737",
     "puntuacion": 23.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7116,7 +7906,8 @@
     "cif": "G56420136",
     "puntuacion": 29.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7125,7 +7916,8 @@
     "cif": "G13582721",
     "puntuacion": 12.55,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7134,7 +7926,8 @@
     "cif": "G09861238",
     "puntuacion": 25.35,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7143,7 +7936,8 @@
     "cif": "G64968381",
     "puntuacion": 22.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7152,7 +7946,8 @@
     "cif": "G23812373",
     "puntuacion": 18.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7161,7 +7956,8 @@
     "cif": "G44852085",
     "puntuacion": 24.78,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7170,7 +7966,8 @@
     "cif": "G16976037",
     "puntuacion": 22.45,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7179,7 +7976,8 @@
     "cif": "G39820063",
     "puntuacion": 28.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7188,7 +7986,8 @@
     "cif": "G42561464",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7197,7 +7996,8 @@
     "cif": "G90395294",
     "puntuacion": 16.78,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7206,7 +8006,8 @@
     "cif": "G56732860",
     "puntuacion": 19.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7215,7 +8016,8 @@
     "cif": "G55389290",
     "puntuacion": 22.9,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7224,7 +8026,8 @@
     "cif": "G05410832",
     "puntuacion": 18.55,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7233,7 +8036,8 @@
     "cif": "G05556329",
     "puntuacion": 18.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7242,7 +8046,8 @@
     "cif": "G56106487",
     "puntuacion": 21.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7251,7 +8056,8 @@
     "cif": "G54895057",
     "puntuacion": 23.08,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7260,7 +8066,8 @@
     "cif": "G32446734",
     "puntuacion": 27.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7269,7 +8076,8 @@
     "cif": "G55386288",
     "puntuacion": 21.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7278,7 +8086,8 @@
     "cif": "G44990463",
     "puntuacion": 13.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7287,7 +8096,8 @@
     "cif": "G95990339",
     "puntuacion": 22.23,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7296,7 +8106,8 @@
     "cif": "G72761430",
     "puntuacion": 11.45,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7305,7 +8116,8 @@
     "cif": "G04954384",
     "puntuacion": 27.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7314,7 +8126,8 @@
     "cif": "G19332253",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7323,7 +8136,8 @@
     "cif": "G72900491",
     "puntuacion": 18.42,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7332,7 +8146,8 @@
     "cif": "G99498099",
     "puntuacion": 21.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7341,7 +8156,8 @@
     "cif": "G23705205",
     "puntuacion": 20.6,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7350,7 +8166,8 @@
     "cif": "G90333592",
     "puntuacion": 29.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7359,7 +8176,8 @@
     "cif": "G10725547",
     "puntuacion": 24.78,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7368,7 +8186,8 @@
     "cif": "G01940923",
     "puntuacion": 26.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7377,7 +8196,8 @@
     "cif": "G88594288",
     "puntuacion": 29.18,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7386,7 +8206,8 @@
     "cif": "G05325659",
     "puntuacion": 19.93,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7395,7 +8216,8 @@
     "cif": "G44547719",
     "puntuacion": 29.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7404,7 +8226,8 @@
     "cif": "G67569657",
     "puntuacion": 22.65,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7413,7 +8236,8 @@
     "cif": "G45895125",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7422,7 +8246,8 @@
     "cif": "G72364755",
     "puntuacion": 27.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7431,7 +8256,8 @@
     "cif": "G19332485",
     "puntuacion": 26.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7440,7 +8266,8 @@
     "cif": "G76355692",
     "puntuacion": 25.84,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7449,7 +8276,8 @@
     "cif": "G10918464",
     "puntuacion": 26.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7458,7 +8286,8 @@
     "cif": "G06933949",
     "puntuacion": 26.75,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7467,7 +8296,8 @@
     "cif": "G56329881",
     "puntuacion": 20.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7476,7 +8306,8 @@
     "cif": "G39889738",
     "puntuacion": 28.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7485,7 +8316,8 @@
     "cif": "G66762667",
     "puntuacion": 15.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7494,7 +8326,8 @@
     "cif": "G72779721",
     "puntuacion": 23.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7503,7 +8336,8 @@
     "cif": "G16972226",
     "puntuacion": 29.95,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7512,7 +8346,8 @@
     "cif": "G19636125",
     "puntuacion": 29.98,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7521,7 +8356,8 @@
     "cif": "G76258912",
     "puntuacion": 20.6,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7530,7 +8366,8 @@
     "cif": "G54922125",
     "puntuacion": 21.38,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7539,7 +8376,8 @@
     "cif": "G44916161",
     "puntuacion": 18.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7548,7 +8386,8 @@
     "cif": "G10575348",
     "puntuacion": 20.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7557,7 +8396,8 @@
     "cif": "G87415857",
     "puntuacion": 22.83,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7566,7 +8406,8 @@
     "cif": "G09645144",
     "puntuacion": 9.2,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7575,7 +8416,8 @@
     "cif": "G01965532",
     "puntuacion": 24.48,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7584,7 +8426,8 @@
     "cif": "G96841291",
     "puntuacion": 26.45,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7593,7 +8436,8 @@
     "cif": "G72609407",
     "puntuacion": 16.85,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7602,7 +8446,8 @@
     "cif": "G72622335",
     "puntuacion": 28.8,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7611,7 +8456,8 @@
     "cif": "G56336449",
     "puntuacion": 29.25,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7620,7 +8466,8 @@
     "cif": "G21562574",
     "puntuacion": 19.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7629,7 +8476,8 @@
     "cif": "G76317825",
     "puntuacion": 27.08,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7638,7 +8486,8 @@
     "cif": "G21552930",
     "puntuacion": 24.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7647,7 +8496,8 @@
     "cif": "G10564870",
     "puntuacion": 22.5,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7656,7 +8506,8 @@
     "cif": "G72503659",
     "puntuacion": 20.15,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7665,7 +8516,8 @@
     "cif": "G56219264",
     "puntuacion": 17.0,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7674,7 +8526,8 @@
     "cif": "G01779651",
     "puntuacion": 21.17,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7683,7 +8536,8 @@
     "cif": "G19650936",
     "puntuacion": 24.29,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7692,7 +8546,8 @@
     "cif": "G01979038",
     "puntuacion": 28.3,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7701,7 +8556,8 @@
     "cif": "G67861310",
     "puntuacion": 21.06,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7710,7 +8566,8 @@
     "cif": "G19752153",
     "puntuacion": 18.13,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "animales_abandonados"
   },
   {
     "anio": 2024,
@@ -7719,7 +8576,8 @@
     "cif": "G10785897",
     "puntuacion": 18.11,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7728,7 +8586,8 @@
     "cif": "G09985169",
     "puntuacion": 27.7,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "linea": "colonias_felinas"
   },
   {
     "anio": 2024,
@@ -7737,7 +8596,8 @@
     "cif": "G54969894",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7746,7 +8606,8 @@
     "cif": "G02689404",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7755,7 +8616,8 @@
     "cif": "G19880574",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7764,7 +8626,8 @@
     "cif": "G66310616",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7773,7 +8636,8 @@
     "cif": "G19580257",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7782,7 +8646,8 @@
     "cif": "G54769864",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7791,7 +8656,8 @@
     "cif": "G67610634",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7800,7 +8666,8 @@
     "cif": "G72290257",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7809,7 +8676,8 @@
     "cif": "G72774920",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7818,7 +8686,8 @@
     "cif": "G84446236",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7827,7 +8696,8 @@
     "cif": "G93642866",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7836,7 +8706,8 @@
     "cif": "G55430037",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7845,7 +8716,8 @@
     "cif": "G54932157",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7854,7 +8726,8 @@
     "cif": "G67549162",
     "puntuacion": null,
     "importe": null,
-    "estado": "excluida"
+    "estado": "excluida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7863,7 +8736,8 @@
     "cif": "G02754653",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7872,7 +8746,8 @@
     "cif": "G56910987",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7881,7 +8756,8 @@
     "cif": "G92984368",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7890,7 +8766,8 @@
     "cif": "G56345952",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7899,7 +8776,8 @@
     "cif": "G70976535",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7908,7 +8786,8 @@
     "cif": "G16592818",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7917,7 +8796,8 @@
     "cif": "G56443419",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7926,7 +8806,8 @@
     "cif": "G56841232",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   },
   {
     "anio": 2024,
@@ -7935,6 +8816,7 @@
     "cif": "G02871713",
     "puntuacion": null,
     "importe": null,
-    "estado": "desistida"
+    "estado": "desistida",
+    "linea": null
   }
 ]
