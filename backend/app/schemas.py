@@ -94,12 +94,24 @@ class EstadisticaAnio(BaseModel):
     desistidas:    int
     importe_total: float
 
+class UmbralLinea(BaseModel):
+    linea:  str
+    umbral: float
+
+class UmbralAnio(BaseModel):
+    tipo:       str                     # "epa" o "eell"
+    anio:       int
+    hubo_corte: bool                    # False = todas las admitidas obtuvieron subvención
+    umbral:     Optional[float] = None  # puntuación mínima concedida (global); None si sin corte o si va por línea
+    por_linea:  list[UmbralLinea] = []  # EPA de años con línea (2024+): umbral por cada línea
+
 class EstadisticasOut(BaseModel):
     por_anio: list[EstadisticaAnio]
     total_registros:  int
     total_concedidas: int
     importe_global:   float
     entidades_unicas: int
+    umbrales:         list[UmbralAnio] = []
 
 
 # ──────────────────────────────────────────────

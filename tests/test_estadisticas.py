@@ -354,3 +354,66 @@ def test_eell_recurrencia_multianio(db_eell_multianio, client):
     # El recurrente de 2024 es la entidad que ya estaba en 2023 (ba)
     assert rec[2024]["recurrentes_nombres"] == ["Ayto. Repite"]
     assert rec[2023]["recurrentes_nombres"] == []
+
+
+# ─────────────────────────────────────────────────────────────
+# TESTS — umbrales de puntuación (GET /estadisticas/)
+# ─────────────────────────────────────────────────────────────
+
+@pytest.fixture
+def db_umbrales(db):
+    """EPA 2021 sin corte (todas concedidas) y EPA 2024 con corte y dos líneas."""
+    c21 = Convocatoria(titulo_convoc="EPA 2021", tipo_convoc="epa", anio_convocatoria=2021, periodo_meses=12)
+    c24 = Convocatoria(titulo_convoc="EPA 2024", tipo_convoc="epa", anio_convocatoria=2024, periodo_meses=12)
+    db.add_all([c21, c24])
+    db.flush()
+
+    bs = [Beneficiario(cif=f"G0000000{i}", nombre=f"Ent {i}", tipo_benef="asociacion") for i in range(1, 6)]
+    db.add_all(bs)
+    db.flush()
+
+    # 2021: dos concedidas, ninguna no_beneficiaria → sin corte
+    s1 = Solicitud(id_convoc=c21.id_convoc, id_benef=bs[0].id_benef, estado="concedida", puntuacion=50.0)
+    s2 = Solicitud(id_convoc=c21.id_convoc, id_benef=bs[1].id_benef, estado="concedida", puntuacion=60.0)
+    # 2024: dos concedidas (una por línea) + una no_beneficiaria → corte por línea
+    s3 = Solicitud(id_convoc=c24.id_convoc, id_benef=bs[2].id_benef, estado="concedida", puntuacion=40.0)
+    s4 = Solicitud(id_convoc=c24.id_convoc, id_benef=bs[3].id_benef, estado="concedida", puntuacion=45.0)
+    s5 = Solicitud(id_convoc=c24.id_convoc, id_benef=bs[4].id_benef, estado="no_beneficiaria", puntuacion=35.0)
+    db.add_all([s1, s2, s3, s4, s5])
+    db.flush()
+
+    db.add_all([
+        Concesion(id_solic=s1.id_solic, importe=3000.0),
+        Concesion(id_solic=s2.id_solic, importe=3000.0),
+        Concesion(id_solic=s3.id_solic, importe=3000.0, linea="colonias_felinas"),
+        Concesion(id_solic=s4.id_solic, importe=3000.0, linea="animales_abandonados"),
+    ])
+    db.commit()
+
+
+def test_umbrales_en_estructura(client):
+    assert "umbrales" in client.get("/estadisticas/").json()
+
+
+def test_umbrales_sin_datos_lista_vacia(client):
+    assert client.get("/estadisticas/").json()["umbrales"] == []
+
+
+def test_umbrales_sin_corte(db_umbrales, client):
+    # 2021 no tiene no_beneficiarias → todas las admitidas obtuvieron ayuda
+    data = client.get("/estadisticas/").json()
+    u = {(x["tipo"], x["anio"]): x for x in data["umbrales"]}
+    assert u[("epa", 2021)]["hubo_corte"] is False
+    assert u[("epa", 2021)]["umbral"] is None
+    assert u[("epa", 2021)]["por_linea"] == []
+
+
+def test_umbrales_con_corte_por_linea(db_umbrales, client):
+    # 2024 tiene una no_beneficiaria → hubo corte; umbral = mín. concedida por línea
+    data = client.get("/estadisticas/").json()
+    u = {(x["tipo"], x["anio"]): x for x in data["umbrales"]}
+    item = u[("epa", 2024)]
+    assert item["hubo_corte"] is True
+    por = {p["linea"]: p["umbral"] for p in item["por_linea"]}
+    assert por["colonias_felinas"] == 40.0
+    assert por["animales_abandonados"] == 45.0

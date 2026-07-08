@@ -466,6 +466,7 @@ Botón flotante (`js/scroll-arriba.js` + clase `.btn-subir`) que permite regresa
 | Portada partida | Título "Sobre el proyecto" + descripción + foto de animales + botón "Ir al buscador" | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
 | Convocatorias | Dos bloques (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador filtrado; pendientes sin `fecha_resolucion` muestran estado | API `/convocatorias/` |
+| Umbral de puntuación | Bajo Convocatorias: texto explicativo (EPA/EELL) + tabla del corte de concesión por año (puntuación mínima concedida; "Sin corte" donde todas las admitidas obtuvieron ayuda; por línea en EPA 2024+) | API `/estadisticas/` → `umbrales[]` |
 | Gráficos | Fila 1: Evolución importe por año (línea) + EPA vs EELL por año (barras agrupadas). Fila 2: Distribución estados (donut) + KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
@@ -478,6 +479,7 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 | `crearGraficoDonut(datos)` | `doughnut` + `cutout: '62%'` | `home-grafico-donut` | Totales concedidas / resto |
 | `crearGraficoBarras(porAnio)` | `bar` agrupado | `home-grafico-barras` | `por_anio` separado por tipo |
 | `mostrarTasaExito(datos)` | KPI HTML | `home-tasa-exito` | `total_concedidas / total_registros` |
+| `poblarUmbrales(umbrales)` | Tabla HTML | `umbral-tbody` | `datos.umbrales[]` (una fila por año, columnas EPA/EELL) |
 
 **Archivo JS:** `js/home.js` — tres funciones asíncronas independientes: `cargarDatos()` (métricas + gráficos desde `/estadisticas/`), `cargarAvisos()` (banner desde `/avisos/`) y `cargarConvocatorias()` (bloque convocatorias desde `/convocatorias/`).
 
