@@ -155,6 +155,7 @@ async function cargarDatos() {
         crearGraficoDonut(datos);
         crearGraficoBarras(datos.por_anio);
         mostrarTasaExito(datos);
+        poblarUmbrales(datos.umbrales);
 
     } catch (error) {
         // Si hay cualquier fallo (sin conexión, backend caído, JSON inválido...)
@@ -613,6 +614,60 @@ function mostrarTasaExito(datos) {
         elExito.textContent = '—';
         if (elFracaso) elFracaso.textContent = '—';
     }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// UMBRAL DE PUNTUACIÓN (corte de concesión por año)
+// Datos: GET /estadisticas/ → datos.umbrales
+// ─────────────────────────────────────────────────────────────
+
+const _ORDEN_LINEA    = ['colonias_felinas', 'animales_abandonados'];
+const _ETIQUETA_LINEA = { colonias_felinas: 'Colonias', animales_abandonados: 'Abandonados' };
+
+/** Formatea una puntuación: entero sin decimales, coma decimal, sin ceros sobrantes. */
+function formatearUmbral(n) {
+    const txt = Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/0+$/, '');
+    return txt.replace('.', ',');
+}
+
+/** Construye el contenido de una celda (EPA o EELL) para un año. */
+function celdaUmbral(item) {
+    if (!item) return '—';
+    if (!item.hubo_corte) return '<span class="umbral-sin-corte">Sin corte</span>';
+
+    if (item.por_linea && item.por_linea.length) {
+        const iguales = item.por_linea.every(v => v.umbral === item.por_linea[0].umbral);
+        if (iguales) {
+            return `${formatearUmbral(item.por_linea[0].umbral)} <span class="umbral-detalle">(ambas líneas)</span>`;
+        }
+        return [...item.por_linea]
+            .sort((a, b) => _ORDEN_LINEA.indexOf(a.linea) - _ORDEN_LINEA.indexOf(b.linea))
+            .map(v => `${_ETIQUETA_LINEA[v.linea]} ${formatearUmbral(v.umbral)}`)
+            .join(' · ');
+    }
+    return formatearUmbral(item.umbral);
+}
+
+/** Rellena la tabla de umbrales (una fila por año, columnas EPA y EELL). */
+function poblarUmbrales(umbrales) {
+    const tbody = document.getElementById('umbral-tbody');
+    if (!tbody || !umbrales || !umbrales.length) return;
+
+    // Años más recientes arriba (como las tablas de convocatorias/resoluciones)
+    const anios = [...new Set(umbrales.map(u => u.anio))].sort((a, b) => b - a);
+    const porClave = {};
+    umbrales.forEach(u => { porClave[`${u.tipo}-${u.anio}`] = u; });
+
+    tbody.innerHTML = anios.map(anio => `
+        <tr>
+            <td>${anio}</td>
+            <td>${celdaUmbral(porClave['epa-' + anio])}</td>
+            <td>${celdaUmbral(porClave['eell-' + anio])}</td>
+        </tr>`).join('');
+
+    const seccion = document.getElementById('seccion-umbral');
+    if (seccion) seccion.style.display = '';
 }
 
 

@@ -4370,6 +4370,49 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     text-align: center;
 }
 
+
+/* ── Umbral de puntuación (corte de concesión por año) ── */
+/* Banda crema entre las dos secciones verdes del inicio (convocatorias y
+   gráficos), para romper la secuencia de dos verdes seguidos. */
+#seccion-umbral {
+    background-color: var(--hero-crema, #FAF4EE);
+    padding: var(--espacio-lg) 0;
+}
+
+.umbral-bloque {
+    text-align: center;
+}
+
+.umbral-intro {
+    /* Ancho completo del contenedor (como las dos tablas de arriba) para que
+       el texto ocupe más en horizontal y menos en alto. */
+    margin: 0 auto var(--espacio-md);
+    text-align: justify;
+    hyphens: auto;              /* guionado (lang="es") para evitar huecos feos */
+    font-size: 0.95rem;
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+}
+.umbral-intro p + p {
+    margin-top: var(--espacio-sm);
+}
+
+/* El ancho se limita en el wrapper (no en la tabla) para que el border-radius
+   de .tabla-wrapper envuelva la tabla y las esquinas queden redondeadas. */
+.umbral-wrapper {
+    max-width: 640px;
+    margin-inline: auto;
+}
+
+.umbral-sin-corte {
+    color: var(--color-gris-texto);
+    font-style: italic;
+}
+.umbral-detalle {
+    color: var(--color-gris-texto);
+    font-size: 0.85em;
+}
+
 /* Subtítulo centrado del sub-bloque */
 .sub-bloque__subtitulo {
     text-align: center;

@@ -8,7 +8,7 @@ from sqlalchemy import func, case, distinct
 from ..db import get_db
 from ..models import Solicitud, Convocatoria, Concesion, Beneficiario
 from ..schemas import (
-    EstadisticasOut, EstadisticaAnio,
+    EstadisticasOut, EstadisticaAnio, UmbralAnio, UmbralLinea,
     EstadisticasEpaOut, EpaAnio, TopBeneficiarioEpa, RangoImporte,
     EstadisticasEellOut, CcaaItem, ProvinciaItem, ConcentracionItem,
     EellAnioRecurrencia,
@@ -59,12 +59,63 @@ def get_estadisticas(response: Response, db: Session = Depends(get_db)):
 
     entidades_unicas = db.query(func.count(distinct(Solicitud.id_benef))).scalar()
 
+    # ── Umbrales de puntuación (corte de concesión por año) ──
+    # "Hubo corte" cuando existen no_beneficiarias: entidades admitidas que se
+    # quedaron sin subvención por puntuación (presupuesto agotado). Si no las
+    # hay, todas las admitidas obtuvieron ayuda (sin corte). El umbral es la
+    # puntuación mínima entre las concedidas; para EPA con línea (2024+) se da
+    # por línea, porque cada línea tiene su propio presupuesto y su propio corte.
+    con_corte = {
+        (t, a) for (t, a) in db.query(
+            Convocatoria.tipo_convoc, Convocatoria.anio_convocatoria
+        ).join(Solicitud, Solicitud.id_convoc == Convocatoria.id_convoc)
+         .filter(Solicitud.estado == "no_beneficiaria").distinct().all()
+    }
+
+    punt_rows = (
+        db.query(
+            Convocatoria.tipo_convoc, Convocatoria.anio_convocatoria,
+            Concesion.linea, Solicitud.puntuacion,
+        )
+        .join(Solicitud, Solicitud.id_convoc == Convocatoria.id_convoc)
+        .join(Concesion, Concesion.id_solic == Solicitud.id_solic)
+        .filter(Solicitud.estado == "concedida", Solicitud.puntuacion.isnot(None))
+        .all()
+    )
+
+    glob: dict[tuple, list] = defaultdict(list)
+    por_linea: dict[tuple, dict] = defaultdict(lambda: defaultdict(list))
+    for r in punt_rows:
+        clave = (r.tipo_convoc, r.anio_convocatoria)
+        glob[clave].append(float(r.puntuacion))
+        if r.linea:
+            por_linea[clave][r.linea].append(float(r.puntuacion))
+
+    umbrales = []
+    for (tipo, anio) in sorted(glob.keys()):
+        if (tipo, anio) not in con_corte:
+            umbrales.append(UmbralAnio(tipo=tipo, anio=anio, hubo_corte=False))
+        elif tipo == "epa" and por_linea[(tipo, anio)]:
+            umbrales.append(UmbralAnio(
+                tipo=tipo, anio=anio, hubo_corte=True,
+                por_linea=[
+                    UmbralLinea(linea=l, umbral=round(min(v), 2))
+                    for l, v in sorted(por_linea[(tipo, anio)].items())
+                ],
+            ))
+        else:
+            umbrales.append(UmbralAnio(
+                tipo=tipo, anio=anio, hubo_corte=True,
+                umbral=round(min(glob[(tipo, anio)]), 2),
+            ))
+
     return EstadisticasOut(
         por_anio         = por_anio,
         total_registros  = sum(f.total for f in filas),
         total_concedidas = sum(f.concedidas for f in filas),
         importe_global   = sum(float(f.importe_total) for f in filas),
         entidades_unicas = entidades_unicas,
+        umbrales         = umbrales,
     )
 
 
