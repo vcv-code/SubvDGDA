@@ -1402,7 +1402,7 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **Logs de cron en panel admin** — mostrar `bdns_check.log` y `health_check.log` en el panel. Requiere: montar `../logs/cron` en el contenedor backend, dos endpoints nuevos en `admin.py` y dos secciones en `admin.html` / `admin.js`.
 - **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
 - **Login con terceros (OAuth)** — integración con Google.
-- **Conclusiones comparativas en modales EELL** — los modales de estadísticas EELL ("Top provincias" y "Tramos de importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si crece la concentración de importes) añadiría valor analítico. La recurrencia de entidades ya se muestra por año; los modales de home y EPA ya tienen conclusiones completas.
+- **Conclusiones comparativas en modales EELL** — los modales de estadísticas EELL ("Top provincias" y "Tramos de importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si crece la concentración de importes) añadiría valor analítico. La recurrencia de entidades se resume en un KPI con nota al pie; los modales de home y EPA ya tienen conclusiones completas.
 
 ### Producción y seguridad
 

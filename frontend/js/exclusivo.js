@@ -112,7 +112,7 @@ async function cargarResumenTabla(token) {
                 <td>${num(f.no_beneficiarias)}</td>
                 <td>${num(f.excluidas)}</td>
                 <td>${num(f.desistidas)}</td>
-                <td class="col-sep">${fmt(f.importe_total)}</td>
+                <td class="col-sep">${fmt(f.importe_total)}${f.tipo === 'epa' && f.anio === 2021 ? '<sup>*</sup>' : ''}</td>
             </tr>`;
         };
 
@@ -154,6 +154,11 @@ async function cargarResumenTabla(token) {
         contenedor.innerHTML = `
             <div class="resumen-grupos">
                 ${renderBloque('epa', filasEpa)}
+                <!-- Nota del asterisco del importe de 2021 (EPA), justo bajo su tabla.
+                     Texto editorial FIJO; revisar si cambian los presupuestos. -->
+                <p class="nota-asterisco">
+                    <span aria-hidden="true">*</span> En 2021, primer año de la convocatoria, el presupuesto ascendía a 3 millones de euros; sin embargo, la escasa difusión y la complejidad del procedimiento provocaron un número reducido de solicitudes, por lo que gran parte de los fondos quedó sin adjudicar. Al año siguiente el presupuesto se redujo en un millón y, pese al posterior aumento de solicitudes, no ha vuelto a ampliarse. Sería deseable que se incremente en próximas convocatorias.
+                </p>
                 ${renderBloque('eell', filasEell)}
                 <div class="resumen-tabla-card">
                 <div class="resumen-bloque resumen-bloque--total tabla-scroll">

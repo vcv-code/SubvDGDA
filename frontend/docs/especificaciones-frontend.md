@@ -856,7 +856,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | Tramos de importe | `#grafico-tramos` | Barras verticales: nº concesiones por tramo |
 | Top 5 CCAA por subvención | `#top5-ccaa-lista` | Lista top 5 por importe |
 | Top 5 CCAA por ayuntamientos | `#top5-concesiones-lista` | Lista top 5 por número de concesiones |
-| Recurrencia | `#tabla-recurrencia-eell` | Tabla nuevas/recurrentes por año + nota |
+| Recurrencia | KPI `#kpi-eell-repiten` + `.nota-asterisco` | El KPI "Entidades que repiten" lleva un asterisco que remite a una nota fija bajo los 4 KPIs (nombres de los aytos recurrentes) |
 
 **KPIs:**
 
@@ -875,7 +875,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | `poblarGraficoTramos` | `bar` vertical | `#grafico-tramos` | `distribucion_importes[]` |
 | `poblarTop5Ccaa` | Lista HTML | `#top5-ccaa-lista` | `por_ccaa[]` |
 | `poblarTop5Concesiones` | Lista HTML | `#top5-concesiones-lista` | `por_ccaa[]` |
-| `poblarRecurrencia` | KPI + tabla | `#kpi-eell-repiten`, `#tabla-recurrencia-eell` | `recurrencia_por_anio[]`, `entidades_repiten`, `total_entidades` |
+| `poblarRecurrencia` | KPI (nº + asterisco) | `#kpi-eell-repiten` | `entidades_repiten`, `total_entidades` (los nombres de los recurrentes van fijos en la nota HTML) |
 
 > **Nota:** `poblarRankingCcaa` fue eliminada — el ranking completo de CCAA se muestra en `exclusivo.html` junto al mapa.
 

@@ -6,7 +6,7 @@
  *   · % ayuntamientos con ayuda
  *   · Importe medio EELL
  *   · Ratio de exclusión
- *   · Entidades que repiten (KPI) + tabla nuevas/recurrentes por año
+ *   · Entidades que repiten (KPI con asterisco → nota fija bajo los KPIs)
  *   · Top provincias por importe (barras horizontales)
  *   · Tramos de importe concedido (barras verticales)
  *   · Ranking CCAA por importe (lista HTML)
@@ -304,68 +304,24 @@ function poblarGraficoTramos(distribucion) {
 
 // ─────────────────────────────────────────────────────────────
 // FUNCIÓN: poblarRecurrencia
-// KPI "entidades que repiten" + tabla de nuevas/recurrentes por año.
+// KPI "entidades que repiten" con asterisco → nota fija bajo los KPIs.
 // ─────────────────────────────────────────────────────────────
 /**
- * @param {Object} datos - respuesta completa de /estadisticas/eell:
- *   { entidades_repiten, total_entidades,
- *     recurrencia_por_anio: [{ anio, nuevas, recurrentes }, ...] }
+ * @param {Object} datos - respuesta de /estadisticas/eell:
+ *   { entidades_repiten, total_entidades, ... }
  */
 function poblarRecurrencia(datos) {
     const repiten = datos.entidades_repiten || 0;
     const total   = datos.total_entidades   || 0;
 
-    // KPI (sustituye al antiguo "CCAA con mayor importe concedido")
-    if (kpiEellRepiten) kpiEellRepiten.textContent = repiten.toLocaleString('es-ES');
+    // KPI "Entidades que repiten": el número lleva un asterisco (superíndice)
+    // que remite a la nota fija bajo los KPIs, con los ayuntamientos concretos.
+    if (kpiEellRepiten) {
+        kpiEellRepiten.innerHTML = repiten.toLocaleString('es-ES') + '<sup>*</sup>';
+    }
     if (kpiEellRepitenTag && total) {
         kpiEellRepitenTag.textContent = `de ${total} beneficiarias`;
     }
-
-    // Tabla por año
-    const porAnio = datos.recurrencia_por_anio || [];
-    const tabla   = document.getElementById('tabla-recurrencia-eell');
-    const nota    = document.getElementById('recurrencia-nota');
-    const detalle = document.getElementById('recurrencia-detalle');
-    const tbody   = tabla ? tabla.querySelector('tbody') : null;
-
-    if (!porAnio.length || !tbody) return;
-
-    // Los recurrentes (>0) se marcan con un asterisco que remite a la
-    // lista de ayuntamientos concretos bajo la nota.
-    tbody.innerHTML = porAnio.map(r => `
-        <tr>
-            <td>${r.anio}</td>
-            <td>${r.nuevas.toLocaleString('es-ES')}</td>
-            <td>${r.recurrentes.toLocaleString('es-ES')}${r.recurrentes > 0 ? ' *' : ''}</td>
-        </tr>`).join('');
-    tabla.style.display = 'table';
-
-    if (nota) {
-        const pct = total ? Math.round((repiten / total) * 100) : 0;
-        nota.textContent =
-            `Solo ${repiten} de ${total} entidades (${pct}%) han recibido ayuda en más de una ` +
-            `convocatoria: cada año entra mayoritariamente gente nueva, con muy poca continuidad ` +
-            `entre 2023 y 2025.`;
-    }
-
-    // Detalle: qué ayuntamientos concretos repiten cada año (los marcados
-    // con asterisco en la tabla). Nombres tal cual vienen de la API.
-    if (detalle) {
-        const partes = porAnio
-            .filter(r => r.recurrentes_nombres && r.recurrentes_nombres.length)
-            .map(r => `en ${r.anio}, ${formatearLista(r.recurrentes_nombres)}`);
-        detalle.textContent = partes.length ? `* Repiten: ${partes.join('; ')}.` : '';
-    }
-}
-
-
-/**
- * formatearLista(items)
- * Une una lista en lenguaje natural: "a, b y c".
- */
-function formatearLista(items) {
-    if (items.length <= 1) return items.join('');
-    return items.slice(0, -1).join(', ') + ' y ' + items[items.length - 1];
 }
 
 
