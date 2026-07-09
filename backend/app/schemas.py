@@ -319,6 +319,10 @@ class UsuarioOut(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class UsuariosPaginadosOut(BaseModel):
+    usuarios: list[UsuarioOut]
+    total:    int
+
 class RecuperarPasswordIn(BaseModel):
     email: EmailStr
 

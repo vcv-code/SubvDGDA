@@ -3214,6 +3214,28 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     flex-wrap: wrap;
 }
 
+/* Subtítulo de cada sub-bloque de logs del cron (BDNS / health) */
+.admin-logs-subtitulo {
+    margin: var(--espacio-lg) 0 var(--espacio-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-negro);
+}
+.admin-logs-subtitulo:first-child {
+    margin-top: 0;
+}
+.admin-logs-fichero {
+    font-family: monospace;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-gris-texto);
+}
+
+/* Paginación de la tabla de usuarios (reutiliza .paginacion) */
+.admin-usuarios-paginacion {
+    margin-top: var(--espacio-md);
+}
+
 .admin-logs-controls label {
     font-size: 0.88rem;
     font-weight: 600;

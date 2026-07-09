@@ -397,7 +397,7 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | `GET` | `/admin/estado` | Estado del sistema: número de usuarios, solicitudes y convocatorias |
-| `GET` | `/admin/usuarios` | Lista completa de usuarios |
+| `GET` | `/admin/usuarios` | Lista paginada de usuarios (`pagina`, `limite`; devuelve `{ usuarios, total }`) |
 | `PATCH` | `/admin/usuarios/{id}/rol` | Cambiar rol (`registrado` ↔ `admin`) |
 | `PATCH` | `/admin/usuarios/{id}/activo` | Activar o desactivar cuenta |
 | `DELETE` | `/admin/usuarios/{id}` | Eliminar usuario |
@@ -408,6 +408,7 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `DELETE` | `/admin/avisos/{id}` | Eliminar convocatoria sin resolución (409 si tiene solicitudes) |
 | `GET` | `/admin/logs` | Últimas N líneas del log de acceso |
 | `GET` | `/admin/logs/errores` | Últimas N líneas del log de errores |
+| `GET` | `/admin/logs/cron` | Últimas N líneas de un log del cron (`fichero=bdns\|health`) |
 
 ---
 
