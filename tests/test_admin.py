@@ -110,7 +110,10 @@ def test_listar_usuarios(client, db):
         client.post("/auth/registro", json=USUARIO)
     r = client.get("/admin/usuarios", headers=_headers(token))
     assert r.status_code == 200
-    emails = [u["email"] for u in r.json()]
+    data = r.json()
+    assert "usuarios" in data and "total" in data
+    assert data["total"] == 2
+    emails = [u["email"] for u in data["usuarios"]]
     assert ADMIN["email"] in emails
     assert USUARIO["email"] in emails
 
@@ -119,7 +122,7 @@ def test_cambiar_rol_a_admin(client, db):
     token = _token_admin(client, db)
     with patch("backend.app.routers.auth.enviar_email_verificacion"):
         client.post("/auth/registro", json=USUARIO)
-    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
     r = client.patch(
@@ -133,7 +136,7 @@ def test_cambiar_rol_a_admin(client, db):
 
 def test_cambiar_propio_rol_devuelve_400(client, db):
     token = _token_admin(client, db)
-    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_admin = next(u["id_usuario"] for u in usuarios if u["email"] == ADMIN["email"])
 
     r = client.patch(
@@ -148,7 +151,7 @@ def test_desactivar_usuario(client, db):
     token = _token_admin(client, db)
     with patch("backend.app.routers.auth.enviar_email_verificacion"):
         client.post("/auth/registro", json=USUARIO)
-    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
     r = client.patch(
@@ -162,7 +165,7 @@ def test_desactivar_usuario(client, db):
 
 def test_desactivar_propia_cuenta_devuelve_400(client, db):
     token = _token_admin(client, db)
-    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_admin = next(u["id_usuario"] for u in usuarios if u["email"] == ADMIN["email"])
 
     r = client.patch(
@@ -183,19 +186,19 @@ def test_eliminar_usuario(client, db):
     token = _token_admin(client, db)
     with patch("backend.app.routers.auth.enviar_email_verificacion"):
         client.post("/auth/registro", json=USUARIO)
-    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
     r = client.delete(f"/admin/usuarios/{id_usr}", headers=_headers(token))
     assert r.status_code == 200
 
-    usuarios_tras = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios_tras = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     assert not any(u["id_usuario"] == id_usr for u in usuarios_tras)
 
 
 def test_eliminar_propia_cuenta_devuelve_400(client, db):
     token = _token_admin(client, db)
-    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()
+    usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_admin = next(u["id_usuario"] for u in usuarios if u["email"] == ADMIN["email"])
 
     r = client.delete(f"/admin/usuarios/{id_admin}", headers=_headers(token))
@@ -206,6 +209,54 @@ def test_eliminar_usuario_inexistente_devuelve_404(client, db):
     token = _token_admin(client, db)
     r = client.delete("/admin/usuarios/9999", headers=_headers(token))
     assert r.status_code == 404
+
+
+def test_listar_usuarios_paginacion(client, db):
+    token = _token_admin(client, db)
+    # 5 registrados + el admin = 6 usuarios en total
+    for i in range(5):
+        db.add(Usuario(email=f"u{i}@test.com", password=hashear_password("Usuario1234"),
+                       rol="registrado", activo=1, email_verificado=1,
+                       created_at=datetime.now(timezone.utc)))
+    db.commit()
+
+    p1 = client.get("/admin/usuarios?pagina=1&limite=2", headers=_headers(token)).json()
+    assert p1["total"] == 6
+    assert len(p1["usuarios"]) == 2
+
+    # Página fuera de rango: lista vacía pero total correcto
+    p99 = client.get("/admin/usuarios?pagina=99&limite=2", headers=_headers(token)).json()
+    assert p99["usuarios"] == []
+    assert p99["total"] == 6
+
+
+# ── Logs del cron ─────────────────────────────────────────────────────────────
+
+def test_logs_cron_requiere_admin(client):
+    assert client.get("/admin/logs/cron?fichero=bdns").status_code == 401
+
+
+def test_logs_cron_fichero_invalido(client, db):
+    token = _token_admin(client, db)
+    r = client.get("/admin/logs/cron?fichero=otro", headers=_headers(token))
+    assert r.status_code == 400
+
+
+def test_logs_cron_lee_fichero(client, db, tmp_path, monkeypatch):
+    token = _token_admin(client, db)
+    (tmp_path / "bdns_check.log").write_text("linea1\nlinea2\n", encoding="utf-8")
+    monkeypatch.setattr("backend.app.routers.admin.CRON_LOG_DIR", str(tmp_path))
+    r = client.get("/admin/logs/cron?fichero=bdns&n=1", headers=_headers(token))
+    assert r.status_code == 200
+    assert r.json()["lineas"] == ["linea2"]
+
+
+def test_logs_cron_fichero_no_disponible(client, db, tmp_path, monkeypatch):
+    token = _token_admin(client, db)
+    monkeypatch.setattr("backend.app.routers.admin.CRON_LOG_DIR", str(tmp_path))
+    r = client.get("/admin/logs/cron?fichero=health", headers=_headers(token))
+    assert r.status_code == 200
+    assert r.json()["lineas"] == ["(archivo de log no disponible)"]
 
 
 # ── Avisos ────────────────────────────────────────────────────────────────────

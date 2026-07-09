@@ -466,6 +466,7 @@ Botón flotante (`js/scroll-arriba.js` + clase `.btn-subir`) que permite regresa
 | Portada partida | Título "Sobre el proyecto" + descripción + foto de animales + botón "Ir al buscador" | Estático |
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
 | Convocatorias | Dos bloques (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador filtrado; pendientes sin `fecha_resolucion` muestran estado | API `/convocatorias/` |
+| Umbral de puntuación | Bajo Convocatorias: texto explicativo (EPA/EELL) + tabla del corte de concesión por año (puntuación mínima concedida; "Sin corte" donde todas las admitidas obtuvieron ayuda; por línea en EPA 2024+) | API `/estadisticas/` → `umbrales[]` |
 | Gráficos | Fila 1: Evolución importe por año (línea) + EPA vs EELL por año (barras agrupadas). Fila 2: Distribución estados (donut) + KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
@@ -478,6 +479,7 @@ Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para sim
 | `crearGraficoDonut(datos)` | `doughnut` + `cutout: '62%'` | `home-grafico-donut` | Totales concedidas / resto |
 | `crearGraficoBarras(porAnio)` | `bar` agrupado | `home-grafico-barras` | `por_anio` separado por tipo |
 | `mostrarTasaExito(datos)` | KPI HTML | `home-tasa-exito` | `total_concedidas / total_registros` |
+| `poblarUmbrales(umbrales)` | Tabla HTML | `umbral-tbody` | `datos.umbrales[]` (una fila por año, columnas EPA/EELL) |
 
 **Archivo JS:** `js/home.js` — tres funciones asíncronas independientes: `cargarDatos()` (métricas + gráficos desde `/estadisticas/`), `cargarAvisos()` (banner desde `/avisos/`) y `cargarConvocatorias()` (bloque convocatorias desde `/convocatorias/`).
 
@@ -854,7 +856,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | Tramos de importe | `#grafico-tramos` | Barras verticales: nº concesiones por tramo |
 | Top 5 CCAA por subvención | `#top5-ccaa-lista` | Lista top 5 por importe |
 | Top 5 CCAA por ayuntamientos | `#top5-concesiones-lista` | Lista top 5 por número de concesiones |
-| Recurrencia | `#tabla-recurrencia-eell` | Tabla nuevas/recurrentes por año + nota |
+| Recurrencia | KPI `#kpi-eell-repiten` + `.nota-asterisco` | El KPI "Entidades que repiten" lleva un asterisco que remite a una nota fija bajo los 4 KPIs (nombres de los aytos recurrentes) |
 
 **KPIs:**
 
@@ -873,7 +875,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | `poblarGraficoTramos` | `bar` vertical | `#grafico-tramos` | `distribucion_importes[]` |
 | `poblarTop5Ccaa` | Lista HTML | `#top5-ccaa-lista` | `por_ccaa[]` |
 | `poblarTop5Concesiones` | Lista HTML | `#top5-concesiones-lista` | `por_ccaa[]` |
-| `poblarRecurrencia` | KPI + tabla | `#kpi-eell-repiten`, `#tabla-recurrencia-eell` | `recurrencia_por_anio[]`, `entidades_repiten`, `total_entidades` |
+| `poblarRecurrencia` | KPI (nº + asterisco) | `#kpi-eell-repiten` | `entidades_repiten`, `total_entidades` (los nombres de los recurrentes van fijos en la nota HTML) |
 
 > **Nota:** `poblarRankingCcaa` fue eliminada — el ranking completo de CCAA se muestra en `exclusivo.html` junto al mapa.
 

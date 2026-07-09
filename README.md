@@ -224,6 +224,7 @@ Las resoluciones de concesión no aparecen en la API BDNS — se obtienen direct
 | Puntuación | Puntuación obtenida en la evaluación |
 | Importe | Importe concedido (€) |
 | Estado | Concedida / No beneficiaria / Excluida / Desistida |
+| Línea | Línea de subvención: colonias felinas / animales abandonados (EPA 2024 y 2025; la de 2024 se obtiene de la relación de admitidas, ver Pipeline de datos) |
 
 ### Datos de ayuntamientos (EELL) — PDF (2023–2024) y XML+Excel (2025)
 
@@ -439,13 +440,13 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 
 | Página | Descripción |
 |--------|-------------|
-| `index.html` | Home con métricas, gráficas de evolución y una tabla por tipo de entidad con cada convocatoria: **estado de plazo** (abierto/cerrado), enlace a la **convocatoria oficial en BDNS**, enlace a la **resolución en el BOE** y acceso directo a la búsqueda filtrada. Incluye enlaces a las **bases reguladoras** oficiales |
-| `buscador.html` | Buscador de solicitudes con filtros, búsqueda por nombre de entidad o nº de expediente, paginación, ordenación server-side, estado vacío con sugerencias cuando no hay resultados y exportación CSV con nombre de archivo dinámico según filtros activos |
-| `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, nuevas vs recurrentes, top beneficiarios |
-| `estadisticas-eell.html` | Análisis de ayuntamientos: ranking CCAA/provincias, concentración del importe |
+| `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año). Incluye enlaces a las **bases reguladoras** oficiales |
+| `buscador.html` | Buscador de solicitudes con filtros (incluida la **línea de subvención** en EPA 2024/2025), búsqueda por nombre de entidad o nº de expediente, paginación (con accesos a primera/última página), ordenación server-side, estado vacío con sugerencias y exportación CSV con nombre dinámico según filtros activos |
+| `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios |
+| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades y mapa (en exclusivo) |
 | `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
-| `admin.html` | Panel de administración: gestión de usuarios, avisos (incluida la **fecha de fin de plazo** de cada convocatoria) y logs (solo rol `admin`) |
+| `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas |
 | `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
@@ -1111,14 +1112,14 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 - Autenticación completa: JWT · refresh token · verificación email · recuperación contraseña
 - Caché y rate limiting activos (Nginx); medidas anti-bots
-- Cron con auto-detección de resoluciones BDNS
+- Cron con auto-detección de resoluciones BDNS y reintentos con backoff ante fallos de la API
 - Auditoría de seguridad completada (parámetros, SRI, SMTP, logs de acceso)
 
 ### Interfaz web
 
 - Buscador con ordenación server-side; exportación CSV
 - Banner de convocatorias con estado de plazo (abierto/cerrado) calculado automáticamente
-- Panel de administración completo con visor de logs y edición del fin de plazo de convocatorias
+- Panel de administración completo: gestión paginada de usuarios, visor de logs (de la app y del cron) y edición del fin de plazo de convocatorias
 - Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
 - Modal de conclusiones con textos reales en las 9 gráficas
 - Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
@@ -1127,7 +1128,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 246 funciones de test automáticas / 344 ejecuciones (pytest)
+- 366 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1388,7 +1389,6 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 ### Datos y análisis
 
 - **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando infosubvenciones.es. No afecta a ninguna funcionalidad actual.
-- **Campo `linea` para EPA 2024** — la Orden modificada ya estaba en vigor pero el BOE de 2024 no desglosa la línea por entidad en las tablas parseadas. Si se revisa el parser, el campo `linea` ya está preparado en el modelo.
 - **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
 - **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL; requieren un parser específico.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
@@ -1398,12 +1398,8 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
-- **Paginación en `/admin/usuarios`** — la tabla de usuarios no pagina; con pocos usuarios actuales no es problema pero escalaría mal.
-- **Retry en cron si BDNS API no responde** — el cron falla silenciosamente si BDNS devuelve error; añadir reintentos con backoff exponencial.
-- **Logs de cron en panel admin** — mostrar `bdns_check.log` y `health_check.log` en el panel. Requiere: montar `../logs/cron` en el contenedor backend, dos endpoints nuevos en `admin.py` y dos secciones en `admin.html` / `admin.js`.
-- **Autogeneración de `models.py`** — usar `sqlacodegen` para generar el ORM de SQLAlchemy directamente desde el esquema de la BD, en lugar de mantenerlo a mano.
 - **Login con terceros (OAuth)** — integración con Google.
-- **Conclusiones comparativas en modales EELL** — los modales de estadísticas EELL ("Top provincias" y "Tramos de importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si crece la concentración de importes) añadiría valor analítico. La recurrencia de entidades ya se muestra por año; los modales de home y EPA ya tienen conclusiones completas.
+- **Conclusiones comparativas en modales EELL** — los modales de estadísticas EELL ("Top provincias" y "Tramos de importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si crece la concentración de importes) añadiría valor analítico. La recurrencia de entidades se resume en un KPI con nota al pie; los modales de home y EPA ya tienen conclusiones completas.
 
 ### Producción y seguridad
 

@@ -2888,65 +2888,15 @@ canvas {
 
 
 /* ------------------------------------------------------------
-   Recurrencia EELL — tabla nuevas/recurrentes + nota lateral
-   (tarjeta de la página de estadísticas EELL)
+   Nota al pie con asterisco (KPI de recurrencia EELL, importe 2021 en
+   exclusivo, etc.). Texto pequeño y gris que remite a un asterisco.
    ------------------------------------------------------------ */
-.recurrencia-eell {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--espacio-lg);
-}
-
-.tabla-recurrencia {
-    border-collapse: collapse;
-    min-width: 260px;
-}
-
-.tabla-recurrencia th,
-.tabla-recurrencia td {
-    padding: 8px 20px;
-    text-align: center;
-    border-bottom: 1px solid var(--color-gris-medio);
-}
-
-.tabla-recurrencia thead th {
-    font-size: 0.85rem;
-    color: var(--color-blanco);
-    background-color: var(--color-verde-tabla);
-}
-
-.tabla-recurrencia thead th:first-child { border-top-left-radius: var(--radio-input); }
-.tabla-recurrencia thead th:last-child  { border-top-right-radius: var(--radio-input); }
-
-.tabla-recurrencia td {
-    font-size: 0.95rem;
-    color: var(--color-negro);
-}
-
-.tabla-recurrencia td:first-child { font-weight: 700; }
-
-.tabla-recurrencia tbody tr:last-child td { border-bottom: none; }
-
-.recurrencia-eell__texto {
-    flex: 1 1 260px;
-}
-
-.recurrencia-eell__nota {
-    font-size: 0.95rem;
-    color: var(--color-gris-texto);
-    line-height: 1.5;
-}
-
-.recurrencia-eell__detalle {
-    margin-top: var(--espacio-xs);
+.nota-asterisco {
+    margin-top: var(--espacio-sm);
+    margin-bottom: var(--espacio-lg);
     font-size: 0.85rem;
     color: var(--color-gris-texto);
     line-height: 1.5;
-}
-
-.recurrencia-eell__detalle:empty {
-    display: none;
 }
 
 
@@ -3262,6 +3212,28 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     gap: var(--espacio-sm);
     margin-bottom: var(--espacio-sm);
     flex-wrap: wrap;
+}
+
+/* Subtítulo de cada sub-bloque de logs del cron (BDNS / health) */
+.admin-logs-subtitulo {
+    margin: var(--espacio-lg) 0 var(--espacio-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-negro);
+}
+.admin-logs-subtitulo:first-child {
+    margin-top: 0;
+}
+.admin-logs-fichero {
+    font-family: monospace;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-gris-texto);
+}
+
+/* Paginación de la tabla de usuarios (reutiliza .paginacion) */
+.admin-usuarios-paginacion {
+    margin-top: var(--espacio-md);
 }
 
 .admin-logs-controls label {
@@ -4368,6 +4340,49 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     font-weight: 700;
     margin-bottom: 0.25rem;
     text-align: center;
+}
+
+
+/* ── Umbral de puntuación (corte de concesión por año) ── */
+/* Banda crema entre las dos secciones verdes del inicio (convocatorias y
+   gráficos), para romper la secuencia de dos verdes seguidos. */
+#seccion-umbral {
+    background-color: var(--hero-crema, #FAF4EE);
+    padding: var(--espacio-lg) 0;
+}
+
+.umbral-bloque {
+    text-align: center;
+}
+
+.umbral-intro {
+    /* Ancho completo del contenedor (como las dos tablas de arriba) para que
+       el texto ocupe más en horizontal y menos en alto. */
+    margin: 0 auto var(--espacio-md);
+    text-align: justify;
+    hyphens: auto;              /* guionado (lang="es") para evitar huecos feos */
+    font-size: 0.95rem;
+    color: var(--color-gris-texto);
+    line-height: 1.6;
+}
+.umbral-intro p + p {
+    margin-top: var(--espacio-sm);
+}
+
+/* El ancho se limita en el wrapper (no en la tabla) para que el border-radius
+   de .tabla-wrapper envuelva la tabla y las esquinas queden redondeadas. */
+.umbral-wrapper {
+    max-width: 640px;
+    margin-inline: auto;
+}
+
+.umbral-sin-corte {
+    color: var(--color-gris-texto);
+    font-style: italic;
+}
+.umbral-detalle {
+    color: var(--color-gris-texto);
+    font-size: 0.85em;
 }
 
 /* Subtítulo centrado del sub-bloque */

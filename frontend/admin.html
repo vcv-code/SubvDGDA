@@ -207,6 +207,50 @@
                     </div>
                 </section>
 
+                <!-- 6. LOGS DEL CRON ─────────────────────── -->
+                <section class="admin-seccion" aria-labelledby="titulo-logs-cron">
+                    <div class="admin-seccion__cabecera">
+                        <h2 id="titulo-logs-cron" class="titulo-admin">Logs del cron</h2>
+                        <span class="admin-seccion__subtitulo">Tareas periódicas: comprobación de resoluciones en BDNS y health check</span>
+                    </div>
+                    <div class="admin-seccion__cuerpo">
+
+                        <h3 class="admin-logs-subtitulo">Comprobación BDNS <span class="admin-logs-fichero">bdns_check.log</span></h3>
+                        <div class="admin-logs-controls">
+                            <label for="logs-cron-bdns-n">Últimas líneas:</label>
+                            <select id="logs-cron-bdns-n">
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                            </select>
+                            <button type="button" class="btn-accion btn-accion--gris" id="btn-recargar-logs-cron-bdns">
+                                Recargar
+                            </button>
+                        </div>
+                        <pre class="admin-logs-pre" id="admin-logs-cron-bdns-pre"
+                             aria-label="Últimas líneas del log de comprobación BDNS del cron"
+                             aria-live="polite">Cargando...</pre>
+
+                        <h3 class="admin-logs-subtitulo">Health check <span class="admin-logs-fichero">health_check.log</span></h3>
+                        <div class="admin-logs-controls">
+                            <label for="logs-cron-health-n">Últimas líneas:</label>
+                            <select id="logs-cron-health-n">
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                                <option value="200">200</option>
+                                <option value="500">500</option>
+                            </select>
+                            <button type="button" class="btn-accion btn-accion--gris" id="btn-recargar-logs-cron-health">
+                                Recargar
+                            </button>
+                        </div>
+                        <pre class="admin-logs-pre" id="admin-logs-cron-health-pre"
+                             aria-label="Últimas líneas del log de health check del cron"
+                             aria-live="polite">Cargando...</pre>
+                    </div>
+                </section>
+
             </div>
         </div>
 

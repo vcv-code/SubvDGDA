@@ -16,12 +16,17 @@ from ..schemas import (
     CambiarRolIn,
     FinPlazoIn,
     UsuarioOut,
+    UsuariosPaginadosOut,
 )
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 LOG_FILE       = os.getenv("LOG_DIR", "/app/logs") + "/access.log"
 LOG_FILE_ERROR = os.getenv("LOG_DIR", "/app/logs") + "/error.log"
+
+# Logs del cron (montados en solo lectura desde ../logs/cron; ver docker-compose).
+CRON_LOG_DIR = os.getenv("CRON_LOG_DIR", "/app/cronlogs")
+_CRON_LOGS = {"bdns": "bdns_check.log", "health": "health_check.log"}
 
 
 # ── Estado general ────────────────────────────────────────────────────────────
@@ -56,12 +61,22 @@ def estado(
 
 # ── Usuarios ──────────────────────────────────────────────────────────────────
 
-@router.get("/usuarios", response_model=list[UsuarioOut])
+@router.get("/usuarios", response_model=UsuariosPaginadosOut)
 def listar_usuarios(
+    pagina: int = Query(1, ge=1),
+    limite: int = Query(20, ge=1, le=100),
     _admin: Usuario = Depends(require_rol("admin")),
     db: Session = Depends(get_db),
 ):
-    return db.query(Usuario).order_by(Usuario.created_at.desc()).all()
+    total = db.query(func.count(Usuario.id_usuario)).scalar()
+    usuarios = (
+        db.query(Usuario)
+        .order_by(Usuario.created_at.desc())
+        .offset((pagina - 1) * limite)
+        .limit(limite)
+        .all()
+    )
+    return UsuariosPaginadosOut(usuarios=usuarios, total=total)
 
 
 @router.patch("/usuarios/{id_usuario}/rol", response_model=UsuarioOut)
@@ -242,6 +257,24 @@ def ver_logs_errores(
 ):
     try:
         with open(LOG_FILE_ERROR, "r", encoding="utf-8", errors="replace") as f:
+            lineas = f.readlines()
+        return AdminLogsOut(lineas=[l.rstrip() for l in lineas[-n:]])
+    except FileNotFoundError:
+        return AdminLogsOut(lineas=["(archivo de log no disponible)"])
+
+
+@router.get("/logs/cron", response_model=AdminLogsOut)
+def ver_logs_cron(
+    fichero: str = Query("bdns", description="Log del cron: 'bdns' o 'health'"),
+    n: int = Query(100, ge=1, le=500),
+    _admin: Usuario = Depends(require_rol("admin")),
+):
+    """Últimas líneas de un log del cron (bdns_check.log / health_check.log)."""
+    nombre = _CRON_LOGS.get(fichero)
+    if nombre is None:
+        raise HTTPException(status_code=400, detail="Fichero de log no válido")
+    try:
+        with open(os.path.join(CRON_LOG_DIR, nombre), "r", encoding="utf-8", errors="replace") as f:
             lineas = f.readlines()
         return AdminLogsOut(lineas=[l.rstrip() for l in lineas[-n:]])
     except FileNotFoundError:

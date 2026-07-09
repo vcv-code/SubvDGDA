@@ -137,24 +137,27 @@ async function cargarEstado() {
 // ── 2. Usuarios ───────────────────────────────────────────────────────────────
 
 let miId = null;  // id del admin en sesión, para proteger autoedición
+let usuariosPagina = 1;             // página actual de la tabla de usuarios
+const USUARIOS_LIMITE = 20;         // usuarios por página
 
 async function cargarUsuarios() {
     const contenedor = document.getElementById('admin-usuarios-contenido');
     try {
         const [rPerfil, rUsuarios] = await Promise.all([
             fetch(`${API_URL}/privado/perfil`, { headers: authHeaders() }),
-            fetch(`${API_URL}/admin/usuarios`, { headers: authHeaders() }),
+            fetch(`${API_URL}/admin/usuarios?pagina=${usuariosPagina}&limite=${USUARIOS_LIMITE}`, { headers: authHeaders() }),
         ]);
         if (!rUsuarios.ok) {
             contenedor.innerHTML = '<p class="admin-vacio">Error al cargar usuarios.</p>';
             return;
         }
         const perfil   = await rPerfil.json();
-        const usuarios = await rUsuarios.json();
+        const data     = await rUsuarios.json();
+        const usuarios = data.usuarios;
 
         miId = perfil.id_usuario ?? null;
 
-        if (!usuarios.length) {
+        if (!data.total) {
             contenedor.innerHTML = '<p class="admin-vacio">No hay usuarios registrados.</p>';
             return;
         }
@@ -202,6 +205,15 @@ async function cargarUsuarios() {
             </tr>`;
         }).join('');
 
+        const totalPaginas = Math.ceil(data.total / USUARIOS_LIMITE);
+        const totalTxt = `${data.total} ${data.total === 1 ? 'usuario' : 'usuarios'}`;
+        const controles = totalPaginas > 1
+            ? `<button class="btn btn-secundario btn--sm" id="usuarios-anterior" ${usuariosPagina <= 1 ? 'disabled' : ''}>Anterior</button>
+                <span>Página ${usuariosPagina} de ${totalPaginas} · ${totalTxt}</span>
+                <button class="btn btn-secundario btn--sm" id="usuarios-siguiente" ${usuariosPagina >= totalPaginas ? 'disabled' : ''}>Siguiente</button>`
+            : `<span>${totalTxt}</span>`;
+        const paginacion = `<div class="paginacion admin-usuarios-paginacion">${controles}</div>`;
+
         contenedor.innerHTML = `
             <table class="admin-tabla">
                 <thead>
@@ -215,11 +227,17 @@ async function cargarUsuarios() {
                     </tr>
                 </thead>
                 <tbody>${filas}</tbody>
-            </table>`;
+            </table>
+            ${paginacion}`;
 
         contenedor.querySelectorAll('[data-accion]').forEach(btn =>
             btn.addEventListener('click', accionUsuario)
         );
+
+        const btnAnt = document.getElementById('usuarios-anterior');
+        const btnSig = document.getElementById('usuarios-siguiente');
+        if (btnAnt) btnAnt.addEventListener('click', () => { usuariosPagina--; cargarUsuarios(); });
+        if (btnSig) btnSig.addEventListener('click', () => { usuariosPagina++; cargarUsuarios(); });
     } catch {
         contenedor.innerHTML = '<p class="admin-vacio">Error al cargar usuarios.</p>';
     }
@@ -462,6 +480,38 @@ async function cargarLogsErrores() {
 }
 
 
+// ── 6. Logs del cron ──────────────────────────────────────────────────────────
+
+async function cargarLogsCron(fichero, preId, selectId) {
+    const pre = document.getElementById(preId);
+    const n   = document.getElementById(selectId).value;
+    pre.textContent = 'Cargando...';
+    pre.className   = 'admin-logs-pre';
+    try {
+        const r = await fetch(`${API_URL}/admin/logs/cron?fichero=${fichero}&n=${n}`, { headers: authHeaders() });
+        if (!r.ok) {
+            pre.textContent = 'Error al cargar logs.';
+            pre.classList.add('admin-logs-pre--vacio');
+            return;
+        }
+        const data = await r.json();
+        if (!data.lineas.length) {
+            pre.textContent = '(sin registros)';
+            pre.classList.add('admin-logs-pre--vacio');
+        } else {
+            pre.textContent = data.lineas.join('\n');
+            pre.scrollTop   = pre.scrollHeight;
+        }
+    } catch {
+        pre.textContent = 'Error al cargar logs.';
+        pre.classList.add('admin-logs-pre--vacio');
+    }
+}
+
+const cargarLogsCronBdns   = () => cargarLogsCron('bdns',   'admin-logs-cron-bdns-pre',   'logs-cron-bdns-n');
+const cargarLogsCronHealth = () => cargarLogsCron('health', 'admin-logs-cron-health-pre', 'logs-cron-health-n');
+
+
 // ── Cerrar sesión ─────────────────────────────────────────────────────────────
 
 async function cerrarSesion() {
@@ -485,13 +535,15 @@ async function init() {
     const acceso = await verificarAcceso();
     if (!acceso) return;
 
-    // Carga en paralelo las 4 secciones
+    // Carga en paralelo todas las secciones
     await Promise.all([
         cargarEstado(),
         cargarUsuarios(),
         cargarAvisos(),
         cargarLogs(),
         cargarLogsErrores(),
+        cargarLogsCronBdns(),
+        cargarLogsCronHealth(),
     ]);
 
     document.getElementById('btn-cerrar-sesion')
@@ -504,6 +556,14 @@ async function init() {
         .addEventListener('click', cargarLogsErrores);
     document.getElementById('logs-errores-n')
         .addEventListener('change', cargarLogsErrores);
+    document.getElementById('btn-recargar-logs-cron-bdns')
+        .addEventListener('click', cargarLogsCronBdns);
+    document.getElementById('logs-cron-bdns-n')
+        .addEventListener('change', cargarLogsCronBdns);
+    document.getElementById('btn-recargar-logs-cron-health')
+        .addEventListener('click', cargarLogsCronHealth);
+    document.getElementById('logs-cron-health-n')
+        .addEventListener('change', cargarLogsCronHealth);
 }
 
 init();
