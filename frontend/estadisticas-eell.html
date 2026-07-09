@@ -145,6 +145,15 @@
 
                 </div><!-- /grid-4 KPIs -->
 
+                <!-- Nota del asterisco del KPI "Entidades que repiten".
+                     Nombres FIJOS (decisión de la usuaria): ACTUALIZAR A MANO
+                     cuando salgan las resoluciones EELL 2026 (~dic 2026/ene 2027):
+                     añadir el año y sus aytos recurrentes, y el "X de Y (Z %)".
+                     El número del KPI sí es dinámico (poblarRecurrencia). -->
+                <p class="nota-asterisco">
+                    <span aria-hidden="true">*</span> De las 150 entidades locales que han recibido ayuda (155 concesiones en total, 2023–2025), solo 5 (3 %) lo han conseguido en más de una convocatoria: cada año consiguen subvención mayoritariamente entidades nuevas. Repiten: en 2024, Ayto. de Artesa de Lleida, Ayto. de Granada y Diputación de Cuenca; en 2025, Ayto. de El Carpio de Tajo y Ayto. de Elda.
+                </p>
+
 
                 <!-- ─────────────────────────────────────────────────
                      FILA 2: TOP PROVINCIAS + CONCENTRACIÓN
@@ -267,43 +276,6 @@
                     </div>
 
                 </div><!-- /fila 4 top5 -->
-
-
-                <!-- ─────────────────────────────────────────────────
-                     FILA 5: RECURRENCIA — NUEVAS VS RECURRENTES POR AÑO
-                     ───────────────────────────────────────────────── -->
-                <div class="card-grafico mb-lg">
-                    <div class="card-grafico__cabecera">
-                        <div>
-                            <p class="card-grafico__titulo">Entidades nuevas y recurrentes</p>
-                            <p class="card-grafico__subtitulo">
-                                Cuántas EELL entran por primera vez y cuántas repiten en cada convocatoria
-                            </p>
-                        </div>
-                    </div>
-                    <!--
-                        Tabla generada por estadisticas-eell.js a partir de
-                        recurrencia_por_anio[{ anio, nuevas, recurrentes }].
-                        La nota lateral resume el hallazgo (apenas hay recurrencia).
-                    -->
-                    <div class="recurrencia-eell">
-                        <table class="tabla-recurrencia" id="tabla-recurrencia-eell" style="display:none;">
-                            <caption class="skip-nav">Entidades nuevas y recurrentes por año</caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Año</th>
-                                    <th scope="col">Nuevas</th>
-                                    <th scope="col">Recurrentes</th>
-                                </tr>
-                            </thead>
-                            <tbody><!-- filas desde estadisticas-eell.js --></tbody>
-                        </table>
-                        <div class="recurrencia-eell__texto">
-                            <p class="recurrencia-eell__nota" id="recurrencia-nota">Cargando…</p>
-                            <p class="recurrencia-eell__detalle" id="recurrencia-detalle"></p>
-                        </div>
-                    </div>
-                </div><!-- /fila 5 recurrencia -->
 
             </div><!-- /contenedor -->
         </section>
