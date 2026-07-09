@@ -42,10 +42,13 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       CORS_ORIGINS: ${CORS_ORIGINS}
       LOG_DIR: /app/logs
+      CRON_LOG_DIR: /app/cronlogs
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
     volumes:
       - ../logs/app:/app/logs
+      # Logs del cron en solo lectura, para mostrarlos en el panel admin.
+      - ../logs/cron:/app/cronlogs:ro
     depends_on:
       db:
         condition: service_healthy
