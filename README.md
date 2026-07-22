@@ -1380,6 +1380,8 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 
 - **Formatos de expediente heterogéneos en EELL 2025**: el BOE XML de 2025 usa el formato `EXP/NNNNN` (sin año) para 23 entidades, mientras que el Excel principal usa `EXP2025/NNNNN`. No se trata de duplicados de las mismas entidades — son registros distintos que el BOE referencia con diferente esquema de numeración. Todas son `excluida` o `no_beneficiaria`, sin impacto económico. La deduplicación no puede unirlas automáticamente porque los números no coinciden entre fuentes.
 
+- **Cofinanciación EELL — descartada por dato incompleto e incomparable entre años**: la aportación propia de cada entidad no se incorpora al dataset porque las fuentes no la recogen de forma consistente. En **2023** la resolución incluye una columna «Porcentaje de cofinanciación» pero está **vacía en 558 de 593 entidades** (solo 35 con valor). En **2024** la resolución de concesión **no la trae**: el presupuesto de gastos del que podría derivarse el importe cofinanciado (gasto − subvención) está en la «relación de admitidas», un documento aparte que no se procesa. En **2025** figura en el XML, pero con otro formato. Incorporarla daría un campo casi vacío en 2023, ausente en 2024 y con métricas distintas (**%** en 2023 vs **€** en 2024), sin valor analítico comparable, por lo que se descarta.
+
 ---
 
 ## Mejoras futuras
@@ -1389,7 +1391,6 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 ### Datos y análisis
 
 - **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando infosubvenciones.es. No afecta a ninguna funcionalidad actual.
-- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
 - **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL; requieren un parser específico.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
 - **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
