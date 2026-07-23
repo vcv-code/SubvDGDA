@@ -50,6 +50,8 @@ def mapear_indices(headers):
             mapa["cif"] = i
         elif "actuación" in h or "actuacion" in h or "línea" in h or "linea" in h:
             mapa["linea"] = i
+        elif "criterio" in h or "causa" in h or "motiv" in h:
+            mapa["causa"] = i
     return mapa
 
 
@@ -202,6 +204,12 @@ def parsear_boe_epa_2025(url):
                     "estado": estado_actual,
                     "linea": normalizar_linea(safe_get(celdas, mapa.get("linea"))),
                 }
+
+                # Causa de exclusión: solo la tiene el anexo de excluídas
+                # (columna "Criterios de exclusión"). Aditivo: no afecta a concedidos.
+                if "causa" in mapa:
+                    causa = limpiar_texto(safe_get(celdas, mapa["causa"]))
+                    data["causa_exclusion"] = causa or None
 
                 # Regla clave: si hay importe → concedida
                 if data["importe"] is not None:

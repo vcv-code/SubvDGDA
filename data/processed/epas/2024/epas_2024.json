@@ -8597,6 +8597,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "7",
     "linea": null
   },
   {
@@ -8607,6 +8608,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "5",
     "linea": null
   },
   {
@@ -8617,6 +8619,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "7",
     "linea": null
   },
   {
@@ -8627,6 +8630,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "7",
     "linea": null
   },
   {
@@ -8637,6 +8641,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8647,6 +8652,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8657,6 +8663,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8667,6 +8674,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8677,6 +8685,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8687,6 +8696,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8697,6 +8707,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "3.1",
     "linea": null
   },
   {
@@ -8707,6 +8718,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "4; 5",
     "linea": null
   },
   {
@@ -8717,6 +8729,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "5; 6; 7",
     "linea": null
   },
   {
@@ -8727,6 +8740,7 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
+    "causa_exclusion": "6, 7, 8",
     "linea": null
   },
   {

@@ -4477,7 +4477,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 6.a"
   },
   {
     "anio": 2025,
@@ -4487,7 +4488,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "19."
   },
   {
     "anio": 2025,
@@ -4497,7 +4499,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4507,7 +4510,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4517,7 +4521,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4527,7 +4532,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4537,7 +4543,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4547,7 +4554,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15. 19."
   },
   {
     "anio": 2025,
@@ -4557,7 +4565,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "18."
   },
   {
     "anio": 2025,
@@ -4567,7 +4576,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 6.b. 16. 17."
   },
   {
     "anio": 2025,
@@ -4577,7 +4587,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "6.b. 16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4587,7 +4598,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15. 17."
   },
   {
     "anio": 2025,
@@ -4597,7 +4609,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 17. 19"
   },
   {
     "anio": 2025,
@@ -4607,7 +4620,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4617,7 +4631,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "18."
   },
   {
     "anio": 2025,
@@ -4627,7 +4642,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -4637,7 +4653,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4647,7 +4664,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4657,7 +4675,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15"
   },
   {
     "anio": 2025,
@@ -4667,7 +4686,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15"
   },
   {
     "anio": 2025,
@@ -4677,7 +4697,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 19."
   },
   {
     "anio": 2025,
@@ -4687,7 +4708,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4697,7 +4719,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -4707,7 +4730,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4717,7 +4741,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4727,7 +4752,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "4. 10."
   },
   {
     "anio": 2025,
@@ -4737,7 +4763,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4747,7 +4774,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 16."
   },
   {
     "anio": 2025,
@@ -4757,7 +4785,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -4767,7 +4796,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 15. 18."
   },
   {
     "anio": 2025,
@@ -4777,7 +4807,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "4."
   },
   {
     "anio": 2025,
@@ -4787,7 +4818,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4797,7 +4829,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16."
   },
   {
     "anio": 2025,
@@ -4807,7 +4840,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "4. 8. 10. 14. 16."
   },
   {
     "anio": 2025,
@@ -4817,7 +4851,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 6.b. 17. 19. 20."
   },
   {
     "anio": 2025,
@@ -4827,7 +4862,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4837,7 +4873,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4847,7 +4884,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4857,7 +4895,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -4867,7 +4906,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4877,7 +4917,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4887,7 +4928,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 17. 19."
   },
   {
     "anio": 2025,
@@ -4897,7 +4939,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 16. 18. 19. 20."
   },
   {
     "anio": 2025,
@@ -4907,7 +4950,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16."
   },
   {
     "anio": 2025,
@@ -4917,7 +4961,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15"
   },
   {
     "anio": 2025,
@@ -4927,7 +4972,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 6.a."
   },
   {
     "anio": 2025,
@@ -4937,7 +4983,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -4947,7 +4994,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "18. 19."
   },
   {
     "anio": 2025,
@@ -4957,7 +5005,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4967,7 +5016,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4977,7 +5027,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -4987,7 +5038,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -4997,7 +5049,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 16. 18. 19. 20."
   },
   {
     "anio": 2025,
@@ -5007,7 +5060,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "18. 19."
   },
   {
     "anio": 2025,
@@ -5017,7 +5071,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5027,7 +5082,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5037,7 +5093,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -5047,7 +5104,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16."
   },
   {
     "anio": 2025,
@@ -5057,7 +5115,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5067,7 +5126,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 15."
   },
   {
     "anio": 2025,
@@ -5077,7 +5137,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5087,7 +5148,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15. 19."
   },
   {
     "anio": 2025,
@@ -5097,7 +5159,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 19."
   },
   {
     "anio": 2025,
@@ -5107,7 +5170,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5117,7 +5181,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16.18.19."
   },
   {
     "anio": 2025,
@@ -5127,7 +5192,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5137,7 +5203,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 19."
   },
   {
     "anio": 2025,
@@ -5147,7 +5214,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15. 17."
   },
   {
     "anio": 2025,
@@ -5157,7 +5225,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -5167,7 +5236,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5177,7 +5247,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18."
   },
   {
     "anio": 2025,
@@ -5187,7 +5258,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5197,7 +5269,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5207,7 +5280,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16."
   },
   {
     "anio": 2025,
@@ -5217,7 +5291,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -5227,7 +5302,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5237,7 +5313,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 20."
   },
   {
     "anio": 2025,
@@ -5247,7 +5324,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5257,7 +5335,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5267,7 +5346,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "4. 8. 10."
   },
   {
     "anio": 2025,
@@ -5277,7 +5357,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "18. 19."
   },
   {
     "anio": 2025,
@@ -5287,7 +5368,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "19."
   },
   {
     "anio": 2025,
@@ -5297,7 +5379,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15."
   },
   {
     "anio": 2025,
@@ -5307,7 +5390,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "1."
   },
   {
     "anio": 2025,
@@ -5317,7 +5401,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5327,7 +5412,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "1."
   },
   {
     "anio": 2025,
@@ -5337,7 +5423,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18."
   },
   {
     "anio": 2025,
@@ -5347,7 +5434,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "19."
   },
   {
     "anio": 2025,
@@ -5357,7 +5445,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16."
   },
   {
     "anio": 2025,
@@ -5367,7 +5456,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5377,7 +5467,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 6.b"
   },
   {
     "anio": 2025,
@@ -5387,7 +5478,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5397,7 +5489,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "18."
   },
   {
     "anio": 2025,
@@ -5407,7 +5500,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5417,7 +5511,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 6.b."
   },
   {
     "anio": 2025,
@@ -5427,7 +5522,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15"
   },
   {
     "anio": 2025,
@@ -5437,7 +5533,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "19."
   },
   {
     "anio": 2025,
@@ -5447,7 +5544,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 16."
   },
   {
     "anio": 2025,
@@ -5457,7 +5555,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 18."
   },
   {
     "anio": 2025,
@@ -5467,7 +5566,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 15. 18."
   },
   {
     "anio": 2025,
@@ -5477,7 +5577,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16"
   },
   {
     "anio": 2025,
@@ -5487,7 +5588,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5497,7 +5599,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "15. 19."
   },
   {
     "anio": 2025,
@@ -5507,7 +5610,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2. 19."
   },
   {
     "anio": 2025,
@@ -5517,7 +5621,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5527,7 +5632,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "16. 18. 19."
   },
   {
     "anio": 2025,
@@ -5537,7 +5643,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5547,7 +5654,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "2."
   },
   {
     "anio": 2025,
@@ -5557,7 +5665,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "1."
   },
   {
     "anio": 2025,
@@ -5567,7 +5676,8 @@
     "puntuacion": null,
     "importe": null,
     "estado": "excluida",
-    "linea": null
+    "linea": null,
+    "causa_exclusion": "1."
   },
   {
     "anio": 2025,

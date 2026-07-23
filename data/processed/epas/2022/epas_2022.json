@@ -5334,7 +5334,8 @@
     "cif": "G88249727",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 5; 6; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5343,7 +5344,8 @@
     "cif": "G88249727",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 10"
   },
   {
     "anio": 2022,
@@ -5352,7 +5354,8 @@
     "cif": "G88344833",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5361,7 +5364,8 @@
     "cif": "G02707743",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5370,7 +5374,8 @@
     "cif": "G13621669",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 8; 9; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5379,7 +5384,8 @@
     "cif": "G01908540",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "6; 10"
   },
   {
     "anio": 2022,
@@ -5388,7 +5394,8 @@
     "cif": "G19711464",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5397,7 +5404,8 @@
     "cif": "G09823477",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 5; 6; 7; 8; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5406,7 +5414,8 @@
     "cif": "G40656407",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 6; 7; 10"
   },
   {
     "anio": 2022,
@@ -5415,7 +5424,8 @@
     "cif": "G24712366",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "8; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5424,7 +5434,8 @@
     "cif": "G86659075",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5433,7 +5444,8 @@
     "cif": "G90204082",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 8; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5442,7 +5454,8 @@
     "cif": "G93650760",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5451,7 +5464,8 @@
     "cif": "G43649326",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "6; 7; 9"
   },
   {
     "anio": 2022,
@@ -5460,7 +5474,8 @@
     "cif": "G67606186",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "6; 10; 12"
   },
   {
     "anio": 2022,
@@ -5469,7 +5484,8 @@
     "cif": "G10480168",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5478,7 +5494,8 @@
     "cif": null,
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "1"
   },
   {
     "anio": 2022,
@@ -5487,7 +5504,8 @@
     "cif": "G09804451",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7; 8; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5496,7 +5514,8 @@
     "cif": "G88412309",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5505,7 +5524,8 @@
     "cif": "G85712511",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5514,7 +5534,8 @@
     "cif": "G65984486",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 6; 7; 11; 13"
   },
   {
     "anio": 2022,
@@ -5523,7 +5544,8 @@
     "cif": "G16331944",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5532,7 +5554,8 @@
     "cif": "G87777686",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 5; 6; 7; 8; 12"
   },
   {
     "anio": 2022,
@@ -5541,7 +5564,8 @@
     "cif": "G76111996",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "3"
   },
   {
     "anio": 2022,
@@ -5550,7 +5574,8 @@
     "cif": "G36971513",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4"
   },
   {
     "anio": 2022,
@@ -5559,7 +5584,8 @@
     "cif": "G10624377",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 8"
   },
   {
     "anio": 2022,
@@ -5568,7 +5594,8 @@
     "cif": "G10997351",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7"
   },
   {
     "anio": 2022,
@@ -5577,7 +5604,8 @@
     "cif": "G04889614",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "8; 12"
   },
   {
     "anio": 2022,
@@ -5586,7 +5614,8 @@
     "cif": "G16841470",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 9; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5595,7 +5624,8 @@
     "cif": "G93430148",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 6; 8; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5604,7 +5634,8 @@
     "cif": "G09997776",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 8; 12"
   },
   {
     "anio": 2022,
@@ -5613,7 +5644,8 @@
     "cif": "G67453621",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "6"
   },
   {
     "anio": 2022,
@@ -5622,7 +5654,8 @@
     "cif": "G40274219",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5631,7 +5664,8 @@
     "cif": "G11080108",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "8"
   },
   {
     "anio": 2022,
@@ -5640,7 +5674,8 @@
     "cif": "G87239604",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10; 12"
   },
   {
     "anio": 2022,
@@ -5649,7 +5684,8 @@
     "cif": "G45875911",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "8; 12"
   },
   {
     "anio": 2022,
@@ -5658,7 +5694,8 @@
     "cif": "G45839198",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5667,7 +5704,8 @@
     "cif": "G16590440",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5676,7 +5714,8 @@
     "cif": "G88350715",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 6; 12"
   },
   {
     "anio": 2022,
@@ -5685,7 +5724,8 @@
     "cif": "G67691741",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5694,7 +5734,8 @@
     "cif": "G01708437",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2"
   },
   {
     "anio": 2022,
@@ -5703,7 +5744,8 @@
     "cif": "G76258912",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 10"
   },
   {
     "anio": 2022,
@@ -5712,7 +5754,8 @@
     "cif": "G90180365",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10"
   },
   {
     "anio": 2022,
@@ -5721,7 +5764,8 @@
     "cif": "G72487747",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4; 6; 7; 8; 12"
   },
   {
     "anio": 2022,
@@ -5730,7 +5774,8 @@
     "cif": "G67610634",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "6; 7"
   },
   {
     "anio": 2022,
@@ -5739,7 +5784,8 @@
     "cif": "G66262676",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 6; 7; 8"
   },
   {
     "anio": 2022,
@@ -5748,7 +5794,8 @@
     "cif": "G25842337",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 10"
   },
   {
     "anio": 2022,
@@ -5757,7 +5804,8 @@
     "cif": "G87470852",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5766,7 +5814,8 @@
     "cif": "G05377932",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5775,7 +5824,8 @@
     "cif": "G02677292",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5784,7 +5834,8 @@
     "cif": "G40254955",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 8; 12; 13"
   },
   {
     "anio": 2022,
@@ -5793,7 +5844,8 @@
     "cif": "G90263708",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 4; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5802,7 +5854,8 @@
     "cif": "G23763535",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 4; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5811,7 +5864,8 @@
     "cif": "G67453621",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 4; 7; 8; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5820,7 +5874,8 @@
     "cif": "G19611268",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 6; 7; 8; 10; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5829,7 +5884,8 @@
     "cif": "G16809402",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 8; 11; 12; 13"
   },
   {
     "anio": 2022,
@@ -5838,7 +5894,8 @@
     "cif": "G88016456",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 10"
   },
   {
     "anio": 2022,
@@ -5847,7 +5904,8 @@
     "cif": "G05261193",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 10"
   },
   {
     "anio": 2022,
@@ -5856,7 +5914,8 @@
     "cif": "G67544544",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 6; 7; 9; 10; 12"
   },
   {
     "anio": 2022,
@@ -5865,7 +5924,8 @@
     "cif": "G65419806",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "2; 4; 6; 7; 9; 10; 11; 13"
   },
   {
     "anio": 2022,

@@ -308,8 +308,10 @@ def cargar_epas(archivos):
                 "estado": estado,
                 "linea": item.get("linea") or None,
                 "tramo": None,           # las EPAs no tienen tramo
-                "causa_exclusion": None, # las EPAs sí tienen causas de exclusión en el BOE,
-                                         # pero no se capturan aún (mejora futura)
+                # Causa de exclusión capturada del BOE: código(s) en 2022-2025,
+                # texto literal en 2021 (ese anexo no usa códigos). None en el resto.
+                "causa_exclusion": (str(item["causa_exclusion"]).strip()
+                                    if item.get("causa_exclusion") else None),
                 "provincia": None,       # no derivable de CIF de asociación (mejora futura)
                 "ccaa": None,            # idem
                 "periodo_meses": 6 if anio_fallback in (2023, 2024) else 12,
