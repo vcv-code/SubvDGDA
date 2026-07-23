@@ -217,7 +217,7 @@
                 <!-- ─────────────────────────────────────────────────
                      FILA 3: NUEVOS VS RECURRENTES + TOP BENEFICIARIOS
                      ───────────────────────────────────────────────── -->
-                <div class="grid-2">
+                <div class="grid-2 mb-lg">
 
                     <!-- Nuevos vs recurrentes por año -->
                     <div class="card-grafico">
@@ -280,6 +280,72 @@
                     </div>
 
                 </div><!-- /grid-2 fila 3 -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 4: EXCLUSIONES — EVOLUCIÓN Y CAUSAS
+                     Análisis agregado; el buscador de exclusiones
+                     (buscador.html) muestra solo EELL, pero los datos
+                     EPA están completos en la API.
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2 mb-lg">
+
+                    <!-- Exclusiones por año -->
+                    <div class="card-grafico card-grafico--exclusiones">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Exclusiones por año</p>
+                                <p class="card-grafico__subtitulo">
+                                    Nº de solicitudes EPA excluidas en cada convocatoria
+                                </p>
+                            </div>
+
+                            <button class="btn-descargar-png" id="btn-dl-exclusiones-anio"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de exclusiones por año como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container" id="grafico-exclusiones-anio-container">
+                            <p class="estado-carga" id="exclusiones-anio-pendiente">
+                                Cargando...
+                            </p>
+                            <canvas id="grafico-exclusiones-anio" role="img" style="display:none;"
+                                aria-label="Gráfico de solicitudes EPA excluidas por año"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Causas más frecuentes (último año) -->
+                    <div class="card-grafico card-grafico--exclusiones">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Causas de exclusión más frecuentes</p>
+                                <!--
+                                    El año lo pone estadisticas-epas.js: cada convocatoria
+                                    usa su propia numeración de causas, así que la gráfica
+                                    muestra SOLO el último año (no son mezclables).
+                                -->
+                                <p class="card-grafico__subtitulo" id="causas-frecuentes-sub">
+                                    Top de causas de la última convocatoria
+                                </p>
+                            </div>
+
+                            <button class="btn-descargar-png" id="btn-dl-causas-frecuentes"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de causas de exclusión como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container" id="grafico-causas-frecuentes-container">
+                            <p class="estado-carga" id="causas-frecuentes-pendiente">
+                                Cargando...
+                            </p>
+                            <canvas id="grafico-causas-frecuentes" role="img" style="display:none;"
+                                aria-label="Gráfico de causas de exclusión más frecuentes EPA"></canvas>
+                        </div>
+                    </div>
+
+                </div><!-- /fila 4 exclusiones -->
 
             </div><!-- /contenedor -->
         </section>

@@ -166,7 +166,7 @@
                             <div>
                                 <p class="card-grafico__titulo">Top provincias</p>
                                 <p class="card-grafico__subtitulo">
-                                    Importe total concedido por provincia (EELL)
+                                    Importe total concedido por provincia
                                 </p>
                             </div>
                             
@@ -195,7 +195,7 @@
                             <div>
                                 <p class="card-grafico__titulo">Tramos de importe concedido</p>
                                 <p class="card-grafico__subtitulo">
-                                    Nº de concesiones EELL por tramo de importe
+                                    Nº de concesiones a EELL por tramos de importe
                                 </p>
                             </div>
 
@@ -231,9 +231,9 @@
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">Top 5 CCAA por subvención</p>
+                                <p class="card-grafico__titulo">Top 5 CCAA con importes subvención</p>
                                 <p class="card-grafico__subtitulo">
-                                    Importe total concedido por comunidad autónoma
+                                    Máximos importes totales concedidos por comunidad autónoma
                                 </p>
                             </div>
                         </div>
@@ -254,9 +254,9 @@
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
                             <div>
-                                <p class="card-grafico__titulo">Top 5 CCAA por ayuntamientos</p>
+                                <p class="card-grafico__titulo">Top 5 CCAA con más ayuntamientos</p>
                                 <p class="card-grafico__subtitulo">
-                                    Comunidades con más ayuntamientos beneficiados
+                                    Comunidades con más ayuntamientos beneficiados con subvenciones
                                 </p>
                             </div>
                         </div>
@@ -276,6 +276,71 @@
                     </div>
 
                 </div><!-- /fila 4 top5 -->
+
+
+                <!-- ─────────────────────────────────────────────────
+                     FILA 5: EXCLUSIONES — EVOLUCIÓN Y CAUSAS
+                     Complementa al buscador de exclusiones (buscador.html):
+                     aquí el análisis agregado, allí el detalle por entidad.
+                     ───────────────────────────────────────────────── -->
+                <div class="grid-2 mb-lg">
+
+                    <!-- Exclusiones por año -->
+                    <div class="card-grafico card-grafico--exclusiones">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Exclusiones por año</p>
+                                <p class="card-grafico__subtitulo">
+                                    Nº de solicitudes EELL excluidas en cada convocatoria
+                                </p>
+                            </div>
+
+                            <button class="btn-descargar-png" id="btn-dl-exclusiones-anio"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de exclusiones por año como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container" id="grafico-exclusiones-anio-container">
+                            <p class="estado-carga" id="exclusiones-anio-pendiente">
+                                Cargando...
+                            </p>
+                            <canvas id="grafico-exclusiones-anio" role="img" style="display:none;"
+                                aria-label="Gráfico de solicitudes EELL excluidas por año"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Causas más frecuentes (último año) -->
+                    <div class="card-grafico card-grafico--exclusiones">
+                        <div class="card-grafico__cabecera">
+                            <div>
+                                <p class="card-grafico__titulo">Causas de exclusión más frecuentes</p>
+                                <!--
+                                    El año lo pone estadisticas-eell.js: cada convocatoria
+                                    usa su propia numeración de causas, así que la gráfica
+                                    muestra SOLO el último año (no son mezclables).
+                                -->
+                                <p class="card-grafico__subtitulo" id="causas-frecuentes-sub">
+                                    Top de causas de la última convocatoria
+                                </p>
+                            </div>
+
+                            <button class="btn-descargar-png" id="btn-dl-causas-frecuentes"
+                                    style="display:none;"
+                                    aria-label="Descargar gráfico de causas de exclusión como PNG">
+                                ↓ PNG
+                            </button>
+                        </div>
+                        <div class="chart-container" id="grafico-causas-frecuentes-container">
+                            <p class="estado-carga" id="causas-frecuentes-pendiente">
+                                Cargando...
+                            </p>
+                            <canvas id="grafico-causas-frecuentes" role="img" style="display:none;"
+                                aria-label="Gráfico de causas de exclusión más frecuentes EELL"></canvas>
+                        </div>
+                    </div>
+
+                </div><!-- /fila 5 exclusiones -->
 
             </div><!-- /contenedor -->
         </section>
