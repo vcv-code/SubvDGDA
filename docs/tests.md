@@ -84,7 +84,7 @@ pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 
 ### Tabla completa de tests
 
-> **Pendiente de actualizar:** esta tabla numerada es una foto que se quedó en 199 filas; la suite real ya tiene **347 funciones**. Falta regenerarla (y añadir, entre otros, los tests de tramos de importe y recurrencia EELL). Al hacerlo conviene automatizar la extracción desde `pytest --collect-only` para no volver a desincronizarla.
+> **Pendiente de actualizar:** esta tabla numerada es una foto que se quedó en 199 filas; la suite real ya tiene **375 funciones**. Falta regenerarla (y añadir, entre otros, los tests de tramos de importe y recurrencia EELL). Al hacerlo conviene automatizar la extracción desde `pytest --collect-only` para no volver a desincronizarla.
 
 | # | Archivo | Tipo | Caja | Qué comprueba |
 |---|---|---|---|---|
@@ -278,6 +278,8 @@ Verifica que `/convocatorias/` responde correctamente, que devuelve una lista JS
 #### test_solicitudes.py
 
 Inserta 3 solicitudes de prueba con dos beneficiarios distintos (EPA/asociación y EELL/entidad local) y comprueba filtros, paginación y búsqueda. Incluye el filtro `?cif=` (añadido en la fase 8b) y verifica que la respuesta tiene el formato `{"total": N, "resultados": [...]}` que permite al frontend mostrar "Página X de Y".
+
+Incluye además el bloque de **causas de exclusión** (fixture `db_con_causas`): causa en la respuesta, filtro `?causa=` con match por token exacto ("6" no casa con "16" ni con "6.a"), códigos con punto (`6.a`), estructura del catálogo `GET /solicitudes/causas`, su Cache-Control de 24 h y la columna `causa_exclusion` en el CSV de exportación.
 
 **Nota:** estos tests se actualizaron durante el desarrollo cuando se cambió el formato de respuesta de lista directa a objeto paginado. El test `test_solicitudes_devuelve_lista` se renombró a `test_solicitudes_estructura_paginada` y se adaptaron todos los que accedían a `response.json()` directamente como lista.
 
