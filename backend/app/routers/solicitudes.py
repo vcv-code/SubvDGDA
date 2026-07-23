@@ -1,13 +1,13 @@
 import csv
 import io
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import StreamingResponse
 from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 from typing import Optional
 from ..db import get_db
-from ..models import Solicitud, Convocatoria, Beneficiario, Concesion
-from ..schemas import SolicitudOut, SolicitudesPageOut
+from ..models import Solicitud, Convocatoria, Beneficiario, Concesion, CausaExclusion
+from ..schemas import SolicitudOut, SolicitudesPageOut, CausaExclusionOut
 
 router = APIRouter(prefix="/solicitudes", tags=["solicitudes"])
 
@@ -36,6 +36,7 @@ def listar_solicitudes(
     linea:    Optional[str] = Query(None, description="Línea de actuación: animales_abandonados o colonias_felinas (EPA 2024 y 2025)"),
     provincia: Optional[str] = Query(None, description="Provincia (solo EELL)"),
     ccaa:     Optional[str] = Query(None, description="Comunidad autónoma (solo EELL)"),
+    causa:    Optional[str] = Query(None, max_length=10, description="Código de causa de exclusión (leyenda por tipo+año en GET /solicitudes/causas)"),
     cif:      Optional[str] = Query(None, description="CIF exacto del beneficiario"),
     buscar:   Optional[str] = Query(None, max_length=200, description="Búsqueda parcial por nombre de entidad (stopwords ignoradas)"),
     orden:  Optional[str] = Query("entidad-az", description="Orden: entidad-az, importe-desc, importe-asc"),
@@ -71,6 +72,16 @@ def listar_solicitudes(
         consulta = consulta.filter(Solicitud.provincia == provincia)
     if ccaa:
         consulta = consulta.filter(Solicitud.ccaa == ccaa)
+    if causa:
+        # causa_exclusion guarda código(s) separados por ";" ("2;6.a").
+        # Match por token exacto para que "6" no case con "16" ni con "6.a".
+        # LIKE portable (MariaDB y SQLite de los tests), sin funciones propietarias.
+        consulta = consulta.filter(or_(
+            Solicitud.causa_exclusion == causa,
+            Solicitud.causa_exclusion.like(f"{causa};%"),
+            Solicitud.causa_exclusion.like(f"%;{causa}"),
+            Solicitud.causa_exclusion.like(f"%;{causa};%"),
+        ))
     if cif:
         consulta = consulta.filter(Beneficiario.cif == cif)
     if buscar:
@@ -124,9 +135,32 @@ def listar_solicitudes(
             ccaa           = s.ccaa,
             es_agrupacion  = bool(s.concesion and s.concesion.agrupacion),
             tramo          = s.concesion.tramo if s.concesion else None,
+            causa_exclusion = s.causa_exclusion,
         ))
 
     return SolicitudesPageOut(total=total, resultados=resultado)
+
+
+@router.get("/causas", response_model=dict[str, dict[str, dict[str, CausaExclusionOut]]])
+def catalogo_causas(response: Response, db: Session = Depends(get_db)):
+    """
+    Catálogo código → motivo de las causas de exclusión, agrupado por tipo y año:
+    `{"epa": {"2024": {"3.1": {"motivo": ..., "articulo": ...}, ...}}, "eell": {...}}`.
+    Cada convocatoria usa su propia numeración, por eso la leyenda va por (tipo, año).
+    Cache-Control: 24 h — es un catálogo histórico que no cambia.
+    """
+    response.headers["Cache-Control"] = "public, max-age=86400"
+
+    filas = (
+        db.query(CausaExclusion)
+        .order_by(CausaExclusion.tipo_convoc, CausaExclusion.anio, CausaExclusion.id_causa)
+        .all()
+    )
+    catalogo: dict = {}
+    for f in filas:
+        catalogo.setdefault(f.tipo_convoc, {}).setdefault(str(f.anio), {})[f.codigo] = \
+            CausaExclusionOut(motivo=f.motivo, articulo=f.articulo)
+    return catalogo
 
 
 @router.get("/export")
@@ -137,6 +171,7 @@ def exportar_csv(
     linea:     Optional[str] = Query(None),
     provincia: Optional[str] = Query(None),
     ccaa:      Optional[str] = Query(None),
+    causa:     Optional[str] = Query(None, max_length=10),
     cif:       Optional[str] = Query(None),
     buscar:    Optional[str] = Query(None),
     db: Session = Depends(get_db),
@@ -168,6 +203,16 @@ def exportar_csv(
         consulta = consulta.filter(Solicitud.provincia == provincia)
     if ccaa:
         consulta = consulta.filter(Solicitud.ccaa == ccaa)
+    if causa:
+        # causa_exclusion guarda código(s) separados por ";" ("2;6.a").
+        # Match por token exacto para que "6" no case con "16" ni con "6.a".
+        # LIKE portable (MariaDB y SQLite de los tests), sin funciones propietarias.
+        consulta = consulta.filter(or_(
+            Solicitud.causa_exclusion == causa,
+            Solicitud.causa_exclusion.like(f"{causa};%"),
+            Solicitud.causa_exclusion.like(f"%;{causa}"),
+            Solicitud.causa_exclusion.like(f"%;{causa};%"),
+        ))
     if cif:
         consulta = consulta.filter(Beneficiario.cif == cif)
     if buscar:
@@ -201,7 +246,7 @@ def exportar_csv(
     writer = csv.writer(output)
     writer.writerow(["anio", "tipo", "num_expediente", "entidad", "cif",
                      "estado", "importe", "linea", "tramo", "provincia", "ccaa",
-                     "puntuacion", "es_agrupacion"])
+                     "puntuacion", "es_agrupacion", "causa_exclusion"])
     for s in solicitudes:
         writer.writerow([
             s.convocatoria.anio_convocatoria,
@@ -217,6 +262,7 @@ def exportar_csv(
             s.ccaa or "",
             float(s.puntuacion) if s.puntuacion is not None else "",
             bool(s.concesion and s.concesion.agrupacion),
+            s.causa_exclusion or "",
         ])
 
     output.seek(0)
