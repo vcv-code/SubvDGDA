@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS solicitudes (
                    ) NOT NULL                             COMMENT 'no_beneficiaria = admitida pero fuera del cupo (EELL todos los años; EPA desde 2024)',
     provincia      VARCHAR(100)     NULL                   COMMENT 'Provincia derivada del CIF. Solo disponible para EELL; NULL para EPA',
     ccaa           VARCHAR(100)     NULL                   COMMENT 'Comunidad autónoma derivada del CIF. Solo disponible para EELL; NULL para EPA',
+    causa_exclusion VARCHAR(100)    NULL                   COMMENT 'Código(s) de causa de exclusión separados por ";" (leyenda en causas_exclusion). Solo estado=excluida',
     PRIMARY KEY (id_solic),
     -- Clave compuesta: el mismo num_expediente puede aparecer en convocatorias distintas
     -- (entidades que desistieron un año y volvieron al siguiente).
@@ -80,6 +81,23 @@ CREATE TABLE IF NOT EXISTS solicitudes (
     INDEX idx_solic_ccaa      (ccaa),
     CONSTRAINT fk_solic_convoc FOREIGN KEY (id_convoc) REFERENCES convocatorias (id_convoc),
     CONSTRAINT fk_solic_benef  FOREIGN KEY (id_benef)  REFERENCES beneficiarios  (id_benef)
+);
+
+-- ------------------------------------------------------------
+-- CAUSAS DE EXCLUSIÓN (catálogo)
+-- Leyenda código -> motivo por (tipo, año). Cada convocatoria usa su propia
+-- numeración, así que el código solo tiene sentido junto a tipo y año.
+-- Se carga desde data/final/causas_exclusion.json en cargar_dataset.py
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS causas_exclusion (
+    id_causa    INT              NOT NULL AUTO_INCREMENT,
+    tipo_convoc ENUM('epa','eell') NOT NULL,
+    anio        INT              NOT NULL,
+    codigo      VARCHAR(10)      NOT NULL                  COMMENT 'Código tal como aparece en la resolución (1, 6.a, 3.1, B...)',
+    motivo      VARCHAR(500)     NOT NULL                  COMMENT 'Texto del motivo de exclusión',
+    articulo    VARCHAR(20)      NULL                      COMMENT 'Artículo de la convocatoria, si la leyenda lo indica',
+    PRIMARY KEY (id_causa),
+    UNIQUE KEY uq_causa (tipo_convoc, anio, codigo)
 );
 
 -- ------------------------------------------------------------

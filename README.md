@@ -252,9 +252,12 @@ XML / PDF / Excel BOE (DGDA)
 JSON por año (data/processed/)
       ↓  unificar_datasets.py
 data/final/dataset_unificado.json
+      ↓  normalizar_causa_exclusion.py   (códigos de causa canónicos ";")
+data/final/dataset_unificado.json
       ↓  cargar_dataset.py
-MariaDB — 6 pasos: convocatorias → beneficiarios → solicitudes
+MariaDB — 7 pasos: convocatorias → beneficiarios → solicitudes
           → concesiones → agrupaciones → agrupacion_miembros
+          → causas_exclusion (catálogo código→motivo)
 ```
 
 Fuentes por tipo:
@@ -282,7 +285,7 @@ Los scripts transforman los datos crudos (XMLs, PDFs, Excel del BOE) en el datas
 
 ### Procesamiento
 
-`scripts/data_processing/` — parsers para cada tipo de fuente (EPA XML, EELL PDF/Excel), normalización de estados, unificación del dataset y carga en la base de datos (`cargar_dataset.py`).
+`scripts/data_processing/` — parsers para cada tipo de fuente (EPA XML, EELL PDF/Excel), normalización de estados, unificación del dataset, normalización de las causas de exclusión a códigos canónicos (`normalizar_causa_exclusion.py`, guiada por el catálogo `data/final/causas_exclusion.json`) y carga en la base de datos (`cargar_dataset.py`).
 
 ---
 
@@ -324,7 +327,7 @@ Campos:
 - `importe` → importe concedido (0 si no aplica)
 - `estado` → `concedida`, `no_beneficiaria`, `excluida`, `desistida`
 - `tramo` → 1, 2 o 3 (solo EELL 2025 concedidas; `null` en el resto)
-- `causa_exclusion` → código de causa (solo excluidas EELL; `null` en el resto)
+- `causa_exclusion` → código(s) de causa separados por `;` (todas las excluidas, EPA y EELL; `null` en el resto). La leyenda código→motivo por tipo y año está en `data/final/causas_exclusion.json`
 - `provincia` → provincia de la entidad, derivada del CIF (solo EELL; `null` para EPA)
 - `ccaa` → comunidad autónoma, derivada del CIF (solo EELL; `null` para EPA)
 - `periodo_meses` → duración del periodo subvencionable: `6` (EPA 2023 y 2024) o `12` (resto)
@@ -390,7 +393,7 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 - Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/registro` (5 req/min, burst 3), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2)
 - Cabeceras de seguridad en todas las respuestas: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
 - SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
-- Cabeceras `Cache-Control`: `/convocatorias/` (1 día) y `/estadisticas/` (1 hora)
+- Cabeceras `Cache-Control`: `/convocatorias/` (1 día), `/estadisticas/` (1 hora) y `/solicitudes/causas` (1 día)
 - Parámetros de búsqueda validados (`buscar` máx. 200 caracteres, `limite` entre 1 y 500); exportación CSV limitada a 5.000 registros
 - Honeypot en el registro: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin crear cuenta
 - Anti-enumeración en registro: intentar crear una cuenta con un email ya existente devuelve `201` sin crear duplicado — igual que `/auth/recuperar`, la respuesta no revela si el email estaba registrado
@@ -441,9 +444,9 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | Página | Descripción |
 |--------|-------------|
 | `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año). Incluye enlaces a las **bases reguladoras** oficiales |
-| `buscador.html` | Buscador de solicitudes con filtros (incluida la **línea de subvención** en EPA 2024/2025), búsqueda por nombre de entidad o nº de expediente, paginación (con accesos a primera/última página), ordenación server-side, estado vacío con sugerencias y exportación CSV con nombre dinámico según filtros activos |
-| `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios |
-| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades y mapa (en exclusivo) |
+| `buscador.html` | Buscador de solicitudes con filtros (incluida la **línea de subvención** en EPA 2024/2025), búsqueda por nombre de entidad o nº de expediente, paginación (con accesos a primera/última página), ordenación server-side, estado vacío con sugerencias y exportación CSV con nombre dinámico según filtros activos. Debajo, **buscador de exclusiones (EELL)**: entidades locales excluidas con su causa oficial — filtro de causa dependiente del año (cada convocatoria usa su propia numeración), chip con los códigos y modal con el motivo completo de cada uno |
+| `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios, **exclusiones por año y causas más frecuentes** |
+| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y mapa (en exclusivo) |
 | `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
@@ -927,7 +930,7 @@ El sistema tiene tres capas independientes. Cada una se actualiza de forma difer
 
 **Caché del navegador** (JS/CSS): si el navegador muestra una versión antigua del frontend después de un cambio, Ctrl+Shift+R fuerza la recarga ignorando la caché local. En DevTools → Network → "Disable cache" para depurar sin caché.
 
-**Caché HTTP de la API** (Cache-Control): los endpoints `/convocatorias/` (1 día) y `/estadisticas/` (1 hora) devuelven cabeceras `Cache-Control`. FastAPI no cachea internamente — los datos siempre vienen de la BD. Si se actualiza la BD y se quiere que el navegador vea los nuevos datos antes de que expire la caché, basta con hacer Ctrl+Shift+R.
+**Caché HTTP de la API** (Cache-Control): los endpoints `/convocatorias/` (1 día), `/estadisticas/` (1 hora) y `/solicitudes/causas` (1 día) devuelven cabeceras `Cache-Control`. FastAPI no cachea internamente — los datos siempre vienen de la BD. Si se actualiza la BD y se quiere que el navegador vea los nuevos datos antes de que expire la caché, basta con hacer Ctrl+Shift+R.
 
 **Volumen de la BD**: `docker compose down` para los contenedores pero **conserva** el volumen con todos los datos. Solo `docker compose down -v` borra el volumen — usar únicamente para reset total desde cero.
 
@@ -1118,6 +1121,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Interfaz web
 
 - Buscador con ordenación server-side; exportación CSV
+- Buscador de exclusiones EELL con causa oficial (chip de códigos + modal con motivos, leyenda servida por la API)
 - Banner de convocatorias con estado de plazo (abierto/cerrado) calculado automáticamente
 - Panel de administración completo: gestión paginada de usuarios, visor de logs (de la app y del cron) y edición del fin de plazo de convocatorias
 - Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
@@ -1128,7 +1132,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 366 pruebas automáticas en verde (pytest)
+- 375 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1165,7 +1169,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **`fetchpriority="high"`** en la imagen hero — mejora el LCP (Largest Contentful Paint)
 - **`loading="lazy"`** en todas las imágenes fuera del viewport inicial
 - **Caché Nginx** — imágenes y fuentes: `expires 1y`; CSS y JS: `expires 1h`
-- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora
+- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora, `/solicitudes/causas` 1 día
 - **Imágenes Docker slim** — `python:3.12-slim` (~75 MB vs ~900 MB de la imagen completa); `--no-cache-dir` en pip
 
 ### Calidad y mantenibilidad
@@ -1380,6 +1384,8 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 
 - **Formatos de expediente heterogéneos en EELL 2025**: el BOE XML de 2025 usa el formato `EXP/NNNNN` (sin año) para 23 entidades, mientras que el Excel principal usa `EXP2025/NNNNN`. No se trata de duplicados de las mismas entidades — son registros distintos que el BOE referencia con diferente esquema de numeración. Todas son `excluida` o `no_beneficiaria`, sin impacto económico. La deduplicación no puede unirlas automáticamente porque los números no coinciden entre fuentes.
 
+- **Cofinanciación EELL — descartada por dato incompleto e incomparable entre años**: la aportación propia de cada entidad no se incorpora al dataset porque las fuentes no la recogen de forma consistente. En **2023** la resolución incluye una columna «Porcentaje de cofinanciación» pero está **vacía en 558 de 593 entidades** (solo 35 con valor). En **2024** la resolución de concesión **no la trae**: el presupuesto de gastos del que podría derivarse el importe cofinanciado (gasto − subvención) está en la «relación de admitidas», un documento aparte que no se procesa. En **2025** figura en el XML, pero con otro formato. Incorporarla daría un campo casi vacío en 2023, ausente en 2024 y con métricas distintas (**%** en 2023 vs **€** en 2024), sin valor analítico comparable, por lo que se descarta.
+
 ---
 
 ## Mejoras futuras
@@ -1389,13 +1395,12 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 ### Datos y análisis
 
 - **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando infosubvenciones.es. No afecta a ninguna funcionalidad actual.
-- **Cofinanciación EELL** — aporta puntos en la evaluación pero no modifica el importe concedido. Solo disponible en el ANEXO V del XML 2025; no existe en los PDF de 2023/2024.
-- **Causas de exclusión EPA** — el BOE las incluye pero con un formato diferente al de EELL; requieren un parser específico.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
 - **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
 
 ### Funcionalidades y UX
 
+- **Mostrar exclusiones EPA en el buscador de exclusiones** — los datos ya están completos en BD y API (`/solicitudes/?estado=excluida&tipo=epa` + leyenda en `/solicitudes/causas`); por decisión de producto la sección del buscador solo muestra EELL, donde la causa aporta más análisis (CCAA derivable). Añadir EPA sería reactivar el filtro de tipo en la sección.
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
 - **Login con terceros (OAuth)** — integración con Google.

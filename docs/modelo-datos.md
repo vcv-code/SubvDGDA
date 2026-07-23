@@ -35,7 +35,7 @@ Los documentos oficiales publicados por la DGDA contienen:
 - importes concedidos
 - puntuaciones
 - entidades beneficiarias
-- causas de exclusión (solo en EELL: 2023, 2024 y 2025)
+- causas de exclusión (EELL 2023–2025 y EPA 2021–2025; leyenda propia por convocatoria)
 - tramos (solo en EELL 2025)
 
 ---
@@ -64,11 +64,7 @@ Las entidades del **modelo implementado** son:
 - Concesiones
 - Agrupaciones de entidades locales
 - Miembros de agrupación
-
-Adicionalmente, se contemplan como **entidades de fase futura** (presentes en el diagrama conceptual pero no implementadas en el modelo físico actual):
-
-- Causas de exclusión
-- Solicitud_causas (tabla intermedia)
+- Causas de exclusión (catálogo código→motivo por tipo y año; ver §4.7)
 
 ---
 
@@ -131,6 +127,7 @@ Campos principales:
 - num_expediente — UNIQUE. Para registros EPA sin número de expediente real se generan IDs sintéticos con formato `SIN_EXP_YYYY_NNN`.
 - puntuacion
 - estado — ENUM: `concedida`, `no_beneficiaria`, `excluida`, `desistida`
+- causa_exclusion — código(s) de causa separados por `;` (p. ej. `2;6.a`); solo para `estado = excluida`, `NULL` en el resto. La leyenda código→motivo está en la tabla `causas_exclusion` (§4.7)
 
 Los cuatro valores posibles del campo `estado` cubren los distintos resultados del proceso administrativo:
 
@@ -187,18 +184,22 @@ Campos principales:
 
 ---
 
-### 4.7 Causas de exclusión *(fase futura)*
+### 4.7 Causas de exclusión
 
-Las solicitudes excluidas pueden haberlo sido por distintos motivos, codificados numéricamente en los documentos oficiales. Esta entidad y la tabla intermedia `solicitud_causas` están contempladas en el modelo conceptual pero **no implementadas en el modelo físico actual**.
+Las solicitudes excluidas indican en los documentos oficiales el/los motivo(s) de exclusión, codificados. La entidad **causas_exclusion** es el **catálogo** código→motivo, y cada convocatoria (tipo + año) usa su propia numeración, por lo que el código solo tiene sentido junto a tipo y año.
 
-Campos previstos:
+Campos:
 
 - id_causa (PK)
-- descrip_exclu
+- tipo_convoc — ENUM: `epa`, `eell`
+- anio
+- codigo — tal como aparece en la resolución (`1`, `6.a`, `3.1`, `B`…) · UNIQUE junto a (tipo_convoc, anio)
+- motivo
+- articulo — artículo de la convocatoria, si la leyenda lo indica (`NULL` si no)
 
-La relación prevista es muchos a muchos entre `solicitudes` y `causas_exclusion`, resuelta mediante la tabla intermedia `solicitud_causas` con campos `id_soli` (FK) e `id_causa` (FK).
+El catálogo se carga desde `data/final/causas_exclusion.json` (paso 7 de `cargar_dataset.py`), transcrito de las tablas de referencia revisadas manualmente y cotejado con los anexos oficiales del BOE (que contienen huecos y erratas). Cubre EPA 2021–2025 y EELL 2023–2025 (137 causas).
 
-> **Nota:** Las causas de exclusión también están presentes en las resoluciones EPA del BOE, aunque con un formato diferente al de las EELL. Su extracción e incorporación al modelo para las EPA está contemplada como mejora futura adicional.
+> **Decisión de diseño frente al modelo conceptual inicial:** el diagrama conceptual preveía una relación N:M `solicitudes`↔`causas_exclusion` resuelta con una tabla intermedia `solicitud_causas`. Se implementó en su lugar el campo `solicitudes.causa_exclusion` con los códigos canónicos separados por `;` + el catálogo como tabla de consulta, sin tabla intermedia. Motivo: es dato histórico de solo lectura (nunca se actualiza causa a causa), el volumen es pequeño (643 excluidas) y la API resuelve el filtrado por código con match por token exacto, con lo que la tabla intermedia solo añadiría complejidad de carga y joins sin aportar funcionalidad.
 
 ---
 

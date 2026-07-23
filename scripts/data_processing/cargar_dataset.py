@@ -10,6 +10,8 @@ Orden de inserción (respeta FKs):
   4. concesiones         → solo registros con estado='concedida'
   5. agrupaciones        → una fila por concesión que sea agrupación EELL
   6. agrupacion_miembros → una fila por municipio miembro de cada agrupación
+  7. causas_exclusion    → catálogo código→motivo por (tipo, año), desde
+                           data/final/causas_exclusion.json
 
 Uso:
   Desde la raíz del proyecto:
@@ -264,10 +266,11 @@ def cargar_solicitudes(cursor, registros, mapa_convoc, mapa_benef):
                 continue
 
         cursor.execute(
-            "INSERT INTO solicitudes (id_convoc, id_benef, num_expediente, puntuacion, estado, provincia, ccaa) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO solicitudes (id_convoc, id_benef, num_expediente, puntuacion, estado, provincia, ccaa, causa_exclusion) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
             (id_convoc, id_benef, num_exp, puntuacion, estado,
-             r.get("provincia") or None, r.get("ccaa") or None),
+             r.get("provincia") or None, r.get("ccaa") or None,
+             r.get("causa_exclusion") or None),
         )
         mapa_solic[i] = cursor.lastrowid
         insertadas += 1
@@ -393,6 +396,44 @@ def cargar_agrupaciones(cursor, registros, mapa_benef, mapa_conces):
 
 
 # ──────────────────────────────────────────────
+# Paso 6: Catálogo de causas de exclusión
+# ──────────────────────────────────────────────
+
+def cargar_causas_exclusion(cursor):
+    """Carga data/final/causas_exclusion.json en la tabla causas_exclusion.
+    Idempotente: omite las (tipo, anio, codigo) que ya existan."""
+    ruta = os.path.join(os.path.dirname(__file__), "../../data/final/causas_exclusion.json")
+    ruta = os.path.normpath(ruta)
+
+    with open(ruta, encoding="utf-8") as f:
+        catalogo = json.load(f)
+
+    insertadas = 0
+    omitidas   = 0
+    for tipo, anios in catalogo.items():
+        if tipo.startswith("_"):        # bloque _meta
+            continue
+        for anio, causas in anios.items():
+            for codigo, info in causas.items():
+                cursor.execute(
+                    "SELECT id_causa FROM causas_exclusion "
+                    "WHERE tipo_convoc = %s AND anio = %s AND codigo = %s",
+                    (tipo, int(anio), codigo),
+                )
+                if cursor.fetchone():
+                    omitidas += 1
+                    continue
+                cursor.execute(
+                    "INSERT INTO causas_exclusion (tipo_convoc, anio, codigo, motivo, articulo) "
+                    "VALUES (%s, %s, %s, %s, %s)",
+                    (tipo, int(anio), codigo, info["motivo"], info.get("articulo")),
+                )
+                insertadas += 1
+
+    print(f"  Causas de exclusión: {insertadas} insertadas, {omitidas} ya existían")
+
+
+# ──────────────────────────────────────────────
 # Main
 # ──────────────────────────────────────────────
 
@@ -414,22 +455,25 @@ def main():
 
     try:
         with conn.cursor() as cursor:
-            print("\n[1/6] Convocatorias...")
+            print("\n[1/7] Convocatorias...")
             mapa_convoc = cargar_convocatorias(cursor, registros)
 
-            print("[2/6] Beneficiarios...")
+            print("[2/7] Beneficiarios...")
             mapa_benef = cargar_beneficiarios(cursor, registros)
 
-            print("[3/6] Solicitudes...")
+            print("[3/7] Solicitudes...")
             mapa_solic = cargar_solicitudes(cursor, registros, mapa_convoc, mapa_benef)
 
-            print("[4/6] Concesiones...")
+            print("[4/7] Concesiones...")
             mapa_conces = cargar_concesiones(cursor, registros, mapa_solic)
 
-            print("[5/6] Agrupaciones y miembros...")
+            print("[5/7] Agrupaciones y miembros...")
             cargar_agrupaciones(cursor, registros, mapa_benef, mapa_conces)
 
-            print("[6/6] Fechas de resolución conocidas...")
+            print("[6/7] Catálogo de causas de exclusión...")
+            cargar_causas_exclusion(cursor)
+
+            print("[7/7] Fechas de resolución conocidas...")
             resoluciones = [
                 ("epa",  2021, "2022-01-14"),
                 ("epa",  2022, "2022-12-23"),

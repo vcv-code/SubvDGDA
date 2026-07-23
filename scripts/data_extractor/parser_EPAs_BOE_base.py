@@ -70,6 +70,8 @@ def mapear_indices(headers):
             mapa["cif"] = i
         elif "punt" in h or "ptos" in h or "valoraci" in h:
             mapa["puntuacion"] = i
+        elif "motiv" in h or "causa" in h or "criterio" in h:
+            mapa["causa"] = i
     return mapa
 
 
@@ -202,6 +204,13 @@ def parsear_boe_epa_base(url, anio):
 
                 if "importe" in mapa:
                     data["importe"] = parse_float(safe_get(celdas, mapa["importe"]))
+
+                # Causa de exclusión/desestimación: solo la tienen los anexos de
+                # excluidas/desestimadas (columna "Motivo de desestimación" /
+                # "Causas de exclusión"). Aditivo: no afecta a los concedidos.
+                if "causa" in mapa:
+                    causa = limpiar_texto(safe_get(celdas, mapa["causa"]))
+                    data["causa_exclusion"] = causa or None
 
                 # Regla clave: si hay importe → concedida (independientemente del estado del párrafo)
                 if data["importe"] is not None:

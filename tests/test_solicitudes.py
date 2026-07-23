@@ -112,7 +112,7 @@ def test_exportar_csv_cabecera(client):
     cabecera = next(reader)
     assert cabecera == ["anio", "tipo", "num_expediente", "entidad", "cif",
                         "estado", "importe", "linea", "tramo", "provincia", "ccaa",
-                        "puntuacion", "es_agrupacion"]
+                        "puntuacion", "es_agrupacion", "causa_exclusion"]
 
 
 def test_exportar_csv_con_datos(db_con_datos, client):
@@ -165,3 +165,72 @@ def test_tramo_nulo_en_solicitud_sin_concesion(db_con_datos, client):
     data = client.get("/solicitudes/?estado=excluida").json()
     assert data["total"] >= 1
     assert all(r["tramo"] is None for r in data["resultados"])
+
+
+# --- Causas de exclusión ---
+
+@pytest.fixture
+def db_con_causas(db):
+    """Excluidas con códigos de causa + catálogo, para el buscador de exclusiones."""
+    from backend.app.models import CausaExclusion
+
+    conv = Convocatoria(titulo_convoc="EPA 2024", tipo_convoc="epa", anio_convocatoria=2024, periodo_meses=12)
+    db.add(conv)
+    db.flush()
+    benef = Beneficiario(cif="G11111111", nombre="Asociación Test Causas", tipo_benef="asociacion")
+    db.add(benef)
+    db.flush()
+    db.add_all([
+        Solicitud(id_convoc=conv.id_convoc, id_benef=benef.id_benef, num_expediente="EXC-6",   estado="excluida", causa_exclusion="6"),
+        Solicitud(id_convoc=conv.id_convoc, id_benef=benef.id_benef, num_expediente="EXC-16",  estado="excluida", causa_exclusion="16"),
+        Solicitud(id_convoc=conv.id_convoc, id_benef=benef.id_benef, num_expediente="EXC-6A",  estado="excluida", causa_exclusion="6.a"),
+        Solicitud(id_convoc=conv.id_convoc, id_benef=benef.id_benef, num_expediente="EXC-269", estado="excluida", causa_exclusion="2;6;9"),
+    ])
+    db.add_all([
+        CausaExclusion(tipo_convoc="epa", anio=2024, codigo="3.1", motivo="Solicitud fuera de plazo o no presentada por SIGES."),
+        CausaExclusion(tipo_convoc="epa", anio=2024, codigo="7",   motivo="No acreditar inscripción de la entidad."),
+        CausaExclusion(tipo_convoc="eell", anio=2023, codigo="5",  motivo="Solicitud presentada fuera de plazo.", articulo="5.1"),
+    ])
+    db.commit()
+
+
+def test_causa_exclusion_en_respuesta(db_con_causas, client):
+    data = client.get("/solicitudes/?estado=excluida").json()
+    assert data["total"] == 4
+    causas = {r["num_expediente"]: r["causa_exclusion"] for r in data["resultados"]}
+    assert causas["EXC-269"] == "2;6;9"
+
+
+def test_filtro_causa_token_exacto(db_con_causas, client):
+    """El filtro causa=6 debe casar '6' y '2;6;9' pero NO '16' ni '6.a'."""
+    data = client.get("/solicitudes/?causa=6").json()
+    expedientes = {r["num_expediente"] for r in data["resultados"]}
+    assert expedientes == {"EXC-6", "EXC-269"}
+
+
+def test_filtro_causa_codigo_con_punto(db_con_causas, client):
+    data = client.get("/solicitudes/?causa=6.a").json()
+    expedientes = {r["num_expediente"] for r in data["resultados"]}
+    assert expedientes == {"EXC-6A"}
+
+
+def test_catalogo_causas_estructura(db_con_causas, client):
+    response = client.get("/solicitudes/causas")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["epa"]["2024"]["7"]["motivo"] == "No acreditar inscripción de la entidad."
+    assert data["epa"]["2024"]["7"]["articulo"] is None
+    assert data["eell"]["2023"]["5"]["articulo"] == "5.1"
+
+
+def test_catalogo_causas_cache(db_con_causas, client):
+    response = client.get("/solicitudes/causas")
+    assert "max-age=86400" in response.headers.get("cache-control", "")
+
+
+def test_exportar_csv_incluye_causa(db_con_causas, client):
+    response = client.get("/solicitudes/export?estado=excluida")
+    filas = list(csv.reader(io.StringIO(response.text)))
+    idx = filas[0].index("causa_exclusion")
+    causas = {f[2]: f[idx] for f in filas[1:]}   # num_expediente -> causa
+    assert causas["EXC-269"] == "2;6;9"

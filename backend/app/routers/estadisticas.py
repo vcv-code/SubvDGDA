@@ -6,15 +6,72 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, case, distinct
 
 from ..db import get_db
-from ..models import Solicitud, Convocatoria, Concesion, Beneficiario
+from ..models import Solicitud, Convocatoria, Concesion, Beneficiario, CausaExclusion
 from ..schemas import (
     EstadisticasOut, EstadisticaAnio, UmbralAnio, UmbralLinea,
     EstadisticasEpaOut, EpaAnio, TopBeneficiarioEpa, RangoImporte,
     EstadisticasEellOut, CcaaItem, ProvinciaItem, ConcentracionItem,
-    EellAnioRecurrencia,
+    EellAnioRecurrencia, ExclusionesStats, ExclusionAnio, CausaFrecuente,
 )
 
 router = APIRouter(prefix="/estadisticas", tags=["estadisticas"])
+
+
+# ──────────────────────────────────────────────
+# EXCLUSIONES (compartido por /epas y /eell)
+# ──────────────────────────────────────────────
+
+def _stats_exclusiones(db: Session, tipo: str, top_n: int = 8) -> ExclusionesStats:
+    """Bloque de exclusiones para las páginas de estadísticas:
+
+    - `por_anio`: nº de excluidas por año (comparable entre años).
+    - `causas_frecuentes`: top de causas SOLO del último año con exclusiones.
+      No se mezclan años porque cada convocatoria usa su propia numeración
+      (el "5" de 2023 no es el "5" de 2025). El motivo sale del catálogo
+      `causas_exclusion`; una solicitud con varias causas ("2;6.a") suma
+      en cada una de ellas.
+    """
+    filas = (
+        db.query(Convocatoria.anio_convocatoria, Solicitud.causa_exclusion)
+        .join(Solicitud, Solicitud.id_convoc == Convocatoria.id_convoc)
+        .filter(Convocatoria.tipo_convoc == tipo, Solicitud.estado == "excluida")
+        .all()
+    )
+    if not filas:
+        return ExclusionesStats()
+
+    por_anio: dict[int, int] = defaultdict(int)
+    for anio, _ in filas:
+        por_anio[anio] += 1
+
+    ultimo = max(por_anio)
+
+    # Frecuencia de cada código en el último año
+    conteo: dict[str, int] = defaultdict(int)
+    for anio, causa in filas:
+        if anio != ultimo or not causa:
+            continue
+        for codigo in causa.split(";"):
+            if codigo:
+                conteo[codigo] += 1
+
+    # Resolver código → motivo con el catálogo de ese (tipo, año)
+    leyenda = {
+        c.codigo: c.motivo
+        for c in db.query(CausaExclusion)
+                   .filter(CausaExclusion.tipo_convoc == tipo, CausaExclusion.anio == ultimo)
+    }
+
+    frecuentes = sorted(conteo.items(), key=lambda kv: (-kv[1], kv[0]))[:top_n]
+
+    return ExclusionesStats(
+        por_anio=[ExclusionAnio(anio=a, total=t) for a, t in sorted(por_anio.items())],
+        causas_anio=ultimo,
+        causas_frecuentes=[
+            CausaFrecuente(codigo=cod, motivo=leyenda.get(cod, ""), total=tot)
+            for cod, tot in frecuentes
+        ],
+    )
 
 
 @router.get("/", response_model=EstadisticasOut)
@@ -231,6 +288,7 @@ def get_estadisticas_epas(response: Response, db: Session = Depends(get_db)):
         nuevas_entidades     = nuevas_entidades,
         distribucion_importes= distribucion,
         por_anio             = anios_out,
+        exclusiones          = _stats_exclusiones(db, "epa"),
     )
 
 
@@ -386,4 +444,5 @@ def get_estadisticas_eell(response: Response, db: Session = Depends(get_db)):
         recurrencia_por_anio        = recurrencia,
         entidades_repiten           = entidades_repiten,
         total_entidades             = len(anios_por_benef),
+        exclusiones                 = _stats_exclusiones(db, "eell"),
     )

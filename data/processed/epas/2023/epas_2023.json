@@ -4515,7 +4515,8 @@
     "cif": "G44513307",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "5"
   },
   {
     "anio": 2023,
@@ -4524,7 +4525,8 @@
     "cif": "G02784668",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7"
   },
   {
     "anio": 2023,
@@ -4533,7 +4535,8 @@
     "cif": "G95817953",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "6;7"
   },
   {
     "anio": 2023,
@@ -4542,7 +4545,8 @@
     "cif": "G99486425",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7"
   },
   {
     "anio": 2023,
@@ -4551,7 +4555,8 @@
     "cif": "G30885008",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4"
   },
   {
     "anio": 2023,
@@ -4560,7 +4565,8 @@
     "cif": "G45875911",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7"
   },
   {
     "anio": 2023,
@@ -4569,7 +4575,8 @@
     "cif": "G13944384",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7"
   },
   {
     "anio": 2023,
@@ -4578,7 +4585,8 @@
     "cif": "G55284079",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "7"
   },
   {
     "anio": 2023,
@@ -4587,7 +4595,8 @@
     "cif": "G76510916",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4;5;6;9"
   },
   {
     "anio": 2023,
@@ -4596,7 +4605,8 @@
     "cif": "G39851068",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "10;12"
   },
   {
     "anio": 2023,
@@ -4605,7 +4615,8 @@
     "cif": "G45844933",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "4;5;6;7;10;12"
   },
   {
     "anio": 2023,
@@ -4614,7 +4625,8 @@
     "cif": "G90322991",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "5;10;12"
   },
   {
     "anio": 2023,
@@ -4623,7 +4635,8 @@
     "cif": "G09950296",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "12"
   },
   {
     "anio": 2023,

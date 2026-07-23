@@ -65,9 +65,14 @@ Unificación y normalización de estados (unificar_datasets.py)
 ↓
 Dataset unificado (data/final/dataset_unificado.json)
 ↓
+Normalización de causas de exclusión (normalizar_causa_exclusion.py)
+  · Deja causa_exclusion como código(s) canónicos separados por ";"
+    validados contra el catálogo data/final/causas_exclusion.json
+↓
 Carga en base de datos (cargar_dataset.py)
-  · 6 pasos: convocatorias → beneficiarios → solicitudes
+  · 7 pasos: convocatorias → beneficiarios → solicitudes
              → concesiones → agrupaciones → agrupacion_miembros
+             → causas_exclusion (catálogo código→motivo por tipo y año)
   · Los municipios miembro sin registro propio en el dataset
     se insertan en beneficiarios en el paso 2
   · Paso 1 (convocatorias): consulta los snapshots BDNS de
@@ -125,6 +130,18 @@ Scripts:
 > En la resolución EPA 2025 las cabeceras de las columnas cambian respecto a años anteriores: aparece "Cuantía concedida a la entidad" (que contiene la palabra *entidad*) y la cabecera de puntuación varía entre anexos. Esto rompe el mapeo por palabras clave del parser base. El parser 2025 usa extracción heurística por contenido de celda: importes > 100 para el campo importe, valores entre 0 y 100 para puntuación.
 
 > **Línea de subvención EPA 2024.** El BOE de concesión 2024 no desglosa la línea (colonias felinas / animales abandonados) por entidad, así que las concesiones quedaban con `linea = NULL`. La "relación definitiva de admitidas y excluidas" (PDF de la Sede, `data/raw/epas/2024/relacion-def-admitidas-EPA2024.pdf`) sí trae esa columna en el Anexo I. `parser_EPAs_admitidas_2024.py` la extrae por texto anclando el CIF (la línea es lo que va **después** del CIF, para no confundirse con nombres que contienen "COLONIAS") y `enriquecer_linea_epa2024.py` la añade a `epas_2024.json` cruzando por `num_expediente`. Cruce completo: 628/628 concedidas (627 con línea + 1 "No aplica" → NULL). Desde 2025 el XML sí incluye la línea directamente, sin este paso.
+
+### Causas de exclusión
+
+Los anexos de excluidas/desestimadas del BOE indican por entidad el/los **código(s) de causa** ("Motivo de desestimación", "Causas de exclusión", "Criterios de exclusión"). Ambos parsers EPA capturan esa columna cuando existe (los parsers EELL ya lo hacían); las tablas-leyenda embebidas (cabeceras "Ref./Motivo") se descartan solas porque no tienen columna de expediente ni de entidad.
+
+Particularidades resueltas:
+
+- **Numeración por convocatoria**: cada (tipo, año) usa su propia numeración de causas. La leyenda código→motivo vive en `data/final/causas_exclusion.json`, transcrita de las tablas de referencia revisadas manualmente y cotejada con los anexos oficiales (la fuente publicada tiene huecos y erratas: p. ej. EPA 2025 omite el motivo del código 11 y dos resoluciones ponen "Ley 38/2033"). Es dato de referencia histórico e inmutable — excepción documentada a la regla de no hardcodear.
+- **Separadores inconsistentes**: `4; 5`, `6, 7, 8`, `2. 6.a` e incluso `16.18.19.` (sin espacios), con códigos que llevan punto propio (`6.a`, `3.1`). `normalizar_causa_exclusion.py` tokeniza **guiado por el catálogo** (match voraz del código válido más largo en cada posición) y guarda el resultado canónico separado por `;`. Validación: 643/643 excluidas resuelven contra el catálogo.
+- **EPA 2021 en texto libre**: ese anexo no usa códigos sino el motivo literal; se mapea a código por match exacto del texto contra el catálogo (21/21).
+- **Desistidas por no subsanar (EELL 2023, ANEXO IV)**: 198 ayuntamientos "se tienen por desistidos al no haber subsanado en plazo" (causa 18). El BOE los clasifica como **desistidas**, no excluidas, y así se mantienen (fuera del buscador de exclusiones, por consistencia con el resto de años, donde las desistidas tampoco aparecen).
+- **Conciliación con el Excel de referencia**: EPA 2022 muestra 59 excluidas frente a las 60 del anexo porque `SUBV2022271` aparece también como concedida y la deduplicación intra-año conserva la concedida (correcto). Quedan ±1 en EELL 2024/2025 pendientes de ajuste manual (fila partida en el PDF / expediente sintético duplicado).
 
 ---
 

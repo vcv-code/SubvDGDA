@@ -47,10 +47,24 @@ class Solicitud(Base):
     estado         = Column(Enum("concedida", "no_beneficiaria", "excluida", "desistida"), nullable=False)
     provincia      = Column(String(100), nullable=True)
     ccaa           = Column(String(100), nullable=True)
+    causa_exclusion = Column(String(100), nullable=True)  # código(s) separados por ";" — leyenda en causas_exclusion
 
     convocatoria = relationship("Convocatoria", back_populates="solicitudes")
     beneficiario = relationship("Beneficiario", back_populates="solicitudes")
     concesion    = relationship("Concesion", back_populates="solicitud", uselist=False)  # 0 o 1 concesión
+
+
+class CausaExclusion(Base):
+    """Catálogo código -> motivo de las causas de exclusión, por (tipo, año).
+    Cada convocatoria usa su propia numeración."""
+    __tablename__ = "causas_exclusion"
+
+    id_causa    = Column(Integer, primary_key=True, autoincrement=True)
+    tipo_convoc = Column(Enum("epa", "eell"), nullable=False)
+    anio        = Column(Integer, nullable=False)
+    codigo      = Column(String(10), nullable=False)
+    motivo      = Column(String(500), nullable=False)
+    articulo    = Column(String(20), nullable=True)
 
 
 class Concesion(Base):

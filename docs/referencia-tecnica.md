@@ -242,7 +242,7 @@ El cron usa `python:3.12-slim` — la misma versión menor que el backend (ver s
 |---|---|---|---|
 | API BDNS (infosubvenciones.es) | REST/JSON | Convocatorias EPA y EELL | `bdns_client.py` (requests) |
 | BOE (XML) | XML | Resoluciones EELL 2025 | `parser_eell_BOE_2025.py` (BeautifulSoup) |
-| BOE (PDF) | PDF | Resoluciones EPAs 2021–2025 | `parser_EPAs_BOE_base.py`, `parser_EPAs_BOE_2025.py` (pdfplumber) |
+| BOE (XML) | XML | Resoluciones EPAs 2021–2025 (incl. causas de exclusión) | `parser_EPAs_BOE_base.py`, `parser_EPAs_BOE_2025.py` (BeautifulSoup) |
 | PDF resoluciones EELL | PDF | Resoluciones EELL 2023–2024 | `parser_eell_PDF_base.py` (pdfplumber, dos pasadas) |
 | Excel manual (DGDA) | XLSX | EELL 2025 (beneficiarias y municipios) | `parser_eell_BOE_2025.py` (openpyxl) |
 
@@ -255,7 +255,9 @@ Fuentes externas (API / PDF / XML / XLSX)
         ↓
   unificar_datasets.py → data/final/dataset_unificado.json
         ↓
-  cargar_dataset.py → Base de datos (6 pasos respetando FKs)
+  normalizar_causa_exclusion.py → causas como códigos canónicos ";"
+        ↓
+  cargar_dataset.py → Base de datos (7 pasos respetando FKs)
 ```
 
 ### Archivos JSON generados
@@ -263,6 +265,7 @@ Fuentes externas (API / PDF / XML / XLSX)
 - `data/processed/epas/` → 5 archivos (2021–2025)
 - `data/processed/eell/` → 3 archivos (2023–2025)
 - `data/final/dataset_unificado.json` → dataset completo normalizado
+- `data/final/causas_exclusion.json` → catálogo código→motivo de causas de exclusión por (tipo, año); revisado a mano contra los anexos oficiales, se carga en la tabla `causas_exclusion`
 
 ---
 
