@@ -417,3 +417,68 @@ def test_umbrales_con_corte_por_linea(db_umbrales, client):
     por = {p["linea"]: p["umbral"] for p in item["por_linea"]}
     assert por["colonias_felinas"] == 40.0
     assert por["animales_abandonados"] == 45.0
+
+
+# ─────────────────────────────────────────────────────────────
+# TESTS — bloque de exclusiones (por año + causas frecuentes)
+# ─────────────────────────────────────────────────────────────
+
+@pytest.fixture
+def db_exclusiones(db):
+    """Dos años EELL con excluidas y catálogo de causas; las causas frecuentes
+    deben salir SOLO del último año (cada convocatoria numera distinto)."""
+    from backend.app.models import CausaExclusion
+
+    c23 = Convocatoria(titulo_convoc="EELL 2023", tipo_convoc="eell", anio_convocatoria=2023, periodo_meses=12)
+    c24 = Convocatoria(titulo_convoc="EELL 2024", tipo_convoc="eell", anio_convocatoria=2024, periodo_meses=12)
+    db.add_all([c23, c24])
+    db.flush()
+
+    b = Beneficiario(cif="P9900001X", nombre="Ayto. Prueba Exclusiones", tipo_benef="ayuntamiento")
+    db.add(b)
+    db.flush()
+
+    db.add_all([
+        # 2023: 1 excluida (no debe influir en causas_frecuentes)
+        Solicitud(id_convoc=c23.id_convoc, id_benef=b.id_benef, num_expediente="E23-1",
+                  estado="excluida", causa_exclusion="5"),
+        # 2024: 3 excluidas → B aparece 3 veces, F 1 vez
+        Solicitud(id_convoc=c24.id_convoc, id_benef=b.id_benef, num_expediente="E24-1",
+                  estado="excluida", causa_exclusion="B"),
+        Solicitud(id_convoc=c24.id_convoc, id_benef=b.id_benef, num_expediente="E24-2",
+                  estado="excluida", causa_exclusion="B;F"),
+        Solicitud(id_convoc=c24.id_convoc, id_benef=b.id_benef, num_expediente="E24-3",
+                  estado="excluida", causa_exclusion="B"),
+        # una concedida para que el resto del endpoint tenga datos
+        Solicitud(id_convoc=c24.id_convoc, id_benef=b.id_benef, num_expediente="E24-OK",
+                  estado="concedida", ccaa="Andalucía", provincia="Sevilla"),
+    ])
+    db.add_all([
+        CausaExclusion(tipo_convoc="eell", anio=2024, codigo="B", motivo="Sin Programa de Gestión Ética aprobado."),
+        CausaExclusion(tipo_convoc="eell", anio=2024, codigo="F", motivo="Cronograma no conforme al Anexo II."),
+    ])
+    db.commit()
+
+
+def test_exclusiones_por_anio(db_exclusiones, client):
+    data = client.get("/estadisticas/eell").json()
+    por_anio = {x["anio"]: x["total"] for x in data["exclusiones"]["por_anio"]}
+    assert por_anio == {2023: 1, 2024: 3}
+
+
+def test_exclusiones_causas_solo_ultimo_anio(db_exclusiones, client):
+    """Las causas frecuentes son del último año; el "5" de 2023 no aparece."""
+    data = client.get("/estadisticas/eell").json()
+    exc = data["exclusiones"]
+    assert exc["causas_anio"] == 2024
+    causas = {c["codigo"]: c for c in exc["causas_frecuentes"]}
+    assert set(causas) == {"B", "F"}
+    assert causas["B"]["total"] == 3          # multivalor "B;F" suma en ambas
+    assert causas["F"]["total"] == 1
+    assert causas["B"]["motivo"] == "Sin Programa de Gestión Ética aprobado."
+
+
+def test_exclusiones_vacio_sin_datos(client):
+    """Sin excluidas, el bloque llega vacío y el endpoint no falla."""
+    data = client.get("/estadisticas/eell").json()
+    assert data["exclusiones"] == {"por_anio": [], "causas_anio": None, "causas_frecuentes": []}

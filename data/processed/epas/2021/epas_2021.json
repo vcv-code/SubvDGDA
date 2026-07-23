@@ -2715,7 +2715,8 @@
     "cif": "G93559862",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2724,7 +2725,8 @@
     "cif": "G01951243",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud de ayuda para gastos no contemplados en la convocatoria."
   },
   {
     "anio": 2021,
@@ -2733,7 +2735,8 @@
     "cif": "G13621669",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2742,7 +2745,8 @@
     "cif": "G66457805",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2751,7 +2755,8 @@
     "cif": "G57902504",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2760,7 +2765,8 @@
     "cif": "G88056361",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2769,7 +2775,8 @@
     "cif": "G37473196",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2778,7 +2785,8 @@
     "cif": "G47079819",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar o no acreditar estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2787,7 +2795,8 @@
     "cif": "G98448327",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2796,7 +2805,8 @@
     "cif": "G93584290",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No indicar cuenta corriente de pago válida a nombre de la Entidad. No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2805,7 +2815,8 @@
     "cif": "G67484105",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar o no acreditar estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2814,7 +2825,8 @@
     "cif": "G88172606",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2823,7 +2835,8 @@
     "cif": "G88534581",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2832,7 +2845,8 @@
     "cif": "G90288523",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "No estar al corriente de las obligaciones tributarias."
   },
   {
     "anio": 2021,
@@ -2841,7 +2855,8 @@
     "cif": "G88147251",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud presentada fuera de plazo."
   },
   {
     "anio": 2021,
@@ -2850,7 +2865,8 @@
     "cif": "G86916640",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud presentada fuera de plazo."
   },
   {
     "anio": 2021,
@@ -2859,7 +2875,8 @@
     "cif": "G55716849",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud presentada fuera de plazo."
   },
   {
     "anio": 2021,
@@ -2868,7 +2885,8 @@
     "cif": "G40267429",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud presentada fuera de plazo."
   },
   {
     "anio": 2021,
@@ -2877,7 +2895,8 @@
     "cif": "G40549537",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud no presentada conforme a lo establecido en la Convocatoria."
   },
   {
     "anio": 2021,
@@ -2886,7 +2905,8 @@
     "cif": "G87861027",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud presentada fuera de plazo."
   },
   {
     "anio": 2021,
@@ -2895,7 +2915,8 @@
     "cif": "G72313497",
     "puntuacion": null,
     "importe": null,
-    "estado": "denegada"
+    "estado": "denegada",
+    "causa_exclusion": "Solicitud presentada fuera de plazo."
   },
   {
     "anio": 2021,

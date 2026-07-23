@@ -83,6 +83,15 @@ const nuevosPendiente       = document.getElementById('nuevos-pendiente');
 const graficoNuevos         = document.getElementById('grafico-nuevos-recurrentes');
 
 const topPendiente          = document.getElementById('top-pendiente');
+
+const exclusionesAnioPendiente  = document.getElementById('exclusiones-anio-pendiente');
+const graficoExclusionesAnio    = document.getElementById('grafico-exclusiones-anio');
+const causasFrecuentesPendiente = document.getElementById('causas-frecuentes-pendiente');
+const graficoCausasFrecuentes   = document.getElementById('grafico-causas-frecuentes');
+const causasFrecuentesSub       = document.getElementById('causas-frecuentes-sub');
+
+// Rojo del estado "excluida" (mismo que los badges y chips del buscador)
+const COLOR_EXCLUIDA = '#C62828';
 const graficoTop            = document.getElementById('grafico-top-beneficiarios');
 
 
@@ -122,6 +131,8 @@ async function cargarEstadisticasEpas() {
         poblarGraficoMediaMediana(datos.por_anio || []);
         poblarGraficoNuevosRecurrentes(datos.por_anio || []);
         poblarGraficoTopBeneficiarios(datos.por_anio || []);
+        poblarGraficoExclusionesAnio(datos.exclusiones || {});
+        poblarGraficoCausasFrecuentes(datos.exclusiones || {});
 
     } catch (error) {
         console.error('Error al cargar estadísticas EPAs:', error);
@@ -481,6 +492,143 @@ function poblarGraficoTopBeneficiarios(porAnio) {
 
     const tituloEl = graficoTop.closest('.card-grafico')?.querySelector('.card-grafico__titulo');
     if (tituloEl) tituloEl.textContent = `Top beneficiarios ${ultimo.anio}`;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// FUNCIÓN: poblarGraficoExclusionesAnio
+// Barras: nº de solicitudes EPA excluidas por convocatoria.
+// Datos: exclusiones.por_anio[{ anio, total }]
+// ─────────────────────────────────────────────────────────────
+function poblarGraficoExclusionesAnio(exclusiones) {
+    const porAnio = exclusiones.por_anio || [];
+    if (!porAnio.length) return;
+    if (exclusionesAnioPendiente) exclusionesAnioPendiente.style.display = 'none';
+    if (graficoExclusionesAnio)   graficoExclusionesAnio.style.display   = 'block';
+
+    const instancia = new Chart(graficoExclusionesAnio, {
+        type: 'bar',
+        data: {
+            labels: porAnio.map(d => d.anio),
+            datasets: [{
+                label:           'Solicitudes excluidas',
+                data:            porAnio.map(d => d.total),
+                backgroundColor: COLOR_EXCLUIDA,
+                borderRadius:    4,
+                borderSkipped:   false,
+            }],
+        },
+        options: {
+            ...OPCIONES_BASE,
+            plugins: {
+                ...OPCIONES_BASE.plugins,
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.parsed.y.toLocaleString('es-ES')} excluidas`,
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    grid:  { display: false },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
+                },
+                y: {
+                    beginAtZero: true,
+                    grid:  { color: COLORES.grisMedio },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
+                },
+            },
+        },
+    });
+    configurarDescarga(instancia, 'btn-dl-exclusiones-anio', 'exclusiones-por-anio-epa.png');
+    configurarModal(instancia, 'Exclusiones EPA por año', `
+<p>Las exclusiones de protectoras han sido muy variables: 21 en 2021, 59 en 2022 (el año con más tropiezos documentales de la primera etapa), solo 13 y 14 en 2023 y 2024, y un salto hasta 110 en 2025. Ese repunte acompaña al crecimiento de la convocatoria —cada año se presentan más asociaciones— y a un control formal más minucioso: la resolución de 2025 detalla 27 causas distintas de exclusión.</p>
+<p>Un matiz de lectura: en 2021–2023 el BOE llama a estas solicitudes "desestimadas", pero todas llevan una causa formal de exclusión (documentación que falta, plazos, requisitos de registro), así que se contabilizan igual en toda la serie.</p>
+<p>Quedar excluida no significa no necesitar la ayuda: son requisitos administrativos que muchas asociaciones pequeñas, gestionadas por voluntariado, no siempre pueden cubrir sin apoyo técnico.</p>
+`);
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// FUNCIÓN: poblarGraficoCausasFrecuentes
+// Barras horizontales: top de causas del ÚLTIMO año con exclusiones.
+// Solo un año porque cada convocatoria usa su propia numeración de
+// causas (el "5" de 2022 no es el "5" de 2023).
+// Datos: exclusiones.{ causas_anio, causas_frecuentes[{ codigo, motivo, total }] }
+// ─────────────────────────────────────────────────────────────
+function poblarGraficoCausasFrecuentes(exclusiones) {
+    const causas = exclusiones.causas_frecuentes || [];
+    if (!causas.length) return;
+    if (causasFrecuentesPendiente) causasFrecuentesPendiente.style.display = 'none';
+    if (graficoCausasFrecuentes)   graficoCausasFrecuentes.style.display   = 'block';
+
+    if (causasFrecuentesSub && exclusiones.causas_anio) {
+        causasFrecuentesSub.textContent =
+            `Top de causas de la convocatoria ${exclusiones.causas_anio} (código oficial)`;
+    }
+
+    // Partir el motivo en líneas de ~55 caracteres para el tooltip
+    const partirMotivo = (texto) => {
+        const palabras = (texto || '').split(' ');
+        const lineas = [];
+        let linea = '';
+        for (const p of palabras) {
+            if ((linea + ' ' + p).trim().length > 55) {
+                lineas.push(linea.trim());
+                linea = p;
+            } else {
+                linea += ' ' + p;
+            }
+        }
+        if (linea.trim()) lineas.push(linea.trim());
+        return lineas;
+    };
+
+    const instancia = new Chart(graficoCausasFrecuentes, {
+        type: 'bar',
+        data: {
+            labels: causas.map(c => c.codigo),
+            datasets: [{
+                label:           'Solicitudes con esta causa',
+                data:            causas.map(c => c.total),
+                backgroundColor: COLOR_EXCLUIDA,
+                borderRadius:    4,
+                borderSkipped:   false,
+            }],
+        },
+        options: {
+            ...OPCIONES_BASE,
+            indexAxis: 'y',   // barras horizontales: los códigos caben mejor en el eje Y
+            plugins: {
+                ...OPCIONES_BASE.plugins,
+                tooltip: {
+                    callbacks: {
+                        title: (items) => `Causa ${items[0].label}`,
+                        label: ctx => ` ${ctx.parsed.x.toLocaleString('es-ES')} solicitudes`,
+                        afterBody: (items) => partirMotivo(causas[items[0].dataIndex]?.motivo),
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid:  { color: COLORES.grisMedio },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
+                },
+                y: {
+                    grid:  { display: false },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: COLORES.grisTexto },
+                },
+            },
+        },
+    });
+    configurarDescarga(instancia, 'btn-dl-causas-frecuentes', 'causas-exclusion-epa.png');
+    configurarModal(instancia, 'Causas de exclusión más frecuentes (EPA)', `
+<p>En 2025 casi todo el top es documentación registral básica: no presentar la inscripción de la entidad (44 solicitudes), la copia de la tarjeta de identificación fiscal definitiva (43, más otras 21 por presentarla provisional), los estatutos (38) o incurrir en alguna de las prohibiciones del artículo 13.2 de la Ley General de Subvenciones (37). Una misma solicitud puede acumular varias causas, por eso la suma supera el total de excluidas.</p>
+<p>El patrón apunta a asociaciones pequeñas, a menudo recién constituidas o gestionadas íntegramente por voluntariado, que se quedan fuera por papeles que no dependen del proyecto en sí sino de su situación administrativa. Un acompañamiento técnico previo (o una fase de subsanación más accesible) reduciría buena parte de estas exclusiones.</p>
+<p>La gráfica muestra solo la última convocatoria porque cada año usa su propia numeración de causas y no son mezclables entre sí. Pasa el cursor por cada barra para ver el motivo oficial completo.</p>
+`);
 }
 
 

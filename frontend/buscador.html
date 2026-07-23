@@ -464,6 +464,192 @@
 
             </div><!-- /contenedor -->
         </section>
+
+
+        <!-- ═════════════════════════════════════════════════════
+             BUSCADOR DE EXCLUSIONES (solo EELL)
+             Segundo buscador de la página: entidades locales
+             excluidas con su causa oficial. Lógica en exclusiones.js
+             (IIFE con IDs prefijados "exc-" para no chocar con el
+             buscador general de arriba).
+             ═════════════════════════════════════════════════════ -->
+        <section class="seccion" id="exclusiones" aria-labelledby="exclusiones-titulo">
+            <div class="contenedor">
+
+                <div class="seccion__cabecera">
+                    <h2 class="seccion__titulo" id="exclusiones-titulo">
+                        Buscador de exclusiones (EELL)
+                    </h2>
+                    <p class="seccion__subtitulo">
+                        Entidades locales excluidas de cada convocatoria con su causa oficial.
+                        Haz clic en el código de causa para ver el motivo completo.
+                    </p>
+                </div>
+
+                <form
+                    class="filtros"
+                    id="exc-form-filtros"
+                    action="#"
+                    onsubmit="return false;"
+                    aria-label="Panel de filtros de exclusiones">
+
+                    <div class="filtros__fila">
+
+                        <div class="form-grupo form-grupo--entidad">
+                            <label for="exc-filtro-nombre">Entidad</label>
+                            <input
+                                type="search"
+                                id="exc-filtro-nombre"
+                                class="form-control"
+                                placeholder="Nombre del ayuntamiento..."
+                                autocomplete="off">
+                        </div>
+
+                        <!-- Año: EELL solo tiene convocatorias desde 2023 -->
+                        <div class="form-grupo">
+                            <label for="exc-filtro-anio">Año</label>
+                            <select id="exc-filtro-anio" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label for="exc-filtro-ccaa">CCAA</label>
+                            <select id="exc-filtro-ccaa" class="form-control">
+                                <option value="">Todas</option>
+                                <option value="Andalucía">Andalucía</option>
+                                <option value="Aragón">Aragón</option>
+                                <option value="Principado de Asturias">Asturias</option>
+                                <option value="Illes Balears">Illes Balears</option>
+                                <option value="Canarias">Canarias</option>
+                                <option value="Cantabria">Cantabria</option>
+                                <option value="Castilla-La Mancha">Castilla-La Mancha</option>
+                                <option value="Castilla y León">Castilla y León</option>
+                                <option value="Cataluña">Cataluña</option>
+                                <option value="Extremadura">Extremadura</option>
+                                <option value="Galicia">Galicia</option>
+                                <option value="La Rioja">La Rioja</option>
+                                <option value="Comunidad de Madrid">Comunidad de Madrid</option>
+                                <option value="Región de Murcia">Región de Murcia</option>
+                                <option value="Comunidad Foral de Navarra">Navarra</option>
+                                <option value="País Vasco">País Vasco</option>
+                                <option value="Comunidad Valenciana">Comunidad Valenciana</option>
+                            </select>
+                        </div>
+
+                        <!-- Causa: desplegable DEPENDIENTE del año, porque cada
+                             convocatoria usa su propia numeración de causas.
+                             exclusiones.js lo rellena con la leyenda de la API. -->
+                        <div class="form-grupo form-grupo--causa">
+                            <label for="exc-filtro-causa">Causa</label>
+                            <select id="exc-filtro-causa" class="form-control" disabled
+                                    title="Elige antes el año: cada convocatoria numera sus causas de forma distinta">
+                                <option value="">Elige un año</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="filtros__botones">
+                        <button type="submit" class="btn btn-primario btn--sm" id="exc-btn-buscar">
+                            Buscar
+                        </button>
+                        <button type="button" class="btn btn-secundario btn--sm" id="exc-btn-limpiar">
+                            Limpiar filtros
+                        </button>
+                    </div>
+
+                </form><!-- /exc-form-filtros -->
+
+                <div id="exc-spinner" class="spinner"></div>
+
+                <p class="estado-carga" id="exc-tabla-carga">
+                    Usa los filtros y pulsa "Buscar" para ver las entidades locales excluidas.
+                </p>
+
+                <div class="estado-error" id="exc-tabla-error" style="display:none;"></div>
+
+                <div class="resultados-card" id="exc-resultados-card" style="display:none;">
+                    <div class="tabla-controles" id="exc-tabla-controles">
+                        <div id="exc-info-resultados" class="info-resultados"></div>
+                        <div class="tabla-controles__derecha">
+                            <button
+                                type="button"
+                                class="btn btn-secundario btn--sm btn-csv"
+                                id="exc-btn-descargar-csv"
+                                title="Descargar todas las exclusiones filtradas en formato CSV">
+                                ↓ Descargar CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tabla-wrapper" id="exc-tabla-wrapper" style="display:none;">
+                        <table aria-label="Entidades locales excluidas">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Entidad</th>
+                                    <th scope="col">Año</th>
+                                    <th scope="col">CCAA</th>
+                                    <th scope="col">Causa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exc-tabla-body">
+                            </tbody>
+                        </table>
+                    </div><!-- /exc-tabla-wrapper -->
+
+                    <div class="estado-carga estado-vacio"
+                         id="exc-tabla-vacia"
+                         style="display:none;">
+                        <svg class="estado-vacio__icono"
+                             xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.5"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <p class="estado-vacio__titulo">No se han encontrado exclusiones</p>
+                        <p class="estado-vacio__sub">Prueba a cambiar los filtros o a buscar con otras palabras.</p>
+                        <button type="button" class="btn btn-secundario btn--sm" id="exc-btn-limpiar-vacio">
+                            Limpiar filtros
+                        </button>
+                    </div>
+
+                    <div class="paginacion" id="exc-paginacion" style="display:none;"
+                         aria-label="Navegación por páginas de exclusiones">
+
+                        <button class="btn btn-enlace btn--sm" id="exc-btn-primera" hidden>
+                            « Primera
+                        </button>
+
+                        <button class="btn btn-secundario btn--sm" id="exc-btn-anterior" disabled>
+                            Anterior
+                        </button>
+
+                        <span id="exc-pagina-info">Página 1</span>
+
+                        <button class="btn btn-secundario btn--sm" id="exc-btn-siguiente" disabled>
+                            Siguiente
+                        </button>
+
+                        <button class="btn btn-enlace btn--sm" id="exc-btn-ultima" hidden>
+                            Última »
+                        </button>
+
+                    </div><!-- /exc-paginacion -->
+                </div><!-- /exc-resultados-card -->
+
+            </div><!-- /contenedor -->
+        </section><!-- /exclusiones -->
+
     </main>
 
 
@@ -582,10 +768,51 @@
     </div>
     <!-- /MODAL DE ENTIDAD -->
 
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         MODAL DE CAUSAS DE EXCLUSIÓN
+         Se abre al hacer clic en el chip de causa del buscador de
+         exclusiones. Reutiliza las clases del modal genérico.
+         Aquí se muestra también el nº de expediente (no está en la tabla).
+         ════════════════════════════════════════════════════════════════ -->
+    <div
+        id="modal-causas"
+        class="modal-backdrop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-causas-titulo"
+        aria-hidden="true"
+    >
+        <div class="modal-card">
+
+            <div class="modal-cabecera">
+                <div>
+                    <h2 class="modal-cabecera__titulo" id="modal-causas-titulo">—</h2>
+                    <span class="modal-cabecera__cif" id="modal-causas-convocatoria"></span>
+                </div>
+                <button
+                    class="modal-cerrar"
+                    id="modal-causas-cerrar"
+                    type="button"
+                    aria-label="Cerrar detalle de causas"
+                >×</button>
+            </div>
+
+            <div class="modal-cuerpo">
+                <p class="modal-historico-titulo">Causas de exclusión</p>
+                <ul class="modal-causas-lista" id="modal-causas-lista"></ul>
+            </div>
+
+        </div>
+    </div>
+    <!-- /MODAL DE CAUSAS -->
+
+
     <script src="js/navbar.js" defer></script>
     <script src="js/scroll-arriba.js" defer></script>
     <script src="js/modal-entidad.js" defer></script>
     <script src="js/solicitudes.js" defer></script>
+    <script src="js/exclusiones.js" defer></script>
 
 </body>
 </html>

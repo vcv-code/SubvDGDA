@@ -50,12 +50,21 @@ class SolicitudOut(BaseModel):
     ccaa:           Optional[str]     # solo EELL; None para EPA
     es_agrupacion:  bool              # True si la concesión pertenece a una agrupación de municipios
     tramo:          Optional[int]     # 1, 2 o 3 (solo EELL 2025 concedidas); None en el resto
+    causa_exclusion: Optional[str] = None  # código(s) separados por ";" (solo estado=excluida)
 
     model_config = ConfigDict(from_attributes=True)
 
 class SolicitudesPageOut(BaseModel):
     total:      int
     resultados: list[SolicitudOut]
+
+
+class CausaExclusionOut(BaseModel):
+    """Entrada del catálogo de causas de exclusión: motivo legible de un código."""
+    motivo:   str
+    articulo: Optional[str] = None
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ──────────────────────────────────────────────
@@ -134,6 +143,26 @@ class RangoImporte(BaseModel):
     rango:    str
     cantidad: int
 
+class ExclusionAnio(BaseModel):
+    """Nº de solicitudes excluidas en un año (para la gráfica de evolución)."""
+    anio:  int
+    total: int
+
+class CausaFrecuente(BaseModel):
+    """Una causa de exclusión con su frecuencia (gráfica de causas más frecuentes)."""
+    codigo: str
+    motivo: str
+    total:  int
+
+class ExclusionesStats(BaseModel):
+    """Bloque de exclusiones de las páginas de estadísticas.
+    Las causas frecuentes son SOLO del último año con exclusiones, porque
+    cada convocatoria usa su propia numeración de causas (no son mezclables)."""
+    por_anio:          list[ExclusionAnio]   = []
+    causas_anio:       Optional[int]         = None   # año al que pertenecen las causas
+    causas_frecuentes: list[CausaFrecuente]  = []
+
+
 class EstadisticasEpaOut(BaseModel):
     importe_medio:         float
     mediana:               float
@@ -141,6 +170,7 @@ class EstadisticasEpaOut(BaseModel):
     nuevas_entidades:      int
     distribucion_importes: list[RangoImporte]
     por_anio:              list[EpaAnio]
+    exclusiones:           ExclusionesStats = ExclusionesStats()
 
 
 # ──────────────────────────────────────────────
@@ -175,6 +205,7 @@ class EstadisticasEellOut(BaseModel):
     top_provincias:              list[ProvinciaItem]
     concentracion:               ConcentracionItem
     distribucion_importes:       list[RangoImporte]        = []
+    exclusiones:                 ExclusionesStats          = ExclusionesStats()
     recurrencia_por_anio:        list[EellAnioRecurrencia] = []
     entidades_repiten:           int                       = 0
     total_entidades:             int                       = 0
