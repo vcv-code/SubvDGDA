@@ -5200,3 +5200,87 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     padding-top: var(--espacio-sm);
     border-top: 1px solid var(--color-gris-medio);
 }
+
+
+/* ============================================================
+   BUSCADOR DE EXCLUSIONES (exclusiones.html)
+   ============================================================ */
+
+/* El desplegable de causa muestra "código — motivo" y necesita
+   más ancho que los selects cortos de tipo/año. */
+.form-grupo--causa {
+    min-width: 260px;
+    flex: 1 1 260px;
+}
+
+/* Chip con el/los código(s) de causa. Es un <button> (accesible por
+   teclado) que abre el modal con el motivo completo de cada código.
+   En rojo, el color de estado "excluida" de los badges. */
+.chip-causa {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid var(--estado-excluida);
+    border-radius: 20px;
+    background-color: #FDECEA;   /* rojo suave, tinte de --estado-excluida */
+    color: var(--estado-excluida);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.chip-causa:hover,
+.chip-causa:focus-visible {
+    background-color: var(--estado-excluida);
+    color: #fff;
+}
+
+/* Lista código → motivo dentro del modal de causas */
+.modal-causas-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.modal-causas-lista li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+/* El código va en su propia "pastilla" alineada con la primera línea,
+   en el mismo rojo que el chip de la tabla. */
+.modal-causas-lista__codigo {
+    flex-shrink: 0;
+    min-width: 2.5rem;
+    text-align: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background-color: #FDECEA;   /* rojo suave, tinte de --estado-excluida */
+    color: var(--estado-excluida);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+/* Variante para las tarjetas de exclusiones (estadísticas EPA/EELL):
+   el botón de conclusiones va en el rojo del estado "excluida" pero
+   rebajado (fondo translúcido), a juego con sus gráficas. */
+.card-grafico--exclusiones .card-grafico__trigger {
+    background: rgba(198, 40, 40, 0.08);      /* --estado-excluida al 8% */
+    border-color: rgba(198, 40, 40, 0.55);
+    color: var(--estado-excluida);
+}
+
+.card-grafico--exclusiones .card-grafico__trigger:hover,
+.card-grafico--exclusiones .card-grafico__trigger:focus-visible {
+    background: var(--estado-excluida);
+    color: var(--color-blanco);
+    outline-color: var(--estado-excluida);
+}
