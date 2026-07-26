@@ -3554,7 +3554,11 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* Ocupa el panel (flex column) y permite que __cuerpo tenga scroll:
+       flex:1 + min-height:0 en lugar de height:100% (que no resuelve con
+       el max-height del panel y hacía que el texto largo se recortara). */
+    flex: 1;
+    min-height: 0;
 }
 
 /* Cabecera: título + botón cerrar */
