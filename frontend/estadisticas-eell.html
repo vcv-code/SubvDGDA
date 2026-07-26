@@ -49,6 +49,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <!-- Leaflet CSS (mapa CCAA) — CDN con SRI + fallback local vía onerror -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous" onerror="this.onerror=null; var l=document.createElement('link'); l.rel='stylesheet'; l.href='/assets/vendor/leaflet.css'; document.head.appendChild(l);">
 </head>
 
 <body>
@@ -153,6 +155,30 @@
                 <p class="nota-asterisco">
                     <span aria-hidden="true">*</span> De las 150 entidades locales que han recibido ayuda (155 concesiones en total, 2023–2025), solo 5 (3 %) lo han conseguido en más de una convocatoria: cada año consiguen subvención mayoritariamente entidades nuevas. Repiten: en 2024, Ayto. de Artesa de Lleida, Ayto. de Granada y Diputación de Cuenca; en 2025, Ayto. de El Carpio de Tajo y Ayto. de Elda.
                 </p>
+
+                <!-- ─────────────────────────────────────────────────
+                     MAPA CCAA (choropleth Leaflet) — bajo los KPIs
+                     Datos: por_ccaa de GET /estadisticas/eell (público).
+                     Lógica en js/mapa-ccaa.js; el modal de top municipios
+                     al hacer clic, en js/modal-ccaa.js. Antes solo estaba
+                     en el contenido exclusivo; ahora es público.
+                     ───────────────────────────────────────────────── -->
+                <div class="card-grafico mb-lg">
+                    <div class="card-grafico__cabecera">
+                        <div>
+                            <p class="card-grafico__titulo">Mapa por CCAA</p>
+                            <p class="card-grafico__subtitulo" id="subtitulo-mapa-ccaa">
+                                Importes concedidos a entidades locales por comunidad autónoma (2023–2025). Pasa el cursor por una comunidad para ver su importe total y número de concesiones, y haz clic para ver el top 10 de municipios.
+                            </p>
+                        </div>
+                    </div>
+                    <p class="mapa-ccaa-hint">Toca para ver el importe · Doble toque para ver el top de municipios.</p>
+                    <div class="mapa-ccaa-wrapper">
+                        <div id="mapa-ccaa"
+                             role="img"
+                             aria-label="Mapa de subvenciones EELL por comunidad autónoma">
+                        </div>
+                    </div>
 
 
                 <!-- ─────────────────────────────────────────────────
@@ -342,8 +368,34 @@
 
                 </div><!-- /fila 5 exclusiones -->
 
+
+                </div>
+
             </div><!-- /contenedor -->
         </section>
+
+
+        <!-- Modal "Top municipios" del mapa (lógica en js/modal-ccaa.js) -->
+        <div id="modal-ccaa" class="modal-ccaa" role="dialog" aria-modal="true" aria-labelledby="modal-ccaa-titulo" style="display:none;">
+            <div class="modal-ccaa__panel">
+                <div class="modal-ccaa__cabecera">
+                    <h3 class="modal-ccaa__titulo" id="modal-ccaa-titulo"></h3>
+                    <button class="modal-ccaa__cerrar" aria-label="Cerrar">&times;</button>
+                </div>
+                <div class="modal-ccaa__cuerpo">
+                    <div class="modal-ccaa__col">
+                        <p class="modal-ccaa__col-titulo">Acumulado <span id="modal-anio-min"></span>–<span id="modal-anio-max"></span></p>
+                        <p class="modal-ccaa__col-nota" id="modal-nota-acum"></p>
+                        <ol class="modal-ccaa__lista" id="modal-lista-acum"></ol>
+                    </div>
+                    <div class="modal-ccaa__col">
+                        <p class="modal-ccaa__col-titulo">Último año con resolución (<span id="modal-anio-ult"></span>)</p>
+                        <p class="modal-ccaa__col-nota" id="modal-nota-anio"></p>
+                        <ol class="modal-ccaa__lista" id="modal-lista-anio"></ol>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
 
@@ -384,6 +436,10 @@
     <script src="js/modal-grafica.js" defer></script>
     <script src="js/navbar.js" defer></script>
     <script src="js/scroll-arriba.js" defer></script>
+    <!-- Leaflet JS (mapa CCAA) — CDN con SRI + fallback local vía onerror -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous" defer onerror="this.onerror=null; var s=document.createElement('script'); s.src='/assets/vendor/leaflet.js'; s.defer=true; document.head.appendChild(s);"></script>
+    <script src="js/mapa-ccaa.js" defer></script>
+    <script src="js/modal-ccaa.js" defer></script>
     <script src="js/estadisticas-eell.js" defer></script>
 
 </body>

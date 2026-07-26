@@ -145,6 +145,13 @@ async function cargarEstadisticasEell() {
         poblarGraficoExclusionesAnio(datos.exclusiones    || {});
         poblarGraficoCausasFrecuentes(datos.exclusiones   || {});
 
+        // Mapa CCAA (Leaflet). El modal de top municipios al hacer
+        // clic vive en js/modal-ccaa.js (window.abrirModalCCAA). Se retrasa un
+        // pelín para asegurar que Leaflet (defer) ya ha cargado.
+        if (typeof pintarMapaCCAA === 'function') {
+            setTimeout(() => pintarMapaCCAA(datos.por_ccaa || [], window.abrirModalCCAA), 150);
+        }
+
     } catch (error) {
         console.error('Error al cargar estadísticas EELL:', error);
         if (!errorMensaje.textContent) {
