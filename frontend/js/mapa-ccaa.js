@@ -100,6 +100,7 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
     var esTactilPrimario = window.matchMedia('(pointer: coarse)').matches;
     _mapaInstancia = L.map('mapa-ccaa', {
         center: [40.2, -3.5], zoom: 5.8,
+        minZoom: 2, maxZoom: 8,   // acotado: por debajo de 2 queda muy lejos y por encima de 8 no aporta
         zoomControl: true, scrollWheelZoom: true, attributionControl: true,
         doubleClickZoom: !esTactilPrimario,
     });
