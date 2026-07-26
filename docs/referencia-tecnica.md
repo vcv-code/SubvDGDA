@@ -363,6 +363,8 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `GET` | `/estadisticas/` | Métricas globales · `Cache-Control: 1 hora` |
 | `GET` | `/estadisticas/epas` | Análisis de protectoras |
 | `GET` | `/estadisticas/eell` | Análisis de ayuntamientos |
+| `GET` | `/estadisticas/resumen-convocatorias` | Tabla resumen por tipo y año (recuento por estado + importe) · `Cache-Control: 1 hora` · se muestra en el inicio |
+| `GET` | `/solicitudes/causas` | Leyenda código→motivo de causas de exclusión por tipo y año · `Cache-Control: 1 día` |
 | `GET` | `/agrupaciones/{id_solic}` | Municipios miembro de una agrupación EELL |
 | `GET` | `/avisos/` | Convocatorias del año en curso sin resolución |
 
@@ -393,7 +395,7 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | `PUT` | `/privado/cambiar-nombre` | Actualizar alias |
 | `PUT` | `/privado/cambiar-contrasena` | Cambiar contraseña · revoca todos los refresh tokens |
 | `GET` | `/privado/resumen-exclusivo` | Datos para el mapa choropleth CCAA |
-| `GET` | `/privado/resumen-tabla` | Tabla resumen de solicitudes por convocatoria |
+| `GET` | `/privado/resumen-tabla` | Tabla resumen de solicitudes por convocatoria (misma lógica que el endpoint público `/estadisticas/resumen-convocatorias`; se conserva para la página de registrados) |
 
 ### Panel de administración (rol: `admin`)
 

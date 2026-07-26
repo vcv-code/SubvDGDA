@@ -6,6 +6,7 @@ from ..db import get_db
 from ..dependencies import require_rol
 from ..models import Concesion, Solicitud, Convocatoria, Usuario, RefreshToken
 from ..schemas import CambiarNombreIn, CambiarPasswordIn, ResumenTablaOut, ResumenFilaTabla
+from .estadisticas import construir_resumen_tabla
 
 router = APIRouter(prefix="/privado", tags=["zona privada"])
 
@@ -73,48 +74,9 @@ def resumen_tabla(
     usuario: Usuario = Depends(require_rol("registrado")),
     db: Session = Depends(get_db),
 ):
-    """Tabla resumen de solicitudes por tipo y año. Requiere rol: registrado o admin."""
-    filas = []
-    total_global     = 0
-    concedidas_total = 0
-    importe_global   = 0.0
+    """Tabla resumen de solicitudes por tipo y año. Requiere rol: registrado o admin.
 
-    convocatorias = db.query(Convocatoria).order_by(
-        Convocatoria.tipo_convoc, Convocatoria.anio_convocatoria
-    ).all()
-
-    for conv in convocatorias:
-        solicitudes = db.query(Solicitud).filter(Solicitud.id_convoc == conv.id_convoc).all()
-        total    = len(solicitudes)
-        conced   = sum(1 for s in solicitudes if s.estado == "concedida")
-        no_benef = sum(1 for s in solicitudes if s.estado == "no_beneficiaria")
-        excl     = sum(1 for s in solicitudes if s.estado == "excluida")
-        desist   = sum(1 for s in solicitudes if s.estado == "desistida")
-
-        ids_conced = [s.id_solic for s in solicitudes if s.estado == "concedida"]
-        importe = 0.0
-        if ids_conced:
-            concesiones = db.query(Concesion).filter(Concesion.id_solic.in_(ids_conced)).all()
-            importe = float(sum(c.importe for c in concesiones if c.importe))
-
-        filas.append(ResumenFilaTabla(
-            tipo=conv.tipo_convoc,
-            anio=conv.anio_convocatoria,
-            total=total,
-            concedidas=conced,
-            no_beneficiarias=no_benef,
-            excluidas=excl,
-            desistidas=desist,
-            importe_total=round(importe, 2),
-        ))
-
-        total_global     += total
-        concedidas_total += conced
-        importe_global   += importe
-
-    return ResumenTablaOut(
-        filas=filas,
-        total_global=total_global,
-        concedidas_total=concedidas_total,
-        importe_global=round(importe_global, 2),
-    )
+    Reutiliza la misma agregación que el endpoint público
+    GET /estadisticas/resumen-convocatorias (la lógica vive ahí, sin duplicar).
+    """
+    return construir_resumen_tabla(db)

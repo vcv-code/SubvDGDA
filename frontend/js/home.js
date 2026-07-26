@@ -649,22 +649,33 @@ function celdaUmbral(item) {
     return formatearUmbral(item.umbral);
 }
 
-/** Rellena la tabla de umbrales (una fila por año, columnas EPA y EELL). */
+/** Rellena la tabla de umbrales en horizontal: una fila por tipo de entidad
+ *  (EPA / EELL) y una columna por año (más recientes a la izquierda). */
 function poblarUmbrales(umbrales) {
+    const thead = document.getElementById('umbral-thead');
     const tbody = document.getElementById('umbral-tbody');
     if (!tbody || !umbrales || !umbrales.length) return;
 
-    // Años más recientes arriba (como las tablas de convocatorias/resoluciones)
+    // Años como columnas, más recientes a la izquierda
     const anios = [...new Set(umbrales.map(u => u.anio))].sort((a, b) => b - a);
     const porClave = {};
     umbrales.forEach(u => { porClave[`${u.tipo}-${u.anio}`] = u; });
 
-    tbody.innerHTML = anios.map(anio => `
+    if (thead) {
+        thead.innerHTML = `<tr>
+            <th scope="col">Tipo de entidad</th>
+            ${anios.map(a => `<th scope="col">${a}</th>`).join('')}
+        </tr>`;
+    }
+
+    const fila = (tipo, etiqueta) => `
         <tr>
-            <td>${anio}</td>
-            <td>${celdaUmbral(porClave['epa-' + anio])}</td>
-            <td>${celdaUmbral(porClave['eell-' + anio])}</td>
-        </tr>`).join('');
+            <th scope="row">${etiqueta}</th>
+            ${anios.map(a => `<td>${celdaUmbral(porClave[`${tipo}-${a}`])}</td>`).join('')}
+        </tr>`;
+
+    tbody.innerHTML = fila('epa', 'EPA (protectoras)')
+                    + fila('eell', 'EELL (entidades locales)');
 
     const seccion = document.getElementById('seccion-umbral');
     if (seccion) seccion.style.display = '';
@@ -829,8 +840,29 @@ async function cargarConvocatorias() {
 }
 
 
+// ─────────────────────────────────────────────────────────────
+// RESUMEN POR CONVOCATORIA (tabla al final, banda crema)
+// Endpoint público propio; render compartido con exclusivo.html
+// (js/resumen-tabla.js → window.renderResumenTabla).
+// ─────────────────────────────────────────────────────────────
+async function cargarResumenTabla() {
+    const contenedor = document.getElementById('resumen-tabla-contenedor');
+    if (!contenedor) return;
+    try {
+        const respuesta = await fetch(`${API_URL}/estadisticas/resumen-convocatorias`);
+        if (!respuesta.ok) throw new Error(`Error ${respuesta.status}`);
+        const datos = await respuesta.json();
+        window.renderResumenTabla(datos, contenedor);
+    } catch (error) {
+        console.error('Error al cargar el resumen por convocatoria:', error);
+        contenedor.innerHTML = '<p class="tabla-error-msg">No se pudo cargar el resumen por convocatoria.</p>';
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
     cargarAvisos();
     cargarConvocatorias();
+    cargarResumenTabla();
 });

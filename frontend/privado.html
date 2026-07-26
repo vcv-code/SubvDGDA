@@ -48,7 +48,7 @@
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
                 <li><a href="privado.html" aria-current="page" class="activo">Mi perfil</a></li>
-                <li><a href="exclusivo.html">Exclusivo</a></li>
+                <li id="nav-exclusivo" style="display:none;"><a href="exclusivo.html">Exclusivo</a></li>
                 <li>
                     <button type="button" id="btn-cerrar-sesion" class="btn-login">
                         Cerrar sesión
@@ -88,21 +88,25 @@
                     No se pudieron cargar los datos. Comprueba tu conexión e inténtalo de nuevo.
                 </div>
 
-                <!-- Acceso al área de datos exclusivos -->
-                <h2 class="privado-seccion__titulo">Área exclusiva</h2>
-                <p class="privado-seccion__subtitulo">
-                    Datos detallados por tipos de convocatoria, estados y años, mapa de subvenciones con información detallada por comunidades autónomas y top de municipios beneficiados en cada comunidad.
-                </p>
-                <a href="exclusivo.html" class="privado-acceso-exclusivo">
-                    <span class="privado-acceso-exclusivo__icono">⭐</span>
-                    <span class="privado-acceso-exclusivo__texto">
-                        <strong>Ver contenido exclusivo</strong>
-                        <span>Resumen por convocatoria · Mapa CCAA · Top municipios</span>
-                    </span>
-                    <span class="privado-acceso-exclusivo__flecha">→</span>
-                </a>
+                <!-- Acceso al área de datos exclusivos — solo admin.
+                     Su contenido (resumen + mapa) ya es público; privado.js
+                     muestra este bloque únicamente si el rol es admin. -->
+                <div id="area-exclusiva-privado" style="display:none;">
+                    <h2 class="privado-seccion__titulo">Área exclusiva</h2>
+                    <p class="privado-seccion__subtitulo">
+                        Datos detallados por tipos de convocatoria, estados y años, mapa de subvenciones con información detallada por comunidades autónomas y top de municipios beneficiados en cada comunidad.
+                    </p>
+                    <a href="exclusivo.html" class="privado-acceso-exclusivo">
+                        <span class="privado-acceso-exclusivo__icono">⭐</span>
+                        <span class="privado-acceso-exclusivo__texto">
+                            <strong>Ver contenido exclusivo</strong>
+                            <span>Resumen por convocatoria · Mapa CCAA · Top municipios</span>
+                        </span>
+                        <span class="privado-acceso-exclusivo__flecha">→</span>
+                    </a>
 
-                <hr class="privado-divisor">
+                    <hr class="privado-divisor">
+                </div>
 
                 <!-- Nombre y contraseña en dos columnas -->
                 <div class="privado-dos-columnas">

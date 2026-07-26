@@ -329,25 +329,31 @@
 
 
         <!-- ─────────────────────────────────────────────────
-             UMBRAL DE PUNTUACIÓN (corte de concesión por año)
-             Banda crema entre las dos secciones verdes
-             (convocatorias verde clarito y gráficos verde suave).
-             Se rellena desde GET /estadisticas/ en home.js.
+             SECCIÓN: RESUMEN POR CONVOCATORIA (banda crema)
+             Tabla resumen de solicitudes por tipo y año (recuento por
+             estado + importe). Datos: GET /estadisticas/resumen-convocatorias
+             (público). Render compartido con exclusivo.html vía
+             js/resumen-tabla.js. La puebla home.js.
              ───────────────────────────────────────────────── -->
-        <section id="seccion-umbral" style="display:none;">
-            <div class="contenedor">
-                <div class="umbral-bloque">
-                    <h3 class="sub-bloque__titulo">Umbral de puntuación</h3>
-                    <div class="umbral-intro">
-                        <p><strong>Protectoras (EPA):</strong> en las primeras convocatorias <strong>todas las entidades admitidas recibían subvención</strong>. A partir de 2024, se estableció un <strong>corte por puntuación</strong>: para no repartir ayudas muy pequeñas, dejaron fuera las entidades con menor puntuación <strong>aunque cumplieron todos los requisitos</strong>. Este umbral cambia cada año y desde 2024 se fija <strong>de forma independiente por línea de subvención</strong>; la tabla muestra la puntuación más baja con la que se consiguió ayuda. La solución para evitar esto pasaría por <strong>ampliar el presupuesto</strong> o que las administraciones se hicieran cargo de todos los gastos, como corresponde. Las <strong>fórmulas exactas</strong> de puntuación y reparto no son públicas, y la <strong>puntuación máxima es siempre de 100 puntos</strong>.</p>
-                        <p><strong>Entidades locales (EELL):</strong> aquí <strong>siempre ha habido corte</strong> por puntuación, desde la primera convocatoria (2023). <strong>Sobre la cofinanciación.</strong> Además de la subvención, las entidades aportan fondos propios (<strong>cofinanciación</strong>): esa aportación <strong>suma puntos</strong> en la evaluación, pero <strong>no cambia el importe concedido</strong>. No la mostramos por entidad porque las resoluciones oficiales apenas la publican —en 2023 solo consta en unas pocas y en 2024 no figura en la resolución de concesión—, así que no habría un dato comparable entre años.</p>
-                    </div>
-                    <div class="tabla-wrapper umbral-wrapper">
-                        <table class="tabla-convoc tabla-umbral">
-                            <caption class="skip-nav">Umbral de puntuación de concesión por año y tipo de entidad</caption>
-                            <thead><tr><th scope="col">Año</th><th scope="col">EPA (protectoras)</th><th scope="col">EELL (entidades locales)</th></tr></thead>
-                            <tbody id="umbral-tbody"><tr><td colspan="3" class="estado-carga">Cargando…</td></tr></tbody>
-                        </table>
+        <section class="fondo-crema" aria-labelledby="resumen-titulo">
+            <div class="seccion contenedor">
+                <div class="bloque-intro">
+                    <h2 class="bloque-titulo bloque-titulo--md" id="resumen-titulo">
+                        Resumen por convocatoria
+                    </h2>
+                    <p class="bloque-subtitulo">
+                        Solicitudes por tipo y año, con el desglose por estado
+                        (concedidas, no beneficiarias, excluidas y desistidas) y el importe concedido.
+                    </p>
+                </div>
+
+                <div id="resumen-tabla-contenedor">
+                    <div class="skeleton-tabla" aria-hidden="true">
+                        <div class="skeleton-tabla__cabecera"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
+                        <div class="skeleton-tabla__fila"></div>
                     </div>
                 </div>
             </div>
@@ -484,9 +490,37 @@
                     </div>
 
 
+                </div>
             </div>
         </section>
 
+
+        <!-- ─────────────────────────────────────────────────
+             UMBRAL DE PUNTUACIÓN (corte de concesión por año)
+             Banda crema de cierre: explica el corte por puntuación
+             y la cofinanciación como "letra pequeña" antes del footer.
+             Se rellena desde GET /estadisticas/ en home.js.
+             ───────────────────────────────────────────────── -->
+        <section id="seccion-umbral" style="display:none;">
+            <div class="contenedor">
+                <div class="umbral-bloque">
+                    <h3 class="sub-bloque__titulo">Umbral de puntuación</h3>
+                    <div class="umbral-intro">
+                        <p><strong>Protectoras (EPA):</strong> en las primeras convocatorias <strong>todas las entidades admitidas recibían subvención</strong>. A partir de 2024, se estableció un <strong>corte por puntuación</strong>: para no repartir ayudas muy pequeñas, dejaron fuera las entidades con menor puntuación <strong>aunque cumplieron todos los requisitos</strong>. Este umbral cambia cada año y desde 2024 se fija <strong>de forma independiente por línea de subvención</strong>; la tabla muestra la puntuación más baja con la que se consiguió ayuda. La solución para evitar esto pasaría por <strong>ampliar el presupuesto</strong> o que las administraciones se hicieran cargo de todos los gastos, como corresponde. Las <strong>fórmulas exactas</strong> de puntuación y reparto no son públicas, y la <strong>puntuación máxima es siempre de 100 puntos</strong>.</p>
+                        <p><strong>Entidades locales (EELL):</strong> aquí <strong>siempre ha habido corte</strong> por puntuación, desde la primera convocatoria (2023). <strong>Sobre la cofinanciación.</strong> Además de la subvención, las entidades aportan fondos propios (<strong>cofinanciación</strong>): esa aportación <strong>suma puntos</strong> en la evaluación, pero <strong>no cambia el importe concedido</strong>. No la mostramos por entidad porque las resoluciones oficiales apenas la publican —en 2023 solo consta en unas pocas y en 2024 no figura en la resolución de concesión—, así que no habría un dato comparable entre años.</p>
+                    </div>
+                    <div class="tabla-wrapper umbral-wrapper">
+                        <!-- Tabla horizontal: filas por tipo de entidad, columnas por año.
+                             Cabecera y cuerpo los construye poblarUmbrales() en home.js. -->
+                        <table class="tabla-convoc tabla-umbral">
+                            <caption class="skip-nav">Umbral de puntuación de concesión por año y tipo de entidad</caption>
+                            <thead id="umbral-thead"></thead>
+                            <tbody id="umbral-tbody"><tr><td class="estado-carga">Cargando…</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
     </main>
@@ -555,6 +589,7 @@
     <!-- Primario: CDN con SRI. Fallback local en /assets/vendor/ si el CDN no responde (onerror). -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous" defer onerror="this.onerror=null; var s=document.createElement('script'); s.src='/assets/vendor/chart.umd.min.js'; s.defer=true; document.head.appendChild(s);"></script>
     <script src="js/modal-grafica.js" defer></script>
+    <script src="js/resumen-tabla.js" defer></script>
     <script src="js/home.js" defer></script>
 
 </body>
