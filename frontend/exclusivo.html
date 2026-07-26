@@ -123,14 +123,14 @@
                 <div class="card-grafico mb-lg">
                     <div class="card-grafico__cabecera">
                         <div>
-                            <p class="card-grafico__titulo">Mapa de calor por CCAA</p>
+                            <p class="card-grafico__titulo">Mapa por CCAA</p>
                         </div>
                     </div>
                     <p class="mapa-ccaa-hint">Toca para ver el importe · Doble toque para ver el top de municipios.</p>
                     <div class="mapa-ccaa-wrapper">
                         <div id="mapa-ccaa"
                              role="img"
-                             aria-label="Mapa de calor de subvenciones EELL por comunidad autónoma">
+                             aria-label="Mapa de subvenciones EELL por comunidad autónoma">
                         </div>
                     </div>
                 </div>
@@ -216,6 +216,8 @@
     <!-- Leaflet JS — primario CDN con SRI, fallback local en /assets/vendor/ vía onerror -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous" defer onerror="this.onerror=null; var s=document.createElement('script'); s.src='/assets/vendor/leaflet.js'; s.defer=true; document.head.appendChild(s);"></script>
     <script src="js/mapa-ccaa.js" defer></script>
+    <script src="js/modal-ccaa.js" defer></script>
+    <script src="js/resumen-tabla.js" defer></script>
     <script src="js/navbar.js" defer></script>
     <script src="js/scroll-arriba.js" defer></script>
     <script src="js/exclusivo.js" defer></script>

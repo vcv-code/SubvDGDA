@@ -79,107 +79,8 @@ async function cargarResumenTabla(token) {
     try {
         const datos = await fetchAutenticado('/privado/resumen-tabla', token);
         if (!datos) return;
-
-        const fmt = (n) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
-        const num = (n) => n.toLocaleString('es-ES');
-
-        const colgroup = `<colgroup>
-            <col style="width:10%"><col style="width:7%"><col style="width:9%">
-            <col style="width:13%"><col style="width:12%"><col style="width:12%">
-            <col style="width:12%"><col style="width:15%">
-        </colgroup>`;
-
-        const cabecera = `<tr>
-            <th scope="col">Tipo</th><th scope="col">Año</th><th scope="col">Total</th>
-            <th scope="col" class="col-sep">Concedidas</th>
-            <th scope="col">No benef.</th><th scope="col">Excluidas</th><th scope="col">Desistidas</th>
-            <th scope="col" class="col-sep">Importe concedido</th>
-        </tr>`;
-
-        const renderFila = (f) => {
-            if (f.total === 0) {
-                return `<tr class="resumen-tabla__pendiente">
-                    <td><span class="resumen-tabla__tipo resumen-tabla__tipo--${f.tipo}">${f.tipo.toUpperCase()}</span></td>
-                    <td>${f.anio}</td>
-                    <td colspan="6" style="text-align:center;">Resolución pendiente de publicación</td>
-                </tr>`;
-            }
-            return `<tr>
-                <td><span class="resumen-tabla__tipo resumen-tabla__tipo--${f.tipo}">${f.tipo.toUpperCase()}</span></td>
-                <td>${f.anio}</td>
-                <td>${num(f.total)}</td>
-                <td class="col-sep">${num(f.concedidas)}</td>
-                <td>${num(f.no_beneficiarias)}</td>
-                <td>${num(f.excluidas)}</td>
-                <td>${num(f.desistidas)}</td>
-                <td class="col-sep">${fmt(f.importe_total)}${f.tipo === 'epa' && f.anio === 2021 ? '<sup>*</sup>' : ''}</td>
-            </tr>`;
-        };
-
-        const renderBloque = (tipo, filasTipo) => {
-            const cd = filasTipo.filter(f => f.total > 0);
-            const s  = (campo) => cd.reduce((a, f) => a + f[campo], 0);
-            const subtotal = cd.length ? `
-                <tfoot>
-                    <tr class="resumen-tabla__subtotal">
-                        <td colspan="2">Subtotal ${tipo.toUpperCase()}</td>
-                        <td>${num(s('total'))}</td>
-                        <td class="col-sep">${num(s('concedidas'))}</td>
-                        <td>${num(s('no_beneficiarias'))}</td>
-                        <td>${num(s('excluidas'))}</td>
-                        <td>${num(s('desistidas'))}</td>
-                        <td class="col-sep">${fmt(s('importe_total'))}</td>
-                    </tr>
-                </tfoot>` : '';
-            return `
-                <div class="resumen-tabla-card">
-                <div class="resumen-bloque tabla-scroll">
-                    <table class="resumen-tabla" aria-label="Solicitudes ${tipo.toUpperCase()}" style="table-layout:fixed;">
-                        ${colgroup}<thead>${cabecera}</thead>
-                        <tbody>${filasTipo.map(renderFila).join('')}</tbody>
-                        ${subtotal}
-                    </table>
-                </div>
-                </div>`;
-        };
-
-        const filasEpa  = datos.filas.filter(f => f.tipo === 'epa').sort((a, b) => b.anio - a.anio);
-        const filasEell = datos.filas.filter(f => f.tipo === 'eell').sort((a, b) => b.anio - a.anio);
-
-        const todosConDatos = datos.filas.filter(f => f.total > 0);
-        const totNobenef = todosConDatos.reduce((s, f) => s + f.no_beneficiarias, 0);
-        const totExcl    = todosConDatos.reduce((s, f) => s + f.excluidas, 0);
-        const totDesist  = todosConDatos.reduce((s, f) => s + f.desistidas, 0);
-
-        contenedor.innerHTML = `
-            <div class="resumen-grupos">
-                ${renderBloque('epa', filasEpa)}
-                <!-- Nota del asterisco del importe de 2021 (EPA), justo bajo su tabla.
-                     Texto editorial FIJO; revisar si cambian los presupuestos. -->
-                <p class="nota-asterisco">
-                    <span aria-hidden="true">*</span> En 2021, primer año de la convocatoria, el presupuesto ascendía a 3 millones de euros; sin embargo, la escasa difusión y la complejidad del procedimiento provocaron un número reducido de solicitudes, por lo que gran parte de los fondos quedó sin adjudicar. Al año siguiente el presupuesto se redujo en un millón y, pese al posterior aumento de solicitudes, no ha vuelto a ampliarse. Sería deseable que se incremente en próximas convocatorias.
-                </p>
-                ${renderBloque('eell', filasEell)}
-                <div class="resumen-tabla-card">
-                <div class="resumen-bloque resumen-bloque--total tabla-scroll">
-                    <table class="resumen-tabla" aria-label="Total global" style="table-layout:fixed;">
-                        ${colgroup}
-                        <thead>${cabecera}</thead>
-                        <tbody>
-                            <tr class="resumen-tabla__totales">
-                                <td colspan="2">TOTAL GLOBAL</td>
-                                <td>${num(datos.total_global)}</td>
-                                <td class="col-sep">${num(datos.concedidas_total)}</td>
-                                <td>${num(totNobenef)}</td>
-                                <td>${num(totExcl)}</td>
-                                <td>${num(totDesist)}</td>
-                                <td class="col-sep">${fmt(datos.importe_global)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-            </div>`;
+        // Render compartido con la home (js/resumen-tabla.js)
+        window.renderResumenTabla(datos, contenedor);
     } catch {
         if (contenedor) contenedor.innerHTML = '<p class="tabla-error-msg">No se pudo cargar la tabla de resumen.</p>';
     }
@@ -222,104 +123,8 @@ async function cargarMapaCCAA() {
 }
 
 
-// ─── MODAL TOP 10 MUNICIPIOS ──────────────────────────────────────────────────
-
-function fmtEur(v) {
-    return Math.round(Number(v)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
-}
-
-async function abrirModalCCAA(nombre) {
-    const modal = document.getElementById('modal-ccaa');
-    if (!modal) return;
-
-    document.getElementById('modal-ccaa-titulo').textContent = 'Top municipios — ' + nombre;
-    document.getElementById('modal-lista-acum').innerHTML = '<li style="color:#999;padding:.5rem 0">Cargando...</li>';
-    document.getElementById('modal-lista-anio').innerHTML  = '';
-    modal.style.display = 'flex';
-
-    try {
-        const resp = await fetch(`${API_URL}/solicitudes/?ccaa=${encodeURIComponent(nombre)}&estado=concedida&limite=500`);
-        if (!resp.ok) throw new Error();
-        const datos = await resp.json();
-        const rows  = datos.resultados || [];
-
-        // Expandir agrupaciones: obtener miembros individuales con importe_asignado
-        const agrupaciones = rows.filter(r => r.es_agrupacion);
-        const miembrosMap  = {};
-        if (agrupaciones.length) {
-            const detalles = await Promise.all(
-                agrupaciones.map(r => fetch(`${API_URL}/agrupaciones/${r.id_solic}`).then(res => res.ok ? res.json() : null))
-            );
-            detalles.forEach((det, i) => {
-                if (det && det.miembros) {
-                    miembrosMap[agrupaciones[i].id_solic] = {
-                        anio:     agrupaciones[i].convocatoria.anio_convocatoria,
-                        miembros: det.miembros,
-                    };
-                }
-            });
-        }
-
-        const acum = {}, porAnio = {};
-        rows.forEach(function(r) {
-            const anio = r.convocatoria.anio_convocatoria;
-            if (r.es_agrupacion && miembrosMap[r.id_solic]) {
-                // Distribuir entre municipios miembro
-                miembrosMap[r.id_solic].miembros.forEach(function(m) {
-                    const key = m.nombre;
-                    const imp = Number(m.importe_asignado) || 0;
-                    acum[key] = (acum[key] || 0) + imp;
-                    if (!porAnio[anio]) porAnio[anio] = {};
-                    porAnio[anio][key] = (porAnio[anio][key] || 0) + imp;
-                });
-            } else {
-                const key = r.beneficiario.nombre;
-                const imp = Number(r.importe) || 0;
-                acum[key] = (acum[key] || 0) + imp;
-                if (!porAnio[anio]) porAnio[anio] = {};
-                porAnio[anio][key] = (porAnio[anio][key] || 0) + imp;
-            }
-        });
-
-        const anios   = rows.map(r => r.convocatoria.anio_convocatoria);
-        const minAnio = anios.length ? String(Math.min(...anios)) : '—';
-        const maxAnio = anios.length ? String(Math.max(...anios)) : '—';
-        document.getElementById('modal-anio-min').textContent = minAnio;
-        document.getElementById('modal-anio-max').textContent = maxAnio;
-        document.getElementById('modal-anio-ult').textContent = maxAnio;
-
-        function top10html(obj) {
-            return Object.entries(obj)
-                .sort((a, b) => b[1] - a[1]).slice(0, 10)
-                .map(([nom, imp], i) => {
-                    const n = nom.replace(/^AYUNTAMIENTO\s+(DE\s+|DEL?\s+)?/i, '');
-                    return `<li><span class="modal-ccaa__pos">${i+1}</span>` +
-                           `<span class="modal-ccaa__nombre">${n}</span>` +
-                           `<span class="modal-ccaa__importe">${fmtEur(imp)}</span></li>`;
-                }).join('') || '<li style="color:#999">Sin datos</li>';
-        }
-
-        const listaAcum = Object.entries(acum).sort((a,b) => b[1]-a[1]);
-        const listaAnio = Object.entries(porAnio[maxAnio] || {}).sort((a,b) => b[1]-a[1]);
-
-        const notaFmt = n => `Top ${Math.min(10, n)} de ${n} municipio${n !== 1 ? 's' : ''}.`;
-        document.getElementById('modal-nota-acum').textContent = notaFmt(listaAcum.length);
-        document.getElementById('modal-nota-anio').textContent = notaFmt(listaAnio.length);
-
-        document.getElementById('modal-lista-acum').innerHTML = top10html(acum);
-        document.getElementById('modal-lista-anio').innerHTML  = top10html(porAnio[maxAnio] || {});
-
-    } catch(e) {
-        const err = '<li style="color:#c00">Error al cargar datos</li>';
-        document.getElementById('modal-lista-acum').innerHTML = err;
-        document.getElementById('modal-lista-anio').innerHTML = err;
-    }
-}
-
-function cerrarModalCCAA() {
-    const modal = document.getElementById('modal-ccaa');
-    if (modal) modal.style.display = 'none';
-}
+// El modal "Top municipios" (abrirModalCCAA / cerrarModalCCAA) vive en el
+// módulo compartido js/modal-ccaa.js — se usa igual desde estadisticas-eell.html.
 
 
 // ─── PUNTO DE ENTRADA ─────────────────────────────────────────────────────────
@@ -341,12 +146,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const perfil = await fetchAutenticado('/privado/perfil', token);
     if (!perfil) return;
 
+    // Solo admin: el contenido (resumen + mapa) ya es público en el inicio y en
+    // estadísticas EELL, así que esta página queda reservada para la usuaria
+    // (admin) de cara a futuro contenido exclusivo. Los registrados normales se
+    // redirigen a su perfil.
+    if (perfil.rol !== 'admin') {
+        window.location.href = 'privado.html';
+        return;
+    }
+
     await cargarResumenTabla(token);
     cargarMapaCCAA();
 
-    const btnCerrarModal = document.querySelector('.modal-ccaa__cerrar');
-    if (btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarModalCCAA);
-    const modalOverlay = document.getElementById('modal-ccaa');
-    if (modalOverlay) modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) cerrarModalCCAA(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModalCCAA(); });
+    // El cierre del modal CCAA (×, clic fuera, Escape) lo auto-conecta modal-ccaa.js
 });
