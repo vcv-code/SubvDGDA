@@ -2570,7 +2570,7 @@ canvas {
 }
 
 .resumen-tabla th {
-    background: var(--nav-oscuro);
+    background: var(--color-verde-tabla);
     color: #fff;
     font-weight: 600;
     font-size: 0.82rem;
