@@ -414,8 +414,8 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 | Rol | Quién es | Páginas y rutas accesibles |
 |-----|----------|---------------------------|
 | Sin token | Usuario no registrado | Home, buscador, estadísticas, recursos · API: `/convocatorias/`, `/solicitudes/`, `/estadisticas/*`, `/avisos/` |
-| `registrado` | Cuenta verificada | Todo lo anterior + `privado.html`, `exclusivo.html` · API: `/privado/*` |
-| `admin` | Administrador | Todo lo anterior + `admin.html` · API: `/admin/*` |
+| `registrado` | Cuenta verificada | Todo lo anterior + `privado.html` · API: `/privado/*` |
+| `admin` | Administrador | Todo lo anterior + `admin.html` y `exclusivo.html` · API: `/admin/*` |
 
 **Errores personalizados:** los errores HTTP devuelven siempre JSON estructurado con tres campos:
 
@@ -443,11 +443,11 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 
 | Página | Descripción |
 |--------|-------------|
-| `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año). Incluye enlaces a las **bases reguladoras** oficiales |
+| `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año) y, al final, el **resumen por convocatoria** (recuento por estado + importe). Incluye enlaces a las **bases reguladoras** oficiales |
 | `buscador.html` | Buscador de solicitudes con filtros (incluida la **línea de subvención** en EPA 2024/2025), búsqueda por nombre de entidad o nº de expediente, paginación (con accesos a primera/última página), ordenación server-side, estado vacío con sugerencias y exportación CSV con nombre dinámico según filtros activos. Debajo, **buscador de exclusiones (EELL)**: entidades locales excluidas con su causa oficial — filtro de causa dependiente del año (cada convocatoria usa su propia numeración), chip con los códigos y modal con el motivo completo de cada uno |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios, **exclusiones por año y causas más frecuentes** |
-| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y mapa (en exclusivo) |
-| `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
+| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y **mapa de calor por CCAA** (choropleth con top de municipios al hacer clic) |
+| `exclusivo.html` | Resumen por convocatoria y mapa CCAA. Su contenido ya es **público** (el resumen en el inicio, el mapa en estadísticas EELL), así que la página queda **reservada a rol `admin`** (`exclusivo.js` redirige a los no-admin) como espacio para futuro contenido exclusivo; comparte el render con las páginas públicas (`js/resumen-tabla.js`, `js/modal-ccaa.js`) |
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
@@ -460,7 +460,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `mantenimiento.html` | Página de mantenimiento programado (503); Nginx la sirve cuando existe el fichero-bandera `maintenance.on` |
 
 **Estados de carga:**
-Las páginas con peticiones asíncronas muestran feedback visual mientras esperan la respuesta: spinner giratorio (home, estadísticas, buscador, ficha de entidad) y skeleton loader animado en verde para la tabla de `exclusivo.html` — barras con shimmer que simulan la forma de la tabla antes de que lleguen los datos.
+Las páginas con peticiones asíncronas muestran feedback visual mientras esperan la respuesta: spinner giratorio (home, estadísticas, buscador, ficha de entidad) y skeleton loader animado en verde para la tabla resumen por convocatoria (en el inicio y en `exclusivo.html`) — barras con shimmer que simulan la forma de la tabla antes de que lleguen los datos.
 
 **Optimización de carga:**
 
@@ -480,7 +480,7 @@ Componente compartido (`js/scroll-arriba.js` + clase `.btn-subir`) cargado en la
 **Visualizaciones:**
 
 - **Chart.js** — gráficas de barras, líneas, donut y distribución en las páginas de estadísticas. Cada gráfica abre un modal con conclusiones en HTML (`<p>`, `<ul>`, `<a>`).
-- **Leaflet + GeoJSON** — mapa choropleth por CCAA en `exclusivo.html`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
+- **Leaflet + GeoJSON** — mapa choropleth por CCAA en las estadísticas EELL (público) y en `exclusivo.html`, con el mismo módulo `mapa-ccaa.js` y el modal de top municipios `modal-ccaa.js`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
 
 Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-frontend.md](frontend/docs/especificaciones-frontend.md) · Paleta, tipografía y guía visual en [frontend/docs/diseño.md](frontend/docs/diseño.md).
 
@@ -518,7 +518,7 @@ La carpeta `frontend/` contiene:
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y dos componentes compartidos por todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
@@ -1132,7 +1132,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 375 pruebas automáticas en verde (pytest)
+- 378 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1169,7 +1169,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **`fetchpriority="high"`** en la imagen hero — mejora el LCP (Largest Contentful Paint)
 - **`loading="lazy"`** en todas las imágenes fuera del viewport inicial
 - **Caché Nginx** — imágenes y fuentes: `expires 1y`; CSS y JS: `expires 1h`
-- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora, `/solicitudes/causas` 1 día
+- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora, `/estadisticas/resumen-convocatorias` 1 hora, `/solicitudes/causas` 1 día
 - **Imágenes Docker slim** — `python:3.12-slim` (~75 MB vs ~900 MB de la imagen completa); `--no-cache-dir` en pip
 
 ### Calidad y mantenibilidad
