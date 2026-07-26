@@ -1400,11 +1400,9 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Funcionalidades y UX
 
-- **Mostrar exclusiones EPA en el buscador de exclusiones** — los datos ya están completos en BD y API (`/solicitudes/?estado=excluida&tipo=epa` + leyenda en `/solicitudes/causas`); por decisión de producto la sección del buscador solo muestra EELL, donde la causa aporta más análisis (CCAA derivable). Añadir EPA sería reactivar el filtro de tipo en la sección.
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
 - **Login con terceros (OAuth)** — integración con Google.
-- **Conclusiones comparativas en modales EELL** — los modales de estadísticas EELL ("Top provincias" y "Tramos de importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si crece la concentración de importes) añadiría valor analítico. La recurrencia de entidades se resume en un KPI con nota al pie; los modales de home y EPA ya tienen conclusiones completas.
 
 ### Producción y seguridad
 
