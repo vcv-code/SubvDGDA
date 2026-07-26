@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 246 funciones / 344 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 280 funciones / 378 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **298 funciones / 396 ejecuciones** | |
+| **Total** | **332 funciones / 430 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de las 344 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 328. Con Docker completo, pasan las 344.
+Nota sobre ejecución: 16 de las 378 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 362. Con Docker completo, pasan las 378.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (344) es mayor que el número de **funciones de test** escritas (246). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (378) es mayor que el número de **funciones de test** escritas (280). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **246 funciones de test automáticas** (344 ejecuciones con pytest) distribuidas en 22 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
+El proyecto incluye **280 funciones de test automáticas** (378 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
 
 ### Cómo funcionan
 
@@ -82,188 +82,50 @@ pytest tests/test_auth.py -v      # solo un archivo
 pytest -k "filtro"                 # solo tests cuyo nombre contiene "filtro"
 ```
 
-### Tabla completa de tests
+### Tests por archivo
 
-> **Pendiente de actualizar:** esta tabla numerada es una foto que se quedó en 199 filas; la suite real ya tiene **378 funciones**. Falta regenerarla (y añadir, entre otros, los tests de tramos de importe y recurrencia EELL). Al hacerlo conviene automatizar la extracción desde `pytest --collect-only` para no volver a desincronizarla.
+En lugar de una tabla fila a fila (que se desincronizaba cada vez que se añadía
+un test), este resumen se **deriva de la propia suite** y se regenera en segundos:
 
-| # | Archivo | Tipo | Caja | Qué comprueba |
-|---|---|---|---|---|
-| 1 | `test_smoke.py` | Smoke | Negra | `GET /` responde 200 con `{"mensaje": "API funcionando"}` |
-| 2 | `test_convocatorias.py` | Funcional | Negra | `GET /convocatorias/` responde 200 |
-| 3 | `test_convocatorias.py` | Funcional | Negra | La respuesta es una lista JSON |
-| 4 | `test_convocatorias.py` | Funcional | Negra | Con BD vacía devuelve `[]` sin error (robustez) |
-| 5 | `test_solicitudes.py` | Funcional | Negra | `GET /solicitudes/` responde 200 |
-| 6 | `test_solicitudes.py` | Funcional | Negra | La respuesta tiene las claves `total` y `resultados` |
-| 7 | `test_solicitudes.py` | Funcional | Blanca | Filtro `?tipo=epa` devuelve solo solicitudes EPA; `total` correcto |
-| 8 | `test_solicitudes.py` | Funcional | Blanca | Filtro `?estado=concedida` devuelve solo las concedidas; `total` correcto |
-| 9 | `test_solicitudes.py` | Funcional | Blanca | Paginación: `total` no cambia entre páginas; registros por página correctos |
-| 10 | `test_solicitudes.py` | Funcional | Blanca | Filtro `?cif=` devuelve solo solicitudes del beneficiario con ese CIF |
-| 11 | `test_solicitudes.py` | Funcional | Blanca | `?buscar=Protectora` devuelve solo solicitudes cuya entidad contiene "Protectora" |
-| 12 | `test_solicitudes.py` | Funcional | Blanca | Stopwords ignoradas: `buscar=Ayuntamiento de Burgos` equivale a `buscar=Burgos` |
-| 13 | `test_solicitudes.py` | Funcional | Blanca | Búsqueda sin coincidencias devuelve `total: 0` y `resultados: []` sin error |
-| 14 | `test_estadisticas.py` | Funcional | Negra | `GET /estadisticas/` responde 200 |
-| 15 | `test_estadisticas.py` | Funcional | Negra | El JSON tiene las 4 claves esperadas |
-| 16 | `test_estadisticas.py` | Funcional | Blanca | Totales calculados correctos con datos reales |
-| 17 | `test_estadisticas.py` | Funcional | Blanca | Desglose por año y tipo correcto |
-| 18 | `test_auth.py` | Funcional | Blanca | Registro válido devuelve 201 con email y rol |
-| 19 | `test_auth.py` | Funcional | Blanca | Registro con email duplicado devuelve 400 |
-| 20 | `test_auth.py` | Unitario | Blanca | Contraseña débil rechazada con 422 (validador Pydantic) |
-| 21 | `test_auth.py` | Funcional | Blanca | Login correcto devuelve token JWT con `token_type: bearer` |
-| 22 | `test_auth.py` | Funcional | Blanca | Login con contraseña incorrecta devuelve 401 |
-| 23 | `test_auth.py` | Funcional | Blanca | Login con email inexistente devuelve 401 |
-| 24 | `test_auth.py` | Seguridad | Blanca | `GET /privado/perfil` sin token devuelve 401 |
-| 25 | `test_auth.py` | Seguridad | Blanca | `GET /privado/perfil` con token válido devuelve 200 |
-| 26 | `test_auth.py` | Seguridad | Blanca | `GET /privado/resumen-exclusivo` sin token devuelve 401 |
-| 27 | `test_auth.py` | Seguridad | Blanca | `GET /privado/resumen-exclusivo` con token válido devuelve 200 |
-| 28–48 | `test_unificar_datasets.py` | Unitario | Blanca | Funciones de normalización de estados, limpieza de importes, entidades y puntuaciones |
-| 49–70 | `test_parser_epa2025.py` | Unitario | Blanca | Helpers de detección (CIF, expediente, número europeo), mapeo de columnas, extracción de entidad con fallback, normalización de línea, flujo completo con XML mínimo mockeado |
-| 71 | `test_smoke.py` | Smoke | Negra | `GET /health` responde 200 |
-| 72 | `test_smoke.py` | Funcional | Negra | Respuesta de `/health` es exactamente `{"status": "ok"}` |
-| 73 | `test_agrupaciones.py` | Funcional | Negra | ID inexistente en `/agrupaciones/` devuelve 404 |
-| 74 | `test_agrupaciones.py` | Funcional | Blanca | Solicitud sin concesión ni agrupación devuelve 404 |
-| 75 | `test_agrupaciones.py` | Funcional | Negra | Respuesta tiene las claves `id_agrup`, `num_municipios`, `representante`, `miembros` |
-| 76 | `test_agrupaciones.py` | Funcional | Blanca | `num_municipios` coincide con el valor insertado en la fixture |
-| 77 | `test_agrupaciones.py` | Funcional | Negra | Cada miembro tiene `nombre`, `cif` e `importe_asignado` |
-| 78 | `test_solicitudes.py` | Funcional | Negra | `GET /solicitudes/export` devuelve `Content-Type: text/csv` |
-| 79 | `test_solicitudes.py` | Funcional | Blanca | Primera línea del CSV tiene exactamente las 13 columnas esperadas (incluye `tramo`) |
-| 80 | `test_solicitudes.py` | Funcional | Blanca | Con 3 solicitudes en BD, el CSV tiene cabecera + 3 filas de datos |
-| 81 | `test_solicitudes.py` | Funcional | Blanca | `?tipo=epa` en export devuelve solo filas con tipo `epa` |
-| 82 | `test_solicitudes.py` | Funcional | Negra | `Content-Disposition` incluye `attachment` y `solicitudes.csv` |
-| 83 | `test_logging.py` | Funcional | Blanca | El middleware registra en el log el método y la ruta de cada request |
-| 84 | `test_logging.py` | Funcional | Blanca | El código HTTP de la respuesta (ej. 404) aparece en el log |
-| 85 | `test_logging.py` | Funcional | Blanca | La IP del cliente queda registrada en cada entrada del log |
-| 86 | `test_logging.py` | Unitario | Blanca | `generic_exception_handler` llama a `logger.error` con el tipo de excepción |
-| 87 | `test_logging.py` | Unitario | Blanca | `setup_logging()` devuelve un logger con nombre `bdns`, nivel INFO y al menos un handler |
-| 88 | `test_avisos.py` | Funcional | Negra | `GET /avisos/` responde 200 y devuelve lista |
-| 89 | `test_avisos.py` | Funcional | Negra | Con BD vacía devuelve `[]` sin error |
-| 90 | `test_avisos.py` | Funcional | Blanca | Solo devuelve convocatorias del año actual con `fecha_resolucion = NULL` (filtra las resueltas y las de años anteriores) |
-| 91 | `test_avisos.py` | Funcional | Blanca | La respuesta tiene las claves `id_convoc`, `titulo_convoc`, `tipo_convoc`, `anio_convocatoria`, `fecha_convocatoria` |
-| 92 | `test_avisos.py` | Funcional | Blanca | Todos los avisos devueltos tienen `anio_convocatoria` igual al año en curso |
-| 93 | `test_avisos.py` | Funcional | Blanca | Convocatorias con `fecha_resolucion` no nula no aparecen en la respuesta |
-| 94 | `test_https_config.py` | Configuración | Blanca | El archivo `server.crt` existe en `docker/ssl/` |
-| 95 | `test_https_config.py` | Seguridad | Blanca | `server.key` está excluida del repositorio vía `.gitignore` |
-| 96 | `test_https_config.py` | Configuración | Blanca | El certificado tiene `CN=subvencionesDGDA.local` |
-| 97 | `test_https_config.py` | Configuración | Blanca | El certificado incluye `subjectAltName` con el dominio (requerido por navegadores modernos) |
-| 98 | `test_https_config.py` | Configuración | Blanca | El certificado no ha expirado |
-| 99 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `listen 443 ssl` |
-| 100 | `test_https_config.py` | Configuración | Blanca | `default.conf` contiene `return 301 https://` (redirección HTTP→HTTPS) |
-| 101 | `test_https_config.py` | Seguridad | Blanca | `default.conf` incluye la cabecera `Strict-Transport-Security` |
-| 102 | `test_https_config.py` | Seguridad | Blanca | `default.conf` limita los protocolos a TLS 1.2 y TLS 1.3 |
-| 103 | `test_cache_headers.py` | Rendimiento | Negra | `GET /convocatorias/` incluye `Cache-Control: public` en la respuesta |
-| 104 | `test_cache_headers.py` | Rendimiento | Negra | `GET /convocatorias/` incluye `max-age=86400` (1 día) |
-| 105 | `test_cache_headers.py` | Rendimiento | Negra | `GET /estadisticas/` incluye `Cache-Control: public` en la respuesta |
-| 106 | `test_cache_headers.py` | Rendimiento | Negra | `GET /estadisticas/` incluye `max-age=3600` (1 hora) |
-| 107 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` contiene `limit_req_zone` |
-| 108 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` define la zona `login` para rate limiting |
-| 109 | `test_rate_limiting.py` | Configuración | Blanca | `default.conf` establece el límite en `10r/m` (10 peticiones/minuto) |
-| 110 | `test_rate_limiting.py` | Seguridad | Blanca | `default.conf` devuelve código `429` al superar el límite |
-| 111 | `test_rate_limiting.py` | Seguridad | Blanca | El rate limiting se aplica al bloque `/auth/login` y no al resto de la API |
-| 112 | `test_privado.py` | Seguridad | Blanca | `PUT /privado/cambiar-contrasena` sin token devuelve 401 |
-| 113 | `test_privado.py` | Funcional | Blanca | Contraseña actual incorrecta devuelve 401 |
-| 114 | `test_privado.py` | Funcional | Blanca | Nueva contraseña débil devuelve 422 (validador Pydantic) |
-| 115 | `test_privado.py` | Funcional | Blanca | Cambio correcto devuelve 200 con campo `mensaje` |
-| 116 | `test_privado.py` | Funcional | Blanca | Tras el cambio, el login con la contraseña nueva devuelve 200 |
-| 117 | `test_privado.py` | Funcional | Blanca | Tras el cambio, el login con la contraseña vieja devuelve 401 |
-| 118 | `test_refresh_token.py` | Funcional | Blanca | `POST /auth/login` devuelve `refresh_token` de 64 caracteres |
-| 119 | `test_refresh_token.py` | Funcional | Blanca | `POST /auth/refresh` con token válido devuelve nuevo `access_token` |
-| 120 | `test_refresh_token.py` | Seguridad | Blanca | El token usado en `/auth/refresh` queda revocado (rotación); el nuevo sí funciona |
-| 121 | `test_refresh_token.py` | Seguridad | Blanca | Token inventado en `/auth/refresh` devuelve 401 |
-| 122 | `test_refresh_token.py` | Seguridad | Blanca | `POST /auth/logout` revoca el token; un `/auth/refresh` posterior devuelve 401 |
-| 123 | `test_refresh_token.py` | Funcional | Blanca | Logout con token inexistente devuelve 200 sin error |
-| 124 | `test_refresh_token.py` | Seguridad | Blanca | Cambiar contraseña revoca todos los refresh tokens activos del usuario |
-| 125 | `test_estadisticas.py` | Funcional | Negra | `GET /estadisticas/epas` responde 200 |
-| 126 | `test_estadisticas.py` | Funcional | Negra | Respuesta de `/estadisticas/epas` tiene las claves esperadas |
-| 127 | `test_estadisticas.py` | Funcional | Blanca | Sin datos en BD, `/estadisticas/epas` devuelve ceros sin error |
-| 128 | `test_estadisticas.py` | Funcional | Blanca | Cálculos globales de EPAs (importe medio, mediana, total) correctos con fixture |
-| 129 | `test_estadisticas.py` | Funcional | Blanca | Entidades únicas (sin duplicados por año) calculadas correctamente |
-| 130 | `test_estadisticas.py` | Funcional | Blanca | Nuevos vs recurrentes por año: la primera aparición cuenta como nuevo |
-| 131 | `test_estadisticas.py` | Funcional | Blanca | Top beneficiarios devuelve el importe acumulado por entidad |
-| 132 | `test_estadisticas.py` | Funcional | Blanca | Distribución por tramos: todos los rangos presentes en la respuesta |
-| 133 | `test_estadisticas.py` | Rendimiento | Negra | `/estadisticas/epas` incluye cabecera `Cache-Control` |
-| 134 | `test_estadisticas.py` | Funcional | Negra | `GET /estadisticas/eell` responde 200 |
-| 135 | `test_estadisticas.py` | Funcional | Negra | Respuesta de `/estadisticas/eell` tiene las claves esperadas |
-| 136 | `test_estadisticas.py` | Funcional | Blanca | Sin datos en BD, `/estadisticas/eell` devuelve ceros sin error |
-| 137 | `test_estadisticas.py` | Funcional | Blanca | Porcentaje de ayuntamientos con ayuda calculado correctamente |
-| 138 | `test_estadisticas.py` | Funcional | Blanca | Importe medio por entidad local correcto con fixture |
-| 139 | `test_estadisticas.py` | Funcional | Blanca | Ratio de exclusión (excluidas / total evaluadas) correcto |
-| 140 | `test_estadisticas.py` | Funcional | Blanca | CCAA top devuelve la comunidad con más concedidas |
-| 141 | `test_estadisticas.py` | Funcional | Blanca | Desglose por CCAA tiene el recuento correcto por comunidad |
-| 142 | `test_estadisticas.py` | Funcional | Blanca | Top provincias devuelve las provincias con más concedidas |
-| 143 | `test_estadisticas.py` | Funcional | Blanca | Concentración top 10 %: los porcentajes suman exactamente 100 |
-| 144 | `test_estadisticas.py` | Rendimiento | Negra | `/estadisticas/eell` incluye cabecera `Cache-Control` |
-| 145 | `test_agrupaciones.py` | Funcional | Blanca | `representante` es un objeto con campo `nombre` (no `[object Object]`) |
-| 146 | `test_agrupaciones.py` | Funcional | Blanca | `importe_asignado` de cada miembro coincide con el valor insertado en la fixture |
-| 147 | `test_solicitudes.py` | Funcional | Blanca | Campo `tramo` aparece en la respuesta con el valor correcto para EELL 2025 concedidas |
-| 148 | `test_solicitudes.py` | Funcional | Blanca | Campo `tramo` es `null` para solicitudes sin concesión |
-| 149 | `test_recuperar_password.py` | Funcional | Negra | `POST /auth/recuperar` con email existente devuelve 200 |
-| 150 | `test_recuperar_password.py` | Seguridad | Negra | `POST /auth/recuperar` con email inexistente devuelve también 200 (no revela si existe) |
-| 151 | `test_recuperar_password.py` | Funcional | Blanca | Llamar a `/recuperar` crea exactamente un `ResetToken` en la BD |
-| 152 | `test_recuperar_password.py` | Funcional | Blanca | La función `enviar_email_recuperacion` se llama con el email y el token correctos |
-| 153 | `test_recuperar_password.py` | Funcional | Blanca | `POST /auth/reset` con token válido cambia la contraseña y el login posterior funciona |
-| 154 | `test_recuperar_password.py` | Seguridad | Negra | `POST /auth/reset` con token inventado devuelve 400 |
-| 155 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token ya usado devuelve 400 (no se puede usar dos veces) |
-| 156 | `test_recuperar_password.py` | Seguridad | Blanca | `POST /auth/reset` con token expirado (insertado con fecha en el pasado) devuelve 400 |
-| 157 | `test_recuperar_password.py` | Unitario | Blanca | Contraseña nueva débil en `/auth/reset` devuelve 422 (validación Pydantic antes de comprobar el token) |
-| 158 | `test_verificacion_email.py` | Funcional | Blanca | `POST /auth/registro` crea el usuario con `email_verificado=0` |
-| 159 | `test_verificacion_email.py` | Funcional | Blanca | El registro inserta un token de verificación en `verificacion_tokens` |
-| 160 | `test_verificacion_email.py` | Funcional | Blanca | La función de envío de email se llama con el email y token correctos |
-| 161 | `test_verificacion_email.py` | Seguridad | Blanca | `POST /auth/login` devuelve 403 si el email no está verificado |
-| 162 | `test_verificacion_email.py` | Funcional | Blanca | `GET /auth/verificar?token=...` válido establece `email_verificado=1` |
-| 163 | `test_verificacion_email.py` | Funcional | Blanca | Login correcto tras verificar el email |
-| 164 | `test_verificacion_email.py` | Seguridad | Negra | Token inventado en `/auth/verificar` devuelve 400 |
-| 165 | `test_verificacion_email.py` | Seguridad | Blanca | Token ya usado en `/auth/verificar` devuelve 400 |
-| 166 | `test_verificacion_email.py` | Seguridad | Blanca | Token expirado en `/auth/verificar` devuelve 400 |
-| 167 | `test_verificacion_email.py` | Funcional | Blanca | `POST /auth/reset` exitoso también activa `email_verificado` |
-| 168 | `test_admin.py` | Seguridad | Negra | `GET /admin/estado` sin token devuelve 401 |
-| 169 | `test_admin.py` | Seguridad | Blanca | `GET /admin/estado` con rol `registrado` devuelve 403 |
-| 170 | `test_admin.py` | Funcional | Blanca | `GET /admin/estado` con rol `admin` devuelve 200 con campos `total_solicitudes`, `total_usuarios`, `total_convocatorias` |
-| 171 | `test_admin.py` | Funcional | Blanca | `GET /admin/usuarios` devuelve lista con email, rol, activo y created_at |
-| 172 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/usuarios/{id}/rol` cambia rol a `admin` |
-| 173 | `test_admin.py` | Seguridad | Blanca | `PATCH /admin/usuarios/{id}/rol` sobre la propia cuenta devuelve 400 |
-| 174 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/usuarios/{id}/activo` desactiva la cuenta |
-| 175 | `test_admin.py` | Seguridad | Blanca | `PATCH /admin/usuarios/{id}/activo` sobre la propia cuenta devuelve 400 |
-| 176 | `test_admin.py` | Seguridad | Blanca | `PATCH /admin/usuarios/{id_inexistente}/activo` devuelve 404 |
-| 177 | `test_admin.py` | Funcional | Blanca | `DELETE /admin/usuarios/{id}` elimina el usuario de la BD |
-| 178 | `test_admin.py` | Seguridad | Blanca | `DELETE /admin/usuarios/{id}` sobre la propia cuenta devuelve 400 |
-| 179 | `test_admin.py` | Seguridad | Blanca | `DELETE /admin/usuarios/{id_inexistente}` devuelve 404 |
-| 180 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos` sin resolución devuelve solo avisos activos |
-| 181 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos` con fecha_resolucion != NULL no aparece en la lista por defecto |
-| 182 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/avisos/{id}/desactivar` actualiza fecha_resolucion |
-| 183 | `test_admin.py` | Funcional | Blanca | `DELETE /admin/avisos/{id}` sin solicitudes elimina la convocatoria |
-| 184 | `test_admin.py` | Seguridad | Blanca | `DELETE /admin/avisos/{id}` con solicitudes asociadas devuelve 409 |
-| 185 | `test_admin.py` | Funcional | Blanca | `PATCH /admin/avisos/{id}/reactivar` elimina fecha_resolucion |
-| 186 | `test_admin.py` | Seguridad | Blanca | Reactivar aviso ya activo devuelve 400 |
-| 187 | `test_admin.py` | Funcional | Blanca | `GET /admin/avisos?incluir_resueltas=true` devuelve avisos activos e inactivos |
-| 188 | `test_admin.py` | Seguridad | Blanca | Aviso inexistente devuelve 404 |
-| 189 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs` devuelve una lista (aunque esté vacía) |
-| 190 | `test_admin.py` | Funcional | Blanca | `GET /admin/logs/errores` devuelve una lista (aunque esté vacía) |
-| 191 | `test_admin.py` | Seguridad | Blanca | `GET /admin/logs/errores` con rol `registrado` devuelve 403 |
-| 192 | `test_scheduler.py` | Unitario | Blanca | `health_check.py` se ejecuta a las 00:00, 06:00, 12:00 y 18:00 UTC |
-| 193 | `test_scheduler.py` | Unitario | Blanca | `health_check.py` no se ejecuta a horas fuera del calendario cada-6h |
-| 194 | `test_scheduler.py` | Unitario | Blanca | `health_check.py` solo se ejecuta en el minuto 0 (no a las 06:30) |
-| 195 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en marzo los días 1, 5, 9, 13, 17, 21, 25, 29 a las 08:00 UTC |
-| 196 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en marzo los días intermedios (2, 3, 4, 6, 7, 8) |
-| 197 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en abril cada 2 días (días 1, 3, 5, 7, …, 29) |
-| 198 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en mayo cada 2 días (días 1, 3, 5, …, 31) |
-| 199 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en mayo los días pares (2, 4, 6, …) |
-| 200 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en junio cada 4 días (días 1, 5, 9, …, 29) |
-| 201 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en noviembre cada 2 días (días 1, 3, 5, …, 29) |
-| 202 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en noviembre los días pares (2, 4, 6, …) |
-| 203 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en diciembre cada 2 días (días 1, 3, 5, …, 31) |
-| 204 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` corre en enero cada 4 días (días 1, 5, 9, …, 29) |
-| 205 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no corre en enero los días intermedios (2, 3, 4, 6, 7, 8) |
-| 206 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` no se ejecuta fuera de temporada (febrero, julio–octubre) ningún día del mes |
-| 207 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` solo se ejecuta a las 08:00 UTC, no a otras horas aunque el día sea válido |
-| 208 | `test_scheduler.py` | Unitario | Blanca | `check_bdns.py` solo se ejecuta en el minuto 0 (no a las 08:30) |
-| 209 | `test_scheduler.py` | Unitario | Blanca | A medianoche en un día válido para `check_bdns` solo se ejecuta `health_check.py` |
-| 210 | `test_scheduler.py` | Unitario | Blanca | A las 08:00 en un día válido para `check_bdns` solo se ejecuta `check_bdns.py` (no `health_check`) |
-| 211 | `test_scheduler.py` | Unitario | Blanca | A las 08:00 en un día NO válido para `check_bdns` no se ejecuta ningún job |
-| 212 | `test_scheduler.py` | Unitario | Blanca | En julio el `check_bdns.py` no se ejecuta nunca; el `health_check.py` sí continúa cada 6h |
-| 213 | `test_check_bdns.py` | Unitario | Blanca | `_get_bdns_con_retry` devuelve la response al primer intento si BDNS responde 200 (sin sleeps) |
-| 214 | `test_check_bdns.py` | Unitario | Blanca | Si BDNS falla en el 1.er intento y responde 200 en el 2.º, la función reintenta con sleep de 2s y devuelve la response |
-| 215 | `test_check_bdns.py` | Unitario | Blanca | Si los 3 intentos fallan por error de red, la función devuelve None y hace 2 sleeps (entre intentos) |
-| 216 | `test_check_bdns.py` | Unitario | Blanca | Si BDNS responde 500 las 3 veces, la función devuelve None tras 3 intentos |
-| 217 | `test_check_bdns.py` | Unitario | Blanca | Los tiempos de espera entre reintentos siguen el patrón exponencial 2s → 4s (no constante ni lineal) |
+```bash
+pytest tests/ --collect-only -q            # lista todos los tests recogidos
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (378)
+```
+
+Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
+difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
+
+| Archivo | Func. | Ejec. | Qué cubre |
+|---|---:|---:|---|
+| `test_smoke.py` | 3 | 3 | Humo: `GET /` responde y la app arranca |
+| `test_convocatorias.py` | 4 | 4 | `GET /convocatorias/` (lista, BD vacía, `Cache-Control`) |
+| `test_solicitudes.py` | 22 | 22 | Buscador: filtros, paginación, búsqueda, export CSV y **causas de exclusión** (filtro por token, catálogo `/solicitudes/causas`) |
+| `test_estadisticas.py` | 37 | 37 | `/estadisticas/`, `/epas`, `/eell`: cálculos, umbrales, tramos, recurrencia, **exclusiones** y **resumen por convocatoria** (público + privado protegido) |
+| `test_agrupaciones.py` | 7 | 7 | `GET /agrupaciones/{id}`: miembros de agrupaciones EELL |
+| `test_avisos.py` | 10 | 10 | `/avisos/`: convocatorias del año en curso sin resolución |
+| `test_cache_headers.py` | 4 | 4 | Cabeceras `Cache-Control` en los endpoints públicos |
+| `test_auth.py` | 14 | 14 | Registro, login, JWT y validación de contraseña |
+| `test_refresh_token.py` | 7 | 7 | Rotación y revocación del refresh token |
+| `test_verificacion_email.py` | 10 | 10 | Verificación de email por token |
+| `test_recuperar_password.py` | 9 | 9 | Flujo de recuperación/reset de contraseña |
+| `test_privado.py` | 6 | 6 | Zona privada: perfil, cambiar nombre/contraseña, `resumen-tabla` protegido |
+| `test_admin.py` | 34 | 34 | Panel admin: usuarios paginados, cambio de rol/activo, logs de la app y del cron |
+| `test_contacto.py` | 9 | 9 | Formulario de contacto: honeypot, rate limiting, validación, error SMTP |
+| `test_mantenimiento.py` | 4 | 4 | Modo mantenimiento (503 controlado) |
+| `test_unificar_datasets.py` | 21 | 21 | Pipeline: unificación, deduplicación cross-year, provincia/CCAA desde CIF, estados |
+| `test_parser_epa2025.py` | 22 | 22 | Parser EPA 2025 (extracción heurística) y captura de causas |
+| `test_parser_epa_admitidas_2024.py` | 10 | 10 | Parser de la línea EPA 2024 (anclaje por CIF, nombres con "COLONIAS") |
+| `test_check_bdns.py` | 5 | 5 | Comprobación BDNS del cron y reintentos con backoff |
+| `test_scheduler.py` | 21 | 119 | Calendario del cron (parametrizado por días del mes) |
+| `test_logging.py` | 5 | 5 | Sistema de logging de la aplicación |
+| `test_https_config.py` | 9 | 9 | TLS/HTTPS y redirección (**requiere Docker + Nginx**) |
+| `test_rate_limiting.py` | 7 | 7 | Rate limiting de Nginx (**requiere Docker + Nginx**) |
+| **Total** | **280** | **378** | 23 archivos |
+
+> Para el detalle de qué comprueba cada archivo, ver la sección siguiente
+> ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
+> de la fila correspondiente (o regenerarlo con `--collect-only`).
+
 
 ### Descripción por módulo
 
