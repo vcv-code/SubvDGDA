@@ -482,3 +482,32 @@ def test_exclusiones_vacio_sin_datos(client):
     """Sin excluidas, el bloque llega vacío y el endpoint no falla."""
     data = client.get("/estadisticas/eell").json()
     assert data["exclusiones"] == {"por_anio": [], "causas_anio": None, "causas_frecuentes": []}
+
+
+# ─────────────────────────────────────────────────────────────
+# TESTS — resumen por convocatoria (público) + delega el privado
+# ─────────────────────────────────────────────────────────────
+
+def test_resumen_convocatorias_publico(db_eell, client):
+    """El endpoint público devuelve la tabla resumen sin necesidad de login."""
+    r = client.get("/estadisticas/resumen-convocatorias")
+    assert r.status_code == 200
+    data = r.json()
+    assert {"filas", "total_global", "concedidas_total", "importe_global"} <= data.keys()
+    # db_eell: 4 solicitudes (2 concedidas, 1 excluida, 1 desistida), 30.000 €
+    fila = next(f for f in data["filas"] if f["tipo"] == "eell" and f["anio"] == 2024)
+    assert fila["total"] == 4
+    assert fila["concedidas"] == 2
+    assert fila["excluidas"] == 1
+    assert fila["desistidas"] == 1
+    assert fila["importe_total"] == 30000.0
+
+
+def test_resumen_convocatorias_cache(client):
+    r = client.get("/estadisticas/resumen-convocatorias")
+    assert "max-age=3600" in r.headers.get("cache-control", "")
+
+
+def test_resumen_tabla_privado_requiere_login(client):
+    """El endpoint privado sigue protegido (401 sin token)."""
+    assert client.get("/privado/resumen-tabla").status_code == 401
