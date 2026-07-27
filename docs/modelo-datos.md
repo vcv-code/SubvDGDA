@@ -411,7 +411,7 @@ Recuentos esperados tras la primera carga completa:
 |---|---|
 | convocatorias | 8 |
 | beneficiarios | 3103 |
-| solicitudes | 6398 |
+| solicitudes | 6396 |
 | concesiones | 2623 |
 | agrupaciones | 13 |
 | agrupacion_miembros | 72 |

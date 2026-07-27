@@ -247,6 +247,56 @@ def normalizar_estado_epa(estado, anio):
 # CARGADORES POR TIPO
 # =========================
 
+def indexar_solicitudes_epa(datos_por_anio):
+    """
+    Índice {anio_fichero: {(num_expediente, cif), ...}} usado para detectar
+    resoluciones tardías. Ver `resolver_anio_epa`.
+    """
+    indice = {}
+    for anio_fichero, data in datos_por_anio.items():
+        indice[anio_fichero] = {
+            (str(item.get("num_expediente") or "").strip(),
+             str(item.get("cif") or "").strip())
+            for item in data
+        }
+    return indice
+
+
+def resolver_anio_epa(item, anio_fichero, indice):
+    """
+    Devuelve el año de convocatoria al que pertenece un registro EPA.
+
+    Por defecto es el año del fichero fuente (el BOE en que se publicó). La
+    excepción son las RESOLUCIONES TARDÍAS: una solicitud presentada en el año N
+    cuya resolución no sale hasta el BOE del año N+1. En ese caso el JSON de
+    origen trae `anio` = N (el año codificado en el número de expediente) y hay
+    que atribuir el registro —y su importe— a la convocatoria N, no al N+1.
+
+    Solo se reatribuye cuando está PROBADO que es la misma solicitud: el mismo
+    número de expediente Y el mismo CIF tienen que existir también en el fichero
+    del año declarado. Esa condición deja fuera los dos falsos positivos:
+
+      - SUBV2022021: en el BOE de 2021 es Amores Perros Cádiz (G01779131) y en
+        el de 2022 es Can Terrassa (G66561812). El BOE reutilizó el número para
+        otra entidad; el CIF no coincide, así que cada una se queda en su año.
+      - SUBV2032021: trae `anio` 2032 por una errata del número de expediente.
+        No hay fichero de 2032, así que se queda en el año de su BOE.
+
+    Sin esta comprobación, reatribuir por el `anio` del JSON volvería a colapsar
+    registros distintos bajo la misma clave de deduplicación.
+    """
+    anio_declarado = item.get("anio")
+    if anio_declarado is None or anio_declarado == anio_fichero:
+        return anio_fichero
+
+    clave = (str(item.get("num_expediente") or "").strip(),
+             str(item.get("cif") or "").strip())
+    if clave in indice.get(anio_declarado, ()):
+        return anio_declarado
+
+    return anio_fichero
+
+
 def cargar_epas(archivos):
     """
     Carga registros EPA desde sus JSON.
@@ -255,14 +305,25 @@ def cargar_epas(archivos):
     registros = []
     contador_sin_exp = {}   # {anio: contador} para IDs sintéticos únicos
 
+    # Pre-lectura de todos los ficheros: `resolver_anio_epa` necesita saber qué
+    # expedientes hay en los demás años para detectar resoluciones tardías.
+    datos_por_anio = {}
     for ruta, anio_fallback in archivos:
         if not os.path.exists(ruta):
             print(f"  AVISO: no encontrado → {ruta}")
             continue
+        datos_por_anio[anio_fallback] = json.load(open(ruta, encoding="utf-8"))
 
-        data = json.load(open(ruta, encoding="utf-8"))
+    indice = indexar_solicitudes_epa(datos_por_anio)
+
+    for ruta, anio_fallback in archivos:
+        if anio_fallback not in datos_por_anio:
+            continue
+
+        data = datos_por_anio[anio_fallback]
 
         sin_exp_en_archivo = 0
+        reatribuidos_en_archivo = 0
         for item in data:
             # Saltar filas de totales parseadas como entidades
             # (ej: la fila "TOTAL" de la tabla de importes en EPA 2024 y 2025)
@@ -287,13 +348,11 @@ def cargar_epas(archivos):
                 item.get("puntuacion") or item.get("puntos")
             )
 
-            # El año del registro es siempre el año del fichero (convocatoria).
-            # El campo 'anio' del JSON refleja el año codificado en el número de
-            # expediente (ej: SUBV2022659 → 2022), que en registros cross-year
-            # no coincide con el año de la convocatoria en que realmente participaron.
-            # Usar anio_fallback garantiza que el mismo expediente en distintos
-            # ficheros tenga años diferentes y no se duplique.
-            anio_item = anio_fallback
+            # Año de convocatoria: el del fichero salvo resolución tardía
+            # comprobada (mismo expediente y mismo CIF en el año declarado).
+            anio_item = resolver_anio_epa(item, anio_fallback, indice)
+            if anio_item != anio_fallback:
+                reatribuidos_en_archivo += 1
 
             estado = normalizar_estado_epa(estado, anio_item)
 
@@ -314,13 +373,16 @@ def cargar_epas(archivos):
                                     if item.get("causa_exclusion") else None),
                 "provincia": None,       # no derivable de CIF de asociación (mejora futura)
                 "ccaa": None,            # idem
-                "periodo_meses": 6 if anio_fallback in (2023, 2024) else 12,
+                # Propiedad de la convocatoria, por eso sigue a anio_item
+                # (no al fichero) en las resoluciones tardías reatribuidas.
+                "periodo_meses": 6 if anio_item in (2023, 2024) else 12,
                 "es_agrupacion": False,
                 "municipios_agrupacion": None,
             })
 
         aviso_sin_exp = f" ({sin_exp_en_archivo} sin expediente → ID sintético)" if sin_exp_en_archivo else ""
-        print(f"  EPA {anio_fallback}: {len(data)} registros cargados desde {os.path.basename(ruta)}{aviso_sin_exp}")
+        aviso_reatrib = f" ({reatribuidos_en_archivo} resolución/es tardía/s reatribuida/s a su convocatoria)" if reatribuidos_en_archivo else ""
+        print(f"  EPA {anio_fallback}: {len(data)} registros cargados desde {os.path.basename(ruta)}{aviso_sin_exp}{aviso_reatrib}")
 
     return registros
 
@@ -442,7 +504,8 @@ def validar_y_mostrar(final):
     print("  Nota EPA 2025: 110 excluidas sin num_expediente → ID sintético SIN_EXP_2025_XXX")
     print("  EELL: 2023=593, 2024=1137, 2025=1315")
     print("  Totales unificados esperados (tras dedup por tipo+expediente+anio):")
-    print("    EPA=3353 (SUBV2022271 Peludosos dedup intra-año: se conserva la concedida), EELL=3045, Total=6398")
+    print("    EPA=3351 (SUBV2022271 Peludosos dedup intra-año: se conserva la concedida;")
+    print("              SUBV2022659 y 2023B628 reatribuidas a su convocatoria y deduplicadas), EELL=3045, Total=6396")
     print("  Periodos subvencionables EPA: 2021/2022/2025=anual(12m), 2023/2024=semestral(6m)")
     print("  → Al comparar importes entre años tener en cuenta la diferencia de periodo.")
 

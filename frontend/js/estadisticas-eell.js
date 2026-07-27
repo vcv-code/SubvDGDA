@@ -145,6 +145,13 @@ async function cargarEstadisticasEell() {
         poblarGraficoExclusionesAnio(datos.exclusiones    || {});
         poblarGraficoCausasFrecuentes(datos.exclusiones   || {});
 
+        // Mapa CCAA (Leaflet). El modal de top municipios al hacer
+        // clic vive en js/modal-ccaa.js (window.abrirModalCCAA). Se retrasa un
+        // pelín para asegurar que Leaflet (defer) ya ha cargado.
+        if (typeof pintarMapaCCAA === 'function') {
+            setTimeout(() => pintarMapaCCAA(datos.por_ccaa || [], window.abrirModalCCAA), 150);
+        }
+
     } catch (error) {
         console.error('Error al cargar estadísticas EELL:', error);
         if (!errorMensaje.textContent) {
@@ -251,7 +258,8 @@ function poblarGraficoTopProvincias(topProvincias) {
 <p>Castilla-La Mancha encabeza el importe total concedido, mientras Andalucía lidera en número de ayuntamientos beneficiados. Sin embargo, los datos muestran que muchas ayudas relevantes recaen en municipios pequeños y medianos —especialmente mediante agrupaciones— y no únicamente en grandes capitales.</p>
 <p>De hecho, entre las entidades con mayores importes aparecen numerosos municipios de Tramo 1 y Tramo 2, así como agrupaciones municipales creadas para poder afrontar conjuntamente costes de gestión, esterilización o control de colonias felinas.</p>
 <p>Esto sugiere que factores como la capacidad técnica para presentar proyectos, el grado de implicación institucional o la voluntad política local influyen tanto o más que la población total a la hora de acceder a estas subvenciones.</p>
-<p>El buscador público permite consultar y filtrar ayudas por comunidades, provincias y municipios, y analizar agrupaciones y tramos. Además, los usuarios registrados pueden acceder a mapas interactivos, rankings y tablas avanzadas para analizar con más detalle la distribución territorial y evolución de las subvenciones.</p>
+<p><strong>Evolución 2023–2025.</strong> El reparto territorial ha cambiado mucho entre convocatorias. En 2023 las ayudas estaban muy repartidas (15 comunidades, con Castilla-La Mancha, Comunidad Valenciana, Región de Murcia y Canarias entre el 12&nbsp;% y el 18&nbsp;% cada una). En 2024 se concentraron drásticamente: solo 8 comunidades recibieron ayuda y dos —Castilla-La Mancha (41&nbsp;%) y Andalucía (32&nbsp;%)— acapararon casi tres cuartas partes del importe. En 2025 el reparto se reabre (de nuevo 15 comunidades), pero con Castilla-La Mancha (39&nbsp;%) y Andalucía (23&nbsp;%) consolidadas como líderes. En conjunto, las que más peso ganan son Castilla-La Mancha (+21 puntos) y Andalucía (+14), mientras que Región de Murcia (−13) y Canarias (−12), protagonistas en 2023, casi desaparecen.</p>
+<p>Puedes explorar esta distribución en el <strong>mapa por comunidad autónoma</strong> de esta misma página (con el top de municipios de cada una al hacer clic) y filtrar las ayudas por comunidad, provincia y municipio en el buscador.</p>
 `);
 }
 
@@ -308,7 +316,8 @@ function poblarGraficoTramos(distribucion) {
 <p>Las EELL manejan importes mucho mayores y más dispersos que las protectoras: van desde poco más de 3.000&nbsp;€ hasta cerca de 100.000&nbsp;€, con una media en torno a los 37.500&nbsp;€. La mayoría de las concesiones se concentra en los tramos intermedios (10.000–50.000&nbsp;€), mientras que los importes muy bajos y los muy altos son minoritarios.</p>
 <p>Esa dispersión no responde únicamente al tamaño de los municipios: buena parte de los importes más altos corresponde a municipios pequeños o medianos que se presentan en agrupación para asumir de forma conjunta costes veterinarios, campañas de esterilización o la gestión de colonias felinas.</p>
 <p>Aun así, un grupo reducido de entidades concentra una parte muy significativa del importe total concedido, lo que refleja desigualdades territoriales: mientras algunas comunidades y ayuntamientos participan activamente y tienen capacidad para acceder a las ayudas, otros territorios apenas aparecen, ya sea por falta de medios técnicos, escasa prioridad política o dificultades administrativas.</p>
-<p>El buscador público permite filtrar las ayudas por importe, comunidad, provincia y municipio, y los usuarios registrados disponen de rankings, mapas y tablas avanzadas para analizar cómo se reparten los fondos y cómo evoluciona ese reparto entre convocatorias.</p>
+<p><strong>Evolución 2023–2025.</strong> El importe medio por concesión ha crecido de forma sostenida: unos 32.200&nbsp;€ en 2023, 35.200&nbsp;€ en 2024 y 48.800&nbsp;€ en 2025. A la vez baja el número de concesiones (60&nbsp;→&nbsp;55&nbsp;→&nbsp;40): cada año hay menos beneficiarias pero de mayor cuantía. El grueso, que en 2023–2024 estaba en los tramos de 10.000–50.000&nbsp;€, se desplaza en 2025 hacia importes más altos (el tramo de 50.000–75.000&nbsp;€ pasa a ser el más frecuente), en buena parte por el peso creciente de las agrupaciones de municipios, que concentran ayudas más grandes.</p>
+<p>El buscador público permite filtrar las ayudas por importe, comunidad, provincia y municipio, y el <strong>mapa por comunidad</strong> de esta página muestra cómo se reparten los fondos por territorio.</p>
 `);
 }
 

@@ -245,6 +245,12 @@ async function cargarZonaPrivada() {
 
         if (perfil.rol === 'admin') {
             document.getElementById('btn-panel-admin').classList.add('privado-banner__btn-admin--visible');
+            // El área exclusiva y su enlace en el navbar solo se muestran a admin
+            // (su contenido ya es público; la página queda reservada para admin).
+            const navExc = document.getElementById('nav-exclusivo');
+            if (navExc) navExc.style.display = '';
+            const areaExc = document.getElementById('area-exclusiva-privado');
+            if (areaExc) areaExc.style.display = '';
         }
 
     } catch (error) {

@@ -260,6 +260,11 @@ MariaDB — 7 pasos: convocatorias → beneficiarios → solicitudes
           → causas_exclusion (catálogo código→motivo)
 ```
 
+> **Los pasos no son opcionales ni intercambiables.** Dos detalles que muerden si se salta alguno:
+>
+> - `unificar_datasets.py` reescribe el dataset con las causas de exclusión **tal cual vienen del BOE** (`10, 12, 16`). Ejecutarlo suelto revierte la normalización de ~370 registros a su forma cruda. Usa **`make dataset`**, que encadena la unificación y la normalización en el orden correcto.
+> - `cargar_dataset.py` es **aditivo**: inserta lo que falta y salta lo que ya existe por `(num_expediente, id_convoc)`; nunca actualiza ni borra. Sirve para poblar una BD vacía o añadir una convocatoria nueva. Si cambian registros ya cargados, `make cargar` **no** los actualiza — hay que recrear la BD con **`make reset-db`**.
+
 Fuentes por tipo:
 
 - **EPA** (protectoras) — XML BOE · 2021–2025 · parser base + parser 2025 separado por cambio de cabeceras
@@ -341,7 +346,7 @@ Características:
 - consistente entre fuentes heterogéneas
 - trazable por año y tipo
 
-**Total de registros: 6398** (EPA: 3353 · EELL: 3045)
+**Total de registros: 6396** (EPA: 3351 · EELL: 3045)
 
 ---
 
@@ -414,8 +419,8 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 | Rol | Quién es | Páginas y rutas accesibles |
 |-----|----------|---------------------------|
 | Sin token | Usuario no registrado | Home, buscador, estadísticas, recursos · API: `/convocatorias/`, `/solicitudes/`, `/estadisticas/*`, `/avisos/` |
-| `registrado` | Cuenta verificada | Todo lo anterior + `privado.html`, `exclusivo.html` · API: `/privado/*` |
-| `admin` | Administrador | Todo lo anterior + `admin.html` · API: `/admin/*` |
+| `registrado` | Cuenta verificada | Todo lo anterior + `privado.html` · API: `/privado/*` |
+| `admin` | Administrador | Todo lo anterior + `admin.html` y `exclusivo.html` · API: `/admin/*` |
 
 **Errores personalizados:** los errores HTTP devuelven siempre JSON estructurado con tres campos:
 
@@ -443,11 +448,11 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 
 | Página | Descripción |
 |--------|-------------|
-| `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año). Incluye enlaces a las **bases reguladoras** oficiales |
+| `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año) y, al final, el **resumen por convocatoria** (recuento por estado + importe). Incluye enlaces a las **bases reguladoras** oficiales |
 | `buscador.html` | Buscador de solicitudes con filtros (incluida la **línea de subvención** en EPA 2024/2025), búsqueda por nombre de entidad o nº de expediente, paginación (con accesos a primera/última página), ordenación server-side, estado vacío con sugerencias y exportación CSV con nombre dinámico según filtros activos. Debajo, **buscador de exclusiones (EELL)**: entidades locales excluidas con su causa oficial — filtro de causa dependiente del año (cada convocatoria usa su propia numeración), chip con los códigos y modal con el motivo completo de cada uno |
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios, **exclusiones por año y causas más frecuentes** |
-| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y mapa (en exclusivo) |
-| `exclusivo.html` | Resumen por convocatoria y mapa de calor CCAA (solo usuarios registrados) |
+| `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y **mapa de calor por CCAA** (choropleth con top de municipios al hacer clic) |
+| `exclusivo.html` | Resumen por convocatoria y mapa CCAA. Su contenido ya es **público** (el resumen en el inicio, el mapa en estadísticas EELL), así que la página queda **reservada a rol `admin`** (`exclusivo.js` redirige a los no-admin) como espacio para futuro contenido exclusivo; comparte el render con las páginas públicas (`js/resumen-tabla.js`, `js/modal-ccaa.js`) |
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
@@ -460,7 +465,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `mantenimiento.html` | Página de mantenimiento programado (503); Nginx la sirve cuando existe el fichero-bandera `maintenance.on` |
 
 **Estados de carga:**
-Las páginas con peticiones asíncronas muestran feedback visual mientras esperan la respuesta: spinner giratorio (home, estadísticas, buscador, ficha de entidad) y skeleton loader animado en verde para la tabla de `exclusivo.html` — barras con shimmer que simulan la forma de la tabla antes de que lleguen los datos.
+Las páginas con peticiones asíncronas muestran feedback visual mientras esperan la respuesta: spinner giratorio (home, estadísticas, buscador, ficha de entidad) y skeleton loader animado en verde para la tabla resumen por convocatoria (en el inicio y en `exclusivo.html`) — barras con shimmer que simulan la forma de la tabla antes de que lleguen los datos.
 
 **Optimización de carga:**
 
@@ -480,7 +485,7 @@ Componente compartido (`js/scroll-arriba.js` + clase `.btn-subir`) cargado en la
 **Visualizaciones:**
 
 - **Chart.js** — gráficas de barras, líneas, donut y distribución en las páginas de estadísticas. Cada gráfica abre un modal con conclusiones en HTML (`<p>`, `<ul>`, `<a>`).
-- **Leaflet + GeoJSON** — mapa choropleth por CCAA en `exclusivo.html`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
+- **Leaflet + GeoJSON** — mapa choropleth por CCAA en las estadísticas EELL (público) y en `exclusivo.html`, con el mismo módulo `mapa-ccaa.js` y el modal de top municipios `modal-ccaa.js`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
 
 Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-frontend.md](frontend/docs/especificaciones-frontend.md) · Paleta, tipografía y guía visual en [frontend/docs/diseño.md](frontend/docs/diseño.md).
 
@@ -518,7 +523,7 @@ La carpeta `frontend/` contiene:
 - `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
 - `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
-- `js/` — un archivo JS por página (`home.js`, `solicitudes.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y dos componentes compartidos por todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
+- `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
 - `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
@@ -851,7 +856,7 @@ UNION ALL SELECT 'agrupaciones',        COUNT(*) FROM agrupaciones
 UNION ALL SELECT 'agrupacion_miembros', COUNT(*) FROM agrupacion_miembros;"
 ```
 
-Resultado esperado: 8 · 3103 · 6398 · 2623 · 13 · 72
+Resultado esperado: 8 · 3103 · 6396 · 2623 · 13 · 72
 
 #### Arranques posteriores (volumen con datos)
 
@@ -950,8 +955,9 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
 | `make mantenimiento-on` | Activa el modo mantenimiento (la web responde 503 con `mantenimiento.html`) |
 | `make mantenimiento-off` | Desactiva el modo mantenimiento |
-| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
-| `make cargar` | Recarga el dataset sin borrar el volumen |
+| `make dataset` | Regenera `dataset_unificado.json` (unificar + normalizar causas, en ese orden) |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Necesario si cambian registros ya cargados |
+| `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests con pytest |
 | `make test-v` | Tests con salida detallada |
 | `make logs` | Últimas 100 líneas de logs del backend |
@@ -1041,7 +1047,7 @@ Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adi
 |---|---|---|
 | Acceso a `admin.html` sin token (incógnito) | ✅ Redirige a `login.html` | JS verifica token antes de cargar |
 | Acceso a `admin.html` con token de usuario `registrado` | ✅ Redirige a `privado.html` | Backend devuelve 403 en `/privado/perfil` con rol insuficiente |
-| Carga del panel completo (admin) | ✅ 4 secciones cargan en paralelo | health OK · 9 convocatorias · 6398 solicitudes · 4 usuarios |
+| Carga del panel completo (admin) | ✅ 4 secciones cargan en paralelo | health OK · 9 convocatorias · 6396 solicitudes · 4 usuarios |
 | Última convocatoria detectada | ✅ Muestra convocatoria EELL 2026 | Derivado de la BD, no del cron |
 | Tabla de usuarios | ✅ 4 usuarios con rol, estado, fecha | Fila propia marcada con `(tú)` sin botones de acción |
 | Desactivar usuario | ✅ 403 al intentar login posterior | Badge cambia a "Inactivo"; login devuelve 403 correctamente |
@@ -1132,7 +1138,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 375 pruebas automáticas en verde (pytest)
+- 386 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1169,7 +1175,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **`fetchpriority="high"`** en la imagen hero — mejora el LCP (Largest Contentful Paint)
 - **`loading="lazy"`** en todas las imágenes fuera del viewport inicial
 - **Caché Nginx** — imágenes y fuentes: `expires 1y`; CSS y JS: `expires 1h`
-- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora, `/solicitudes/causas` 1 día
+- **Cache-Control en la API** — `/convocatorias/` 1 día, `/estadisticas/` 1 hora, `/estadisticas/resumen-convocatorias` 1 hora, `/solicitudes/causas` 1 día
 - **Imágenes Docker slim** — `python:3.12-slim` (~75 MB vs ~900 MB de la imagen completa); `--no-cache-dir` en pip
 
 ### Calidad y mantenibilidad
@@ -1400,11 +1406,9 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Funcionalidades y UX
 
-- **Mostrar exclusiones EPA en el buscador de exclusiones** — los datos ya están completos en BD y API (`/solicitudes/?estado=excluida&tipo=epa` + leyenda en `/solicitudes/causas`); por decisión de producto la sección del buscador solo muestra EELL, donde la causa aporta más análisis (CCAA derivable). Añadir EPA sería reactivar el filtro de tipo en la sección.
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
 - **Login con terceros (OAuth)** — integración con Google.
-- **Conclusiones comparativas en modales EELL** — los modales de estadísticas EELL ("Top provincias" y "Tramos de importe") analizan el estado agregado pero no comparan la evolución entre las tres convocatorias disponibles (2023, 2024, 2025). Ampliar los textos con tendencias interanuales (p.ej. qué CCAA ganó o perdió peso, si crece la concentración de importes) añadiría valor analítico. La recurrencia de entidades se resume en un KPI con nota al pie; los modales de home y EPA ya tienen conclusiones completas.
 
 ### Producción y seguridad
 
