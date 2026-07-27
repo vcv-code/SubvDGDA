@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 280 funciones / 378 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 288 funciones / 386 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **332 funciones / 430 ejecuciones** | |
+| **Total** | **340 funciones / 438 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de las 378 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 362. Con Docker completo, pasan las 378.
+Nota sobre ejecución: 16 de las 386 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 370. Con Docker completo, pasan las 386.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (378) es mayor que el número de **funciones de test** escritas (280). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (386) es mayor que el número de **funciones de test** escritas (288). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **280 funciones de test automáticas** (378 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
+El proyecto incluye **288 funciones de test automáticas** (386 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (378)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (386)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -112,7 +112,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_admin.py` | 34 | 34 | Panel admin: usuarios paginados, cambio de rol/activo, logs de la app y del cron |
 | `test_contacto.py` | 9 | 9 | Formulario de contacto: honeypot, rate limiting, validación, error SMTP |
 | `test_mantenimiento.py` | 4 | 4 | Modo mantenimiento (503 controlado) |
-| `test_unificar_datasets.py` | 21 | 21 | Pipeline: unificación, deduplicación cross-year, provincia/CCAA desde CIF, estados |
+| `test_unificar_datasets.py` | 29 | 29 | Pipeline: unificación, deduplicación cross-year, provincia/CCAA desde CIF, estados |
 | `test_parser_epa2025.py` | 22 | 22 | Parser EPA 2025 (extracción heurística) y captura de causas |
 | `test_parser_epa_admitidas_2024.py` | 10 | 10 | Parser de la línea EPA 2024 (anclaje por CIF, nombres con "COLONIAS") |
 | `test_check_bdns.py` | 5 | 5 | Comprobación BDNS del cron y reintentos con backoff |
@@ -120,7 +120,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_logging.py` | 5 | 5 | Sistema de logging de la aplicación |
 | `test_https_config.py` | 9 | 9 | TLS/HTTPS y redirección (**requiere Docker + Nginx**) |
 | `test_rate_limiting.py` | 7 | 7 | Rate limiting de Nginx (**requiere Docker + Nginx**) |
-| **Total** | **280** | **378** | 23 archivos |
+| **Total** | **288** | **386** | 23 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
@@ -230,7 +230,10 @@ Es el primer archivo del proyecto que usa `@pytest.mark.parametrize`: 21 funcion
 
 #### test_unificar_datasets.py
 
-Prueba las funciones puras de transformación de `unificar_datasets.py`. El caso más relevante: `normalizar_estado_epa` mapea "denegada" a valores distintos según el año (≤2023 → `excluida`; ≥2024 → `no_beneficiaria`), porque el BOE usa la misma palabra para dos realidades distintas.
+Prueba las funciones puras de transformación de `unificar_datasets.py`. Dos casos relevantes:
+
+- `normalizar_estado_epa` mapea "denegada" a valores distintos según el año (≤2023 → `excluida`; ≥2024 → `no_beneficiaria`), porque el BOE usa la misma palabra para dos realidades distintas.
+- `resolver_anio_epa` decide si un registro es una **resolución tardía** que hay que atribuir a la convocatoria del año anterior. Los tests cubren los dos casos que sí se reatribuyen (La Sexta Huella y Amibichos) y, sobre todo, los dos falsos positivos que **no** deben reatribuirse: el número de expediente reutilizado por otra entidad (`SUBV2022021`) y la errata de año (`SUBV2032021`). Sin la comprobación del CIF, ambos colapsarían bajo la misma clave de deduplicación.
 
 #### test_parser_epa2025.py
 
@@ -274,7 +277,7 @@ Las pruebas manuales se realizaron navegando por la aplicación en `http://local
 
 | # | Pantalla | Acción | Resultado esperado | OK |
 |---|----------|--------|-------------------|-----|
-| 1 | Inicio | Carga de métricas del dashboard | Números correctos (6398 solicitudes, 8 convocatorias, etc.) | ✔ |
+| 1 | Inicio | Carga de métricas del dashboard | Números correctos (6396 solicitudes, 8 convocatorias, etc.) | ✔ |
 | 2 | Solicitudes | Buscar sin filtros | Tabla con resultados y "Página 1 de N" | ✔ |
 | 3 | Solicitudes | Filtrar por tipo EPA | Solo aparecen protectoras de animales | ✔ |
 | 4 | Solicitudes | Filtrar por tipo EELL | Solo aparecen ayuntamientos; aparecen filtros CCAA y Provincia | ✔ |

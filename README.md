@@ -260,6 +260,11 @@ MariaDB — 7 pasos: convocatorias → beneficiarios → solicitudes
           → causas_exclusion (catálogo código→motivo)
 ```
 
+> **Los pasos no son opcionales ni intercambiables.** Dos detalles que muerden si se salta alguno:
+>
+> - `unificar_datasets.py` reescribe el dataset con las causas de exclusión **tal cual vienen del BOE** (`10, 12, 16`). Ejecutarlo suelto revierte la normalización de ~370 registros a su forma cruda. Usa **`make dataset`**, que encadena la unificación y la normalización en el orden correcto.
+> - `cargar_dataset.py` es **aditivo**: inserta lo que falta y salta lo que ya existe por `(num_expediente, id_convoc)`; nunca actualiza ni borra. Sirve para poblar una BD vacía o añadir una convocatoria nueva. Si cambian registros ya cargados, `make cargar` **no** los actualiza — hay que recrear la BD con **`make reset-db`**.
+
 Fuentes por tipo:
 
 - **EPA** (protectoras) — XML BOE · 2021–2025 · parser base + parser 2025 separado por cambio de cabeceras
@@ -341,7 +346,7 @@ Características:
 - consistente entre fuentes heterogéneas
 - trazable por año y tipo
 
-**Total de registros: 6398** (EPA: 3353 · EELL: 3045)
+**Total de registros: 6396** (EPA: 3351 · EELL: 3045)
 
 ---
 
@@ -851,7 +856,7 @@ UNION ALL SELECT 'agrupaciones',        COUNT(*) FROM agrupaciones
 UNION ALL SELECT 'agrupacion_miembros', COUNT(*) FROM agrupacion_miembros;"
 ```
 
-Resultado esperado: 8 · 3103 · 6398 · 2623 · 13 · 72
+Resultado esperado: 8 · 3103 · 6396 · 2623 · 13 · 72
 
 #### Arranques posteriores (volumen con datos)
 
@@ -950,8 +955,9 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make reload-nginx` | Recarga la config de Nginx sin reiniciar |
 | `make mantenimiento-on` | Activa el modo mantenimiento (la web responde 503 con `mantenimiento.html`) |
 | `make mantenimiento-off` | Desactiva el modo mantenimiento |
-| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación) |
-| `make cargar` | Recarga el dataset sin borrar el volumen |
+| `make dataset` | Regenera `dataset_unificado.json` (unificar + normalizar causas, en ese orden) |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Necesario si cambian registros ya cargados |
+| `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests con pytest |
 | `make test-v` | Tests con salida detallada |
 | `make logs` | Últimas 100 líneas de logs del backend |
@@ -1041,7 +1047,7 @@ Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adi
 |---|---|---|
 | Acceso a `admin.html` sin token (incógnito) | ✅ Redirige a `login.html` | JS verifica token antes de cargar |
 | Acceso a `admin.html` con token de usuario `registrado` | ✅ Redirige a `privado.html` | Backend devuelve 403 en `/privado/perfil` con rol insuficiente |
-| Carga del panel completo (admin) | ✅ 4 secciones cargan en paralelo | health OK · 9 convocatorias · 6398 solicitudes · 4 usuarios |
+| Carga del panel completo (admin) | ✅ 4 secciones cargan en paralelo | health OK · 9 convocatorias · 6396 solicitudes · 4 usuarios |
 | Última convocatoria detectada | ✅ Muestra convocatoria EELL 2026 | Derivado de la BD, no del cron |
 | Tabla de usuarios | ✅ 4 usuarios con rol, estado, fecha | Fila propia marcada con `(tú)` sin botones de acción |
 | Desactivar usuario | ✅ 403 al intentar login posterior | Badge cambia a "Inactivo"; login devuelve 403 correctamente |
@@ -1132,7 +1138,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 378 pruebas automáticas en verde (pytest)
+- 386 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 

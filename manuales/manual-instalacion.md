@@ -198,7 +198,7 @@ docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
   -e "SELECT COUNT(*) AS solicitudes FROM solicitudes;"
 ```
 
-El resultado debería ser **6398**.
+El resultado debería ser **6396**.
 
 Comprueba que las convocatorias vigentes están registradas (necesarias para los avisos de la home):
 
@@ -261,7 +261,9 @@ make logs-nginx    # Últimas 50 líneas de Nginx
 | `make restart` | Para y vuelve a levantar |
 | `make build` | Reconstruye la imagen del backend |
 | `make reload-nginx` | Recarga la configuración de Nginx sin reiniciar |
-| `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación) |
+| `make dataset` | Regenera el dataset (unificar + normalizar causas, en ese orden) |
+| `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación). Necesario si cambian registros ya cargados |
+| `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests automáticos con pytest |
 | `make backup` | Genera un backup de la BD en SQL |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
