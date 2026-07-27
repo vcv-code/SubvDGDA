@@ -8,7 +8,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
 ✔ parsing PDF (EELL 2023–2024)
 ✔ parsing XML BOE + Excel manual (EELL 2025)
 ✔ limpieza y normalización de estados
-✔ dataset unificado (6398 registros · EPA: 3353 · EELL: 3045)
+✔ dataset unificado (6396 registros · EPA: 3351 · EELL: 3045)
 ✔ fix deduplicación cross-year (clave tipo + expediente + anio)
 ✔ campo provincia y ccaa para EELL (derivados del CIF, con overrides manuales)
 ✔ campo periodo_meses (6 para EPA 2023/2024, 12 para el resto)
@@ -16,7 +16,7 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
 ✔ modelo físico de base de datos (MariaDB, `docker/init/modelo-fisico.sql`)
 ✔ entorno Docker (docker-compose con MariaDB + FastAPI)
 ✔ script de carga del dataset a la base de datos (`scripts/data_processing/cargar_dataset.py`)
-✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6398 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
+✔ primera carga completa verificada (8 convocatorias, 3103 beneficiarios, 6396 solicitudes, 2623 concesiones, 13 agrupaciones, 72 miembros)
 ✔ backend FastAPI: modelos ORM, schemas Pydantic, primeros endpoints verificados
   · GET /convocatorias/ → lista las 8 convocatorias
   · GET /solicitudes/   → filtros por año, tipo, estado, CIF exacto, búsqueda parcial por nombre, CCAA, provincia y línea; ordenación server-side (`?orden=entidad-az|importe-desc|importe-asc`); respuesta paginada con `total` y `resultados`
@@ -562,3 +562,13 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · **docs/tests.md**: la tabla numerada obsoleta (199 filas) se sustituye por un resumen por archivo (23 filas, funciones/ejecuciones) regenerable con `pytest --collect-only`; recuentos al día (280 funciones / 378 ejecuciones)
   · **Arreglos**: el modal de conclusiones no dejaba hacer scroll con textos largos (`.modal-grafica__contenido` con `flex:1`+`min-height:0` en vez de `height:100%`); la tarjeta del mapa EELL no cerraba su `<div>` y su fondo blanco envolvía las gráficas de debajo (cerrada la card, retirado el `</div>` huérfano); el zoom del mapa se acota a **2-8** (antes llegaba a 1 y a 9+)
   · Se retira de "Mejoras futuras" el ítem de conclusiones comparativas EELL (implementado) y el de mostrar exclusiones EPA en el buscador (descartado: el análisis ya está en las gráficas)
+✔ Resoluciones tardías EPA reatribuidas a su convocatoria
+  · **Problema**: una solicitud presentada en el año N cuya resolución no se publica hasta el BOE de N+1 se atribuía al año del fichero, inflando los importes de N+1. Afectaba a dos casos con dinero real: **La Sexta Huella** (`SUBV2022659`, 4.684,91 € contados en 2023 en vez de 2022) y **Amibichos** (`2023B628`, 4.028,42 € contados en 2024 en vez de 2023)
+  · **Solución** (`resolver_anio_epa` en `unificar_datasets.py`): se reatribuye el registro al año que declara el JSON de origen, pero **solo si el mismo `num_expediente` y el mismo `cif` existen también en el fichero de ese año**. La comprobación del CIF es imprescindible: sin ella se reatribuirían `SUBV2022021` (número reutilizado por el BOE para Amores Perros Cádiz en 2021 y Can Terrassa en 2022 — CIF distinto) y `SUBV2032021` (errata de año, no hay fichero de 2032), y ambos colapsarían bajo la misma clave de deduplicación
+  · **Efecto**: al caer en el año donde ya estaba su versión excluida, la prioridad intra-año conserva la concedida, y cada solicitud queda con un solo registro y su estado final. Importe global sin cambios (14.835.479,86 € concedidos), solo repartido: EPA 2022 **+4.684,91 €**, EPA 2023 **−656,49 €**, EPA 2024 **−4.028,42 €**. Total de registros **6398 → 6396** (EPA 3353 → 3351); excluidas EPA 2022 59 → 58 y 2023 13 → 12. Duplicados intra-año siguen en **0**. `periodo_meses` pasa a seguir al año reatribuido, no al del fichero
+  · **Tests**: +8 en `test_unificar_datasets.py` cubriendo los dos casos reatribuidos y los dos falsos positivos. Suite **386** en verde
+  · Actualizados README, `manuales/manual-instalacion.md`, `docs/modelo-datos.md`, `docs/pipeline-datos.md` (sección "Duplicados cross-year" reescrita) y `docs/tests.md`
+✔ Pipeline: dos trampas corregidas al hilo de lo anterior
+  · **`make dataset` (nuevo)**: encadena `unificar_datasets.py` + `normalizar_causa_exclusion.py`. Hacía falta porque el primero reconstruye el dataset desde los JSON procesados y deja las causas en crudo (`10, 12, 16`), revirtiendo la normalización de ~370 registros. Ejecutarlos por separado era un pie de banco fácil de pisar
+  · **`make reset-db` arreglado**: su bucle de espera usaba `mariadb -uroot -proot`, y la contraseña real es `${MYSQL_ROOT_PASSWORD}` (`rootpass_bdns`), así que nunca conectaba y el target se colgaba indefinidamente. Se retira el bucle entero: `docker compose up -d` ya bloquea hasta que el healthcheck de `db` pasa, porque backend, cron y adminer declaran `condition: service_healthy`
+  · **Documentado que `cargar_dataset.py` es aditivo** (salta por `(num_expediente, id_convoc)`, nunca actualiza ni borra), en README, manual de instalación y `pipeline-datos.md`. En el README, `make cargar` estaba descrito como "recarga el dataset sin borrar el volumen", que inducía a error: si cambian registros ya cargados hay que ir a `make reset-db`

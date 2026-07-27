@@ -83,6 +83,11 @@ Carga en base de datos (cargar_dataset.py)
     futuros antes de que la DGDA publique en BDNS).
 ```
 
+**Dos propiedades del pipeline que no son evidentes y conviene tener presentes:**
+
+1. **`unificar_datasets.py` revierte la normalización de causas.** Reconstruye `dataset_unificado.json` desde los JSON procesados, donde `causa_exclusion` está tal cual la publica el BOE (`10, 12, 16`). Ejecutarlo suelto deshace el trabajo de `normalizar_causa_exclusion.py` en ~370 registros. Los dos pasos van siempre juntos y en ese orden: **`make dataset`** los encadena.
+2. **`cargar_dataset.py` es aditivo, no sincronizador.** Antes de insertar una solicitud comprueba si ya existe por `(num_expediente, id_convoc)` y, si está, la salta. Nunca hace `UPDATE` ni `DELETE`. Eso lo hace idempotente y seguro para poblar una BD vacía o añadir una convocatoria nueva, pero significa que **un cambio en registros ya cargados no llega a la BD volviendo a ejecutarlo**: hay que recrearla con **`make reset-db`** (`docker compose down -v && up -d` + carga). No hace falta esperar a la BD a mano; `up -d` ya bloquea hasta que su healthcheck pasa, porque backend, cron y adminer declaran `condition: service_healthy`.
+
 ### Integración con BDNS en la carga (`bdns_lookup.py`)
 
 El módulo `scripts/data_processing/bdns_lookup.py` actúa de **puente** entre los snapshots BDNS (descargados por `scripts/ingestion/bdns_client.py`, ver §API BDNS) y el paso 1 de `cargar_dataset.py`. Lee el snapshot más reciente de cada patrón (`*_convocatorias_proteccion_animal.json` y `*_convocatorias_colonias_felinas.json`), detecta el tipo (`epa` / `eell`) por palabras clave del título y devuelve un índice `{(anio, tipo): {num_convoc, fecha_convocatoria, titulo, bdns_id}}`.
@@ -141,7 +146,7 @@ Particularidades resueltas:
 - **Separadores inconsistentes**: `4; 5`, `6, 7, 8`, `2. 6.a` e incluso `16.18.19.` (sin espacios), con códigos que llevan punto propio (`6.a`, `3.1`). `normalizar_causa_exclusion.py` tokeniza **guiado por el catálogo** (match voraz del código válido más largo en cada posición) y guarda el resultado canónico separado por `;`. Validación: 643/643 excluidas resuelven contra el catálogo.
 - **EPA 2021 en texto libre**: ese anexo no usa códigos sino el motivo literal; se mapea a código por match exacto del texto contra el catálogo (21/21).
 - **Desistidas por no subsanar (EELL 2023, ANEXO IV)**: 198 ayuntamientos "se tienen por desistidos al no haber subsanado en plazo" (causa 18). El BOE los clasifica como **desistidas**, no excluidas, y así se mantienen (fuera del buscador de exclusiones, por consistencia con el resto de años, donde las desistidas tampoco aparecen).
-- **Conciliación con el Excel de referencia**: EPA 2022 muestra 59 excluidas frente a las 60 del anexo porque `SUBV2022271` aparece también como concedida y la deduplicación intra-año conserva la concedida (correcto). Quedan ±1 en EELL 2024/2025 pendientes de ajuste manual (fila partida en el PDF / expediente sintético duplicado).
+- **Conciliación con el Excel de referencia**: EPA 2022 muestra 58 excluidas frente a las 60 del anexo por dos motivos, ambos correctos: `SUBV2022271` aparece también como concedida y la deduplicación intra-año conserva la concedida; y `SUBV2022659` (La Sexta Huella) se resolvió a favor en el BOE de 2023, así que su registro de 2022 pasa a concedida (ver "Duplicados cross-year"). Por lo mismo, EPA 2023 muestra 12 en vez de 13: `2023B628` (Amibichos) se resolvió a favor en el BOE de 2024. Los desajustes de ±1 en EELL quedaron cerrados sin tocar datos: EELL 2025 ya era correcto (303 excluidas, cotejadas por NIF contra el ANEXO III del XML oficial) y en EELL 2024 el Ayuntamiento de Oñati (`EXP2024/007460`) aparece a la vez en el ANEXO II —desestimada, 52,31 puntos— y en el ANEXO III —excluida, con la causa en blanco—; ante la contradicción de la fuente se mantiene como `no_beneficiaria`, de ahí 84 y no 85.
 
 ---
 
@@ -249,17 +254,30 @@ Situación detectada: cuatro expedientes aparecían en más de un año del datas
 
 - **SUBV2022021** — mismo código de expediente en el BOE de 2021 (Amores Perros Cádiz) y 2022 (Can Terrassa). Probablemente error del BOE al reutilizar el número.
 - **SUBV2022271** — la protectora Peludosos aparece dos veces dentro del JSON de 2022 (concedida con importe y denegada sin importe). Publicada en dos anexos distintos del BOE. Se conserva la concedida (prioridad al registro con importe > 0).
-- **SUBV2022659** — La Sexta Huella aparece en 2022 como excluida y en 2023 como concedida. Desistió en 2022 y volvió a solicitar en 2023.
-- **2023B628** — Amibichos aparece en 2023 como excluida y en 2024 como concedida. Mismo caso.
+- **SUBV2022659** — La Sexta Huella aparece en el BOE de 2022 como excluida (causa 10) y en el de 2023 como concedida con 4.684,91 €. **Es la misma solicitud**: el recurso se resolvió a favor y la resolución salió publicada un año tarde.
+- **2023B628** — Amibichos aparece en el BOE de 2023 como excluida y en el de 2024 como concedida con 4.028,42 €. Mismo caso.
+- **SUBV2032021** — Mes Que Gossos, con `anio` 2032 por una errata en el número de expediente. No es cross-year real.
 
-**Problema adicional detectado:** el campo `anio` en los JSON de origen refleja el año del número de expediente (ej: SUBV2022659 → anio=2022), no el año de la convocatoria. Con la tolerancia ±1 original, los registros cross-year colapsaban bajo el mismo año aunque estuvieran en ficheros distintos.
+**Problema adicional detectado:** el campo `anio` en los JSON de origen refleja el año del número de expediente (ej: SUBV2022659 → anio=2022), no el año del BOE que publica el registro. Con la tolerancia ±1 original, los registros cross-year colapsaban bajo el mismo año aunque estuvieran en ficheros distintos.
 
 Solución implementada:
 
 - Se cambia la clave de deduplicación de `(tipo, num_expediente)` a `(tipo, num_expediente, anio)`.
-- El campo `anio` del registro se fija siempre al año del fichero fuente (`anio_fallback`), no al que trae el JSON. Esto garantiza que el mismo expediente en distintas convocatorias tenga años diferentes.
-- Resultado: SUBV2022271 (intra-año 2022) se deduplica conservando la concedida; los otros tres conservan ambos registros en años distintos.
 - Regla de prioridad intra-año: cuando dos registros compiten por la misma clave, se prefiere el que tiene importe > 0 sobre el que tiene importe = 0. Si ambos tienen o ambos no tienen importe, prevalece el último procesado.
+- El campo `anio` se fija al año del **fichero fuente**, no al que trae el JSON, salvo en las **resoluciones tardías** (ver más abajo). Esto evita que expedientes distintos que comparten número colapsen bajo la misma clave.
+
+**Resoluciones tardías (`resolver_anio_epa`).** Una solicitud presentada en el año N cuya resolución no se publica hasta el BOE de N+1 aparece en el fichero de N+1 pero pertenece económicamente a la convocatoria de N. Atribuirla al año del fichero infla los importes de N+1. Por eso se reatribuye al año que declara el JSON, pero **solo cuando está probado que es la misma solicitud**: el mismo `num_expediente` **y** el mismo `cif` tienen que existir también en el fichero del año declarado.
+
+Esa condición es imprescindible, porque hay dos falsos positivos que no deben reatribuirse:
+
+| Caso | Por qué NO se reatribuye |
+|------|--------------------------|
+| `SUBV2022021` | En el BOE de 2021 es Amores Perros Cádiz (`G01779131`) y en el de 2022 es Can Terrassa (`G66561812`). El BOE **reutilizó el número** para otra entidad: el CIF no coincide, así que cada una se queda en su año. |
+| `SUBV2032021` | Declara `anio` 2032 por errata. No existe fichero de 2032, así que se queda en el año de su BOE (2021). |
+
+Reatribuir sin comprobar el CIF volvería a colapsar registros distintos bajo la misma clave — exactamente el fallo que arregló el cambio de clave.
+
+Resultado: se reatribuyen **dos** registros (`SUBV2022659` → 2022, `2023B628` → 2023). Al caer en el año donde ya estaba su versión excluida, la prioridad intra-año conserva la concedida, de modo que cada solicitud queda con **un solo registro y su estado final**. El importe global no cambia (14.835.479,86 € concedidos); solo se reparte al año correcto: EPA 2022 +4.684,91 €, EPA 2023 −656,49 €, EPA 2024 −4.028,42 €. El total de registros pasa de 6398 a **6396**, y `periodo_meses` sigue al año reatribuido, no al del fichero.
 
 #### Periodo subvencionable semestral en EPAs 2023 y 2024
 

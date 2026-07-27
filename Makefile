@@ -9,7 +9,7 @@
 
 .PHONY: start stop restart build build-cron reload-nginx \
         mantenimiento-on mantenimiento-off \
-        reset-db cargar test logs logs-cron logs-nginx \
+        reset-db dataset cargar test logs logs-cron logs-nginx \
         backup restore shell-db mailpit uninstall
 
 # ── Docker ────────────────────────────────────────────────────────────────────
@@ -45,15 +45,31 @@ mantenimiento-off:
 
 # ── Base de datos ─────────────────────────────────────────────────────────────
 
+# Recrea la BD desde cero. Hace falta cada vez que cambia el dataset: el
+# cargador solo INSERTA (ver `cargar`), así que sobre la BD existente no
+# borraría los registros que ya no están ni actualizaría los que cambiaron.
+# No hace falta esperar a la BD a mano: `up -d` ya bloquea hasta que el
+# healthcheck de `db` pasa, porque backend/cron/adminer dependen de
+# `condition: service_healthy`.
 reset-db:
 	@echo "⚠️  Esto borrará todos los datos. ¿Continuar? [s/N]" && read ans && [ "$$ans" = "s" ]
 	cd docker && docker compose down -v && docker compose up -d
-	@echo "Esperando a que la BD esté lista..."
-	@until docker exec bdns_dgda_db mariadb -uroot -proot -e "SELECT 1" >/dev/null 2>&1; do \
-		printf "."; sleep 2; \
-	done && echo ""
 	venv/bin/python -m scripts.data_processing.cargar_dataset
 
+# Regenera data/final/dataset_unificado.json desde los JSON procesados.
+# El segundo paso NO es opcional: unificar_datasets.py reescribe el fichero
+# con las causas de exclusión tal cual vienen del BOE ("10, 12, 16"), y
+# normalizar_causa_exclusion.py las deja en su forma canónica ("10;12;16").
+# Ejecutar solo el primero revierte la normalización de ~370 registros.
+dataset:
+	venv/bin/python scripts/data_processing/unificar_datasets.py
+	venv/bin/python scripts/data_processing/normalizar_causa_exclusion.py
+	@echo "Dataset regenerado. Para llevarlo a la BD: make reset-db (no basta con make cargar)."
+
+# Carga aditiva: inserta lo que falta y salta lo que ya existe por
+# (num_expediente, id_convoc). Nunca actualiza ni borra — sirve para poblar
+# una BD vacía o añadir una convocatoria nueva, no para reflejar cambios en
+# registros ya cargados. Para eso, make reset-db.
 cargar:
 	venv/bin/python -m scripts.data_processing.cargar_dataset
 
