@@ -97,9 +97,8 @@ frontend/
 ├── estadisticas-epas.html   → Estadísticas de Entidades Protectoras de Animales (Issue 7D)
 ├── estadisticas-eell.html   → Estadísticas de Entidades Locales / Ayuntamientos (Issue 7D)
 ├── recursos.html            → Directorio de organizaciones y sitios de interés (Issue 7D)
-├── exclusivo.html           → Resumen por convocatoria y mapa CCAA (solo usuarios registrados)
+├── exclusivo.html           → Reservado a rol admin (su contenido ya es público en el inicio y en estadísticas EELL)
 ├── login.html               → Formulario de inicio de sesión
-├── registro.html            → Formulario de creación de cuenta
 ├── verificar-email.html     → Confirmación del enlace de verificación de email
 ├── privado.html             → Zona privada / perfil del usuario registrado
 ├── admin.html               → Panel de administración (solo rol admin)
@@ -289,7 +288,7 @@ Los breakpoints son: 900px (tablet para `.grid-3`), 768px (tablet/móvil para `.
 
 ### 4.6 Auth Page (páginas de autenticación)
 
-`login.html` y `registro.html` usan una **card partida en dos columnas** (split card) combinando dos referencias de diseño: la identidad visual del proyecto en el panel izquierdo, y la claridad institucional del **GOV.UK Design System** en el formulario derecho.
+`login.html` usa una **card partida en dos columnas** (split card) combinando dos referencias de diseño: la identidad visual del proyecto en el panel izquierdo, y la claridad institucional del **GOV.UK Design System** en el formulario derecho.
 
 Estructura HTML:
 
@@ -329,7 +328,7 @@ Estructura HTML:
 
 ### 4.7 Indicadores de contraseña en tiempo real
 
-En `registro.html`, cuatro elementos `.password-req` muestran si cada requisito se cumple. Cuando el usuario escribe, `auth.js` añade o quita la clase `ok` en cada indicador con el evento `input`. El CSS convierte el punto `·` en una marca `✓` verde al añadir la clase `ok`. Los indicadores tienen `aria-live="polite"` para ser accesibles con lector de pantalla.
+Los indicadores en vivo `.password-req` vivían en `registro.html` y desaparecieron con él. El formulario de alta del panel (`admin.html`) muestra los requisitos en una línea fija con `aria-live="polite"`, que pasa a rojo si la contraseña no los cumple al enviar. Las reglas se comprueban con `cumpleRequisitosPassword`, que se movió de `auth.js` a `utils.js` justamente para poder reutilizarla aquí.
 
 ### 4.8 Spinners de carga (Issue 7D)
 
@@ -919,7 +918,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
 ---
 
-### 5.8 Login y Registro — `login.html` / `registro.html`
+### 5.8 Login — `login.html`
 
 **Propósito:** Autenticación de usuarios mediante email y contraseña.
 
@@ -927,9 +926,11 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 
 | Rol | Permisos |
 |---|---|
-| Visitante (sin login) | Acceso completo a Home, Buscador y Estadísticas |
-| Registrado | Acceso a la Zona Exclusiva |
-| Admin | Gestión de usuarios (no hay panel admin en el frontend por ahora) |
+| Visitante (sin login) | Acceso completo a Home, Buscador y Estadísticas, incluidos el resumen por convocatoria y el mapa CCAA |
+| Registrado | Zona privada (perfil) |
+| Admin | Panel de administración: usuarios, avisos y logs |
+
+**No hay registro público.** Las cuentas las crea la administradora desde el panel (`POST /admin/usuarios`); nadie se da de alta solo. La versión con registro abierto queda congelada en el tag `v1.0-completo`.
 
 **Diseño:** Card partida en dos columnas (max-width 920px) sobre fondo verde suave `#E8F5E9`. Panel izquierdo: fondo claro `#f0f5f1`, gran círculo geométrico verde oscuro centrado (`300×300px`, `border-radius: 50%`) con un blob secundario verde claro en la esquina inferior-derecha; la foto de animales se superpone centrada con `drop-shadow`. Panel derecho: formulario de calidad institucional (GOV.UK) con labels en negrita, inputs borde 2px, foco outline verde 3px y errores con borde izquierdo rojo. En móvil la imagen se oculta. Los botones sociales (Google, GitHub) han sido eliminados; el flujo de acceso es únicamente email + contraseña.
 
@@ -942,13 +943,15 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 6. Se redirige a `privado.html`.
 7. Si hay error (401): se muestra la alerta roja con el mensaje del servidor.
 
-**Flujo de registro (`registro.html` + `auth.js`):**
-1. El usuario rellena nombre (solo visual), email y contraseña.
-2. Validación en tiempo real de los requisitos de contraseña.
-3. `POST /auth/registro` con body JSON `{ email, password }`.
-   - El campo nombre **no se envía** — el backend (`RegistroIn`) solo acepta `email` y `password`.
-4. Si la respuesta es 201: mensaje de éxito y redirección a `login.html` tras 2 segundos.
-5. Si hay error (400, email ya en uso): se muestra la alerta roja.
+**Flujo de alta (`admin.html` + `admin.js`):**
+1. La administradora abre el bloque plegable "Crear usuario" de la sección Usuarios.
+2. Rellena email, nombre (opcional), contraseña y rol.
+3. Validación en cliente con `cumpleRequisitosPassword` (en `utils.js`, compartida) antes de enviar.
+4. `POST /admin/usuarios` con body JSON `{ email, nombre, password, rol }`.
+5. Si la respuesta es 201: se limpia el formulario, aparece un toast y se recarga el listado.
+6. Si es 409 (email ya en uso) o 422 (datos inválidos): alerta roja con el motivo.
+
+La cuenta nace sin verificar y recibe el email de verificación: el login devuelve 403 hasta que se confirme la dirección.
 
 **Validaciones de contraseña** (mismas reglas que el backend, `RegistroIn.password_seguro`):
 
@@ -1284,12 +1287,16 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
                  └─ Credenciales incorrectas → alerta roja (sin redirección)
 
 
-[Visitante] → registro.html
+[Admin en admin.html] → "Crear usuario"
                  │
-                 ├─ Formulario válido → POST /auth/registro (201 Created)
-                 │     └─ mensaje de éxito → setTimeout(2s) → login.html
+                 ├─ Formulario válido → POST /admin/usuarios (201 Created)
+                 │     └─ toast + recarga del listado; se envía email de verificación
                  │
-                 └─ Email ya existente → alerta roja (400 Bad Request)
+                 ├─ Email ya existente → alerta roja (409 Conflict)
+                 │
+                 └─ Datos inválidos → alerta roja (422)
+
+  No existe registro público: es la única vía de alta de cuentas.
 
 
 [privado.html carga]

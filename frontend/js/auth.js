@@ -1,17 +1,14 @@
 /**
- * auth.js — Lógica de login y registro
+ * auth.js — Lógica de login
  * ──────────────────────────────────────────────────────
- * Este archivo gestiona los formularios de login.html y registro.html.
- * Es el único script que se encarga de toda la autenticación del frontend.
+ * Gestiona el formulario de login.html.
  *
- * ¿Cómo sabe este script en qué página está?
- * No necesita saberlo. Cada función busca un elemento del DOM por su id.
- * Si el elemento no existe (porque estamos en otra página), el código
- * simplemente no hace nada. Así funciona en ambas páginas con un solo archivo.
+ * Ya no hay registro público: las cuentas las crea la administradora desde
+ * el panel (POST /admin/usuarios, ver admin.js). La versión con registro
+ * abierto queda congelada en el tag v1.0-completo.
  *
  * PETICIONES A LA API:
- *   · POST /auth/login    → { email, password } → { access_token, token_type }
- *   · POST /auth/registro → { email, password } → 201 { id_usuario, email, rol... }
+ *   · POST /auth/login → { email, password } → { access_token, token_type }
  *
  * ALMACENAMIENTO DEL TOKEN:
  *   · localStorage.setItem('token', access_token)
@@ -59,38 +56,6 @@ function esEmailValido(email) {
     // Regex básica de email: algo@algo.algo
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
-
-/**
- * cumpleRequisitosPassword(password)
- * Comprueba los cuatro requisitos del backend (definidos en schemas.py).
- * Devuelve un objeto con el resultado de cada requisito individualmente
- * para poder actualizar los indicadores visuales uno a uno.
- *
- * @param {string} password
- * @returns {{ longitud: boolean, mayuscula: boolean, minuscula: boolean, numero: boolean }}
- */
-function cumpleRequisitosPassword(password) {
-    return {
-        longitud:  password.length >= 8,
-        mayuscula: /[A-Z]/.test(password),
-        minuscula: /[a-z]/.test(password),
-        numero:    /[0-9]/.test(password),
-    };
-}
-
-/**
- * todosRequisitosOk(requisitos)
- * Devuelve true si todos los requisitos son true.
- * Usamos Object.values() para obtener el array de booleanos
- * y .every() para comprobar que todos sean true.
- *
- * @param {object} requisitos - Resultado de cumpleRequisitosPassword()
- * @returns {boolean}
- */
-function todosRequisitosOk(requisitos) {
-    return Object.values(requisitos).every(Boolean);
-}
-
 
 // ─────────────────────────────────────────────────────────────
 // UTILIDADES DE UI (interfaz de usuario)
@@ -150,24 +115,12 @@ function setBtnCargando(idBtn, cargando) {
 /**
  * iniciarLogin()
  * Busca el formulario de login en el DOM y le añade el event listener.
- * Si el formulario no existe (estamos en registro.html), no hace nada.
+ * Si el formulario no existe (estamos en otra página), no hace nada.
  * Se llama desde DOMContentLoaded.
  */
 function iniciarLogin() {
     const form = document.getElementById('form-login');
     if (!form) return;   // No estamos en login.html, salimos
-
-    // Si venimos del registro, pre-rellenamos email y contraseña
-    const prefillEmail    = sessionStorage.getItem('prefill_email');
-    const prefillPassword = sessionStorage.getItem('prefill_password');
-    if (prefillEmail) {
-        const inputEmail = document.getElementById('login-email');
-        const inputPass  = document.getElementById('login-password');
-        if (inputEmail) inputEmail.value = prefillEmail;
-        if (inputPass)  inputPass.value  = prefillPassword ?? '';
-        sessionStorage.removeItem('prefill_email');
-        sessionStorage.removeItem('prefill_password');
-    }
 
     // Guardamos el texto original del botón para restaurarlo después de la carga
     const btn = document.getElementById('btn-submit-login');
@@ -284,156 +237,18 @@ function iniciarLogin() {
 
 
 // ─────────────────────────────────────────────────────────────
-// MÓDULO DE REGISTRO
-// ─────────────────────────────────────────────────────────────
-
-/**
- * actualizarIndicadoresPassword(password)
- * Actualiza los 4 indicadores de requisitos en tiempo real.
- * Se llama en cada pulsación de tecla en el campo de contraseña.
- *
- * ¿Cómo funciona visualmente?
- * Cada .password-req tiene un ::before con "·" por defecto.
- * Al añadir la clase "ok", el CSS cambia el "·" por "✓" verde.
- * Ver styles.css sección 22 (.password-req.ok).
- *
- * @param {string} password
- */
-function actualizarIndicadoresPassword(password) {
-    const req = cumpleRequisitosPassword(password);
-
-    // Para cada requisito: añadir/quitar clase "ok" según si se cumple
-    document.getElementById('req-longitud') ?.classList.toggle('ok', req.longitud);
-    document.getElementById('req-mayuscula')?.classList.toggle('ok', req.mayuscula);
-    document.getElementById('req-minuscula')?.classList.toggle('ok', req.minuscula);
-    document.getElementById('req-numero')   ?.classList.toggle('ok', req.numero);
-}
-
-/**
- * iniciarRegistro()
- * Busca el formulario de registro en el DOM y le añade los listeners.
- * Si el formulario no existe (estamos en login.html), no hace nada.
- */
-function iniciarRegistro() {
-    const form = document.getElementById('form-registro');
-    if (!form) return;   // No estamos en registro.html, salimos
-
-    const btn = document.getElementById('btn-submit-registro');
-    if (btn) btn.dataset.textoOriginal = btn.textContent;
-
-    // ── Listener de contraseña en tiempo real ────────────────────────────
-    // El evento 'input' se dispara con cada pulsación de tecla.
-    // Actualiza los indicadores visuales sin esperar al submit.
-    const inputPassword = document.getElementById('registro-password');
-    if (inputPassword) {
-        inputPassword.addEventListener('input', () => {
-            actualizarIndicadoresPassword(inputPassword.value);
-        });
-    }
-
-    // ── Listener del formulario ──────────────────────────────────────────
-    form.addEventListener('submit', async (evento) => {
-        evento.preventDefault();
-
-        // ── Paso 1: Leer valores ──────────────────────────────────────────
-        const email           = document.getElementById('registro-email').value.trim();
-        const nombre          = document.getElementById('registro-nombre')?.value.trim() ?? '';
-        const password        = document.getElementById('registro-password').value;
-        const passwordConfirm = document.getElementById('registro-password-confirm')?.value ?? '';
-
-        // ── Paso 2: Validación client-side ────────────────────────────────
-        let hayErrores = false;
-
-        if (!esEmailValido(email)) {
-            mostrarError('error-email-reg', true);
-            hayErrores = true;
-        } else {
-            mostrarError('error-email-reg', false);
-        }
-
-        const requisitos = cumpleRequisitosPassword(password);
-        if (!todosRequisitosOk(requisitos)) {
-            mostrarError('error-password-reg', true);
-            hayErrores = true;
-        } else {
-            mostrarError('error-password-reg', false);
-        }
-
-        // Validación confirmar contraseña (campo solo frontend)
-        if (password !== passwordConfirm) {
-            mostrarError('error-password-confirm-reg', true);
-            hayErrores = true;
-        } else {
-            mostrarError('error-password-confirm-reg', false);
-        }
-
-        if (hayErrores) return;
-
-        // ── Paso 3: Ocultar alertas previas y deshabilitar botón ─────────
-        mostrarAlerta('registro-alerta', false);
-        mostrarAlerta('registro-ok', false);
-        setBtnCargando('btn-submit-registro', true);
-
-        try {
-            // ── Paso 4: Petición POST /auth/registro ──────────────────────
-            const sitio_web = document.getElementById('hp-sitio-web')?.value ?? '';
-            const respuesta = await fetch(`${API_URL}/auth/registro`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, nombre, password, sitio_web }),
-            });
-
-            if (!respuesta.ok) {
-                const errorData = await respuesta.json().catch(() => ({}));
-                const mensaje = errorData.mensaje || 'No se pudo crear la cuenta. Inténtalo de nuevo.';
-                mostrarAlerta('registro-alerta', true, mensaje);
-                return; // detail por mensaje
-            }
-
-            // ── Paso 5: Mostrar éxito y redirigir ─────────────────────────
-            /**
-             * No guardamos el token aquí. El registro solo CREA la cuenta.
-             * El usuario debe hacer login a continuación para obtener su token.
-             * Esto es el flujo estándar: Registro → Login → Token.
-             */
-            mostrarAlerta('registro-ok', true,
-                'Cuenta creada. Te hemos enviado un email de verificación — ' +
-                'revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.'
-            );
-            // No redirigimos: el usuario debe verificar el email antes de poder hacer login
-
-        } catch (error) {
-            console.error('Error en registro:', error);
-            mostrarAlerta('registro-alerta', true, 'No se pudo conectar con el servidor. Comprueba que el backend está activo.');
-
-        } finally {
-            setBtnCargando('btn-submit-registro', false);
-        }
-    });
-}
-
-
-// ─────────────────────────────────────────────────────────────
 // PUNTO DE ENTRADA
 // ─────────────────────────────────────────────────────────────
 
 /**
- * DOMContentLoaded: esperamos a que el DOM esté listo y luego
- * intentamos inicializar ambos módulos.
- * Cada módulo se inicia solo si encuentra su formulario en el DOM.
- * En login.html se activa iniciarLogin().
- * En registro.html se activa iniciarRegistro().
+ * DOMContentLoaded: esperamos a que el DOM esté listo e inicializamos el
+ * módulo de login, que se activa solo si encuentra su formulario.
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Si ya hay sesión activa, redirigir sin mostrar el formulario de login ni de registro
-    if (localStorage.getItem('token')) {
-        const esLogin    = !!document.getElementById('form-login');
-        const esRegistro = !!document.getElementById('form-registro');
-        if (esLogin || esRegistro) {
-            window.location.href = 'privado.html';
-            return;
-        }
+    // Si ya hay sesión activa, redirigir sin llegar a mostrar el formulario
+    if (localStorage.getItem('token') && document.getElementById('form-login')) {
+        window.location.href = 'privado.html';
+        return;
     }
     iniciarLogin();
-    iniciarRegistro();
 });

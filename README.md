@@ -395,7 +395,7 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 
 **Seguridad:**
 
-- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/registro` (5 req/min, burst 3), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2)
+- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2). No hay zona de registro: retirada junto con el alta pública
 - Cabeceras de seguridad en todas las respuestas: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
 - SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
 - Cabeceras `Cache-Control`: `/convocatorias/` (1 día), `/estadisticas/` (1 hora) y `/solicitudes/causas` (1 día)
@@ -457,7 +457,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas |
-| `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
+| `login.html` | Acceso a la cuenta. No hay alta pública: las cuentas las crea la administradora desde el panel |
 | `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
 | `contacto.html` | Formulario de contacto (honeypot antispam + rate limiting); envía el mensaje por email |
 | `aviso-legal.html` · `privacidad.html` | Páginas legales: aviso legal y política de privacidad |
@@ -526,7 +526,7 @@ La carpeta `frontend/` contiene:
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
 - `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
 - `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
 
@@ -956,7 +956,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make mantenimiento-on` | Activa el modo mantenimiento (la web responde 503 con `mantenimiento.html`) |
 | `make mantenimiento-off` | Desactiva el modo mantenimiento |
 | `make dataset` | Regenera `dataset_unificado.json` (unificar + normalizar causas, en ese orden) |
-| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Necesario si cambian registros ya cargados |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Necesario si cambian registros ya cargados. **Ver aviso debajo** |
 | `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests con pytest |
 | `make test-v` | Tests con salida detallada |
@@ -967,6 +967,8 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
 | `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
+
+> **`make reset-db` no es reversible con solo recargar el dataset.** El dataset llega hasta 2025; las convocatorias del año en curso las descubre el **cron** consultando BDNS y viven **solo en la BD**, igual que las `fecha_fin_plazo` que se fijan a mano desde el panel admin y los usuarios creados. Al borrar el volumen desaparecen, y con ellas los **avisos del banner de inicio**. Haz `make backup` antes y comprueba los avisos después.
 
 ### Windows
 
@@ -1264,7 +1266,7 @@ A continuación, el detalle por dominio.
 
 - `solicitudes.html` se conserva intencionalmente aunque la URL pública es ahora `buscador.html`. Actúa como redirección de compatibilidad para cualquier enlace externo o marcador guardado antes del renombrado. No es un archivo huérfano: es legacy deliberado.
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
-- El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
+- El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero el alta desde el panel (`POST /admin/usuarios`) siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
 - `history.replaceState` vs `pushState` en el buscador: al usar `pushState` cada cambio de filtro añadía una entrada al historial. Al hacer clic en una convocatoria y pulsar "Atrás", el navegador volvía al estado anterior del filtro en lugar de salir del buscador, obligando a pulsar "Atrás" varias veces. Cambiado a `replaceState` — actualiza la URL sin añadir entradas al historial.
@@ -1404,10 +1406,15 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
 - **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
 
+### Operación y despliegue
+
+- **Blindar `make reset-db` para no perder los avisos** — el dataset llega a 2025, pero las convocatorias del año en curso las descubre el cron consultando BDNS en vivo y viven solo en la BD, igual que las `fecha_fin_plazo` fijadas a mano desde el panel. Al recrear la BD desaparecen y con ellas los avisos del banner de inicio. Hoy está cubierto solo con documentación y disciplina (`make backup` antes). Plan acordado, ~15 min: **(A)** que `reset-db` haga el volcado automáticamente antes de borrar —y añadir `backup_*.sql` al `.gitignore`, que hoy no está, para no commitear un volcado por error—, y **(B)** ejecutar `check_bdns.py` al final del target para redescubrir las convocatorias del año en curso. La opción B no repone las `fecha_fin_plazo`, que son dato propio y no de BDNS; para cubrir también eso haría falta preservar las tablas `convocatorias` y `usuarios` a través del reset casando por `num_convoc` en vez de por `id` (~1 h), descartado de momento por coste.
+
 ### Funcionalidades y UX
 
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
+- **Alta por invitación en vez de contraseña fijada por la admin** — hoy `POST /admin/usuarios` obliga a la administradora a inventar la contraseña y hacérsela llegar a la persona por un canal externo (mensajería, verbalmente), que es justo donde una contraseña no debería viajar. La alternativa: crear la cuenta **solo con el email** y enviar un enlace de "establece tu contraseña"; la elige la propia persona, nadie más llega a conocerla y la cuenta queda verificada al usarlo. Reaprovecharía casi entero el flujo de recuperación ya existente (`crear_reset_token`, `enviar_email_recuperacion` y `POST /auth/reset`, que ya activa `email_verificado` al completarse). Requiere: quitar `password` de `CrearUsuarioIn`, generar el token de establecimiento en el alta, un texto de email distinto al de recuperación, y ajustar el formulario del panel y sus tests. Coste estimado: media jornada.
 - **Login con terceros (OAuth)** — integración con Google.
 
 ### Producción y seguridad

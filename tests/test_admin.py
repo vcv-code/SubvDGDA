@@ -49,6 +49,27 @@ def _token_admin(client, db):
     return r.json()["access_token"]
 
 
+def _sembrar_registrado(db):
+    """Usuario corriente sobre el que operar (listar, cambiar rol, borrar...).
+
+    Antes se creaba llamando a POST /auth/registro. Retirado el registro
+    público, se siembra en BD: estos tests prueban las operaciones del panel
+    sobre un usuario existente, no cómo se dio de alta.
+    """
+    usuario = Usuario(
+        email=USUARIO["email"],
+        password=hashear_password(USUARIO["password"]),
+        rol="registrado",
+        activo=1,
+        email_verificado=1,
+        created_at=datetime.now(timezone.utc),
+    )
+    db.add(usuario)
+    db.commit()
+    db.refresh(usuario)
+    return usuario
+
+
 def _token_registrado(client, db):
     u = Usuario(email=USUARIO["email"], password=hashear_password(USUARIO["password"]),
                 rol="registrado", activo=1, email_verificado=1, created_at=datetime.now(timezone.utc))
@@ -106,8 +127,7 @@ def test_estado_rol_admin_devuelve_200(client, db):
 
 def test_listar_usuarios(client, db):
     token = _token_admin(client, db)
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO)
+    _sembrar_registrado(db)
     r = client.get("/admin/usuarios", headers=_headers(token))
     assert r.status_code == 200
     data = r.json()
@@ -120,8 +140,7 @@ def test_listar_usuarios(client, db):
 
 def test_cambiar_rol_a_admin(client, db):
     token = _token_admin(client, db)
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO)
+    _sembrar_registrado(db)
     usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
@@ -149,8 +168,7 @@ def test_cambiar_propio_rol_devuelve_400(client, db):
 
 def test_desactivar_usuario(client, db):
     token = _token_admin(client, db)
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO)
+    _sembrar_registrado(db)
     usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
@@ -184,8 +202,7 @@ def test_usuario_inexistente_devuelve_404(client, db):
 
 def test_eliminar_usuario(client, db):
     token = _token_admin(client, db)
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO)
+    _sembrar_registrado(db)
     usuarios = client.get("/admin/usuarios", headers=_headers(token)).json()["usuarios"]
     id_usr = next(u["id_usuario"] for u in usuarios if u["email"] == USUARIO["email"])
 
@@ -228,6 +245,116 @@ def test_listar_usuarios_paginacion(client, db):
     p99 = client.get("/admin/usuarios?pagina=99&limite=2", headers=_headers(token)).json()
     assert p99["usuarios"] == []
     assert p99["total"] == 6
+
+
+# ── Alta de usuarios ──────────────────────────────────────────────────────────
+# POST /admin/usuarios es la única vía de creación de cuentas desde que se
+# retiró el registro público.
+
+NUEVO = {"email": "nuevo@test.com", "password": "Nuevo1234", "nombre": "Persona Nueva"}
+
+
+def _crear(client, token, **extra):
+    with patch("backend.app.routers.admin.enviar_email_verificacion") as mock_email:
+        r = client.post("/admin/usuarios", json={**NUEVO, **extra}, headers=_headers(token))
+    return r, mock_email
+
+
+def test_crear_usuario_devuelve_201_y_datos(client, db):
+    token = _token_admin(client, db)
+    r, _ = _crear(client, token)
+    assert r.status_code == 201
+    data = r.json()
+    assert data["email"] == NUEVO["email"]
+    assert data["nombre"] == "Persona Nueva"
+    assert data["rol"] == "registrado"          # rol por defecto
+    assert data["activo"] is True
+    assert data["email_verificado"] is False    # nace sin verificar
+
+
+def test_crear_usuario_permite_fijar_rol_admin(client, db):
+    token = _token_admin(client, db)
+    r, _ = _crear(client, token, rol="admin")
+    assert r.status_code == 201
+    assert r.json()["rol"] == "admin"
+
+
+def test_crear_usuario_no_puede_entrar_hasta_verificar(client, db):
+    """La cuenta creada por la admin nace sin verificar, así que el login
+    se bloquea con 403 hasta que la persona confirme su dirección."""
+    token = _token_admin(client, db)
+    _crear(client, token)
+    r = client.post("/auth/login", json={"email": NUEVO["email"], "password": NUEVO["password"]})
+    assert r.status_code == 403
+
+
+def test_crear_usuario_guarda_la_password_hasheada(client, db):
+    token = _token_admin(client, db)
+    _crear(client, token)
+    usuario = db.query(Usuario).filter(Usuario.email == NUEVO["email"]).first()
+    assert usuario.password != NUEVO["password"]
+
+    # Una vez verificada la cuenta, la contraseña que fijó la admin sirve para entrar
+    usuario.email_verificado = 1
+    db.commit()
+    r = client.post("/auth/login", json={"email": NUEVO["email"], "password": NUEVO["password"]})
+    assert r.status_code == 200
+
+
+def test_crear_usuario_envia_email_de_verificacion(client, db):
+    token = _token_admin(client, db)
+    _, mock_email = _crear(client, token)
+    mock_email.assert_called_once()
+    assert mock_email.call_args[0][0] == NUEVO["email"]
+
+
+def test_crear_usuario_email_duplicado_devuelve_409(client, db):
+    """A diferencia del registro público, aquí NO se finge éxito.
+
+    El anti-enumeración tenía sentido de cara al exterior; a la administradora
+    hay que decirle por qué no se ha creado la cuenta.
+    """
+    token = _token_admin(client, db)
+    _crear(client, token)
+    r, _ = _crear(client, token)
+    assert r.status_code == 409
+
+
+def test_crear_usuario_password_debil_devuelve_422(client, db):
+    token = _token_admin(client, db)
+    r, _ = _crear(client, token, password="debil")
+    assert r.status_code == 422
+
+
+def test_crear_usuario_email_invalido_devuelve_422(client, db):
+    token = _token_admin(client, db)
+    r, _ = _crear(client, token, email="no-es-un-email")
+    assert r.status_code == 422
+
+
+def test_crear_usuario_rol_invalido_devuelve_422(client, db):
+    token = _token_admin(client, db)
+    r, _ = _crear(client, token, rol="superadmin")
+    assert r.status_code == 422
+
+
+def test_crear_usuario_sin_token_devuelve_401(client):
+    r = client.post("/admin/usuarios", json=NUEVO)
+    assert r.status_code == 401
+
+
+def test_crear_usuario_rol_registrado_devuelve_403(client, db):
+    token = _token_registrado(client, db)
+    r = client.post("/admin/usuarios", json=NUEVO, headers=_headers(token))
+    assert r.status_code == 403
+
+
+def test_crear_usuario_aparece_en_el_listado(client, db):
+    token = _token_admin(client, db)
+    _crear(client, token)
+    data = client.get("/admin/usuarios", headers=_headers(token)).json()
+    assert data["total"] == 2
+    assert NUEVO["email"] in [u["email"] for u in data["usuarios"]]
 
 
 # ── Logs del cron ─────────────────────────────────────────────────────────────

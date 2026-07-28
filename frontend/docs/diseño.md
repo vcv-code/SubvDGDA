@@ -82,7 +82,6 @@ frontend/
 ├── privado.html                        ← Perfil de usuario (zona privada)
 ├── admin.html                          ← Panel de administración
 ├── login.html
-├── registro.html
 ├── recuperar-password.html
 ├── reset-password.html
 ├── verificar-email.html

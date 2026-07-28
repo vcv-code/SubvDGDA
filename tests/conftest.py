@@ -45,3 +45,40 @@ def db(client):
     session = TestingSessionLocal()
     yield session
     session.close()
+
+
+@pytest.fixture
+def crear_usuario(db):
+    """Crea un usuario directamente en BD y lo devuelve.
+
+    Los tests sembraban usuarios llamando a POST /auth/registro. Al retirarse
+    el registro público esa vía desapareció, y hacerlo ahora contra
+    POST /admin/usuarios obligaría a montar un admin autenticado en tests que
+    no van de eso. Sembrar en BD deja cada test probando solo lo suyo.
+
+    Por defecto la cuenta nace verificada y activa, que es lo que necesita la
+    mayoría (poder hacer login). Quien pruebe el flujo de verificación pasa
+    email_verificado=0 explícitamente.
+    """
+    from datetime import datetime, timezone
+
+    from backend.app.auth import hashear_password
+    from backend.app.models import Usuario
+
+    def _crear(email, password="Usuario1234", rol="registrado",
+               activo=1, email_verificado=1, nombre=None):
+        usuario = Usuario(
+            email=email,
+            nombre=nombre,
+            password=hashear_password(password),
+            rol=rol,
+            activo=activo,
+            email_verificado=email_verificado,
+            created_at=datetime.now(timezone.utc),
+        )
+        db.add(usuario)
+        db.commit()
+        db.refresh(usuario)
+        return usuario
+
+    return _crear
