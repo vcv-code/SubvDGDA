@@ -262,13 +262,15 @@ make logs-nginx    # Últimas 50 líneas de Nginx
 | `make build` | Reconstruye la imagen del backend |
 | `make reload-nginx` | Recarga la configuración de Nginx sin reiniciar |
 | `make dataset` | Regenera el dataset (unificar + normalizar causas, en ese orden) |
-| `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación). Necesario si cambian registros ya cargados |
+| `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación). Necesario si cambian registros ya cargados. **Ver aviso debajo** |
 | `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests automáticos con pytest |
 | `make backup` | Genera un backup de la BD en SQL |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Muestra la URL de Mailpit |
 | `make uninstall` | Ejecuta el script de desinstalación |
+
+> **`make reset-db` no es reversible con solo recargar el dataset.** El dataset llega hasta 2025; las convocatorias del año en curso las descubre el **cron** consultando BDNS y viven **solo en la BD**, igual que las `fecha_fin_plazo` que se fijan a mano desde el panel admin y los usuarios creados. Al borrar el volumen desaparecen, y con ellas los **avisos del banner de inicio**. Haz `make backup` antes y comprueba los avisos después.
 
 ---
 

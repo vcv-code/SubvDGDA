@@ -28,7 +28,6 @@
 | `estadisticas-eell.html` | Estadísticas EELL | [x] |
 | `recursos.html` | Recursos y enlaces útiles | [x] |
 | `login.html` | Inicio de sesión | [x] |
-| `registro.html` | Registro de usuario | [x] |
 | `verificar-email.html` | Confirmación de email | [x] |
 | `recuperar-password.html` | Solicitud de recuperación | [x] |
 | `reset-password.html` | Restablecimiento de contraseña | [x] |

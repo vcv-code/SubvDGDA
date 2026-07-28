@@ -48,6 +48,15 @@ mantenimiento-off:
 # Recrea la BD desde cero. Hace falta cada vez que cambia el dataset: el
 # cargador solo INSERTA (ver `cargar`), así que sobre la BD existente no
 # borraría los registros que ya no están ni actualizaría los que cambiaron.
+#
+# CUIDADO: esto NO se recupera solo del dataset. Se pierde todo lo que vive
+# únicamente en la BD y no está en data/final/:
+#   · convocatorias que descubrió el cron consultando BDNS (las del año en
+#     curso, posteriores al último año del dataset),
+#   · las fecha_fin_plazo fijadas a mano desde el panel admin,
+#   · los usuarios (salvo el admin que siembra docker/init/modelo-fisico.sql).
+# Haz `make backup` antes y comprueba los avisos después.
+#
 # No hace falta esperar a la BD a mano: `up -d` ya bloquea hasta que el
 # healthcheck de `db` pasa, porque backend/cron/adminer dependen de
 # `condition: service_healthy`.

@@ -33,12 +33,12 @@ def test_nginx_rate_limit_aplicado_a_login():
     assert "limit_req" in contenido
 
 
-def test_nginx_zona_registro_definida():
-    contenido = NGINX_CONF.read_text()
-    assert "zone=registro" in contenido
+def test_nginx_sin_zona_ni_rate_limit_de_registro():
+    """El alta pública ya no existe, así que su zona tampoco debe quedarse.
 
-
-def test_nginx_rate_limit_aplicado_a_registro():
+    Una zona `limit_req_zone` huérfana reserva 10 MB de memoria compartida en
+    Nginx sin que ninguna `location` la use.
+    """
     contenido = NGINX_CONF.read_text()
-    assert "/auth/registro" in contenido
-    assert "zone=registro" in contenido
+    assert "zone=registro" not in contenido
+    assert "/auth/registro" not in contenido

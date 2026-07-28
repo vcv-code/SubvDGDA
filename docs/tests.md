@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 288 funciones / 386 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 292 funciones / 390 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **340 funciones / 438 ejecuciones** | |
+| **Total** | **344 funciones / 442 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de las 386 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 370. Con Docker completo, pasan las 386.
+Nota sobre ejecución: 16 de las 390 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 374. Con Docker completo, pasan las 390.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (386) es mayor que el número de **funciones de test** escritas (288). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (390) es mayor que el número de **funciones de test** escritas (292). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **288 funciones de test automáticas** (386 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
+El proyecto incluye **292 funciones de test automáticas** (390 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (386)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (390)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -104,12 +104,12 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_agrupaciones.py` | 7 | 7 | `GET /agrupaciones/{id}`: miembros de agrupaciones EELL |
 | `test_avisos.py` | 10 | 10 | `/avisos/`: convocatorias del año en curso sin resolución |
 | `test_cache_headers.py` | 4 | 4 | Cabeceras `Cache-Control` en los endpoints públicos |
-| `test_auth.py` | 14 | 14 | Registro, login, JWT y validación de contraseña |
+| `test_auth.py` | 10 | 10 | Login, JWT y validación de contraseña (el alta vive en `test_admin.py`) |
 | `test_refresh_token.py` | 7 | 7 | Rotación y revocación del refresh token |
-| `test_verificacion_email.py` | 10 | 10 | Verificación de email por token |
+| `test_verificacion_email.py` | 7 | 7 | Verificación de email por token |
 | `test_recuperar_password.py` | 9 | 9 | Flujo de recuperación/reset de contraseña |
 | `test_privado.py` | 6 | 6 | Zona privada: perfil, cambiar nombre/contraseña, `resumen-tabla` protegido |
-| `test_admin.py` | 34 | 34 | Panel admin: usuarios paginados, cambio de rol/activo, logs de la app y del cron |
+| `test_admin.py` | 46 | 46 | Panel admin: **alta de usuarios**, listado paginado, cambio de rol/activo, logs de la app y del cron |
 | `test_contacto.py` | 9 | 9 | Formulario de contacto: honeypot, rate limiting, validación, error SMTP |
 | `test_mantenimiento.py` | 4 | 4 | Modo mantenimiento (503 controlado) |
 | `test_unificar_datasets.py` | 29 | 29 | Pipeline: unificación, deduplicación cross-year, provincia/CCAA desde CIF, estados |
@@ -119,8 +119,8 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_scheduler.py` | 21 | 119 | Calendario del cron (parametrizado por días del mes) |
 | `test_logging.py` | 5 | 5 | Sistema de logging de la aplicación |
 | `test_https_config.py` | 9 | 9 | TLS/HTTPS y redirección (**requiere Docker + Nginx**) |
-| `test_rate_limiting.py` | 7 | 7 | Rate limiting de Nginx (**requiere Docker + Nginx**) |
-| **Total** | **288** | **386** | 23 archivos |
+| `test_rate_limiting.py` | 6 | 6 | Rate limiting de Nginx (**requiere Docker + Nginx**) |
+| **Total** | **292** | **390** | 23 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
