@@ -80,7 +80,6 @@
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
-                <li><a href="login.html" class="btn-login">Acceder</a></li>
             
             </ul>
             <button class="navbar__hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
@@ -657,10 +656,37 @@
          FOOTER — igual que en index.html
          ===================================================== -->
     <footer class="footer-principal">
+
+        <!-- Franja de apoyo: causa que el sitio señala, NO patrocinio ni
+             financiación de la web. Las dos ideas van deliberadamente
+             separadas: el dinero del grupo de Teaming es para la asociación,
+             y sugerir otro destino es causa de bloqueo en sus condiciones.
+             Ver aviso-legal.html. -->
+        <div class="footer-apoyo">
+            <!-- El logo enlaza a su web y redes. No se dice "pulsa en el logo":
+                 en móvil no se hace clic y quien usa lector de pantalla no
+                 percibe dónde está; el destino va en el aria-label. -->
+            <a class="footer-apoyo__logo"
+               href="https://linktr.ee/lagatapirata"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="La Gata Pirata: su trabajo, web y redes sociales">
+                <img src="assets/img/logos/logo-laGataPirata.webp"
+                     alt="Logo de la Asociación La Gata Pirata" loading="lazy">
+            </a>
+            <p class="footer-apoyo__texto">
+                Esta web se mantiene de forma voluntaria, es gratuita y no tiene publicidad:
+                prepararla y actualizar los datos lleva su trabajo.
+                Si te resulta útil y quieres ayudar, puedes apoyar con
+                <a href="https://www.teaming.net/asociacionla-gata-pirata"
+                   target="_blank" rel="noopener noreferrer">solo <strong>1&nbsp;€ al mes</strong> a La Gata Pirata</a>,
+                una asociación sin ánimo de lucro que trabaja por el bienestar animal.
+            </p>
+        </div>
+
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
-                <span><strong>Proyecto BDNS/DGDA</strong> — independiente y sin ánimo de lucro</span>
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+                <span><strong>Subvenciones DGDA</strong></span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
                 <a href="https://github.com/vcv-code/SubvDGDA" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -670,6 +696,8 @@
                 <a href="privacidad.html">Privacidad</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="contacto.html">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="login.html">Acceder</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">

@@ -200,7 +200,7 @@ Se usa una escala basada en **múltiplos de 8px**. Esta escala es estándar en d
 
 Barra de navegación fija (`position: fixed`) de 80px de altura. Fondo verde oscuro institucional `#1A3429` en **todas las páginas**. Contiene el logo y el nombre **"Subvenciones DGDA"** a la izquierda (texto blanco, logo con `drop-shadow` sutil) y los enlaces de navegación a la derecha en blanco semitransparente. El enlace de la página actual recibe la clase `activo` que aplica blanco puro y subrayado CTA verde (`#2DC26C`); también se añade `aria-current="page"` para accesibilidad.
 
-El botón "Acceder" / "Cerrar sesión" tiene estilo pill (`border-radius: 50px`, fondo `#2DC26C`, texto blanco) para destacarlo visualmente. Cuando hay sesión activa, `navbar.js` sustituye "Acceder" por "Mi perfil" (`.navbar__user-link`) + "Cerrar sesión" (`.btn-login` como `<button>`).
+El navbar **no lleva botón "Acceder"**: desde que se retiró el registro público, el acceso es solo para la administración y vive como un enlace más del pie. Cuando hay sesión activa, `navbar.js` añade al final del menú "Mi perfil" y "Exclusivo" (`.navbar__user-link`) más "Cerrar sesión" (`.btn-login` como `<button>`, estilo pill).
 
 **Diseño visual unificado (Sesión 2026-05-17):**
 
@@ -223,26 +223,38 @@ El botón "Acceder" / "Cerrar sesión" tiene estilo pill (`border-radius: 50px`,
 | 3 | EPAs | `estadisticas-epas.html` | `activo` en EPAs |
 | 4 | EELL | `estadisticas-eell.html` | `activo` en EELL |
 | 5 | Recursos | `recursos.html` | `activo` en recursos |
-| 6 | Acceder | `login.html` | `.btn-login` (pill verde) |
+| — | *(sin botón de acceso: está en el pie)* | `login.html` | — |
 
 Todas las páginas del proyecto comparten este navbar unificado. El patrón de accesibilidad (`role="navigation"`, `aria-label`, `aria-current="page"`) se mantiene uniforme.
 
 ### 4.2 Footer
 
-Footer en dos zonas, con fondo verde oscuro institucional `#1A3429` en **todas las páginas**, espejo visual del navbar:
+Footer en tres zonas, con fondo verde oscuro institucional `#1A3429` en **todas las páginas menos `mantenimiento.html`** (la página de corte no lleva navegación), espejo visual del navbar:
 
-- **Zona principal** (`#1A3429`): logo del proyecto (sin filtros de inversión, con `drop-shadow` sutil) a la izquierda; nombre **"Proyecto BDNS/DGDA"** en blanco puro `#FFFFFF`; enlaces GitHub / Aviso legal / Privacidad a la derecha en blanco semitransparente. Sin borde superior visible.
-- **Zona de créditos** (`#142b20`): crédito de los datos (BDNS y DGDA) y aviso de proyecto educativo en texto blanco tenue.
+- **Franja de apoyo** (`#2E6B4F`, `.footer-apoyo`): logo de la Asociación La Gata Pirata enlazado a su Linktree, y texto enlazando a Teaming. Va arriba y en un verde **más claro** que las otras dos, para distinguirse sin invitar a inventar un color nuevo: se reutiliza el de las cabeceras de tabla.
+- **Zona principal** (`#1A3429`): logo del proyecto (sin filtros de inversión, con `drop-shadow` sutil) a la izquierda; nombre **"Subvenciones DGDA"**, el mismo que usa el navbar, en blanco puro `#FFFFFF`; enlaces GitHub / Aviso legal / Privacidad / Contacto / **Acceder** a la derecha en blanco semitransparente. Sin borde superior visible.
+- **Zona de créditos** (`#142b20`): crédito de los datos (BDNS y DGDA), copyright y licencia en texto blanco tenue.
 
 | Elemento | Valor |
 |---|---|
+| Fondo franja de apoyo | `#2E6B4F` (`--color-verde-tabla`) |
 | Fondo zona principal | `#1A3429` |
 | Fondo zona créditos | `#142b20` |
 | Nombre proyecto (`<strong>`) | `#FFFFFF` — contraste máximo |
 | Texto general | `rgba(255,255,255,0.88)` — WCAG AA > 7:1 |
+| Texto franja de apoyo | `rgba(255,255,255,0.88)` — 5,30:1 sobre su fondo |
 | Texto créditos | `rgba(255,255,255,0.52)` |
-| Logo | `drop-shadow` sutil, `height: 40px`, sin filtros de inversión |
+| Logo del proyecto | `drop-shadow` sutil, `33×36`, sin filtros de inversión |
+| Logo de la asociación | `112×86` (96×74 en ≤850px), sin fondo |
 | Borde superior | Ninguno |
+
+**Por qué el texto de la franja de apoyo no va atenuado:** sobre ese verde más claro, el `rgba(255,255,255,0.52)` de los créditos se queda en 2,98:1 de contraste y no llega al mínimo AA de 4,5:1. En blanco al 88 % sube a 5,30:1.
+
+**Por qué el logo de la asociación se aloja aquí y no se enlaza desde Teaming:** cargarlo desde su servidor haría que el navegador de cada visitante se conectara a un tercero, filtrando su IP. Ver la sección "Recursos externos" de `privacidad.html`.
+
+**Por qué el enlace del logo no dice "pulsa aquí":** en móvil no se hace clic y quien usa lector de pantalla no percibe dónde está el logo. El destino va en un `aria-label` y que sea pulsable se comunica con el comportamiento — crece al pasar por encima (desactivado con `prefers-reduced-motion`) y muestra contorno al recibir el foco.
+
+**Por qué "Acceder" está aquí y no en el navbar:** retirado el registro público, el acceso es solo para la administración. Como llamada a la acción principal de la barra llevaba a un formulario que casi nadie puede usar.
 
 **Sticky footer:** El footer siempre aparece al pie de la ventana, incluso cuando el contenido es corto. Se consigue con `display: flex; flex-direction: column; min-height: 100vh` en el `body` y `flex: 1` en `main`.
 
@@ -661,6 +673,8 @@ Si el endpoint devuelve error o aún no está disponible, el bloque queda oculto
 
 **Directorio:** `assets/img/logos/`  
 **Formato:** WebP
+
+> El directorio guarda los logos de las entidades del directorio de Recursos y, además, `logo-laGataPirata.webp`, que **no aparece en Recursos**: lo usa la franja de apoyo del pie. Se aloja aquí, y no se enlaza desde el servidor de Teaming, para no filtrar la IP de cada visitante a un tercero.
 
 **Parámetros de conversión (Squoosh / cwebp):**
 

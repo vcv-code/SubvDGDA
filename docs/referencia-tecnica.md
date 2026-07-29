@@ -508,7 +508,7 @@ Con `rate=10r/m` y `burst=5`:
 | Cabeceras de seguridad | `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `HSTS: max-age=31536000` |
 | Panel de admin | Solo accesible para usuarios con `rol = 'admin'` |
 | Sesión activa en login/registro | Si hay token en `localStorage`, `login.html` y `registro.html` redirigen automáticamente a `privado.html` sin mostrar el formulario |
-| Navbar en páginas públicas | `js/navbar.js` detecta el token en `localStorage` y reemplaza el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin necesidad de petición al servidor |
+| Navbar en páginas públicas | `js/navbar.js` detecta el token en `localStorage` y añade al final del menú "Mi perfil", "Exclusivo" y "Cerrar sesión", sin necesidad de petición al servidor. El navbar no lleva botón "Acceder": el acceso está en el pie |
 | SRI en recursos CDN | Atributos `integrity="sha384-..."` y `crossorigin="anonymous"` en los 5 recursos externos (Chart.js ×3, Leaflet JS, Leaflet CSS); el navegador verifica el hash antes de ejecutar/aplicar el recurso |
 
 ---

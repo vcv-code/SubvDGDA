@@ -146,7 +146,9 @@ async function verificarAcceso() {
 
 **Por qué verificar con el backend y no solo leer el JWT:** el JWT puede ser válido (firma correcta, no caducado) pero el usuario puede haber sido desactivado por un admin en ese tiempo. La verificación con `/privado/perfil` siempre refleja el estado actual de la BD. Si el usuario está desactivado, el backend devuelve 403.
 
-**Navbar dinámico:** `navbar.js` detecta el token en `localStorage` y sustituye el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin hacer ninguna petición al servidor. Es solo lectura del `localStorage` — rápido y sin latencia.
+**Navbar dinámico:** `navbar.js` detecta el token en `localStorage` y **añade** "Mi perfil", "Exclusivo" y "Cerrar sesión" al final del menú, sin hacer ninguna petición al servidor. Es solo lectura del `localStorage` — rápido y sin latencia.
+
+Antes *sustituía* el botón "Acceder" del navbar. Al retirarse ese botón (el acceso vive ahora en el pie), no quedaba nada que sustituir y quien iniciaba sesión se quedaba sin controles. Las páginas que traen los suyos escritos en el HTML, como `admin.html`, se detectan por el `id="btn-cerrar-sesion"` y se dejan intactas para no duplicarlos.
 
 **Botón "volver arriba":** `scroll-arriba.js` es el otro componente compartido entre páginas (excepción a la regla "un JS por página"). Inyecta un botón flotante fijo que solo se muestra al superar 600px de scroll, así que en las páginas cortas nunca aparece aunque el script esté cargado. El listener de scroll es `passive` y agrupa el cálculo en un `requestAnimationFrame` para no penalizar el desplazamiento.
 
