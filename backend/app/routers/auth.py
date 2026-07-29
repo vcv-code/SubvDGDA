@@ -12,54 +12,14 @@ from ..auth import (hashear_password, verificar_password, crear_token,
                     crear_verificacion_token, verificacion_expira_en, enviar_email_verificacion)
 from ..db import get_db
 from ..models import Usuario, RefreshToken, ResetToken, VerificacionToken
-from ..schemas import RegistroIn, LoginIn, TokenOut, UsuarioOut, RefreshIn, RecuperarPasswordIn, ResetPasswordIn, ReenviarVerificacionIn
+from ..schemas import LoginIn, TokenOut, RefreshIn, RecuperarPasswordIn, ResetPasswordIn, ReenviarVerificacionIn
 
 router = APIRouter(prefix="/auth", tags=["autenticación"])
 
 
-@router.post("/registro", response_model=UsuarioOut, status_code=status.HTTP_201_CREATED)
-def registro(datos: RegistroIn, db: Session = Depends(get_db)):
-    # Honeypot: campo oculto que solo rellenan los bots — devolver éxito falso sin crear cuenta
-    if datos.sitio_web:
-        return UsuarioOut(
-            id_usuario=0,
-            email=datos.email,
-            rol="registrado",
-            activo=True,
-            email_verificado=False,
-            created_at=datetime.now(timezone.utc),
-        )
-    if db.query(Usuario).filter(Usuario.email == datos.email).first():
-        # Respuesta idéntica al registro exitoso para evitar enumeración de usuarios
-        return UsuarioOut(
-            id_usuario=0,
-            email=datos.email,
-            rol="registrado",
-            activo=True,
-            email_verificado=False,
-            created_at=datetime.now(timezone.utc),
-        )
-    usuario = Usuario(
-        email=datos.email,
-        nombre=datos.nombre.strip() or None,
-        password=hashear_password(datos.password),
-        rol="registrado",
-        activo=1,
-        email_verificado=0,
-        created_at=datetime.now(timezone.utc),
-    )
-    db.add(usuario)
-    db.commit()
-    db.refresh(usuario)
-    token_verif = crear_verificacion_token()
-    db.add(VerificacionToken(
-        id_usuario=usuario.id_usuario,
-        token=token_verif,
-        expira_en=verificacion_expira_en(),
-    ))
-    db.commit()
-    enviar_email_verificacion(usuario.email, token_verif)
-    return usuario
+# El registro público (POST /auth/registro) se retiró: nadie se da de alta
+# solo. Las cuentas las crea la administradora desde POST /admin/usuarios.
+# La versión con registro abierto queda congelada en el tag v1.0-completo.
 
 
 @router.post("/login", response_model=TokenOut)

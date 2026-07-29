@@ -41,7 +41,7 @@ make backup
 ```bash
 docker exec -i bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda < /tmp/backup.sql
 # o con make:
-make restore FILE=backup_20260525_120000.sql
+make restore FILE=backups/backup_20260525_120000.sql
 ```
 
 ### Desinstalar
@@ -162,12 +162,19 @@ Abre el navegador y ve a:
 
 Si el navegador muestra un aviso de certificado no seguro, haz clic en **Avanzado → Continuar a subvencionesDGDA.local**. Es normal: el certificado es autofirmado para el entorno local.
 
-### Credenciales de demo
+### Cuenta de administración
 
-| Rol | Email | Contraseña |
-|-----|-------|------------|
-| Administrador | `admin@demo.com` | `Admin1234!` |
-| Usuario registrado | `usuario@demo.com` | `User1234!` |
+La instalación **no trae ninguna cuenta preparada**. `install.sh` te pide un email y una contraseña al final y crea con ellos la cuenta de administración.
+
+Es deliberado: si el repositorio llevase dentro un hash válido, cualquiera que lo leyese conocería la contraseña de administración de todo despliegue nuevo, y bastaría con abrir el dominio y entrar.
+
+Si necesitas crearla más tarde (por ejemplo tras un `make reset-db`, que ya la pide automáticamente):
+
+```bash
+make crear-admin
+```
+
+Las demás cuentas se crean desde el panel de administración, en la sección Usuarios. No hay registro público.
 
 ---
 
@@ -262,13 +269,15 @@ make logs-nginx    # Últimas 50 líneas de Nginx
 | `make build` | Reconstruye la imagen del backend |
 | `make reload-nginx` | Recarga la configuración de Nginx sin reiniciar |
 | `make dataset` | Regenera el dataset (unificar + normalizar causas, en ese orden) |
-| `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación). Necesario si cambian registros ya cargados |
+| `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación). Hace backup automático y relanza el cron. **Ver aviso debajo** |
 | `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests automáticos con pytest |
-| `make backup` | Genera un backup de la BD en SQL |
+| `make backup` | Volcado de la BD en `backups/` (ignorado por git) |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Muestra la URL de Mailpit |
 | `make uninstall` | Ejecuta el script de desinstalación |
+
+> **`make reset-db` ya se protege solo, pero revisa los avisos al terminar.** El target hace un **backup automático** antes de borrar (en `backups/`, ignorado por git) y al final vuelve a lanzar el cron para **redescubrir las convocatorias del año en curso**, que no están en el dataset. Lo que el cron **no** repone son las `fecha_fin_plazo` fijadas a mano desde el panel ni los usuarios creados: eso sale del backup. Comprueba con `curl -sk https://localhost/avisos/`. Si pasa, el procedimiento paso a paso está en «Resolución de problemas comunes», al final de este manual.
 
 ---
 
@@ -513,6 +522,56 @@ Para reinstalar desde cero: `bash install.sh`.
 ---
 
 ## Resolución de problemas comunes
+
+**Tras un `make reset-db` no se ven los avisos ni el banner del inicio**
+
+Es el efecto secundario conocido de recrear la base de datos, no un fallo. Síntoma: el panel admin dice "No hay avisos activos" y el banner del inicio no aparece, aunque la web funcione con normalidad.
+
+Qué ocurre: el dataset de `data/final/` llega hasta 2025. Las convocatorias del **año en curso** no salen de ahí — las descubre el cron consultando BDNS y viven únicamente en la base de datos. Al borrar el volumen desaparecen, y sin convocatoria abierta no hay aviso que mostrar.
+
+`reset-db` ya intenta arreglarlo solo: al terminar relanza el cron, que vuelve a insertarlas. Si aun así no aparecen, comprueba primero qué hay:
+
+```bash
+curl -sk https://localhost/avisos/
+```
+
+**Caso 1 — no sale ninguna convocatoria del año en curso.** El cron no pudo completarse (sin red, o BDNS caído). Vuelve a lanzarlo cuando tengas conexión:
+
+```bash
+make redescubrir-convocatorias
+```
+
+**Caso 2 — las convocatorias están, pero sin `fecha_fin_plazo`.** Es lo normal: esa fecha la fijas tú desde el panel y BDNS no la publica, así que el cron no puede reponerla. Tienes tres vías.
+
+La cómoda: entrar en el panel admin, sección Avisos, y volver a escribir la fecha de fin de plazo de cada convocatoria.
+
+La rápida, si son las del año que ya estaba desplegado: `install.sh` lleva esas fechas hardcodeadas en su bloque de migraciones, con `WHERE fecha_fin_plazo IS NULL`, así que volver a ejecutarlo las repone sin pisar nada. Ojo: solo cubre los años que alguien haya añadido ahí a mano; para un año nuevo hay que actualizarlo.
+
+La exacta, recuperando el valor que tenías: `reset-db` guarda un volcado en `backups/` **antes** de borrar. Busca ahí las fechas y aplícalas.
+
+```bash
+ls -t backups/                       # el más reciente es el de antes del reset
+sed -n '/INSERT INTO `convocatorias`/,/;$/p' backups/backup_AAAAMMDD_HHMMSS.sql
+```
+
+Eso imprime una convocatoria por línea. Un `grep` de la cabecera no vale: `mariadb-dump` deja el `INSERT INTO` en una línea y todos los valores en la siguiente, así que solo verías el encabezado.
+
+Cada convocatoria aparece con sus campos en este orden: `id_convoc`, `num_convoc`, `titulo_convoc`, `tipo_convoc`, `anio_convocatoria`, `fecha_convocatoria`, **`fecha_fin_plazo`**, `fecha_resolucion`, `periodo_meses`. Por ejemplo, aquí el fin de plazo es `2026-06-15`:
+
+```text
+(9,'904714','Subvenciones a entidades de protección animal 2026','epa',2026,'2026-05-11','2026-06-15',NULL,12)
+```
+
+Con la fecha localizada:
+
+```bash
+docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
+  -e "UPDATE convocatorias SET fecha_fin_plazo='2026-06-15' WHERE num_convoc='904714';"
+```
+
+**Los usuarios se pierden igual** y por el mismo motivo. `reset-db` te pide una contraseña nueva al terminar y recrea la cuenta de administración, así que no te quedas fuera; las demás cuentas hay que volver a crearlas desde el panel. Si necesitas conservar una contraseña concreta, su hash está en el mismo volcado, en la tabla `usuarios`.
+
+Automatizar esta recuperación está anotado como mejora futura en el README. No se ha hecho porque un `reset-db` es una operación poco frecuente —solo cuando cambia el dataset— y el arreglo pide casar las filas por `num_convoc` en vez de por `id`, para no duplicar las 8 convocatorias históricas que el dataset sí recrea.
 
 **El navegador muestra "Esta web no es segura" y no deja continuar**
 

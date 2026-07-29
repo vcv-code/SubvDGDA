@@ -247,24 +247,22 @@ class FinPlazoIn(BaseModel):
 # AUTENTICACIÓN
 # ──────────────────────────────────────────────
 
-class RegistroIn(BaseModel):
-    email:     EmailStr
-    password:  str
-    nombre:    str = ""
-    sitio_web: str = ""  # honeypot: debe llegar vacío en envíos legítimos
+def validar_password_segura(v: str) -> str:
+    """Reglas de contraseña compartidas por todos los formularios que la piden.
 
-    @field_validator("password")
-    @classmethod
-    def password_seguro(cls, v: str) -> str:
-        if len(v) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
-        if not any(c.isupper() for c in v):
-            raise ValueError("La contraseña debe contener al menos una mayúscula")
-        if not any(c.islower() for c in v):
-            raise ValueError("La contraseña debe contener al menos una minúscula")
-        if not any(c.isdigit() for c in v):
-            raise ValueError("La contraseña debe contener al menos un número")
-        return v
+    Estaba duplicada en cada schema; al centralizarla, cambiar una regla (o los
+    mensajes que ve la usuaria) se hace en un solo sitio y no queda ningún
+    formulario descolgado con las reglas antiguas.
+    """
+    if len(v) < 8:
+        raise ValueError("La contraseña debe tener al menos 8 caracteres")
+    if not any(c.isupper() for c in v):
+        raise ValueError("La contraseña debe contener al menos una mayúscula")
+    if not any(c.islower() for c in v):
+        raise ValueError("La contraseña debe contener al menos una minúscula")
+    if not any(c.isdigit() for c in v):
+        raise ValueError("La contraseña debe contener al menos un número")
+    return v
 
 
 class ContactoIn(BaseModel):
@@ -317,15 +315,7 @@ class CambiarPasswordIn(BaseModel):
     @field_validator("contrasena_nueva")
     @classmethod
     def password_seguro(cls, v: str) -> str:
-        if len(v) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
-        if not any(c.isupper() for c in v):
-            raise ValueError("La contraseña debe contener al menos una mayúscula")
-        if not any(c.islower() for c in v):
-            raise ValueError("La contraseña debe contener al menos una minúscula")
-        if not any(c.isdigit() for c in v):
-            raise ValueError("La contraseña debe contener al menos un número")
-        return v
+        return validar_password_segura(v)
 
 class LoginIn(BaseModel):
     email:    EmailStr
@@ -367,15 +357,7 @@ class ResetPasswordIn(BaseModel):
     @field_validator("contrasena_nueva")
     @classmethod
     def password_seguro(cls, v: str) -> str:
-        if len(v) < 8:
-            raise ValueError("La contraseña debe tener al menos 8 caracteres")
-        if not any(c.isupper() for c in v):
-            raise ValueError("La contraseña debe contener al menos una mayúscula")
-        if not any(c.islower() for c in v):
-            raise ValueError("La contraseña debe contener al menos una minúscula")
-        if not any(c.isdigit() for c in v):
-            raise ValueError("La contraseña debe contener al menos un número")
-        return v
+        return validar_password_segura(v)
 
 
 # ──────────────────────────────────────────────
@@ -402,6 +384,25 @@ class ResumenTablaOut(BaseModel):
     total_global:     int
     concedidas_total: int
     importe_global:   float
+
+
+class CrearUsuarioIn(BaseModel):
+    """Alta de usuario desde el panel admin.
+
+    Sustituye al registro público: nadie se da de alta solo, las cuentas las
+    crea la administradora. A diferencia del registro público, aquí NO hay
+    honeypot (el endpoint ya está tras autenticación de admin) y sí se
+    permite fijar el rol de entrada.
+    """
+    email:    EmailStr
+    password: str
+    nombre:   str = ""
+    rol:      Literal["admin", "registrado"] = "registrado"
+
+    @field_validator("password")
+    @classmethod
+    def password_seguro(cls, v: str) -> str:
+        return validar_password_segura(v)
 
 
 class CambiarRolIn(BaseModel):

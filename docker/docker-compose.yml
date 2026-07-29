@@ -21,6 +21,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      # start_period es imprescindible con volumen NUEVO (make reset-db o
+      # primera instalación): MariaDB tarda ~1 min en inicializar los ficheros
+      # y cargar modelo-fisico.sql. Sin esto, los fallos cuentan desde el
+      # segundo 0, se agotan los 5 reintentos (~50 s) y el contenedor queda
+      # marcado unhealthy justo antes de estar listo — con lo que backend,
+      # cron y adminer no arrancan y `up -d` falla. Durante start_period los
+      # fallos no cuentan, así que no ralentiza el arranque normal.
+      start_period: 180s
 
   mailpit:
     image: axllent/mailpit

@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-from unittest.mock import patch
 
 from backend.app.models import Usuario
 from backend.app.auth import hashear_password
@@ -14,38 +13,10 @@ def _crear_verificado(db, email, password, rol="registrado"):
     return u
 
 
-# ── Registro ────────────────────────────────────────────────────────────────
-
-def test_registro_exitoso(client):
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        response = client.post("/auth/registro", json=USUARIO_VALIDO)
-    assert response.status_code == 201
-    data = response.json()
-    assert data["email"] == USUARIO_VALIDO["email"]
-    assert data["rol"] == "registrado"
-    assert data["email_verificado"] is False
-
-
-def test_registro_email_duplicado(client):
-    # Responde 201 aunque el email ya exista (anti-enumeración)
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO_VALIDO)
-        response = client.post("/auth/registro", json=USUARIO_VALIDO)
-    assert response.status_code == 201
-
-
-def test_registro_contrasena_debil(client):
-    response = client.post("/auth/registro", json={"email": "otro@example.com", "password": "debil"})
-    assert response.status_code == 422
-
-
-def test_registro_honeypot_silencioso(client):
-    # Si el campo trampa llega relleno, se devuelve 201 sin crear cuenta
-    response = client.post("/auth/registro", json={**USUARIO_VALIDO, "sitio_web": "http://spam.example.com"})
-    assert response.status_code == 201
-    # El usuario no debe existir en la BD (la cuenta no se creó)
-    response2 = client.post("/auth/login", json=USUARIO_VALIDO)
-    assert response2.status_code == 401
+# El alta de usuarios ya no vive aquí: se retiró el registro público y la
+# creación de cuentas pasó a POST /admin/usuarios, probado en test_admin.py.
+# Con el endpoint público desapareció también su honeypot, que solo tenía
+# sentido frente a un formulario abierto a cualquiera.
 
 
 # ── Login ────────────────────────────────────────────────────────────────────
@@ -59,10 +30,13 @@ def test_login_exitoso(client, db):
     assert data["token_type"] == "bearer"
 
 
-def test_login_email_no_verificado(client):
-    # Usuario registrado pero que no ha verificado el email
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO_VALIDO)
+def test_login_email_no_verificado(client, db):
+    # Cuenta creada pero cuyo titular no ha confirmado aún su dirección
+    _crear_verificado(db, USUARIO_VALIDO["email"], USUARIO_VALIDO["password"])
+    usuario = db.query(Usuario).filter(Usuario.email == USUARIO_VALIDO["email"]).first()
+    usuario.email_verificado = 0
+    db.commit()
+
     response = client.post("/auth/login", json=USUARIO_VALIDO)
     assert response.status_code == 403
 

@@ -1,10 +1,12 @@
 import os
-from datetime import date
+from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from ..auth import (hashear_password, crear_verificacion_token,
+                    verificacion_expira_en, enviar_email_verificacion)
 from ..db import get_db
 from ..dependencies import require_rol
 from ..models import Convocatoria, RefreshToken, ResetToken, VerificacionToken, Solicitud, Usuario
@@ -14,6 +16,7 @@ from ..schemas import (
     AvisoOut,
     CambiarActivoIn,
     CambiarRolIn,
+    CrearUsuarioIn,
     FinPlazoIn,
     UsuarioOut,
     UsuariosPaginadosOut,
@@ -77,6 +80,59 @@ def listar_usuarios(
         .all()
     )
     return UsuariosPaginadosOut(usuarios=usuarios, total=total)
+
+
+@router.post("/usuarios", response_model=UsuarioOut, status_code=status.HTTP_201_CREATED)
+def crear_usuario(
+    datos: CrearUsuarioIn,
+    _admin: Usuario = Depends(require_rol("admin")),
+    db: Session = Depends(get_db),
+):
+    """Da de alta un usuario. Única vía de creación de cuentas.
+
+    Al retirarse el registro público, este endpoint es el que permite dar
+    acceso a alguien sin tener que insertar la fila a mano en la base de datos.
+
+    Dos diferencias deliberadas respecto al antiguo POST /auth/registro:
+      - Si el email ya existe devuelve 409, en vez de fingir éxito. Aquello
+        era una defensa anti-enumeración necesaria en un endpoint público;
+        aquí sólo entra la administradora y ocultarle el motivo del fallo la
+        dejaría sin saber por qué "no se crea" el usuario.
+      - Permite fijar el rol al crear, en lugar de crear siempre 'registrado'
+        y tener que cambiarlo después con un PATCH.
+
+    La cuenta nace sin verificar y se le envía el email de verificación, igual
+    que en el registro público: quien la reciba confirma su propia dirección.
+    """
+    if db.query(Usuario).filter(Usuario.email == datos.email).first():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Ya existe un usuario con ese email",
+        )
+
+    usuario = Usuario(
+        email=datos.email,
+        nombre=datos.nombre.strip() or None,
+        password=hashear_password(datos.password),
+        rol=datos.rol,
+        activo=1,
+        email_verificado=0,
+        created_at=datetime.now(timezone.utc),
+    )
+    db.add(usuario)
+    db.commit()
+    db.refresh(usuario)
+
+    token_verif = crear_verificacion_token()
+    db.add(VerificacionToken(
+        id_usuario=usuario.id_usuario,
+        token=token_verif,
+        expira_en=verificacion_expira_en(),
+    ))
+    db.commit()
+    enviar_email_verificacion(usuario.email, token_verif)
+
+    return usuario
 
 
 @router.patch("/usuarios/{id_usuario}/rol", response_model=UsuarioOut)

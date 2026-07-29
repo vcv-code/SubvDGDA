@@ -81,7 +81,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 - [Referencia técnica](docs/referencia-tecnica.md) — arquitectura, seguridad, HTTPS, cron, logs, tests y comandos
 - [Pipeline de datos](docs/pipeline-datos.md) — API BDNS, parsers, herramientas, problemas resueltos y organización del dataset
 - [Modelo de datos](docs/modelo-datos.md) — esquema de la BD y relaciones
-- [Sistema de autenticación](docs/autenticacion.md) — JWT, access/refresh token, rotación, verificación email, honeypot
+- [Sistema de autenticación](docs/autenticacion.md) — JWT, access/refresh token, rotación, verificación de email, alta de usuarios sin registro público
 - [Tests automáticos](docs/tests.md) — cobertura y técnicas
 - [Especificaciones del frontend](frontend/docs/especificaciones-frontend.md) — componentes, páginas y decisiones de diseño
 - [Diseño del frontend](frontend/docs/diseño.md) — paleta, tipografía y guía visual
@@ -395,13 +395,13 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 
 **Seguridad:**
 
-- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/registro` (5 req/min, burst 3), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2)
+- Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2). No hay zona de registro: retirada junto con el alta pública
 - Cabeceras de seguridad en todas las respuestas: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
 - SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
 - Cabeceras `Cache-Control`: `/convocatorias/` (1 día), `/estadisticas/` (1 hora) y `/solicitudes/causas` (1 día)
 - Parámetros de búsqueda validados (`buscar` máx. 200 caracteres, `limite` entre 1 y 500); exportación CSV limitada a 5.000 registros
-- Honeypot en el registro: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin crear cuenta
-- Anti-enumeración en registro: intentar crear una cuenta con un email ya existente devuelve `201` sin crear duplicado — igual que `/auth/recuperar`, la respuesta no revela si el email estaba registrado
+- Honeypot en el formulario de contacto: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin enviar nada
+- Anti-enumeración en `/auth/recuperar`: la respuesta es idéntica exista o no el email, para no revelar quién tiene cuenta
 - Verificación de email obligatoria: cuentas nuevas con `email_verificado=0`; el login bloquea con 403 hasta confirmar
 
 **Estructura:**
@@ -457,7 +457,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas |
-| `login.html` · `registro.html` | Acceso y creación de cuenta con verificación de email |
+| `login.html` | Acceso a la cuenta. No hay alta pública: las cuentas las crea la administradora desde el panel |
 | `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
 | `contacto.html` | Formulario de contacto (honeypot antispam + rate limiting); envía el mensaje por email |
 | `aviso-legal.html` · `privacidad.html` | Páginas legales: aviso legal y política de privacidad |
@@ -526,7 +526,7 @@ La carpeta `frontend/` contiene:
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `registro.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
 - `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
 - `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
 
@@ -596,7 +596,7 @@ El script explica en lenguaje llano qué elimina en cada paso (contenedores, vol
 
 1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
 2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
-3. El script crea dos cuentas de demo (ver tabla de credenciales más abajo). Para el panel de administración usa `admin@demo.com` / `Admin1234!`.
+3. Al final, el script pide un email y una contraseña y crea con ellos la cuenta de administración. No hay cuentas preparadas de antemano.
 
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
@@ -626,14 +626,16 @@ Antes de continuar el script detecta si ya existen recursos y los reutiliza sin 
 | `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
 | Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
 
-El script crea dos usuarios de demo si no existen:
+El script **no siembra ninguna cuenta**. Al final llama a `scripts/crear_admin.sh`, que pide un email y una contraseña y crea con ellos la cuenta de administración; si ya existe una, no hace nada.
 
-| Rol | Email | Contraseña | Acceso |
-|-----|-------|------------|--------|
-| `admin` | `admin@demo.com` | `Admin1234!` | Panel de administración + zona privada + contenido exclusivo |
-| `registrado` | `usuario@demo.com` | `User1234!` | Zona privada + contenido exclusivo |
+| Rol | Cómo se crea | Acceso |
+|-----|--------------|--------|
+| `admin` | `install.sh` la pide al instalar, o `make crear-admin` | Panel de administración + zona privada |
+| `registrado` | Desde el panel de administración, sección Usuarios | Zona privada |
 
-Si ya existen (instalaciones previas), `INSERT IGNORE` los omite sin error.
+Antes había dos cuentas de demo con la contraseña escrita en el código. Se retiraron a propósito: mientras un hash válido viviese en el repositorio, cualquiera que lo leyese conocería la contraseña de administración de todo despliegue nuevo. Es lo que permite que el repositorio pueda ser público sin comprometer el sitio real.
+
+El hash lo genera el contenedor del backend con `hashear_password`, la misma función que usa la aplicación al cambiar una contraseña, así que no hay dos formas distintas de derivarlo. La contraseña se pasa por stdin y no como argumento, porque los argumentos de un proceso son visibles para cualquiera que liste procesos.
 
 Además, **siempre** (sin importar si hay datos o no):
 
@@ -653,7 +655,7 @@ El script detecta la BD existente, aplica las migraciones pendientes y reconstru
 
 > **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
 >
-> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — existen los dos usuarios demo que crea el script (`admin@demo.com` y `usuario@demo.com`). Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
+> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario **no** se transfieren entre máquinas: el script pide una contraseña nueva para la cuenta de administración en cada instalación. Las demás se crean desde el panel.
 >
 > **Desinstalar:** `bash uninstall.sh` elimina los contenedores, volúmenes (BD y datos), certificado SSL, `docker/.env` y opcionalmente la imagen Docker y el `venv/`. También elimina la entrada de `/etc/hosts` (con confirmación, requiere sudo). La operación es irreversible para los datos.
 
@@ -956,7 +958,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make mantenimiento-on` | Activa el modo mantenimiento (la web responde 503 con `mantenimiento.html`) |
 | `make mantenimiento-off` | Desactiva el modo mantenimiento |
 | `make dataset` | Regenera `dataset_unificado.json` (unificar + normalizar causas, en ese orden) |
-| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Necesario si cambian registros ya cargados |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Hace backup automático y relanza el cron. **Ver aviso debajo** |
 | `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests con pytest |
 | `make test-v` | Tests con salida detallada |
@@ -967,6 +969,8 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
 | `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
+
+> **`make reset-db` ya se protege solo, pero revisa los avisos al terminar.** El target hace un **backup automático** antes de borrar (en `backups/`, ignorado por git) y al final vuelve a lanzar el cron para **redescubrir las convocatorias del año en curso**, que no están en el dataset. Lo que el cron **no** repone son las `fecha_fin_plazo` fijadas a mano desde el panel ni los usuarios creados: eso sale del backup. Comprueba con `curl -sk https://localhost/avisos/`. Ver el procedimiento de recuperación en [manuales/manual-instalacion.md](manuales/manual-instalacion.md#resolución-de-problemas-comunes).
 
 ### Windows
 
@@ -1155,8 +1159,8 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Rate limiting** — Nginx bloquea con HTTP 429 antes de llegar al backend: login (10 req/min), registro (5 req/min), recuperar contraseña (3 req/min)
 - **Cabeceras de seguridad** — `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
 - **SRI** — atributo `integrity` en los 5 recursos CDN externos (Chart.js ×3, Leaflet JS y CSS); el navegador verifica el hash antes de ejecutarlos
-- **Honeypot** — campo oculto `sitio_web` en el registro; si llega relleno (bot), se devuelve éxito falso sin crear cuenta
-- **Anti-enumeración** — registro y recuperación de contraseña devuelven siempre la misma respuesta, exista o no el email
+- **Honeypot** — campo oculto `sitio_web` en el formulario de contacto; si llega relleno (bot), se devuelve éxito falso sin enviar nada
+- **Anti-enumeración** — la recuperación de contraseña devuelve siempre la misma respuesta, exista o no el email
 - **Validación de parámetros** — `buscar` máx. 200 caracteres, `limite` entre 1 y 500, exportación CSV limitada a 5.000 filas
 - **Verificación de email** — cuentas nuevas con `email_verificado=0`; login bloqueado hasta verificar
 - **HTTPS** — TLS 1.2/1.3 únicamente; certificado autofirmado con `subjectAltName` (requisito Chrome/Firefox)
@@ -1264,7 +1268,7 @@ A continuación, el detalle por dominio.
 
 - `solicitudes.html` se conserva intencionalmente aunque la URL pública es ahora `buscador.html`. Actúa como redirección de compatibilidad para cualquier enlace externo o marcador guardado antes del renombrado. No es un archivo huérfano: es legacy deliberado.
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
-- El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero `POST /auth/registro` siempre lo establece a `0` explícitamente.
+- El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero el alta desde el panel (`POST /admin/usuarios`) siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
 - Chart.js: `formatearEjeY` usa `.toFixed(0)` que redondea 7,5 → 8, generando ticks duplicados si el rango del eje es pequeño y `stepSize` no es múltiplo entero de 1000. Solución: callback personalizado `(k % 1 === 0 ? k : k.toFixed(1)) + ' K'`.
 - `history.replaceState` vs `pushState` en el buscador: al usar `pushState` cada cambio de filtro añadía una entrada al historial. Al hacer clic en una convocatoria y pulsar "Atrás", el navegador volvía al estado anterior del filtro en lugar de salir del buscador, obligando a pulsar "Atrás" varias veces. Cambiado a `replaceState` — actualiza la URL sin añadir entradas al historial.
@@ -1400,14 +1404,18 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Datos y análisis
 
-- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando infosubvenciones.es. No afecta a ninguna funcionalidad actual.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
 - **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
+
+### Operación y despliegue
+
+- **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — el target ya hace backup automático y relanza el cron para redescubrir las convocatorias del año en curso, pero las fechas de fin de plazo fijadas a mano desde el panel y los usuarios creados siguen saliendo solo del backup, a mano. Cubrirlo del todo pide volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después casando por `num_convoc` en vez de por `id` (lo delicado es no duplicar las 8 convocatorias que sí recrea el dataset). Coste estimado: ~1 hora.
 
 ### Funcionalidades y UX
 
 - **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — dividir Recursos en "Organizaciones y entidades" (el directorio actual) e "Información útil / Guías y trámites" (artículos prácticos: crear una asociación, certificado digital, justicia gratuita…). Acceso vía desplegable en el navbar (hecho accesible: hover + clic + teclado + dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
+- **Alta por invitación en vez de contraseña fijada por la admin** — hoy `POST /admin/usuarios` obliga a la administradora a inventar la contraseña y hacérsela llegar a la persona por un canal externo (mensajería, verbalmente), que es justo donde una contraseña no debería viajar. La alternativa: crear la cuenta **solo con el email** y enviar un enlace de "establece tu contraseña"; la elige la propia persona, nadie más llega a conocerla y la cuenta queda verificada al usarlo. Reaprovecharía casi entero el flujo de recuperación ya existente (`crear_reset_token`, `enviar_email_recuperacion` y `POST /auth/reset`, que ya activa `email_verificado` al completarse). Requiere: quitar `password` de `CrearUsuarioIn`, generar el token de establecimiento en el alta, un texto de email distinto al de recuperación, y ajustar el formulario del panel y sus tests. Coste estimado: media jornada.
 - **Login con terceros (OAuth)** — integración con Google.
 
 ### Producción y seguridad
@@ -1415,8 +1423,8 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
-- **CAPTCHA en registro** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto en su estado actual.
-- **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido.
+- **CAPTCHA en el formulario de contacto** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción; hoy se cubre con honeypot y rate limiting, que para el volumen de este proyecto basta. (Cuando existía el registro público este punto también le aplicaba; retirado el registro, el contacto es el único formulario abierto que queda.)
+- **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares en el formulario de contacto. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido. Perdió casi todo su sentido al retirarse el registro público: ya nadie se da de alta solo.
 - **Analítica de visitas** — medir el uso real (páginas más vistas, búsquedas frecuentes, dispositivos). Decidir entre una analítica **sin cookies** (p. ej. Plausible o Matomo en modo cookieless), que evita el banner de consentimiento, o una con cookies (Google Analytics), que obligaría a banner. Preferencia: cookieless, para mantener la política actual de cero cookies de seguimiento.
 - **Auto-alojar fuentes y librerías de terceros** — actualmente Google Fonts (Inter) y Chart.js se cargan desde CDN; no ponen cookies, pero el navegador del visitante envía su IP a Google/jsdelivr. Servir las fuentes y los `.js` desde el propio dominio elimina esas peticiones a terceros (ya existe un fallback local para Chart.js en `assets/vendor/`). Mejora de privacidad, opcional.
 

@@ -6,17 +6,22 @@ from backend.app.models import ResetToken
 USUARIO = {"email": "recuperar@example.com", "password": "Segura1234"}
 
 
-def _registrar(client):
-    with patch("backend.app.routers.auth.enviar_email_verificacion"):
-        client.post("/auth/registro", json=USUARIO)
+def _sembrar(crear_usuario):
+    """Cuenta pendiente de verificar, como la deja el alta desde el panel admin.
+
+    Se siembra en BD porque estos tests van del flujo de recuperación, no de
+    quién crea la cuenta: montar aquí un admin autenticado solo para sembrar
+    añadiría ruido sin cubrir nada nuevo.
+    """
+    return crear_usuario(USUARIO["email"], USUARIO["password"], email_verificado=0)
 
 
 # ──────────────────────────────────────────────
 # /auth/recuperar
 # ──────────────────────────────────────────────
 
-def test_recuperar_email_existente_devuelve_200(client):
-    _registrar(client)
+def test_recuperar_email_existente_devuelve_200(client, crear_usuario):
+    _sembrar(crear_usuario)
     with patch("backend.app.routers.auth.enviar_email_recuperacion"):
         r = client.post("/auth/recuperar", json={"email": USUARIO["email"]})
     assert r.status_code == 200
@@ -31,15 +36,15 @@ def test_recuperar_email_inexistente_devuelve_igual(client):
     assert "mensaje" in r.json()
 
 
-def test_recuperar_crea_token_en_bd(client, db):
-    _registrar(client)
+def test_recuperar_crea_token_en_bd(client, db, crear_usuario):
+    _sembrar(crear_usuario)
     with patch("backend.app.routers.auth.enviar_email_recuperacion"):
         client.post("/auth/recuperar", json={"email": USUARIO["email"]})
     assert db.query(ResetToken).count() == 1
 
 
-def test_recuperar_envia_email(client):
-    _registrar(client)
+def test_recuperar_envia_email(client, crear_usuario):
+    _sembrar(crear_usuario)
     with patch("backend.app.routers.auth.enviar_email_recuperacion") as mock_enviar:
         client.post("/auth/recuperar", json={"email": USUARIO["email"]})
     mock_enviar.assert_called_once_with(USUARIO["email"], mock_enviar.call_args[0][1])
@@ -49,8 +54,8 @@ def test_recuperar_envia_email(client):
 # /auth/reset
 # ──────────────────────────────────────────────
 
-def test_reset_token_valido_cambia_password(client, db):
-    _registrar(client)
+def test_reset_token_valido_cambia_password(client, db, crear_usuario):
+    _sembrar(crear_usuario)
     with patch("backend.app.routers.auth.enviar_email_recuperacion"):
         client.post("/auth/recuperar", json={"email": USUARIO["email"]})
     token = db.query(ResetToken).first().token
@@ -68,8 +73,8 @@ def test_reset_token_invalido_devuelve_400(client):
     assert r.status_code == 400
 
 
-def test_reset_token_ya_usado_devuelve_400(client, db):
-    _registrar(client)
+def test_reset_token_ya_usado_devuelve_400(client, db, crear_usuario):
+    _sembrar(crear_usuario)
     with patch("backend.app.routers.auth.enviar_email_recuperacion"):
         client.post("/auth/recuperar", json={"email": USUARIO["email"]})
     token = db.query(ResetToken).first().token
@@ -81,11 +86,9 @@ def test_reset_token_ya_usado_devuelve_400(client, db):
     assert r.status_code == 400
 
 
-def test_reset_token_expirado_devuelve_400(client, db):
-    _registrar(client)
+def test_reset_token_expirado_devuelve_400(client, db, crear_usuario):
+    usuario = _sembrar(crear_usuario)
     # Insertamos un token con fecha de expiración en el pasado
-    from backend.app.models import Usuario
-    usuario = db.query(Usuario).filter(Usuario.email == USUARIO["email"]).first()
     token_expirado = "a" * 64
     db.add(ResetToken(
         id_usuario=usuario.id_usuario,

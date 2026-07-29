@@ -243,6 +243,74 @@ async function cargarUsuarios() {
     }
 }
 
+/**
+ * iniciarAltaUsuario()
+ * Alta de cuentas desde el panel. Es la única vía que queda desde que se
+ * retiró el registro público, así que también es la única forma de dar
+ * acceso a alguien sin tocar la base de datos a mano.
+ *
+ * POST /admin/usuarios → 201 { id_usuario, email, rol... }
+ *                        409 si el email ya existe
+ *                        422 si la contraseña o el email no son válidos
+ */
+function iniciarAltaUsuario() {
+    const form = document.getElementById('form-alta-usuario');
+    if (!form) return;
+
+    const requisitos = form.querySelector('.admin-alta__requisitos');
+    const TEXTO_REQUISITOS = 'Mínimo 8 caracteres, con mayúscula, minúscula y número.';
+
+    function marcarRequisitos(ok) {
+        requisitos.classList.toggle('admin-alta__requisitos--error', !ok);
+        requisitos.textContent = ok
+            ? TEXTO_REQUISITOS
+            : 'La contraseña no cumple: mínimo 8 caracteres, con mayúscula, minúscula y número.';
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email    = document.getElementById('alta-email').value.trim();
+        const nombre   = document.getElementById('alta-nombre').value.trim();
+        const password = document.getElementById('alta-password').value;
+        const rol      = document.getElementById('alta-rol').value;
+
+        // Validación en cliente para no gastar una ida y vuelta en lo evidente.
+        // Las reglas viven en utils.js y son las mismas que aplica el backend.
+        if (!todosRequisitosOk(cumpleRequisitosPassword(password))) {
+            marcarRequisitos(false);
+            return;
+        }
+        marcarRequisitos(true);
+
+        const btn = document.getElementById('btn-alta-usuario');
+        btn.disabled = true;
+
+        try {
+            const r = await fetch(`${API_URL}/admin/usuarios`, {
+                method:  'POST',
+                headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ email, nombre, password, rol }),
+            });
+
+            if (r.ok) {
+                form.reset();
+                mostrarToast('Usuario creado. Se le ha enviado el email de verificación.');
+                usuariosPagina = 1;
+                await cargarUsuarios();
+            } else if (r.status === 409) {
+                mostrarAlerta('Ya existe un usuario con ese email.');
+            } else {
+                mostrarAlerta('No se ha podido crear el usuario. Revisa el email y la contraseña.');
+            }
+        } catch {
+            mostrarAlerta('Error de conexión.');
+        } finally {
+            btn.disabled = false;
+        }
+    });
+}
+
 async function accionUsuario(e) {
     const btn    = e.currentTarget;
     const id     = btn.dataset.id;
@@ -545,6 +613,8 @@ async function init() {
         cargarLogsCronBdns(),
         cargarLogsCronHealth(),
     ]);
+
+    iniciarAltaUsuario();
 
     document.getElementById('btn-cerrar-sesion')
         .addEventListener('click', cerrarSesion);

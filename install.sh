@@ -437,20 +437,6 @@ UPDATE convocatorias SET fecha_resolucion='2024-11-20' WHERE tipo_convoc='eell' 
 UPDATE convocatorias SET fecha_resolucion='2025-12-31' WHERE tipo_convoc='eell' AND anio_convocatoria=2025 AND fecha_resolucion IS NULL;
 UPDATE convocatorias SET fecha_fin_plazo='2026-06-15' WHERE tipo_convoc='epa'  AND anio_convocatoria=2026 AND fecha_fin_plazo IS NULL;
 UPDATE convocatorias SET fecha_fin_plazo='2026-06-10' WHERE tipo_convoc='eell' AND anio_convocatoria=2026 AND fecha_fin_plazo IS NULL;
-INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
-VALUES (
-    'admin@demo.com',
-    'Admin Demo',
-    '\$2b\$12\$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
-    'admin', 1, 1, NOW()
-);
-INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
-VALUES (
-    'usuario@demo.com',
-    'Usuario Demo',
-    '\$2b\$12\$K3FLihBDEI.eWcMsxP8yfeVgNkRjRtNyKKSk84ajrilYAaElnoCYq',
-    'registrado', 1, 1, NOW()
-);
 " 2>/dev/null && ok "Esquema al día" || aviso "Migración omitida (BD vacía, se aplicará en el primer arranque)"
 
 FILAS=$(docker exec bdns_dgda_db mariadb \
@@ -505,6 +491,11 @@ else
     insertar_convocatorias_vigentes
 fi
 
+# Cuenta de administración. Va aquí y no antes porque necesita el contenedor
+# del backend levantado para generar el hash con la misma función que usa la
+# aplicación. El script no hace nada si ya existe una cuenta admin.
+bash scripts/crear_admin.sh
+
 # =============================================================================
 # FASE 7 — Entorno de desarrollo local (venv)
 # =============================================================================
@@ -553,9 +544,8 @@ fi
 echo -e "  ${NEGRITA}→ Mailpit:${RESET}  http://localhost:8025"
 echo -e "  ${NEGRITA}→ Adminer:${RESET}  http://localhost:8080"
 echo
-echo "  Cuentas de demo:"
-echo -e "  ${NEGRITA}→ Admin:${RESET}    admin@demo.com   /  Admin1234!"
-echo -e "  ${NEGRITA}→ Usuario:${RESET}  usuario@demo.com /  User1234!"
+echo "  Acceso: con la cuenta de administración que acabas de crear."
+echo "  No hay registro público; las demás cuentas se crean desde el panel admin."
 echo
 echo "  Comandos útiles:"
 echo "    make start      — levantar contenedores"
@@ -563,4 +553,5 @@ echo "    make stop       — parar contenedores"
 echo "    make test       — ejecutar tests"
 echo "    make logs       — ver logs del backend"
 echo "    make reset-db   — reinstalar BD desde cero"
+echo "    make crear-admin — crear la cuenta de administración"
 echo

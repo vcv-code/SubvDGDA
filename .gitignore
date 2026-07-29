@@ -222,3 +222,8 @@ frontend/maintenance.on
 
 # Guía de estudio detallada del proyecto con especial detalle en el backend
 guia-estudio/
+
+# Volcados de la base de datos (make backup / make reset-db).
+# Contienen datos reales: usuarios y hashes de contraseña.
+backups/
+backup_*.sql

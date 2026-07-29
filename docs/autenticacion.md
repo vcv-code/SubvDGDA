@@ -160,7 +160,7 @@ Hay tres contextos donde aparece `email_verificado` y cada uno tiene un comporta
 
 | Contexto | Valor | Motivo |
 |----------|-------|--------|
-| `POST /auth/registro` (código Python) | `0` explícito | Cuenta nueva sin verificar |
+| `POST /admin/usuarios` (código Python) | `0` explícito | Cuenta nueva sin verificar |
 | `ALTER TABLE` en migraciones (`install.sh`) | `DEFAULT 1` | Las cuentas existentes antes de la migración ya estaban verificadas manualmente |
 | `modelo-fisico.sql` (schema inicial) | `DEFAULT 0` | Instalaciones nuevas: todas las cuentas nuevas empiezan sin verificar |
 
@@ -168,17 +168,31 @@ El endpoint `POST /auth/reset` (restablecer contraseña) activa `email_verificad
 
 ---
 
-## Honeypot en el registro
+## Alta de usuarios: sin registro público
 
-El formulario de registro incluye un campo `sitio_web` oculto con CSS (`display:none`, `visibility:hidden`, `position:absolute; left:-9999px`). Los usuarios reales no lo ven ni lo rellenan. Los bots que automatizan el relleno de formularios sí lo rellenan.
+**No hay auto-registro.** La creación de cuentas es `POST /admin/usuarios`, protegido por rol `admin`: la administradora da de alta a quien quiera y nadie más puede crear cuentas. La versión con registro abierto queda congelada en el tag `v1.0-completo`.
 
-Si el backend recibe `sitio_web` con contenido, devuelve HTTP 201 con respuesta de éxito falsa — el bot cree que la cuenta se creó, pero no existe nada en la BD. Devolver éxito (en lugar de error) evita que el bot detecte el honeypot y lo evite.
+Diferencias respecto al antiguo `POST /auth/registro`:
+
+| | Registro público (retirado) | Alta desde el panel |
+|---|---|---|
+| Quién puede llamarlo | Cualquiera | Solo rol `admin` |
+| Email ya existente | HTTP 201 fingiendo éxito | HTTP 409 con el motivo |
+| Rol de la cuenta | Siempre `registrado` | Se elige al crear |
+| Honeypot `sitio_web` | Sí | No hace falta |
+| Rate limiting en Nginx | Zona `registro`, 5 req/min | Ninguno |
+
+Las dos primeras filas son la misma decisión vista desde dos lados. De cara al exterior, responder 201 aunque el email existiese era una defensa **anti-enumeración**: impedía usar el formulario para averiguar quién tiene cuenta. Detrás del candado de admin esa amenaza desaparece y ocultar el motivo solo serviría para dejar a la administradora sin entender por qué "no se crea" el usuario; por eso ahí sí se devuelve 409.
+
+El honeypot y el rate limiting protegían un formulario abierto a cualquiera. Sin formulario público, sobran los dos.
+
+La cuenta se crea igualmente **sin verificar** y se envía el email de verificación: quien la reciba confirma que la dirección es suya y existe.
 
 ---
 
-## Sesión activa en login y registro
+## Sesión activa en login
 
-Si el usuario ya tiene un `access_token` válido en `localStorage`, las páginas `login.html` y `registro.html` redirigen automáticamente a `privado.html` sin mostrar el formulario. Evita la confusión de ver el formulario de login cuando ya estás dentro.
+Si el usuario ya tiene un `access_token` válido en `localStorage`, `login.html` redirige automáticamente a `privado.html` sin mostrar el formulario. Evita la confusión de ver el formulario de login cuando ya estás dentro.
 
 ---
 
