@@ -162,12 +162,19 @@ Abre el navegador y ve a:
 
 Si el navegador muestra un aviso de certificado no seguro, haz clic en **Avanzado → Continuar a subvencionesDGDA.local**. Es normal: el certificado es autofirmado para el entorno local.
 
-### Credenciales de demo
+### Cuenta de administración
 
-| Rol | Email | Contraseña |
-|-----|-------|------------|
-| Administrador | `admin@demo.com` | `Admin1234!` |
-| Usuario registrado | `usuario@demo.com` | `User1234!` |
+La instalación **no trae ninguna cuenta preparada**. `install.sh` te pide un email y una contraseña al final y crea con ellos la cuenta de administración.
+
+Es deliberado: si el repositorio llevase dentro un hash válido, cualquiera que lo leyese conocería la contraseña de administración de todo despliegue nuevo, y bastaría con abrir el dominio y entrar.
+
+Si necesitas crearla más tarde (por ejemplo tras un `make reset-db`, que ya la pide automáticamente):
+
+```bash
+make crear-admin
+```
+
+Las demás cuentas se crean desde el panel de administración, en la sección Usuarios. No hay registro público.
 
 ---
 
@@ -562,7 +569,7 @@ docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
   -e "UPDATE convocatorias SET fecha_fin_plazo='2026-06-15' WHERE num_convoc='904714';"
 ```
 
-**Los usuarios creados desde el panel** se pierden igual y por el mismo motivo (solo se repone el `admin@demo.com` que siembra `modelo-fisico.sql`). Lo más rápido es volver a crearlos desde el panel; si necesitas conservar la contraseña original, el hash está en el mismo volcado, en la tabla `usuarios`.
+**Los usuarios se pierden igual** y por el mismo motivo. `reset-db` te pide una contraseña nueva al terminar y recrea la cuenta de administración, así que no te quedas fuera; las demás cuentas hay que volver a crearlas desde el panel. Si necesitas conservar una contraseña concreta, su hash está en el mismo volcado, en la tabla `usuarios`.
 
 Automatizar esta recuperación está anotado como mejora futura en el README. No se ha hecho porque un `reset-db` es una operación poco frecuente —solo cuando cambia el dataset— y el arreglo pide casar las filas por `num_convoc` en vez de por `id`, para no duplicar las 8 convocatorias históricas que el dataset sí recrea.
 

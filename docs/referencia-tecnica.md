@@ -500,7 +500,8 @@ Con `rate=10r/m` y `burst=5`:
 
 | Medida | Descripción |
 |---|---|
-| Honeypot en registro | Campo `sitio_web` oculto: si llega relleno, se devuelve éxito falso sin crear cuenta |
+| Honeypot en el formulario de contacto | Campo `sitio_web` oculto: si llega relleno, se devuelve éxito falso sin enviar nada |
+| Sin registro público | No existe alta autoservicio: las cuentas se crean desde `POST /admin/usuarios`, protegido por rol admin |
 | Verificación de email | Las cuentas nuevas tienen `email_verificado=0`; el login bloquea con 403 hasta verificar |
 | Reenvío de verificación | `POST /auth/reenviar-verificacion` invalida tokens anteriores y envía nuevo enlace; siempre devuelve 200 |
 | HTTPS | Certificado autofirmado, TLS 1.2 y 1.3 únicamente |
@@ -929,7 +930,7 @@ ALTER TABLE verificacion_tokens ADD UNIQUE INDEX ix_verificacion_token (token);
 | **ASGI** | Interfaz estándar entre servidor web y aplicación Python asíncrona (aquí: uvicorn + FastAPI). |
 | **Proxy inverso** | Servidor que recibe las peticiones del cliente y las redirige al servicio correcto internamente (aquí: Nginx → FastAPI). |
 | **Rate limiting** | Límite de peticiones por IP en un intervalo de tiempo para frenar ataques de fuerza bruta. |
-| **Honeypot** | Campo oculto en un formulario. Si llega relleno, es un bot — se simula éxito sin crear la cuenta. |
+| **Honeypot** | Campo oculto en un formulario. Si llega relleno, es un bot — se simula éxito sin procesar el envío. |
 | **CDN** | Red de distribución de contenidos. Aquí se usa para cargar Chart.js y Google Fonts desde servidores externos. |
 | **Bearer token** | Formato de autenticación HTTP: `Authorization: Bearer <token>`. El cliente lo envía en cada petición protegida. |
 | **HSTS** | HTTP Strict Transport Security. Cabecera que obliga al navegador a usar siempre HTTPS con este dominio. |
