@@ -162,7 +162,7 @@ Abre el navegador y ve a:
 
 Si el navegador muestra un aviso de certificado no seguro, haz clic en **Avanzado → Continuar a subvencionesDGDA.local**. Es normal: el certificado es autofirmado para el entorno local.
 
-### Credenciales de demo
+### Cuenta de administración
 
 La instalación **no trae ninguna cuenta preparada**. `install.sh` te pide un email y una contraseña al final y crea con ellos la cuenta de administración.
 

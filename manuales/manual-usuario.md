@@ -103,14 +103,11 @@ En ambas páginas, cada gráfica tiene un botón ⓘ que abre un modal con las c
 
 ---
 
-## Registro e inicio de sesión
+## Inicio de sesión
 
-### Crear una cuenta
+Todo el contenido de la web es público: los datos, el buscador, las estadísticas, el resumen por convocatoria y el mapa por comunidades autónomas se consultan sin cuenta.
 
-1. Haz clic en **Acceder** en la barra de navegación.
-2. En la página de login, haz clic en **¿No tienes cuenta? Regístrate**.
-3. Introduce tu email y una contraseña que cumpla los requisitos (mínimo 8 caracteres, al menos una mayúscula, una minúscula y un número).
-4. Recibirás un email de verificación. Haz clic en el enlace del email para activar tu cuenta.
+**No hay registro público.** No existe la opción de crearse una cuenta: las da de alta la administración desde su panel. Si te han creado una, recibirás un email de verificación y tendrás que pulsar su enlace antes de poder entrar por primera vez.
 
 > **Nota:** Si el email no llega, comprueba la carpeta de spam o usa la opción "Reenviar email de verificación" en la página de login.
 
@@ -190,14 +187,9 @@ El panel de administración solo está disponible para usuarios con rol de admin
 - Gestionar avisos: activar, desactivar o eliminar los avisos de convocatorias pendientes que aparecen en la home.
 - Consultar los logs de acceso y errores del servidor.
 
-### Credenciales de demo
+### Cómo se accede al panel
 
-Para acceder al panel en una instalación nueva:
-
-- **Email:** el que indicaste al instalar
-- **Contraseña:** la que indicaste al instalar
-
-(La instalación no trae credenciales puestas: las eliges tú al ejecutar `install.sh`.)
+Con la cuenta de administración que se creó al instalar: el email y la contraseña los eligió quien montó la instalación, porque el proyecto no trae ninguna credencial puesta.
 
 Se recomienda cambiar estas credenciales si se va a usar en un entorno real.
 

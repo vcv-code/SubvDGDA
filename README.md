@@ -81,7 +81,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 - [Referencia técnica](docs/referencia-tecnica.md) — arquitectura, seguridad, HTTPS, cron, logs, tests y comandos
 - [Pipeline de datos](docs/pipeline-datos.md) — API BDNS, parsers, herramientas, problemas resueltos y organización del dataset
 - [Modelo de datos](docs/modelo-datos.md) — esquema de la BD y relaciones
-- [Sistema de autenticación](docs/autenticacion.md) — JWT, access/refresh token, rotación, verificación email, honeypot
+- [Sistema de autenticación](docs/autenticacion.md) — JWT, access/refresh token, rotación, verificación de email, alta de usuarios sin registro público
 - [Tests automáticos](docs/tests.md) — cobertura y técnicas
 - [Especificaciones del frontend](frontend/docs/especificaciones-frontend.md) — componentes, páginas y decisiones de diseño
 - [Diseño del frontend](frontend/docs/diseño.md) — paleta, tipografía y guía visual
@@ -400,8 +400,8 @@ JWT con doble token: `access_token` de corta duración (15 min) para cada petici
 - SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
 - Cabeceras `Cache-Control`: `/convocatorias/` (1 día), `/estadisticas/` (1 hora) y `/solicitudes/causas` (1 día)
 - Parámetros de búsqueda validados (`buscar` máx. 200 caracteres, `limite` entre 1 y 500); exportación CSV limitada a 5.000 registros
-- Honeypot en el registro: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin crear cuenta
-- Anti-enumeración en registro: intentar crear una cuenta con un email ya existente devuelve `201` sin crear duplicado — igual que `/auth/recuperar`, la respuesta no revela si el email estaba registrado
+- Honeypot en el formulario de contacto: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin enviar nada
+- Anti-enumeración en `/auth/recuperar`: la respuesta es idéntica exista o no el email, para no revelar quién tiene cuenta
 - Verificación de email obligatoria: cuentas nuevas con `email_verificado=0`; el login bloquea con 403 hasta confirmar
 
 **Estructura:**
@@ -1159,8 +1159,8 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Rate limiting** — Nginx bloquea con HTTP 429 antes de llegar al backend: login (10 req/min), registro (5 req/min), recuperar contraseña (3 req/min)
 - **Cabeceras de seguridad** — `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
 - **SRI** — atributo `integrity` en los 5 recursos CDN externos (Chart.js ×3, Leaflet JS y CSS); el navegador verifica el hash antes de ejecutarlos
-- **Honeypot** — campo oculto `sitio_web` en el registro; si llega relleno (bot), se devuelve éxito falso sin crear cuenta
-- **Anti-enumeración** — registro y recuperación de contraseña devuelven siempre la misma respuesta, exista o no el email
+- **Honeypot** — campo oculto `sitio_web` en el formulario de contacto; si llega relleno (bot), se devuelve éxito falso sin enviar nada
+- **Anti-enumeración** — la recuperación de contraseña devuelve siempre la misma respuesta, exista o no el email
 - **Validación de parámetros** — `buscar` máx. 200 caracteres, `limite` entre 1 y 500, exportación CSV limitada a 5.000 filas
 - **Verificación de email** — cuentas nuevas con `email_verificado=0`; login bloqueado hasta verificar
 - **HTTPS** — TLS 1.2/1.3 únicamente; certificado autofirmado con `subjectAltName` (requisito Chrome/Firefox)
@@ -1404,7 +1404,6 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Datos y análisis
 
-- **`num_convoc` en convocatorias históricas (2021–2025):** el campo existe en el modelo pero está a NULL para las convocatorias cargadas desde CSV/PDF (las fuentes históricas no incluían el número BDNS). Se podría rellenar manualmente consultando infosubvenciones.es. No afecta a ninguna funcionalidad actual.
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
 - **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
 
@@ -1424,8 +1423,8 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 - **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
 - **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
 - **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
-- **CAPTCHA en registro** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción al usuario; desproporcionado para este proyecto en su estado actual.
-- **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares al registrarse. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido.
+- **CAPTCHA en el formulario de contacto** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción; hoy se cubre con honeypot y rate limiting, que para el volumen de este proyecto basta. (Cuando existía el registro público este punto también le aplicaba; retirado el registro, el contacto es el único formulario abierto que queda.)
+- **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares en el formulario de contacto. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido. Perdió casi todo su sentido al retirarse el registro público: ya nadie se da de alta solo.
 - **Analítica de visitas** — medir el uso real (páginas más vistas, búsquedas frecuentes, dispositivos). Decidir entre una analítica **sin cookies** (p. ej. Plausible o Matomo en modo cookieless), que evita el banner de consentimiento, o una con cookies (Google Analytics), que obligaría a banner. Preferencia: cookieless, para mantener la política actual de cero cookies de seguimiento.
 - **Auto-alojar fuentes y librerías de terceros** — actualmente Google Fonts (Inter) y Chart.js se cargan desde CDN; no ponen cookies, pero el navegador del visitante envía su IP a Google/jsdelivr. Servir las fuentes y los `.js` desde el propio dominio elimina esas peticiones a terceros (ya existe un fallback local para Chart.js en `assets/vendor/`). Mejora de privacidad, opcional.
 
