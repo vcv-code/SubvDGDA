@@ -39,7 +39,6 @@
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html">Recursos</a></li>
-                <li><a href="login.html" class="btn-login">Acceder</a></li>
             
             </ul>
             <button class="navbar__hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
@@ -52,18 +51,18 @@
 
 
     <main id="contenido-principal">
-        <div class="contenedor" style="padding-top: 3rem; padding-bottom: 4rem; max-width: 760px;">
+        <div class="contenedor pagina-legal">
 
-            <p style="margin-bottom: 0.5rem;">
+            <p>
                 <a class="legal-back-link" href="index.html">← Volver al inicio</a>
             </p>
 
-            <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem; color: var(--color-negro);">
+            <h1 class="pagina-legal__titulo">
                 Aviso legal
             </h1>
 
-            <section style="margin-bottom: 2rem;">
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Titularidad</h2>
+            <section class="legal-seccion">
+                <h2 class="legal-seccion__titulo">Titularidad</h2>
                 <p>
                     Este sitio web es un proyecto independiente y sin ánimo de lucro. Su responsable es
                     el titular del sitio, una persona particular a quien puedes dirigirte a través del
@@ -72,8 +71,31 @@
                 </p>
             </section>
 
-            <section style="margin-bottom: 2rem;">
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Finalidad</h2>
+            <section class="legal-seccion">
+                <h2 class="legal-seccion__titulo">Enlace de apoyo a una asociación</h2>
+                <p>
+                    En el pie de página figura un enlace para apoyar a la Asociación La Gata Pirata.
+                    Es una <strong>causa afín que este sitio señala</strong>, de la que su
+                    responsable forma parte. La afinidad está en los valores que ambos proyectos
+                    comparten: datos objetivos, transparencia y gestión eficiente de los recursos
+                    públicos, en beneficio de los animales y de quienes trabajan por ellos de
+                    forma voluntaria. No es un patrocinio ni existe contraprestación de ningún
+                    tipo por incluir ese enlace.
+                </p>
+                <p>
+                    Aun así son proyectos distintos: la asociación no financia esta web ni
+                    interviene en su contenido. Las aportaciones se realizan íntegramente en la
+                    plataforma
+                    <a href="https://www.teaming.net/asociacionla-gata-pirata"
+                       target="_blank" rel="noopener noreferrer">Teaming</a>
+                    y se destinan a los fines de la asociación: <strong>este sitio web no recibe ni
+                    gestiona ningún importe</strong>, y su acceso y funcionamiento son gratuitos e
+                    idénticos se aporte o no.
+                </p>
+            </section>
+
+            <section class="legal-seccion">
+                <h2 class="legal-seccion__titulo">Finalidad</h2>
                 <p>
                     El objeto del proyecto es el análisis y visualización de datos públicos sobre subvenciones
                     de bienestar animal en España, obtenidos de la
@@ -86,8 +108,8 @@
                 </p>
             </section>
 
-            <section style="margin-bottom: 2rem;">
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Responsabilidad</h2>
+            <section class="legal-seccion">
+                <h2 class="legal-seccion__titulo">Responsabilidad</h2>
                 <p>
                     La información presentada tiene carácter meramente informativo. No se garantiza
                     la exactitud, integridad o actualidad de los datos. El uso de esta web es responsabilidad
@@ -95,8 +117,8 @@
                 </p>
             </section>
 
-            <section style="margin-bottom: 2rem;">
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Propiedad intelectual</h2>
+            <section class="legal-seccion">
+                <h2 class="legal-seccion__titulo">Propiedad intelectual</h2>
                 <p>
                     El código fuente está sujeto a derechos de autor (todos los derechos reservados).
                     El contenido y la documentación del sitio se publican bajo licencia Creative Commons
@@ -105,8 +127,8 @@
                 </p>
             </section>
 
-            <section style="margin-bottom: 2rem;">
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Cookies y almacenamiento local</h2>
+            <section class="legal-seccion">
+                <h2 class="legal-seccion__titulo">Cookies y almacenamiento local</h2>
                 <p>
                     Este sitio no utiliza cookies de seguimiento, analítica ni publicidad.
                     El único dato almacenado en el navegador es el token de sesión necesario para el acceso a la zona privada,
@@ -115,7 +137,7 @@
             </section>
 
             <section>
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Contacto</h2>
+                <h2 class="legal-seccion__titulo">Contacto</h2>
                 <p>
                     Para cualquier consulta relacionada con este proyecto, puedes escribir a través del
                     <a href="contacto.html">formulario de contacto</a>.
@@ -128,10 +150,37 @@
 
     <!-- FOOTER -->
     <footer class="footer-principal">
+
+        <!-- Franja de apoyo: causa que el sitio señala, NO patrocinio ni
+             financiación de la web. Las dos ideas van deliberadamente
+             separadas: el dinero del grupo de Teaming es para la asociación,
+             y sugerir otro destino es causa de bloqueo en sus condiciones.
+             Ver aviso-legal.html. -->
+        <div class="footer-apoyo">
+            <!-- El logo enlaza a su web y redes. No se dice "pulsa en el logo":
+                 en móvil no se hace clic y quien usa lector de pantalla no
+                 percibe dónde está; el destino va en el aria-label. -->
+            <a class="footer-apoyo__logo"
+               href="https://linktr.ee/lagatapirata"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="La Gata Pirata: su trabajo, web y redes sociales">
+                <img src="assets/img/logos/logo-laGataPirata.webp"
+                     alt="Logo de la Asociación La Gata Pirata" loading="lazy">
+            </a>
+            <p class="footer-apoyo__texto">
+                Esta web se mantiene de forma voluntaria, es gratuita y no tiene publicidad:
+                prepararla y actualizar los datos lleva su trabajo.
+                Si te resulta útil y quieres ayudar, puedes apoyar con
+                <a href="https://www.teaming.net/asociacionla-gata-pirata"
+                   target="_blank" rel="noopener noreferrer">solo <strong>1&nbsp;€ al mes</strong> a La Gata Pirata</a>,
+                una asociación sin ánimo de lucro que trabaja por el bienestar animal.
+            </p>
+        </div>
+
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
-                <span><strong>Proyecto BDNS/DGDA</strong> — independiente y sin ánimo de lucro</span>
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+                <span><strong>Subvenciones DGDA</strong></span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
                 <a href="https://github.com/vcv-code/SubvDGDA" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -141,6 +190,8 @@
                 <a href="privacidad.html">Privacidad</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="contacto.html">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="login.html">Acceder</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
