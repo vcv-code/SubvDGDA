@@ -956,7 +956,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make mantenimiento-on` | Activa el modo mantenimiento (la web responde 503 con `mantenimiento.html`) |
 | `make mantenimiento-off` | Desactiva el modo mantenimiento |
 | `make dataset` | Regenera `dataset_unificado.json` (unificar + normalizar causas, en ese orden) |
-| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Necesario si cambian registros ya cargados. **Ver aviso debajo** |
+| `make reset-db` | Borra el volumen y recarga el dataset desde cero (pide confirmación). Hace backup automático y relanza el cron. **Ver aviso debajo** |
 | `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests con pytest |
 | `make test-v` | Tests con salida detallada |
@@ -968,7 +968,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
 | `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
 
-> **`make reset-db` no es reversible con solo recargar el dataset.** El dataset llega hasta 2025; las convocatorias del año en curso las descubre el **cron** consultando BDNS y viven **solo en la BD**, igual que las `fecha_fin_plazo` que se fijan a mano desde el panel admin y los usuarios creados. Al borrar el volumen desaparecen, y con ellas los **avisos del banner de inicio**. Haz `make backup` antes y comprueba los avisos después.
+> **`make reset-db` ya se protege solo, pero revisa los avisos al terminar.** El target hace un **backup automático** antes de borrar (en `backups/`, ignorado por git) y al final vuelve a lanzar el cron para **redescubrir las convocatorias del año en curso**, que no están en el dataset. Lo que el cron **no** repone son las `fecha_fin_plazo` fijadas a mano desde el panel ni los usuarios creados: eso sale del backup. Comprueba con `curl -sk https://localhost/avisos/`. Ver el procedimiento de recuperación en [manuales/manual-instalacion.md](manuales/manual-instalacion.md#resolución-de-problemas-comunes).
 
 ### Windows
 
@@ -1408,7 +1408,7 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Operación y despliegue
 
-- **Blindar `make reset-db` para no perder los avisos** — el dataset llega a 2025, pero las convocatorias del año en curso las descubre el cron consultando BDNS en vivo y viven solo en la BD, igual que las `fecha_fin_plazo` fijadas a mano desde el panel. Al recrear la BD desaparecen y con ellas los avisos del banner de inicio. Hoy está cubierto solo con documentación y disciplina (`make backup` antes). Plan acordado, ~15 min: **(A)** que `reset-db` haga el volcado automáticamente antes de borrar —y añadir `backup_*.sql` al `.gitignore`, que hoy no está, para no commitear un volcado por error—, y **(B)** ejecutar `check_bdns.py` al final del target para redescubrir las convocatorias del año en curso. La opción B no repone las `fecha_fin_plazo`, que son dato propio y no de BDNS; para cubrir también eso haría falta preservar las tablas `convocatorias` y `usuarios` a través del reset casando por `num_convoc` en vez de por `id` (~1 h), descartado de momento por coste.
+- **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — el target ya hace backup automático y relanza el cron para redescubrir las convocatorias del año en curso, pero las fechas de fin de plazo fijadas a mano desde el panel y los usuarios creados siguen saliendo solo del backup, a mano. Cubrirlo del todo pide volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después casando por `num_convoc` en vez de por `id` (lo delicado es no duplicar las 8 convocatorias que sí recrea el dataset). Coste estimado: ~1 hora.
 
 ### Funcionalidades y UX
 
