@@ -596,7 +596,7 @@ El script explica en lenguaje llano qué elimina en cada paso (contenedores, vol
 
 1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
 2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
-3. El script crea dos cuentas de demo (ver tabla de credenciales más abajo). Para el panel de administración usa `admin@demo.com` / `Admin1234!`.
+3. Al final, el script pide un email y una contraseña y crea con ellos la cuenta de administración. No hay cuentas preparadas de antemano.
 
 **Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
 **Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
@@ -626,14 +626,16 @@ Antes de continuar el script detecta si ya existen recursos y los reutiliza sin 
 | `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
 | Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
 
-El script crea dos usuarios de demo si no existen:
+El script **no siembra ninguna cuenta**. Al final llama a `scripts/crear_admin.sh`, que pide un email y una contraseña y crea con ellos la cuenta de administración; si ya existe una, no hace nada.
 
-| Rol | Email | Contraseña | Acceso |
-|-----|-------|------------|--------|
-| `admin` | `admin@demo.com` | `Admin1234!` | Panel de administración + zona privada + contenido exclusivo |
-| `registrado` | `usuario@demo.com` | `User1234!` | Zona privada + contenido exclusivo |
+| Rol | Cómo se crea | Acceso |
+|-----|--------------|--------|
+| `admin` | `install.sh` la pide al instalar, o `make crear-admin` | Panel de administración + zona privada |
+| `registrado` | Desde el panel de administración, sección Usuarios | Zona privada |
 
-Si ya existen (instalaciones previas), `INSERT IGNORE` los omite sin error.
+Antes había dos cuentas de demo con la contraseña escrita en el código. Se retiraron a propósito: mientras un hash válido viviese en el repositorio, cualquiera que lo leyese conocería la contraseña de administración de todo despliegue nuevo. Es lo que permite que el repositorio pueda ser público sin comprometer el sitio real.
+
+El hash lo genera el contenedor del backend con `hashear_password`, la misma función que usa la aplicación al cambiar una contraseña, así que no hay dos formas distintas de derivarlo. La contraseña se pasa por stdin y no como argumento, porque los argumentos de un proceso son visibles para cualquiera que liste procesos.
 
 Además, **siempre** (sin importar si hay datos o no):
 
@@ -653,7 +655,7 @@ El script detecta la BD existente, aplica las migraciones pendientes y reconstru
 
 > **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
 >
-> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario (registro, admin) **no** se transfieren entre máquinas — existen los dos usuarios demo que crea el script (`admin@demo.com` y `usuario@demo.com`). Si necesitas las mismas cuentas en el portátil, créalas manualmente desde el panel de administración.
+> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario **no** se transfieren entre máquinas: el script pide una contraseña nueva para la cuenta de administración en cada instalación. Las demás se crean desde el panel.
 >
 > **Desinstalar:** `bash uninstall.sh` elimina los contenedores, volúmenes (BD y datos), certificado SSL, `docker/.env` y opcionalmente la imagen Docker y el `venv/`. También elimina la entrada de `/etc/hosts` (con confirmación, requiere sudo). La operación es irreversible para los datos.
 

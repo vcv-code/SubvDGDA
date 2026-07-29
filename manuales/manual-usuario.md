@@ -194,8 +194,10 @@ El panel de administración solo está disponible para usuarios con rol de admin
 
 Para acceder al panel en una instalación nueva:
 
-- **Email:** admin@demo.com
-- **Contraseña:** Admin1234!
+- **Email:** el que indicaste al instalar
+- **Contraseña:** la que indicaste al instalar
+
+(La instalación no trae credenciales puestas: las eliges tú al ejecutar `install.sh`.)
 
 Se recomienda cambiar estas credenciales si se va a usar en un entorno real.
 

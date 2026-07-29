@@ -9,7 +9,7 @@
 
 .PHONY: start stop restart build build-cron reload-nginx \
         mantenimiento-on mantenimiento-off \
-        reset-db redescubrir-convocatorias dataset cargar \
+        reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
         backup restore shell-db mailpit uninstall
 
@@ -77,6 +77,7 @@ reset-db:
 	cd docker && docker compose down -v && docker compose up -d
 	venv/bin/python -m scripts.data_processing.cargar_dataset
 	@$(MAKE) --no-print-directory redescubrir-convocatorias
+	@$(MAKE) --no-print-directory crear-admin
 	@echo ""
 	@echo "Comprueba los avisos:  curl -sk https://localhost/avisos/"
 	@echo "Si faltan fecha_fin_plazo, están en el backup de $(BACKUP_DIR)/."
@@ -96,6 +97,14 @@ redescubrir-convocatorias:
 	@rm -f logs/cron/estado_*.json
 	@docker exec bdns_cron python3 /app/scripts/check_bdns.py \
 		|| echo "AVISO: el cron no pudo completarse (¿sin red o BDNS caído?). Las convocatorias del año en curso pueden faltar."
+
+# Crea la cuenta de administración preguntando la contraseña. Ni el esquema ni
+# install.sh siembran usuarios con contraseña escrita: un hash válido dentro
+# del repositorio sería la contraseña de administración de todo despliegue
+# nuevo. reset-db lo invoca al final para no dejarte sin ninguna cuenta.
+# No hace nada si ya existe un admin.
+crear-admin:
+	@bash scripts/crear_admin.sh
 
 # Regenera data/final/dataset_unificado.json desde los JSON procesados.
 # El segundo paso NO es opcional: unificar_datasets.py reescribe el fichero

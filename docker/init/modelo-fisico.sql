@@ -222,15 +222,15 @@ CREATE TABLE IF NOT EXISTS verificacion_tokens (
 );
 
 -- ------------------------------------------------------------
--- USUARIO ADMIN DE DEMO
--- Creado solo en instalaciones nuevas (INSERT IGNORE ignora
--- el insert si el email ya existe).
--- Credenciales: admin@demo.com / Admin1234!
+-- SIN USUARIOS SEMBRADOS
+-- Aquí había una cuenta de administración con su hash escrito.
+-- Se retiró a propósito: este fichero está en el repositorio, así que
+-- cualquiera que lo leyese conocería la contraseña de administración de
+-- todo despliegue nuevo, y bastaría con ir al dominio y entrar.
+--
+-- La cuenta se crea al instalar, pidiendo la contraseña:
+--   scripts/crear_admin.sh   (lo invocan install.sh y `make crear-admin`)
+--
+-- `make reset-db` lo llama al terminar, para no dejar la instalación sin
+-- ninguna cuenta con la que entrar.
 -- ------------------------------------------------------------
-INSERT IGNORE INTO usuarios (email, nombre, password, rol, activo, email_verificado, created_at)
-VALUES (
-    'admin@demo.com',
-    'Admin Demo',
-    '$2b$12$SG5kPM3viEt7gXX4pBkPJOy74WSOzjawiiRxU0ruz9sTvHfk3A9bq',
-    'admin', 1, 1, NOW()
-);
