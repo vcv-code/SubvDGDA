@@ -13,6 +13,7 @@ Implementa la misma lógica que el crontab original:
                       0 8 */2 11 *   (noviembre: días 1,3,5,…)
                       0 8 */2 12 *   (diciembre: días 1,3,5,…)
                       0 8 */4 1 *    (enero:     días 1,5,9,…)
+  · rotar_logs.py   — 15 4 * * *     (04:15 UTC a diario)
 """
 import logging
 import signal
@@ -54,6 +55,12 @@ def _jobs_for(dt: datetime) -> list[str]:
             jobs.append("check_bdns.py")
         elif mo == 1 and (d - 1) % 4 == 0:
             jobs.append("check_bdns.py")
+
+    # 15 4 * * *  →  04:15 UTC a diario.
+    # A esa hora no hay tráfico, así que la ventana entre copiar y vaciar el
+    # log (donde se pierde alguna línea) cae en el momento de menos actividad.
+    if h == 4 and m == 15:
+        jobs.append("rotar_logs.py")
 
     return jobs
 

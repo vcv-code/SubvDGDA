@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 292 funciones / 390 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 295 funciones / 399 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **344 funciones / 442 ejecuciones** | |
+| **Total** | **347 funciones / 451 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: 16 de las 390 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 374. Con Docker completo, pasan las 390.
+Nota sobre ejecución: 16 de las 399 ejecuciones automáticas requieren Docker y Nginx levantados (`test_https_config.py` y `test_rate_limiting.py`). Sin Docker, pasan 383. Con Docker completo, pasan las 399.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (390) es mayor que el número de **funciones de test** escritas (292). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (399) es mayor que el número de **funciones de test** escritas (295). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **292 funciones de test automáticas** (390 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
+El proyecto incluye **295 funciones de test automáticas** (399 ejecuciones con pytest) distribuidas en 23 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron y el helper de reintentos a la API BDNS.
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (390)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (399)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -116,11 +116,11 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_parser_epa2025.py` | 22 | 22 | Parser EPA 2025 (extracción heurística) y captura de causas |
 | `test_parser_epa_admitidas_2024.py` | 10 | 10 | Parser de la línea EPA 2024 (anclaje por CIF, nombres con "COLONIAS") |
 | `test_check_bdns.py` | 5 | 5 | Comprobación BDNS del cron y reintentos con backoff |
-| `test_scheduler.py` | 21 | 119 | Calendario del cron (parametrizado por días del mes) |
+| `test_scheduler.py` | 24 | 128 | Calendario del cron (parametrizado por días del mes y por meses) |
 | `test_logging.py` | 5 | 5 | Sistema de logging de la aplicación |
 | `test_https_config.py` | 9 | 9 | TLS/HTTPS y redirección (**requiere Docker + Nginx**) |
 | `test_rate_limiting.py` | 6 | 6 | Rate limiting de Nginx (**requiere Docker + Nginx**) |
-| **Total** | **292** | **390** | 23 archivos |
+| **Total** | **295** | **399** | 23 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
