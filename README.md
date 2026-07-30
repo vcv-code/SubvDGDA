@@ -53,6 +53,7 @@ Proyecto desarrollado por:
 - **Apéndices**
   - [Notas técnicas](#notas-técnicas)
   - [Limitaciones conocidas del dato de origen](#limitaciones-conocidas-del-dato-de-origen)
+  - [Requisitos pendientes para producción](#requisitos-pendientes-para-producción)
   - [Mejoras futuras](#mejoras-futuras)
 
 ---
@@ -1402,6 +1403,27 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 
 ---
 
+## Requisitos pendientes para producción
+
+No son mejoras opcionales: son condiciones para poner el sitio en internet. El
+resto de pasos del despliegue (asegurar el servidor, rotar los secretos, SMTP
+real, backups) está en el manual de instalación.
+
+- **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+
+- **Puertos expuestos en producción** — `docker-compose.yml` publica cuatro puertos y **tres no deberían estar accesibles** en un servidor:
+  - `3307` (MariaDB) — la BD y el backend se comunican dentro de la red Docker; no hace falta exponerlo al host.
+  - `8080` (**Adminer**) — panel de administración de la base de datos, sin contraseña propia más allá de las credenciales de MariaDB.
+  - `8025` (**Mailpit**) — buzón web con **todos los correos** que envía la aplicación. Es el más peligroso de los tres: si queda accesible, cualquiera pide una recuperación de contraseña en la web, abre Mailpit, lee el enlace y se hace administrador sin necesidad de adivinar nada.
+
+  Adminer y Mailpit son herramientas de desarrollo: en el servidor conviene no arrancarlos, o dejarlos accesibles solo por túnel SSH. Los únicos que deben quedar abiertos son el `80` y el `443`.
+
+- **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
+
+> El más urgente de los tres es el de los puertos, y dentro de él **Mailpit**:
+> si queda accesible, cualquiera pide una recuperación de contraseña, abre el
+> buzón, lee el enlace y se hace administrador sin adivinar nada.
+
 ## Mejoras futuras
 
 Mejoras identificadas durante el desarrollo, no planificadas para la entrega actual. Agrupadas por ámbito.
@@ -1428,21 +1450,9 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 ### Funcionalidades y UX
 
 - **Entidades favoritas** — permitir marcar entidades (un máximo razonable, p. ej. 20) para hacerles seguimiento, con su último estado y el importe acumulado, sin buscarlas cada vez. **Ojo al replantearlo:** la idea original las mostraba en `exclusivo.html` para usuarios registrados, pero esa página quedó reservada al rol admin cuando se retiró el registro público, así que hoy irían en `privado.html` — y con muy pocas cuentas en juego, conviene decidir antes si la función aporta algo o si tiene más sentido guardar la búsqueda en la URL, que ya funciona sin cuenta. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
-- **Alta por invitación en vez de contraseña fijada por la admin** — hoy `POST /admin/usuarios` obliga a la administradora a inventar la contraseña y hacérsela llegar a la persona por un canal externo (mensajería, verbalmente), que es justo donde una contraseña no debería viajar. La alternativa: crear la cuenta **solo con el email** y enviar un enlace de "establece tu contraseña"; la elige la propia persona, nadie más llega a conocerla y la cuenta queda verificada al usarlo. Reaprovecharía casi entero el flujo de recuperación ya existente (`crear_reset_token`, `enviar_email_recuperacion` y `POST /auth/reset`, que ya activa `email_verificado` al completarse). Requiere: quitar `password` de `CrearUsuarioIn`, generar el token de establecimiento en el alta, un texto de email distinto al de recuperación, y ajustar el formulario del panel y sus tests. Coste estimado: media jornada.
-- **Login con terceros (OAuth)** — integración con Google. Perdió casi todo su atractivo al retirarse el registro público: la ventaja de OAuth es ahorrar el alta, y aquí ya no hay altas que ahorrar. Quedaría solo como comodidad para las pocas cuentas que cree la administración, a cambio de una dependencia de un tercero. Difícil que compense.
 
-### Producción y seguridad
+### Privacidad
 
-- **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
-- **Puertos expuestos en producción** — `docker-compose.yml` publica cuatro puertos y **tres no deberían estar accesibles** en un servidor:
-  - `3307` (MariaDB) — la BD y el backend se comunican dentro de la red Docker; no hace falta exponerlo al host.
-  - `8080` (**Adminer**) — panel de administración de la base de datos, sin contraseña propia más allá de las credenciales de MariaDB.
-  - `8025` (**Mailpit**) — buzón web con **todos los correos** que envía la aplicación. Es el más peligroso de los tres: si queda accesible, cualquiera pide una recuperación de contraseña en la web, abre Mailpit, lee el enlace y se hace administrador sin necesidad de adivinar nada.
-
-  Adminer y Mailpit son herramientas de desarrollo: en el servidor conviene no arrancarlos, o dejarlos accesibles solo por túnel SSH. Los únicos que deben quedar abiertos son el `80` y el `443`.
-- **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
-- **CAPTCHA en el formulario de contacto** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción; hoy se cubre con honeypot y rate limiting, que para el volumen de este proyecto basta. (Cuando existía el registro público este punto también le aplicaba; retirado el registro, el contacto es el único formulario abierto que queda.)
-- **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares en el formulario de contacto. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido. Perdió casi todo su sentido al retirarse el registro público: ya nadie se da de alta solo.
 - **Auto-alojar fuentes y librerías de terceros** — actualmente Google Fonts (Inter) y Chart.js se cargan desde CDN; no ponen cookies, pero el navegador del visitante envía su IP a Google/jsdelivr. Servir las fuentes y los `.js` desde el propio dominio elimina esas peticiones a terceros (ya existe un fallback local para Chart.js en `assets/vendor/`). Mejora de privacidad, opcional.
 
 ---

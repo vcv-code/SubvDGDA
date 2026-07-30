@@ -188,6 +188,18 @@ El honeypot y el rate limiting protegían un formulario abierto a cualquiera. Si
 
 La cuenta se crea igualmente **sin verificar** y se envía el email de verificación: quien la reciba confirma que la dirección es suya y existe.
 
+### Dar de alta sin que la contraseña viaje por ningún sitio
+
+Al crear la cuenta hay que ponerle una contraseña, y hacérsela llegar a la persona por mensajería o de viva voz es justo donde una contraseña no debería pasar. **No hace falta:**
+
+1. Crear la cuenta con una contraseña **aleatoria** que no se le diga a nadie.
+2. Decirle a la persona que entre en la web y pulse **«¿Olvidaste tu contraseña?»**.
+3. Recibe el enlace, elige la suya, y **la cuenta queda verificada en el proceso**.
+
+Funciona porque `POST /auth/recuperar` **no exige que la cuenta esté verificada** —solo que exista y esté activa— y `POST /auth/reset` activa `email_verificado` al completarse. Así la contraseña definitiva solo la conoce su dueña, y ni siquiera hace falta pulsar el email de verificación.
+
+Es el motivo por el que se descartó implementar un alta por invitación con su propio enlace de "establece tu contraseña": costaba media jornada y el resultado es el mismo que ya se consigue con el flujo existente.
+
 ---
 
 ## Sesión activa en login
