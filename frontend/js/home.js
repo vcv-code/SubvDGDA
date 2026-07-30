@@ -726,15 +726,17 @@ async function cargarAvisos() {
         contenedor.innerHTML = avisos.map(aviso => {
             const tipo  = etiquetas[aviso.tipo_convoc] || aviso.tipo_convoc.toUpperCase();
             const plazo = etiquetasPlazo[aviso.estado_plazo] ?? '';
-            const fecha = aviso.fecha_convocatoria
-                ? new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-                : 'fecha pendiente';
+            // Sin fecha se cambia la frase entera, no solo el valor: "publicada el
+            // fecha pendiente" no se sostiene al leerlo.
+            const publicacion = aviso.fecha_convocatoria
+                ? `, publicada el ${new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+                : ' (fecha de publicación pendiente).';
             return `
                 <div class="aviso-banner">
                     <span class="aviso-banner__icono" aria-hidden="true">📢</span>
                     <div class="aviso-banner__texto">
-                        <strong>Convocatoria ${aviso.anio_convocatoria}${plazo} — ${tipo}</strong>
-                        <p>Publicada el ${fecha}. Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
+                        <strong>${tipo} — Convocatoria ${aviso.anio_convocatoria}${publicacion}${plazo}</strong>
+                        <p>Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
                     </div>
                 </div>`;
         }).join('');
@@ -860,7 +862,28 @@ async function cargarResumenTabla() {
 }
 
 
+/**
+ * mostrarBannerCampana()
+ * Muestra la franja de campaña solo mientras el aviso siga vigente.
+ *
+ * Nace con fecha de caducidad a propósito: un aviso de una fecha concreta
+ * escrito a pelo en el HTML depende de que alguien se acuerde de quitarlo, y
+ * un cartel de una movilización pasada desluce más que no haber puesto nada.
+ * Así desaparece solo al día siguiente.
+ *
+ * Para retirarla antes de tiempo basta con borrar el bloque de index.html;
+ * para reutilizarla en otra convocatoria, cambiar el texto y esta fecha.
+ */
+const FIN_CAMPANA = new Date('2026-09-07T00:00:00');   // primer día en que ya NO se muestra
+
+function mostrarBannerCampana() {
+    const banner = document.getElementById('banner-campana');
+    if (!banner) return;
+    if (new Date() < FIN_CAMPANA) banner.classList.add('visible');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    mostrarBannerCampana();
     cargarDatos();
     cargarAvisos();
     cargarConvocatorias();

@@ -211,6 +211,10 @@ Los botones del panel de administración usan atributos `data-*` para transporta
 
 ## Persistencia de filtros entre página y ficha
 
+**Avisos con fecha de caducidad:** cuando se añade a la web un aviso atado a una fecha concreta —una movilización, una jornada, un plazo—, no se deja fijo en el HTML esperando que alguien lo retire. Se le pone una constante con la fecha de fin y el JS decide si mostrarlo (`FIN_CAMPANA` en `home.js`, para `.banner-campana`).
+
+El motivo es práctico: un cartel de una convocatoria que ya pasó desluce más que no haber puesto nada, y quien lo retira suele ser quien lo puso, que para entonces está en otra cosa. Reutilizarlo en otra ocasión es cambiar el texto y esa fecha.
+
 **Gestión del foco en los modales (WCAG 2.4.3):** los cuatro modales del proyecto —entidad, conclusiones de gráficas, top municipios del mapa y causas de exclusión— siguen el mismo patrón: al abrirse llevan el foco al botón de cerrar, y al cerrarse lo **devuelven al elemento que los abrió**. Sin lo segundo, quien navega con teclado acaba al principio del documento y tiene que tabular otra vez hasta donde estaba; sin lo primero, con lector de pantalla no te enteras de que se ha abierto un diálogo.
 
 El elemento que abrió el modal se guarda al abrirlo: en una propiedad del propio modal (`_openerEl`) cuando hay un botón identificable, o desde `document.activeElement` cuando el disparador es una región del mapa de Leaflet y no un control propio.

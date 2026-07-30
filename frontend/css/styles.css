@@ -1332,6 +1332,50 @@ table tbody tr:hover {
 }
 
 
+/* ── Franja de campaña (temporal) ──
+   Aviso puntual sobre una movilización del sector. Nace con fecha de
+   caducidad: `home.js` la oculta pasada la fecha, para no depender de que
+   alguien se acuerde de quitarla (ver FIN_CAMPANA).
+
+   Morado de la campaña. Es el único color libre de significado en este
+   proyecto: verde=concedida, ámbar=no beneficiaria, rojo=excluida y
+   gris=desistida ya describen estados de los datos, así que una franja
+   naranja o granate en lo alto arrastraría ese sentido sin quererlo, en una
+   web que trata justo de quién queda dentro y quién fuera. El morado quedó
+   libre al retirarse el de la antigua zona privada, y de paso es el color de
+   la campaña. Blanco sobre este fondo da 10,62:1. */
+.banner-campana {
+    display: none;               /* home.js lo muestra si está en fecha */
+    background-color: #4C2A85;
+    color: #ffffff;
+    padding: 0.85rem var(--espacio-lg);
+    text-align: center;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.banner-campana.visible {
+    display: block;
+}
+
+.banner-campana__contenido {
+    max-width: 900px;
+    margin-inline: auto;
+}
+
+.banner-campana a {
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+}
+
+.banner-campana a:hover {
+    text-decoration-thickness: 2px;
+}
+
+
 /* ── Franja de apoyo ──
    Va en su propia línea, entre la fila principal y los créditos: el texto
    necesita explicarse y metido entre los enlaces recargaría la fila y se
@@ -2871,11 +2915,17 @@ canvas {
 /* Contenedor de avisos — fondo verde para integrarse con el hero */
 #avisos-banner {
     background-color: #DFF0E1;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem var(--espacio-lg);
 }
 
+/* Ancho tope en px y NO centrados: van pegados a la izquierda a propósito.
+   Antes era `max-width: 70%`, que ataba su tamaño al ancho de la pantalla y
+   los hacía crecer sin fin en monitores grandes; con un valor fijo se
+   comportan igual en cualquier resolución.
+   Que queden a la izquierda en lugar de alineados con el contenido centrado
+   de más abajo es una decisión estética de la autora, no un descuido. */
 #avisos-banner .aviso-banner {
-    max-width: 70%;
+    max-width: 1200px;
     border-radius: 6px;
     border-left-width: 5px;
     margin: 0.4rem 0;
