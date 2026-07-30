@@ -23,14 +23,27 @@
         return Math.round(Number(v)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' €';
     }
 
+    // Elemento que abrió el modal, para devolverle el foco al cerrar.
+    // Se toma de document.activeElement porque el disparador es una región
+    // del mapa de Leaflet, no un botón propio al que podamos referirnos.
+    let elementoConFocoPrevio = null;
+
     async function abrirModalCCAA(nombre) {
         const modal = document.getElementById('modal-ccaa');
         if (!modal) return;
+
+        elementoConFocoPrevio = document.activeElement;
 
         document.getElementById('modal-ccaa-titulo').textContent = 'Top municipios — ' + nombre;
         document.getElementById('modal-lista-acum').innerHTML = '<li style="color:#999;padding:.5rem 0">Cargando...</li>';
         document.getElementById('modal-lista-anio').innerHTML  = '';
         modal.style.display = 'flex';
+
+        // Llevar el foco dentro del diálogo (WCAG 2.4.3). Sin esto, quien usa
+        // teclado o lector de pantalla no se entera de que se ha abierto: el
+        // foco se queda detrás, sobre el mapa.
+        const btnCerrar = modal.querySelector('.modal-ccaa__cerrar');
+        if (btnCerrar) setTimeout(() => btnCerrar.focus(), 50);
 
         try {
             const resp = await fetch(`${API_URL}/solicitudes/?ccaa=${encodeURIComponent(nombre)}&estado=concedida&limite=500`);
@@ -114,6 +127,12 @@
     function cerrarModalCCAA() {
         const modal = document.getElementById('modal-ccaa');
         if (modal) modal.style.display = 'none';
+
+        // Devolver el foco a donde estaba antes de abrirlo
+        if (elementoConFocoPrevio) {
+            elementoConFocoPrevio.focus();
+            elementoConFocoPrevio = null;
+        }
     }
 
     window.abrirModalCCAA  = abrirModalCCAA;

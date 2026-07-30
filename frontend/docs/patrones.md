@@ -146,7 +146,9 @@ async function verificarAcceso() {
 
 **Por qué verificar con el backend y no solo leer el JWT:** el JWT puede ser válido (firma correcta, no caducado) pero el usuario puede haber sido desactivado por un admin en ese tiempo. La verificación con `/privado/perfil` siempre refleja el estado actual de la BD. Si el usuario está desactivado, el backend devuelve 403.
 
-**Navbar dinámico:** `navbar.js` detecta el token en `localStorage` y sustituye el botón "Acceder" por "Mi perfil" + "Cerrar sesión" sin hacer ninguna petición al servidor. Es solo lectura del `localStorage` — rápido y sin latencia.
+**Navbar dinámico:** `navbar.js` detecta el token en `localStorage` y **añade** "Mi perfil", "Exclusivo" y "Cerrar sesión" al final del menú, sin hacer ninguna petición al servidor. Es solo lectura del `localStorage` — rápido y sin latencia.
+
+Antes *sustituía* el botón "Acceder" del navbar. Al retirarse ese botón (el acceso vive ahora en el pie), no quedaba nada que sustituir y quien iniciaba sesión se quedaba sin controles. Las páginas que traen los suyos escritos en el HTML, como `admin.html`, se detectan por el `id="btn-cerrar-sesion"` y se dejan intactas para no duplicarlos.
 
 **Botón "volver arriba":** `scroll-arriba.js` es el otro componente compartido entre páginas (excepción a la regla "un JS por página"). Inyecta un botón flotante fijo que solo se muestra al superar 600px de scroll, así que en las páginas cortas nunca aparece aunque el script esté cargado. El listener de scroll es `passive` y agrupa el cálculo en un `requestAnimationFrame` para no penalizar el desplazamiento.
 
@@ -208,6 +210,16 @@ Los botones del panel de administración usan atributos `data-*` para transporta
 ---
 
 ## Persistencia de filtros entre página y ficha
+
+**Avisos con fecha de caducidad:** cuando se añade a la web un aviso atado a una fecha concreta —una movilización, una jornada, un plazo—, no se deja fijo en el HTML esperando que alguien lo retire. Se le pone una constante con la fecha de fin y el JS decide si mostrarlo (`FIN_CAMPANA` en `home.js`, para `.banner-campana`).
+
+El motivo es práctico: un cartel de una convocatoria que ya pasó desluce más que no haber puesto nada, y quien lo retira suele ser quien lo puso, que para entonces está en otra cosa. Reutilizarlo en otra ocasión es cambiar el texto y esa fecha.
+
+**Gestión del foco en los modales (WCAG 2.4.3):** los cuatro modales del proyecto —entidad, conclusiones de gráficas, top municipios del mapa y causas de exclusión— siguen el mismo patrón: al abrirse llevan el foco al botón de cerrar, y al cerrarse lo **devuelven al elemento que los abrió**. Sin lo segundo, quien navega con teclado acaba al principio del documento y tiene que tabular otra vez hasta donde estaba; sin lo primero, con lector de pantalla no te enteras de que se ha abierto un diálogo.
+
+El elemento que abrió el modal se guarda al abrirlo: en una propiedad del propio modal (`_openerEl`) cuando hay un botón identificable, o desde `document.activeElement` cuando el disparador es una región del mapa de Leaflet y no un control propio.
+
+Al implementarlo (julio de 2026) faltaba en dos: `modal-grafica` llevaba el foco al abrir pero no lo devolvía, y `modal-ccaa` no hacía ninguna de las dos cosas. La referencia era `modal-entidad`, que ya lo tenía resuelto junto con la trampa de tabulación.
 
 Al hacer clic en una fila del buscador se abre un **modal inline** sin abandonar `buscador.html` — la URL del buscador no cambia, los filtros siguen visibles y el usuario puede cerrar el modal y seguir navegando sin perder nada.
 

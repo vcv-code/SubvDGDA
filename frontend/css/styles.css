@@ -1294,6 +1294,170 @@ table tbody tr:hover {
     color: var(--footer-borde);
 }
 
+/* ── Páginas legales (aviso-legal.html, privacidad.html) ──
+   Estas dos páginas llevaban todos sus estilos en atributos `style` dentro
+   del HTML. Se migran a clases: repetidos a mano en cada sección, cualquier
+   retoque obligaba a tocar trece sitios y ya habían empezado a divergir. */
+.pagina-legal {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+    max-width: 760px;
+}
+
+.legal-seccion {
+    margin-bottom: 2rem;
+}
+
+.pagina-legal__titulo {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: var(--color-negro);
+}
+
+.legal-seccion__titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.legal-seccion p + p {
+    margin-top: 0.75rem;
+}
+
+.legal-lista {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+    line-height: 1.8;
+}
+
+
+/* ── Franja de campaña (temporal) ──
+   Aviso puntual sobre una movilización del sector. Nace con fecha de
+   caducidad: `home.js` la oculta pasada la fecha, para no depender de que
+   alguien se acuerde de quitarla (ver FIN_CAMPANA).
+
+   Morado de la campaña. Es el único color libre de significado en este
+   proyecto: verde=concedida, ámbar=no beneficiaria, rojo=excluida y
+   gris=desistida ya describen estados de los datos, así que una franja
+   naranja o granate en lo alto arrastraría ese sentido sin quererlo, en una
+   web que trata justo de quién queda dentro y quién fuera. El morado quedó
+   libre al retirarse el de la antigua zona privada, y de paso es el color de
+   la campaña. Blanco sobre este fondo da 10,62:1. */
+.banner-campana {
+    display: none;               /* home.js lo muestra si está en fecha */
+    background-color: #4C2A85;
+    color: #ffffff;
+    padding: 0.85rem var(--espacio-lg);
+    text-align: center;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.banner-campana.visible {
+    display: block;
+}
+
+.banner-campana__contenido {
+    max-width: 900px;
+    margin-inline: auto;
+}
+
+.banner-campana a {
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+}
+
+.banner-campana a:hover {
+    text-decoration-thickness: 2px;
+}
+
+
+/* ── Franja de apoyo ──
+   Va en su propia línea, entre la fila principal y los créditos: el texto
+   necesita explicarse y metido entre los enlaces recargaría la fila y se
+   partiría mal en móvil.
+
+   El proyecto NO recauda para sí mismo. Esta franja señala una causa, y así
+   está redactada: sin ella se leería como una petición encubierta, que es
+   justo lo que las condiciones de Teaming no admiten (y contradiría el
+   "independiente y sin ánimo de lucro" de encima). Ver aviso-legal.html. */
+.footer-apoyo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    padding: 1.15rem var(--espacio-lg);
+    /* Un tono por encima del verde del pie, reutilizando el de las cabeceras
+       de tabla: distingue la franja sin inventar un color nuevo y deja las
+       dos bandas de abajo como las oscuras.
+       El texto va en blanco pleno, no atenuado: sobre este fondo más claro
+       el atenuado se queda en 2,98:1 de contraste y no llega al mínimo AA
+       (4,5:1). En blanco sube a 5,36:1. */
+    background-color: var(--color-verde-tabla);
+    border-bottom: 1px solid var(--footer-borde);
+    font-size: 0.9375rem;
+    color: var(--footer-texto);
+    text-align: center;
+}
+
+/* Pastilla blanca: el logo es negro en un 62% y sobre el verde del footer
+   quedaría como una mancha. Mismo criterio que las tarjetas de recursos,
+   donde los logos ajenos también van sobre blanco. */
+.footer-apoyo__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 112px;
+    height: 86px;
+    /* Sin pastilla blanca: sobre el verde claro de la franja el logo se
+       sostiene solo. En el verde oscuro del pie sí hacía falta, porque el
+       logo es negro en un 62% y quedaba como una mancha. */
+    order: 2;
+    border-radius: 6px;
+    transition: transform 0.2s ease, outline-color 0.2s ease;
+    outline: 2px solid transparent;
+    outline-offset: 3px;
+}
+
+/* Señales de que es pulsable, sin ponerlo en el texto */
+.footer-apoyo__logo:hover img {
+    transform: scale(1.04);
+}
+
+.footer-apoyo__logo:focus-visible {
+    outline-color: #ffffff;
+}
+
+.footer-apoyo__logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.footer-apoyo__texto {
+    margin: 0;
+    max-width: 92ch;
+}
+
+.footer-apoyo__texto a {
+    color: var(--footer-texto);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+}
+
+.footer-apoyo__texto a:hover {
+    color: #ffffff;
+}
+
 /* ── Zona inferior: créditos ── */
 .footer-principal__creditos {
     background-color: var(--footer-bg-sub);
@@ -1330,6 +1494,20 @@ table tbody tr:hover {
         flex-wrap: wrap;
         gap: var(--espacio-xs);
         justify-content: center;
+    }
+
+    /* La franja de apoyo se apila igual que el resto del pie. Sin esto se
+       apoyaba solo en flex-wrap: funcionaba, pero el logo quedaba colgando
+       con demasiado aire y el padding lateral se comía el ancho útil. */
+    .footer-apoyo {
+        flex-direction: column;
+        gap: 0.85rem;
+        padding: 1rem var(--espacio-md);
+    }
+
+    .footer-apoyo__logo {
+        width: 96px;
+        height: 74px;
     }
 }
 
@@ -2348,6 +2526,54 @@ canvas {
 }
 
 
+/* ── Tabla del umbral: versión ligera ──
+   La tabla de convocatorias es densa y con muchas columnas, y por eso lleva
+   cabecera rellena y filas alternas. La del umbral son dos filas: ese peso
+   visual la hacía parecer más importante que el texto que la explica.
+   Aquí solo se marcan las líneas, que es lo que necesita para leerse.
+   `.tabla-umbral` no tenía estilos propios, así que esto no afecta a la
+   otra tabla de la página. */
+.tabla-umbral {
+    border-collapse: collapse;
+    /* Fondo propio: la sección del umbral va sobre crema y con las celdas
+       transparentes la tabla se confundía con el fondo de la página. */
+    background-color: #ffffff;
+    border-radius: var(--radio-card);
+    overflow: hidden;
+}
+
+.tabla-umbral th,
+.tabla-umbral td {
+    background-color: #ffffff;
+    border: none;
+    border-bottom: 1px solid var(--color-gris-medio);
+    padding: 10px 14px;
+}
+
+.tabla-umbral thead th {
+    color: var(--color-verde-tabla);
+    font-weight: 700;
+    border-bottom: 2px solid var(--color-verde-tabla);
+}
+
+/* Filas alternas fuera: con dos filas solo añade ruido */
+.tabla-umbral tbody tr:nth-child(even) td {
+    background-color: #ffffff;
+}
+
+/* La primera columna es la etiqueta de la fila, no un dato */
+.tabla-umbral tbody th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-verde-tabla);
+}
+
+.tabla-umbral tbody tr:last-child th,
+.tabla-umbral tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
 /* ============================================================
    26. Spinner de carga (Paso 17)
    ============================================================ */
@@ -2689,11 +2915,17 @@ canvas {
 /* Contenedor de avisos — fondo verde para integrarse con el hero */
 #avisos-banner {
     background-color: #DFF0E1;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem var(--espacio-lg);
 }
 
+/* Ancho tope en px y NO centrados: van pegados a la izquierda a propósito.
+   Antes era `max-width: 70%`, que ataba su tamaño al ancho de la pantalla y
+   los hacía crecer sin fin en monitores grandes; con un valor fijo se
+   comportan igual en cualquier resolución.
+   Que queden a la izquierda en lugar de alineados con el contenido centrado
+   de más abajo es una decisión estética de la autora, no un descuido. */
 #avisos-banner .aviso-banner {
-    max-width: 70%;
+    max-width: 1200px;
     border-radius: 6px;
     border-left-width: 5px;
     margin: 0.4rem 0;
@@ -3153,7 +3385,7 @@ canvas {
     padding: .6rem .9rem;
     font-size: .9rem;
     font-weight: 600;
-    color: var(--color-verde-oscuro);
+    color: var(--color-verde-btn);
     list-style: none;
 }
 
@@ -3690,7 +3922,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .modal-grafica__fuentes {
     margin-top: 1rem;
     padding-top: 0.75rem;
-    border-top: 1px solid var(--color-borde);
+    border-top: 1px solid var(--color-gris-medio);
     font-size: 0.8rem;
     color: var(--color-gris-texto);
 }
@@ -4268,6 +4500,9 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .umbral-wrapper {
     max-width: 640px;
     margin-inline: auto;
+    /* La tabla va debajo del texto que la explica; sin este aire quedaban
+       pegados y se leían como un solo bloque. */
+    margin-top: 1.75rem;
 }
 
 .umbral-sin-corte {
@@ -4454,7 +4689,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     justify-content: space-between;
     gap: var(--espacio-sm);
     padding: var(--espacio-md) var(--espacio-md) var(--espacio-sm);
-    border-bottom: 1px solid var(--color-borde);
+    border-bottom: 1px solid var(--color-gris-medio);
     flex-shrink: 0;
 }
 
@@ -4492,7 +4727,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .modal-cerrar:focus-visible {
     color: var(--color-texto);
     background-color: var(--color-fondo-verde);
-    outline: 2px solid var(--color-verde);
+    outline: 2px solid var(--color-verde-btn);
     outline-offset: 2px;
 }
 
@@ -4550,12 +4785,12 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     font-weight: 600;
     color: var(--color-gris-texto);
     padding: 6px 8px;
-    border-bottom: 2px solid var(--color-borde);
+    border-bottom: 2px solid var(--color-gris-medio);
 }
 
 .modal-historico-tabla td {
     padding: 7px 8px;
-    border-bottom: 1px solid var(--color-borde);
+    border-bottom: 1px solid var(--color-gris-medio);
     color: var(--color-texto);
     vertical-align: middle;
 }
@@ -4585,7 +4820,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 /* 36.9 Pie del modal con enlace a ficha completa */
 .modal-pie {
     padding: var(--espacio-sm) var(--espacio-md);
-    border-top: 1px solid var(--color-borde);
+    border-top: 1px solid var(--color-gris-medio);
     display: flex;
     justify-content: flex-end;
     gap: var(--espacio-sm);
@@ -4986,6 +5221,15 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     .btn-subir--visible {
         transform: none;
     }
+
+    /* El logo de la franja de apoyo crece al pasar por encima: es decoración
+       y debe desaparecer si se ha pedido reducir el movimiento. El contorno
+       de foco se mantiene, porque eso no es decoración sino navegación. */
+    .footer-apoyo__logo,
+    .footer-apoyo__logo:hover img {
+        transition: none;
+        transform: none;
+    }
 }
 
 /* ============================================================
@@ -5004,6 +5248,68 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .recursos-bloque--colonias       { background: #E1EEF9; }  /* azul pastel */
 .recursos-bloque--especializadas { background: #ECE6F6; }  /* lila pastel */
 .recursos-bloque--campanas       { background: #FCE4EC; }  /* rosa pastel */
+.recursos-bloque--guias          { background: #FBF0DC; }  /* crema pastel */
+
+/* ── Tarjeta de guía o documento ──
+   El resto de la página son tarjetas de ORGANIZACIONES, con su logo. Estas
+   son documentos y artículos, que no tienen logo propio: forzarlos al mismo
+   molde habría obligado a repetir el logo de quien los publica. Aquí manda
+   el título, que es lo que se busca al mirar una lista de lecturas. */
+.card-guia {
+    background: #ffffff;
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-guia__tipo {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--color-verde-tabla);
+    margin: 0;
+}
+
+.card-guia__titulo {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.card-guia__titulo a {
+    color: var(--color-negro);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.card-guia__titulo a:hover {
+    color: var(--color-verde-btn);
+}
+
+.card-guia__descripcion {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+/* Los <a> globales van sin subrayado y con color heredado, así que dentro de
+   un párrafo pasarían por texto corriente. Aquí hay enlaces a organismos en
+   mitad de la frase y tienen que verse pulsables. */
+.card-guia__descripcion a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.card-guia__descripcion a:hover {
+    color: var(--color-hover);
+}
 
 .recursos-bloque__cabecera {
     display: flex;

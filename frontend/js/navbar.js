@@ -27,10 +27,20 @@
     function actualizarNavbar() {
         if (!localStorage.getItem('token')) return;
 
-        const enlace = document.querySelector('a.btn-login[href="login.html"]');
-        if (!enlace) return;
-        const li = enlace.closest('li');
-        if (!li) return;
+        const lista = document.querySelector('.navbar__links');
+        if (!lista) return;
+
+        // Antes esto sustituía el botón "Acceder" del navbar. Al retirarse ese
+        // botón (el acceso vive ahora en el pie), no había nada que sustituir y
+        // quien iniciaba sesión se quedaba sin "Mi perfil" ni "Cerrar sesión".
+        // Ahora los controles se añaden a la lista.
+        //
+        // Salvo que la página ya traiga los suyos escritos en el HTML, como
+        // admin.html: ahí duplicarlos dejaría dos botones de cerrar sesión.
+        if (document.getElementById('btn-cerrar-sesion')) return;
+        if (lista.querySelector('.navbar__user-controls')) return;
+
+        const li = document.createElement('li');
 
         const linkPerfil = document.createElement('a');
         linkPerfil.href = 'privado.html';
@@ -50,6 +60,7 @@
 
         li.className = 'navbar__user-controls';
         li.replaceChildren(linkPerfil, linkExclusivo, btnCerrar);
+        lista.appendChild(li);
     }
 
     function iniciarHamburguesa() {

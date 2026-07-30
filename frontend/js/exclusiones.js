@@ -115,7 +115,10 @@
             filtroCausa.disabled = true;
             const opt = document.createElement('option');
             opt.value = '';
-            opt.textContent = 'Elige un año';
+            // "concreto" no sobra: el desplegable de arriba permite "Todos",
+            // así que sin esa palabra quien lo tiene puesto cree que ya ha
+            // elegido y el mensaje parece un error.
+            opt.textContent = 'Elige antes un año concreto';
             filtroCausa.appendChild(opt);
             return;
         }
@@ -221,18 +224,27 @@
     function crearFila(s) {
         const tr = document.createElement('tr');
 
+        // dataset.label: en móvil (<600px) el CSS convierte cada fila en una
+        // tarjeta y pinta este texto como etiqueta a la izquierda del valor
+        // (regla `.tabla-wrapper table tbody td::before`). Sin él los valores
+        // quedan solos contra el margen derecho, sin decir qué son. Deben
+        // coincidir con las cabeceras <th> de la tabla.
         const tdEntidad = document.createElement('td');
+        tdEntidad.dataset.label = 'Entidad';
         tdEntidad.textContent = s.beneficiario.nombre;
 
         const tdAnio = document.createElement('td');
+        tdAnio.dataset.label = 'Año';
         tdAnio.textContent = s.convocatoria.anio_convocatoria;
 
         const tdCcaa = document.createElement('td');
+        tdCcaa.dataset.label = 'CCAA';
         tdCcaa.textContent = s.ccaa || '—';
 
         // Celda de causa: botón con los códigos que abre el modal con los
         // motivos completos. Botón (no texto) por accesibilidad de teclado.
         const tdCausa = document.createElement('td');
+        tdCausa.dataset.label = 'Causa';
         if (s.causa_exclusion) {
             const btn = document.createElement('button');
             btn.type = 'button';

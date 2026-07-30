@@ -51,7 +51,6 @@
                 <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
                 <li><a href="estadisticas-eell.html">EELL</a></li>
                 <li><a href="recursos.html" class="activo" aria-current="page">Recursos</a></li>
-                <li><a href="login.html" class="btn-login">Acceder</a></li>
             
             </ul>
             <button class="navbar__hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
@@ -495,6 +494,115 @@
                 </div>
 
 
+                <!-- Guías y documentos: no son organizaciones, así que usan
+                     tarjeta propia (.card-guia) sin logo. -->
+                <div class="recursos-bloque recursos-bloque--guias" aria-labelledby="bloque-guias">
+                    <div class="recursos-bloque__cabecera">
+                        <h2 class="recursos-bloque__titulo" id="bloque-guias">
+                            Guías y documentos útiles
+                        </h2>
+                    </div>
+
+                    <div class="grid-recursos">
+
+                        <article class="card-guia">
+                            <p class="card-guia__tipo">Documento oficial · PDF</p>
+                            <h3 class="card-guia__titulo">
+                                <a href="https://www.dsca.gob.es/sites/default/files/derechos-sociales/derechos-animales/docs/directriz-tecnica-colonias-felinas.pdf"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Directriz técnica de colonias felinas
+                                </a>
+                            </h3>
+                            <p class="card-guia__descripcion">
+                                Criterios técnicos de la Dirección General de Derechos de los Animales
+                                para la gestión de colonias felinas. Es la referencia a la que
+                                remiten las convocatorias y los pliegos municipales.
+                            </p>
+                        </article>
+
+                        <article class="card-guia">
+                            <p class="card-guia__tipo">Documento oficial</p>
+                            <h3 class="card-guia__titulo">
+                                <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2013-12887"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Ley 19/2013 de transparencia y acceso a la información
+                                </a>
+                            </h3>
+                            <p class="card-guia__descripcion">
+                                Reconoce a cualquier persona el derecho a pedir información a las
+                                administraciones, sin necesidad de justificar para qué la quiere.
+                                Es la base legal para reclamar los datos que no se publican.
+                            </p>
+                        </article>
+
+                        <article class="card-guia">
+                            <p class="card-guia__tipo">Trámite</p>
+                            <h3 class="card-guia__titulo">
+                                <a href="https://transparencia.gob.es/derecho-acceso/solicite-informacion-publica"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Cómo solicitar información pública
+                                </a>
+                            </h3>
+                            <p class="card-guia__descripcion">
+                                Formulario y guías del Portal de Transparencia para presentar una
+                                solicitud. Si no contestan o deniegan, la reclamación va al
+                                <a href="https://consejodetransparencia.es/reclamaciones/como_reclamar/presentar-reclamacion" target="_blank" rel="noopener noreferrer">Consejo de Transparencia</a>;
+                                y si el problema es el mal funcionamiento de una administración,
+                                la queja se presenta en el
+                                <a href="https://portal-sac.defensordelpueblo.es/" target="_blank" rel="noopener noreferrer">Defensor del Pueblo</a>,
+                                que es gratuito y no exige abogado.
+                            </p>
+                        </article>
+
+                        <article class="card-guia">
+                            <p class="card-guia__tipo">Guía práctica</p>
+                            <h3 class="card-guia__titulo">
+                                <a href="https://lagatapirata.org/como-crear-una-asociacion-de-proteccion-animal/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Cómo crear una asociación de protección animal
+                                </a>
+                            </h3>
+                            <p class="card-guia__descripcion">
+                                Los pasos para constituirla y mantenerla en marcha: registro,
+                                documentación, costes y obligaciones que vienen después. Para quien
+                                quiere organizarse y no sabe por dónde empezar.
+                            </p>
+                        </article>
+
+                        <article class="card-guia">
+                            <p class="card-guia__tipo">Guía práctica</p>
+                            <h3 class="card-guia__titulo">
+                                <a href="https://lagatapirata.org/certificado-digital-para-asociaciones/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Certificado digital para asociaciones
+                                </a>
+                            </h3>
+                            <p class="card-guia__descripcion">
+                                Cómo obtenerlo y renovarlo. Sin él no se puede presentar una
+                                solicitud de subvención ni recibir las notificaciones de la
+                                administración, que son electrónicas y corren plazo.
+                            </p>
+                        </article>
+
+                        <article class="card-guia">
+                            <p class="card-guia__tipo">Guía práctica</p>
+                            <h3 class="card-guia__titulo">
+                                <a href="https://lagatapirata.org/la-justicia-gratuita/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    Justicia gratuita para asociaciones
+                                </a>
+                            </h3>
+                            <p class="card-guia__descripcion">
+                                Cómo denunciar o defenderse ante los tribunales sin poder pagar
+                                abogado, incluidos los requisitos que dan acceso automático al
+                                demandar a una administración. No hace falta ser de utilidad pública.
+                            </p>
+                        </article>
+
+                    </div>
+                </div>
+
+
                 <p class="recursos-nota">
                     Directorio de referencia de organizaciones de protección animal.<br>
                     Si detectas información incorrecta o desactualizada, o si tu organización
@@ -509,10 +617,37 @@
 
     <!-- FOOTER -->
     <footer class="footer-principal">
+
+        <!-- Franja de apoyo: causa que el sitio señala, NO patrocinio ni
+             financiación de la web. Las dos ideas van deliberadamente
+             separadas: el dinero del grupo de Teaming es para la asociación,
+             y sugerir otro destino es causa de bloqueo en sus condiciones.
+             Ver aviso-legal.html. -->
+        <div class="footer-apoyo">
+            <!-- El logo enlaza a su web y redes. No se dice "pulsa en el logo":
+                 en móvil no se hace clic y quien usa lector de pantalla no
+                 percibe dónde está; el destino va en el aria-label. -->
+            <a class="footer-apoyo__logo"
+               href="https://linktr.ee/lagatapirata"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="La Gata Pirata: su trabajo, web y redes sociales">
+                <img src="assets/img/logos/logo-laGataPirata.webp"
+                     alt="Logo de la Asociación La Gata Pirata" loading="lazy">
+            </a>
+            <p class="footer-apoyo__texto">
+                Esta web se mantiene de forma voluntaria, es gratuita y no tiene publicidad:
+                prepararla y actualizar los datos lleva su trabajo.
+                Si te resulta útil y quieres ayudar, puedes apoyar con
+                <a href="https://www.teaming.net/asociacionla-gata-pirata"
+                   target="_blank" rel="noopener noreferrer">solo <strong>1&nbsp;€ al mes</strong> a La Gata Pirata</a>,
+                una asociación sin ánimo de lucro que trabaja por el bienestar animal.
+            </p>
+        </div>
+
         <div class="footer-principal__zona">
             <div class="footer-principal__marca">
-                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54" loading="lazy">
-                <span><strong>Proyecto BDNS/DGDA</strong> — independiente y sin ánimo de lucro</span>
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+                <span><strong>Subvenciones DGDA</strong></span>
             </div>
             <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
                 <a href="https://github.com/vcv-code/SubvDGDA" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -522,6 +657,8 @@
                 <a href="privacidad.html">Privacidad</a>
                 <span class="footer-principal__sep" aria-hidden="true">|</span>
                 <a href="contacto.html">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="login.html">Acceder</a>
             </nav>
         </div>
         <div class="footer-principal__creditos">
