@@ -5248,6 +5248,68 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .recursos-bloque--colonias       { background: #E1EEF9; }  /* azul pastel */
 .recursos-bloque--especializadas { background: #ECE6F6; }  /* lila pastel */
 .recursos-bloque--campanas       { background: #FCE4EC; }  /* rosa pastel */
+.recursos-bloque--guias          { background: #FBF0DC; }  /* crema pastel */
+
+/* ── Tarjeta de guía o documento ──
+   El resto de la página son tarjetas de ORGANIZACIONES, con su logo. Estas
+   son documentos y artículos, que no tienen logo propio: forzarlos al mismo
+   molde habría obligado a repetir el logo de quien los publica. Aquí manda
+   el título, que es lo que se busca al mirar una lista de lecturas. */
+.card-guia {
+    background: #ffffff;
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+    padding: var(--espacio-md);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-guia__tipo {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--color-verde-tabla);
+    margin: 0;
+}
+
+.card-guia__titulo {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.card-guia__titulo a {
+    color: var(--color-negro);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.card-guia__titulo a:hover {
+    color: var(--color-verde-btn);
+}
+
+.card-guia__descripcion {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+/* Los <a> globales van sin subrayado y con color heredado, así que dentro de
+   un párrafo pasarían por texto corriente. Aquí hay enlaces a organismos en
+   mitad de la frase y tienen que verse pulsables. */
+.card-guia__descripcion a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.card-guia__descripcion a:hover {
+    color: var(--color-hover);
+}
 
 .recursos-bloque__cabecera {
     display: flex;

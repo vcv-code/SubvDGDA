@@ -456,7 +456,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
-| `recursos.html` | Directorio de organizaciones de protección animal y campañas |
+| `recursos.html` | Directorio de organizaciones de protección animal y campañas, más un bloque de **guías y documentos útiles**: la directriz técnica de colonias felinas de la DGDA, la Ley 19/2013 de transparencia y cómo ejercer el derecho de acceso a la información (con la ruta de reclamación al Consejo de Transparencia y de queja al Defensor del Pueblo), junto a guías prácticas sobre certificado digital, justicia gratuita y creación de asociaciones |
 | `login.html` | Acceso a la cuenta. No hay alta pública: las cuentas las crea la administradora desde el panel |
 | `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
 | `contacto.html` | Formulario de contacto (honeypot antispam + rate limiting); envía el mensaje por email |
