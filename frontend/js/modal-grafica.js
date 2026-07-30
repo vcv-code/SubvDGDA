@@ -44,6 +44,13 @@
         const cerrar = () => {
             modal.classList.remove('modal-grafica--visible');
             modal.setAttribute('aria-hidden', 'true');
+            // Devuelve el foco al botón que abrió el modal (WCAG 2.4.3).
+            // Sin esto, al cerrar con teclado el foco vuelve al principio del
+            // documento y hay que tabular otra vez hasta donde se estaba.
+            if (modal._openerEl) {
+                modal._openerEl.focus();
+                modal._openerEl = null;
+            }
         };
 
         modal.querySelector('.modal-grafica__backdrop').addEventListener('click', cerrar);
@@ -80,6 +87,7 @@
             titEl.appendChild(tag);
             texEl.innerHTML  = conclusion;
 
+            modal._openerEl = trigger;
             modal.classList.add('modal-grafica--visible');
             modal.setAttribute('aria-hidden', 'false');
             modal.querySelector('.modal-grafica__cerrar').focus();

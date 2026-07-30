@@ -1407,7 +1407,11 @@ Ambas páginas tienen `<meta name="robots" content="noindex">` para excluirlas d
 **Problema:** En pantallas estrechas (<600 px) la tabla de resultados del buscador desbordaba horizontalmente, obligando al usuario a hacer scroll lateral. La columna "Entidad" (la más ancha) quedaba cortada y los badges de estado eran difíciles de pulsar.
 
 **Solución técnica — CSS (`styles.css`):**  
-Se añadió un bloque `@media (max-width: 600px)` estrictamente acotado a `.tabla-wrapper`. El selector limita el impacto a la tabla de solicitudes y no afecta otras tablas del proyecto (p. ej. la de entidad, que usa `id` en lugar de clase). La técnica empleada es **data-label + `::before { content: attr(data-label) }`**: cada celda pasa a `display: flex; justify-content: space-between` y muestra el nombre de columna como prefijo usando su atributo HTML `data-label`. El `<thead>` se oculta con `display: none` porque la información ya está duplicada en los atributos. Las filas se convierten en tarjetas con borde, `border-radius` y sombra suave, reutilizando las variables CSS del sistema de diseño (`--radio-card`, `--color-gris-medio`, `--color-fondo-verde`).
+Se añadió un bloque `@media (max-width: 600px)` acotado a `.tabla-wrapper`.
+
+> **Ojo con el alcance:** el selector **no** se limita a la tabla de solicitudes. Aplica a **cualquier tabla dentro de un `.tabla-wrapper`**, así que toda tabla que use ese contenedor necesita sus `data-label`. Quedan fuera las que no lo usan, como la de entidad (`id` en lugar de clase).
+>
+> Esta especificación decía lo contrario, y la tabla del **buscador de exclusiones** se creó sin `data-label`: el CSS convertía sus filas en tarjetas pero sin etiqueta que mostrar, así que los valores quedaban solos contra el margen derecho. Corregido en julio de 2026. La técnica empleada es **data-label + `::before { content: attr(data-label) }`**: cada celda pasa a `display: flex; justify-content: space-between` y muestra el nombre de columna como prefijo usando su atributo HTML `data-label`. El `<thead>` se oculta con `display: none` porque la información ya está duplicada en los atributos. Las filas se convierten en tarjetas con borde, `border-radius` y sombra suave, reutilizando las variables CSS del sistema de diseño (`--radio-card`, `--color-gris-medio`, `--color-fondo-verde`).
 
 **Solución técnica — JS (`solicitudes.js`):**  
 En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atributo `data-label` en cada `<td>`. El atributo es texto literal y no requiere lógica adicional. Los valores dinámicos (entidad, año, tipo, estado, importe) no se alteraron.
@@ -1423,6 +1427,8 @@ En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atrib
 
 **Columnas y sus `data-label`:**
 
+Buscador de solicitudes (`solicitudes.js`, `crearFila()`):
+
 | `<th>` visible | `data-label` en `<td>` |
 |---|---|
 | Entidad beneficiaria | `Entidad` |
@@ -1430,6 +1436,15 @@ En la función `crearFila()`, el `tr.innerHTML` se amplió para incluir el atrib
 | Tipo | `Tipo` |
 | Estado | `Estado` |
 | Importe concedido | `Importe` |
+
+Buscador de exclusiones (`exclusiones.js`, `crearFila()`), que crea las celdas con `document.createElement` y usa `dataset.label`:
+
+| `<th>` visible | `dataset.label` |
+|---|---|
+| Entidad | `Entidad` |
+| Año | `Año` |
+| CCAA | `CCAA` |
+| Causa | `Causa` |
 
 **Breakpoint elegido:** `600 px` — coincide con el breakpoint `sm` de referencia, que es el límite habitual entre móvil portrait y tablet. Las tarjetas de la página de inicio ya usan `480 px`; usar `600 px` para la tabla da más margen en dispositivos en el rango 481–600 px donde la tabla sigue siendo incómoda.
 
