@@ -124,9 +124,9 @@ API externa BDNS + PDFs/XML BOE
 
 | Área | Tecnologías |
 |-----|-------------|
-| Frontend | HTML, CSS, JavaScript, Chart.js |
-| Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
-| Base de datos | MySQL / MariaDB |
+| Frontend | HTML, CSS y JavaScript sin framework · Chart.js (gráficas) · Leaflet (mapa por CCAA) |
+| Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt, PyMySQL |
+| Base de datos | MariaDB 11.8 |
 | Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
 | Control de versiones | Git, GitHub |
@@ -766,7 +766,7 @@ El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-co
 | `db`      | `bdns_dgda_db`   | mariadb:11.8             | Base de datos MariaDB con el dataset cargado              | 3307 (interno: 3306)   |
 | `backend` | `bdns_api`       | python:3.12-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
 | `nginx`   | `bdns_nginx`     | nginx:alpine             | Proxy inverso, HTTPS, archivos estáticos                  | 80 (HTTP), 443 (HTTPS) |
-| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS y health check               | ninguno                |
+| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS, health check y rotación de logs | ninguno            |
 | `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 (SMTP), 8025 (UI) |
 | `adminer` | `bdns_adminer`   | adminer                  | Interfaz web para explorar la BD                          | 8080                   |
 
@@ -783,12 +783,16 @@ El backend no expone su puerto al exterior — solo Nginx y el cron pueden acced
 
 Mailpit intercepta todos los emails que el backend intenta enviar (recuperación de contraseña, verificación) sin que lleguen a ningún destinatario real.
 
-El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta dos tareas:
+El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta tres tareas:
 
 - **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
 - **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva. Al insertar una convocatoria nueva (que entra sin fecha de fin de plazo, porque BDNS no la da de forma fiable), registra un **aviso de acción requerida** en su log para que se rellene la fecha desde el panel admin.
 
-Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron puede lanzarse manualmente con `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
+- **`rotar_logs.py`** — a diario a las 04:15 UTC, rota los ficheros `.log` de `logs/` y borra las copias de más de 30 días. Hace falta porque Nginx y el backend escriben directamente a fichero: el `max-size` del logging de Docker solo afecta a la salida estándar, así que sin esto crecerían sin límite. Copia el contenido a un fichero con fecha y **vacía** el original en lugar de renombrarlo, para que los procesos que lo tienen abierto sigan escribiendo sin necesidad de recargarlos.
+
+Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. Cualquiera de las tres se puede lanzar a mano, por ejemplo `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
+
+> **Al añadir o cambiar una tarea, el fichero que manda es `scheduler.py`.** `docker/cron/crontab` no lo ejecuta nadie: se conserva solo como documentación de la programación original, así que editarlo no tiene ningún efecto. La lógica real está en `_jobs_for()`, y tiene tests en `tests/test_scheduler.py`.
 
 ### Nginx — qué hace exactamente
 
@@ -1142,7 +1146,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 386 pruebas automáticas en verde (pytest)
+- 399 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
