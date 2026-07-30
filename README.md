@@ -1409,13 +1409,21 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 ### Datos y análisis
 
 - **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
-- **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — actualmente las URLs de bases reguladoras (3) y resoluciones del BOE (8) están hardcodeadas en `index.html`. Mientras sean ~10 enlaces y se actualicen 1 vez al año, el HTML directo es razonable; cuando la lista crezca (más años, más tipos de convocatoria) o se requiera multi-idioma, conviene moverlas a un JSON estático cargado con `fetch`, manteniendo el patrón ya usado en otros endpoints. Coste estimado: ~1 hora.
+- **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — las URLs de bases reguladoras (3) y resoluciones del BOE (8) están escritas en `index.html`. Pasarlas a un JSON estático cargado con `fetch` seguiría el patrón del resto del proyecto. Coste estimado: ~1 hora.
+
+  **Contrapartida, y no es menor:** hoy están en el HTML y se ven **siempre**, aunque el JavaScript falle o tarde. En un JSON pasarían a depender de una petición que puede fallar, y entonces los enlaces oficiales desaparecerían de la página. Se cambiaría algo que no puede romperse por algo que sí.
+
+  **Hazlo cuando** la lista crezca de verdad (bastantes más años o tipos de convocatoria) o haga falta multi-idioma. Con ~10 enlaces que se actualizan una vez al año, el HTML directo es más fiable y igual de mantenible.
 
 ### Operación y despliegue
 
 - **Analítica de visitas sobre los propios logs** — para saber cuánta gente entra, de qué país y a qué páginas, no hace falta añadir ningún rastreador: Nginx ya registra cada petición. Una herramienta como GoAccess los convierte en informes sin JavaScript, sin cookies, sin terceros y sin banner de consentimiento. Antes hay que **ampliar el `log_format`**, hoy reducido a `IP | fecha | petición | estado | tiempo`, porque sin referrer ni user-agent no se puede saber de dónde llegan ni con qué dispositivo. Si más adelante hicieran falta el tiempo en página y los visitantes únicos fiables, la alternativa es una analítica sin cookies auto-alojada (Umami, Plausible o Matomo en modo *cookieless*). Cualquiera de las dos obliga a actualizar la política de privacidad, porque la IP es dato personal.
 
-- **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — el target ya hace backup automático y relanza el cron para redescubrir las convocatorias del año en curso, pero las fechas de fin de plazo fijadas a mano desde el panel y los usuarios creados siguen saliendo solo del backup, a mano. Cubrirlo del todo pide volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después casando por `num_convoc` en vez de por `id` (lo delicado es no duplicar las 8 convocatorias que sí recrea el dataset). Coste estimado: ~1 hora.
+- **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después, casando por `num_convoc` en vez de por `id`. Coste estimado: ~1 hora, y lo delicado es no duplicar las 8 convocatorias que el dataset sí recrea.
+
+  **Probablemente no compense.** `reset-db` es una operación de desarrollo: en producción no se ejecuta casi nunca, porque destruye la base de datos. Y lo que se pierde ya está cubierto — la cuenta de administración la recrea el propio target llamando a `crear-admin`, las fechas de fin de plazo son dos y se reescriben en el panel en un par de minutos, y hay backup automático más el procedimiento paso a paso en el manual de instalación. Es una hora de código delicado, con riesgo de duplicar datos si se equivoca, para ahorrar un par de minutos al año.
+
+  **Hazlo si te muerde dos veces.** Una vez es anécdota.
 
 ### Funcionalidades y UX
 
