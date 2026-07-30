@@ -157,3 +157,28 @@ def test_julio_a_medianoche_solo_health():
     """En julio el cron de BDNS no corre nunca; el health sí cada 6h."""
     assert _jobs_for(_dt(2026, 7, 15, 0, 0)) == ["health_check.py"]
     assert _jobs_for(_dt(2026, 7, 15, 8, 0)) == []
+
+
+# ──────────────────────────────────────────────
+# rotar_logs.py — diario a las 04:15 UTC
+# ──────────────────────────────────────────────
+
+@pytest.mark.parametrize("mes", [1, 3, 4, 6, 7, 11, 12])
+def test_rotar_logs_corre_todos_los_dias(mes):
+    """A diferencia de check_bdns, no depende de la temporada: corre siempre."""
+    assert _jobs_for(_dt(2026, mes, 15, 4, 15)) == ["rotar_logs.py"]
+
+
+def test_rotar_logs_solo_a_las_4_15():
+    """Un minuto antes o después no dispara nada."""
+    assert _jobs_for(_dt(2026, 7, 15, 4, 14)) == []
+    assert _jobs_for(_dt(2026, 7, 15, 4, 16)) == []
+    assert _jobs_for(_dt(2026, 7, 15, 5, 15)) == []
+
+
+def test_rotar_logs_no_choca_con_los_demas():
+    """Las 04:15 no coinciden con health_check (en punto cada 6 h) ni con
+    check_bdns (08:00), así que nunca se solapan."""
+    assert _jobs_for(_dt(2026, 4, 1, 0, 0))  == ["health_check.py"]
+    assert _jobs_for(_dt(2026, 4, 1, 8, 0))  == ["check_bdns.py"]
+    assert _jobs_for(_dt(2026, 4, 1, 4, 15)) == ["rotar_logs.py"]

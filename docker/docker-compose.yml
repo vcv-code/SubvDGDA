@@ -109,7 +109,10 @@ services:
       DB_PASSWORD: ${MYSQL_PASSWORD}
       BACKEND_INTERNAL_URL: http://backend:8000
     volumes:
-      - ../logs/cron:/app/logs/cron
+      # Toda la carpeta de logs, no solo la del cron: rotar_logs.py necesita
+      # ver también los de nginx y los del backend. Las rutas que ya usaban
+      # los scripts (/app/logs/cron) siguen siendo válidas.
+      - ../logs:/app/logs
     depends_on:
       db:
         condition: service_healthy

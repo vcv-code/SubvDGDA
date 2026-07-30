@@ -124,9 +124,9 @@ API externa BDNS + PDFs/XML BOE
 
 | Área | Tecnologías |
 |-----|-------------|
-| Frontend | HTML, CSS, JavaScript, Chart.js |
-| Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt |
-| Base de datos | MySQL / MariaDB |
+| Frontend | HTML, CSS y JavaScript sin framework · Chart.js (gráficas) · Leaflet (mapa por CCAA) |
+| Backend | Python, FastAPI, SQLAlchemy, JWT (python-jose), bcrypt, PyMySQL |
+| Base de datos | MariaDB 11.8 |
 | Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
 | Control de versiones | Git, GitHub |
@@ -766,7 +766,7 @@ El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-co
 | `db`      | `bdns_dgda_db`   | mariadb:11.8             | Base de datos MariaDB con el dataset cargado              | 3307 (interno: 3306)   |
 | `backend` | `bdns_api`       | python:3.12-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
 | `nginx`   | `bdns_nginx`     | nginx:alpine             | Proxy inverso, HTTPS, archivos estáticos                  | 80 (HTTP), 443 (HTTPS) |
-| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS y health check               | ninguno                |
+| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS, health check y rotación de logs | ninguno            |
 | `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 (SMTP), 8025 (UI) |
 | `adminer` | `bdns_adminer`   | adminer                  | Interfaz web para explorar la BD                          | 8080                   |
 
@@ -783,12 +783,16 @@ El backend no expone su puerto al exterior — solo Nginx y el cron pueden acced
 
 Mailpit intercepta todos los emails que el backend intenta enviar (recuperación de contraseña, verificación) sin que lleguen a ningún destinatario real.
 
-El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta dos tareas:
+El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta tres tareas:
 
 - **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
 - **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva. Al insertar una convocatoria nueva (que entra sin fecha de fin de plazo, porque BDNS no la da de forma fiable), registra un **aviso de acción requerida** en su log para que se rellene la fecha desde el panel admin.
 
-Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. El cron puede lanzarse manualmente con `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
+- **`rotar_logs.py`** — a diario a las 04:15 UTC, rota los ficheros `.log` de `logs/` y borra las copias de más de 30 días. Hace falta porque Nginx y el backend escriben directamente a fichero: el `max-size` del logging de Docker solo afecta a la salida estándar, así que sin esto crecerían sin límite. Copia el contenido a un fichero con fecha y **vacía** el original en lugar de renombrarlo, para que los procesos que lo tienen abierto sigan escribiendo sin necesidad de recargarlos.
+
+Registra todo en stdout (`docker logs bdns_cron`) y en `logs/cron/`. Cualquiera de las tres se puede lanzar a mano, por ejemplo `docker exec bdns_cron python3 /app/scripts/check_bdns.py`.
+
+> **Al añadir o cambiar una tarea, el fichero que manda es `scheduler.py`.** `docker/cron/crontab` no lo ejecuta nadie: se conserva solo como documentación de la programación original, así que editarlo no tiene ningún efecto. La lógica real está en `_jobs_for()`, y tiene tests en `tests/test_scheduler.py`.
 
 ### Nginx — qué hace exactamente
 
@@ -1142,7 +1146,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 386 pruebas automáticas en verde (pytest)
+- 399 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1409,26 +1413,29 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Operación y despliegue
 
-- **Rotación de los logs de Nginx** — no hay ninguna configurada, así que `logs/nginx/access.log` crece sin límite. Dos consecuencias: en un servidor acabaría comiéndose el disco, y las direcciones IP que registra se conservan de forma indefinida. Por eso la sección "Registros del servidor" de `privacidad.html` explica qué se anota y para qué, pero **no indica plazo de conservación**: hoy la respuesta sería "para siempre" y no procede escribir eso. Al configurarla (con `logrotate`, o con `max-size`/`max-file` en el logging de Docker) hay que añadir la frase del plazo y la política queda completa.
 - **Analítica de visitas sobre los propios logs** — para saber cuánta gente entra, de qué país y a qué páginas, no hace falta añadir ningún rastreador: Nginx ya registra cada petición. Una herramienta como GoAccess los convierte en informes sin JavaScript, sin cookies, sin terceros y sin banner de consentimiento. Antes hay que **ampliar el `log_format`**, hoy reducido a `IP | fecha | petición | estado | tiempo`, porque sin referrer ni user-agent no se puede saber de dónde llegan ni con qué dispositivo. Si más adelante hicieran falta el tiempo en página y los visitantes únicos fiables, la alternativa es una analítica sin cookies auto-alojada (Umami, Plausible o Matomo en modo *cookieless*). Cualquiera de las dos obliga a actualizar la política de privacidad, porque la IP es dato personal.
 
 - **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — el target ya hace backup automático y relanza el cron para redescubrir las convocatorias del año en curso, pero las fechas de fin de plazo fijadas a mano desde el panel y los usuarios creados siguen saliendo solo del backup, a mano. Cubrirlo del todo pide volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después casando por `num_convoc` en vez de por `id` (lo delicado es no duplicar las 8 convocatorias que sí recrea el dataset). Coste estimado: ~1 hora.
 
 ### Funcionalidades y UX
 
-- **Entidades favoritas** — permitir a usuarios registrados marcar hasta un máximo razonable de entidades (p.ej. 20) como favoritas para hacerles seguimiento. Las entidades marcadas se mostrarían en `exclusivo.html` con su último estado y el importe acumulado, sin necesidad de buscarlas cada vez. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
+- **Entidades favoritas** — permitir marcar entidades (un máximo razonable, p. ej. 20) para hacerles seguimiento, con su último estado y el importe acumulado, sin buscarlas cada vez. **Ojo al replantearlo:** la idea original las mostraba en `exclusivo.html` para usuarios registrados, pero esa página quedó reservada al rol admin cuando se retiró el registro público, así que hoy irían en `privado.html` — y con muy pocas cuentas en juego, conviene decidir antes si la función aporta algo o si tiene más sentido guardar la búsqueda en la URL, que ya funciona sin cuenta. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
 - **Recursos en dos sub-páginas** — el contenido de "Información útil / Guías y trámites" **ya existe**: es el bloque *Guías y documentos útiles* del final de `recursos.html`, con la directriz técnica de la DGDA, la Ley 19/2013 de transparencia, cómo ejercer el derecho de acceso y tres guías prácticas. Lo que queda pendiente es **separarlo en su propia página** si algún día crece lo suficiente como para que la actual se haga larga; hoy son seis fichas y no compensa. Si se hace: acceso vía desplegable en el navbar (accesible con hover, clic, teclado y dentro de la hamburguesa) o, más simple, una página índice de Recursos con dos tarjetas.
 - **Alta por invitación en vez de contraseña fijada por la admin** — hoy `POST /admin/usuarios` obliga a la administradora a inventar la contraseña y hacérsela llegar a la persona por un canal externo (mensajería, verbalmente), que es justo donde una contraseña no debería viajar. La alternativa: crear la cuenta **solo con el email** y enviar un enlace de "establece tu contraseña"; la elige la propia persona, nadie más llega a conocerla y la cuenta queda verificada al usarlo. Reaprovecharía casi entero el flujo de recuperación ya existente (`crear_reset_token`, `enviar_email_recuperacion` y `POST /auth/reset`, que ya activa `email_verificado` al completarse). Requiere: quitar `password` de `CrearUsuarioIn`, generar el token de establecimiento en el alta, un texto de email distinto al de recuperación, y ajustar el formulario del panel y sus tests. Coste estimado: media jornada.
-- **Login con terceros (OAuth)** — integración con Google.
+- **Login con terceros (OAuth)** — integración con Google. Perdió casi todo su atractivo al retirarse el registro público: la ventaja de OAuth es ahorrar el alta, y aquí ya no hay altas que ahorrar. Quedaría solo como comodidad para las pocas cuentas que cree la administración, a cambio de una dependencia de un tercero. Difícil que compense.
 
 ### Producción y seguridad
 
 - **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
-- **Puerto de base de datos** — en producción eliminar la exposición del puerto `3307` en `docker-compose.yml`; la BD y el backend se comunican dentro de la red Docker sin necesidad de exponer el puerto al host.
+- **Puertos expuestos en producción** — `docker-compose.yml` publica cuatro puertos y **tres no deberían estar accesibles** en un servidor:
+  - `3307` (MariaDB) — la BD y el backend se comunican dentro de la red Docker; no hace falta exponerlo al host.
+  - `8080` (**Adminer**) — panel de administración de la base de datos, sin contraseña propia más allá de las credenciales de MariaDB.
+  - `8025` (**Mailpit**) — buzón web con **todos los correos** que envía la aplicación. Es el más peligroso de los tres: si queda accesible, cualquiera pide una recuperación de contraseña en la web, abre Mailpit, lee el enlace y se hace administrador sin necesidad de adivinar nada.
+
+  Adminer y Mailpit son herramientas de desarrollo: en el servidor conviene no arrancarlos, o dejarlos accesibles solo por túnel SSH. Los únicos que deben quedar abiertos son el `80` y el `443`.
 - **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
 - **CAPTCHA en el formulario de contacto** — reCAPTCHA o hCaptcha para bloquear bots sofisticados. Requiere dependencia de terceros y añade fricción; hoy se cubre con honeypot y rate limiting, que para el volumen de este proyecto basta. (Cuando existía el registro público este punto también le aplicaba; retirado el registro, el contacto es el único formulario abierto que queda.)
 - **Blocklist de dominios desechables** — bloquear `mailinator.com`, `guerrillamail.com` y similares en el formulario de contacto. Hay cientos de dominios y se actualizan constantemente; coste de mantenimiento alto para el beneficio obtenido. Perdió casi todo su sentido al retirarse el registro público: ya nadie se da de alta solo.
-- **Analítica de visitas** — medir el uso real (páginas más vistas, búsquedas frecuentes, dispositivos). Decidir entre una analítica **sin cookies** (p. ej. Plausible o Matomo en modo cookieless), que evita el banner de consentimiento, o una con cookies (Google Analytics), que obligaría a banner. Preferencia: cookieless, para mantener la política actual de cero cookies de seguimiento.
 - **Auto-alojar fuentes y librerías de terceros** — actualmente Google Fonts (Inter) y Chart.js se cargan desde CDN; no ponen cookies, pero el navegador del visitante envía su IP a Google/jsdelivr. Servir las fuentes y los `.js` desde el propio dominio elimina esas peticiones a terceros (ya existe un fallback local para Chart.js en `assets/vendor/`). Mejora de privacidad, opcional.
 
 ---

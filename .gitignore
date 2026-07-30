@@ -223,6 +223,11 @@ frontend/maintenance.on
 # Guía de estudio detallada del proyecto con especial detalle en el backend
 guia-estudio/
 
+# Copias rotadas de los logs (rotar_logs.py: access.log.2026-07-30).
+# La regla *.log no las cubre, porque la fecha va DESPUÉS de la extensión, y
+# contienen direcciones IP de las visitas.
+*.log.20*
+
 # Volcados de la base de datos (make backup / make reset-db).
 # Contienen datos reales: usuarios y hashes de contraseña.
 backups/
