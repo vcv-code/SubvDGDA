@@ -156,11 +156,20 @@
              para que no haya que acordarse de retirarla a mano. -->
         <div class="banner-campana" id="banner-campana" role="region"
              aria-label="Aviso de movilización del sector">
-            <p class="banner-campana__contenido">
-                <strong>6 de septiembre</strong> — Movilizaciones convocadas en varias
-                ciudades por el cumplimiento de la Ley 7/2023 en colonias felinas.
-                <a href="https://losgatostienenley.org/" target="_blank" rel="noopener noreferrer">Más información →</a>
-            </p>
+            <!-- Los carteles son decorativos: repiten lo que ya dice el texto, así
+                 que van con alt vacío para que un lector de pantalla no lo lea dos
+                 veces. width/height evitan el salto de maquetación al cargar. -->
+            <div class="banner-campana__interior">
+                <img class="banner-campana__cartel" src="assets/img/mani-6sep.webp"
+                     alt="" aria-hidden="true" width="528" height="452">
+                <p class="banner-campana__contenido">
+                    <strong>6 de septiembre</strong> — Movilizaciones convocadas en varias
+                    ciudades por el cumplimiento de la Ley 7/2023 sobre colonias felinas.
+                    <a href="https://losgatostienenley.org/" target="_blank" rel="noopener noreferrer">Más información →</a>
+                </p>
+                <img class="banner-campana__cartel" src="assets/img/mani-6sep.webp"
+                     alt="" aria-hidden="true" width="528" height="452">
+            </div>
         </div>
 
         <!-- Banner de avisos: convocatorias del año en curso sin resolución.

@@ -1337,18 +1337,29 @@ table tbody tr:hover {
    caducidad: `home.js` la oculta pasada la fecha, para no depender de que
    alguien se acuerde de quitarla (ver FIN_CAMPANA).
 
-   Morado de la campaña. Es el único color libre de significado en este
-   proyecto: verde=concedida, ámbar=no beneficiaria, rojo=excluida y
-   gris=desistida ya describen estados de los datos, así que una franja
-   naranja o granate en lo alto arrastraría ese sentido sin quererlo, en una
-   web que trata justo de quién queda dentro y quién fuera. El morado quedó
-   libre al retirarse el de la antigua zona privada, y de paso es el color de
-   la campaña. Blanco sobre este fondo da 10,62:1. */
+   Naranja #F67C01, muestreado del propio cartel: es el color oficial de la
+   campaña y se usa tal cual. Al coincidir exactamente, la banda naranja de la
+   imagen se funde con la franja y no se ve el borde del cartel.
+
+   TEXTO OSCURO, NO BLANCO. Sobre este naranja el blanco se queda en 2,69:1,
+   muy por debajo del mínimo AA (4,5:1) — peor incluso que el ámbar del
+   sistema, que ya se descartó en su día por ese motivo. En `--color-negro`
+   sube a 5,98:1, y de paso queda coherente con el cartel, que es naranja con
+   las figuras en negro.
+
+   Se acepta a sabiendas que el naranja coincide con el ámbar de "no
+   beneficiaria": aquí manda la identidad de la campaña, no el código de
+   colores de los datos. Es una franja temporal que se retira sola. */
 .banner-campana {
     display: none;               /* home.js lo muestra si está en fecha */
-    background-color: #4C2A85;
-    color: #ffffff;
-    padding: 0.85rem var(--espacio-lg);
+    background-color: #F67C01;
+    color: var(--color-negro);
+    /* La altura la marcan los carteles (3,25rem), no el texto, así que el
+       padding vertical va corto: 0,35rem deja la franja en ~63 px, algo más
+       alta que cuando la marcaba una línea de texto (~50 px).
+       El padding lateral es la mitad del habitual para que los carteles se
+       acerquen al borde en vez de quedar flotando hacia el centro. */
+    padding: 0.35rem var(--espacio-sm);
     text-align: center;
     font-size: 0.9375rem;
     line-height: 1.5;
@@ -1358,13 +1369,35 @@ table tbody tr:hover {
     display: block;
 }
 
-.banner-campana__contenido {
-    max-width: 900px;
+/* Fila: cartel — texto — cartel.
+
+   El ancho máximo es alto (1500px) porque es lo que separa los carteles del
+   borde en pantallas anchas: con el límite del texto (900px) quedaban muy
+   metidos hacia dentro. El tope sigue existiendo para que en monitores muy
+   panorámicos no acaben tan lejos del texto que parezcan otra cosa. */
+.banner-campana__interior {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.15rem;
+    max-width: 1500px;
     margin-inline: auto;
 }
 
+/* Altura fija y ancho automático: el cartel se adapta sin deformarse.
+   `flex-shrink: 0` evita que se aplaste cuando el texto necesita sitio. */
+.banner-campana__cartel {
+    height: 3.25rem;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.banner-campana__contenido {
+    max-width: 900px;
+}
+
 .banner-campana a {
-    color: #ffffff;
+    color: var(--color-negro);
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -1373,6 +1406,20 @@ table tbody tr:hover {
 
 .banner-campana a:hover {
     text-decoration-thickness: 2px;
+}
+
+/* En pantalla estrecha los carteles se quitan: el texto ocupa varias líneas y
+   con ellos a los lados quedaría una columna de palabras sueltas. Se recupera
+   el padding original, porque sin carteles la altura vuelve a marcarla el
+   texto. */
+@media (max-width: 600px) {
+    .banner-campana {
+        padding: 0.85rem var(--espacio-lg);
+    }
+
+    .banner-campana__cartel {
+        display: none;
+    }
 }
 
 
