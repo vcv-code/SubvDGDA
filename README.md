@@ -1147,7 +1147,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 415 pruebas automáticas en verde (pytest)
+- 420 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1452,7 +1452,11 @@ Mejoras identificadas durante el desarrollo, no planificadas para la entrega act
 
 ### Operación y despliegue
 
-- **Analítica de visitas sobre los propios logs** — para saber cuánta gente entra, de qué país y a qué páginas, no hace falta añadir ningún rastreador: Nginx ya registra cada petición. Una herramienta como GoAccess los convierte en informes sin JavaScript, sin cookies, sin terceros y sin banner de consentimiento. Antes hay que **ampliar el `log_format`**, hoy reducido a `IP | fecha | petición | estado | tiempo`, porque sin referrer ni user-agent no se puede saber de dónde llegan ni con qué dispositivo. Si más adelante hicieran falta el tiempo en página y los visitantes únicos fiables, la alternativa es una analítica sin cookies auto-alojada (Umami, Plausible o Matomo en modo *cookieless*). Cualquiera de las dos obliga a actualizar la política de privacidad, porque la IP es dato personal.
+- **Analítica de visitas sobre los propios logs** — para saber cuánta gente entra, de qué país y a qué páginas, no hace falta añadir ningún rastreador: Nginx ya registra cada petición, y desde que el `log_format` es el `combined` estándar guarda también **de dónde llega cada visita y con qué dispositivo**. Solo falta pasarle una herramienta como GoAccess, que los convierte en informes sin JavaScript, sin cookies, sin terceros y sin banner de consentimiento. El comando concreto está en `docker/nginx/default.conf`, junto al formato.
+
+  **Qué se puede saber y qué no.** Sí: país y ciudad aproximados (de la IP, con una base GeoIP), páginas visitadas, procedencia, dispositivo y navegador, y franjas horarias. No: el **tiempo en página** —el servidor ve cuándo llega la petición, no cuándo se marcha el visitante— ni los visitantes únicos exactos, porque las IPs se comparten y cambian. Para eso haría falta una analítica sin cookies auto-alojada (Umami, Plausible o Matomo en modo *cookieless*), que sí lleva un fragmento de JavaScript en las páginas.
+
+  **Los registros solo cuentan hacia delante:** los informes empezarán el día que se ponga en marcha, no antes.
 
 - **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después, casando por `num_convoc` en vez de por `id`. Coste estimado: ~1 hora, y lo delicado es no duplicar las 8 convocatorias que el dataset sí recrea.
 
