@@ -823,10 +823,25 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 ### Logs de Nginx
 
-- **Formato:** `"IP | fecha | request | status | tiempo_respuesta"`
+- **Formato:** el `combined` estándar más el tiempo de respuesta al final.
+
+  ```text
+  IP - - [fecha] "request" status bytes "referrer" "user-agent" tiempo_respuesta
+  ```
+
+  Se eligió el formato estándar en vez de uno propio para que lo entienda cualquier analizador sin configurarlo. Con GoAccess:
+
+  ```bash
+  goaccess access.log --log-format='%h %^[%d:%t %^] "%r" %s %b "%R" "%u" %T' \
+                      --date-format='%d/%b/%Y' --time-format='%H:%M:%S'
+  ```
+
 - **Destinos:**
   - `logs/nginx/access.log` — todas las peticiones HTTP y HTTPS
   - `logs/nginx/error.log` — nivel `warn` en adelante
+- **El referrer solo aparece en las visitas que llegan de fuera.** Navegando dentro de la web sale siempre vacío (`"-"`), y no es un fallo: el sitio envía la cabecera `Referrer-Policy: no-referrer`, que le dice al navegador que no revele la procedencia. Eso no afecta a quien llega desde un buscador o desde otra web, porque ahí decide el sitio de origen. Si algún día interesara el recorrido *dentro* de la web, habría que pasar esa cabecera a `same-origin`, que lo permitiría sin revelar nada hacia fuera.
+- **Ningún código del proyecto los lee.** El `access.log` que muestra el panel de administración es otro fichero distinto, `logs/app/access.log`, escrito por el backend.
+- Se conservan **30 días** (`docker/cron/scripts/rotar_logs.py`) y lo que registran está declarado en `frontend/privacidad.html`, porque la IP es dato personal.
 
 ---
 
