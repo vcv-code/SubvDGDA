@@ -51,8 +51,19 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS}
       LOG_DIR: /app/logs
       CRON_LOG_DIR: /app/cronlogs
-      SMTP_HOST: mailpit
-      SMTP_PORT: 1025
+      # Correo saliente. Sin nada en .env apunta a Mailpit, que no pide
+      # usuario ni cifrado: es el comportamiento de desarrollo de siempre.
+      # En producción se rellenan estas variables en .env con el proveedor
+      # real (Gmail, Brevo…), sin tocar este fichero.
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_TLS: ${SMTP_TLS:-false}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      EMAIL_CONTACTO: ${EMAIL_CONTACTO:-}
+      # Base de los enlaces de verificación y recuperación que van en los correos.
+      SITE_URL: ${SITE_URL:-}
     volumes:
       - ../logs/app:/app/logs
       # Logs del cron en solo lectura, para mostrarlos en el panel admin.

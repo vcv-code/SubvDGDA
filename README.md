@@ -1147,7 +1147,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 399 pruebas automáticas en verde (pytest)
+- 415 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1406,10 +1406,23 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 ## Requisitos pendientes para producción
 
 No son mejoras opcionales: son condiciones para poner el sitio en internet. El
-resto de pasos del despliegue (asegurar el servidor, rotar los secretos, SMTP
-real, backups) está en el manual de instalación.
+resto de pasos del despliegue (asegurar el servidor, rotar los secretos,
+backups) está en el manual de instalación.
 
 - **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+
+- **Correo saliente con un proveedor real** — solo requiere configuración: se rellenan estas variables en `docker/.env` y no hay que tocar código ni `docker-compose.yml`. Sin ellas, el backend sigue enviando a Mailpit, que es el comportamiento de desarrollo.
+
+  | Variable | Para qué |
+  |---|---|
+  | `SMTP_HOST`, `SMTP_PORT` | Servidor del proveedor (Gmail: `smtp.gmail.com`, `587`) |
+  | `SMTP_USER`, `SMTP_PASSWORD` | Credenciales. En Gmail, una **contraseña de aplicación**, que exige tener activada la verificación en dos pasos |
+  | `SMTP_TLS` | `true` para cifrar con STARTTLS. Gmail y Brevo lo exigen |
+  | `EMAIL_FROM` | Remitente. Debe ser un dominio que exista o el proveedor lo rechazará o irá a spam |
+  | `EMAIL_CONTACTO` | Buzón que recibe los mensajes del formulario de contacto |
+  | `SITE_URL` | Base de los enlaces que viajan **dentro** de los correos |
+
+  `SITE_URL` es la que más silenciosamente puede fallar: si apunta a un dominio equivocado, el correo se envía y llega bien, pero **el enlace de recuperación de contraseña no lleva a ninguna parte**. Y desde que las credenciales no viven en el repositorio, ese enlace es la única forma de recuperar el acceso si se olvida la contraseña de administración. Conviene **probar la recuperación de punta a punta nada más desplegar**, antes de necesitarla de verdad.
 
 - **Puertos expuestos en producción** — `docker-compose.yml` publica cuatro puertos y **tres no deberían estar accesibles** en un servidor:
   - `3307` (MariaDB) — la BD y el backend se comunican dentro de la red Docker; no hace falta exponerlo al host.
