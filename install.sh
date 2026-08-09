@@ -268,6 +268,9 @@ MYSQL_USER=bdns_user
 MYSQL_PASSWORD=bdns_pass
 SECRET_KEY=${SECRET_KEY_GENERADA}
 CORS_ORIGINS=*
+
+# Sin variables SMTP, el correo va a Mailpit (http://localhost:8025) y no sale
+# de la máquina. Para enviar correo de verdad, ver docker/.env.example.
 EOF
 
     ok ".env creado"

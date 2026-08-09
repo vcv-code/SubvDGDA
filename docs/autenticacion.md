@@ -168,6 +168,65 @@ El endpoint `POST /auth/reset` (restablecer contraseña) activa `email_verificad
 
 ---
 
+## Envío de correo
+
+Los tres correos que salen de la aplicación —verificación, recuperación de
+contraseña y formulario de contacto— comparten una única función,
+`_entregar_mensaje()` en `backend/app/auth.py`:
+
+```python
+with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=SMTP_TIMEOUT) as servidor:
+    if SMTP_TLS:
+        servidor.starttls()
+    if SMTP_USER:
+        servidor.login(SMTP_USER, SMTP_PASSWORD)
+    servidor.send_message(msg)
+```
+
+**El cifrado va antes que la autenticación.** Invertir ese orden enviaría la
+contraseña del SMTP en claro por la red.
+
+Ambos pasos son condicionales, y ahí está la razón de que el entorno de
+desarrollo no necesite configurar nada: Mailpit acepta conexiones sin cifrar y
+sin credenciales, así que con los valores por defecto el envío es exactamente
+el de siempre. Los proveedores reales (Gmail, Brevo) exigen las dos cosas, y se
+activan rellenando `SMTP_TLS` y `SMTP_USER` en `docker/.env`.
+
+El `timeout` no es decorativo: sin él, un servidor SMTP que acepta la conexión
+y luego no responde dejaría la petición HTTP colgada indefinidamente.
+
+### Los enlaces de los correos
+
+Los correos de verificación y recuperación llevan dentro un enlace a la web, y
+su base sale de `SITE_URL`:
+
+```python
+SITE_URL = (os.getenv("SITE_URL") or "https://subvencionesDGDA.local").rstrip("/")
+enlace   = f"{SITE_URL}/reset-password.html?token={token}"
+```
+
+Es el punto de configuración que falla más silenciosamente: si apunta a un
+dominio equivocado, el correo se envía y llega, pero el enlace no lleva a
+ninguna parte. Como la recuperación por email es la única forma de recobrar el
+acceso cuando se olvida la contraseña de administración, conviene **probar el
+flujo completo nada más desplegar**.
+
+El `rstrip("/")` evita que un `SITE_URL` acabado en barra genere enlaces con
+doble barra.
+
+### Fallos de envío
+
+| Correo | Si el SMTP falla | Por qué |
+|---|---|---|
+| Verificación y recuperación | Se registra el error y la petición continúa | El alta y la solicitud de recuperación no deben romperse porque el correo no salga; se puede reenviar |
+| Formulario de contacto | Propaga el error → HTTP 503 | Fingir que el mensaje se envió dejaría a la persona esperando una respuesta que nunca llegaría |
+
+Los dos primeros capturan `(smtplib.SMTPException, OSError)`. `OSError` es
+necesario porque una conexión rechazada o un timeout **no** son `SMTPException`
+y, sin él, tumbarían la petición con un error 500.
+
+---
+
 ## Alta de usuarios: sin registro público
 
 **No hay auto-registro.** La creación de cuentas es `POST /admin/usuarios`, protegido por rol `admin`: la administradora da de alta a quien quiera y nadie más puede crear cuentas. La versión con registro abierto queda congelada en el tag `v1.0-completo`.
@@ -187,6 +246,18 @@ Las dos primeras filas son la misma decisión vista desde dos lados. De cara al 
 El honeypot y el rate limiting protegían un formulario abierto a cualquiera. Sin formulario público, sobran los dos.
 
 La cuenta se crea igualmente **sin verificar** y se envía el email de verificación: quien la reciba confirma que la dirección es suya y existe.
+
+### Dar de alta sin que la contraseña viaje por ningún sitio
+
+Al crear la cuenta hay que ponerle una contraseña, y hacérsela llegar a la persona por mensajería o de viva voz es justo donde una contraseña no debería pasar. **No hace falta:**
+
+1. Crear la cuenta con una contraseña **aleatoria** que no se le diga a nadie.
+2. Decirle a la persona que entre en la web y pulse **«¿Olvidaste tu contraseña?»**.
+3. Recibe el enlace, elige la suya, y **la cuenta queda verificada en el proceso**.
+
+Funciona porque `POST /auth/recuperar` **no exige que la cuenta esté verificada** —solo que exista y esté activa— y `POST /auth/reset` activa `email_verificado` al completarse. Así la contraseña definitiva solo la conoce su dueña, y ni siquiera hace falta pulsar el email de verificación.
+
+Es el motivo por el que se descartó implementar un alta por invitación con su propio enlace de "establece tu contraseña": costaba media jornada y el resultado es el mismo que ya se consigue con el flujo existente.
 
 ---
 
