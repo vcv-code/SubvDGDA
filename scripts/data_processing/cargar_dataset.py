@@ -35,11 +35,28 @@ from scripts.data_processing import bdns_lookup
 # Conexión
 # ──────────────────────────────────────────────
 
-DB_HOST     = os.environ.get("DB_HOST",     "127.0.0.1")
-DB_PORT     = int(os.environ.get("DB_PORT", "3307"))   # puerto mapeado en docker-compose
-DB_NAME     = os.environ.get("DB_NAME",     "bdns_dgda")
-DB_USER     = os.environ.get("DB_USER",     "bdns_user")
-DB_PASSWORD = os.environ.get("DB_PASSWORD", "bdns_pass")
+# Se aceptan DOS juegos de nombres. Los DB_* son los que usa el backend dentro
+# de Docker; los MYSQL_* son los que define docker/.env, porque son los que
+# espera la imagen de MariaDB al crear la base de datos.
+#
+# Sin el segundo juego, este script se quedaba con los valores por defecto de
+# abajo en cuanto se ejecutaba fuera de un contenedor —que es siempre, porque
+# carga el dataset desde el host— y fallaba con "Access denied" en cualquier
+# despliegue cuyo .env tuviera una contraseña propia. En desarrollo no se veía
+# porque el .env de ejemplo usa justo estos valores por defecto.
+def _cfg(*nombres, defecto):
+    for n in nombres:
+        v = os.environ.get(n)
+        if v:
+            return v
+    return defecto
+
+
+DB_HOST     = _cfg("DB_HOST",                     defecto="127.0.0.1")
+DB_PORT     = int(_cfg("DB_PORT",                 defecto="3307"))   # puerto mapeado en docker-compose
+DB_NAME     = _cfg("DB_NAME",     "MYSQL_DATABASE", defecto="bdns_dgda")
+DB_USER     = _cfg("DB_USER",     "MYSQL_USER",     defecto="bdns_user")
+DB_PASSWORD = _cfg("DB_PASSWORD", "MYSQL_PASSWORD", defecto="bdns_pass")
 
 
 def conectar():
