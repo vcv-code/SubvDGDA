@@ -95,6 +95,10 @@ services:
       - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
+      # Rutas del certificado, en carpeta aparte: es lo único que cambia entre
+      # desarrollo y producción. En el servidor se monta otra encima mediante
+      # docker-compose.override.yml, que git ignora.
+      - ./nginx-tls:/etc/nginx/tls:ro
       - ./ssl:/etc/nginx/ssl:ro
       - ../frontend:/usr/share/nginx/html:ro
       - ../logs/nginx:/var/log/nginx
