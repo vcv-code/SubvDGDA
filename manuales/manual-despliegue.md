@@ -570,6 +570,15 @@ En la descripción, apunta **qué recuperas**, no solo la fecha: qué versión e
 desplegada, qué falta por configurar, y que restaurar **revierte también la base
 de datos** a ese momento.
 
+**Cuándo rehacerlo.** Los planes suelen incluir un solo snapshot, así que el
+nuevo sustituye al viejo. Conviene refrescarlo **cuando el servidor cambie de
+verdad** —una configuración nueva, un cambio grande de versión—, no en cada
+publicación. Un snapshot que devuelve el servidor a un estado sin configurar
+deja de ser un punto de retorno útil.
+
+Y no lo gastes a mitad de un montaje: espera a que el servidor esté completo y
+funcionando.
+
 ---
 
 ## Reconciliar un servidor desplegado antes de esta separación
@@ -644,7 +653,38 @@ ssh -L 8080:localhost:8080 -L 8025:localhost:8025 servidor
 ```
 
 Con el túnel abierto, `http://localhost:8080` en **tu** navegador es el Adminer
-del servidor. Solo entra quien pueda entrar por SSH.
+del servidor. Solo entra quien pueda entrar por SSH, y los túneles desaparecen
+al cerrar la sesión.
+
+Merece la pena dejarlo como atajo en tu `~/.ssh/config`, y así basta escribir
+`ssh tuneles`:
+
+```
+Host tuneles
+    HostName LA.IP.DEL.SERVIDOR
+    User root
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+    LocalForward 8080 localhost:8080
+    LocalForward 8025 localhost:8025
+```
+
+> **Para antes tus contenedores locales: `make stop`.**
+> Tu equipo tiene su propio Adminer y su propio Mailpit **en esos mismos
+> puertos**. Con los dos en marcha, `localhost:8080` te enseña el de casa y no
+> el del servidor — y no hay forma de distinguirlos a simple vista. Es el error
+> más fácil de cometer aquí: creer que estás mirando producción cuando miras tu
+> portátil.
+
+Para entrar en Adminer necesitas las credenciales de la base de datos del
+servidor, que están solo allí (`cat /opt/subvdgda/docker/.env`):
+
+| Campo | Valor |
+|---|---|
+| Motor | MySQL |
+| **Servidor** | **`db`**, no `localhost` — es el nombre del contenedor en la red interna de Docker |
+| Usuario y contraseña | los `MYSQL_USER` y `MYSQL_PASSWORD` del `.env` |
+| Base de datos | `bdns_dgda` |
 
 ### Actualizar a una versión nueva
 
