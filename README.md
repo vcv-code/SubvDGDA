@@ -516,7 +516,7 @@ La aplicación usa APIs modernas (ES2017+, `fetch`, CSS custom properties, `URLS
 | **Edge 80+** | ✅ Completa | Mismo motor que Chrome (Chromium) |
 | **Firefox 75+** | ✅ Completa | |
 | **Safari 14+** | ✅ Con matiz | El certificado autofirmado puede requerir añadirlo manualmente al llavero del sistema (Acceso a Llaveros) antes de que Safari lo acepte |
-| **Navegadores móviles** | ⚠️ Con matices | Diseño responsive **verificado con la emulación de Chrome DevTools, no en dispositivos reales**. El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle). Hay ajustes pendientes detectados al probarlo en un móvil de verdad |
+| **Navegadores móviles** | ✅ Completa | Verificado **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools: seis correcciones de maquetación en agosto de 2026 (ver [especificaciones-frontend.md § 12](frontend/docs/especificaciones-frontend.md#12-desbordamiento-horizontal-en-móvil)). El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle) |
 | **Internet Explorer** | ❌ No soportado | Sin soporte de `fetch`, `async/await` ni CSS variables |
 
 **Nota sobre el certificado autofirmado:** todos los navegadores mostrarán un aviso de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
@@ -1179,7 +1179,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Roles ARIA** — `role="navigation"`, `aria-label` en todos los `<nav>`, `role="img"` en todos los `<canvas>`, `aria-live` en mensajes de error y éxito
 - **Formularios** — todos los campos con `<label>` explícito (`for` + `id`); errores con `role="alert"`, confirmaciones con `role="status"`
 - **Foco de teclado** — trampa de foco en modales (Tab/Shift+Tab ciclan dentro); cierre con Esc; foco devuelto al elemento que abrió el modal al cerrar
-- **Responsive y táctil** — diseño verificado con la emulación de Chrome DevTools (no en dispositivos reales); mapa choropleth con interacción táctil específica (un toque = info, doble toque = detalle)
+- **Responsive y táctil** — desbordamiento horizontal medido en el navegador a 360 px, no solo emulado; mapa choropleth con interacción táctil específica (un toque = info, doble toque = detalle)
 
 ### Rendimiento
 
