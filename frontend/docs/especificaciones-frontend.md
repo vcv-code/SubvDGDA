@@ -21,6 +21,8 @@
 9. [Decisiones de diseño justificadas](#9-decisiones-de-diseño-justificadas)
 10. [Pendientes de implementación](#10-pendientes-de-implementación)
 11. [Flujo completo de autenticación](#11-flujo-completo-de-autenticación)
+12. [Desbordamiento horizontal en móvil](#12-desbordamiento-horizontal-en-móvil)
+13. [Registro de ajustes post-wireframe](#13-registro-de-ajustes-post-wireframe)
 
 ---
 
@@ -1331,7 +1333,115 @@ Este diagrama resume cómo se mueve el usuario entre las páginas de autenticaci
 
 ---
 
-## 12. Registro de ajustes post-wireframe
+## 12. Desbordamiento horizontal en móvil
+
+Cuatro fallos distintos detectados en agosto de 2026 al probar la web en un
+móvil real —no en la emulación de DevTools, que es donde se había verificado
+hasta entonces— resultaron ser **el mismo error de fondo con cuatro caras**:
+algo que no puede encogerse y nada que lo contenga.
+
+Cuando eso pasa, el documento se vuelve más ancho que la ventana y **los
+síntomas aparecen lejos del culpable**: la barra de navegación, los fondos de
+sección y los modales se dimensionan respecto al ancho del documento, así que
+se descolocan todos a la vez. La hamburguesa se sale de la pantalla, el modal
+aparece centrado sobre un ancho mayor que el visible y se ve cortado, y los
+fondos pintan solo hasta donde llega la ventana.
+
+**Y `html { overflow-x: hidden }` no lo arregla, lo esconde**: impide el
+desplazamiento lateral pero el contenido sigue siendo más ancho, con lo que en
+vez de poder desplazarte y verlo todo, la página *parece* rota.
+
+### Cómo diagnosticarlo
+
+Leer el CSS no basta —en la revisión original tres hipótesis seguidas
+resultaron falsas—. Hay que medir, en la consola del navegador con la ventana
+a 360 px:
+
+```js
+(() => {
+  const vw = document.documentElement.clientWidth;
+  console.log('Ventana:', vw, '| Documento:', document.documentElement.scrollWidth);
+  // Se para ANTES de body: html lleva overflow-x hidden y "contendría" todo.
+  const contenido = el => {
+    for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+      const o = getComputedStyle(p).overflowX;
+      if (o === 'auto' || o === 'hidden' || o === 'scroll') return true;
+    }
+    return false;
+  };
+  const reales = [...document.querySelectorAll('*')].filter(el => {
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && (r.right > vw + 1 || r.left < -1) && !contenido(el);
+  });
+  console.log('Los que ensanchan el documento DE VERDAD:', reales.length);
+  console.table(reales.slice(0, 12).map(el => {
+    const r = el.getBoundingClientRect();
+    return { etiqueta: el.tagName.toLowerCase(),
+             clase: (el.className.baseVal ?? el.className ?? '').toString().slice(0, 40),
+             izq: Math.round(r.left), der: Math.round(r.right), ancho: Math.round(r.width) };
+  }));
+})();
+```
+
+**Cómo leer el resultado:** el culpable es el que *empuja*, no el que *sigue*.
+Si `nav.navbar` o `.modal-backdrop` llegan al ancho del documento, son
+consecuencia — miden el 100 % de lo que haya. Y si el elemento ancho está
+dentro de un contenedor con `overflow` propio, está contenido y no hace daño.
+
+Cuando el culpable no es evidente, se sube por la cadena de padres imprimiendo
+el ancho de cada uno: **el causante es el último que todavía va inflado**, justo
+por debajo del primero que ya mide lo que la pantalla.
+
+### Los cuatro patrones
+
+**1. Elementos de rejilla o flex sin `min-width: 0`.** Por defecto llevan
+`min-width: auto`, que significa «no encojas por debajo del ancho mínimo de tu
+contenido». Un hijo de `.grid-2` medía 450 px en una columna de 296 porque
+dentro había una tabla que no cabía. Es el fallo de CSS Grid más habitual que
+existe.
+
+**2. `white-space: nowrap` sin nada que lo contenga.** `.chip-causa` muestra
+todas las causas unidas (`9 · 15 · 18 · 21`) y llegaba a 266 px. En escritorio
+no se notaba porque `.tabla-wrapper` tiene `overflow-x: auto`; pero **al pasar
+la tabla a tarjetas en móvil el wrapper cambia a `overflow-x: visible`** y ya
+nada lo frenaba. Si un elemento lleva `nowrap`, o cabe siempre, o su contenedor
+tiene que hacer scroll.
+
+**3. Contenedores flex sin `flex-wrap: wrap`.** La paginación —«Anterior ·
+Página X de Y · Siguiente · Última »»— iba obligada a una sola línea de 386 px
+y, al estar centrada, asomaba por los **dos** lados: «Anterior» empezaba en
+-26 px.
+
+**4. `overflow: visible` en lugar de mover el scroll.** El `@media` del resumen
+quitaba el recorte de la tarjeta con la intención de «que se vea entera», pero
+`visible` no da scroll: solo deja que se desborde. La tabla medía 822 px con sus
+últimas columnas **inalcanzables**. El patrón correcto está en el panel de
+administración: `.admin-seccion { overflow: visible }` junto con
+`.admin-seccion__cuerpo { overflow-x: auto }` — el scroll se mueve al elemento
+interior, no se elimina.
+
+### Dos avisos más
+
+**La forma abreviada de `padding` escribe los cuatro lados.** `padding: X 0` no
+dice «X arriba y abajo», dice «X arriba y abajo y **cero a los lados**». En
+`<div class="seccion contenedor">`, la regla de `.seccion` borraba los 32 px
+laterales de `.contenedor` — y cuál gana depende de cuál esté más abajo en el
+fichero, algo que no se ve mirando el HTML. Usar `padding-block` cuando solo se
+quiere el eje vertical.
+
+**Orden de capas.** Los modales tienen que ir por encima de la barra de
+navegación y del botón flotante de subir, o los tapan:
+
+| z-index | Elemento |
+|---|---|
+| 1100 | `.btn-subir` |
+| 1200 | `.navbar` |
+| 2000 | modales |
+| 9999 | avisos y `skip-nav` |
+
+---
+
+## 13. Registro de ajustes post-wireframe
 
 ### 12.1 Límite de paginación en el buscador de solicitudes
 
