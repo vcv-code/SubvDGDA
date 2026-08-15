@@ -1288,6 +1288,19 @@ table tbody tr:hover {
     color: var(--footer-texto);
 }
 
+/* El bloque de marca del pie enlaza al inicio, igual que el logo de la barra.
+   Como los <a> del proyecto van sin subrayado y con color heredado, se ve
+   idéntico a antes; estas dos reglas son la señal de que se puede pulsar. */
+.footer-principal__marca:hover {
+    opacity: 0.85;
+}
+
+.footer-principal__marca:focus-visible {
+    outline: 2px solid var(--color-foco);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
 /* Logo PNG — sin filtro de inversión; drop-shadow para visibilidad */
 .footer-principal__marca img {
     height: 40px;

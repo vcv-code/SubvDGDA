@@ -708,3 +708,9 @@ Registro completo de funcionalidades desarrolladas por orden cronológico.
   · **Metodología, que es lo que más valor tiene**: leer el CSS no bastó. Tres hipótesis seguidas resultaron falsas (que las tablas no estaban en su wrapper, que la cabecera del modal no tenía `flex-shrink`, que las tablas de convocatorias perdían el scroll — todas desmentidas al comprobarlas). Lo que funcionó fue **medir en el navegador** qué elementos ensanchan el documento y subir por la cadena de padres. El comando queda documentado en `especificaciones-frontend.md` § 12
   · Dos versiones de ese comando dieron datos engañosos antes de acertar: la primera contaba como culpables elementos bien contenidos, y la segunda daba cero porque subía hasta `html`, que con su `overflow-x: hidden` "contiene" todo
   · Auditado además el resto del frontend con comprobaciones automáticas —clases que se pisan la abreviada, rejillas con contenido ancho sin proteger, anchos fijos mayores que un móvil, capas—: sin más hallazgos
+✔ El logo del pie enlaza a la página de inicio
+  · El logo de la barra ya llevaba al inicio; el del pie no hacía nada. Ahora se comporta igual, en las **19 páginas** que tienen ese bloque
+  · **No cambia nada visualmente**: los `<a>` del proyecto van con `text-decoration: none` y `color: inherit`, así que el bloque se ve idéntico. Se añaden un oscurecido leve al pasar por encima —señal de que se puede pulsar— y un contorno de foco visible, que un elemento pulsable necesita para quien navega con teclado
+  · **La ruta no es la misma en todas**: `50x.html` usa rutas absolutas porque puede servirse desde cualquier URL, así que ahí el enlace es `/index.html`. Se decidió por página mirando cómo referencia cada una su propio logo, no a mano
+  · Verificado que las 19 páginas conservan el HTML bien formado: convertir un `<div>` en `<a>` puede descuadrar el cierre de etiquetas
+
