@@ -580,30 +580,46 @@ modificados y **el primer `git pull` fallará**. Se arregla una sola vez:
 
 ```bash
 cd /opt/subvdgda
+pwd                                             # comprobar: /opt/subvdgda
 
 # 1. Guardar las rutas del certificado ANTES de descartar nada
 mkdir -p docker/nginx-tls-prod
 grep ssl_certificate docker/nginx/default.conf > docker/nginx-tls-prod/letsencrypt.conf
 cat docker/nginx-tls-prod/letsencrypt.conf     # comprobar que son las dos líneas
 
-# 2. Crear la configuración propia del servidor
-cp docker/docker-compose.override.yml.example docker/docker-compose.override.yml
-
-# 3. Descartar las modificaciones locales de los ficheros versionados
+# 2. Descartar las modificaciones locales de los ficheros versionados
 git status                                      # ver qué hay modificado
 git checkout -- docker/nginx/default.conf docker/docker-compose.yml
 
-# 4. Ahora sí, traer la versión nueva
+# 3. Traer la versión nueva
 git pull
 
-# 5. Aplicar y comprobar
+# 4. AHORA crear la configuración propia del servidor: el fichero de ejemplo
+#    llega con el pull, antes no existe
+cp docker/docker-compose.override.yml.example docker/docker-compose.override.yml
+
+# 5. Comprobar antes de aplicar
+git status                                      # debe salir "working tree clean"
+cat docker/nginx-tls-prod/letsencrypt.conf
+
+# 6. Aplicar
 cd docker && docker compose up -d nginx
 docker exec bdns_nginx nginx -t
 ```
 
-**El paso 1 va primero y no es opcional**: el paso 3 descarta el fichero donde
-están escritas esas rutas. Si se hace al revés, hay que volver a escribirlas a
-mano.
+**Dos cosas del orden que no son negociables:**
+
+**El paso 1 va primero.** El paso 2 descarta el fichero donde están escritas esas
+rutas; al revés, hay que volver a escribirlas a mano.
+
+**El paso 4 va después del `git pull`.** El fichero de ejemplo forma parte del
+commit nuevo, así que **antes del pull no existe** y el `cp` falla.
+
+Y **no adelantes el paso 6**: entre el `pull` y el `cp`, la configuración del
+repositorio apunta al certificado de desarrollo. Si recreas Nginx en ese momento,
+arranca sirviendo el autofirmado y la web sale con aviso de «no seguro» hasta que
+lo arregles. Mientras no toques el contenedor, sigue funcionando con lo que ya
+tenía cargado: no hay corte.
 
 Comprueba desde **otra máquina** que el certificado sigue siendo el bueno:
 
