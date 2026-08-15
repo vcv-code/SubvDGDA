@@ -1,0 +1,39 @@
+# =============================================================================
+# Configuración específica del SERVIDOR de producción
+# =============================================================================
+# Docker Compose lee y fusiona `docker-compose.override.yml` automáticamente si
+# existe, sin pasarle ningún parámetro. Como ese nombre está en .gitignore, el
+# servidor puede hacer `git pull` sin conflictos y guarda aquí lo suyo.
+#
+# Qué hace falta en el servidor, una sola vez:
+#
+#   cd /opt/subvdgda/docker
+#   cp docker-compose.override.yml.example docker-compose.override.yml
+#   mkdir -p nginx-tls-prod
+#   cat > nginx-tls-prod/letsencrypt.conf <<'FIN'
+#   ssl_certificate     /etc/letsencrypt/live/TU-DOMINIO/fullchain.pem;
+#   ssl_certificate_key /etc/letsencrypt/live/TU-DOMINIO/privkey.pem;
+#   FIN
+#   docker compose up -d nginx
+#
+# Compose fusiona los volúmenes POR RUTA DE DESTINO, no concatenándolos: el
+# montaje de /etc/nginx/tls de aquí SUSTITUYE al del fichero base, así que el
+# contenedor ve el certificado de Let's Encrypt en vez del autofirmado. Los dos
+# montajes nuevos se añaden. (Comprobado con `docker compose config`.)
+# =============================================================================
+services:
+  nginx:
+    volumes:
+      # Sustituye la carpeta de desarrollo: aquí van las rutas del certificado
+      # de Let's Encrypt en lugar de las del autofirmado.
+      - ./nginx-tls-prod:/etc/nginx/tls:ro
+
+      # Los certificados. Se monta la carpeta ENTERA y no los ficheros sueltos:
+      # los de `live/` son enlaces simbólicos a `archive/`, y al renovar cambian
+      # de destino. Montando un fichero suelto, el contenedor se quedaría
+      # sirviendo el certificado viejo para siempre.
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
+      # Carpeta del reto ACME, donde certbot deja el fichero de validación que
+      # Nginx tiene que servir por HTTP al pedir o renovar el certificado.
+      - /var/www/certbot:/var/www/certbot:ro

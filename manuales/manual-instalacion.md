@@ -31,17 +31,21 @@ bash install.sh
 ### Guardar BD antes de reinstalar
 
 ```bash
-docker exec bdns_dgda_db mariadb-dump -ubdns_user -pbdns_pass bdns_dgda > /tmp/backup.sql
-# o con make:
 make backup
+# o a mano (las credenciales salen de docker/.env, no están escritas en ningún sitio):
+set -a; . docker/.env; set +a
+docker exec bdns_dgda_db mariadb-dump \
+  -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" > /tmp/backup.sql
 ```
 
 ### Restaurar BD tras reinstalar
 
 ```bash
-docker exec -i bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda < /tmp/backup.sql
-# o con make:
 make restore FILE=backups/backup_20260525_120000.sql
+# o a mano:
+set -a; . docker/.env; set +a
+docker exec -i bdns_dgda_db mariadb \
+  -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < /tmp/backup.sql
 ```
 
 ### Desinstalar
@@ -201,7 +205,8 @@ Deberías ver seis contenedores en estado `running` o `healthy`:
 Verifica también que los datos se han cargado correctamente:
 
 ```bash
-docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
+set -a; . docker/.env; set +a
+docker exec bdns_dgda_db mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" \
   -e "SELECT COUNT(*) AS solicitudes FROM solicitudes;"
 ```
 
@@ -210,7 +215,8 @@ El resultado debería ser **6396**.
 Comprueba que las convocatorias vigentes están registradas (necesarias para los avisos de la home):
 
 ```bash
-docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
+set -a; . docker/.env; set +a
+docker exec bdns_dgda_db mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" \
   -e "SELECT tipo_convoc, anio_convocatoria, fecha_resolucion FROM convocatorias WHERE anio_convocatoria=2026;"
 ```
 
@@ -305,6 +311,7 @@ docker compose up -d db
 
 # Terminal 2 — backend con recarga automática
 source venv/bin/activate
+set -a; . docker/.env; set +a      # credenciales de la BD
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
@@ -565,7 +572,8 @@ Cada convocatoria aparece con sus campos en este orden: `id_convoc`, `num_convoc
 Con la fecha localizada:
 
 ```bash
-docker exec bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda \
+set -a; . docker/.env; set +a
+docker exec bdns_dgda_db mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" \
   -e "UPDATE convocatorias SET fecha_fin_plazo='2026-06-15' WHERE num_convoc='904714';"
 ```
 

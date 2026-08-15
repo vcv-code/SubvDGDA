@@ -232,3 +232,10 @@ guia-estudio/
 # Contienen datos reales: usuarios y hashes de contraseña.
 backups/
 backup_*.sql
+
+# Configuración específica del servidor de producción. Docker Compose lee y
+# fusiona docker-compose.override.yml automáticamente si existe; al no estar
+# versionado, el servidor puede hacer `git pull` sin conflictos y guarda ahí lo
+# suyo: los volúmenes de Let's Encrypt y las rutas de su certificado.
+docker/docker-compose.override.yml
+docker/nginx-tls-prod/

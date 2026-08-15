@@ -652,8 +652,14 @@ table tbody tr:hover {
    11. SECCIONES GENÉRICAS
    Padding y encabezados para cada bloque de contenido.
    ============================================================ */
+/* Solo el eje vertical. Con la forma abreviada `padding: X 0` esta regla
+   ponía a CERO el padding lateral, y como va después de `.contenedor` en el
+   fichero —misma especificidad, gana la última— se lo borraba a las secciones
+   que llevan las dos clases (`<div class="seccion contenedor">`). El resultado
+   era que el resumen y los gráficos quedaban pegados al borde en móvil,
+   mientras el resto de secciones sí respiraban. */
 .seccion {
-    padding: var(--espacio-xl) 0;
+    padding-block: var(--espacio-xl);
 }
 
 .seccion--gris {
@@ -692,6 +698,23 @@ table tbody tr:hover {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--espacio-md);
+}
+
+/* `min-width: 0` en los hijos NO es cosmético: es el arreglo canónico del
+   desbordamiento en CSS Grid.
+
+   Por defecto los elementos de una rejilla llevan `min-width: auto`, que
+   significa "no encojas por debajo del ancho mínimo de tu contenido". Si dentro
+   hay una tabla o un enlace largo que necesita 450 px, el elemento se estira a
+   450 aunque su columna mida 296 — y ese exceso sube hasta el documento entero,
+   descolocando la barra de navegación y los modales, que se dimensionan
+   respecto a él.
+
+   Con `min-width: 0` el elemento sí puede encogerse a su columna, y entonces el
+   contenido hace lo que debe: el texto se parte y las tablas usan el scroll de
+   su propio contenedor. */
+.grid-2 > * {
+    min-width: 0;
 }
 
 /* En pantallas medianas, el grid de 3 pasa a 2 columnas */
@@ -856,8 +879,14 @@ table tbody tr:hover {
    15. PAGINACIÓN
    Controles de siguiente / anterior para la tabla de solicitudes.
    ============================================================ */
+/* `flex-wrap: wrap` no es opcional: sin él, «Anterior · Página X de Y ·
+   Siguiente · Última »» va obligado a una sola línea. En un móvil esa fila mide
+   más que la pantalla y, al ir centrada, asoma por los DOS lados — «Anterior»
+   empezaba en -26 px. Y como la barra de navegación se dimensiona respecto al
+   ancho del documento, la hamburguesa se desplazaba en cuanto había resultados. */
 .paginacion {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: var(--espacio-sm);
@@ -1257,6 +1286,19 @@ table tbody tr:hover {
     gap: var(--espacio-xs);
     font-size: 0.92rem;
     color: var(--footer-texto);
+}
+
+/* El bloque de marca del pie enlaza al inicio, igual que el logo de la barra.
+   Como los <a> del proyecto van sin subrayado y con color heredado, se ve
+   idéntico a antes; estas dos reglas son la señal de que se puede pulsar. */
+.footer-principal__marca:hover {
+    opacity: 0.85;
+}
+
+.footer-principal__marca:focus-visible {
+    outline: 2px solid var(--color-foco);
+    outline-offset: 3px;
+    border-radius: 4px;
 }
 
 /* Logo PNG — sin filtro de inversión; drop-shadow para visibilidad */
@@ -2227,10 +2269,17 @@ canvas {
 }
 
 /* Contenedor del canvas de Chart.js */
+/* `min-width: 0` es prevención, no un arreglo de algo roto: `.chart-container`
+   es un elemento flex dentro de `.card-grafico`, y por defecto los elementos
+   flex no encogen por debajo del tamaño mínimo de su contenido. Un <canvas>
+   tiene tamaño intrínseco propio, así que al pasar de una ventana ancha a una
+   estrecha la gráfica crece pero no vuelve a encoger: es el fallo más conocido
+   de Chart.js con flexbox. */
 .chart-container {
     position: relative;
     height: 280px;
     width: 100%;
+    min-width: 0;
 }
 
 /* Variante para donut: altura menor y centrado */
@@ -2789,9 +2838,20 @@ canvas {
     margin-bottom: var(--espacio-lg);
 }
 
+/* La tabla no cabe en un móvil: con estas columnas necesita unos 800 px. La
+   solución es que haga scroll DENTRO de su tarjeta, no que se desborde.
+
+   Antes ponía `overflow: visible`, que no da scroll: solo deja que la tabla se
+   salga. El resultado era una tabla de 822 px empujando el documento entero, con
+   sus últimas columnas inalcanzables —no había manera de llegar a ellas— y la
+   página descolocada, porque la barra de navegación y los modales se dimensionan
+   respecto al ancho del documento.
+
+   `overflow-x: auto` mantiene el recorte de las esquinas redondeadas y añade el
+   desplazamiento horizontal. Es el mismo patrón que usa `.tabla-wrapper`. */
 @media (max-width: 768px) {
     .resumen-tabla-card {
-        overflow: visible;
+        overflow-x: auto;
     }
     .resumen-tabla {
         table-layout: auto !important;
@@ -3835,7 +3895,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: 2000;   /* por encima de la barra (1200) y del botón de subir (1100) */
     align-items: center;
     justify-content: center;
 }
@@ -4158,8 +4218,8 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     border-top: 2px solid #BFE3C9;
 }
 .pagina-inicio .fondo-stats .seccion {
-    padding: 0;
-}
+        padding-block: 0;
+    }
 
 /* ─── 33.9 TARJETAS DE GRÁFICOS — radio mayor, sombra cálida ────── */
 .pagina-inicio .card-grafico {
@@ -4687,6 +4747,14 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
    ─────────────────────────────────────────────────────────────────── */
 
 /* 36.1 Backdrop */
+/* ORDEN DE CAPAS del proyecto, de abajo arriba:
+     1100  .btn-subir        botón flotante de volver arriba
+     1200  .navbar           barra de navegación fija
+     2000  los modales       tienen que tapar a las dos anteriores
+     9999  avisos y skip-nav
+
+   Los modales van a 2000 y no a 1000: por debajo de la barra, esta les tapaba
+   el título, y el botón de subir aparecía flotando por encima del diálogo. */
 .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -4694,7 +4762,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 2000;
     padding: var(--espacio-md);
     /* Estado inicial: oculto */
     opacity: 0;
@@ -5478,6 +5546,23 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .chip-causa:focus-visible {
     background-color: var(--estado-excluida);
     color: #fff;
+}
+
+/* En móvil el chip TIENE que poder partirse. Su texto son todas las causas
+   unidas ("9 · 15 · 18 · 21 · 24"), y con `nowrap` llega a medir 266 px.
+   En escritorio no se nota porque `.tabla-wrapper` tiene `overflow-x: auto` y
+   lo contiene; pero al pasar la tabla a tarjetas el wrapper cambia a
+   `overflow-x: visible` y entonces nada lo frena: ensancha el documento entero.
+
+   Y eso no rompe solo esta celda. La barra de navegación, el fondo de los
+   modales y el botón de subir se dimensionan respecto al ancho del documento,
+   así que se descolocan todos a la vez — el modal aparece centrado sobre un
+   ancho mayor que la pantalla y se ve cortado por la derecha. */
+@media (max-width: 600px) {
+    .chip-causa {
+        white-space: normal;
+        max-width: 100%;
+    }
 }
 
 /* Lista código → motivo dentro del modal de causas */

@@ -21,10 +21,12 @@ Datos concretos del sistema para consulta rápida.
 |---|---|---|
 | 80 | nginx | HTTP → redirige a HTTPS |
 | 443 | nginx | HTTPS (dominio: `subvencionesDGDA.local`) |
-| 3307 | MariaDB | Acceso externo a la BD (interno: 3306) |
-| 8025 | Mailpit | Interfaz web para ver emails capturados |
-| 1025 | Mailpit | Puerto SMTP |
-| 8080 | Adminer | Interfaz web de administración de BD |
+| 3307 | MariaDB | Acceso a la BD desde el propio equipo (interno: 3306) — **solo `127.0.0.1`** |
+| 8025 | Mailpit | Interfaz web para ver emails capturados — **solo `127.0.0.1`** |
+| 1025 | Mailpit | Puerto SMTP — **solo `127.0.0.1`** |
+| 8080 | Adminer | Interfaz web de administración de BD — **solo `127.0.0.1`** |
+
+Los puertos marcados como `127.0.0.1` se publican **solo en la interfaz local**: se llega a ellos desde el propio equipo, pero no desde la red. En un servidor eso es lo que impide que Adminer o Mailpit queden accesibles desde internet — y no basta con el cortafuegos, porque Docker escribe sus reglas por delante de las de ufw. Desde fuera se llega por túnel SSH: `ssh -L 8080:localhost:8080 servidor`.
 
 El backend (`bdns_api`, puerto 8000) **no expone ningún puerto al host** — solo es accesible desde dentro de la red Docker interna. Nginx actúa como única puerta de entrada.
 

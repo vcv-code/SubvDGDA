@@ -256,16 +256,22 @@ if [ -f "$ENV_FILE" ]; then
     ok ".env ya existe — se usará el existente"
     aviso "Si quieres regenerarlo, bórralo manualmente y vuelve a ejecutar el script."
 else
-    info "Creando $ENV_FILE con valores por defecto..."
+    info "Creando $ENV_FILE con credenciales generadas al azar..."
 
-    # Genera una SECRET_KEY aleatoria de 64 caracteres hex
+    # Todas las credenciales se generan aquí, ninguna viene escrita en el
+    # repositorio: una contraseña fija en el código sería la contraseña de la
+    # base de datos de cualquiera que desplegase el proyecto sin cambiarla.
+    # En hexadecimal para que no aparezcan caracteres que compliquen las
+    # cadenas de conexión ni el propio fichero .env.
     SECRET_KEY_GENERADA=$(openssl rand -hex 32)
+    ROOT_PASS_GENERADA=$(openssl rand -hex 24)
+    USER_PASS_GENERADA=$(openssl rand -hex 24)
 
     cat > "$ENV_FILE" <<EOF
-MYSQL_ROOT_PASSWORD=rootpass_bdns
+MYSQL_ROOT_PASSWORD=${ROOT_PASS_GENERADA}
 MYSQL_DATABASE=bdns_dgda
 MYSQL_USER=bdns_user
-MYSQL_PASSWORD=bdns_pass
+MYSQL_PASSWORD=${USER_PASS_GENERADA}
 SECRET_KEY=${SECRET_KEY_GENERADA}
 CORS_ORIGINS=*
 
@@ -273,9 +279,11 @@ CORS_ORIGINS=*
 # de la máquina. Para enviar correo de verdad, ver docker/.env.example.
 EOF
 
-    ok ".env creado"
-    aviso "Las contraseñas son genéricas para desarrollo local."
-    aviso "No uses estos valores en un servidor público."
+    ok ".env creado con credenciales propias de esta instalación"
+    aviso "Las contraseñas viven SOLO en docker/.env (ignorado por git)."
+    aviso "Si borras ese fichero teniendo ya datos, la base de datos dejará de"
+    aviso "aceptar la conexión: el volumen conserva las credenciales con las que"
+    aviso "se creó. Para empezar de cero: make reset-db."
 fi
 
 # Carga las variables para usarlas en este script

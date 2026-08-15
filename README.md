@@ -53,7 +53,7 @@ Proyecto desarrollado por:
 - **Apéndices**
   - [Notas técnicas](#notas-técnicas)
   - [Limitaciones conocidas del dato de origen](#limitaciones-conocidas-del-dato-de-origen)
-  - [Requisitos pendientes para producción](#requisitos-pendientes-para-producción)
+  - [Despliegue en producción](#despliegue-en-producción)
   - [Mejoras futuras](#mejoras-futuras)
 
 ---
@@ -87,6 +87,8 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 - [Especificaciones del frontend](frontend/docs/especificaciones-frontend.md) — componentes, páginas y decisiones de diseño
 - [Diseño del frontend](frontend/docs/diseño.md) — paleta, tipografía y guía visual
 - [Patrones JavaScript](frontend/docs/patrones.md) — URLSearchParams, history, fetch, auth cliente, delegación de eventos
+- [Manual de instalación](manuales/manual-instalacion.md) — poner el proyecto en marcha en tu propio equipo
+- [Manual de despliegue](manuales/manual-despliegue.md) — sacarlo a un servidor: asegurar la máquina, DNS, Docker, Let's Encrypt y los errores que salieron
 - [Historial de implementación](docs/historial-implementacion.md) — registro completo de funcionalidades desarrolladas
 
 ---
@@ -514,7 +516,7 @@ La aplicación usa APIs modernas (ES2017+, `fetch`, CSS custom properties, `URLS
 | **Edge 80+** | ✅ Completa | Mismo motor que Chrome (Chromium) |
 | **Firefox 75+** | ✅ Completa | |
 | **Safari 14+** | ✅ Con matiz | El certificado autofirmado puede requerir añadirlo manualmente al llavero del sistema (Acceso a Llaveros) antes de que Safari lo acepte |
-| **Navegadores móviles** | ✅ Completa | Diseño responsive verificado. El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle) |
+| **Navegadores móviles** | ✅ Completa | Verificado **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools: seis correcciones de maquetación en agosto de 2026 (ver [especificaciones-frontend.md § 12](frontend/docs/especificaciones-frontend.md#12-desbordamiento-horizontal-en-móvil)). El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle) |
 | **Internet Explorer** | ❌ No soportado | Sin soporte de `fetch`, `async/await` ni CSS variables |
 
 **Nota sobre el certificado autofirmado:** todos los navegadores mostrarán un aviso de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
@@ -764,12 +766,12 @@ El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-co
 
 | Servicio  | Contenedor       | Imagen                   | Función                                                   | Puerto externo         |
 |-----------|------------------|--------------------------|-----------------------------------------------------------|------------------------|
-| `db`      | `bdns_dgda_db`   | mariadb:11.8             | Base de datos MariaDB con el dataset cargado              | 3307 (interno: 3306)   |
+| `db`      | `bdns_dgda_db`   | mariadb:11.8             | Base de datos MariaDB con el dataset cargado              | 3307 solo local (interno: 3306) |
 | `backend` | `bdns_api`       | python:3.12-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
 | `nginx`   | `bdns_nginx`     | nginx:alpine             | Proxy inverso, HTTPS, archivos estáticos                  | 80 (HTTP), 443 (HTTPS) |
 | `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS, health check y rotación de logs | ninguno            |
-| `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 (SMTP), 8025 (UI) |
-| `adminer` | `bdns_adminer`   | adminer                  | Interfaz web para explorar la BD                          | 8080                   |
+| `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 y 8025, solo local |
+| `adminer` | `bdns_adminer`   | adminer                  | Interfaz web para explorar la BD                          | 8080, solo local       |
 
 El backend no expone su puerto al exterior — solo Nginx y el cron pueden acceder a él dentro de la red Docker interna.
 
@@ -831,6 +833,7 @@ docker compose up -d db
 
 # Terminal 2 — arrancar el backend (desde la raíz del proyecto)
 source venv/bin/activate
+set -a; . docker/.env; set +a      # credenciales de la BD
 uvicorn backend.app.main:app --reload --port 8000
 ```
 
@@ -1147,7 +1150,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 420 pruebas automáticas en verde (pytest)
+- 438 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1176,7 +1179,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Roles ARIA** — `role="navigation"`, `aria-label` en todos los `<nav>`, `role="img"` en todos los `<canvas>`, `aria-live` en mensajes de error y éxito
 - **Formularios** — todos los campos con `<label>` explícito (`for` + `id`); errores con `role="alert"`, confirmaciones con `role="status"`
 - **Foco de teclado** — trampa de foco en modales (Tab/Shift+Tab ciclan dentro); cierre con Esc; foco devuelto al elemento que abrió el modal al cerrar
-- **Responsive y táctil** — diseño verificado en Chrome DevTools; mapa choropleth con interacción táctil específica (un toque = info, doble toque = detalle)
+- **Responsive y táctil** — desbordamiento horizontal medido en el navegador a 360 px, no solo emulado; mapa choropleth con interacción táctil específica (un toque = info, doble toque = detalle)
 
 ### Rendimiento
 
@@ -1403,39 +1406,55 @@ El endpoint devuelve exactamente el mismo mensaje tanto si el email está regist
 
 ---
 
-## Requisitos pendientes para producción
+## Despliegue en producción
 
-No son mejoras opcionales: son condiciones para poner el sitio en internet. El
-resto de pasos del despliegue (asegurar el servidor, rotar los secretos,
-backups) está en el manual de instalación.
+El proyecto está **desplegado y funcionando** desde el 15 de agosto de 2026 en
+un VPS con Ubuntu 24.04, con dominio propio y HTTPS de Let's Encrypt.
 
-- **Dominio real y certificado Let's Encrypt** — sustituir el certificado autofirmado por uno de Let's Encrypt (gratuito, renovación automática, confiado por todos los navegadores).
+El procedimiento completo —asegurar el servidor, instalar Docker, configurar el
+DNS, desplegar y montar el certificado— está en
+**[manuales/manual-despliegue.md](manuales/manual-despliegue.md)**, escrito
+sobre el despliegue real e incluyendo los errores que aparecieron.
 
-- **Correo saliente con un proveedor real** — solo requiere configuración: se rellenan estas variables en `docker/.env` y no hay que tocar código ni `docker-compose.yml`. Sin ellas, el backend sigue enviando a Mailpit, que es el comportamiento de desarrollo.
+Los tres puntos que más fácilmente se hacen mal:
 
-  | Variable | Para qué |
-  |---|---|
-  | `SMTP_HOST`, `SMTP_PORT` | Servidor del proveedor (Gmail: `smtp.gmail.com`, `587`) |
-  | `SMTP_USER`, `SMTP_PASSWORD` | Credenciales. En Gmail, una **contraseña de aplicación**, que exige tener activada la verificación en dos pasos |
-  | `SMTP_TLS` | `true` para cifrar con STARTTLS. Gmail y Brevo lo exigen |
-  | `EMAIL_FROM` | Remitente. Debe ser un dominio que exista o el proveedor lo rechazará o irá a spam |
-  | `EMAIL_CONTACTO` | Buzón que recibe los mensajes del formulario de contacto |
-  | `SITE_URL` | Base de los enlaces que viajan **dentro** de los correos |
+- **ufw no protege los puertos de Docker.** Docker escribe sus reglas de red por
+  delante de las del cortafuegos, así que un puerto publicado queda accesible
+  desde internet aunque ufw lo deniegue. La protección real es atarlos a
+  `127.0.0.1`, que es lo que hace ya `docker-compose.yml` con la base de datos,
+  Adminer y Mailpit. **Mailpit accesible es acceso de administración regalado**:
+  se pide una recuperación de contraseña, se lee el enlace en el buzón y listo.
 
-  `SITE_URL` es la que más silenciosamente puede fallar: si apunta a un dominio equivocado, el correo se envía y llega bien, pero **el enlace de recuperación de contraseña no lleva a ninguna parte**. Y desde que las credenciales no viven en el repositorio, ese enlace es la única forma de recuperar el acceso si se olvida la contraseña de administración. Conviene **probar la recuperación de punta a punta nada más desplegar**, antes de necesitarla de verdad.
+- **En la configuración de SSH gana la primera aparición de cada opción**, no la
+  última, y los proveedores dejan ficheros propios que activan las contraseñas.
+  Por eso el fichero de endurecimiento se llama `00-hardening.conf`.
 
-- **Puertos expuestos en producción** — `docker-compose.yml` publica cuatro puertos y **tres no deberían estar accesibles** en un servidor:
-  - `3307` (MariaDB) — la BD y el backend se comunican dentro de la red Docker; no hace falta exponerlo al host.
-  - `8080` (**Adminer**) — panel de administración de la base de datos, sin contraseña propia más allá de las credenciales de MariaDB.
-  - `8025` (**Mailpit**) — buzón web con **todos los correos** que envía la aplicación. Es el más peligroso de los tres: si queda accesible, cualquiera pide una recuperación de contraseña en la web, abre Mailpit, lee el enlace y se hace administrador sin necesidad de adivinar nada.
+- **Certbot renueva el certificado pero Nginx no se entera**: lo mantiene
+  cargado en memoria y seguiría sirviendo el caducado. Hace falta un hook de
+  recarga, y probarlo con `certbot renew --dry-run` en vez de esperar tres meses
+  a descubrirlo.
 
-  Adminer y Mailpit son herramientas de desarrollo: en el servidor conviene no arrancarlos, o dejarlos accesibles solo por túnel SSH. Los únicos que deben quedar abiertos son el `80` y el `443`.
+### Configuración del correo
 
-- **CORS con dominio específico** — cambiar `CORS_ORIGINS=*` por `CORS_ORIGINS=https://mi-dominio.com` en `docker/.env` (ya implementado mediante variable de entorno, solo requiere configuración).
+Es lo único que queda por configurar tras desplegar, y **no requiere tocar
+código**: se rellenan estas variables en `docker/.env`. Sin ellas, el backend
+sigue enviando a Mailpit.
 
-> El más urgente de los tres es el de los puertos, y dentro de él **Mailpit**:
-> si queda accesible, cualquiera pide una recuperación de contraseña, abre el
-> buzón, lee el enlace y se hace administrador sin adivinar nada.
+| Variable | Para qué |
+|---|---|
+| `SMTP_HOST`, `SMTP_PORT` | Servidor del proveedor (Gmail: `smtp.gmail.com`, `587`) |
+| `SMTP_USER`, `SMTP_PASSWORD` | Credenciales. En Gmail, una **contraseña de aplicación**, que exige tener activada la verificación en dos pasos |
+| `SMTP_TLS` | `true` para cifrar con STARTTLS. Gmail y Brevo lo exigen. **Puerto 587, no 465** |
+| `EMAIL_FROM` | Remitente. Debe ser un dominio que exista o el proveedor lo rechazará o irá a spam |
+| `EMAIL_CONTACTO` | Buzón que recibe los mensajes del formulario de contacto |
+| `SITE_URL` | Base de los enlaces que viajan **dentro** de los correos |
+
+`SITE_URL` es la que falla más silenciosamente: si apunta a un dominio
+equivocado, el correo se envía y llega bien, pero **el enlace de recuperación de
+contraseña no lleva a ninguna parte**. Y desde que las credenciales no viven en
+el repositorio, ese enlace es la única forma de recuperar el acceso si se olvida
+la contraseña de administración. Conviene **probar la recuperación de punta a
+punta nada más desplegar**, antes de necesitarla de verdad.
 
 ## Mejoras futuras
 
