@@ -9,7 +9,11 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3307:3306"
+      # Atado al loopback: Docker escribe sus reglas de red POR DELANTE de las
+      # de ufw, así que un puerto publicado en todas las interfaces queda
+      # accesible desde internet aunque el cortafuegos lo deniegue. Desde el
+      # propio equipo se sigue llegando igual; desde fuera, por túnel SSH.
+      - "127.0.0.1:3307:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./init/modelo-fisico.sql:/docker-entrypoint-initdb.d/modelo-fisico.sql
@@ -35,8 +39,8 @@ services:
     container_name: bdns_mailpit
     restart: unless-stopped
     ports:
-      - "1025:1025"   # SMTP — el backend envía emails aquí
-      - "8025:8025"   # Web UI — http://localhost:8025
+      - "127.0.0.1:1025:1025"   # SMTP — el backend envía emails aquí
+      - "127.0.0.1:8025:8025"   # Web UI — http://localhost:8025
 
   backend:
     build: ../backend
@@ -138,7 +142,7 @@ services:
     container_name: bdns_adminer
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       db:
         condition: service_healthy

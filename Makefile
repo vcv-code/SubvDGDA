@@ -17,6 +17,14 @@
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
 BACKUP_DIR = backups
 
+# Las credenciales de la base de datos viven en docker/.env, NO escritas aquí:
+# este fichero está versionado y en un despliegue real la contraseña es
+# aleatoria. Cada receta que toca la BD carga ese fichero en su propio shell
+# (make ejecuta cada línea en uno distinto, así que no basta con hacerlo una vez).
+# La comprobación va ANTES del `.`: make usa /bin/sh (dash), donde un `.` sobre
+# un fichero inexistente mata el shell en el acto y nunca llegaría a un `||`.
+ENV_BD = [ -f docker/.env ] || { echo "Falta docker/.env — ejecuta 'bash install.sh'"; exit 1; }; set -a; . docker/.env; set +a;
+
 # ── Docker ────────────────────────────────────────────────────────────────────
 
 start:
@@ -75,7 +83,7 @@ reset-db:
 	@echo "⚠️  Esto borrará todos los datos. ¿Continuar? [s/N]" && read ans && [ "$$ans" = "s" ]
 	@$(MAKE) --no-print-directory backup
 	cd docker && docker compose down -v && docker compose up -d
-	venv/bin/python -m scripts.data_processing.cargar_dataset
+	@$(ENV_BD) venv/bin/python -m scripts.data_processing.cargar_dataset
 	@$(MAKE) --no-print-directory redescubrir-convocatorias
 	@$(MAKE) --no-print-directory crear-admin
 	@echo ""
@@ -121,7 +129,7 @@ dataset:
 # una BD vacía o añadir una convocatoria nueva, no para reflejar cambios en
 # registros ya cargados. Para eso, make reset-db.
 cargar:
-	venv/bin/python -m scripts.data_processing.cargar_dataset
+	@$(ENV_BD) venv/bin/python -m scripts.data_processing.cargar_dataset
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
@@ -150,7 +158,8 @@ logs-nginx:
 backup:
 	@mkdir -p $(BACKUP_DIR)
 	@F=$(BACKUP_DIR)/backup_$$(date +%Y%m%d_%H%M%S).sql; \
-	if docker exec bdns_dgda_db mariadb-dump -ubdns_user -pbdns_pass bdns_dgda > $$F; then \
+	if $(ENV_BD) docker exec bdns_dgda_db mariadb-dump \
+		-u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE" > $$F; then \
 		echo "Backup guardado en $$F"; \
 	else \
 		rm -f $$F; \
@@ -160,11 +169,13 @@ backup:
 
 restore:
 	@test -n "$(FILE)" || (echo "Uso: make restore FILE=backups/backup_YYYYMMDD_HHMMSS.sql"; exit 1)
-	docker exec -i bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda < $(FILE)
+	@$(ENV_BD) docker exec -i bdns_dgda_db mariadb \
+		-u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE" < $(FILE)
 	@echo "Backup $(FILE) restaurado."
 
 shell-db:
-	docker exec -it bdns_dgda_db mariadb -ubdns_user -pbdns_pass bdns_dgda
+	@$(ENV_BD) docker exec -it bdns_dgda_db mariadb \
+		-u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"
 
 mailpit:
 	@echo "Mailpit disponible en http://localhost:8025"
