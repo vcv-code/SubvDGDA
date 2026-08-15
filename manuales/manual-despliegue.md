@@ -19,8 +19,9 @@ Para instalarlo en tu propio ordenador, el documento es otro:
 6. [Fase 5 — HTTPS con Let's Encrypt](#fase-5--https-con-lets-encrypt)
 7. [Fase 6 — Comprobar desde fuera](#fase-6--comprobar-desde-fuera)
 8. [Fase 7 — Snapshot](#fase-7--snapshot)
-9. [Mantenimiento](#mantenimiento)
-10. [Errores que nos encontramos](#errores-que-nos-encontramos)
+9. [Reconciliar un servidor desplegado antes de esta separación](#reconciliar-un-servidor-desplegado-antes-de-esta-separación)
+10. [Mantenimiento](#mantenimiento)
+11. [Errores que nos encontramos](#errores-que-nos-encontramos)
 
 ---
 
@@ -446,21 +447,17 @@ apt install -y certbot
 mkdir -p /var/www/certbot/.well-known/acme-challenge
 ```
 
-En `docker/nginx/default.conf`, dentro del bloque `listen 80` y **antes** de la
-redirección:
+La ruta del reto **ya viene en el repositorio** (`docker/nginx/default.conf`,
+dentro del bloque `listen 80` y antes de la redirección). Lo que hay que crear
+es la configuración propia del servidor, que git no versiona:
 
-```nginx
-location ^~ /.well-known/acme-challenge/ {
-    root /var/www/certbot;
-}
+```bash
+cd /opt/subvdgda/docker
+cp docker-compose.override.yml.example docker-compose.override.yml
 ```
 
-En `docker/docker-compose.yml`, en los volúmenes de `nginx`:
-
-```yaml
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/certbot:/var/www/certbot:ro
-```
+Ese fichero añade los volúmenes de `/etc/letsencrypt` y `/var/www/certbot`.
+Docker Compose lo lee y lo fusiona solo, sin pasarle ningún parámetro.
 
 Aplica y **comprueba antes de seguir**:
 
@@ -485,16 +482,33 @@ renovarse: es tu única alerta si la renovación automática falla.
 
 ### 5.3 Usarlo
 
-En `docker/nginx/default.conf`:
-
-```nginx
-ssl_certificate     /etc/letsencrypt/live/tu-dominio.org/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/tu-dominio.org/privkey.pem;
-```
+**Las rutas del certificado NO se editan en `default.conf`.** Son lo único que
+difiere entre desarrollo y producción, así que viven en un fichero aparte que se
+incluye; el repositorio trae la versión de desarrollo en `docker/nginx-tls/` y
+el servidor monta otra carpeta encima:
 
 ```bash
-docker exec bdns_nginx nginx -t && docker exec bdns_nginx nginx -s reload
+cd /opt/subvdgda/docker
+mkdir -p nginx-tls-prod
+cat > nginx-tls-prod/letsencrypt.conf <<'FIN'
+ssl_certificate     /etc/letsencrypt/live/tu-dominio.org/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/tu-dominio.org/privkey.pem;
+FIN
+
+docker compose up -d nginx
+docker exec bdns_nginx nginx -t
 ```
+
+Se monta la carpeta `/etc/letsencrypt` **entera** y no los ficheros sueltos: los
+de `live/` son enlaces simbólicos a `archive/` y **cambian de destino al
+renovar**. Montando un fichero suelto, el contenedor seguiría sirviendo el
+certificado viejo para siempre.
+
+**Por qué toda esta separación:** así el servidor es una **copia limpia del
+repositorio**. No tiene ni un fichero versionado modificado, y `git pull` entra
+siempre sin conflictos. Todo lo específico de producción vive en
+`docker-compose.override.yml` y `docker/nginx-tls-prod/`, que están en
+`.gitignore`.
 
 ### 5.4 El enganche de la renovación
 
@@ -555,6 +569,51 @@ punto de retorno si más adelante tocas algo y lo rompes.
 En la descripción, apunta **qué recuperas**, no solo la fecha: qué versión está
 desplegada, qué falta por configurar, y que restaurar **revierte también la base
 de datos** a ese momento.
+
+---
+
+## Reconciliar un servidor desplegado antes de esta separación
+
+Si el servidor se montó editando `default.conf` y `docker-compose.yml` a mano
+—como ocurrió en el despliegue original—, esos dos ficheros versionados están
+modificados y **el primer `git pull` fallará**. Se arregla una sola vez:
+
+```bash
+cd /opt/subvdgda
+
+# 1. Guardar las rutas del certificado ANTES de descartar nada
+mkdir -p docker/nginx-tls-prod
+grep ssl_certificate docker/nginx/default.conf > docker/nginx-tls-prod/letsencrypt.conf
+cat docker/nginx-tls-prod/letsencrypt.conf     # comprobar que son las dos líneas
+
+# 2. Crear la configuración propia del servidor
+cp docker/docker-compose.override.yml.example docker/docker-compose.override.yml
+
+# 3. Descartar las modificaciones locales de los ficheros versionados
+git status                                      # ver qué hay modificado
+git checkout -- docker/nginx/default.conf docker/docker-compose.yml
+
+# 4. Ahora sí, traer la versión nueva
+git pull
+
+# 5. Aplicar y comprobar
+cd docker && docker compose up -d nginx
+docker exec bdns_nginx nginx -t
+```
+
+**El paso 1 va primero y no es opcional**: el paso 3 descarta el fichero donde
+están escritas esas rutas. Si se hace al revés, hay que volver a escribirlas a
+mano.
+
+Comprueba desde **otra máquina** que el certificado sigue siendo el bueno:
+
+```bash
+echo | openssl s_client -connect tu-dominio.org:443 -servername tu-dominio.org 2>/dev/null \
+  | openssl x509 -noout -issuer -dates
+```
+
+A partir de aquí `git status` en el servidor debe salir limpio, y actualizar es
+solo `git pull`.
 
 ---
 
