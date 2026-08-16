@@ -91,3 +91,44 @@ def test_hay_un_ejemplo_del_override_de_produccion():
     assert "/etc/letsencrypt:/etc/letsencrypt:ro" in t
     assert "/var/www/certbot:/var/www/certbot:ro" in t
     assert "./nginx-tls-prod:/etc/nginx/tls:ro" in t
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Alias histórico solicitudes.html → buscador.html
+#
+# La página se llamó solicitudes.html y pasó a buscador.html. Se conservó un
+# tiempo como copia del contenido: cada cambio había que aplicarlo dos veces y
+# acabó divergiendo. Ahora es una redirección; estos tests evitan la recaída.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_solicitudes_html_redirige_a_buscador():
+    """El alias histórico debe ser una redirección permanente, no una copia."""
+    conf = NGINX.read_text(encoding="utf-8")
+    assert "location = /solicitudes.html" in conf, (
+        "Falta la redirección del alias histórico solicitudes.html"
+    )
+    assert "return 301 /buscador.html" in conf, (
+        "El alias debe redirigir con 301 (permanente) a buscador.html"
+    )
+
+
+def test_la_redireccion_conserva_los_parametros_de_busqueda():
+    """Sin la query string, un enlace guardado con filtros llega vacío.
+
+    Los enlaces antiguos que justifican mantener esta ruta suelen llevar
+    filtros (?buscar=...&anio=...). Redirigir perdiéndolos deja al usuario en
+    un buscador en blanco: la redirección funcionaría, pero no serviría.
+    """
+    conf = NGINX.read_text(encoding="utf-8")
+    assert "return 301 /buscador.html$is_args$args;" in conf, (
+        "La redirección debe arrastrar la query string con $is_args$args"
+    )
+
+
+def test_no_queda_una_copia_de_la_pagina():
+    """solicitudes.html no debe volver a existir como archivo."""
+    copia = RAIZ / "frontend" / "solicitudes.html"
+    assert not copia.exists(), (
+        "solicitudes.html ha vuelto como archivo. Es un duplicado de "
+        "buscador.html: debe ser solo la redirección de Nginx."
+    )

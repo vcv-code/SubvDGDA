@@ -35,9 +35,8 @@ Proyecto desarrollado por:
       - [Capturas](#capturas)
       - [Compatibilidad de navegadores](#compatibilidad-de-navegadores)
 - **Instalación y uso**
-  - [Desarrollo](#desarrollo)
-    - [Requisitos del sistema](#requisitos-del-sistema)
-  - [Entorno de trabajo](#entorno-de-trabajo)
+  - [Instalación](#instalación)
+  - [Dependencias](#dependencias)
   - [Docker — arrancar el sistema](#docker--arrancar-el-sistema)
     - [Nginx — qué hace exactamente](#nginx--qué-hace-exactamente)
     - [Tamaño de las imágenes Docker](#tamaño-de-las-imágenes-docker)
@@ -77,7 +76,7 @@ El proyecto busca facilitar el análisis y comprensión de las políticas públi
 
 ## Documentación técnica
 
-La documentación detallada del proyecto se encuentra en la carpeta `docs`.
+La documentación está repartida en tres sitios según a quién sirve: `docs/` para la referencia técnica, `frontend/docs/` para lo específico de la interfaz y `manuales/` para los procedimientos paso a paso.
 
 - [Referencia técnica](docs/referencia-tecnica.md) — arquitectura, seguridad, HTTPS, cron, logs, tests y comandos
 - [Pipeline de datos](docs/pipeline-datos.md) — API BDNS, parsers, herramientas, problemas resueltos y organización del dataset
@@ -87,6 +86,7 @@ La documentación detallada del proyecto se encuentra en la carpeta `docs`.
 - [Especificaciones del frontend](frontend/docs/especificaciones-frontend.md) — componentes, páginas y decisiones de diseño
 - [Diseño del frontend](frontend/docs/diseño.md) — paleta, tipografía y guía visual
 - [Patrones JavaScript](frontend/docs/patrones.md) — URLSearchParams, history, fetch, auth cliente, delegación de eventos
+- [Auditoría del frontend](frontend/docs/auditoria-frontend.md) — lista de verificación de calidad: estructura, accesibilidad, rendimiento y limpieza de CSS/JS
 - [Manual de instalación](manuales/manual-instalacion.md) — poner el proyecto en marcha en tu propio equipo
 - [Manual de despliegue](manuales/manual-despliegue.md) — sacarlo a un servidor: asegurar la máquina, DNS, Docker, Let's Encrypt y los errores que salieron
 - [Historial de implementación](docs/historial-implementacion.md) — registro completo de funcionalidades desarrolladas
@@ -105,8 +105,8 @@ API externa BDNS + PDFs/XML BOE
     Backend FastAPI  ←──── Cron (sincronización automática con BDNS)
           ↓
     Nginx (puerto 443 HTTPS)
-     ├── /api/*  → proxy al backend (puerto 8000 interno)
-     └── /*      → archivos estáticos del frontend
+     ├── /solicitudes, /estadisticas, /auth…  → proxy al backend (8000 interno)
+     └── el resto                             → archivos estáticos del frontend
           ↓
     Navegador (HTML + CSS + JS vanilla)
 ```
@@ -132,6 +132,7 @@ API externa BDNS + PDFs/XML BOE
 | Base de datos | MariaDB 11.8 |
 | Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
+| Producción | VPS Ubuntu 24.04, Let's Encrypt (certbot), ufw, fail2ban, copias de seguridad programadas |
 | Control de versiones | Git, GitHub |
 | Herramientas de desarrollo | Makefile, VS Code (extensions.json incluido) |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
@@ -142,10 +143,13 @@ API externa BDNS + PDFs/XML BOE
 
 ```text
 analisis-bdns-dgda/
-├── .gitignore              ← archivos excluidos del repositorio (venv, .env, SSL, datos raw…)
+├── .gitignore              ← archivos excluidos del repositorio (venv, .env, SSL, backups, datos raw…)
+├── .vscode/extensions.json ← extensiones recomendadas del editor
+├── LICENSE                 ← código All Rights Reserved; contenido CC BY-NC-ND 4.0
 ├── install.sh              ← instalación automática
 ├── uninstall.sh            ← desinstalación guiada
 ├── Makefile                ← atajos de desarrollo
+├── pytest.ini              ← configuración de pytest
 ├── requeriments.txt        ← dependencias Python para scripts locales (parsers, carga de datos)
 │
 ├── backend/
@@ -166,6 +170,7 @@ analisis-bdns-dgda/
 ├── docker/
 │   ├── docker-compose.yml  ← define los 6 servicios, red interna y volúmenes
 │   ├── nginx/default.conf  ← proxy inverso + HTTPS + rate limiting
+│   ├── nginx-tls/          ← rutas del certificado (lo único que cambia en producción)
 │   ├── cron/               ← scheduler Python
 │   └── init/               ← SQL inicial y migraciones
 │
@@ -176,11 +181,17 @@ analisis-bdns-dgda/
 │
 ├── scripts/
 │   ├── data_processing/    ← parsers EPA y EELL, carga de BD
-│   └── ingestion/          ← cliente API BDNS
+│   ├── ingestion/          ← cliente API BDNS
+│   ├── crear_admin.sh      ← alta de la cuenta de administración
+│   └── backup_db.sh        ← volcado de la BD con rotación
+│
+├── logs/                   ← salida de nginx, backend y cron (ignorada por git salvo .gitkeep)
+│
+├── manuales/               ← manual de instalación y manual de despliegue
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 246 funciones de test pytest (344 ejecuciones)
+└── tests/                  ← tests automáticos (pytest)
 ```
 
 ---
@@ -394,14 +405,14 @@ Ver el esquema completo con relaciones en [docs/modelo-datos.md](docs/modelo-dat
 API REST construida con **FastAPI** (Python), **SQLAlchemy** como ORM y **MariaDB** como base de datos. Se sirve con `uvicorn` dentro de un contenedor Docker; Nginx actúa como proxy inverso y punto de entrada HTTPS.
 
 **Autenticación y sesión:**
-JWT con doble token: `access_token` de corta duración (15 min) para cada petición y `refresh_token` persistente (30 días) para renovarlo sin volver a hacer login. Las contraseñas se hashean con `bcrypt` directamente (sin passlib). El registro valida mínimo 8 caracteres, mayúscula, minúscula y número. Cambiar o restablecer la contraseña revoca todos los refresh tokens activos del usuario.
+JWT con doble token: `access_token` de corta duración (15 min) para cada petición y `refresh_token` persistente (30 días) para renovarlo sin volver a hacer login. Las contraseñas se hashean con `bcrypt` directamente (sin passlib). El alta de una cuenta y el cambio de contraseña validan mínimo 8 caracteres, mayúscula, minúscula y número. Cambiar o restablecer la contraseña revoca todos los refresh tokens activos del usuario.
 
 **Seguridad:**
 
 - Rate limiting en Nginx (HTTP 429 sin llegar al backend): `POST /auth/login` (10 req/min, burst 5), `POST /auth/recuperar` (3 req/min, burst 2), `POST /contacto/` (3 req/min, burst 2). No hay zona de registro: retirada junto con el alta pública
 - Cabeceras de seguridad en todas las respuestas: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
-- SRI (`integrity`) en los 5 recursos CDN del frontend (Chart.js ×3, Leaflet JS, Leaflet CSS)
-- Cabeceras `Cache-Control`: `/convocatorias/` (1 día), `/estadisticas/` (1 hora) y `/solicitudes/causas` (1 día)
+- SRI (`integrity`) en los 3 recursos CDN ejecutables del frontend (Chart.js, Leaflet JS, Leaflet CSS), 7 usos en total. La hoja de Google Fonts queda fuera a propósito: su contenido varía según el navegador y un hash fijo la rompería
+- Cabeceras `Cache-Control`: `/convocatorias/` (1 día), `/estadisticas/` y `/estadisticas/resumen-convocatorias` (1 hora) y `/solicitudes/causas` (1 día)
 - Parámetros de búsqueda validados (`buscar` máx. 200 caracteres, `limite` entre 1 y 500); exportación CSV limitada a 5.000 registros
 - Honeypot en el formulario de contacto: campo `sitio_web` oculto — si llega relleno (bot), se devuelve éxito falso sin enviar nada
 - Anti-enumeración en `/auth/recuperar`: la respuesta es idéntica exista o no el email, para no revelar quién tiene cuenta
@@ -456,7 +467,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios, **exclusiones por año y causas más frecuentes** |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y **mapa de calor por CCAA** (choropleth con top de municipios al hacer clic) |
 | `exclusivo.html` | Resumen por convocatoria y mapa CCAA. Su contenido ya es **público** (el resumen en el inicio, el mapa en estadísticas EELL), así que la página queda **reservada a rol `admin`** (`exclusivo.js` redirige a los no-admin) como espacio para futuro contenido exclusivo; comparte el render con las páginas públicas (`js/resumen-tabla.js`, `js/modal-ccaa.js`) |
-| `privado.html` | Perfil del usuario: cambiar nombre, contraseña y acceso al contenido exclusivo |
+| `privado.html` | Perfil del usuario: cambiar nombre y contraseña. La tarjeta de acceso a `exclusivo.html` solo se muestra al rol `admin` |
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas, más un bloque de **guías y documentos útiles**: la directriz técnica de colonias felinas de la DGDA, la Ley 19/2013 de transparencia y cómo ejercer el derecho de acceso a la información (con la ruta de reclamación al Consejo de Transparencia y de queja al Defensor del Pueblo), junto a guías prácticas sobre certificado digital, justicia gratuita y creación de asociaciones |
@@ -504,7 +515,7 @@ Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-front
 *Buscador con filtros, badges de estado, tramos EELL, ordenación y exportación CSV*
 
 ![Mapa de calor por CCAA](docs/img/screenshots/exclusivo-mapa.webp)
-*Contenido exclusivo: mapa choropleth interactivo por comunidad autónoma (solo usuarios registrados)*
+*Mapa choropleth interactivo por comunidad autónoma, en las estadísticas EELL. La captura es de `exclusivo.html`, donde nació: al retirarse el registro público su contenido pasó a las páginas públicas y esa página quedó reservada al rol `admin`*
 
 #### Compatibilidad de navegadores
 
@@ -519,7 +530,7 @@ La aplicación usa APIs modernas (ES2017+, `fetch`, CSS custom properties, `URLS
 | **Navegadores móviles** | ✅ Completa | Verificado **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools: seis correcciones de maquetación en agosto de 2026 (ver [especificaciones-frontend.md § 12](frontend/docs/especificaciones-frontend.md#12-desbordamiento-horizontal-en-móvil)). El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle) |
 | **Internet Explorer** | ❌ No soportado | Sin soporte de `fetch`, `async/await` ni CSS variables |
 
-**Nota sobre el certificado autofirmado:** todos los navegadores mostrarán un aviso de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
+**Nota sobre el certificado autofirmado — solo en desarrollo local.** La web publicada usa un certificado de Let's Encrypt y no muestra ningún aviso. En una instalación local, en cambio, todos los navegadores avisan de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
 
 La carpeta `frontend/` contiene:
 
@@ -529,7 +540,7 @@ La carpeta `frontend/` contiene:
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido (`solicitudes.html` se conserva como alias legacy de `buscador.html` para compatibilidad con enlaces externos)
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido. La ruta antigua `/solicitudes.html` no es un archivo: Nginx la redirige con un 301 a `buscador.html` conservando los filtros de la URL
 - `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
 - `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
 
@@ -560,24 +571,7 @@ Las páginas `privado.html` y `exclusivo.html` usan tres variables globales en `
 
 ---
 
-## Desarrollo
-
-### Requisitos del sistema
-
-| Requisito | Valor | Notas |
-|-----------|-------|-------|
-| **Sistema operativo** | Linux · macOS · Windows con WSL2 | En Windows se requiere WSL2 + Docker Desktop con integración WSL2 activa |
-| **Docker** | 24+ con `docker compose` v2 | Imprescindible. Incluye todos los servicios (BD, backend, Nginx, cron) |
-| **Python** | 3.10+ | Solo necesario para ejecutar tests y scripts de parseo. La app web funciona sin él. En Ubuntu/Debian instala también `python3.X-venv` (ej. `sudo apt install python3.12-venv`) |
-| **openssl** | Cualquier versión reciente | Para generar el certificado SSL autofirmado en la instalación |
-| **Espacio en disco** | ~1,5 GB | ~1 GB imágenes Docker (primera descarga) + ~10 MB dataset + ~50 MB venv opcional |
-| **RAM** | 4 GB mínimo recomendado | MariaDB + FastAPI + Nginx corren en paralelo dentro de Docker |
-| **Editor** | VS Code recomendado | El proyecto incluye `.vscode/extensions.json` con extensiones preconfiguradas. Cualquier editor funciona |
-| **Conexión a internet** | Solo en la primera instalación | Para descargar las imágenes Docker (~300–400 MB). Después la app funciona completamente offline: Chart.js y Leaflet tienen fallback local en `frontend/assets/vendor/` que se carga automáticamente vía `onerror` si los CDN no responden. Google Fonts es el único recurso CDN sin fallback local — sin conexión y sin caché, la tipografía cae al `font-family` de sistema por defecto, sin romper la app |
-
-### Instalación automática (recomendada)
-
-Clona el repositorio y ejecuta el script de instalación:
+## Instalación
 
 ```bash
 git clone git@github.com:vcv-code/SubvDGDA.git
@@ -585,180 +579,36 @@ cd analisis-bdns-dgda
 bash install.sh
 ```
 
-El script comprueba los prerequisitos, crea el `.env`, genera el certificado SSL, levanta los contenedores y carga el dataset. Guía paso a paso con confirmación antes de cada acción que requiere permisos o modifica el sistema.
+El script comprueba los prerequisitos, genera el `.env` con credenciales
+aleatorias, crea el certificado, levanta los contenedores y carga el dataset.
+Va preguntando antes de cada acción que requiere permisos.
 
-Para desinstalar y limpiar todo el entorno:
+**Requisitos**: Docker 24+ con `docker compose` v2, Python 3.10+ (solo para
+tests y scripts de datos) y `openssl`. En Windows, WSL2 con Docker Desktop.
 
-```bash
-bash uninstall.sh
-```
+→ **[manuales/manual-instalacion.md](manuales/manual-instalacion.md)** tiene el
+procedimiento completo: requisitos detallados, verificación posterior, uso
+diario, instalación en WSL2, desinstalación y resolución de problemas.
 
-El script explica en lenguaje llano qué elimina en cada paso (contenedores, volúmenes con los datos, imagen Docker, `/etc/hosts`, `.env`, `venv/`) y pide confirmación antes de cada operación irreversible. En WSL2 avisa que también hay que editar el `hosts` de Windows.
-
-#### Primeros pasos tras la instalación
-
-1. Abre el navegador en la URL que muestra el script al terminar (`https://subvencionesDGDA.local` o `http://localhost`).
-2. **Aviso de certificado** — el navegador mostrará *"No es seguro"* o *"Tu conexión no es privada"*. Es normal: el certificado es autofirmado para desarrollo local. Haz clic en **Avanzado → Acceder a subvencionesDGDA.local** (o equivalente en tu navegador) para continuar.
-3. Al final, el script pide un email y una contraseña y crea con ellos la cuenta de administración. No hay cuentas preparadas de antemano.
-
-**Prerequisitos:** Docker con `docker compose` v2 · Python 3.10+ · openssl
-**Plataforma:** Linux · macOS · WSL2 (Windows con WSL2 y Docker Desktop)
-**Espacio en disco:** ~1 GB (imágenes Docker) + ~50 MB opcionales si se crea el venv
-**Descarga primera vez:** ~300-400 MB de imágenes Docker (según las que ya tengas cacheadas)
-
-#### Flujos posibles según las respuestas
-
-El script hace tres preguntas y toma varias decisiones automáticas:
-
-**Pregunta 1 — `¿Continuar? [s/N]`**
-
-| Respuesta | Resultado |
-|-----------|-----------|
-| `s` | La instalación continúa |
-| `N` (o Enter) | El script se aborta sin modificar nada en el sistema |
-
-##### Decisiones automáticas (sin preguntar)
-
-Antes de continuar el script detecta si ya existen recursos y los reutiliza sin sobreescribir:
-
-| Recurso | Si ya existe | Si no existe |
-|---------|-------------|--------------|
-| `docker/.env` | Se reutiliza | Se crea con contraseñas de desarrollo y `SECRET_KEY` aleatoria |
-| Certificado SSL | Se reutiliza | Se genera con `openssl` (válido 1 año) |
-| Base de datos con datos | No se toca | Se carga el dataset completo (primera instalación) |
-| `venv/` | Se reutiliza | Primera instalación: se crea automáticamente para poder cargar el dataset. Reinstalación: se pregunta (ver pregunta 3) |
-| Dominio en `/etc/hosts` | Se detecta, no se pregunta | Se pregunta (ver pregunta 2) |
-
-El script **no siembra ninguna cuenta**. Al final llama a `scripts/crear_admin.sh`, que pide un email y una contraseña y crea con ellos la cuenta de administración; si ya existe una, no hace nada.
-
-| Rol | Cómo se crea | Acceso |
-|-----|--------------|--------|
-| `admin` | `install.sh` la pide al instalar, o `make crear-admin` | Panel de administración + zona privada |
-| `registrado` | Desde el panel de administración, sección Usuarios | Zona privada |
-
-Antes había dos cuentas de demo con la contraseña escrita en el código. Se retiraron a propósito: mientras un hash válido viviese en el repositorio, cualquiera que lo leyese conocería la contraseña de administración de todo despliegue nuevo. Es lo que permite que el repositorio pueda ser público sin comprometer el sitio real.
-
-El hash lo genera el contenedor del backend con `hashear_password`, la misma función que usa la aplicación al cambiar una contraseña, así que no hay dos formas distintas de derivarlo. La contraseña se pasa por stdin y no como argumento, porque los argumentos de un proceso son visibles para cualquiera que liste procesos.
-
-Además, **siempre** (sin importar si hay datos o no):
-
-- **Migraciones de esquema** — el script aplica `CREATE TABLE IF NOT EXISTS` y `ALTER TABLE … ADD COLUMN IF NOT EXISTS` para que la BD esté al día con el código. Son seguras de repetir: si las tablas o columnas ya existen, no hacen nada.
-- **Rebuild del backend** — la imagen Docker del backend se reconstruye para que el código en ejecución coincida siempre con el código del repositorio. Gracias al caché de Docker (solo se re-ejecuta la capa de código, no `pip install`), el rebuild tarda ~10-20 s en instalaciones existentes.
-
-#### Actualizar el proyecto (después de `git pull`)
-
-Cada vez que se actualice el código con `git pull`, ejecutar el script es suficiente para aplicar todos los cambios:
-
-```bash
-git pull
-bash install.sh   # responde 's' para continuar
-```
-
-El script detecta la BD existente, aplica las migraciones pendientes y reconstruye el backend. Los datos no se tocan.
-
-> **Nota sobre el certificado SSL:** el certificado no forma parte del repositorio (está en `.gitignore`). Si por cualquier motivo el fichero `docker/ssl/server.crt` desapareciera (por ejemplo, tras una limpieza manual o un `git pull` en una máquina nueva), volver a ejecutar `bash install.sh` lo regenera automáticamente.
->
-> **Instalación en una segunda máquina:** `bash install.sh` funciona igual en cualquier equipo con Docker. Genera un `.env` nuevo con su propia `SECRET_KEY` y `CORS_ORIGINS=*`. Los datos de subvenciones se cargan desde el dataset del repositorio, así que la BD queda idéntica. Las cuentas de usuario **no** se transfieren entre máquinas: el script pide una contraseña nueva para la cuenta de administración en cada instalación. Las demás se crean desde el panel.
->
-> **Desinstalar:** `bash uninstall.sh` elimina los contenedores, volúmenes (BD y datos), certificado SSL, `docker/.env` y opcionalmente la imagen Docker y el `venv/`. También elimina la entrada de `/etc/hosts` (con confirmación, requiere sudo). La operación es irreversible para los datos.
-
-**Pregunta 2 — `¿Añadir subvencionesDGDA.local a /etc/hosts? [s/N]`**
-
-Esta pregunta solo aparece si el dominio no está ya en `/etc/hosts`.
-
-| Respuesta | Resultado |
-|-----------|-----------|
-| `s` | Se añade el dominio con `sudo`. La app queda disponible en `https://subvencionesDGDA.local` con HTTPS completo. |
-| `N` (o Enter) | El dominio no se toca. La instalación **continúa igualmente**. La app queda disponible en `http://localhost` (sin HTTPS). Ver limitaciones abajo. |
-
-Limitaciones de acceder por `http://localhost` en vez del dominio local:
-
-- Sin HTTPS — el navegador no mostrará el candado
-- Las cookies con el flag `Secure` no se enviarán (puede afectar a la sesión en algunos navegadores)
-- El enlace de recuperación de contraseña que llega por email usa la URL del dominio — no funcionará si el dominio no está en `/etc/hosts`
-
-Para añadirlo manualmente en cualquier momento:
-
-```bash
-echo '127.0.0.1 subvencionesDGDA.local' | sudo tee -a /etc/hosts
-```
-
-**Pregunta 3 — `¿Crear entorno virtual Python (venv)? (solo para tests y scripts) [s/N]`**
-
-Esta pregunta solo aparece si no existe ya un `venv/`. El script informa de que ocupa ~50 MB y que **no es necesario para usar la aplicación web**.
-
-| Respuesta | Resultado |
-|-----------|-----------|
-| `s` | Se crea el `venv` y se instalan las dependencias de `requeriments.txt` |
-| `N` (o Enter) | No se crea. La aplicación web **funciona igualmente**. Solo es necesario para ejecutar los tests (`make test`) y los scripts de parseo de datos. |
-
-Para crearlo manualmente después si se necesita:
-
-```bash
-python3 -m venv venv && source venv/bin/activate && pip install -r requeriments.txt
-```
-
-### Instalación manual
-
-Clonar el repositorio:
-
-```bash
-git clone git@github.com:vcv-code/SubvDGDA.git
-cd analisis-bdns-dgda
-```
-
-Sincronizar repositorio:
-
-```bash
-git checkout dev
-git pull
-```
+**Funciona sin conexión una vez instalado.** Solo hace falta internet para
+descargar las imágenes Docker la primera vez. Chart.js y Leaflet tienen copia
+local en `frontend/assets/vendor/`, que se carga automáticamente si los CDN no
+responden; Google Fonts es el único recurso sin copia local, y sin él la
+tipografía cae a la del sistema sin romper nada.
 
 ---
 
-## Entorno de trabajo
+## Dependencias
 
-`venv/` es un **entorno virtual Python** aislado que se crea en la máquina de desarrollo. Permite instalar las librerías de los scripts (parsers, carga de datos) sin mezclarlas con el Python del sistema ni con el de otros proyectos.
+`venv/` es un entorno virtual de Python que solo hace falta para ejecutar los
+tests y los scripts de parseo — **la aplicación web no lo necesita**, porque el
+backend corre en Docker con su propio entorno. No se versiona y `install.sh` lo
+crea si hace falta.
 
-**Solo es necesario para:**
-
-- Ejecutar los scripts de parseo de datos (`scripts/data_processing/`)
-- Ejecutar los tests con `pytest` (`make test`)
-
-**No es necesario para usar la aplicación web** — el backend corre dentro de Docker con su propio entorno aislado (`backend/requirements.txt` se instala en el contenedor). Un usuario que solo quiera arrancar y usar la app puede saltarse este paso.
-
-`venv/` no se versiona (está en `.gitignore`) porque es específico de cada máquina y pesa ~50 MB. `install.sh` lo crea automáticamente si se necesita.
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requeriments.txt
-```
-
-### Archivos de dependencias
-
-El proyecto tiene dos archivos de requisitos con propósitos distintos:
+Hay dos ficheros de requisitos con propósitos distintos:
 
 - **`requeriments.txt` (raíz)** — librerías para el entorno local de desarrollo. Contiene únicamente las herramientas de procesamiento de datos y scripts: `pdfplumber`, `beautifulsoup4`, `lxml`, `openpyxl`, `requests` y `PyMySQL`. Es lo que se instala en el `venv` de la máquina de desarrollo para ejecutar los parsers y cargar datos. Todas las versiones están fijadas.
 - **`backend/requirements.txt`** — librerías que se instalan *dentro del contenedor Docker* del backend. Solo incluye lo que necesita FastAPI para funcionar (`fastapi`, `uvicorn`, `sqlalchemy`, `pymysql`, `bcrypt`, `python-jose`, `email-validator`, `httpx` y `pytest`). No lleva pdfplumber ni pandas porque el contenedor no procesa datos, solo sirve la API. Todas las versiones están fijadas.
-
-### Extensiones de VS Code recomendadas
-
-El proyecto incluye `.vscode/extensions.json` con extensiones recomendadas. Al abrir la carpeta en VS Code aparece una notificación para instalarlas, o filtra por `@recommended` en el panel de extensiones.
-
-| Extensión | Para qué |
-|---|---|
-| Python + Pylance + Pylint | Backend — autocompletado, tipos y linting |
-| autoDocstring | Genera docstrings de Python con un atajo |
-| Docker | Gestión de contenedores desde VS Code |
-| Remote - WSL | Abre el proyecto desde Windows en WSL2 |
-| Auto Rename Tag | Cierra etiquetas HTML automáticamente |
-| Makefile Tools | Resaltado y soporte para el Makefile |
-| Markdown All in One + markdownlint | README y documentación |
-| Error Lens | Muestra errores y avisos inline sin pasar el ratón |
-| Code Spell Checker (+ Spanish) | Corrector ortográfico en español |
-
----
 
 ## Docker — arrancar el sistema
 
@@ -822,112 +672,13 @@ Además, ambos Dockerfiles usan `pip install --no-cache-dir` para no almacenar l
 
 El backend instala además `curl` (~6 MB) sobre la imagen slim: lo usa el healthcheck de Docker para verificar `/health` y queda disponible para depurar la conectividad desde dentro del contenedor (`docker exec bdns_api curl http://db:3306`). El resto de la optimización slim se mantiene; tras la instalación se borra la caché de apt (`rm -rf /var/lib/apt/lists/*`) para no dejar ~30 MB residuales dentro de la imagen.
 
-### Modo desarrollo (día a día)
+### Trabajar en el día a día
 
-Solo la BD corre en Docker. El backend se ejecuta localmente con uvicorn, lo que permite ver cambios al guardar sin reconstruir imágenes.
-
-```bash
-# Terminal 1 — arrancar la BD
-cd docker
-docker compose up -d db
-
-# Terminal 2 — arrancar el backend (desde la raíz del proyecto)
-source venv/bin/activate
-set -a; . docker/.env; set +a      # credenciales de la BD
-uvicorn backend.app.main:app --reload --port 8000
-```
-
-API disponible en `http://localhost:8000/docs`
-
-### Despliegue completo (stack completo con Docker Compose)
-
-#### Primera vez (volumen vacío o tras `down -v`)
-
-```bash
-# 1. Arrancar todos los servicios y construir la imagen del backend
-cd docker
-docker compose up --build -d
-
-# 2. Verificar que los tres contenedores están en marcha
-docker compose ps
-
-# 3. Cargar el dataset en la BD (solo una vez)
-cd ..
-source venv/bin/activate
-python -m scripts.data_processing.cargar_dataset
-
-# 4. Verificar recuentos esperados
-docker exec bdns_dgda_db mariadb -uroot -proot bdns_dgda -e "
-SELECT 'convocatorias'        AS tabla, COUNT(*) AS filas FROM convocatorias
-UNION ALL SELECT 'beneficiarios',       COUNT(*) FROM beneficiarios
-UNION ALL SELECT 'solicitudes',         COUNT(*) FROM solicitudes
-UNION ALL SELECT 'concesiones',         COUNT(*) FROM concesiones
-UNION ALL SELECT 'agrupaciones',        COUNT(*) FROM agrupaciones
-UNION ALL SELECT 'agrupacion_miembros', COUNT(*) FROM agrupacion_miembros;"
-```
-
-Resultado esperado: 8 · 3103 · 6396 · 2623 · 13 · 72
-
-#### Arranques posteriores (volumen con datos)
-
-```bash
-cd docker
-docker compose up -d        # arranca los tres contenedores sin reconstruir
-```
-
-#### Parar el sistema
-
-```bash
-docker compose down          # para los contenedores, conserva los datos
-docker compose down -v       # para y borra el volumen (reset total de la BD)
-```
-
-> El schema SQL se aplica automáticamente la primera vez que el volumen está vacío (via `docker-entrypoint-initdb.d`). Si el volumen existe pero la BD está vacía, aplicarlo manualmente:
-
-```bash
-docker exec -i bdns_dgda_db mariadb -uroot -proot < init/modelo-fisico.sql
-```
-
-#### Instalación en Windows con WSL2
-
-La guía completa paso a paso está en [manuales/manual-instalacion.md](manuales/manual-instalacion.md#instalación-en-windows-con-wsl2). Resumen de los puntos críticos:
-
-- **Software necesario:** WSL2 + Ubuntu, Docker Desktop, VS Code con la extensión WSL.
-- **Docker Desktop:** activar la integración WSL2 en Settings → Resources → WSL Integration → Ubuntu. Sin este paso, `docker ps` falla dentro de WSL.
-- **Distro por defecto:** ejecutar `wsl --set-default Ubuntu` en PowerShell para que `wsl` abra Ubuntu y no `docker-desktop`.
-- **Filesystem Linux:** trabajar SIEMPRE desde `/home/...`, NUNCA desde `/mnt/c/...`. Los bind mounts de Docker, VS Code Remote WSL y los permisos de scripts funcionan correctamente solo en el filesystem Linux.
-- **CRLF:** si el proyecto viene de Windows, los `.sh` pueden tener finales de línea Windows y fallar con `bad interpreter`. Solución: `sudo apt install dos2unix -y && dos2unix install.sh uninstall.sh`.
-- **Contraseña sudo:** es la contraseña del usuario Linux, no la de Windows.
-
-#### Solución de problemas en WSL2
-
-Si algún contenedor falla al arrancar con `failed to create shim task` o errores de bind mounts, recrear los contenedores suele solucionarlo:
-
-```bash
-cd docker
-docker compose down
-docker compose up -d
-```
-
-Si el error persiste, asegúrate de que el volumen de Nginx monta el **directorio** `./nginx` y no el archivo individual `./nginx/nginx.conf`. El archivo de configuración debe llamarse `default.conf` dentro de esa carpeta.
-
-#### Config de Nginx no se aplica tras editar `default.conf`
-
-Editar `default.conf` cambia el fichero en disco (volumen), pero Nginx **no recarga la config automáticamente** — sigue usando la versión anterior en memoria. Síntoma habitual: añades un bloque `location` o una zona de rate limiting y parece no tener efecto.
-
-```bash
-# Verificar sintaxis antes de recargar (falla seguro si hay error)
-docker exec bdns_nginx nginx -t
-
-# Aplicar la nueva config sin cortar conexiones activas
-docker exec bdns_nginx nginx -s reload
-```
-
-#### Contenedor cron — supercronic no arranca (`Failed to fork exec`)
-
-La versión v0.2.33 de supercronic presenta un bug de inicialización en entornos Docker Desktop + WSL2: el proceso muere inmediatamente con `level=fatal msg="Failed to fork exec: no such file or directory"` antes de leer el crontab, aunque el binario sea válido y el crontab correcto (verificado con `supercronic -test`). En modo `--debug` sí arranca, lo que apunta a una race condition en la secuencia de inicialización.
-
-Solución implementada: se sustituyó supercronic por un **scheduler Python propio** (`docker/cron/scheduler.py`) que implementa la misma lógica de ejecución sin depender de binarios externos. El comportamiento es idéntico al crontab original y no presenta el problema.
+Para desarrollar en el backend sin reconstruir la imagen en cada cambio se
+puede arrancar solo la base de datos en Docker y ejecutar uvicorn en local; el
+procedimiento, junto con el arranque completo del stack y la verificación de
+recuentos, está en el
+[manual de instalación](manuales/manual-instalacion.md#uso-diario).
 
 ---
 
@@ -973,6 +724,8 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make logs` | Últimas 100 líneas de logs del backend |
 | `make logs-cron` | Últimas 50 líneas de logs del cron |
 | `make logs-nginx` | Últimas 50 líneas de logs de Nginx |
+| `make crear-admin` | Crea la cuenta de administración si no existe (la pide por teclado; no hay ninguna contraseña en el código) |
+| `make redescubrir-convocatorias` | Relanza el cron para volver a detectar las convocatorias del año en curso, que no están en el dataset |
 | `make backup` | Vuelca la BD a `backups/backup_AAAAMMDD_HHMMSS.sql`, descarta el fichero si el volcado queda incompleto y borra los de más de 30 días (`BACKUP_DIAS` en `docker/.env` para cambiarlo) |
 | `make restore FILE=…` | Restaura una copia. **Sobrescribe la BD actual**, así que pide confirmación y rechaza los volcados truncados |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
@@ -993,12 +746,16 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **298 pruebas en total**: 246 funciones de test automáticas con pytest (344 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto combina pruebas automáticas y manuales:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 246 funciones / 344 ejecuciones | pytest (sin Docker) |
+| Automáticos | **346 funciones / 450 ejecuciones** | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
+
+> El recuento detallado, fichero a fichero, está en **[docs/tests.md](docs/tests.md)**,
+> que es la fuente única. Antes esta cifra estaba repetida en cuatro sitios del
+> README y acabaron diciendo cosas distintas.
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
@@ -1077,32 +834,59 @@ Realizadas con Docker levantado, usuario admin activo y una cuenta de prueba adi
 
 ## Flujo de trabajo
 
-El proyecto sigue un flujo basado en main + dev + feature/*, un modelo híbrido entre Git Flow y GitHub Flow, adaptado a equipos pequeños.
-
-### Estructura
+El proyecto sigue un flujo basado en `main` + `dev` + `feature/*`, un modelo
+híbrido entre Git Flow y GitHub Flow adaptado a proyectos pequeños.
 
 ```text
 main (producción, estable)
  │
- └── dev (desarrollo)
+ └── dev (integración)
        │
-       ├── feature/*(funcionalidad)
-       └── feature/*(funcionalidad)
+       ├── feature/*  (funcionalidad)
+       └── fix/*      (corrección)
 ```
 
-### Orden
+### Ciclo de una funcionalidad
 
-1. Cada funcionalidad se desarrolla en una rama feature/*
-2. Se hacen commits sobre esa rama
-3. Se integra en dev mediante Pull Request (preferiblemente con squash)
-4. dev actúa como entorno de integración
-5. Cuando es estable, se fusiona en main
+1. Se desarrolla en una rama `feature/*` o `fix/*`
+2. Se integra en `dev` mediante Pull Request
+3. `dev` actúa como entorno de integración
+4. Cuando es estable, se publica: PR de `dev` a `main`
 
-### Motivos
+### Al publicar
 
-Hemos elegido este tipo de flujo porque lo hemos utilizado ambas en las prácticas de empresa y porque separa desarrollo (dev) de producción (main), reduciendo errores y permitiendonos trabajar en paralelo de forma segura, manteniendo un flujo claro y sencillo, adecuado para equipos pequeños y proyectos pequeños o medianos con desarrollo activo, como es el caso.
+Tras fusionar `dev` en `main` hacen falta dos pasos más:
 
-Otros flujos más simples (todo en main) son arriesgados, y los más complejos (Git Flow completo) añaden complejidad innecesaria.
+**Sincronizar de vuelta.** `main` recibe un commit de fusión que `dev` no
+conoce, así que hay que hacer `git merge main` sobre `dev`. Sin esto, el
+siguiente Pull Request aparece con commits ya publicados.
+
+**Desplegar.** Fusionar en `main` deja el código en GitHub, pero **no lo publica
+en internet**: no hay despliegue automático. La web se actualiza cuando el
+servidor hace `git pull`, y si el cambio toca el backend, además
+`docker compose up -d --build backend`. El procedimiento está en el
+[manual de despliegue](manuales/manual-despliegue.md#mantenimiento).
+
+### Etiquetas y versiones
+
+Los hitos se marcan con **tags anotados** sobre `main` y una Release en GitHub.
+No se etiqueta cada publicación: solo cuando cambia algo relevante para quien
+usa la web, o antes de una operación arriesgada, para tener un punto conocido al
+que volver.
+
+| Tag | Qué marca |
+|---|---|
+| `v1.0-completo` | Última versión con registro público y zona exclusiva para registrados |
+| `v1.1-publica` | Contenido liberado a las páginas públicas |
+| `v1.2` | Sin registro público y sin credenciales en el repositorio |
+| `v1.3` | Listo para el servidor: correo de producción y rotación de logs |
+| `v1.4` | Primera tanda de correcciones salidas de tener la web en producción |
+
+### Por qué este flujo
+
+Separa desarrollo de producción, que es lo que permite tener `main` siempre
+desplegable, y mantiene el histórico legible sin la complejidad de Git Flow
+completo. Un flujo de rama única sería arriesgado teniendo una web publicada.
 
 ---
 
@@ -1126,9 +910,12 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ### Infraestructura y despliegue
 
-- HTTPS activo (TLS 1.2/1.3, certificado autofirmado, redirección HTTP→HTTPS)
-- Docker: Nginx + FastAPI + MariaDB + cron + Mailpit en contenedores
-- Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile)
+- **Publicado desde el 15 de agosto de 2026** en un VPS con Ubuntu 24.04, dominio propio y **certificado de Let's Encrypt** con renovación automática. En desarrollo local el certificado sigue siendo autofirmado
+- HTTPS con TLS 1.2/1.3 y redirección HTTP→HTTPS; cabeceras de seguridad y HSTS
+- Docker: Nginx + FastAPI + MariaDB + cron + Mailpit + Adminer en contenedores. La base de datos, Adminer y Mailpit escuchan **solo en local**: en el servidor se llega a ellos por túnel SSH
+- El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
+- **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
+- Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación
 
@@ -1143,15 +930,15 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Buscador de exclusiones EELL con causa oficial (chip de códigos + modal con motivos, leyenda servida por la API)
 - Banner de convocatorias con estado de plazo (abierto/cerrado) calculado automáticamente
 - Panel de administración completo: gestión paginada de usuarios, visor de logs (de la app y del cron) y edición del fin de plazo de convocatorias
-- Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
-- Modal de conclusiones con textos reales en las 9 gráficas
+- Zona privada con nombre/alias editable. El **mapa CCAA táctil** y el **resumen por convocatoria** eran contenido exclusivo para registrados; al retirarse el registro público pasaron a las páginas públicas —el mapa a estadísticas EELL y el resumen al inicio— y `exclusivo.html` quedó reservada al rol `admin` como espacio para futuro contenido propio
+- Modal de conclusiones con textos reales en las 13 gráficas
 - Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
-- Auditoría responsive móvil completada
+- Maquetación móvil verificada **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools
 
 ### Calidad del código
 
-- CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 450 pruebas automáticas en verde (pytest)
+- CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.1 AA revisada
+- Tests automáticos en verde (recuento en [docs/tests.md](docs/tests.md))
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1163,20 +950,20 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Seguridad
 
-- **Contraseñas** — hash bcrypt con `rounds=12`; validación de fortaleza en registro y cambio (mínimo 8 caracteres, mayúscula, minúscula, número)
+- **Contraseñas** — hash bcrypt con `rounds=12`; validación de fortaleza al crear la cuenta y al cambiarla (mínimo 8 caracteres, mayúscula, minúscula, número)
 - **Sesión** — doble token JWT: access token de 15 min + refresh token de 30 días con rotación en cada uso; revocación en cascada al cambiar contraseña
-- **Rate limiting** — Nginx bloquea con HTTP 429 antes de llegar al backend: login (10 req/min), registro (5 req/min), recuperar contraseña (3 req/min)
+- **Rate limiting** — Nginx bloquea con HTTP 429 antes de llegar al backend: login (10 req/min), recuperar contraseña (3 req/min) y formulario de contacto (3 req/min). No hay zona de registro porque no hay alta pública
 - **Cabeceras de seguridad** — `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security` (HSTS 1 año)
-- **SRI** — atributo `integrity` en los 5 recursos CDN externos (Chart.js ×3, Leaflet JS y CSS); el navegador verifica el hash antes de ejecutarlos
+- **SRI** — atributo `integrity` en los 3 recursos CDN ejecutables (Chart.js, Leaflet JS y Leaflet CSS), 7 usos repartidos por las páginas; el navegador verifica el hash antes de ejecutarlos. La hoja de Google Fonts es la excepción deliberada: Google sirve un CSS distinto según el navegador, así que un hash fijo la rompería
 - **Honeypot** — campo oculto `sitio_web` en el formulario de contacto; si llega relleno (bot), se devuelve éxito falso sin enviar nada
 - **Anti-enumeración** — la recuperación de contraseña devuelve siempre la misma respuesta, exista o no el email
 - **Validación de parámetros** — `buscar` máx. 200 caracteres, `limite` entre 1 y 500, exportación CSV limitada a 5.000 filas
 - **Verificación de email** — cuentas nuevas con `email_verificado=0`; login bloqueado hasta verificar
-- **HTTPS** — TLS 1.2/1.3 únicamente; certificado autofirmado con `subjectAltName` (requisito Chrome/Firefox)
+- **HTTPS** — TLS 1.2/1.3 únicamente. En producción, certificado de Let's Encrypt con renovación automática comprobada; en desarrollo local, autofirmado con `subjectAltName`, que Chrome y Firefox exigen además del `CN`
 
 ### Accesibilidad (WCAG 2.1 AA)
 
-- **Skip navigation** — enlace "Saltar al contenido" en las 19 páginas; foco visible con contraste 12:1
+- **Skip navigation** — enlace "Saltar al contenido" en las 18 páginas con barra de navegación (todas menos `mantenimiento.html`, que no la lleva y por eso no tiene nada que saltar); foco visible con contraste 12:1
 - **Roles ARIA** — `role="navigation"`, `aria-label` en todos los `<nav>`, `role="img"` en todos los `<canvas>`, `aria-live` en mensajes de error y éxito
 - **Formularios** — todos los campos con `<label>` explícito (`for` + `id`); errores con `role="alert"`, confirmaciones con `role="status"`
 - **Foco de teclado** — trampa de foco en modales (Tab/Shift+Tab ciclan dentro); cierre con Esc; foco devuelto al elemento que abrió el modal al cerrar
@@ -1193,12 +980,12 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **246 funciones de test automáticas** (344 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **Tests automáticos** ([recuento en docs/tests.md](docs/tests.md)) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS, correo saliente, despliegue con secretos propios, configuración TLS de Nginx y copias de seguridad
 - **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
-- **Cabeceras JSDoc** — los 16 archivos JS documentan propósito, endpoints que usan y página asociada
-- **CSS consolidado** — una sola hoja de estilos con índice de 28 secciones. Los `style=` inline que quedan son principalmente `display:none` para toggle por JavaScript (~60 ocurrencias); las ~30 restantes (tipografía y márgenes puntuales) están identificadas como mejora pendiente
+- **Cabeceras JSDoc** — los 21 archivos JS documentan propósito, endpoints que usan y página asociada
+- **CSS consolidado** — una sola hoja de estilos con índice de las 35 secciones en la cabecera, **verificado por tests**: si se añade una sección al cuerpo y no se anota, la batería falla. Los números no son correlativos y cuatro están repetidos, y se han dejado así a propósito —la documentación cita las secciones por número en 47 sitios, uno de ellos un historial— con la razón escrita en el propio índice, para que no se «arregle» rompiendo las citas. De los `style=` inline que quedan, 85 de 105 son `display:none` para alternar visibilidad desde JavaScript; los 20 restantes (tipografía y márgenes puntuales) siguen siendo mejora pendiente
 
 ### Contingencia ante fallos externos
 
@@ -1214,17 +1001,20 @@ Mecanismos que mantienen el sistema operativo (o degradado de forma controlada) 
 | MariaDB cae | `restart: unless-stopped` + `depends_on: service_healthy` | El contenedor se reinicia y el backend espera a que la BD esté lista antes de aceptar peticiones |
 | Nginx cae | `restart: unless-stopped` | Docker reinicia el contenedor automáticamente |
 | CDN externo (`jsdelivr`, `unpkg`) caído o lento | Fallback local en `assets/vendor/` vía `onerror` | Las gráficas y el mapa siguen renderizando con los archivos locales |
-| CDN sirve archivo manipulado | SRI (`integrity`) en los 5 recursos CDN | El navegador rechaza el archivo y dispara el fallback local |
-| Mailpit/SMTP caído | `try/except` no bloqueante en envío de emails | El registro y la recuperación funcionan igual; solo no llega el email (el usuario puede pedir reenvío) |
+| CDN sirve archivo manipulado | SRI (`integrity`) en los 3 recursos CDN ejecutables | El navegador rechaza el archivo y dispara el fallback local |
+| SMTP caído o inalcanzable | `try/except` que captura también `OSError` (conexión rechazada, timeout) | El alta de usuarios y la recuperación de contraseña funcionan igual; solo no llega el email. El formulario de contacto sí avisa (503), para no fingir que el mensaje se envió |
+| El certificado se renueva y Nginx no se entera | Hook de recarga en `renewal-hooks/deploy/` | Nginx recoge el certificado nuevo. Sin él seguiría sirviendo el caducado desde memoria, y el fallo aparecería meses después |
+| Un puerto de administración queda expuesto | Base de datos, Adminer y Mailpit atados a `127.0.0.1` | No son accesibles desde internet ni aunque el cortafuegos falle: Docker escribe sus reglas por delante de las de ufw |
 | Sesión del usuario caduca | Refresh token automático | El usuario sigue navegando sin volver a hacer login |
-| Datos perdidos por error | `make backup` + volúmenes Docker persistentes | La BD se restaura desde un `.sql` fechado |
+| Datos perdidos por error | Copia semanal programada con rotación, más `make backup` a demanda | La BD se restaura desde un `.sql` fechado con `make restore` |
 
 A continuación, el detalle por dominio.
 
 #### Datos
 
-- **Dataset versionado en el repositorio** (`data/final/dataset_unificado.json`, 6.398 registros): la web funciona sin necesidad de la API BDNS ni del BOE en runtime. Las consultas del usuario van a MariaDB local, no a servicios externos.
-- **`make backup` + volúmenes Docker persistentes**: la BD sobrevive a `docker compose down` y se puede restaurar desde un `.sql` fechado.
+- **Dataset versionado en el repositorio** (`data/final/dataset_unificado.json`, 6.396 registros): la web funciona sin necesidad de la API BDNS ni del BOE en runtime. Las consultas del usuario van a MariaDB local, no a servicios externos.
+- **Copias de seguridad programadas** (`scripts/backup_db.sh`, semanal en el servidor) más `make backup` a demanda. El script **descarta los volcados incompletos**: que `mariadb-dump` termine bien no basta, porque un corte a mitad deja un fichero truncado con aspecto de válido, y eso solo se descubriría al restaurar. Rota los antiguos para que no llenen el disco.
+- **Volúmenes Docker persistentes**: la BD sobrevive a `docker compose down`. Solo `down -v` borra el volumen.
 
 #### API BDNS (servicio externo)
 
@@ -1242,6 +1032,8 @@ A continuación, el detalle por dominio.
 
 - **Páginas `404.html` y `50x.html`** servidas por Nginx con `error_page`: se siguen viendo aunque el backend esté caído. Sin JavaScript, sin llamadas a la API.
 - **Endpoint `/healthz` propio de Nginx** (fuera de la redirección HTTPS): permite verificar que Nginx vive independientemente de que el backend esté disponible.
+- **Certificado con renovación comprobada**: certbot renueva solo, pero Nginx mantiene el certificado cargado en memoria y seguiría sirviendo el caducado. Un hook en `/etc/letsencrypt/renewal-hooks/deploy/` lo recarga tras cada renovación, y el conjunto se verificó con `certbot renew --dry-run` en lugar de esperar tres meses a comprobarlo.
+- **La ruta del reto ACME se sirve por HTTP sin redirigir**: si la alcanzara el `return 301` a HTTPS, la validación fracasaría — y fracasaría al *renovar*, no al emitir, así que el fallo aparecería mucho después. Hay tests que verifican que ese bloque va antes de la redirección.
 
 #### Frontend (peticiones, errores y CDN)
 
@@ -1252,19 +1044,19 @@ A continuación, el detalle por dominio.
 
 #### Autenticación
 
-- **SMTP envuelto en `try/except` no bloqueante**: si Mailpit/SMTP cae, el registro y la recuperación de contraseña funcionan igual; solo no llega el email. La cuenta queda creada con `email_verificado=0`, y se puede desbloquear desde el panel de administración o reenviando el email.
+- **SMTP envuelto en `try/except` no bloqueante**, capturando también `OSError` —una conexión rechazada o un timeout no son `SMTPException` y devolvían error 500—: si el servidor de correo cae, el alta de usuarios y la recuperación de contraseña funcionan igual; solo no llega el email. La cuenta queda creada con `email_verificado=0` y se desbloquea desde el panel o reenviando el email. El formulario de contacto es la excepción deliberada: ahí el fallo sí se propaga (503), porque fingir que el mensaje se envió dejaría a alguien esperando una respuesta que nunca llegaría.
 - **Refresh token automático**: si el access token de 15 min caduca, el JS lo renueva en background con el refresh token (30 días) sin pedir al usuario que vuelva a hacer login.
 
 #### Tests de contingencia
 
 - **SQLite en memoria** como sustituto de MariaDB en los tests originales (mock de BD).
 - **`unittest.mock.patch`** para mockear envíos de email (mock de SMTP).
-- **Tests parametrizados del scheduler** del cron (21 funciones / 119 ejecuciones) verifican el calendario completo sin esperar a noviembre.
+- **Tests parametrizados del scheduler** del cron (24 funciones / 128 ejecuciones) verifican el calendario completo sin esperar a noviembre.
 - **Tests del retry de BDNS con backoff** (5 funciones) mockean `requests.get` y `time.sleep` para reproducir los 4 escenarios de fallo sin tocar la API real.
 
 ### UX y experiencia de uso
 
-- **Estados de carga** — spinner en peticiones de datos; skeleton loader animado en tabla de contenido exclusivo
+- **Estados de carga** — spinner flotante en peticiones de datos (fuera del flujo, para no desplazar la página); skeleton loader animado en la tabla resumen por convocatoria, tanto en el inicio como en `exclusivo.html`
 - **Feedback de errores** — mensajes de error visibles en tabla/formulario cuando la API falla o el servidor no responde
 - **Persistencia de filtros** — los filtros del buscador se guardan en la URL; compartible, marcable y restaurado al pulsar "Atrás"
 - **Deep link post-login** — si el usuario accede a una página protegida sin sesión, se redirige al login y vuelve automáticamente a la página original tras autenticarse
@@ -1275,7 +1067,7 @@ A continuación, el detalle por dominio.
 
 ## Notas técnicas
 
-- `solicitudes.html` se conserva intencionalmente aunque la URL pública es ahora `buscador.html`. Actúa como redirección de compatibilidad para cualquier enlace externo o marcador guardado antes del renombrado. No es un archivo huérfano: es legacy deliberado.
+- La ruta `/solicitudes.html` es el nombre que tuvo el buscador antes de renombrarse a `buscador.html`, y se mantiene por los enlaces externos y marcadores antiguos. Durante un tiempo se conservó como **copia del contenido**, lo que obligaba a aplicar cada cambio dos veces —el historial está lleno de «mismo cambio aplicado a los dos»— hasta que se olvidó uno y las páginas divergieron. Hoy es una **redirección 301 en Nginx** que arrastra la query string con `$is_args$args`, para que un enlace guardado con filtros (`?buscar=…&anio=…`) no aterrice en un buscador vacío. Hay tests que impiden que vuelva a existir como archivo.
 - `data/raw/` no se versiona completo; se mantienen ejemplos representativos. Los scripts sobrescriben resultados al volver a ejecutarse — el sistema es reproducible desde cero.
 - El campo `email_verificado` en `usuarios` tiene `DEFAULT 1` en la migración (para no bloquear cuentas existentes), pero el alta desde el panel (`POST /admin/usuarios`) siempre lo establece a `0` explícitamente.
 - El campo `nombre` en `usuarios` es nullable — los usuarios existentes quedan intactos. Migración para instalaciones ya existentes: `ALTER TABLE usuarios ADD COLUMN nombre VARCHAR(100) NULL AFTER email;`
@@ -1284,14 +1076,14 @@ A continuación, el detalle por dominio.
 - Mapa choropleth (`exclusivo.html`) parpadeaba al cargar: Leaflet inicializaba el mapa antes de que llegaran los datos de la tabla, que al inyectarse empujaban el mapa hacia abajo causando un salto visual. Corregido con `await cargarResumenTabla(token)` antes de `cargarMapaCCAA()` — el mapa solo se inicializa cuando el DOM ya tiene su posición definitiva.
 - GeoJSON de CCAA: el archivo original era una versión muy simplificada (~5 KB) en la que los bordes de las comunidades quedaban irregulares y poco precisos. Se sustituyó por un GeoJSON de mayor resolución (~618 KB), lo que mejoró visiblemente la forma de los polígonos en el mapa choropleth.
 - `activo` y `email_verificado` en `models.py` están definidos como `Column(SmallInteger)` en lugar de `Column(Boolean)`. Funcionan igual porque MariaDB almacena `BOOLEAN` como `TINYINT(1)` internamente, pero el tipo semántico es incorrecto: el ORM no valida que solo entren `True`/`False`. Cambiarlo requeriría un `ALTER TABLE` en la BD existente — no justificado en este entorno.
-- La función `cerrarSesion` está definida en `navbar.js`, `privado.js`, `exclusivo.js` y `admin.js`. La duplicación es conocida: `navbar.js` la necesita para páginas donde el botón se inyecta dinámicamente, mientras los otros tres tenían su propia implementación antes de que se añadiera `navbar.js` a esas páginas. La solución limpia sería un `utils-auth.js` compartido, pero introducirlo al final del proyecto supone un riesgo innecesario.
+- La función `cerrarSesion` está definida en `navbar.js`, `privado.js`, `exclusivo.js` y `admin.js`. La duplicación es conocida: `navbar.js` la necesita para páginas donde el botón se inyecta dinámicamente, mientras los otros tres tenían su propia implementación antes de que se añadiera `navbar.js` a esas páginas. La solución limpia sería un `utils-auth.js` compartido; es una deuda técnica asumida y anotada, no un descuido.
 - Enlaces a documentos oficiales hardcodeados en `index.html`: las URLs de las **bases reguladoras** (3 enlaces) y de las **resoluciones de concesión del BOE** (8 enlaces, EPA 2021–2025 + EELL 2023–2025) están escritas directamente como `<a href="...">` en el HTML. No es ideal desde la perspectiva de mantenimiento, pero es una decisión deliberada y proporcionada: son datos estáticos que cambian como máximo una vez al año (cuando se publica una nueva resolución), no dependen del usuario, no requieren paginación ni filtros, y la frecuencia de cambio no justifica la complejidad de moverlos a un JSON externo o a la BD. La actualización anual se hace editando 1-3 líneas en `index.html`. Cuando el número de enlaces crezca o se necesite multi-idioma, conviene migrarlos a `frontend/data/resoluciones.json` (ver Mejoras futuras).
 
 ---
 
 ### Bugs encontrados durante la implementación del panel de administración
 
-Durante el desarrollo se detectaron tres bugs antes de las pruebas manuales, en la revisión del código y al ejecutar los tests:
+Durante el desarrollo se detectaron estos bugs antes de las pruebas manuales, en la revisión del código y al ejecutar los tests:
 
 **1. `/admin/` ausente en la configuración de Nginx** *(crítico)*
 
@@ -1335,7 +1127,7 @@ Al ejecutar `test_admin.py` por primera vez, dos tests fallaron y pusieron de ma
 
 #### Cron — Supercronic incompatible con Docker + WSL2
 
-La primera aproximación para el scheduler fue usar [Supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores Docker. Falló con un error de fork al arrancar en el entorno Docker + WSL2 incluso con la opción `--debug`. Solución: scheduler implementado directamente en Python (`docker/cron/scripts/scheduler.py`) usando `time.sleep()` y comprobaciones de hora/día. Sin dependencias de binarios externos, sin permisos especiales, reproducible en cualquier entorno. Lección: en Docker, preferir código Python antes que binarios del sistema cuando el entorno de destino (WSL2) puede tener restricciones de llamadas al sistema.
+La primera aproximación para el scheduler fue usar [Supercronic](https://github.com/aptible/supercronic), un cron diseñado para contenedores Docker. Falló con un error de fork al arrancar en el entorno Docker + WSL2 incluso con la opción `--debug`. Solución: scheduler implementado directamente en Python (`docker/cron/scheduler.py`) usando `time.sleep()` y comprobaciones de hora/día. Sin dependencias de binarios externos, sin permisos especiales, reproducible en cualquier entorno. Lección: en Docker, preferir código Python antes que binarios del sistema cuando el entorno de destino (WSL2) puede tener restricciones de llamadas al sistema.
 
 #### HTTPS — `subjectAltName` obligatorio en navegadores modernos
 
@@ -1459,38 +1251,116 @@ punta nada más desplegar**, antes de necesitarla de verdad.
 
 ## Mejoras futuras
 
-Mejoras identificadas durante el desarrollo, no planificadas para la entrega actual. Agrupadas por ámbito.
+Mejoras identificadas durante el desarrollo que no están previstas a corto
+plazo. Cada una incluye el motivo por el que no se ha hecho todavía, que suele
+ser más informativo que la mejora en sí.
 
 ### Datos y análisis
 
-- **Provincia/CCAA para EPA (asociaciones)** — no es derivable del CIF tipo G de forma estándar.
-- **Mover enlaces oficiales a `frontend/data/resoluciones.json`** — las URLs de bases reguladoras (3) y resoluciones del BOE (8) están escritas en `index.html`. Pasarlas a un JSON estático cargado con `fetch` seguiría el patrón del resto del proyecto. Coste estimado: ~1 hora.
+- **Provincia y CCAA para las EPA (asociaciones)** — no es derivable del CIF de
+  tipo G de forma estándar, así que hoy ese dato falta en las protectoras.
 
-  **Contrapartida, y no es menor:** hoy están en el HTML y se ven **siempre**, aunque el JavaScript falle o tarde. En un JSON pasarían a depender de una petición que puede fallar, y entonces los enlaces oficiales desaparecerían de la página. Se cambiaría algo que no puede romperse por algo que sí.
+- **Mover los enlaces oficiales a `frontend/data/resoluciones.json`** — las URLs
+  de bases reguladoras (3) y resoluciones del BOE (8) están escritas en
+  `index.html`. Pasarlas a un JSON cargado con `fetch` seguiría el patrón del
+  resto del proyecto. Coste estimado: ~1 hora.
 
-  **Hazlo cuando** la lista crezca de verdad (bastantes más años o tipos de convocatoria) o haga falta multi-idioma. Con ~10 enlaces que se actualizan una vez al año, el HTML directo es más fiable y igual de mantenible.
+  *Por qué no se ha hecho:* en el HTML se ven **siempre**, aunque el JavaScript
+  falle o tarde. En un JSON pasarían a depender de una petición que puede
+  fallar, y los enlaces oficiales desaparecerían de la página. Cambiar algo que
+  no puede romperse por algo que sí solo compensa si la lista crece bastante o
+  hace falta multi-idioma; con ~10 enlaces que se actualizan una vez al año, el
+  HTML directo es más fiable e igual de mantenible.
 
 ### Operación y despliegue
 
-- **Analítica de visitas sobre los propios logs** — para saber cuánta gente entra, de qué país y a qué páginas, no hace falta añadir ningún rastreador: Nginx ya registra cada petición, y desde que el `log_format` es el `combined` estándar guarda también **de dónde llega cada visita y con qué dispositivo**. Solo falta pasarle una herramienta como GoAccess, que los convierte en informes sin JavaScript, sin cookies, sin terceros y sin banner de consentimiento. El comando concreto está en `docker/nginx/default.conf`, junto al formato.
+- **Analítica de visitas sobre los propios logs** — Nginx ya registra cada
+  petición, y desde que el `log_format` es el `combined` estándar guarda también
+  la procedencia y el dispositivo. Falta pasarle una herramienta como GoAccess,
+  que los convierte en informes sin JavaScript, sin cookies, sin terceros y sin
+  banner de consentimiento. El comando concreto está en
+  `docker/nginx/default.conf`, junto al formato.
 
-  **Qué se puede saber y qué no.** Sí: país y ciudad aproximados (de la IP, con una base GeoIP), páginas visitadas, procedencia, dispositivo y navegador, y franjas horarias. No: el **tiempo en página** —el servidor ve cuándo llega la petición, no cuándo se marcha el visitante— ni los visitantes únicos exactos, porque las IPs se comparten y cambian. Para eso haría falta una analítica sin cookies auto-alojada (Umami, Plausible o Matomo en modo *cookieless*), que sí lleva un fragmento de JavaScript en las páginas.
+  *Alcance:* se puede obtener el país y la ciudad aproximados (de la IP, con una
+  base GeoIP), las páginas visitadas, la procedencia, el dispositivo y las
+  franjas horarias. **No** se puede obtener el tiempo en página —el servidor ve
+  la llegada de la petición, no la marcha del visitante— ni los visitantes
+  únicos exactos, porque las IPs se comparten y cambian. Eso exigiría una
+  analítica auto-alojada sin cookies (Umami, Plausible o Matomo *cookieless*),
+  que sí lleva JavaScript en las páginas.
 
-  **Los registros solo cuentan hacia delante:** los informes empezarán el día que se ponga en marcha, no antes.
+  *A tener en cuenta:* los registros solo cuentan hacia delante. Los informes
+  empiezan el día que se pone en marcha, no antes.
 
-- **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** — volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas después, casando por `num_convoc` en vez de por `id`. Coste estimado: ~1 hora, y lo delicado es no duplicar las 8 convocatorias que el dataset sí recrea.
+- **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** —
+  volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas
+  después, casando por `num_convoc` en vez de por `id`. Coste estimado: ~1 hora,
+  y lo delicado es no duplicar las 8 convocatorias que el dataset sí recrea.
 
-  **Probablemente no compense.** `reset-db` es una operación de desarrollo: en producción no se ejecuta casi nunca, porque destruye la base de datos. Y lo que se pierde ya está cubierto — la cuenta de administración la recrea el propio target llamando a `crear-admin`, las fechas de fin de plazo son dos y se reescriben en el panel en un par de minutos, y hay backup automático más el procedimiento paso a paso en el manual de instalación. Es una hora de código delicado, con riesgo de duplicar datos si se equivoca, para ahorrar un par de minutos al año.
+  *Por qué no se ha hecho:* `reset-db` es una operación de desarrollo que en
+  producción no se ejecuta casi nunca. Lo que se pierde ya está cubierto — la
+  cuenta de administración la recrea el propio target, las dos fechas de fin de
+  plazo se reescriben en el panel en un par de minutos, y hay backup automático
+  con el procedimiento en el manual. Una hora de código delicado, con riesgo de
+  duplicar datos, para ahorrar un par de minutos al año.
 
-  **Hazlo si te muerde dos veces.** Una vez es anécdota.
+- **Copias de seguridad fuera del servidor** — las copias programadas viven en
+  la misma máquina que la base de datos, así que no protegen de perder la
+  máquina. El manual de despliegue explica cómo traérselas con `scp`, pero es un
+  paso manual.
+
+### Mantenimiento
+
+- **17 clases CSS usadas en el HTML/JS que no existen en `styles.css`** — detectadas
+  comparando lo que se usa contra lo que está definido:
+
+  `admin-logs-pre--vacio` · `admin-usuario__email` · `auth-campo` ·
+  `auth-campo__etiqueta` · `auth-campo__input` · `col-sep` · `modal-ccaa__col` ·
+  `portada-split__imagen-real` · `privado-banner__meta` · `privado-banner__titulo` ·
+  `privado-item__texto` · `privado-sesion__desc` · `privado-sesion__info` ·
+  `resumen-bloque` · `resumen-bloque--total` · `resumen-grupos` ·
+  `resumen-tabla__subtotal`
+
+  **Sin estilo no es lo mismo que roto**: varias acompañan a otra clase que sí
+  existe (`class="resumen-bloque tabla-scroll"`), así que el elemento se ve bien
+  y la clase huérfana es solo un gancho semántico. Otras, como `resumen-grupos`
+  o `auth-campo`, suenan a que deberían aportar disposición y conviene mirarlas
+  en pantalla antes de decidir. Lo que no se puede saber leyendo el código es
+  cuáles de las dos cosas son.
+
+  Tarea: abrir `privado.html`, `exclusivo.html`, `verificar-email.html`, `admin.html`
+  e inicio, comprobar visualmente y luego **o darles estilo o quitarlas del HTML**.
+  Dejarlas como están es lo peor de las dos opciones: hacen creer que hay un estilo
+  que no existe.
 
 ### Funcionalidades y UX
 
-- **Entidades favoritas** — permitir marcar entidades (un máximo razonable, p. ej. 20) para hacerles seguimiento, con su último estado y el importe acumulado, sin buscarlas cada vez. **Ojo al replantearlo:** la idea original las mostraba en `exclusivo.html` para usuarios registrados, pero esa página quedó reservada al rol admin cuando se retiró el registro público, así que hoy irían en `privado.html` — y con muy pocas cuentas en juego, conviene decidir antes si la función aporta algo o si tiene más sentido guardar la búsqueda en la URL, que ya funciona sin cuenta. Requiere: tabla `usuario_favoritos` (`id_usuario` FK + `cif` + `fecha`), dos endpoints (`POST /privado/favoritos`, `DELETE /privado/favoritos/{cif}`, `GET /privado/favoritos`), botón de marcado en el modal del buscador y en `entidad.html`, y sección dedicada en la zona exclusiva.
+- **Entidades favoritas** — marcar entidades (un máximo razonable, p. ej. 20)
+  para hacerles seguimiento, con su último estado y el importe acumulado, sin
+  buscarlas cada vez. Requiere una tabla `usuario_favoritos` (`id_usuario` FK +
+  `cif` + fecha), tres endpoints bajo `/privado/favoritos`, botón de marcado en
+  el modal del buscador y en `entidad.html`, y una sección donde mostrarlas.
+
+  *A replantear antes de empezar:* la idea original las situaba en
+  `exclusivo.html` para usuarios registrados, pero esa página quedó reservada al
+  rol admin al retirarse el registro público, así que hoy irían en
+  `privado.html`. Con muy pocas cuentas en juego, conviene decidir primero si la
+  función aporta algo frente a guardar la búsqueda en la URL, que ya funciona
+  sin cuenta.
+
+- **Página explicativa del método CER** — qué es la captura, esterilización y
+  retorno de colonias felinas, y por qué se destinan fondos públicos a ello. La
+  web muestra cuánto dinero se reparte; esto respondería al *por qué*. Hay
+  material oficial ya enlazado en Recursos (la directriz técnica de la DGDA y la
+  Ley 7/2023) para sostenerlo con fuente en vez de con opinión.
 
 ### Privacidad
 
-- **Auto-alojar fuentes y librerías de terceros** — actualmente Google Fonts (Inter) y Chart.js se cargan desde CDN; no ponen cookies, pero el navegador del visitante envía su IP a Google/jsdelivr. Servir las fuentes y los `.js` desde el propio dominio elimina esas peticiones a terceros (ya existe un fallback local para Chart.js en `assets/vendor/`). Mejora de privacidad, opcional.
+- **Auto-alojar fuentes y librerías de terceros** — Google Fonts (Inter) y
+  Chart.js se cargan desde CDN. No ponen cookies, pero el navegador del
+  visitante envía su IP a Google y a jsDelivr. Servirlos desde el propio dominio
+  elimina esas peticiones; ya existe una copia local de Chart.js en
+  `assets/vendor/`.
 
 ---
 
