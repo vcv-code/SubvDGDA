@@ -723,14 +723,66 @@ servidor, que están solo allí (`cat /opt/subvdgda/docker/.env`):
 
 ### Actualizar a una versión nueva
 
+Los datos que se olvidan entre despliegue y despliegue, primero:
+
+| Qué | Valor |
+|-----|-------|
+| Conectar | `ssh servidor` (el alias está en tu `~/.ssh/config`, apunta a la IP) |
+| Ruta del proyecto | `/opt/subvdgda` — **no** el home de root |
+| Desde dónde se lanza compose | `/opt/subvdgda/docker`, y así no hace falta `-f` |
+| Rama que sigue el servidor | `main` (compruébalo con `git branch --show-current`) |
+
+La secuencia completa:
+
 ```bash
+ssh servidor
 cd /opt/subvdgda
+git branch --show-current      # debe decir main; si no, parar y mirar por qué
 git pull
-cd docker && docker compose up -d --build backend
+
+cd docker
+docker compose up -d --build backend       # solo si cambió código Python
+docker compose exec nginx nginx -s reload  # solo si cambió la config de Nginx
 ```
 
+**No todos los pasos hacen falta siempre**, y saber cuál toca evita tanto
+reconstruir de más como quedarse corto:
+
+| Qué has cambiado | Qué hay que hacer |
+|------------------|-------------------|
+| HTML, CSS, JS del frontend | **nada** — es un montaje directo, el `git pull` ya lo aplica |
+| Cualquier `.py` del backend | `docker compose up -d --build backend` |
+| `docker/nginx/default.conf` | `docker compose exec nginx nginx -s reload` |
+| Variables de `docker/.env` | `docker compose up -d` del servicio afectado |
+
 El backend va **horneado en la imagen**: un `restart` seguiría ejecutando el
-código viejo. El frontend, en cambio, es un montaje directo y se actualiza solo.
+código viejo, por eso `--build`. Nginx, en cambio, mantiene su configuración
+**cargada en memoria**: sin el `reload` sigue aplicando la anterior aunque el
+fichero ya esté actualizado en disco.
+
+Ese segundo caso es el traicionero, porque el fallo no se parece a su causa.
+Si un despliegue borra un archivo del frontend y añade una regla de Nginx que
+lo sustituye —como pasó al convertir `solicitudes.html` en redirección—, entre
+el `git pull` y el `reload` hay unos segundos en que esa ruta da 404: el
+archivo ya no está y la regla que ocupa su lugar todavía no se ha cargado.
+
+#### Comprobar que ha llegado de verdad
+
+Que los contenedores digan `Started` no prueba que el cambio esté aplicado.
+Conviene verificar lo que se acaba de tocar:
+
+```bash
+# La API responde y sirve datos reales
+curl -s https://subvencionesdgda.org/avisos/ | head -c 120
+
+# Una redirección conserva los parámetros (si tocaste reglas de Nginx)
+curl -sI "https://subvencionesdgda.org/solicitudes.html?buscar=gata" | grep -i location
+```
+
+En la redirección, lo que hay que mirar no es que responda, sino que el
+`Location` conserve el `?buscar=gata`. Una redirección que pierde la query
+string funciona y aun así no sirve: los enlaces guardados con filtros —lo
+único que justifica mantener la ruta— aterrizarían en un buscador vacío.
 
 ### Copias de seguridad
 
