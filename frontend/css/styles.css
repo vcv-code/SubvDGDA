@@ -5126,12 +5126,17 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 @media (max-width: 768px) {
     #mapa-ccaa { height: 400px; }
+    /* La leyenda se encoge en móvil, pero no por debajo de 0.75rem (12px):
+       por ahí está el límite de lo cómodo de leer en un teléfono, y esta
+       leyenda es justo lo que traduce los colores del mapa. Antes bajaba a
+       0.62rem (~10px), o sea que el texto se hacía más pequeño precisamente
+       en la pantalla donde peor se lee. */
     .mapa-leyenda {
         padding:   6px 8px;
-        font-size: 0.68rem;
+        font-size: 0.78rem;
     }
     .mapa-leyenda__titulo {
-        font-size:     0.62rem;
+        font-size:     0.75rem;
         margin-bottom: 4px;
     }
     .mapa-leyenda__fila {
@@ -5157,7 +5162,7 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .mapa-label-badge {
     display:          inline-block;
     font-family:      'Inter', sans-serif;
-    font-size:        0.65rem;
+    font-size:        0.75rem;
     font-weight:      600;
     color:            #1A1A1A;
     white-space:      nowrap;
