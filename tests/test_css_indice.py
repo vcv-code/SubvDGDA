@@ -106,3 +106,4 @@ def test_el_indice_explica_por_que_no_se_renumera():
         "Falta en el índice la nota que explica por qué no se renumera. "
         "Sin ella, el siguiente que pase lo verá como un descuido."
     )
+
