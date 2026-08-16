@@ -53,10 +53,25 @@ def test_borra_el_fichero_si_el_volcado_falla():
 
 
 def test_hay_rotacion():
-    """Sin ella, un volcado diario acaba llenando el disco del servidor."""
+    """Sin ella, las copias acaban llenando el disco del servidor."""
     t = _texto()
     assert "-mtime" in t and "-delete" in t
     assert "BACKUP_DIAS" in t, "los días de retención deben ser configurables"
+
+
+def test_la_retencion_se_lee_despues_del_env():
+    """Así se configura UNA vez por entorno, en docker/.env, y vale igual para
+    la tarea programada y para un `make backup` a mano.
+
+    Leyéndola antes, habría que pasarla en la línea del cron y un `make backup`
+    manual usaría el valor por defecto, borrando copias que se querían
+    conservar. Frecuencia y retención van unidas: con copias semanales, 30 días
+    dejan solo cuatro."""
+    t = _texto()
+    # Se busca la ASIGNACIÓN, no cualquier mención: el comentario de cabecera
+    # nombra la variable mucho antes y daría un falso negativo.
+    asignacion = t.index('DIAS="${BACKUP_DIAS')
+    assert asignacion > t.index('. "$ENV_FILE"')
 
 
 def test_comprueba_que_la_base_de_datos_esta_levantada():

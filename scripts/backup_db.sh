@@ -21,8 +21,6 @@ cd "$(dirname "$0")/.."
 
 ENV_FILE="docker/.env"
 CONTENEDOR="bdns_dgda_db"
-DIR="${BACKUP_DIR:-backups}"
-DIAS="${BACKUP_DIAS:-30}"
 
 if [ ! -f "$ENV_FILE" ]; then
     echo "ERROR: falta $ENV_FILE — ejecuta 'bash install.sh'." >&2
@@ -30,6 +28,18 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 # shellcheck disable=SC1090
 set -a; . "$ENV_FILE"; set +a
+
+# La configuración se lee DESPUÉS de cargar el .env, y no es un detalle: así la
+# retención se define UNA VEZ por entorno, en docker/.env, y vale igual para la
+# tarea programada y para un `make backup` lanzado a mano.
+#
+# Leyéndola antes, habría que pasarla en la línea del cron, y un `make backup`
+# manual usaría el valor por defecto — borrando copias que se querían conservar.
+#
+# Frecuencia y retención van unidas: con copias semanales, 30 días dejan solo
+# cuatro. En el servidor conviene BACKUP_DIAS=180 (unas 26 copias, ~21 MB).
+DIR="${BACKUP_DIR:-backups}"
+DIAS="${BACKUP_DIAS:-30}"
 
 if ! docker ps --format '{{.Names}}' | grep -qx "$CONTENEDOR"; then
     echo "ERROR: el contenedor $CONTENEDOR no está levantado." >&2

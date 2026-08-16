@@ -705,22 +705,45 @@ código viejo. El frontend, en cambio, es un montaje directo y se actualiza solo
 cd /opt/subvdgda && make backup
 ```
 
-**Programado**, una vez, para que se haga solo cada noche:
+**Programado**, una vez, para que se haga solo. Primero fija cuánto tiempo se
+conservan las copias, en `docker/.env` del servidor:
+
+```
+BACKUP_DIAS=180
+```
+
+Y después la tarea:
 
 ```bash
 crontab -e
 ```
 
-Y añade esta línea:
-
 ```
-30 3 * * * /opt/subvdgda/scripts/backup_db.sh >> /opt/subvdgda/logs/cron/backup_db.log 2>&1
+30 3 * * 0 /opt/subvdgda/scripts/backup_db.sh >> /opt/subvdgda/logs/cron/backup_db.log 2>&1
 ```
 
-Las 03:30 no coinciden con las otras tareas del proyecto —la rotación de logs a
-las 04:15 y la comprobación de BDNS a las 08:00—, así que nunca se solapan.
-Recuerda que **el servidor va en UTC**: en horario de verano español, eso son
-las 05:30.
+Eso es **los domingos a las 03:30**. Las 03:30 no coinciden con las otras tareas
+del proyecto —la rotación de logs a las 04:15 y la comprobación de BDNS a las
+08:00—, así que nunca se solapan. Recuerda que **el servidor va en UTC**: en
+horario de verano español, eso son las 05:30.
+
+> **Frecuencia y retención van unidas, y es lo que más se hace mal.**
+> Con copias semanales y 30 días de retención te quedan **solo cuatro**: si
+> descubres un problema a las seis semanas, no hay nada que restaurar. Al
+> espaciar la frecuencia hay que alargar la retención. Semanal + 180 días son
+> unas 26 copias cubriendo medio año, y ocupan ~21 MB.
+
+**Por qué semanal y no diaria.** Depende de cada cuánto cambian los datos que
+*no* se pueden reconstruir. Aquí el dataset se versiona en git, y `make reset-db`
+—la operación más arriesgada— ya hace su propio backup antes de borrar. Lo que
+la copia programada protege de verdad es lo impredecible: que el cron descubra
+una convocatoria nueva un día cualquiera. Semanal cubre eso de sobra; diaria
+sería ruido.
+
+**La retención se pone en el `.env` y no en la línea del cron** a propósito: así
+vale igual para la tarea programada y para un `make backup` lanzado a mano. Al
+revés, ese `make backup` manual usaría el valor por defecto y **borraría copias
+que querías conservar**.
 
 Comprueba al día siguiente que corrió:
 
