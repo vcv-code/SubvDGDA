@@ -644,6 +644,41 @@ solo `git pull`.
 
 ## Mantenimiento
 
+### Trabajar en el servidor por SSH
+
+Tres costumbres que evitan los errores más tontos, todos cometidos al menos una
+vez:
+
+**1. Espera a ver el prompt antes de escribir.** Al conectar hay varios segundos
+—la passphrase, el saludo del proveedor, el mensaje del sistema— en los que el
+teclado no va a donde crees. Si escribes durante esa espera, los comandos se
+pierden por el camino y acabas ejecutando solo el último.
+
+**Nada de pegar varias líneas de golpe** por el mismo motivo: una a una,
+esperando a que vuelva el prompt entre cada una.
+
+**2. Comprueba dónde estás antes de tocar ficheros.** El prompt lo dice:
+
+| Lo que ves | Dónde estás |
+|---|---|
+| `root@servidor:~#` | En `/root`, la carpeta personal |
+| `root@servidor:/opt/subvdgda#` | En el proyecto ← aquí es donde hay que estar |
+
+Ante la duda, `pwd`. Si un comando responde «No such file or directory» y sabes
+que el fichero existe, casi siempre es esto.
+
+**3. Editar sin editor cuando es una línea.** Para añadir algo al final de un
+fichero de configuración:
+
+```bash
+echo "VARIABLE=valor" >> docker/.env
+tail -3 docker/.env          # comprobar que quedó en su propia línea
+```
+
+Evita abrir `nano` y evita guardar sin querer en el sitio equivocado. Para
+cambios más grandes, la extensión **Remote - SSH** de VS Code permite editar los
+ficheros del servidor con el editor de siempre.
+
 ### Llegar a Adminer y Mailpit
 
 No están expuestos, y así debe seguir. Se llega por túnel SSH desde tu equipo:
