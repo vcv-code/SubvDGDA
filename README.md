@@ -973,7 +973,8 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make logs` | Últimas 100 líneas de logs del backend |
 | `make logs-cron` | Últimas 50 líneas de logs del cron |
 | `make logs-nginx` | Últimas 50 líneas de logs de Nginx |
-| `make backup` | Vuelca la BD a un archivo `backup_YYYYMMDD_HHMMSS.sql` |
+| `make backup` | Vuelca la BD a `backups/backup_AAAAMMDD_HHMMSS.sql`, descarta el fichero si el volcado queda incompleto y borra los de más de 30 días (`BACKUP_DIAS` en `docker/.env` para cambiarlo) |
+| `make restore FILE=…` | Restaura una copia. **Sobrescribe la BD actual**, así que pide confirmación y rechaza los volcados truncados |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
 | `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
@@ -1150,7 +1151,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 448 pruebas automáticas en verde (pytest)
+- 450 pruebas automáticas en verde (pytest)
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 

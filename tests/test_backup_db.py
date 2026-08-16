@@ -90,3 +90,23 @@ def test_los_volcados_estan_fuera_de_git():
     """Contienen datos reales: usuarios y hashes de contraseña."""
     t = GITIGNORE.read_text(encoding="utf-8")
     assert "backups/" in t or "backup_*.sql" in t
+
+
+# ── Restaurar es tan destructivo como borrar ────────────────────────────────
+
+def test_restore_pide_confirmacion():
+    """`reset-db` la pedía y `restore` no, y los dos destruyen la BD actual.
+    Un nombre de fichero mal escrito no tenía vuelta atrás."""
+    t = MAKEFILE.read_text(encoding="utf-8")
+    i = t.index("\nrestore:")
+    bloque = t[i:t.index("\n\n", i)]
+    assert "¿Continuar?" in bloque
+
+
+def test_restore_rechaza_un_volcado_truncado():
+    """Restaurar uno incompleto deja la base de datos a medias, que es peor que
+    no restaurar."""
+    t = MAKEFILE.read_text(encoding="utf-8")
+    i = t.index("\nrestore:")
+    bloque = t[i:t.index("\n\n", i)]
+    assert "Dump completed" in bloque
