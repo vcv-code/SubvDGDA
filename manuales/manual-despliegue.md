@@ -705,6 +705,13 @@ código viejo. El frontend, en cambio, es un montaje directo y se actualiza solo
 cd /opt/subvdgda && make backup
 ```
 
+> **Este `crontab` es el de Linux, no el fichero `docker/cron/crontab` del
+> proyecto.** Ese segundo **no lo ejecuta nadie**: el contenedor arranca un
+> `scheduler.py` propio y aquel fichero solo documenta la programación
+> original. La copia de seguridad va en el `crontab` del sistema porque
+> necesita hablar con el contenedor de MariaDB, y eso desde dentro del
+> contenedor de cron exigiría darle acceso al demonio de Docker.
+
 **Programado**, una vez, para que se haga solo. Primero fija cuánto tiempo se
 conservan las copias, en `docker/.env` del servidor:
 

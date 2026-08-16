@@ -655,9 +655,31 @@ Hay **dos sistemas de tareas programadas** y conviene no confundirlos:
 | Contenedor `bdns_cron` (`scheduler.py`) | Comprobación de BDNS, salud y rotación de logs | Va con el proyecto: se comporta igual en local y en el servidor |
 | `crontab` del servidor | Copia de seguridad de la base de datos | Necesita hablar con el contenedor de MariaDB, y darle al contenedor de cron acceso al demonio de Docker sería un permiso que no debe tener |
 
-**Al tocar el calendario del contenedor, el fichero que manda es `scheduler.py`**
-(su función `_jobs_for()`), no `docker/cron/crontab` — ese solo documenta la
-programación original y **no lo ejecuta nadie**.
+> **CUIDADO: hay dos cosas llamadas «crontab» y solo una funciona.**
+>
+> | | `docker/cron/crontab` | `crontab` del servidor |
+> |---|---|---|
+> | Qué es | Un fichero dentro del proyecto | El programador de tareas de Linux |
+> | Quién lo ejecuta | **Nadie** | El sistema, siempre |
+>
+> El contenedor **no arranca `cron`**: arranca `scheduler.py`, un programa de
+> Python propio. `docker/cron/crontab` quedó documentando la programación
+> original y no tiene ningún efecto — ya pasó una vez que se añadió ahí una
+> tarea y no se ejecutó jamás.
+>
+> **Al tocar el calendario del contenedor, el fichero que manda es
+> `scheduler.py`** (su función `_jobs_for()`), y tiene tests.
+>
+> El `crontab` del servidor es otra cosa distinta y sí funciona: es el de
+> Linux, corriendo fuera de los contenedores. Precisamente por estar fuera
+> puede hablar con el contenedor de MariaDB, que es el motivo de que la copia
+> de seguridad vaya ahí y no en `scheduler.py`.
+>
+> **No fue cosa de WSL**, aunque lo parezca: el contenedor no arranca `cron` en
+> ningún sistema. Ese mismo contenedor corre hoy en el servidor —Linux puro— y
+> se comporta igual. Lo que sí es propio de WSL es que allí el `cron` del
+> sistema no suele estar en marcha, así que programar tareas del anfitrión en
+> el portátil no funcionaría sin más; en el servidor sí.
 
 ### Tareas del contenedor
 
