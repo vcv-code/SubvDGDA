@@ -890,15 +890,125 @@ Y la tarea, en el mismo `crontab -e` que la copia de seguridad (el de Linux):
 
 Lunes a las 4:00, media hora después de la copia del domingo para no solaparse.
 
-#### Cómo verlo
+#### Dos informes, para dos cosas distintas
 
-El informe **no es accesible desde la web**, y es a propósito: contiene las
-direcciones IP de los visitantes. Nginx solo sirve `frontend/`, e `informes/`
-queda fuera. Para leerlo, tráetelo a tu ordenador:
+| | `make resumen-visitas` | `make informe-visitas` |
+|---|---|---|
+| Qué es | resumen propio, **en español** | GoAccess, detalle completo en inglés |
+| Tamaño | ~10 KB | ~900 KB |
+| Necesita | solo Python | `apt install goaccess` |
+| Para | el vistazo semanal | investigar algo concreto |
+
+El resumen responde a cinco preguntas y se acaba: cuánta gente entra, qué mira,
+de dónde llega, con qué dispositivo y qué está fallando. Descuenta los robots y
+los ficheros estáticos, porque contarlos infla las cifras hasta dejarlas sin
+sentido: en una web pública la mayor parte del tráfico es automático, y una
+sola visita pide veinte ficheros entre imágenes, estilos y scripts.
 
 ```bash
-scp servidor:/opt/subvdgda/informes/visitas-*.html ~/informes-subvdgda/
+cd /opt/subvdgda
+make resumen-visitas                            # últimos 30 días
+python3 scripts/resumen_visitas.py --dias 7     # solo la última semana
+python3 scripts/resumen_visitas.py --organizaciones   # + administraciones públicas
 ```
+
+El botón **«Guardar como PDF»** del propio informe usa la impresión del
+navegador, que ya sabe generar PDF. No hay opción de imagen: haría falta una
+librería externa y el informe dejaría de abrirse sin conexión; para una imagen,
+una captura de pantalla hace lo mismo.
+
+#### Identificar administraciones públicas
+
+`--organizaciones` resuelve el nombre de red (DNS inverso) de los visitantes
+habituales y busca si pertenece a una administración: ayuntamientos,
+diputaciones, comunidades autónomas, Estado, universidades públicas.
+
+**Identifica organizaciones, no personas.** Nunca se muestra la dirección IP,
+solo el organismo y cuántas páginas ha visto. Que un ayuntamiento consulte los
+datos de sus propias subvenciones es información legítima y de interés público.
+
+Va **desactivado por defecto** por dos razones: cada visitante habitual supone
+una consulta de red, así que tarda; y no siempre aporta.
+
+**Y hay que leerlo con cuidado**: la mayoría de administraciones navegan con
+conexiones comerciales corrientes, indistinguibles de una casa. Que un
+ayuntamiento **no** aparezca no significa que no haya entrado — significa que
+su red no lo dice. Sirve para confirmar que alguien entró, nunca para concluir
+que nadie lo hizo.
+
+Los patrones están comprobados en los tests contra nombres reales de organismos
+y, sobre todo, contra conexiones domésticas y comerciales que **no** deben
+identificarse: un falso positivo sería peor que no detectar nada.
+
+#### Pendiente: países y ciudades
+
+Para saber de dónde entran geográficamente hace falta una base de datos que
+traduzca IP a ubicación. La habitual es **GeoLite2 de MaxMind**: gratuita, pero
+exige registrarse y obtener una clave.
+
+Una vez descargada, GoAccess la usa con `--geoip-database=/ruta/GeoLite2-City.mmdb`
+y añade paneles de país y ciudad. El resumen en español puede incorporarlo
+después.
+
+El país sale con bastante fiabilidad; **la ciudad es aproximada** y con
+conexiones móviles suele fallar, porque la IP corresponde a la salida de la
+operadora y no a dónde está la persona.
+
+#### Cómo abrirlos
+
+Los informes **no son accesibles desde la web**, y es a propósito: contienen
+direcciones IP. Nginx solo sirve `frontend/`, e `informes/` queda fuera.
+
+**Opción 1 — traértelos a tu ordenador** (la habitual). Desde tu máquina, no
+desde la sesión SSH:
+
+```bash
+mkdir -p ~/informes-subvdgda
+scp servidor:/opt/subvdgda/informes/*.html ~/informes-subvdgda/
+```
+
+Y para abrirlos, estando en WSL, hay tres caminos:
+
+```bash
+explorer.exe ~/informes-subvdgda          # abre la carpeta en Windows
+cd ~/informes-subvdgda && explorer.exe resumen-2026-08-16.html   # abre el fichero
+```
+
+O navegando: pega `\\wsl$\Ubuntu\home\ubuntu\informes-subvdgda` en la barra de
+direcciones del explorador de Windows. Merece la pena anclar esa ruta a Acceso
+rápido, porque los ficheros de WSL **no están en el disco de Windows** y no se
+llega a ellos navegando por las carpetas de siempre.
+
+Windows los abrirá con Edge si es tu navegador por defecto. Para usar otro,
+clic derecho sobre el fichero → Abrir con.
+
+**Opción 2 — leerlo por un túnel SSH**, sin descargar nada. Útil si estás en
+otro ordenador. Desde tu máquina:
+
+```bash
+ssh -L 8090:localhost:8090 servidor
+```
+
+Y ya dentro del servidor:
+
+```bash
+cd /opt/subvdgda/informes && python3 -m http.server 8090 --bind 127.0.0.1
+```
+
+Ahora abres `http://localhost:8090` en tu navegador. El `--bind 127.0.0.1` es
+importante: sin él el servidor quedaría escuchando en todas las interfaces y
+los informes, con sus IPs dentro, serían accesibles desde internet. Al terminar,
+`Ctrl+C` y cierras la sesión.
+
+**Opción 3 — verlo en texto por la terminal**, sin salir del servidor:
+
+```bash
+goaccess logs/nginx/access.log* --log-format='%h %^[%d:%t %^] "%r" %s %b "%R" "%u" %T' \
+  --date-format='%d/%b/%Y' --time-format='%H:%M:%S' --num-tests=0
+```
+
+Se abre en modo interactivo dentro de la terminal: flechas para moverse, `q`
+para salir. Es el mismo dato, sin generar fichero.
 
 #### Lo que hay que saber para no sacar conclusiones falsas
 
