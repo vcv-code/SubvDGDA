@@ -3703,6 +3703,14 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     color: #FCA5A5;
 }
 
+/* Estado sin contenido: "(sin registros)" o un error de carga. El JS ya
+   añadía esta clase en nueve sitios, pero nunca se definió, así que ese
+   texto salía con el verde de un log normal y parecía un registro más. */
+.admin-logs-pre--vacio {
+    color: #9CA3AF;
+    font-style: italic;
+}
+
 /* ── Botones de acción (activar/desactivar, cambiar rol) ── */
 .btn-accion {
     background: none;
