@@ -855,6 +855,74 @@ ls -lh /opt/subvdgda/backups/
 - **Rota**: elimina los de más de 30 días, para que un volcado diario no acabe
   llenando el disco. Se ajusta con `BACKUP_DIAS`.
 
+### Informe de visitas
+
+Quién entra, qué mira y desde dónde llega, **sin cookies ni servicios externos**:
+todo sale de los registros que Nginx ya escribe y que `privacidad.html` declara.
+
+Se instala **una vez** y queda para siempre:
+
+```bash
+apt install goaccess
+```
+
+Y se genera cuando quieras:
+
+```bash
+cd /opt/subvdgda && make informe-visitas
+```
+
+Deja `informes/visitas-AAAA-MM-DD.html`. Se abre en el navegador y trae páginas
+más vistas, visitantes únicos por día, procedencia, navegadores y dispositivos,
+códigos de error y las páginas más lentas.
+
+**Programado**, para no acordarte de lanzarlo. Retención en `docker/.env`:
+
+```
+INFORMES_DIAS=365
+```
+
+Y la tarea, en el mismo `crontab -e` que la copia de seguridad (el de Linux):
+
+```
+0 4 * * 1 /opt/subvdgda/scripts/informe_visitas.sh >> /opt/subvdgda/logs/cron/informe_visitas.log 2>&1
+```
+
+Lunes a las 4:00, media hora después de la copia del domingo para no solaparse.
+
+#### Cómo verlo
+
+El informe **no es accesible desde la web**, y es a propósito: contiene las
+direcciones IP de los visitantes. Nginx solo sirve `frontend/`, e `informes/`
+queda fuera. Para leerlo, tráetelo a tu ordenador:
+
+```bash
+scp servidor:/opt/subvdgda/informes/visitas-*.html ~/informes-subvdgda/
+```
+
+#### Lo que hay que saber para no sacar conclusiones falsas
+
+**Las IPs no son personas.** Una puede ser una casa entera o una operadora
+móvil con miles de clientes. Sirve para tendencias, no para contar gente.
+
+**Los rastreadores se descuentan** (`--ignore-crawlers`), pero solo los
+conocidos. En una web nueva, buena parte del tráfico restante seguirá siendo
+automático.
+
+**Solo hay 30 días de registros.** `rotar_logs.py` borra lo anterior, y ese
+número está en `privacidad.html`. Los informes sí se conservan un año, así que
+para series largas lo que vale es guardar los informes, no los registros.
+
+**El sexo o la edad del visitante no se pueden saber**, ni con esto ni con
+nada que no sea perfilado publicitario. En una petición HTTP no viaja esa
+información.
+
+#### Si el informe sale vacío
+
+El script se planta y avisa. Pasa si alguien cambia `log_format` en
+`docker/nginx/default.conf` sin tocar el `FORMATO` del script: GoAccess deja
+de reconocer las líneas. Los dos van juntos, y hay tests que lo comprueban.
+
 ### Sacar las copias del servidor
 
 > **Un backup que vive en la misma máquina que la base de datos no protege de

@@ -915,6 +915,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Docker: Nginx + FastAPI + MariaDB + cron + Mailpit + Adminer en contenedores. La base de datos, Adminer y Mailpit escuchan **solo en local**: en el servidor se llega a ellos por túnel SSH
 - El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
+- **Informe de visitas propio** (GoAccess sobre los registros de Nginx): sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación
@@ -987,6 +988,12 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
 - **Cabeceras JSDoc** — los 21 archivos JS documentan propósito, endpoints que usan y página asociada
 - **CSS consolidado** — una sola hoja de estilos con índice de las 35 secciones en la cabecera, **verificado por tests**: si se añade una sección al cuerpo y no se anota, la batería falla. Ninguna clase usada en el marcado se queda sin definir, también comprobado. Los números no son correlativos y cuatro están repetidos, y se han dejado así a propósito —la documentación cita las secciones por número en 47 sitios, uno de ellos un historial— con la razón escrita en el propio índice, para que no se «arregle» rompiendo las citas. De los `style=` inline que quedan, 85 de 105 son `display:none` para alternar visibilidad desde JavaScript; los 20 restantes (tipografía y márgenes puntuales) siguen siendo mejora pendiente
+
+### Privacidad por diseño
+
+- **Analítica sin rastreo** — las visitas se miden con GoAccess sobre los registros que Nginx ya escribe, no con un servicio externo. No hay cookies, ni identificadores, ni peticiones a terceros, y por eso tampoco hace falta banner de consentimiento. Lo que se sabe es qué páginas se ven, desde dónde se llega y con qué dispositivo; nunca quién
+- **Los informes no se publican** — contienen direcciones IP, así que se generan fuera de lo que Nginx sirve y están en `.gitignore`. Se consultan trayéndolos por `scp`
+- **Retención corta** — los registros duran 30 días (`rotar_logs.py`), y ese número es el que declara `privacidad.html`. Para series largas se conservan los informes, no los registros
 
 ### Contingencia ante fallos externos
 
@@ -1274,24 +1281,6 @@ ser más informativo que la mejora en sí.
   HTML directo es más fiable e igual de mantenible.
 
 ### Operación y despliegue
-
-- **Analítica de visitas sobre los propios logs** — Nginx ya registra cada
-  petición, y desde que el `log_format` es el `combined` estándar guarda también
-  la procedencia y el dispositivo. Falta pasarle una herramienta como GoAccess,
-  que los convierte en informes sin JavaScript, sin cookies, sin terceros y sin
-  banner de consentimiento. El comando concreto está en
-  `docker/nginx/default.conf`, junto al formato.
-
-  *Alcance:* se puede obtener el país y la ciudad aproximados (de la IP, con una
-  base GeoIP), las páginas visitadas, la procedencia, el dispositivo y las
-  franjas horarias. **No** se puede obtener el tiempo en página —el servidor ve
-  la llegada de la petición, no la marcha del visitante— ni los visitantes
-  únicos exactos, porque las IPs se comparten y cambian. Eso exigiría una
-  analítica auto-alojada sin cookies (Umami, Plausible o Matomo *cookieless*),
-  que sí lleva JavaScript en las páginas.
-
-  *A tener en cuenta:* los registros solo cuentan hacia delante. Los informes
-  empiezan el día que se pone en marcha, no antes.
 
 - **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** —
   volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas

@@ -11,7 +11,7 @@
         mantenimiento-on mantenimiento-off \
         reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
-        backup restore shell-db mailpit uninstall
+        backup restore informe-visitas shell-db mailpit uninstall
 
 # Los volcados de BD van a un directorio propio, ignorado por git: contienen
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
@@ -157,6 +157,13 @@ logs-nginx:
 # quedó completo y rota los de más de 30 días.
 backup:
 	@bash scripts/backup_db.sh
+
+# Informe de visitas a partir de los logs de Nginx, con GoAccess. Igual que
+# `backup`, delega en el script para que valga lo mismo a mano que programado.
+# El informe va a informes/, que git ignora y Nginx no sirve: lleva las IPs de
+# los visitantes.
+informe-visitas:
+	@bash scripts/informe_visitas.sh
 
 # Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
 # actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un
