@@ -723,14 +723,66 @@ servidor, que están solo allí (`cat /opt/subvdgda/docker/.env`):
 
 ### Actualizar a una versión nueva
 
+Los datos que se olvidan entre despliegue y despliegue, primero:
+
+| Qué | Valor |
+|-----|-------|
+| Conectar | `ssh servidor` (el alias está en tu `~/.ssh/config`, apunta a la IP) |
+| Ruta del proyecto | `/opt/subvdgda` — **no** el home de root |
+| Desde dónde se lanza compose | `/opt/subvdgda/docker`, y así no hace falta `-f` |
+| Rama que sigue el servidor | `main` (compruébalo con `git branch --show-current`) |
+
+La secuencia completa:
+
 ```bash
+ssh servidor
 cd /opt/subvdgda
+git branch --show-current      # debe decir main; si no, parar y mirar por qué
 git pull
-cd docker && docker compose up -d --build backend
+
+cd docker
+docker compose up -d --build backend       # solo si cambió código Python
+docker compose exec nginx nginx -s reload  # solo si cambió la config de Nginx
 ```
 
+**No todos los pasos hacen falta siempre**, y saber cuál toca evita tanto
+reconstruir de más como quedarse corto:
+
+| Qué has cambiado | Qué hay que hacer |
+|------------------|-------------------|
+| HTML, CSS, JS del frontend | **nada** — es un montaje directo, el `git pull` ya lo aplica |
+| Cualquier `.py` del backend | `docker compose up -d --build backend` |
+| `docker/nginx/default.conf` | `docker compose exec nginx nginx -s reload` |
+| Variables de `docker/.env` | `docker compose up -d` del servicio afectado |
+
 El backend va **horneado en la imagen**: un `restart` seguiría ejecutando el
-código viejo. El frontend, en cambio, es un montaje directo y se actualiza solo.
+código viejo, por eso `--build`. Nginx, en cambio, mantiene su configuración
+**cargada en memoria**: sin el `reload` sigue aplicando la anterior aunque el
+fichero ya esté actualizado en disco.
+
+Ese segundo caso es el traicionero, porque el fallo no se parece a su causa.
+Si un despliegue borra un archivo del frontend y añade una regla de Nginx que
+lo sustituye —como pasó al convertir `solicitudes.html` en redirección—, entre
+el `git pull` y el `reload` hay unos segundos en que esa ruta da 404: el
+archivo ya no está y la regla que ocupa su lugar todavía no se ha cargado.
+
+#### Comprobar que ha llegado de verdad
+
+Que los contenedores digan `Started` no prueba que el cambio esté aplicado.
+Conviene verificar lo que se acaba de tocar:
+
+```bash
+# La API responde y sirve datos reales
+curl -s https://subvencionesdgda.org/avisos/ | head -c 120
+
+# Una redirección conserva los parámetros (si tocaste reglas de Nginx)
+curl -sI "https://subvencionesdgda.org/solicitudes.html?buscar=gata" | grep -i location
+```
+
+En la redirección, lo que hay que mirar no es que responda, sino que el
+`Location` conserve el `?buscar=gata`. Una redirección que pierde la query
+string funciona y aun así no sirve: los enlaces guardados con filtros —lo
+único que justifica mantener la ruta— aterrizarían en un buscador vacío.
 
 ### Copias de seguridad
 
@@ -802,6 +854,74 @@ ls -lh /opt/subvdgda/backups/
   final, y si no está, borra el fichero en vez de guardarlo.
 - **Rota**: elimina los de más de 30 días, para que un volcado diario no acabe
   llenando el disco. Se ajusta con `BACKUP_DIAS`.
+
+### Informe de visitas
+
+Quién entra, qué mira y desde dónde llega, **sin cookies ni servicios externos**:
+todo sale de los registros que Nginx ya escribe y que `privacidad.html` declara.
+
+Se instala **una vez** y queda para siempre:
+
+```bash
+apt install goaccess
+```
+
+Y se genera cuando quieras:
+
+```bash
+cd /opt/subvdgda && make informe-visitas
+```
+
+Deja `informes/visitas-AAAA-MM-DD.html`. Se abre en el navegador y trae páginas
+más vistas, visitantes únicos por día, procedencia, navegadores y dispositivos,
+códigos de error y las páginas más lentas.
+
+**Programado**, para no acordarte de lanzarlo. Retención en `docker/.env`:
+
+```
+INFORMES_DIAS=365
+```
+
+Y la tarea, en el mismo `crontab -e` que la copia de seguridad (el de Linux):
+
+```
+0 4 * * 1 /opt/subvdgda/scripts/informe_visitas.sh >> /opt/subvdgda/logs/cron/informe_visitas.log 2>&1
+```
+
+Lunes a las 4:00, media hora después de la copia del domingo para no solaparse.
+
+#### Cómo verlo
+
+El informe **no es accesible desde la web**, y es a propósito: contiene las
+direcciones IP de los visitantes. Nginx solo sirve `frontend/`, e `informes/`
+queda fuera. Para leerlo, tráetelo a tu ordenador:
+
+```bash
+scp servidor:/opt/subvdgda/informes/visitas-*.html ~/informes-subvdgda/
+```
+
+#### Lo que hay que saber para no sacar conclusiones falsas
+
+**Las IPs no son personas.** Una puede ser una casa entera o una operadora
+móvil con miles de clientes. Sirve para tendencias, no para contar gente.
+
+**Los rastreadores se descuentan** (`--ignore-crawlers`), pero solo los
+conocidos. En una web nueva, buena parte del tráfico restante seguirá siendo
+automático.
+
+**Solo hay 30 días de registros.** `rotar_logs.py` borra lo anterior, y ese
+número está en `privacidad.html`. Los informes sí se conservan un año, así que
+para series largas lo que vale es guardar los informes, no los registros.
+
+**El sexo o la edad del visitante no se pueden saber**, ni con esto ni con
+nada que no sea perfilado publicitario. En una petición HTTP no viaja esa
+información.
+
+#### Si el informe sale vacío
+
+El script se planta y avisa. Pasa si alguien cambia `log_format` en
+`docker/nginx/default.conf` sin tocar el `FORMATO` del script: GoAccess deja
+de reconocer las líneas. Los dos van juntos, y hay tests que lo comprueban.
 
 ### Sacar las copias del servidor
 

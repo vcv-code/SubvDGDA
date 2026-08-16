@@ -192,7 +192,7 @@ async function cargarUsuarios() {
                  </button>`;
 
             const nombreMostrado = u.nombre
-                ? `<span>${u.nombre}</span><br><small class="admin-usuario__email">${u.email}</small>`
+                ? `<span>${u.nombre}</span><br><small>${u.email}</small>`
                 : u.email;
 
             return `<tr>

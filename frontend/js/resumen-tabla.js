@@ -29,9 +29,9 @@ window.renderResumenTabla = function (datos, contenedor) {
 
     const cabecera = `<tr>
         <th scope="col">Tipo</th><th scope="col">Año</th><th scope="col">Total</th>
-        <th scope="col" class="col-sep">Concedidas</th>
+        <th scope="col">Concedidas</th>
         <th scope="col">No benef.</th><th scope="col">Excluidas</th><th scope="col">Desistidas</th>
-        <th scope="col" class="col-sep">Importe concedido</th>
+        <th scope="col">Importe concedido</th>
     </tr>`;
 
     const renderFila = (f) => {
@@ -46,11 +46,11 @@ window.renderResumenTabla = function (datos, contenedor) {
             <td><span class="resumen-tabla__tipo resumen-tabla__tipo--${f.tipo}">${f.tipo.toUpperCase()}</span></td>
             <td>${f.anio}</td>
             <td>${num(f.total)}</td>
-            <td class="col-sep">${num(f.concedidas)}</td>
+            <td>${num(f.concedidas)}</td>
             <td>${num(f.no_beneficiarias)}</td>
             <td>${num(f.excluidas)}</td>
             <td>${num(f.desistidas)}</td>
-            <td class="col-sep">${fmt(f.importe_total)}${f.tipo === 'epa' && f.anio === 2021 ? '<sup>*</sup>' : ''}</td>
+            <td>${fmt(f.importe_total)}${f.tipo === 'epa' && f.anio === 2021 ? '<sup>*</sup>' : ''}</td>
         </tr>`;
     };
 
@@ -59,19 +59,19 @@ window.renderResumenTabla = function (datos, contenedor) {
         const s  = (campo) => cd.reduce((a, f) => a + f[campo], 0);
         const subtotal = cd.length ? `
             <tfoot>
-                <tr class="resumen-tabla__subtotal">
+                <tr>
                     <td colspan="2">Subtotal ${tipo.toUpperCase()}</td>
                     <td>${num(s('total'))}</td>
-                    <td class="col-sep">${num(s('concedidas'))}</td>
+                    <td>${num(s('concedidas'))}</td>
                     <td>${num(s('no_beneficiarias'))}</td>
                     <td>${num(s('excluidas'))}</td>
                     <td>${num(s('desistidas'))}</td>
-                    <td class="col-sep">${fmt(s('importe_total'))}</td>
+                    <td>${fmt(s('importe_total'))}</td>
                 </tr>
             </tfoot>` : '';
         return `
             <div class="resumen-tabla-card">
-            <div class="resumen-bloque tabla-scroll">
+            <div class="tabla-scroll">
                 <table class="resumen-tabla" aria-label="Solicitudes ${tipo.toUpperCase()}" style="table-layout:fixed;">
                     ${colgroup}<thead>${cabecera}</thead>
                     <tbody>${filasTipo.map(renderFila).join('')}</tbody>
@@ -90,7 +90,7 @@ window.renderResumenTabla = function (datos, contenedor) {
     const totDesist  = todosConDatos.reduce((s, f) => s + f.desistidas, 0);
 
     contenedor.innerHTML = `
-        <div class="resumen-grupos">
+        <div>
             ${renderBloque('epa', filasEpa)}
             <!-- Nota del asterisco del importe de 2021 (EPA), justo bajo su tabla.
                  Texto editorial FIJO; revisar si cambian los presupuestos. -->
@@ -99,7 +99,7 @@ window.renderResumenTabla = function (datos, contenedor) {
             </p>
             ${renderBloque('eell', filasEell)}
             <div class="resumen-tabla-card">
-            <div class="resumen-bloque resumen-bloque--total tabla-scroll">
+            <div class="tabla-scroll">
                 <table class="resumen-tabla" aria-label="Total global" style="table-layout:fixed;">
                     ${colgroup}
                     <thead>${cabecera}</thead>
@@ -107,11 +107,11 @@ window.renderResumenTabla = function (datos, contenedor) {
                         <tr class="resumen-tabla__totales">
                             <td colspan="2">TOTAL GLOBAL</td>
                             <td>${num(datos.total_global)}</td>
-                            <td class="col-sep">${num(datos.concedidas_total)}</td>
+                            <td>${num(datos.concedidas_total)}</td>
                             <td>${num(totNobenef)}</td>
                             <td>${num(totExcl)}</td>
                             <td>${num(totDesist)}</td>
-                            <td class="col-sep">${fmt(datos.importe_global)}</td>
+                            <td>${fmt(datos.importe_global)}</td>
                         </tr>
                     </tbody>
                 </table>

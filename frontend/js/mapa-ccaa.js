@@ -157,7 +157,15 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         var html   = datos
             ? '<strong>' + nombre + '</strong><br>Importe: ' + fmtEuro(datos.importe_total) + '<br>Concesiones: ' + datos.num_concesiones.toLocaleString('es-ES')
             : '<strong>' + nombre + '</strong><br>Sin subvenciones';
-        capa.bindTooltip(html, { sticky: true, direction: 'auto', offset: [0, -4] });
+        // El tooltip de Leaflet SOLO en ratón. En táctil no se enlaza siquiera,
+        // en lugar de enlazarlo y deshacerlo después: `unbindTooltip()` pone
+        // `_tooltip` a null pero NO retira los escuchadores de foco que
+        // `bindTooltip()` deja sobre el <path> del SVG. Al recibir foco una
+        // comunidad, ese escuchador huérfano hace `this._tooltip._source = ...`
+        // sobre null y revienta con "Cannot set properties of null".
+        if (!esTactilPrimario) {
+            capa.bindTooltip(html, { sticky: true, direction: 'auto', offset: [0, -4] });
+        }
         capa.on({
             mouseover: onMouseOver,
             mouseout:  function() { capaGeojson.resetStyle(capa); },
@@ -176,11 +184,6 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
     // En móvil ajustar vista para que España quepa completa
     if (window.innerWidth <= 768) {
         _mapaInstancia.fitBounds(capaGeojson.getBounds(), { padding: [8, 8] });
-    }
-
-    // En móvil quitamos los tooltips de Leaflet — usamos el div propio
-    if (esTactilPrimario) {
-        capaGeojson.eachLayer(function(l) { l.unbindTooltip(); });
     }
 
     // Solo móvil: 1 toque = info centrada; 2 toques = modal

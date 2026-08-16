@@ -116,7 +116,7 @@
 
                 <!-- ─────────────────────────────────────────────────
                      FILA 1: KPIs
-                     Pendiente de endpoint GET /estadisticas/eell
+                     Datos de GET /estadisticas/eell
                      ───────────────────────────────────────────────── -->
                 <div class="grid-4 mb-lg">
 
@@ -207,9 +207,7 @@
                             Datos esperados: top_provincias[{ provincia, importe_total }]
                         -->
                         <div class="chart-container" id="grafico-top-provincias-container">
-                            <p class="estado-carga" id="provincias-pendiente">
-                                Pendiente de endpoint <code>/estadisticas/eell</code>
-                            </p>
+                            <p class="estado-carga" id="provincias-pendiente">Cargando...</p>
                             <canvas id="grafico-top-provincias" role="img" style="display:none;"
                                 aria-label="Gráfico de top provincias por importe EELL"></canvas>
                         </div>
@@ -236,9 +234,7 @@
                             concesiones en eje Y. Datos: distribucion_importes[{ rango, cantidad }]
                         -->
                         <div class="chart-container" id="grafico-tramos-container">
-                            <p class="estado-carga" id="tramos-pendiente">
-                                Pendiente de endpoint <code>/estadisticas/eell</code>
-                            </p>
+                            <p class="estado-carga" id="tramos-pendiente">Cargando...</p>
                             <canvas id="grafico-tramos" role="img" style="display:none;"
                                 aria-label="Gráfico de tramos de importe concedido EELL"></canvas>
                         </div>
@@ -380,12 +376,12 @@
                     <button class="modal-ccaa__cerrar" aria-label="Cerrar">&times;</button>
                 </div>
                 <div class="modal-ccaa__cuerpo">
-                    <div class="modal-ccaa__col">
+                    <div>
                         <p class="modal-ccaa__col-titulo">Acumulado <span id="modal-anio-min"></span>–<span id="modal-anio-max"></span></p>
                         <p class="modal-ccaa__col-nota" id="modal-nota-acum"></p>
                         <ol class="modal-ccaa__lista" id="modal-lista-acum"></ol>
                     </div>
-                    <div class="modal-ccaa__col">
+                    <div>
                         <p class="modal-ccaa__col-titulo">Último año con resolución (<span id="modal-anio-ult"></span>)</p>
                         <p class="modal-ccaa__col-nota" id="modal-nota-anio"></p>
                         <ol class="modal-ccaa__lista" id="modal-lista-anio"></ol>
