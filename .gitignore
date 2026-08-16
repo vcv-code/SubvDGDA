@@ -231,6 +231,10 @@ guia-estudio/
 # Volcados de la base de datos (make backup / make reset-db).
 # Contienen datos reales: usuarios y hashes de contraseña.
 backups/
+# Informes de visitas (scripts/informe_visitas.sh). Contienen direcciones IP
+# de los visitantes: ni se versionan ni se publican.
+informes/
+
 backup_*.sql
 
 # Configuración específica del servidor de producción. Docker Compose lee y
