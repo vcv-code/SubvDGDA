@@ -105,8 +105,8 @@ API externa BDNS + PDFs/XML BOE
     Backend FastAPI  ←──── Cron (sincronización automática con BDNS)
           ↓
     Nginx (puerto 443 HTTPS)
-     ├── /api/*  → proxy al backend (puerto 8000 interno)
-     └── /*      → archivos estáticos del frontend
+     ├── /solicitudes, /estadisticas, /auth…  → proxy al backend (8000 interno)
+     └── el resto                             → archivos estáticos del frontend
           ↓
     Navegador (HTML + CSS + JS vanilla)
 ```
@@ -132,6 +132,7 @@ API externa BDNS + PDFs/XML BOE
 | Base de datos | MariaDB 11.8 |
 | Tests | pytest, SQLite en memoria |
 | Infraestructura | Docker, Nginx, scheduler Python (cron en contenedor), Mailpit (SMTP dev) |
+| Producción | VPS Ubuntu 24.04, Let's Encrypt (certbot), ufw, fail2ban, copias de seguridad programadas |
 | Control de versiones | Git, GitHub |
 | Herramientas de desarrollo | Makefile, VS Code (extensions.json incluido) |
 | Fuentes de datos | API BDNS, XML BOE, PDFs oficiales (DGDA) |
@@ -166,6 +167,7 @@ analisis-bdns-dgda/
 ├── docker/
 │   ├── docker-compose.yml  ← define los 6 servicios, red interna y volúmenes
 │   ├── nginx/default.conf  ← proxy inverso + HTTPS + rate limiting
+│   ├── nginx-tls/          ← rutas del certificado (lo único que cambia en producción)
 │   ├── cron/               ← scheduler Python
 │   └── init/               ← SQL inicial y migraciones
 │
@@ -176,11 +178,15 @@ analisis-bdns-dgda/
 │
 ├── scripts/
 │   ├── data_processing/    ← parsers EPA y EELL, carga de BD
-│   └── ingestion/          ← cliente API BDNS
+│   ├── ingestion/          ← cliente API BDNS
+│   ├── crear_admin.sh      ← alta de la cuenta de administración
+│   └── backup_db.sh        ← volcado de la BD con rotación
+│
+├── manuales/               ← manual de instalación y manual de despliegue
 │
 ├── docs/                   ← referencia técnica, modelo datos, tests
 │   └── img/                ← diagramas ER y capturas de pantalla (README)
-└── tests/                  ← 246 funciones de test pytest (344 ejecuciones)
+└── tests/                  ← tests automáticos (pytest)
 ```
 
 ---
@@ -519,7 +525,7 @@ La aplicación usa APIs modernas (ES2017+, `fetch`, CSS custom properties, `URLS
 | **Navegadores móviles** | ✅ Completa | Verificado **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools: seis correcciones de maquetación en agosto de 2026 (ver [especificaciones-frontend.md § 12](frontend/docs/especificaciones-frontend.md#12-desbordamiento-horizontal-en-móvil)). El mapa choropleth de CCAA tiene soporte táctil (un toque = info, doble toque = detalle) |
 | **Internet Explorer** | ❌ No soportado | Sin soporte de `fetch`, `async/await` ni CSS variables |
 
-**Nota sobre el certificado autofirmado:** todos los navegadores mostrarán un aviso de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
+**Nota sobre el certificado autofirmado — solo en desarrollo local.** La web publicada usa un certificado de Let's Encrypt y no muestra ningún aviso. En una instalación local, en cambio, todos los navegadores avisan de "conexión no segura" la primera vez. En Chrome y Firefox basta con hacer clic en "Avanzado" → "Continuar". Safari en macOS puede requerir aceptar el certificado en Preferencias del Sistema → Llaveros.
 
 La carpeta `frontend/` contiene:
 
@@ -993,12 +999,16 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 
 ## Tests
 
-El proyecto tiene **298 pruebas en total**: 246 funciones de test automáticas con pytest (344 ejecuciones por uso de `@pytest.mark.parametrize`) y 52 manuales verificadas en el navegador con Docker levantado.
+El proyecto combina pruebas automáticas y manuales:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | 246 funciones / 344 ejecuciones | pytest (sin Docker) |
+| Automáticos | **346 funciones / 450 ejecuciones** | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
+
+> El recuento detallado, fichero a fichero, está en **[docs/tests.md](docs/tests.md)**,
+> que es la fuente única. Antes esta cifra estaba repetida en cuatro sitios del
+> README y acabaron diciendo cosas distintas.
 
 Los tests automáticos cubren el pipeline de datos (parsers y unificación), los endpoints de la API, el sistema de autenticación completo y la configuración de infraestructura, sin necesidad de tener Docker levantado. Usan una base de datos SQLite en memoria que se crea y destruye en cada test.
 
@@ -1126,9 +1136,12 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 
 ### Infraestructura y despliegue
 
-- HTTPS activo (TLS 1.2/1.3, certificado autofirmado, redirección HTTP→HTTPS)
-- Docker: Nginx + FastAPI + MariaDB + cron + Mailpit en contenedores
-- Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile)
+- **Publicado desde el 15 de agosto de 2026** en un VPS con Ubuntu 24.04, dominio propio y **certificado de Let's Encrypt** con renovación automática. En desarrollo local el certificado sigue siendo autofirmado
+- HTTPS con TLS 1.2/1.3 y redirección HTTP→HTTPS; cabeceras de seguridad y HSTS
+- Docker: Nginx + FastAPI + MariaDB + cron + Mailpit + Adminer en contenedores. La base de datos, Adminer y Mailpit escuchan **solo en local**: en el servidor se llega a ellos por túnel SSH
+- El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
+- **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
+- Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación
 
@@ -1146,12 +1159,12 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Zona privada con nombre/alias editable; contenido exclusivo con mapa CCAA táctil
 - Modal de conclusiones con textos reales en las 9 gráficas
 - Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
-- Auditoría responsive móvil completada
+- Maquetación móvil verificada **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools
 
 ### Calidad del código
 
 - CSS limpio y consolidado en `styles.css`; accesibilidad WCAG 2.2 revisada
-- 450 pruebas automáticas en verde (pytest)
+- Tests automáticos en verde (recuento en [docs/tests.md](docs/tests.md))
 
 → Ver [historial completo de implementación](docs/historial-implementacion.md)
 
@@ -1193,7 +1206,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Calidad y mantenibilidad
 
-- **246 funciones de test automáticas** (344 ejecuciones con `@pytest.mark.parametrize`) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS
+- **Tests automáticos** ([recuento en docs/tests.md](docs/tests.md)) — pipeline de datos, endpoints públicos, autenticación completa, zona privada, panel admin, formulario de contacto, modo mantenimiento, estado del plazo de convocatorias, infraestructura (HTTPS, rate limiting, caché, logs), scheduler del cron, retry con backoff de la API BDNS, correo saliente, despliegue con secretos propios, configuración TLS de Nginx y copias de seguridad
 - **Healthchecks Docker** en `db`, `backend` y `nginx` — detectan cuelgues que no matarían el proceso (deadlocks, bucles infinitos), donde `restart: unless-stopped` no actuaría. `docker compose ps` muestra `(healthy)` o `(unhealthy)` por servicio. El cron no tiene healthcheck Docker porque no expone HTTP; su monitorización es interna vía `restart: unless-stopped` y los logs de `bdns_check.log` / `health_check.log`.
 - **Manejo de errores** — todos los `fetch` tienen bloque `catch` con mensaje visible al usuario; errores HTTP distinguen 401/403/422/500
 - **Sin código muerto** — sin `console.log` en producción, sin funciones definidas y nunca llamadas
@@ -1259,7 +1272,7 @@ A continuación, el detalle por dominio.
 
 - **SQLite en memoria** como sustituto de MariaDB en los tests originales (mock de BD).
 - **`unittest.mock.patch`** para mockear envíos de email (mock de SMTP).
-- **Tests parametrizados del scheduler** del cron (21 funciones / 119 ejecuciones) verifican el calendario completo sin esperar a noviembre.
+- **Tests parametrizados del scheduler** del cron (24 funciones / 128 ejecuciones) verifican el calendario completo sin esperar a noviembre.
 - **Tests del retry de BDNS con backoff** (5 funciones) mockean `requests.get` y `time.sleep` para reproducir los 4 escenarios de fallo sin tocar la API real.
 
 ### UX y experiencia de uso
@@ -1459,7 +1472,7 @@ punta nada más desplegar**, antes de necesitarla de verdad.
 
 ## Mejoras futuras
 
-Mejoras identificadas durante el desarrollo, no planificadas para la entrega actual. Agrupadas por ámbito.
+Mejoras identificadas durante el desarrollo que no están previstas a corto plazo. Agrupadas por ámbito.
 
 ### Datos y análisis
 
