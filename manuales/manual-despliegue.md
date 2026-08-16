@@ -699,13 +699,89 @@ código viejo. El frontend, en cambio, es un montaje directo y se actualiza solo
 
 ### Copias de seguridad
 
+**A mano**, cuando vayas a hacer algo arriesgado:
+
 ```bash
 cd /opt/subvdgda && make backup
 ```
 
-Deja el volcado en `backups/`, ignorado por git. Cópialo fuera del servidor de
-vez en cuando: un backup que vive en la misma máquina que la base de datos no
-protege del incendio.
+**Programado**, una vez, para que se haga solo cada noche:
+
+```bash
+crontab -e
+```
+
+Y añade esta línea:
+
+```
+30 3 * * * /opt/subvdgda/scripts/backup_db.sh >> /opt/subvdgda/logs/cron/backup_db.log 2>&1
+```
+
+Las 03:30 no coinciden con las otras tareas del proyecto —la rotación de logs a
+las 04:15 y la comprobación de BDNS a las 08:00—, así que nunca se solapan.
+Recuerda que **el servidor va en UTC**: en horario de verano español, eso son
+las 05:30.
+
+Comprueba al día siguiente que corrió:
+
+```bash
+cat /opt/subvdgda/logs/cron/backup_db.log
+ls -lh /opt/subvdgda/backups/
+```
+
+**Qué hace el script**, más allá de volcar:
+
+- **Descarta un volcado incompleto.** Que el comando termine bien no basta: un
+  corte a mitad —disco lleno, contenedor parado— deja un fichero truncado con
+  pinta de válido. Comprueba la marca de cierre que escribe `mariadb-dump` al
+  final, y si no está, borra el fichero en vez de guardarlo.
+- **Rota**: elimina los de más de 30 días, para que un volcado diario no acabe
+  llenando el disco. Se ajusta con `BACKUP_DIAS`.
+
+### Sacar las copias del servidor
+
+> **Un backup que vive en la misma máquina que la base de datos no protege de
+> perder la máquina.** Es el punto que más se olvida: si el servidor se pierde,
+> se pierden los dos a la vez.
+
+Desde **tu ordenador**, para traerte el más reciente:
+
+```bash
+ssh servidor 'ls -t /opt/subvdgda/backups/*.sql | head -1' \
+  | xargs -I{} scp servidor:{} ~/backups-subvdgda/
+```
+
+Hazlo de vez en cuando, o cuando hayas metido datos que te importen: usuarios
+nuevos, fechas de plazo ajustadas a mano. Automatizarlo desde el portátil no
+compensa, porque tendría que estar encendido a la hora justa.
+
+### Restaurar
+
+Lo que hay que saber **antes** de necesitarlo:
+
+```bash
+cd /opt/subvdgda
+make restore FILE=backups/backup_AAAAMMDD_HHMMSS.sql
+```
+
+**Restaurar sobrescribe la base de datos actual.** Si tienes dudas de si el
+volcado es bueno, pruébalo primero en una base de datos aparte, sin tocar la
+real:
+
+```bash
+set -a; . docker/.env; set +a
+docker exec bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "CREATE DATABASE prueba_restore;"
+docker exec -i bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  prueba_restore < backups/EL_FICHERO.sql
+docker exec bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "SELECT COUNT(*) FROM prueba_restore.solicitudes;"
+docker exec bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "DROP DATABASE prueba_restore;"
+```
+
+Este procedimiento se probó el 16-ago-2026 con un volcado real: 6396
+solicitudes y 11 tablas, idénticas al original.
 
 ### Comprobar el cron
 

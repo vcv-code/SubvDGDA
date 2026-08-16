@@ -152,20 +152,11 @@ logs-nginx:
 
 # ── Utilidades ────────────────────────────────────────────────────────────────
 
-# El fichero se borra si el volcado falla: la redirección lo crea antes de que
-# mariadb-dump escriba nada, así que un fallo dejaría un .sql de 0 bytes con
-# pinta de backup bueno — justo lo que no quieres encontrarte al restaurar.
+# Delega en el script para tener UNA sola implementación: la misma que ejecuta
+# la tarea programada del servidor. Además de volcar, comprueba que el fichero
+# quedó completo y rota los de más de 30 días.
 backup:
-	@mkdir -p $(BACKUP_DIR)
-	@F=$(BACKUP_DIR)/backup_$$(date +%Y%m%d_%H%M%S).sql; \
-	if $(ENV_BD) docker exec bdns_dgda_db mariadb-dump \
-		-u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE" > $$F; then \
-		echo "Backup guardado en $$F"; \
-	else \
-		rm -f $$F; \
-		echo "ERROR: no se pudo volcar la BD (¿está levantada? prueba make start)."; \
-		exit 1; \
-	fi
+	@bash scripts/backup_db.sh
 
 restore:
 	@test -n "$(FILE)" || (echo "Uso: make restore FILE=backups/backup_YYYYMMDD_HHMMSS.sql"; exit 1)
