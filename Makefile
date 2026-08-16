@@ -152,23 +152,26 @@ logs-nginx:
 
 # ── Utilidades ────────────────────────────────────────────────────────────────
 
-# El fichero se borra si el volcado falla: la redirección lo crea antes de que
-# mariadb-dump escriba nada, así que un fallo dejaría un .sql de 0 bytes con
-# pinta de backup bueno — justo lo que no quieres encontrarte al restaurar.
+# Delega en el script para tener UNA sola implementación: la misma que ejecuta
+# la tarea programada del servidor. Además de volcar, comprueba que el fichero
+# quedó completo y rota los de más de 30 días.
 backup:
-	@mkdir -p $(BACKUP_DIR)
-	@F=$(BACKUP_DIR)/backup_$$(date +%Y%m%d_%H%M%S).sql; \
-	if $(ENV_BD) docker exec bdns_dgda_db mariadb-dump \
-		-u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE" > $$F; then \
-		echo "Backup guardado en $$F"; \
-	else \
-		rm -f $$F; \
-		echo "ERROR: no se pudo volcar la BD (¿está levantada? prueba make start)."; \
-		exit 1; \
-	fi
+	@bash scripts/backup_db.sh
 
+# Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
+# actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un
+# nombre de fichero mal escrito o ejecutarlo en la máquina equivocada no tenían
+# vuelta atrás.
+#
+# Y comprueba la marca de cierre antes de tocar nada: restaurar un volcado
+# truncado deja la BD a medias, que es peor que no restaurar.
 restore:
 	@test -n "$(FILE)" || (echo "Uso: make restore FILE=backups/backup_YYYYMMDD_HHMMSS.sql"; exit 1)
+	@test -f "$(FILE)" || (echo "No existe el fichero: $(FILE)"; exit 1)
+	@tail -5 "$(FILE)" | grep -q "Dump completed" || \
+		(echo "ERROR: $(FILE) no tiene marca de cierre — el volcado puede estar truncado."; \
+		 echo "Restaurar uno incompleto deja la base de datos a medias."; exit 1)
+	@echo "⚠️  Esto SOBRESCRIBE la base de datos actual con $(FILE). ¿Continuar? [s/N]" && read ans && [ "$$ans" = "s" ]
 	@$(ENV_BD) docker exec -i bdns_dgda_db mariadb \
 		-u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE" < $(FILE)
 	@echo "Backup $(FILE) restaurado."

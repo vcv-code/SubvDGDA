@@ -648,11 +648,45 @@ Cert y key deben ser del mismo par generado con el mismo `openssl`. Si uno provi
 
 ## Cron (scheduler)
 
-El contenedor `bdns_cron` ejecuta `scheduler.py` con dos tareas:
+Hay **dos sistemas de tareas programadas** y conviene no confundirlos:
+
+| Dónde | Qué ejecuta | Por qué ahí |
+|---|---|---|
+| Contenedor `bdns_cron` (`scheduler.py`) | Comprobación de BDNS, salud y rotación de logs | Va con el proyecto: se comporta igual en local y en el servidor |
+| `crontab` del servidor | Copia de seguridad de la base de datos | Necesita hablar con el contenedor de MariaDB, y darle al contenedor de cron acceso al demonio de Docker sería un permiso que no debe tener |
+
+> **CUIDADO: hay dos cosas llamadas «crontab» y solo una funciona.**
+>
+> | | `docker/cron/crontab` | `crontab` del servidor |
+> |---|---|---|
+> | Qué es | Un fichero dentro del proyecto | El programador de tareas de Linux |
+> | Quién lo ejecuta | **Nadie** | El sistema, siempre |
+>
+> El contenedor **no arranca `cron`**: arranca `scheduler.py`, un programa de
+> Python propio. `docker/cron/crontab` quedó documentando la programación
+> original y no tiene ningún efecto — ya pasó una vez que se añadió ahí una
+> tarea y no se ejecutó jamás.
+>
+> **Al tocar el calendario del contenedor, el fichero que manda es
+> `scheduler.py`** (su función `_jobs_for()`), y tiene tests.
+>
+> El `crontab` del servidor es otra cosa distinta y sí funciona: es el de
+> Linux, corriendo fuera de los contenedores. Precisamente por estar fuera
+> puede hablar con el contenedor de MariaDB, que es el motivo de que la copia
+> de seguridad vaya ahí y no en `scheduler.py`.
+>
+> **No fue cosa de WSL**, aunque lo parezca: el contenedor no arranca `cron` en
+> ningún sistema. Ese mismo contenedor corre hoy en el servidor —Linux puro— y
+> se comporta igual. Lo que sí es propio de WSL es que allí el `cron` del
+> sistema no suele estar en marcha, así que programar tareas del anfitrión en
+> el portátil no funcionaría sin más; en el servidor sí.
+
+### Tareas del contenedor
 
 | Tarea | Frecuencia |
 |---|---|
 | `health_check.py` | Cada 6 horas (00:00, 06:00, 12:00, 18:00 UTC) |
+| `rotar_logs.py` | Diaria, 04:15 UTC (retención de 30 días) |
 | `check_bdns.py` (marzo) | Cada 4 días a las 08:00 UTC |
 | `check_bdns.py` (abril–mayo) | Cada 2 días a las 08:00 UTC |
 | `check_bdns.py` (junio) | Cada 4 días a las 08:00 UTC |
@@ -759,6 +793,9 @@ En instalaciones posteriores las imágenes ya están cacheadas localmente — ar
 | Ejecutar tests | `source venv/bin/activate && python -m pytest tests/ -q` |
 | Lanzar cron manualmente | `docker exec bdns_cron python3 /app/scripts/check_bdns.py` |
 | Rebuild del cron | `cd docker && docker compose up --build -d cron` |
+| Copia de seguridad de la BD | `make backup` |
+| Restaurar una copia | `make restore FILE=backups/backup_AAAAMMDD_HHMMSS.sql` |
+| Abrir consola de la BD | `make shell-db` |
 
 ---
 
@@ -851,7 +888,9 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 - **Base de datos:** SQLite en memoria (`:memory:`) con `StaticPool` — todas las conexiones comparten la misma instancia, sin necesidad de MariaDB levantado
 - **Fixtures en `conftest.py`:** `client` (crea/destruye tablas por test) y `db` (sesión para insertar datos)
-- **Total:** 246 funciones de test / 344 ejecuciones pasando, 0 fallando (actualizado 2026-06-16)
+- **Total:** ver [docs/tests.md](tests.md), que es la fuente única. Aquí no se
+  repite el número a propósito: estaba duplicado y las dos copias se
+  desincronizaron.
 
 | Archivo | Qué testea |
 |---|---|
