@@ -74,7 +74,6 @@ frontend/
 │   └── color-privado.sh
 ├── index.html                          ← Home
 ├── buscador.html                       ← Buscador avanzado
-├── solicitudes.html                    ← Listado de solicitudes con filtros
 ├── estadisticas-epas.html              ← Dashboard EPAs
 ├── estadisticas-eell.html              ← Dashboard EELL
 ├── entidad.html                        ← Ficha de entidad

@@ -675,11 +675,19 @@ Hay **dos sistemas de tareas programadas** y conviene no confundirlos:
 > puede hablar con el contenedor de MariaDB, que es el motivo de que la copia
 > de seguridad vaya ahí y no en `scheduler.py`.
 >
-> **No fue cosa de WSL**, aunque lo parezca: el contenedor no arranca `cron` en
-> ningún sistema. Ese mismo contenedor corre hoy en el servidor —Linux puro— y
-> se comporta igual. Lo que sí es propio de WSL es que allí el `cron` del
-> sistema no suele estar en marcha, así que programar tareas del anfitrión en
-> el portátil no funcionaría sin más; en el servidor sí.
+> **De dónde viene esto, que sí tuvo que ver con WSL.** El contenedor iba a usar
+> supercronic, un cron pensado para Docker. Falló con un error de *fork* al
+> arrancar en Docker Desktop + WSL2 (bug de la versión v0.2.33), y por eso se
+> escribió `scheduler.py` en Python. `docker/cron/crontab` es el resto de aquel
+> intento.
+>
+> Ahora bien, **que ese fichero no se ejecute ya no depende de WSL**: es
+> consecuencia de que el contenedor arranque `scheduler.py`. Ese mismo
+> contenedor corre hoy en el servidor —Linux puro— y se comporta igual.
+>
+> Y una cosa distinta que sí es propia de WSL: allí el `cron` del sistema no
+> suele estar en marcha, así que programar tareas del anfitrión en el portátil
+> no funcionaría sin más. En el servidor sí.
 
 ### Tareas del contenedor
 

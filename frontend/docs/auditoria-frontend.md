@@ -35,7 +35,6 @@
 | `exclusivo.html` | Contenido exclusivo (resoluciones) | [x] |
 | `admin.html` | Panel de administración | [x] |
 | `entidad.html` | Ficha de entidad — accesible desde "Ver página completa →" en el modal del buscador o por URL directa | [x] |
-| `solicitudes.html` | Alias legacy de `buscador.html` | [x] |
 | `aviso-legal.html` | Aviso legal | [x] |
 | `privacidad.html` | Política de privacidad | [x] |
 | `404.html` | Página de error 404 | [x] |
@@ -256,7 +255,7 @@
 - [x] **Ficha de entidad:** desde buscador → clic en fila → modal inline con historial, expediente, importes y CCAA (cuando disponible)
 - [x] **Enlace "Ver página completa →":** en el pie del modal → abre `entidad.html?cif=...` en pestaña nueva con el historial completo
 - [x] **Error 404:** navegar a `https://subvencionesDGDA.local/ruta-inexistente` → aparece `404.html`
-- [x] **Error 50x:** parar el backend → acceder a `buscador.html` o `solicitudes.html` (Nginx sirve el estático, sin backend la API falla y se muestra `50x.html`)
+- [x] **Error 50x:** parar el backend → acceder a `buscador.html` (Nginx sirve el estático, sin backend la API falla y se muestra `50x.html`)
 - [x] **Responsividad:** verificar portada, buscador y estadísticas en Chrome DevTools (pantalla normal, tablet y móvil)
 
 ### Accesibilidad — prueba con teclado

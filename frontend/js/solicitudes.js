@@ -1,7 +1,7 @@
 /**
  * solicitudes.js — Lógica del buscador de solicitudes
  * ─────────────────────────────────────────────────────
- * Este archivo gestiona toda la interacción de solicitudes.html.
+ * Este archivo gestiona toda la interacción de buscador.html.
  *
  * RESPONSABILIDADES:
  *   1. Leer los valores del panel de filtros.

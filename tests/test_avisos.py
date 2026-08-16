@@ -29,7 +29,8 @@ def db_con_avisos(db):
         fecha_resolucion=date(anio, 11, 30),
         periodo_meses=12,
     )
-    # Convocatoria del año pasado sin resolución → NO debe aparecer (año distinto)
+    # Convocatoria del año pasado sin resolución → SÍ debe aparecer: el aviso
+    # se retira cuando llega la resolución, no cuando cambia el año
     vieja_pendiente = Convocatoria(
         num_convoc="BDNS-TEST-VIEJA",
         titulo_convoc="Subvenciones EELL año anterior",
@@ -55,13 +56,13 @@ def test_avisos_sin_datos_devuelve_lista_vacia(client):
     assert response.json() == []
 
 
-def test_avisos_solo_devuelve_pendientes_anio_actual(db_con_avisos, client):
+def test_avisos_solo_devuelve_las_pendientes(db_con_avisos, client):
+    """Aparecen las dos sin resolver (esta y la del año pasado), no la resuelta."""
     response = client.get("/avisos/")
     assert response.status_code == 200
     data = response.json()
-    # Solo debe aparecer la EELL pendiente, no la resuelta ni la del año pasado
-    assert len(data) == 1
-    assert data[0]["tipo_convoc"] == "eell"
+    assert len(data) == 2
+    assert all(a["tipo_convoc"] == "eell" for a in data)
 
 
 def test_avisos_estructura_correcta(db_con_avisos, client):
@@ -74,11 +75,36 @@ def test_avisos_estructura_correcta(db_con_avisos, client):
     assert "fecha_convocatoria" in aviso
 
 
-def test_avisos_anio_coincide_con_actual(db_con_avisos, client):
-    data = client.get("/avisos/").json()
-    anio_actual = date.today().year
-    for aviso in data:
-        assert aviso["anio_convocatoria"] == anio_actual
+def test_avisos_incluye_el_anio_anterior_sin_resolver(db_con_avisos, client):
+    """El aviso debe irse con la resolución, no con el cambio de año.
+
+    Con el filtro anterior (`anio_convocatoria == anio_actual`) los banners se
+    apagaban solos el 1 de enero a las 00:00 aunque la convocatoria siguiera sin
+    resolver. Aquí las resoluciones tardías son normales —las EPA de un año se
+    han resuelto ya en el siguiente—, así que la web dejaba de anunciar "en
+    tramitación" mientras seguía siendo verdad.
+    """
+    anios = {a["anio_convocatoria"] for a in client.get("/avisos/").json()}
+    actual = date.today().year
+    assert actual in anios,       "Falta la convocatoria sin resolver del año en curso"
+    assert actual - 1 in anios,   "Falta la del año anterior sin resolver"
+
+
+def test_avisos_no_incluye_convocatorias_demasiado_antiguas(db, client):
+    """El corte en dos años evita anunciar para siempre una convocatoria vieja."""
+    anio = date.today().year - 3
+    db.add(Convocatoria(
+        num_convoc="BDNS-TEST-ANTIGUA",
+        titulo_convoc="Convocatoria antigua nunca resuelta",
+        tipo_convoc="eell",
+        anio_convocatoria=anio,
+        fecha_convocatoria=date(anio, 4, 1),
+        fecha_resolucion=None,
+        periodo_meses=12,
+    ))
+    db.commit()
+    anios = {a["anio_convocatoria"] for a in client.get("/avisos/").json()}
+    assert anio not in anios
 
 
 def test_avisos_no_incluye_convocatorias_resueltas(db_con_avisos, client):
