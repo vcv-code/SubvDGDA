@@ -570,6 +570,15 @@ En la descripción, apunta **qué recuperas**, no solo la fecha: qué versión e
 desplegada, qué falta por configurar, y que restaurar **revierte también la base
 de datos** a ese momento.
 
+**Cuándo rehacerlo.** Los planes suelen incluir un solo snapshot, así que el
+nuevo sustituye al viejo. Conviene refrescarlo **cuando el servidor cambie de
+verdad** —una configuración nueva, un cambio grande de versión—, no en cada
+publicación. Un snapshot que devuelve el servidor a un estado sin configurar
+deja de ser un punto de retorno útil.
+
+Y no lo gastes a mitad de un montaje: espera a que el servidor esté completo y
+funcionando.
+
 ---
 
 ## Reconciliar un servidor desplegado antes de esta separación
@@ -580,30 +589,46 @@ modificados y **el primer `git pull` fallará**. Se arregla una sola vez:
 
 ```bash
 cd /opt/subvdgda
+pwd                                             # comprobar: /opt/subvdgda
 
 # 1. Guardar las rutas del certificado ANTES de descartar nada
 mkdir -p docker/nginx-tls-prod
 grep ssl_certificate docker/nginx/default.conf > docker/nginx-tls-prod/letsencrypt.conf
 cat docker/nginx-tls-prod/letsencrypt.conf     # comprobar que son las dos líneas
 
-# 2. Crear la configuración propia del servidor
-cp docker/docker-compose.override.yml.example docker/docker-compose.override.yml
-
-# 3. Descartar las modificaciones locales de los ficheros versionados
+# 2. Descartar las modificaciones locales de los ficheros versionados
 git status                                      # ver qué hay modificado
 git checkout -- docker/nginx/default.conf docker/docker-compose.yml
 
-# 4. Ahora sí, traer la versión nueva
+# 3. Traer la versión nueva
 git pull
 
-# 5. Aplicar y comprobar
+# 4. AHORA crear la configuración propia del servidor: el fichero de ejemplo
+#    llega con el pull, antes no existe
+cp docker/docker-compose.override.yml.example docker/docker-compose.override.yml
+
+# 5. Comprobar antes de aplicar
+git status                                      # debe salir "working tree clean"
+cat docker/nginx-tls-prod/letsencrypt.conf
+
+# 6. Aplicar
 cd docker && docker compose up -d nginx
 docker exec bdns_nginx nginx -t
 ```
 
-**El paso 1 va primero y no es opcional**: el paso 3 descarta el fichero donde
-están escritas esas rutas. Si se hace al revés, hay que volver a escribirlas a
-mano.
+**Dos cosas del orden que no son negociables:**
+
+**El paso 1 va primero.** El paso 2 descarta el fichero donde están escritas esas
+rutas; al revés, hay que volver a escribirlas a mano.
+
+**El paso 4 va después del `git pull`.** El fichero de ejemplo forma parte del
+commit nuevo, así que **antes del pull no existe** y el `cp` falla.
+
+Y **no adelantes el paso 6**: entre el `pull` y el `cp`, la configuración del
+repositorio apunta al certificado de desarrollo. Si recreas Nginx en ese momento,
+arranca sirviendo el autofirmado y la web sale con aviso de «no seguro» hasta que
+lo arregles. Mientras no toques el contenedor, sigue funcionando con lo que ya
+tenía cargado: no hay corte.
 
 Comprueba desde **otra máquina** que el certificado sigue siendo el bueno:
 
@@ -628,7 +653,38 @@ ssh -L 8080:localhost:8080 -L 8025:localhost:8025 servidor
 ```
 
 Con el túnel abierto, `http://localhost:8080` en **tu** navegador es el Adminer
-del servidor. Solo entra quien pueda entrar por SSH.
+del servidor. Solo entra quien pueda entrar por SSH, y los túneles desaparecen
+al cerrar la sesión.
+
+Merece la pena dejarlo como atajo en tu `~/.ssh/config`, y así basta escribir
+`ssh tuneles`:
+
+```
+Host tuneles
+    HostName LA.IP.DEL.SERVIDOR
+    User root
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+    LocalForward 8080 localhost:8080
+    LocalForward 8025 localhost:8025
+```
+
+> **Para antes tus contenedores locales: `make stop`.**
+> Tu equipo tiene su propio Adminer y su propio Mailpit **en esos mismos
+> puertos**. Con los dos en marcha, `localhost:8080` te enseña el de casa y no
+> el del servidor — y no hay forma de distinguirlos a simple vista. Es el error
+> más fácil de cometer aquí: creer que estás mirando producción cuando miras tu
+> portátil.
+
+Para entrar en Adminer necesitas las credenciales de la base de datos del
+servidor, que están solo allí (`cat /opt/subvdgda/docker/.env`):
+
+| Campo | Valor |
+|---|---|
+| Motor | MySQL |
+| **Servidor** | **`db`**, no `localhost` — es el nombre del contenedor en la red interna de Docker |
+| Usuario y contraseña | los `MYSQL_USER` y `MYSQL_PASSWORD` del `.env` |
+| Base de datos | `bdns_dgda` |
 
 ### Actualizar a una versión nueva
 
@@ -643,13 +699,119 @@ código viejo. El frontend, en cambio, es un montaje directo y se actualiza solo
 
 ### Copias de seguridad
 
+**A mano**, cuando vayas a hacer algo arriesgado:
+
 ```bash
 cd /opt/subvdgda && make backup
 ```
 
-Deja el volcado en `backups/`, ignorado por git. Cópialo fuera del servidor de
-vez en cuando: un backup que vive en la misma máquina que la base de datos no
-protege del incendio.
+> **Este `crontab` es el de Linux, no el fichero `docker/cron/crontab` del
+> proyecto.** Ese segundo **no lo ejecuta nadie**: el contenedor arranca un
+> `scheduler.py` propio y aquel fichero solo documenta la programación
+> original. La copia de seguridad va en el `crontab` del sistema porque
+> necesita hablar con el contenedor de MariaDB, y eso desde dentro del
+> contenedor de cron exigiría darle acceso al demonio de Docker.
+
+**Programado**, una vez, para que se haga solo. Primero fija cuánto tiempo se
+conservan las copias, en `docker/.env` del servidor:
+
+```
+BACKUP_DIAS=180
+```
+
+Y después la tarea:
+
+```bash
+crontab -e
+```
+
+```
+30 3 * * 0 /opt/subvdgda/scripts/backup_db.sh >> /opt/subvdgda/logs/cron/backup_db.log 2>&1
+```
+
+Eso es **los domingos a las 03:30**. Las 03:30 no coinciden con las otras tareas
+del proyecto —la rotación de logs a las 04:15 y la comprobación de BDNS a las
+08:00—, así que nunca se solapan. Recuerda que **el servidor va en UTC**: en
+horario de verano español, eso son las 05:30.
+
+> **Frecuencia y retención van unidas, y es lo que más se hace mal.**
+> Con copias semanales y 30 días de retención te quedan **solo cuatro**: si
+> descubres un problema a las seis semanas, no hay nada que restaurar. Al
+> espaciar la frecuencia hay que alargar la retención. Semanal + 180 días son
+> unas 26 copias cubriendo medio año, y ocupan ~21 MB.
+
+**Por qué semanal y no diaria.** Depende de cada cuánto cambian los datos que
+*no* se pueden reconstruir. Aquí el dataset se versiona en git, y `make reset-db`
+—la operación más arriesgada— ya hace su propio backup antes de borrar. Lo que
+la copia programada protege de verdad es lo impredecible: que el cron descubra
+una convocatoria nueva un día cualquiera. Semanal cubre eso de sobra; diaria
+sería ruido.
+
+**La retención se pone en el `.env` y no en la línea del cron** a propósito: así
+vale igual para la tarea programada y para un `make backup` lanzado a mano. Al
+revés, ese `make backup` manual usaría el valor por defecto y **borraría copias
+que querías conservar**.
+
+Comprueba al día siguiente que corrió:
+
+```bash
+cat /opt/subvdgda/logs/cron/backup_db.log
+ls -lh /opt/subvdgda/backups/
+```
+
+**Qué hace el script**, más allá de volcar:
+
+- **Descarta un volcado incompleto.** Que el comando termine bien no basta: un
+  corte a mitad —disco lleno, contenedor parado— deja un fichero truncado con
+  pinta de válido. Comprueba la marca de cierre que escribe `mariadb-dump` al
+  final, y si no está, borra el fichero en vez de guardarlo.
+- **Rota**: elimina los de más de 30 días, para que un volcado diario no acabe
+  llenando el disco. Se ajusta con `BACKUP_DIAS`.
+
+### Sacar las copias del servidor
+
+> **Un backup que vive en la misma máquina que la base de datos no protege de
+> perder la máquina.** Es el punto que más se olvida: si el servidor se pierde,
+> se pierden los dos a la vez.
+
+Desde **tu ordenador**, para traerte el más reciente:
+
+```bash
+ssh servidor 'ls -t /opt/subvdgda/backups/*.sql | head -1' \
+  | xargs -I{} scp servidor:{} ~/backups-subvdgda/
+```
+
+Hazlo de vez en cuando, o cuando hayas metido datos que te importen: usuarios
+nuevos, fechas de plazo ajustadas a mano. Automatizarlo desde el portátil no
+compensa, porque tendría que estar encendido a la hora justa.
+
+### Restaurar
+
+Lo que hay que saber **antes** de necesitarlo:
+
+```bash
+cd /opt/subvdgda
+make restore FILE=backups/backup_AAAAMMDD_HHMMSS.sql
+```
+
+**Restaurar sobrescribe la base de datos actual.** Si tienes dudas de si el
+volcado es bueno, pruébalo primero en una base de datos aparte, sin tocar la
+real:
+
+```bash
+set -a; . docker/.env; set +a
+docker exec bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "CREATE DATABASE prueba_restore;"
+docker exec -i bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  prueba_restore < backups/EL_FICHERO.sql
+docker exec bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "SELECT COUNT(*) FROM prueba_restore.solicitudes;"
+docker exec bdns_dgda_db mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "DROP DATABASE prueba_restore;"
+```
+
+Este procedimiento se probó el 16-ago-2026 con un volcado real: 6396
+solicitudes y 11 tablas, idénticas al original.
 
 ### Comprobar el cron
 

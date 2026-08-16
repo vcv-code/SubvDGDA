@@ -77,12 +77,27 @@ def test_el_makefile_no_lleva_credenciales_escritas():
 
 
 def test_las_recetas_de_bd_cargan_el_env():
-    """Cada receta que toca la BD debe leer docker/.env en su propio shell."""
+    """Cada receta que toca la BD tiene que sacar las credenciales de
+    docker/.env, o bien cargándolo en su propio shell con $(ENV_BD), o bien
+    delegando en un script que lo hace por su cuenta."""
     texto = MAKEFILE.read_text(encoding="utf-8")
+    SCRIPTS_QUE_CARGAN_ENV = ("scripts/backup_db.sh",)
     for receta in ("backup:", "restore:", "shell-db:", "cargar:"):
         i = texto.index("\n" + receta)
         bloque = texto[i:texto.index("\n\n", i)]
-        assert "$(ENV_BD)" in bloque, receta
+        directo = "$(ENV_BD)" in bloque
+        delegado = any(s in bloque for s in SCRIPTS_QUE_CARGAN_ENV)
+        assert directo or delegado, receta
+
+
+def test_los_scripts_delegados_cargan_el_env_de_verdad():
+    """Contrapeso del test anterior: si una receta delega, hay que comprobar
+    que el script al que delega carga el .env. Si no, el test de arriba daría
+    por buena una receta sin credenciales."""
+    for ruta in ("scripts/backup_db.sh",):
+        t = (RAIZ / ruta).read_text(encoding="utf-8")
+        assert "docker/.env" in t, ruta
+        assert ". \"$ENV_FILE\"" in t or ". docker/.env" in t, ruta
 
 
 def test_install_no_escribe_contrasenas_fijas_de_bd():

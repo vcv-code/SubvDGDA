@@ -278,7 +278,8 @@ make logs-nginx    # Últimas 50 líneas de Nginx
 | `make reset-db` | Borra el volumen y recarga el dataset (pide confirmación). Hace backup automático y relanza el cron. **Ver aviso debajo** |
 | `make cargar` | Carga **aditiva**: inserta lo que falta y salta lo que ya existe; no actualiza ni borra |
 | `make test` | Ejecuta los tests automáticos con pytest |
-| `make backup` | Volcado de la BD en `backups/` (ignorado por git) |
+| `make backup` | Volcado de la BD en `backups/` (ignorado por git). Descarta el fichero si queda incompleto y rota los de más de 30 días |
+| `make restore FILE=…` | Restaura una copia. **Sobrescribe la BD actual**: pide confirmación y rechaza volcados truncados |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Muestra la URL de Mailpit |
 | `make uninstall` | Ejecuta el script de desinstalación |
