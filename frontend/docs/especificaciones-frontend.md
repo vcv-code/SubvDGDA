@@ -67,7 +67,7 @@ frontend/
 │
 ├── js/
 │   ├── home.js                  → Lógica de index.html (métricas + gráficos generales con GET /estadisticas/)
-│   ├── solicitudes.js           → Lógica del buscador (buscador.html / solicitudes.html)
+│   ├── solicitudes.js           → Lógica del buscador (buscador.html)
 │   ├── estadisticas-epas.js     → Lógica de estadísticas EPAs (importe medio, distribución, nuevos vs recurrentes, top beneficiarios)
 │   ├── estadisticas-eell.js     → Lógica de estadísticas EELL (% ayuntamientos, top provincias, tramos de importe, recurrencia, ranking CCAA)
 │   ├── exclusivo.js             → Resumen por convocatoria y mapa CCAA (zona registrada)
