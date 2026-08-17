@@ -25,6 +25,7 @@ Uso:
 """
 import argparse
 import html
+import os
 import re
 import socket
 from collections import Counter, defaultdict
@@ -140,6 +141,49 @@ def organizacion(ip, cache):
     return None
 
 
+# ── Geolocalización (opcional) ──────────────────────────────────────────────
+# País y ciudad a partir de la IP, con la base GeoLite2 de MaxMind.
+#
+# Es OPCIONAL a propósito: si falta la librería o la base, el resumen se
+# genera igual sin esa sección. Así se mantiene la promesa de que el script
+# funciona en un servidor pelado, sin instalar nada.
+#
+# Para activarlo:
+#   pip install maxminddb
+#   y dejar GeoLite2-City.mmdb en datos/geoip/ (o apuntar con GEOIP_DB)
+GEOIP_DB = Path(os.environ.get(
+    "GEOIP_DB", RAIZ / "datos/geoip/GeoLite2-City.mmdb"))
+
+
+def abrir_geoip():
+    """Devuelve el lector de GeoLite2, o None si no se puede usar."""
+    try:
+        import maxminddb
+    except ImportError:
+        return None, "falta la librería: pip install maxminddb"
+    if not GEOIP_DB.exists():
+        return None, f"falta la base de datos en {GEOIP_DB}"
+    try:
+        return maxminddb.open_database(str(GEOIP_DB)), None
+    except Exception as e:
+        return None, f"no se pudo abrir la base: {e}"
+
+
+def ubicacion(lector, ip):
+    """(país, ciudad) o (None, None). La ciudad suele fallar en móviles."""
+    try:
+        d = lector.get(ip)
+    except (ValueError, TypeError):
+        return None, None
+    if not d:
+        return None, None
+    pais = (d.get('country') or d.get('registered_country') or {})
+    pais = (pais.get('names') or {}).get('es') or (pais.get('names') or {}).get('en')
+    ciudad = ((d.get('city') or {}).get('names') or {}).get('es') \
+        or ((d.get('city') or {}).get('names') or {}).get('en')
+    return pais, ciudad
+
+
 def navegador(agente):
     for clave, nombre in [('Edg', 'Edge'), ('OPR', 'Opera'), ('Firefox', 'Firefox'),
                           ('Chrome', 'Chrome'), ('Safari', 'Safari')]:
@@ -237,6 +281,18 @@ def construir(filas, descartadas, dias, resolver_dns=False):
         if ref and ref != '-' and 'subvencionesdgda' not in ref and '169.58.179.148' not in ref:
             referentes[re.sub(r'^https?://(www\.)?', '', ref).split('/')[0]] += 1
 
+    # Geolocalización: se resuelve al final, sobre las IPs ya recogidas
+    paises, ciudades = Counter(), Counter()
+    lector, motivo_geo = abrir_geoip()
+    if lector:
+        for ip, n_hits in hits_ip.items():
+            pais, ciudad = ubicacion(lector, ip)
+            if pais:
+                paises[pais] += n_hits
+            if ciudad and pais:
+                ciudades[f"{ciudad} ({pais})"] += n_hits
+        lector.close()
+
     organizaciones = Counter()
     if resolver_dns:
         # Solo las IPs con 3 o más páginas vistas: quien pasa una vez no
@@ -250,7 +306,8 @@ def construir(filas, descartadas, dias, resolver_dns=False):
             if org:
                 organizaciones[org] += n_hits
 
-    return dict(organizaciones=organizaciones, robots=robots, paginas=paginas, api=api, por_dia=por_dia, hits_dia=hits_dia,
+    return dict(paises=paises, ciudades=ciudades, motivo_geo=motivo_geo,
+                organizaciones=organizaciones, robots=robots, paginas=paginas, api=api, por_dia=por_dia, hits_dia=hits_dia,
                 referentes=referentes, dispositivos=dispositivos, horas=horas,
                 navegadores=navegadores, fallos=fallos, visitantes=visitantes,
                 descartadas=descartadas, dias=dias, total=len(filas))
@@ -395,6 +452,20 @@ def render(d):
              'traído gente. Vacío significa que entran escribiendo la dirección '
              'o desde marcadores.</span></h2>')
     p.append(tabla(d['referentes'].most_common(10), ['Procedencia', 'Visitas', '']))
+
+    if d['paises']:
+        p.append('<h2>De qué países<span class="pista">Deducido de la dirección '
+                 'IP con la base GeoLite2. El país es fiable; la ciudad es '
+                 'aproximada y con conexiones móviles suele señalar la salida '
+                 'de la operadora, no dónde está la persona.</span></h2>')
+        p.append(tabla(d['paises'].most_common(10), ['País', 'Visitas', '']))
+        if d['ciudades']:
+            p.append('<div style="height:1rem"></div>')
+            p.append(tabla(d['ciudades'].most_common(10), ['Ciudad', 'Visitas', '']))
+    elif d['motivo_geo']:
+        p.append('<h2>De qué países</h2>')
+        p.append(f'<p class="vacio">Sin datos de ubicación: {html.escape(d["motivo_geo"])}. '
+                 'Es opcional; el resto del resumen no depende de ello.</p>')
 
     p.append('<h2>Con qué entran</h2>')
     p.append(tabla(d['dispositivos'].most_common(), ['Dispositivo', 'Visitas', '']))

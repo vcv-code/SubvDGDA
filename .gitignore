@@ -235,6 +235,12 @@ backups/
 # de los visitantes: ni se versionan ni se publican.
 informes/
 
+# Base GeoLite2 de MaxMind para el resumen de visitas. Pesa decenas de MB y
+# tiene su propia licencia: se descarga con la cuenta de cada uno, no se
+# versiona. Ver "Informe de visitas" en manuales/manual-despliegue.md.
+datos/geoip/
+*.mmdb
+
 backup_*.sql
 
 # Configuración específica del servidor de producción. Docker Compose lee y

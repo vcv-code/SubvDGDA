@@ -1350,16 +1350,6 @@ obliga a revisarlo:
 Mientras nada de eso ocurra, el orden recomendado es: escapado de `innerHTML`
 → CSP permisiva → CSP estricta → cookies `httpOnly`.
 
-### Analítica
-
-- **Países y ciudades en los informes de visitas** — hace falta la base de datos
-  GeoLite2 de MaxMind, que es gratuita pero exige registrarse y obtener una
-  clave. Una vez descargada, GoAccess la usa con `--geoip-database` y el resumen
-  propio puede incorporarla. El país sale fiable; la ciudad es aproximada y con
-  conexiones móviles falla a menudo, porque la IP es la de la salida de la
-  operadora y no la de la persona. Coste: ~30 minutos, la mayor parte el alta
-  en MaxMind.
-
 ### Funcionalidades y UX
 
 - **Entidades favoritas** — marcar entidades (un máximo razonable, p. ej. 20)

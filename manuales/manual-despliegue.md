@@ -940,19 +940,52 @@ Los patrones están comprobados en los tests contra nombres reales de organismos
 y, sobre todo, contra conexiones domésticas y comerciales que **no** deben
 identificarse: un falso positivo sería peor que no detectar nada.
 
-#### Pendiente: países y ciudades
+#### Países y ciudades (GeoLite2 de MaxMind)
 
-Para saber de dónde entran geográficamente hace falta una base de datos que
-traduzca IP a ubicación. La habitual es **GeoLite2 de MaxMind**: gratuita, pero
-exige registrarse y obtener una clave.
+Es **opcional**: sin esto, el resumen se genera igual y lo dice en su propia
+sección, explicando qué falta. Nada más depende de ello.
 
-Una vez descargada, GoAccess la usa con `--geoip-database=/ruta/GeoLite2-City.mmdb`
-y añade paneles de país y ciudad. El resumen en español puede incorporarlo
-después.
+**Una vez, en tu cuenta de MaxMind:**
 
-El país sale con bastante fiabilidad; **la ciudad es aproximada** y con
-conexiones móviles suele fallar, porque la IP corresponde a la salida de la
-operadora y no a dónde está la persona.
+1. Registrarse en `https://www.maxmind.com/en/geolite2/signup` (gratis).
+2. **Manage License Keys** → *Generate new license key*.
+3. **Download Files** → **GeoLite2-City**, formato GZIP (el `.mmdb`, no el CSV).
+
+**Subirla al servidor:**
+
+```bash
+# En tu ordenador, tras descomprimir el .tar.gz
+scp GeoLite2-City.mmdb servidor:/opt/subvdgda/datos/geoip/
+```
+
+Si la carpeta no existe: `ssh servidor 'mkdir -p /opt/subvdgda/datos/geoip'`.
+
+**Y la librería, una vez:**
+
+```bash
+ssh servidor
+pip install maxminddb          # o apt install python3-maxminddb
+```
+
+A partir de ahí, `make resumen-visitas` incluye las secciones de país y ciudad
+sin más. Para usar otra ruta, la variable `GEOIP_DB`.
+
+**En GoAccess** es un parámetro más, si ese binario trae soporte compilado
+(compruébalo con `goaccess --help | grep -i geoip`):
+
+```bash
+goaccess ... --geoip-database=/opt/subvdgda/datos/geoip/GeoLite2-City.mmdb
+```
+
+##### Qué fiabilidad tiene
+
+**El país es fiable.** La ciudad **no**: es una aproximación, y con conexiones
+móviles suele señalar por dónde sale el tráfico de la operadora, no dónde está
+la persona. Sirve para hacerse una idea, no para afirmar nada.
+
+La base **no se versiona** —pesa decenas de MB y tiene licencia propia de
+MaxMind—: está en `.gitignore` y cada instalación descarga la suya. Conviene
+actualizarla un par de veces al año, porque los rangos de IP cambian.
 
 #### Cómo abrirlos
 
