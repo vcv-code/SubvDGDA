@@ -916,7 +916,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
 - **`robots.txt` y `sitemap.xml`**: el sitemap lista las 8 páginas públicas —comprobado por tests que no falte ninguna— y `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal
-- **Informe de visitas propio** (GoAccess sobre los registros de Nginx): sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
+- **Analítica propia sobre los registros de Nginx**, en dos informes: un **resumen en español** (`make resumen-visitas`, ~10 KB, sin dependencias) para el vistazo semanal, y **GoAccess** (`make informe-visitas`) para el detalle. Sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Descuentan robots y **tráfico de centros de datos**, que es la mayor parte de lo que recibe cualquier web pública. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación
@@ -992,7 +992,7 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Privacidad por diseño
 
-- **Analítica sin rastreo** — las visitas se miden con GoAccess sobre los registros que Nginx ya escribe, no con un servicio externo. No hay cookies, ni identificadores, ni peticiones a terceros, y por eso tampoco hace falta banner de consentimiento. Lo que se sabe es qué páginas se ven, desde dónde se llega y con qué dispositivo; nunca quién
+- **Analítica sin rastreo** — las visitas se miden sobre los registros que Nginx ya escribe, no con un servicio externo. No hay cookies, ni identificadores, ni peticiones a terceros, y por eso tampoco hace falta banner de consentimiento. Lo que se sabe es qué páginas se ven, desde dónde se llega y con qué dispositivo; nunca quién. La ubicación se deduce localmente con GeoLite2, sin consultar a nadie
 - **Los informes no se publican** — contienen direcciones IP, así que se generan fuera de lo que Nginx sirve y están en `.gitignore`. Se consultan trayéndolos por `scp`
 - **Retención corta** — los registros duran 30 días (`rotar_logs.py`), y ese número es el que declara `privacidad.html`. Para series largas se conservan los informes, no los registros
 

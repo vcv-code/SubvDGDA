@@ -179,8 +179,16 @@ REDES_NUBE = re.compile(
     # El tráfico doméstico de sus usuarios sale por la operadora, no por aquí.
     r'meta platforms|facebook|linkedin|twitter|x corp|apple inc|bytedance|'
     r'yandex|baidu|openai|anthropic|perplexity|'
-    # Genéricos que aparecen en muchos nombres de red
-    r'data ?cent(er|re)|hosting|server|cloud|vps|colo',
+    # Empresas de escaneo de internet: rastrean todo el espacio de
+    # direcciones para inventariar servicios. No son visitas.
+    r'censys|shodan|shadowserver|binaryedge|leakix|onyphe|internet ?measure|'
+    r'netsystems|driftnet|alphastrike|securitytrails|'
+    # Alojamiento visto en los registros que no encajaba en lo anterior
+    r'ayosoft|techoff|1337 services|play2go|zenlayer|hydra communications|'
+    # Genéricos que aparecen en muchos nombres de red. `\bhost` con límite de
+    # palabra para coger «HostPapa» o «Hostwinds» sin tocar nombres donde
+    # «host» va dentro de otra palabra.
+    r'data ?cent(er|re)|\bhost|server|\bsrv\b|cloud|\bvps|colo\b',
     re.I,
 )
 
