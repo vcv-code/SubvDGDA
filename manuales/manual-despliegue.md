@@ -977,6 +977,36 @@ sin más. Para usar otra ruta, la variable `GEOIP_DB`.
 goaccess ... --geoip-database=/opt/subvdgda/datos/geoip/GeoLite2-City.mmdb
 ```
 
+##### La segunda base: separar personas de centros de datos
+
+Con solo la base de ciudades, el informe engaña. Al activarla por primera vez,
+entre las ciudades con más «visitas» aparecían **Ashburn, Boardman, Santa Clara
+y Phoenix**, que no son sitios donde vive gente leyendo sobre subvenciones sino
+donde están los centros de datos de Amazon, Google y Microsoft. Estados Unidos
+encabezaba la lista con casi el triple de visitas que España.
+
+Eran rastreadores y escáneres alojados en la nube que, **a diferencia de
+Googlebot, no se identifican como robots** en su agente de usuario, así que el
+filtro de robots no los veía.
+
+Se corrige con la segunda base gratuita, **GeoLite2-ASN**, que dice a qué red
+pertenece cada dirección. Misma página de descargas, fila **GeoLite ASN**,
+formato GZIP:
+
+```bash
+scp GeoLite2-ASN_*/GeoLite2-ASN.mmdb servidor:/opt/subvdgda/datos/geoip/
+```
+
+A partir de ahí, ese tráfico se descuenta de todas las cifras igual que los
+robots, y aparece en su propia sección para que se vea cuánto era.
+
+El reconocimiento va por el nombre de la red, porque la base gratuita no marca
+«esto es alojamiento». No es exhaustivo —salen proveedores nuevos
+constantemente— pero cubre a los grandes. Los tests comprueban las dos
+direcciones, y **la segunda importa más**: que Telefónica, Orange, Vodafone o
+MásMóvil **no** se confundan con centros de datos, porque eso borraría del
+informe justo a las personas que entran desde casa.
+
 ##### Qué fiabilidad tiene
 
 **El país es fiable.** La ciudad **no**: es una aproximación, y con conexiones
