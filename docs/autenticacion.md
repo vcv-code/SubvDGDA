@@ -323,3 +323,55 @@ Página carga → ¿hay access_token en localStorage?
 ```
 
 Con este flujo, el usuario solo ve el login si lleva 30 días sin entrar, si hizo logout explícito, o si el administrador revocó su sesión (cambio de contraseña, desactivación de cuenta).
+
+---
+
+## Por qué los tokens viven en `localStorage` y no en cookies
+
+Es la pregunta que hace cualquiera que revise esto, así que conviene que la
+respuesta esté escrita: **se evaluó y se decidió mantenerlo**, no es un
+descuido.
+
+### Lo que se gana con cookies `httpOnly`
+
+Que el token no sea accesible desde JavaScript. Si alguien lograra ejecutar
+código en la página —un XSS—, con `localStorage` puede leer el refresh token y
+suplantar la sesión durante 30 días; con una cookie `httpOnly`, no.
+
+### Lo que se pierde, y suele olvidarse
+
+**No es una mejora limpia, es un intercambio.** Las cookies viajan solas en
+cada petición al dominio, y eso abre la puerta al **CSRF**: una web ajena puede
+provocar que el navegador de la usuaria haga una petición autenticada sin que
+ella lo sepa. Con `localStorage` ese ataque no existe, porque el token hay que
+adjuntarlo a mano en cada llamada.
+
+Migrar bien exige entonces: fijar `SameSite`, revisar la configuración de CORS,
+añadir protección CSRF donde haga falta y reescribir los tests de
+autenticación. Es tocar la pieza que hoy funciona sin fallos.
+
+### Por qué aquí el riesgo es estrecho
+
+- **No hay registro público.** Las cuentas las crea la administradora, así que
+  no hay una masa de sesiones que robar.
+- **No hay contenido escrito por usuarios.** Nadie puede introducir texto que
+  otra persona vea, que es el camino habitual de un XSS.
+- **Los dos scripts externos llevan SRI**, así que un CDN comprometido no
+  ejecutaría código alterado.
+- **El access token dura 15 minutos**, lo que acota la ventana de uso.
+
+### Cuándo hay que rehacer este razonamiento
+
+Este análisis vale para el proyecto tal como está hoy. Deja de valer si:
+
+1. se reabre el registro público,
+2. aparece contenido escrito por usuarios que otros vean,
+3. se añade JavaScript de terceros sin SRI, publicidad o widgets,
+4. se pasan a manejar datos más sensibles que un email y un alias.
+
+En ese momento el orden recomendado es: **escapar los datos antes de
+`innerHTML`** (hay 44 usos sin función de escapado), **añadir
+`Content-Security-Policy`** —primero permisiva, luego estricta, lo que obliga a
+mover 21 manejadores inline a JavaScript externo— y **por último** migrar a
+cookies `httpOnly`. En ese orden: las dos primeras atacan la causa, y sin ellas
+las cookies protegen menos de lo que parece.

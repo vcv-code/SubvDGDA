@@ -1300,15 +1300,55 @@ ser más informativo que la mejora en sí.
   máquina. El manual de despliegue explica cómo traérselas con `scp`, pero es un
   paso manual.
 
-### Analítica
+### Seguridad — decisiones aplazadas a propósito
 
-- **Países y ciudades en los informes de visitas** — hace falta la base de datos
-  GeoLite2 de MaxMind, que es gratuita pero exige registrarse y obtener una
-  clave. Una vez descargada, GoAccess la usa con `--geoip-database` y el resumen
-  propio puede incorporarla. El país sale fiable; la ciudad es aproximada y con
-  conexiones móviles falla a menudo, porque la IP es la de la salida de la
-  operadora y no la de la persona. Coste: ~30 minutos, la mayor parte el alta
-  en MaxMind.
+Estas tres no están hechas, y **no por descuido**: se evaluaron y se decidió
+que el riesgo actual no justifica el coste ni el riesgo del cambio. Lo que
+importa es el **cuándo dejarían de valer**, que va al final.
+
+- **Refresh tokens en `localStorage`, no en cookies `httpOnly`** — cualquier
+  JavaScript que se ejecutara en la página podría leerlos; una cookie
+  `httpOnly` no es accesible desde JavaScript.
+
+  *Por qué se aplaza:* no es una mejora limpia, es un intercambio. Las cookies
+  eliminan el robo por XSS pero **introducen CSRF**, que hoy no existe, y
+  obligan a gestionar `SameSite`, revisar CORS y reescribir los tests de
+  autenticación. Es tocar lo único que funciona sin quejarse, a cambio de
+  cubrir un vector que aquí es estrecho: no hay registro público —las cuentas
+  las crea la administradora—, ni contenido de usuarios, y el access token
+  dura 15 minutos.
+
+- **Sin cabecera `Content-Security-Policy`** — es la que impide que se ejecute
+  JavaScript inyectado. Están las otras cuatro cabeceras de seguridad; falta
+  esta, que es la más importante.
+
+  *Por qué se aplaza:* una CSP estricta rompería lo que hay. En el frontend
+  quedan **21 manejadores inline** (`onclick`, `onerror`, `onsubmit`), dos
+  páginas con `<script>` incrustado y 84 atributos `style=`. Hacerla bien
+  exige moverlos todos a JavaScript externo. Una CSP permisiva —que bloquee
+  dominios ajenos pero tolere lo inline— sí es asumible en una tarde y sería
+  el primer paso natural.
+
+- **44 usos de `innerHTML` con datos de la API, sin función de escapado** — es
+  la puerta por la que entraría un XSS si algún dato traído del BDNS o del BOE
+  contuviera HTML.
+
+  *Por qué se aplaza:* el origen es una API oficial, así que hoy es teórico.
+  Pero es el hueco que hace peligrosos a los dos puntos anteriores, y sería lo
+  primero que habría que cerrar.
+
+**Cuándo hay que retomarlas.** Cualquiera de estas cosas cambia el cálculo y
+obliga a revisarlo:
+
+1. **Se reabre el registro público** — más cuentas y más valor en un token robado.
+2. **Aparece contenido escrito por usuarios** que otros vean: comentarios,
+   perfiles públicos, subida de archivos.
+3. **Se añade JavaScript de terceros** sin SRI, o publicidad, o un widget
+   incrustado.
+4. **Se manejan datos más sensibles** que un email y un alias.
+
+Mientras nada de eso ocurra, el orden recomendado es: escapado de `innerHTML`
+→ CSP permisiva → CSP estricta → cookies `httpOnly`.
 
 ### Funcionalidades y UX
 
