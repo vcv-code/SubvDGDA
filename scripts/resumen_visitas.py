@@ -153,6 +153,61 @@ def organizacion(ip, cache):
 #   y dejar GeoLite2-City.mmdb en datos/geoip/ (o apuntar con GEOIP_DB)
 GEOIP_DB = Path(os.environ.get(
     "GEOIP_DB", RAIZ / "datos/geoip/GeoLite2-City.mmdb"))
+GEOIP_ASN = Path(os.environ.get(
+    "GEOIP_ASN", RAIZ / "datos/geoip/GeoLite2-ASN.mmdb"))
+
+# Redes de alojamiento y nube. El tráfico que sale de aquí NO es gente leyendo
+# la web: son rastreadores y escáneres alojados en servidores que, a diferencia
+# de Googlebot, no se identifican como robots en su agente de usuario.
+#
+# Se detectó al ver el informe: entre las ciudades con más "visitas" salían
+# Ashburn, Boardman, Santa Clara y Phoenix, que no son sitios donde vive gente
+# sino donde están los centros de datos de Amazon, Google y Microsoft. Sin
+# filtrarlas, Estados Unidos encabezaba la lista con casi el triple que España.
+#
+# MaxMind no marca "esto es alojamiento" en la base gratuita, así que se
+# reconoce por el nombre de la red. No es exhaustivo —salen proveedores nuevos
+# constantemente— pero cubre a los grandes, que son la mayor parte.
+REDES_NUBE = re.compile(
+    # Nubes y proveedores de alojamiento
+    r'amazon|aws|google|microsoft|azure|digitalocean|digital ocean|linode|'
+    r'akamai|fastly|cloudflare|oracle|alibaba|tencent|huawei|ovh|hetzner|'
+    r'contabo|scaleway|leaseweb|vultr|choopa|m247|datacamp|hostinger|godaddy|'
+    r'namecheap|ionos|1&1|aruba|netcup|upcloud|kamatera|quadranet|psychz|'
+    r'hostwinds|stackpath|bunny|cdn77|equinix|digitalrealty|'
+    # Grandes tecnológicas: sus rangos son centros de datos, no domicilios.
+    # El tráfico doméstico de sus usuarios sale por la operadora, no por aquí.
+    r'meta platforms|facebook|linkedin|twitter|x corp|apple inc|bytedance|'
+    r'yandex|baidu|openai|anthropic|perplexity|'
+    # Genéricos que aparecen en muchos nombres de red
+    r'data ?cent(er|re)|hosting|server|cloud|vps|colo',
+    re.I,
+)
+
+
+def abrir_asn():
+    """Lector de GeoLite2-ASN, o None. Opcional como el de ciudades."""
+    try:
+        import maxminddb
+    except ImportError:
+        return None
+    if not GEOIP_ASN.exists():
+        return None
+    try:
+        return maxminddb.open_database(str(GEOIP_ASN))
+    except Exception:
+        return None
+
+
+def red_de(lector, ip):
+    """Nombre de la red (operador) a la que pertenece la IP, o None."""
+    if not lector:
+        return None
+    try:
+        d = lector.get(ip)
+    except (ValueError, TypeError):
+        return None
+    return (d or {}).get('autonomous_system_organization')
 
 
 def abrir_geoip():
@@ -243,12 +298,29 @@ def construir(filas, descartadas, dias, resolver_dns=False):
 
     robots = Counter()
     hits_ip = Counter()
+    nube = Counter()          # peticiones desde redes de alojamiento
+    lector_asn = abrir_asn()
+    cache_nube = {}
+
+    def desde_centro_de_datos(ip):
+        if ip not in cache_nube:
+            red = red_de(lector_asn, ip)
+            cache_nube[ip] = (red, bool(red and REDES_NUBE.search(red)))
+        return cache_nube[ip]
 
     for d in filas:
         if d.get('es_bot'):
             robots[nombre_robot(d['agente'])] += 1
             continue
         ruta, estado, ip = d['ruta'].split('?')[0], d['estado'], d['ip']
+
+        # Tráfico de centros de datos: se descuenta como los robots, porque es
+        # lo mismo sin declararse. Antes de esto, Ashburn y Boardman salían
+        # entre las "ciudades" con más visitas.
+        red, es_nube = desde_centro_de_datos(ip)
+        if es_nube:
+            nube[red] += 1
+            continue
         clave_dia = d['fecha_obj'].strftime('%Y-%m-%d')
 
         # Solo el 404 significa "esto no existe". Un 401 o un 403 en
@@ -306,7 +378,7 @@ def construir(filas, descartadas, dias, resolver_dns=False):
             if org:
                 organizaciones[org] += n_hits
 
-    return dict(paises=paises, ciudades=ciudades, motivo_geo=motivo_geo,
+    return dict(nube=nube, hay_asn=lector_asn is not None, paises=paises, ciudades=ciudades, motivo_geo=motivo_geo,
                 organizaciones=organizaciones, robots=robots, paginas=paginas, api=api, por_dia=por_dia, hits_dia=hits_dia,
                 referentes=referentes, dispositivos=dispositivos, horas=horas,
                 navegadores=navegadores, fallos=fallos, visitantes=visitantes,
@@ -435,7 +507,8 @@ def render(d):
     for num, eti in [(f"{len(d['visitantes']):,}".replace(',', '.'), 'Personas distintas'),
                      (f"{sum(d['hits_dia'].values()):,}".replace(',', '.'), 'Páginas vistas'),
                      (f"{media:.0f}", 'Personas al día (media)'),
-                     (f"{d['descartadas']['bots']:,}".replace(',', '.'), 'Peticiones de robots')]:
+                     (f"{d['descartadas']['bots']:,}".replace(',', '.'), 'Peticiones de robots'),
+                     (f"{sum(d['nube'].values()):,}".replace(',', '.'), 'Desde centros de datos')]:
         p.append(f'<div class="cifra"><div class="cifra__num">{num}</div>'
                  f'<div class="cifra__eti">{eti}</div></div>')
     p.append('</div>')
@@ -492,6 +565,20 @@ def render(d):
              'aparezcan aquí significa que están indexando la web, que es lo '
              'que hace que la gente te encuentre.</span></h2>')
     p.append(tabla(d['robots'].most_common(10), ['Quién', 'Peticiones', '']))
+
+    if d['nube']:
+        p.append('<h2>Tráfico de centros de datos<span class="pista">Peticiones '
+                 'que salen de servidores alojados en la nube (Amazon, Google, '
+                 'Microsoft...). No son personas leyendo la web: son rastreadores '
+                 'y escáneres que, a diferencia de Googlebot, <strong>no se '
+                 'identifican como robots</strong>. Se descuentan de todas las '
+                 'cifras de arriba.</span></h2>')
+        p.append(tabla(d['nube'].most_common(10), ['Red', 'Peticiones', '']))
+    elif not d['hay_asn']:
+        p.append('<h2>Tráfico de centros de datos</h2>')
+        p.append('<p class="vacio">Sin la base GeoLite2-ASN no se puede separar. '
+                 'Las cifras de países incluirán entonces rastreadores alojados '
+                 'en la nube, que suelen encabezar la lista sin ser personas.</p>')
 
     p.append('<h2>Rutas que no existen<span class="pista">Casi todo son sondeos '
              'automáticos buscando ficheros de configuración: ruido normal en '

@@ -230,3 +230,40 @@ def test_la_base_geoip_no_se_versiona():
     """Pesa decenas de MB y tiene licencia propia de MaxMind."""
     ignore = (RAIZ / ".gitignore").read_text(encoding="utf-8")
     assert "geoip" in ignore.lower() or "*.mmdb" in ignore
+
+
+def test_distingue_centros_de_datos_de_conexiones_domesticas():
+    """El filtro debe cazar la nube y NO tocar a las operadoras.
+
+    Un falso positivo aquí borra visitas reales: si «Telefónica» se
+    interpretara como centro de datos, desaparecerían del informe las
+    personas que entran desde casa, que son justo las que interesan.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("rv2", RESUMEN)
+    rv = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rv)
+
+    for red in ['AMAZON-02', 'Amazon.com, Inc.', 'Google LLC',
+                'Google Asia Pacific Pte. Ltd.', 'MICROSOFT-CORP-MSN-AS-BLOCK',
+                'Microsoft Corporation', 'DIGITALOCEAN-ASN', 'OVH SAS',
+                'Hetzner Online GmbH', 'CLOUDFLARENET',
+                'Alibaba (US) Technology Co., Ltd.',
+                # Grandes tecnológicas: sus rangos son centros de datos.
+                # Se añadieron al ver que Facebook se colaba como "visita".
+                'Facebook, Inc.', 'Apple Inc.', 'YANDEX LLC']:
+        assert rv.REDES_NUBE.search(red), f"{red} es un centro de datos"
+
+    for red in ['Telefonica de Espana SAU', 'Orange Espagne SA',
+                'Vodafone ONO, S.A.U.', 'MasMovil Ibercom, S.A.',
+                'Euskaltel S.A.', 'France Telecom']:
+        assert not rv.REDES_NUBE.search(red), (
+            f"{red} es una operadora doméstica: filtrarla borraría visitas reales"
+        )
+
+
+def test_la_base_asn_tambien_es_opcional():
+    """Sin ella el resumen se genera igual, avisando de lo que se pierde."""
+    codigo = RESUMEN.read_text(encoding="utf-8")
+    assert "hay_asn" in codigo
+    assert "Sin la base GeoLite2-ASN" in codigo
