@@ -1,0 +1,43 @@
+# robots.txt — subvencionesdgda.org
+#
+# Este proyecto existe para que los datos de subvenciones de bienestar animal
+# se conozcan y se entiendan. Por eso el criterio es PERMITIR: cuanta más
+# gente llegue a esta información, mejor cumple su función.
+#
+# Sobre los rastreadores de inteligencia artificial
+# ─────────────────────────────────────────────────
+# Se permiten a propósito, tanto los que recogen texto para entrenar modelos
+# (GPTBot, ClaudeBot, CCBot...) como los que consultan la web al responder a
+# alguien (OAI-SearchBot, PerplexityBot...). Si estos datos aparecen en más
+# sitios, el asunto gana visibilidad, que es el objetivo.
+#
+# Esta decisión va MÁS ALLÁ de la licencia del contenido (CC BY-NC-ND, que no
+# permite uso comercial ni obras derivadas). Es un permiso expreso y adicional
+# de quien tiene los derechos, explicado en el aviso legal y en el README.
+# Se documenta aquí para que las dos cosas digan lo mismo.
+
+User-agent: *
+Allow: /
+
+# Páginas que requieren cuenta o no tienen sentido en un buscador. No es una
+# medida de seguridad —robots.txt no protege nada, solo pide—: es para que no
+# aparezcan como resultados inútiles.
+Disallow: /admin.html
+Disallow: /privado.html
+Disallow: /exclusivo.html
+Disallow: /login.html
+Disallow: /recuperar-password.html
+Disallow: /reset-password.html
+Disallow: /verificar-email.html
+Disallow: /mantenimiento.html
+
+# La API devuelve JSON: no aporta nada indexarla y consume rastreo.
+Disallow: /solicitudes/
+Disallow: /convocatorias/
+Disallow: /estadisticas/
+Disallow: /avisos/
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /privado/
+
+Sitemap: https://subvencionesdgda.org/sitemap.xml

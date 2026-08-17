@@ -890,15 +890,125 @@ Y la tarea, en el mismo `crontab -e` que la copia de seguridad (el de Linux):
 
 Lunes a las 4:00, media hora después de la copia del domingo para no solaparse.
 
-#### Cómo verlo
+#### Dos informes, para dos cosas distintas
 
-El informe **no es accesible desde la web**, y es a propósito: contiene las
-direcciones IP de los visitantes. Nginx solo sirve `frontend/`, e `informes/`
-queda fuera. Para leerlo, tráetelo a tu ordenador:
+| | `make resumen-visitas` | `make informe-visitas` |
+|---|---|---|
+| Qué es | resumen propio, **en español** | GoAccess, detalle completo en inglés |
+| Tamaño | ~10 KB | ~900 KB |
+| Necesita | solo Python | `apt install goaccess` |
+| Para | el vistazo semanal | investigar algo concreto |
+
+El resumen responde a cinco preguntas y se acaba: cuánta gente entra, qué mira,
+de dónde llega, con qué dispositivo y qué está fallando. Descuenta los robots y
+los ficheros estáticos, porque contarlos infla las cifras hasta dejarlas sin
+sentido: en una web pública la mayor parte del tráfico es automático, y una
+sola visita pide veinte ficheros entre imágenes, estilos y scripts.
 
 ```bash
-scp servidor:/opt/subvdgda/informes/visitas-*.html ~/informes-subvdgda/
+cd /opt/subvdgda
+make resumen-visitas                            # últimos 30 días
+python3 scripts/resumen_visitas.py --dias 7     # solo la última semana
+python3 scripts/resumen_visitas.py --organizaciones   # + administraciones públicas
 ```
+
+El botón **«Guardar como PDF»** del propio informe usa la impresión del
+navegador, que ya sabe generar PDF. No hay opción de imagen: haría falta una
+librería externa y el informe dejaría de abrirse sin conexión; para una imagen,
+una captura de pantalla hace lo mismo.
+
+#### Identificar administraciones públicas
+
+`--organizaciones` resuelve el nombre de red (DNS inverso) de los visitantes
+habituales y busca si pertenece a una administración: ayuntamientos,
+diputaciones, comunidades autónomas, Estado, universidades públicas.
+
+**Identifica organizaciones, no personas.** Nunca se muestra la dirección IP,
+solo el organismo y cuántas páginas ha visto. Que un ayuntamiento consulte los
+datos de sus propias subvenciones es información legítima y de interés público.
+
+Va **desactivado por defecto** por dos razones: cada visitante habitual supone
+una consulta de red, así que tarda; y no siempre aporta.
+
+**Y hay que leerlo con cuidado**: la mayoría de administraciones navegan con
+conexiones comerciales corrientes, indistinguibles de una casa. Que un
+ayuntamiento **no** aparezca no significa que no haya entrado — significa que
+su red no lo dice. Sirve para confirmar que alguien entró, nunca para concluir
+que nadie lo hizo.
+
+Los patrones están comprobados en los tests contra nombres reales de organismos
+y, sobre todo, contra conexiones domésticas y comerciales que **no** deben
+identificarse: un falso positivo sería peor que no detectar nada.
+
+#### Pendiente: países y ciudades
+
+Para saber de dónde entran geográficamente hace falta una base de datos que
+traduzca IP a ubicación. La habitual es **GeoLite2 de MaxMind**: gratuita, pero
+exige registrarse y obtener una clave.
+
+Una vez descargada, GoAccess la usa con `--geoip-database=/ruta/GeoLite2-City.mmdb`
+y añade paneles de país y ciudad. El resumen en español puede incorporarlo
+después.
+
+El país sale con bastante fiabilidad; **la ciudad es aproximada** y con
+conexiones móviles suele fallar, porque la IP corresponde a la salida de la
+operadora y no a dónde está la persona.
+
+#### Cómo abrirlos
+
+Los informes **no son accesibles desde la web**, y es a propósito: contienen
+direcciones IP. Nginx solo sirve `frontend/`, e `informes/` queda fuera.
+
+**Opción 1 — traértelos a tu ordenador** (la habitual). Desde tu máquina, no
+desde la sesión SSH:
+
+```bash
+mkdir -p ~/informes-subvdgda
+scp servidor:/opt/subvdgda/informes/*.html ~/informes-subvdgda/
+```
+
+Y para abrirlos, estando en WSL, hay tres caminos:
+
+```bash
+explorer.exe ~/informes-subvdgda          # abre la carpeta en Windows
+cd ~/informes-subvdgda && explorer.exe resumen-2026-08-16.html   # abre el fichero
+```
+
+O navegando: pega `\\wsl$\Ubuntu\home\ubuntu\informes-subvdgda` en la barra de
+direcciones del explorador de Windows. Merece la pena anclar esa ruta a Acceso
+rápido, porque los ficheros de WSL **no están en el disco de Windows** y no se
+llega a ellos navegando por las carpetas de siempre.
+
+Windows los abrirá con Edge si es tu navegador por defecto. Para usar otro,
+clic derecho sobre el fichero → Abrir con.
+
+**Opción 2 — leerlo por un túnel SSH**, sin descargar nada. Útil si estás en
+otro ordenador. Desde tu máquina:
+
+```bash
+ssh -L 8090:localhost:8090 servidor
+```
+
+Y ya dentro del servidor:
+
+```bash
+cd /opt/subvdgda/informes && python3 -m http.server 8090 --bind 127.0.0.1
+```
+
+Ahora abres `http://localhost:8090` en tu navegador. El `--bind 127.0.0.1` es
+importante: sin él el servidor quedaría escuchando en todas las interfaces y
+los informes, con sus IPs dentro, serían accesibles desde internet. Al terminar,
+`Ctrl+C` y cierras la sesión.
+
+**Opción 3 — verlo en texto por la terminal**, sin salir del servidor:
+
+```bash
+goaccess logs/nginx/access.log* --log-format='%h %^[%d:%t %^] "%r" %s %b "%R" "%u" %T' \
+  --date-format='%d/%b/%Y' --time-format='%H:%M:%S' --num-tests=0
+```
+
+Se abre en modo interactivo dentro de la terminal: flechas para moverse, `q`
+para salir. Es el mismo dato, sin generar fichero.
 
 #### Lo que hay que saber para no sacar conclusiones falsas
 
@@ -922,6 +1032,103 @@ información.
 El script se planta y avisa. Pasa si alguien cambia `log_format` en
 `docker/nginx/default.conf` sin tocar el `FORMATO` del script: GoAccess deja
 de reconocer las líneas. Los dos van juntos, y hay tests que lo comprueban.
+
+### Visibilidad: buscadores y rastreadores de IA
+
+Tener la web publicada no basta para que se encuentre. Esta sección recoge qué
+hay puesto, por qué, y qué hacer cuando algo no aparece.
+
+#### Los dos ficheros
+
+| Fichero | Qué hace |
+|---|---|
+| `frontend/robots.txt` | Dice a los rastreadores qué pueden visitar. **Es una petición, no una barrera**: los rastreadores serios la respetan, los maliciosos la ignoran. Nunca sirve como medida de seguridad |
+| `frontend/sitemap.xml` | Lista las páginas públicas para que los buscadores no dependan de ir siguiendo enlaces |
+
+Al **añadir una página pública hay que añadirla al sitemap**. Un test lo
+comprueba (`test_sitemap_lista_todas_las_paginas_publicas`), así que si se
+olvida, la batería falla.
+
+En el sitemap, la frecuencia declarada (`changefreq`) es **deliberadamente
+conservadora**: `monthly` y `yearly`, nunca `daily`. Los datos se actualizan dos
+veces al año, y anunciar más movimiento del real hace que los buscadores dejen
+de fiarse de esa señal y la ignoren.
+
+#### La decisión sobre los rastreadores de IA
+
+**Se permiten todos, a propósito.** El informe de visitas mostró que OpenAI y
+Anthropic rastrean más que ningún buscador —unas 250 peticiones frente a 17 de
+Bing—, y se decidió dejarlos pasar: si estos datos aparecen en respuestas de
+asistentes, el asunto gana visibilidad, que es para lo que existe el proyecto.
+
+Conviene distinguir dos cosas que suelen confundirse:
+
+| Tipo | Ejemplos | Qué aporta |
+|---|---|---|
+| **Entrenamiento** | `GPTBot`, `ClaudeBot`, `CCBot` | Difuso. Un modelo entrenado con miles de millones de páginas puede no recordar este análisis concreto |
+| **Búsqueda en vivo** | `OAI-SearchBot`, `PerplexityBot`, `ChatGPT-User` | **Concreto: citan con enlace** y traen visitas |
+
+El beneficio real viene de los segundos.
+
+**Esta decisión va más allá de la licencia**, y eso está resuelto y no se debe
+deshacer sin pensarlo. El contenido es CC BY-NC-ND: sin uso comercial y sin
+obras derivadas. Entrenar un modelo comercial es ambas cosas. Sin más, la web
+permitiría en la práctica lo que su propia licencia prohíbe.
+
+Por eso el README y `aviso-legal.html` conceden un **permiso expreso adicional**
+—quien tiene los derechos puede dar más de lo que la licencia da— explicando el
+motivo. **Los tres textos tienen que decir lo mismo**: `robots.txt`, el aviso
+legal y el README. Hay tests que lo verifican; si algún día se bloquea un
+rastreador y se olvida actualizar los otros dos, la batería salta.
+
+#### Google Search Console
+
+Es lo que de verdad mueve la aguja. Al publicar la web, Google **no la rastreó
+en semanas**: en los registros solo aparecía Bing.
+
+Una vez, al principio:
+
+1. Entrar en `https://search.google.com/search-console` y añadir la propiedad
+   `subvencionesdgda.org`.
+2. Verificar que el dominio es tuyo (lo más simple es el registro DNS TXT que
+   te da Google, que se añade en el panel de Cloudflare).
+3. **Inspección de URLs** → pegar `https://subvencionesdgda.org/` → *Solicitar
+   indexación*. Repetir con las páginas principales, sin pasarse: hay cupo
+   diario.
+4. **Sitemaps** → enviar `sitemap.xml` (solo eso; el dominio ya va delante).
+
+> El sitemap hay que enviarlo **después de desplegarlo**. Si se envía antes,
+> Google se encuentra un 404 y lo marca como erróneo.
+
+**Los plazos son largos.** Search Console tarda un día en mostrar datos, y que
+una página aparezca en los resultados lleva días o semanas. Que mañana siga
+vacío no significa que algo falle.
+
+#### Cómo saber si está funcionando
+
+Sin entrar en Search Console, el propio informe de visitas lo dice:
+
+```bash
+make resumen-visitas
+```
+
+En la sección **«Robots y buscadores»**, que aparezca *Google (indexa la web)*
+significa que ya está rastreando. Mientras no aparezca, no está pasando.
+
+Y en **«De dónde llegan»**, si empieza a salir `google.com`, es que la web ya
+sale en resultados y la gente pincha.
+
+#### Si Google sigue sin aparecer
+
+Lo más habitual no es un fallo técnico, sino que **nadie enlaza al sitio**.
+Google descubre webs siguiendo enlaces, y un dominio nuevo sin ningún enlace
+entrante tarda mucho en ser encontrado, aunque se pida la indexación.
+
+En Search Console eso se ve en la inspección de una URL, en «Página de
+referencia: No se ha detectado ninguna».
+
+La solución no es técnica: conseguir que alguna web del sector enlace a esta.
+Un enlace desde una asociación conocida vale más que cualquier ajuste.
 
 ### Sacar las copias del servidor
 

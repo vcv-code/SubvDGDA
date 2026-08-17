@@ -11,7 +11,7 @@
         mantenimiento-on mantenimiento-off \
         reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
-        backup restore informe-visitas shell-db mailpit uninstall
+        backup restore informe-visitas resumen-visitas shell-db mailpit uninstall
 
 # Los volcados de BD van a un directorio propio, ignorado por git: contienen
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
@@ -164,6 +164,12 @@ backup:
 # los visitantes.
 informe-visitas:
 	@bash scripts/informe_visitas.sh
+
+# Resumen en español, con lo justo: cuánta gente entra, qué mira, de dónde
+# llega y qué falla. El informe de GoAccess sigue estando para el detalle.
+# No necesita GoAccess ni nada instalado: solo Python.
+resumen-visitas:
+	@python3 scripts/resumen_visitas.py
 
 # Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
 # actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un

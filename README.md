@@ -915,6 +915,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Docker: Nginx + FastAPI + MariaDB + cron + Mailpit + Adminer en contenedores. La base de datos, Adminer y Mailpit escuchan **solo en local**: en el servidor se llega a ellos por túnel SSH
 - El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
+- **`robots.txt` y `sitemap.xml`**: el sitemap lista las 8 páginas públicas —comprobado por tests que no falte ninguna— y `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal
 - **Informe de visitas propio** (GoAccess sobre los registros de Nginx): sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
@@ -1299,6 +1300,16 @@ ser más informativo que la mejora en sí.
   máquina. El manual de despliegue explica cómo traérselas con `scp`, pero es un
   paso manual.
 
+### Analítica
+
+- **Países y ciudades en los informes de visitas** — hace falta la base de datos
+  GeoLite2 de MaxMind, que es gratuita pero exige registrarse y obtener una
+  clave. Una vez descargada, GoAccess la usa con `--geoip-database` y el resumen
+  propio puede incorporarla. El país sale fiable; la ciudad es aproximada y con
+  conexiones móviles falla a menudo, porque la IP es la de la salida de la
+  operadora y no la de la persona. Coste: ~30 minutos, la mayor parte el alta
+  en MaxMind.
+
 ### Funcionalidades y UX
 
 - **Entidades favoritas** — marcar entidades (un máximo razonable, p. ej. 20)
@@ -1347,6 +1358,16 @@ El README, los archivos `.md` de `docs/` y `frontend/docs/`, los textos visibles
 - **BY** — cualquier uso debe acreditar a «Recopilación y Análisis de Subvenciones DGDA» y enlazar a la licencia.
 - **NC** — no se permite el uso comercial.
 - **ND** — no se permite remezclar, transformar ni crear obras derivadas. Solo compartir la obra original tal cual.
+
+#### Permiso adicional: rastreo e inteligencia artificial
+
+Por encima de esa licencia, y como **permiso expreso de quien tiene los derechos**, se autoriza el rastreo automatizado de este sitio y el uso de su contenido para **indexación, búsqueda y entrenamiento de modelos de inteligencia artificial**, incluidos usos comerciales, que la cláusula NC excluiría.
+
+El motivo es el propósito del proyecto: estos datos existen para que se conozcan. Si aparecen en buscadores y en respuestas de asistentes, el asunto gana visibilidad, y eso pesa más que reservarse un uso que aquí no se está monetizando.
+
+Se pide, sin exigirlo, que se cite la fuente y se enlace a `https://subvencionesdgda.org`.
+
+Este permiso queda reflejado en [`frontend/robots.txt`](frontend/robots.txt), que no bloquea ningún rastreador. Ambos textos tienen que decir lo mismo: si algún día se cambia de criterio, hay que cambiar los dos.
 
 ### Datos y marcas de terceros
 
