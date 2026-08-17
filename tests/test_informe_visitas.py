@@ -106,7 +106,7 @@ def test_el_resumen_no_necesita_dependencias_externas():
     codigo = RESUMEN.read_text(encoding="utf-8")
     imports = [l.strip() for l in codigo.split("\n")
                if l.startswith(("import ", "from ")) and "__future__" not in l]
-    permitidos = {"argparse", "html", "re", "socket", "collections", "datetime", "pathlib"}
+    permitidos = {"argparse", "html", "os", "re", "socket", "collections", "datetime", "pathlib"}
     for linea in imports:
         modulo = linea.split()[1].split(".")[0]
         assert modulo in permitidos, (
@@ -202,3 +202,31 @@ def test_nunca_se_muestran_direcciones_ip_en_el_informe():
         "len(d['visitantes'])", ""), (
         "El informe no debe listar direcciones IP, solo cifras agregadas"
     )
+
+
+def test_la_geolocalizacion_es_opcional_y_no_rompe_nada():
+    """Sin la librería o sin la base, el resumen debe generarse igual.
+
+    Es la promesa que sostiene este script: funciona en un servidor pelado.
+    Si la geolocalización pasara a ser obligatoria, dejaría de cumplirla.
+    """
+    codigo = RESUMEN.read_text(encoding="utf-8")
+    # El import va DENTRO de la función, no arriba del fichero
+    cabecera = codigo[:codigo.index("def ")]
+    assert "maxminddb" not in cabecera, (
+        "maxminddb no debe importarse al principio: haría el script "
+        "inservible sin esa librería instalada"
+    )
+    assert "except ImportError" in codigo
+
+
+def test_avisa_de_por_que_falta_la_ubicacion():
+    """Un hueco sin explicación se interpreta como un fallo."""
+    codigo = RESUMEN.read_text(encoding="utf-8")
+    assert "falta la librería" in codigo and "falta la base de datos" in codigo
+
+
+def test_la_base_geoip_no_se_versiona():
+    """Pesa decenas de MB y tiene licencia propia de MaxMind."""
+    ignore = (RAIZ / ".gitignore").read_text(encoding="utf-8")
+    assert "geoip" in ignore.lower() or "*.mmdb" in ignore
