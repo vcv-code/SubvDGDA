@@ -1033,6 +1033,103 @@ El script se planta y avisa. Pasa si alguien cambia `log_format` en
 `docker/nginx/default.conf` sin tocar el `FORMATO` del script: GoAccess deja
 de reconocer las líneas. Los dos van juntos, y hay tests que lo comprueban.
 
+### Visibilidad: buscadores y rastreadores de IA
+
+Tener la web publicada no basta para que se encuentre. Esta sección recoge qué
+hay puesto, por qué, y qué hacer cuando algo no aparece.
+
+#### Los dos ficheros
+
+| Fichero | Qué hace |
+|---|---|
+| `frontend/robots.txt` | Dice a los rastreadores qué pueden visitar. **Es una petición, no una barrera**: los rastreadores serios la respetan, los maliciosos la ignoran. Nunca sirve como medida de seguridad |
+| `frontend/sitemap.xml` | Lista las páginas públicas para que los buscadores no dependan de ir siguiendo enlaces |
+
+Al **añadir una página pública hay que añadirla al sitemap**. Un test lo
+comprueba (`test_sitemap_lista_todas_las_paginas_publicas`), así que si se
+olvida, la batería falla.
+
+En el sitemap, la frecuencia declarada (`changefreq`) es **deliberadamente
+conservadora**: `monthly` y `yearly`, nunca `daily`. Los datos se actualizan dos
+veces al año, y anunciar más movimiento del real hace que los buscadores dejen
+de fiarse de esa señal y la ignoren.
+
+#### La decisión sobre los rastreadores de IA
+
+**Se permiten todos, a propósito.** El informe de visitas mostró que OpenAI y
+Anthropic rastrean más que ningún buscador —unas 250 peticiones frente a 17 de
+Bing—, y se decidió dejarlos pasar: si estos datos aparecen en respuestas de
+asistentes, el asunto gana visibilidad, que es para lo que existe el proyecto.
+
+Conviene distinguir dos cosas que suelen confundirse:
+
+| Tipo | Ejemplos | Qué aporta |
+|---|---|---|
+| **Entrenamiento** | `GPTBot`, `ClaudeBot`, `CCBot` | Difuso. Un modelo entrenado con miles de millones de páginas puede no recordar este análisis concreto |
+| **Búsqueda en vivo** | `OAI-SearchBot`, `PerplexityBot`, `ChatGPT-User` | **Concreto: citan con enlace** y traen visitas |
+
+El beneficio real viene de los segundos.
+
+**Esta decisión va más allá de la licencia**, y eso está resuelto y no se debe
+deshacer sin pensarlo. El contenido es CC BY-NC-ND: sin uso comercial y sin
+obras derivadas. Entrenar un modelo comercial es ambas cosas. Sin más, la web
+permitiría en la práctica lo que su propia licencia prohíbe.
+
+Por eso el README y `aviso-legal.html` conceden un **permiso expreso adicional**
+—quien tiene los derechos puede dar más de lo que la licencia da— explicando el
+motivo. **Los tres textos tienen que decir lo mismo**: `robots.txt`, el aviso
+legal y el README. Hay tests que lo verifican; si algún día se bloquea un
+rastreador y se olvida actualizar los otros dos, la batería salta.
+
+#### Google Search Console
+
+Es lo que de verdad mueve la aguja. Al publicar la web, Google **no la rastreó
+en semanas**: en los registros solo aparecía Bing.
+
+Una vez, al principio:
+
+1. Entrar en `https://search.google.com/search-console` y añadir la propiedad
+   `subvencionesdgda.org`.
+2. Verificar que el dominio es tuyo (lo más simple es el registro DNS TXT que
+   te da Google, que se añade en el panel de Cloudflare).
+3. **Inspección de URLs** → pegar `https://subvencionesdgda.org/` → *Solicitar
+   indexación*. Repetir con las páginas principales, sin pasarse: hay cupo
+   diario.
+4. **Sitemaps** → enviar `sitemap.xml` (solo eso; el dominio ya va delante).
+
+> El sitemap hay que enviarlo **después de desplegarlo**. Si se envía antes,
+> Google se encuentra un 404 y lo marca como erróneo.
+
+**Los plazos son largos.** Search Console tarda un día en mostrar datos, y que
+una página aparezca en los resultados lleva días o semanas. Que mañana siga
+vacío no significa que algo falle.
+
+#### Cómo saber si está funcionando
+
+Sin entrar en Search Console, el propio informe de visitas lo dice:
+
+```bash
+make resumen-visitas
+```
+
+En la sección **«Robots y buscadores»**, que aparezca *Google (indexa la web)*
+significa que ya está rastreando. Mientras no aparezca, no está pasando.
+
+Y en **«De dónde llegan»**, si empieza a salir `google.com`, es que la web ya
+sale en resultados y la gente pincha.
+
+#### Si Google sigue sin aparecer
+
+Lo más habitual no es un fallo técnico, sino que **nadie enlaza al sitio**.
+Google descubre webs siguiendo enlaces, y un dominio nuevo sin ningún enlace
+entrante tarda mucho en ser encontrado, aunque se pida la indexación.
+
+En Search Console eso se ve en la inspección de una URL, en «Página de
+referencia: No se ha detectado ninguna».
+
+La solución no es técnica: conseguir que alguna web del sector enlace a esta.
+Un enlace desde una asociación conocida vale más que cualquier ajuste.
+
 ### Sacar las copias del servidor
 
 > **Un backup que vive en la misma máquina que la base de datos no protege de
