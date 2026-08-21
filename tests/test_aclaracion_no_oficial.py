@@ -35,14 +35,25 @@ def test_todas_las_paginas_con_pie_aclaran_que_no_es_oficial():
     )
 
 
-def test_la_aclaracion_dice_las_tres_cosas():
-    """No basta con negar: hay que decir qué sí es y de dónde salen los datos."""
+def test_la_aclaracion_niega_las_dos_confusiones_posibles():
+    """Que no es oficial, y que no tramita nada.
+
+    Las fuentes NO se repiten aquí: la línea de debajo del pie ya las nombra
+    con sus enlaces completos, y decirlo dos veces alargaba la aclaración sin
+    aportar.
+    """
     t = (FRONT / "buscador.html").read_text(encoding="utf-8")
     i = t.index("footer-principal__aclaracion")
-    bloque = t[i:i + 500].lower()
+    bloque = t[i:i + 400].lower()
     assert "independiente" in bloque and "no oficial" in bloque
     assert "no gestiona ni tramita" in bloque
-    assert "bdns" in bloque and "boe" in bloque
+
+
+def test_las_fuentes_siguen_nombradas_en_el_pie_con_sus_enlaces():
+    """Al quitarlas de la aclaración, tienen que seguir estando debajo."""
+    t = (FRONT / "buscador.html").read_text(encoding="utf-8")
+    assert "Datos procedentes de la" in t
+    assert "Base de Datos Nacional de Subvenciones" in t
 
 
 def test_el_inicio_lo_dice_tambien_en_el_texto_principal():

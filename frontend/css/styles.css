@@ -1049,10 +1049,10 @@ table tbody tr:hover {
 }
 
 .portada-split__descripcion {
-    font-size: 1rem;
+    font-size: 1rem;          /* no se baja de 16px: es texto de lectura */
     color: var(--color-gris-texto);
-    line-height: 1.7;
-    margin-bottom: var(--espacio-lg);
+    line-height: 1.6;         /* 1.7 hacía la columna más alta que la foto */
+    margin-bottom: var(--espacio-md);
     max-width: 520px;
 }
 
@@ -1363,9 +1363,20 @@ table tbody tr:hover {
 }
 
 /* Separadores | */
+/* Nota de contraste EELL/protectoras, bajo las tablas de convocatorias.
+   Separada y con un filete a la izquierda: no es una nota al pie más, es la
+   diferencia que explica por qué las dos columnas no son comparables. */
+.convocatorias-nota--contraste {
+    margin-top:   var(--espacio-md);
+    padding-left: .75rem;
+    border-left:  3px solid var(--color-verde-btn);
+    text-align:   left;
+}
+
 .footer-principal__aclaracion {
     margin:     .5rem 0 0;
     max-width:  46ch;
+    text-align: center;
     font-size:  .8rem;
     line-height: 1.5;
     opacity:    .85;
