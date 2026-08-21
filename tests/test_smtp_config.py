@@ -238,3 +238,27 @@ def test_los_correos_de_usuario_llevan_el_pie():
         i = codigo.index(f"def {funcion}")
         j = codigo.index("def ", i + 10)
         assert "_firma()" in codigo[i:j], f"{funcion} no incluye el pie"
+
+
+def test_el_remitente_lleva_nombre_visible():
+    """Sin nombre, en la bandeja aparece la dirección a secas.
+
+    Y el nombre que se configure en Gmail NO sirve: solo se aplica a los
+    correos enviados a mano desde su interfaz. Los que manda la web van por
+    SMTP con la cabecera que pone este código.
+    """
+    from backend.app.auth import _remitente
+    r = _remitente()
+    assert "Subvenciones DGDA" in r and "<" in r and ">" in r
+
+
+def test_el_nombre_del_remitente_aclara_que_es_independiente():
+    """Es lo primero que se ve, antes de abrir el correo."""
+    from backend.app.auth import EMAIL_NOMBRE
+    assert "independiente" in EMAIL_NOMBRE.lower()
+
+
+def test_la_cabecera_del_remitente_viaja_en_ascii():
+    """Evita la codificación MIME, que es válida pero se ve fea en crudo."""
+    from backend.app.auth import _remitente
+    _remitente().encode("ascii")   # falla si hay caracteres que obliguen a codificar

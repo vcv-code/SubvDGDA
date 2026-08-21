@@ -54,6 +54,23 @@ FIRMA_EMAIL = (
 )
 
 
+# Nombre visible del remitente. El que se configure en Gmail solo se aplica a
+# los correos enviados a mano desde su interfaz: los que manda la web van por
+# SMTP con la cabecera que se ponga aquí. Si esto fuera solo la dirección, en
+# la bandeja del destinatario aparecería «datos.subvencionesdgda@gmail.com» a
+# secas, que no dice nada y parece automático o sospechoso.
+# Se usa guion y no «·» a propósito: el punto medio obliga a codificar la
+# cabecera en MIME (=?utf-8?q?...?=) y, aunque los clientes modernos lo
+# descodifican, en ASCII puro viaja limpia y se ve igual en todas partes.
+EMAIL_NOMBRE = os.getenv("EMAIL_NOMBRE", "Subvenciones DGDA - web independiente")
+
+
+def _remitente() -> str:
+    """Cabecera From con nombre visible: «Nombre <dirección>»."""
+    from email.utils import formataddr
+    return formataddr((EMAIL_NOMBRE, EMAIL_FROM))
+
+
 def _firma() -> str:
     """El pie, con la dirección real del sitio en cada entorno."""
     return FIRMA_EMAIL.format(sitio=SITE_URL.replace("https://", "").replace("http://", ""))
@@ -128,7 +145,7 @@ def enviar_email_verificacion(email_destino: str, token: str) -> None:
 
     msg = EmailMessage()
     msg["Subject"] = "Verifica tu correo — Subvenciones DGDA"
-    msg["From"]    = EMAIL_FROM
+    msg["From"]    = _remitente()
     msg["To"]      = email_destino
     msg.set_content(
         f"Hola,\n\n"
@@ -153,7 +170,7 @@ def enviar_email_recuperacion(email_destino: str, token: str) -> None:
 
     msg = EmailMessage()
     msg["Subject"] = "Recuperación de contraseña — Subvenciones DGDA"
-    msg["From"]    = EMAIL_FROM
+    msg["From"]    = _remitente()
     msg["To"]      = email_destino
     msg.set_content(
         f"Hola,\n\n"
@@ -179,7 +196,7 @@ def enviar_email_contacto(nombre: str, email_remitente: str, mensaje: str) -> No
     """
     msg = EmailMessage()
     msg["Subject"]  = f"Contacto web — {nombre or email_remitente}"
-    msg["From"]     = EMAIL_FROM
+    msg["From"]     = _remitente()
     msg["To"]       = EMAIL_CONTACTO
     msg["Reply-To"] = email_remitente  # responder va directo a quien escribió
     msg.set_content(
