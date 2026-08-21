@@ -855,6 +855,38 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 ---
 
+## Indexación en buscadores
+
+Tres piezas, y lo importante es que **no se contradigan entre sí**.
+
+| Fichero | Qué declara |
+|---|---|
+| `frontend/robots.txt` | Qué puede rastrearse. **Es una petición, no una barrera**: los rastreadores serios la respetan, los maliciosos la ignoran. Nunca vale como medida de seguridad |
+| `frontend/sitemap.xml` | Las 6 páginas indexables, para que los buscadores no dependan de ir siguiendo enlaces |
+| `<link rel="canonical">` | La dirección buena de cada página |
+
+**Las canónicas resuelven un aviso concreto de Google**: «Duplicada, el usuario
+no ha indicado ninguna versión canónica». Sin ellas, `https://sitio.org/` y
+`https://sitio.org/index.html` son dos direcciones para el mismo contenido, y
+el buscador tiene que adivinar cuál indexar. Cada página indexable declara la
+suya, y un test comprueba que **coincida con la URL que lista el sitemap**.
+
+**El sitemap y las etiquetas `noindex` tienen que ir a la par.** `aviso-legal.html`
+y `privacidad.html` llevan `<meta name="robots" content="noindex">` desde antes
+de que existiera el sitemap, y estaban listadas en él: era decirle a Google
+«indexa esto» y «no me indexes» a la vez, y lo reportó como error. Un test
+impide que vuelva a ocurrir.
+
+La frecuencia declarada (`changefreq`) es **deliberadamente conservadora**:
+`monthly` y `yearly`, nunca `daily`. Los datos se actualizan dos veces al año, y
+anunciar más movimiento del real hace que los buscadores dejen de fiarse de esa
+señal.
+
+`robots.txt` **no bloquea ningún rastreador**, incluidos los de entrenamiento de
+modelos de IA. Es una decisión explícita que va más allá de la licencia
+CC BY-NC-ND, y por eso el README y `aviso-legal.html` conceden un permiso
+expreso: los tres textos tienen que decir lo mismo, y hay tests que lo verifican.
+
 ## Sistema de logs
 
 ### Logs del backend

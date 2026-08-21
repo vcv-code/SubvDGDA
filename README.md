@@ -1014,10 +1014,11 @@ Se dicen tres cosas y no una: que es independiente y no oficial, que **no
 gestiona ni tramita** subvenciones —que es la confusión concreta—, y de dónde
 salen los datos. Negar sin explicar qué sí eres deja a medias a quien lo lee.
 
-- **Y que los datos pueden contener errores**, distinguiendo los propios de los
-  que ya vienen en el origen: si el BOE publica un CIF mal, la web lo refleja.
-  La advertencia invita a avisar por el formulario, porque quien mejor detecta
-  un error sobre una protectora es esa protectora.
+La portada añade además que **los datos pueden contener errores**, distinguiendo
+los propios de los que ya vienen en el origen: si el BOE publica un CIF mal, la
+web lo refleja y no es un fallo del procesamiento. Y en vez de solo advertir,
+invita a avisarlos por el formulario, porque quien mejor detecta un error sobre
+una protectora es esa protectora.
 
 ### Contingencia ante fallos externos
 
