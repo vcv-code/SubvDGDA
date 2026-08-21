@@ -372,6 +372,8 @@ def construir(filas, descartadas, dias, resolver_dns=False):
             if ciudad and pais:
                 ciudades[f"{ciudad} ({pais})"] += n_hits
         lector.close()
+    if lector_asn:
+        lector_asn.close()
 
     organizaciones = Counter()
     if resolver_dns:

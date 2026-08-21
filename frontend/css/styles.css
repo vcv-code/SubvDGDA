@@ -1377,16 +1377,11 @@ table tbody tr:hover {
     margin:     .5rem 0 0;
     max-width:  46ch;
     text-align: center;
-    font-size:  .8rem;
+    font-size:  .85rem;   /* la marca del pie va a .92rem: .8 desentonaba */
     line-height: 1.5;
     opacity:    .85;
 }
 
-.footer-principal__aclaracion abbr {
-    text-decoration: none;   /* el subrayado punteado ensucia a este tamaño */
-    border-bottom:   1px dotted currentColor;
-    cursor:          help;
-}
 
 .footer-principal__sep {
     color: var(--footer-borde);
