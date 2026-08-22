@@ -855,6 +855,38 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
 ---
 
+## Indexación en buscadores
+
+Tres piezas, y lo importante es que **no se contradigan entre sí**.
+
+| Fichero | Qué declara |
+|---|---|
+| `frontend/robots.txt` | Qué puede rastrearse. **Es una petición, no una barrera**: los rastreadores serios la respetan, los maliciosos la ignoran. Nunca vale como medida de seguridad |
+| `frontend/sitemap.xml` | Las 6 páginas indexables, para que los buscadores no dependan de ir siguiendo enlaces |
+| `<link rel="canonical">` | La dirección buena de cada página |
+
+**Las canónicas resuelven un aviso concreto de Google**: «Duplicada, el usuario
+no ha indicado ninguna versión canónica». Sin ellas, `https://sitio.org/` y
+`https://sitio.org/index.html` son dos direcciones para el mismo contenido, y
+el buscador tiene que adivinar cuál indexar. Cada página indexable declara la
+suya, y un test comprueba que **coincida con la URL que lista el sitemap**.
+
+**El sitemap y las etiquetas `noindex` tienen que ir a la par.** `aviso-legal.html`
+y `privacidad.html` llevan `<meta name="robots" content="noindex">` desde antes
+de que existiera el sitemap, y estaban listadas en él: era decirle a Google
+«indexa esto» y «no me indexes» a la vez, y lo reportó como error. Un test
+impide que vuelva a ocurrir.
+
+La frecuencia declarada (`changefreq`) es **deliberadamente conservadora**:
+`monthly` y `yearly`, nunca `daily`. Los datos se actualizan dos veces al año, y
+anunciar más movimiento del real hace que los buscadores dejen de fiarse de esa
+señal.
+
+`robots.txt` **no bloquea ningún rastreador**, incluidos los de entrenamiento de
+modelos de IA. Es una decisión explícita que va más allá de la licencia
+CC BY-NC-ND, y por eso el README y `aviso-legal.html` conceden un permiso
+expreso: los tres textos tienen que decir lo mismo, y hay tests que lo verifican.
+
 ## Sistema de logs
 
 ### Logs del backend
@@ -878,16 +910,24 @@ Google Fonts no tiene fallback porque la app degrada de forma aceptable sin la f
 
   Se eligió el formato estándar en vez de uno propio para que lo entienda cualquier analizador sin configurarlo. Con GoAccess:
 
-  ```bash
-  goaccess access.log --log-format='%h %^[%d:%t %^] "%r" %s %b "%R" "%u" %T' \
-                      --date-format='%d/%b/%Y' --time-format='%H:%M:%S'
-  ```
+    ```bash
+    goaccess access.log --log-format='%h %^[%d:%t %^] "%r" %s %b "%R" "%u" %T' \
+                        --date-format='%d/%b/%Y' --time-format='%H:%M:%S' \
+                        --num-tests=0
+    ```
+
+    Dos detalles que cuestan descubrir: `--log-format=COMBINED` **también**
+    parsea estas líneas, pero descarta el tiempo de respuesta y el informe
+    pierde la sección de páginas lentas sin que nada lo indique. Y
+    `--num-tests=0` es imprescindible: un registro real siempre trae líneas
+    que no encajan —bots, sondas, restos de un formato anterior— y sin él
+    GoAccess aborta el informe entero al toparse con las primeras.
 
 - **Destinos:**
   - `logs/nginx/access.log` — todas las peticiones HTTP y HTTPS
   - `logs/nginx/error.log` — nivel `warn` en adelante
 - **El referrer solo aparece en las visitas que llegan de fuera.** Navegando dentro de la web sale siempre vacío (`"-"`), y no es un fallo: el sitio envía la cabecera `Referrer-Policy: no-referrer`, que le dice al navegador que no revele la procedencia. Eso no afecta a quien llega desde un buscador o desde otra web, porque ahí decide el sitio de origen. Si algún día interesara el recorrido *dentro* de la web, habría que pasar esa cabecera a `same-origin`, que lo permitiría sin revelar nada hacia fuera.
-- **Ningún código del proyecto los lee.** El `access.log` que muestra el panel de administración es otro fichero distinto, `logs/app/access.log`, escrito por el backend.
+- **Los leen los dos generadores de informes**, y nadie más: `scripts/resumen_visitas.py` (resumen en español) y `scripts/informe_visitas.sh` (GoAccess). Ambos escriben en `informes/`, fuera de lo que Nginx sirve, porque el resultado contiene direcciones IP. El `access.log` que muestra el panel de administración es otro fichero distinto, `logs/app/access.log`, escrito por el backend.
 - Se conservan **30 días** (`docker/cron/scripts/rotar_logs.py`) y lo que registran está declarado en `frontend/privacidad.html`, porque la IP es dato personal.
 
 ---

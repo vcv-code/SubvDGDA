@@ -915,8 +915,8 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Docker: Nginx + FastAPI + MariaDB + cron + Mailpit + Adminer en contenedores. La base de datos, Adminer y Mailpit escuchan **solo en local**: en el servidor se llega a ellos por túnel SSH
 - El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
-- **`robots.txt` y `sitemap.xml`**: el sitemap lista las 8 páginas públicas —comprobado por tests que no falte ninguna— y `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal
-- **Informe de visitas propio** (GoAccess sobre los registros de Nginx): sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
+- **`robots.txt`, `sitemap.xml` y direcciones canónicas**: el sitemap lista las 6 páginas indexables —ni una menos ni una de más: las legales llevan `noindex` y estar en ambos sitios era contradecirse— y cada una declara su dirección canónica, para que `/` y `/index.html` no parezcan páginas distintas. `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal. Todo comprobado por tests
+- **Analítica propia sobre los registros de Nginx**, en dos informes: un **resumen en español** (`make resumen-visitas`, ~10 KB, sin dependencias) para el vistazo semanal, y **GoAccess** (`make informe-visitas`) para el detalle. Sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Descuentan robots y **tráfico de centros de datos**, que es la mayor parte de lo que recibe cualquier web pública. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación
@@ -934,6 +934,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Panel de administración completo: gestión paginada de usuarios, visor de logs (de la app y del cron) y edición del fin de plazo de convocatorias
 - Zona privada con nombre/alias editable. El **mapa CCAA táctil** y el **resumen por convocatoria** eran contenido exclusivo para registrados; al retirarse el registro público pasaron a las páginas públicas —el mapa a estadísticas EELL y el resumen al inicio— y `exclusivo.html` quedó reservada al rol `admin` como espacio para futuro contenido propio
 - Modal de conclusiones con textos reales en las 13 gráficas
+- **Aclaración de que el sitio no es oficial en las 18 páginas con pie**, no solo en el inicio: quien llega desde un buscador aterriza en cualquiera. La portada avisa además de que los datos pueden contener errores —propios o ya presentes en el origen— e invita a avisarlos por el formulario
 - Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
 - Maquetación móvil verificada **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools
 - Consola limpia en el mapa de calor: se corrigió un fallo de Leaflet que soltaba errores al tocar una comunidad en móvil
@@ -992,9 +993,32 @@ Criterios de calidad tenidos en cuenta a lo largo del desarrollo, más allá de 
 
 ### Privacidad por diseño
 
-- **Analítica sin rastreo** — las visitas se miden con GoAccess sobre los registros que Nginx ya escribe, no con un servicio externo. No hay cookies, ni identificadores, ni peticiones a terceros, y por eso tampoco hace falta banner de consentimiento. Lo que se sabe es qué páginas se ven, desde dónde se llega y con qué dispositivo; nunca quién
+- **Analítica sin rastreo** — las visitas se miden sobre los registros que Nginx ya escribe, no con un servicio externo. No hay cookies, ni identificadores, ni peticiones a terceros, y por eso tampoco hace falta banner de consentimiento. Lo que se sabe es qué páginas se ven, desde dónde se llega y con qué dispositivo; nunca quién. La ubicación se deduce localmente con GeoLite2, sin consultar a nadie
 - **Los informes no se publican** — contienen direcciones IP, así que se generan fuera de lo que Nginx sirve y están en `.gitignore`. Se consultan trayéndolos por `scp`
 - **Retención corta** — los registros duran 30 días (`rotar_logs.py`), y ese número es el que declara `privacidad.html`. Para series largas se conservan los informes, no los registros
+
+### Claridad sobre qué es este sitio
+
+El nombre, el dominio y el contenido suenan a organismo oficial, y de ahí nace
+un riesgo concreto: que alguien crea que aquí se tramitan subvenciones y
+escriba preguntando por su expediente. Se ataja en cuatro sitios, no en uno:
+
+- **En el pie de las 18 páginas con pie**, porque quien llega desde un buscador
+  no aterriza en la portada sino en el buscador o en una gráfica
+- **En la portada**, junto a la explicación del proyecto
+- **En el remitente de los correos** (`Subvenciones DGDA - web independiente`),
+  que se lee en la bandeja antes de abrir nada
+- **En el pie de los correos**, con las fuentes y la aclaración completa
+
+Se dicen tres cosas y no una: que es independiente y no oficial, que **no
+gestiona ni tramita** subvenciones —que es la confusión concreta—, y de dónde
+salen los datos. Negar sin explicar qué sí eres deja a medias a quien lo lee.
+
+La portada añade además que **los datos pueden contener errores**, distinguiendo
+los propios de los que ya vienen en el origen: si el BOE publica un CIF mal, la
+web lo refleja y no es un fallo del procesamiento. Y en vez de solo advertir,
+invita a avisarlos por el formulario, porque quien mejor detecta un error sobre
+una protectora es esa protectora.
 
 ### Contingencia ante fallos externos
 
@@ -1247,9 +1271,21 @@ sigue enviando a Mailpit.
 | `SMTP_HOST`, `SMTP_PORT` | Servidor del proveedor (Gmail: `smtp.gmail.com`, `587`) |
 | `SMTP_USER`, `SMTP_PASSWORD` | Credenciales. En Gmail, una **contraseña de aplicación**, que exige tener activada la verificación en dos pasos |
 | `SMTP_TLS` | `true` para cifrar con STARTTLS. Gmail y Brevo lo exigen. **Puerto 587, no 465** |
-| `EMAIL_FROM` | Remitente. Debe ser un dominio que exista o el proveedor lo rechazará o irá a spam |
+| `EMAIL_FROM` | Remitente. Debe ser un dominio que exista o el proveedor lo rechazará o irá a spam. **No uses una cuenta personal**: la ve todo el que reciba un correo del sitio |
+| `EMAIL_NOMBRE` | Nombre visible del remitente. Por defecto `Subvenciones DGDA - web independiente` |
 | `EMAIL_CONTACTO` | Buzón que recibe los mensajes del formulario de contacto |
 | `SITE_URL` | Base de los enlaces que viajan **dentro** de los correos |
+
+`EMAIL_NOMBRE` tiene una trampa que cuesta ver: **el nombre que se configure
+en Gmail no sirve aquí**. Ese solo se aplica a los correos enviados a mano
+desde su interfaz; los que manda la web van por SMTP con la cabecera que pone
+el código. Sin esta variable, en la bandeja del destinatario aparecería la
+dirección a secas, que no dice nada y parece automático. Con ella, la
+aclaración de que el sitio no es oficial se lee **antes de abrir el correo**.
+
+Elige un remitente que no parezca oficial: el dominio ya suena a
+administración, y si además lo parece el remitente, la gente escribirá
+creyendo que aquí se tramitan subvenciones.
 
 `SITE_URL` es la que falla más silenciosamente: si apunta a un dominio
 equivocado, el correo se envía y llega bien, pero **el enlace de recuperación de

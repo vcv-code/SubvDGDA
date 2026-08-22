@@ -29,8 +29,12 @@ DOMINIO = "https://subvencionesdgda.org"
 PRIVADAS = {"admin.html", "privado.html", "exclusivo.html", "login.html",
             "recuperar-password.html", "reset-password.html",
             "verificar-email.html", "mantenimiento.html"}
-# Páginas que existen pero no van al sitemap por su naturaleza
-FUERA = PRIVADAS | {"404.html", "50x.html", "entidad.html"}
+# Páginas que existen pero no van al sitemap por su naturaleza.
+# Las legales llevan <meta name="robots" content="noindex"> desde antes:
+# incluirlas en el sitemap era contradecirse, y Google lo reportó como
+# "Excluida por una etiqueta noindex".
+FUERA = PRIVADAS | {"404.html", "50x.html", "entidad.html",
+                    "aviso-legal.html", "privacidad.html"}
 
 
 def _publicas():
@@ -120,3 +124,37 @@ def test_el_aviso_legal_concede_el_permiso_que_robots_refleja():
 def test_el_readme_explica_el_permiso_adicional():
     t = README.read_text(encoding="utf-8")
     assert "Permiso adicional" in t and "robots.txt" in t
+
+
+# ── Coherencia entre el sitemap y las etiquetas de las páginas ──────────────
+
+def test_el_sitemap_no_incluye_paginas_marcadas_noindex():
+    """Decir "indexa esto" en el sitemap y "no me indexes" en la página es
+    contradecirse, y Google lo reporta como error de indexación.
+
+    Pasó con aviso-legal.html y privacidad.html, que llevaban noindex desde
+    antes de que existiera el sitemap.
+    """
+    import xml.etree.ElementTree as ET
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    urls = {u.find("s:loc", ns).text for u in ET.parse(SITEMAP).getroot()}
+    for f in FRONT.glob("*.html"):
+        if 'name="robots"' in f.read_text(encoding="utf-8") and \
+           "noindex" in f.read_text(encoding="utf-8"):
+            assert f"{DOMINIO}/{f.name}" not in urls, (
+                f"{f.name} lleva noindex pero está en el sitemap"
+            )
+
+
+def test_las_paginas_indexables_declaran_su_direccion_canonica():
+    """Sin canonical, Google ve / y /index.html como páginas duplicadas."""
+    import xml.etree.ElementTree as ET
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    urls = {u.find("s:loc", ns).text for u in ET.parse(SITEMAP).getroot()}
+    for url in urls:
+        nombre = url.replace(DOMINIO + "/", "") or "index.html"
+        t = (FRONT / nombre).read_text(encoding="utf-8")
+        assert 'rel="canonical"' in t, f"{nombre} no declara su dirección canónica"
+        assert f'href="{url}"' in t, (
+            f"{nombre} declara una canónica que no coincide con su URL del sitemap"
+        )

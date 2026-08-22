@@ -1007,6 +1007,43 @@ direcciones, y **la segunda importa más**: que Telefónica, Orange, Vodafone o
 MásMóvil **no** se confundan con centros de datos, porque eso borraría del
 informe justo a las personas que entran desde casa.
 
+##### Repasar el filtro de vez en cuando
+
+**Esto nunca queda terminado**: salen proveedores de alojamiento nuevos
+constantemente. Cada pocos meses, o cuando un país raro encabece la lista sin
+que ninguna de sus ciudades aparezca —esa es la señal—, conviene mirar qué
+redes están pasando:
+
+```bash
+ssh servidor
+cd /opt/subvdgda
+python3 -c "
+import maxminddb, re, collections
+from pathlib import Path
+asn = maxminddb.open_database('datos/geoip/GeoLite2-ASN.mmdb')
+c = collections.Counter()
+for f in Path('logs/nginx').glob('access.log*'):
+    for l in f.read_text(errors='replace').splitlines():
+        m = re.match(r'(\S+) ', l)
+        if not m: continue
+        o = (asn.get(m.group(1)) or {}).get('autonomous_system_organization')
+        if o: c[o] += 1
+for red, n in c.most_common(25): print(f'{n:>6}  {red}')
+"
+```
+
+Al leer esa lista, **lo importante no es qué añadir sino qué no tocar**. En la
+primera revisión, la red con más peticiones de todas las que pasaban el filtro
+era `Digi Spain Telecom` con 554: un operador español de consumo, o sea
+personas en su casa. Añadirlo habría «limpiado» las cifras borrando justo a los
+visitantes reales.
+
+La regla: **ante la duda, dejarlo pasar**. Contar de más se nota y se corrige;
+borrar a una persona no se ve nunca.
+
+Los nombres nuevos se añaden a `REDES_NUBE`, en `scripts/resumen_visitas.py`,
+y conviene meterlos también en el test junto a los que no deben filtrarse.
+
 ##### Qué fiabilidad tiene
 
 **El país es fiable.** La ciudad **no**: es una aproximación, y con conexiones
