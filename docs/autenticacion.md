@@ -195,6 +195,51 @@ activan rellenando `SMTP_TLS` y `SMTP_USER` en `docker/.env`.
 El `timeout` no es decorativo: sin él, un servidor SMTP que acepta la conexión
 y luego no responde dejaría la petición HTTP colgada indefinidamente.
 
+### Quién parece que envía, y qué dice el pie
+
+El sitio se llama «Subvenciones DGDA», el dominio es `subvencionesdgda.org` y
+el asunto de los correos dice lo mismo. Todo suena a organismo oficial, y quien
+recibe una verificación puede creer que se la manda la administración que
+concede las ayudas. Dos piezas del código lo evitan.
+
+**`_remitente()`** compone la cabecera `From` con nombre visible:
+
+```
+Subvenciones DGDA - web independiente <datos.subvencionesdgda@gmail.com>
+```
+
+Esto **se lee en la bandeja antes de abrir nada**, así que es donde más gente
+ve la aclaración. Y tiene una trampa que cuesta descubrir: **el nombre que se
+configure en Gmail no sirve aquí**. Ese solo se aplica a los correos enviados a
+mano desde su interfaz; los que manda la aplicación van por SMTP con la
+cabecera que pone este código. Se ajusta con `EMAIL_NOMBRE`.
+
+Va en **ASCII puro**, con guion y no con «·», porque un carácter no ASCII
+obliga a codificar la cabecera en MIME (`=?utf-8?q?...?=`). Los clientes
+modernos lo descodifican, pero en ASCII viaja limpia y se ve igual en todas
+partes. Un test lo comprueba.
+
+**`_firma()`** añade el pie a los correos que van a personas de fuera —
+verificación y recuperación:
+
+```
+—
+Subvenciones DGDA · subvencionesdgda.org
+Web independiente de análisis de datos públicos. No es un sitio oficial
+ni tramita subvenciones: los datos proceden del BDNS y del BOE.
+```
+
+Dice **tres cosas y no una**: que es independiente, que no tramita —que es la
+confusión concreta que se quiere evitar—, y de dónde salen los datos. Negar sin
+explicar qué sí eres deja a medias a quien lo lee.
+
+El correo del formulario de contacto lleva un pie más corto: va a la propia
+administradora, así que solo indica de qué sitio procede.
+
+> Estos dos textos tienen que decir lo mismo que el pie de la web y que el
+> aviso legal. Si se cambia uno, hay que revisar los otros: son cuatro
+> superficies distintas contando lo mismo.
+
 ### Los enlaces de los correos
 
 Los correos de verificación y recuperación llevan dentro un enlace a la web, y

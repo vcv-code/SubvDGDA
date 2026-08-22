@@ -251,12 +251,22 @@ def test_distingue_centros_de_datos_de_conexiones_domesticas():
                 'Alibaba (US) Technology Co., Ltd.',
                 # Grandes tecnológicas: sus rangos son centros de datos.
                 # Se añadieron al ver que Facebook se colaba como "visita".
-                'Facebook, Inc.', 'Apple Inc.', 'YANDEX LLC']:
+                'Facebook, Inc.', 'Apple Inc.', 'YANDEX LLC',
+                # Vistos en los registros reales del servidor tras la primera
+                # pasada: alojamiento y escaneo que se colaba como "visitas"
+                'Ayosoft Ltd', 'Techoff Srv Limited', '1337 Services GmbH',
+                'HostPapa', 'Zenlayer Inc', 'Play2go International Limited',
+                'Hydra Communications Ltd', 'Censys, Inc.']:
         assert rv.REDES_NUBE.search(red), f"{red} es un centro de datos"
 
-    for red in ['Telefonica de Espana SAU', 'Orange Espagne SA',
-                'Vodafone ONO, S.A.U.', 'MasMovil Ibercom, S.A.',
-                'Euskaltel S.A.', 'France Telecom']:
+    for red in ['Telefonica de Espana SAU', 'Telefonica De Espana S.a.u.',
+                'Orange Espagne SA', 'Vodafone ONO, S.A.U.',
+                'MasMovil Ibercom, S.A.', 'Euskaltel S.A.', 'France Telecom',
+                # Digi es un operador español de consumo: era la red con más
+                # peticiones de todas las que pasaban el filtro, y son personas
+                'Digi Spain Telecom S.A',
+                # Una universidad es una organización, no alojamiento
+                'Ruhr-Universitaet Bochum']:
         assert not rv.REDES_NUBE.search(red), (
             f"{red} es una operadora doméstica: filtrarla borraría visitas reales"
         )

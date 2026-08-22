@@ -202,3 +202,63 @@ def test_contacto_si_propaga_el_error():
                side_effect=smtplib.SMTPException("rechazado")), \
          pytest.raises(smtplib.SMTPException):
         auth.enviar_email_contacto("Vero", "vero@ejemplo.com", "Hola")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# El pie que aclara que la web no es oficial
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_los_correos_aclaran_que_la_web_no_es_oficial():
+    """El dominio suena semioficial y el asunto dice "Subvenciones DGDA".
+
+    Quien reciba uno de estos correos puede creer que se lo manda la
+    administración que concede las ayudas. El pie es donde se corta esa
+    confusión, porque lo lee quien ya tiene el mensaje abierto.
+    """
+    from backend.app.auth import _firma
+    pie = _firma().lower()
+    assert "independiente" in pie
+    assert "no es un sitio oficial" in pie
+    assert "no tramita" in pie or "ni tramita" in pie
+
+
+def test_el_pie_nombra_las_fuentes_oficiales():
+    """Decir de dónde salen los datos es la otra mitad de la aclaración:
+    la web no concede nada, pero sí explica qué han concedido otros."""
+    from backend.app.auth import _firma
+    pie = _firma()
+    assert "BDNS" in pie and "BOE" in pie
+
+
+def test_los_correos_de_usuario_llevan_el_pie():
+    """Verificación y recuperación son los que van a personas de fuera."""
+    from pathlib import Path
+    codigo = (Path(__file__).parent.parent / "backend/app/auth.py").read_text(encoding="utf-8")
+    for funcion in ["enviar_email_verificacion", "enviar_email_recuperacion"]:
+        i = codigo.index(f"def {funcion}")
+        j = codigo.index("def ", i + 10)
+        assert "_firma()" in codigo[i:j], f"{funcion} no incluye el pie"
+
+
+def test_el_remitente_lleva_nombre_visible():
+    """Sin nombre, en la bandeja aparece la dirección a secas.
+
+    Y el nombre que se configure en Gmail NO sirve: solo se aplica a los
+    correos enviados a mano desde su interfaz. Los que manda la web van por
+    SMTP con la cabecera que pone este código.
+    """
+    from backend.app.auth import _remitente
+    r = _remitente()
+    assert "Subvenciones DGDA" in r and "<" in r and ">" in r
+
+
+def test_el_nombre_del_remitente_aclara_que_es_independiente():
+    """Es lo primero que se ve, antes de abrir el correo."""
+    from backend.app.auth import EMAIL_NOMBRE
+    assert "independiente" in EMAIL_NOMBRE.lower()
+
+
+def test_la_cabecera_del_remitente_viaja_en_ascii():
+    """Evita la codificación MIME, que es válida pero se ve fea en crudo."""
+    from backend.app.auth import _remitente
+    _remitente().encode("ascii")   # falla si hay caracteres que obliguen a codificar
