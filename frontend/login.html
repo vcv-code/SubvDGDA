@@ -26,7 +26,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entrar — Subvenciones Bienestar Animal</title>
     <meta name="description"
-          content="Accede a tu cuenta para consultar el área privada de subvenciones de bienestar animal.">
+          content="Acceso para la administración del sitio. Todo el contenido de subvenciones de bienestar animal es público y no requiere cuenta.">
 
     <link rel="icon" href="assets/img/logo.png" type="image/png">
     <meta property="og:title" content="Acceder — Subvenciones Bienestar Animal">
@@ -109,7 +109,13 @@
                         Inicia sesión
                     </h1>
                     <p class="auth-card__subtitulo">
-                        Accede a tu cuenta para ver contenido exclusivo.
+                        <!-- Antes decía «para ver contenido exclusivo», y era doblemente
+                             falso: ese contenido pasó a ser público, y no hay registro
+                             abierto, así que quien llegue aquí sin cuenta no puede
+                             crearse una. Conviene que lo sepa en vez de buscar un
+                             botón de alta que no existe. -->
+                        Todo el contenido de la web es público y no necesita cuenta.
+                        Este acceso es para la administración del sitio.
                     </p>
 
                     <!--
@@ -273,6 +279,7 @@
         </div>
     </footer>
 
+    <script src="js/navbar.js" defer></script>
     <script src="js/utils.js" defer></script>
     <script src="js/auth.js" defer></script>
 
