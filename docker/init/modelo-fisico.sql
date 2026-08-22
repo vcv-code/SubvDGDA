@@ -4,16 +4,20 @@
 -- Tablas implementadas: convocatorias, beneficiarios, solicitudes,
 --   concesiones, agrupaciones, agrupacion_miembros, usuarios, refresh_tokens,
 --   reset_tokens
--- Tablas fase futura: causas_exclusion, solicitud_causas
+-- Tablas fase futura: solicitud_causas
 -- ============================================================
 -- Notas:
 --   - Se usa CREATE TABLE IF NOT EXISTS para evitar errores si el
 --     script se ejecuta sobre una BD ya inicializada.
 --   - No se incluyen DROP TABLE: el reset se hace a nivel de volumen
 --     Docker (docker-compose down -v) para evitar pérdidas accidentales.
---   - Las tablas causas_exclusion y solicitud_causas están diseñadas
---     en el modelo conceptual pero no se implementan aquí todavía:
---     los datos de causas no están preparados (mejora futura).
+--   - causas_exclusion SÍ se crea (más abajo): es el catálogo que traduce
+--     el código de exclusión al motivo redactado, y se carga desde
+--     data/final/causas_exclusion.json. La cabecera la daba por futura
+--     desde el diseño inicial, cuando aún no existía.
+--   - solicitud_causas sigue siendo futura: hoy los códigos van en el
+--     campo causa_exclusion de solicitudes, separados por ';', en vez de
+--     en una tabla de relación.
 -- ============================================================
 
 CREATE DATABASE IF NOT EXISTS bdns_dgda

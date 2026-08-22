@@ -404,6 +404,7 @@ La documentación interactiva completa (Swagger UI) está en `/docs` — accesib
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | `GET` | `/admin/estado` | Estado del sistema: número de usuarios, solicitudes y convocatorias |
+| `POST` | `/admin/usuarios` | **Alta de una cuenta. Única vía de creación**: no hay registro público. La cuenta nace sin verificar y se envía el correo de verificación |
 | `GET` | `/admin/usuarios` | Lista paginada de usuarios (`pagina`, `limite`; devuelve `{ usuarios, total }`) |
 | `PATCH` | `/admin/usuarios/{id}/rol` | Cambiar rol (`registrado` ↔ `admin`) |
 | `PATCH` | `/admin/usuarios/{id}/activo` | Activar o desactivar cuenta |
@@ -620,7 +621,7 @@ Nginx actúa como **terminador SSL**: recibe las peticiones HTTPS del navegador,
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout docker/ssl/server.key \
   -out docker/ssl/server.crt \
-  -subj "/CN=subvencionesDGDA.local/O=DAW/C=ES" \
+  -subj "/CN=subvencionesDGDA.local/O=Subvenciones DGDA/C=ES" \
   -addext "subjectAltName=DNS:subvencionesDGDA.local,DNS:localhost"
 ```
 

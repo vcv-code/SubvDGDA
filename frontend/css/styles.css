@@ -1786,7 +1786,8 @@ canvas {
 
 .auth-card--simple {
     grid-template-columns: 1fr;
-    max-width: 480px;
+    /* El ancho lo fija la regla de la sección 34 con !important (520px). El
+       `max-width: 480px` que había aquí no llegaba a aplicarse nunca. */
     min-height: unset;
 }
 

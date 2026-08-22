@@ -400,6 +400,12 @@ Ver el esquema completo con relaciones en [docs/modelo-datos.md](docs/modelo-dat
   </tr>
 </table>
 
+> Ambos diagramas son de la fase de diseño y **no incluyen `causas_exclusion`**,
+> que se implementó después: en el modelo inicial las causas de exclusión iban a
+> quedarse fuera, y acabaron siendo una de las partes más útiles del buscador.
+> El esquema al día está en `docker/init/modelo-fisico.sql` y en
+> [docs/modelo-datos.md](docs/modelo-datos.md).
+
 ### Backend
 
 API REST construida con **FastAPI** (Python), **SQLAlchemy** como ORM y **MariaDB** como base de datos. Se sirve con `uvicorn` dentro de un contenedor Docker; Nginx actúa como proxy inverso y punto de entrada HTTPS.
@@ -750,7 +756,7 @@ El proyecto combina pruebas automáticas y manuales:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | **346 funciones / 450 ejecuciones** | pytest (sin Docker) |
+| Automáticos | **396 funciones / 500 ejecuciones** | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 > El recuento detallado, fichero a fichero, está en **[docs/tests.md](docs/tests.md)**,
@@ -799,9 +805,12 @@ pytest tests/test_rate_limiting.py      # configuración de rate limiting en Ngi
 ### Resultado esperado
 
 ```text
-328 passed   # excluyendo test_https_config.py y test_rate_limiting.py (requieren Docker+Nginx)
-344 passed   # suite completa con Docker levantado
+500 passed
 ```
+
+Las 500 pasan **sin necesidad de Docker**: los tests de HTTPS y de rate limiting
+comprueban los ficheros de configuración directamente, no un servidor
+levantado. Es más rápido y evita que la batería dependa del entorno.
 
 Para el detalle completo de cada test (tipo, técnica de caja y qué comprueba exactamente) ver [`docs/tests.md`](docs/tests.md).
 
