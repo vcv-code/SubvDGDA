@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from ..auth import hashear_password, verificar_password
 from ..db import get_db
 from ..dependencies import require_rol
-from ..models import Concesion, Solicitud, Convocatoria, Usuario, RefreshToken
-from ..schemas import CambiarNombreIn, CambiarPasswordIn, ResumenTablaOut, ResumenFilaTabla
+from ..models import Usuario, RefreshToken
+from ..schemas import CambiarNombreIn, CambiarPasswordIn, ResumenTablaOut
 from .estadisticas import construir_resumen_tabla
 
 router = APIRouter(prefix="/privado", tags=["zona privada"])
