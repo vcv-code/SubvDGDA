@@ -414,9 +414,8 @@ Este análisis vale para el proyecto tal como está hoy. Deja de valer si:
 3. se añade JavaScript de terceros sin SRI, publicidad o widgets,
 4. se pasan a manejar datos más sensibles que un email y un alias.
 
-En ese momento el orden recomendado es: **escapar los datos antes de
-`innerHTML`** (hay 44 usos sin función de escapado), **añadir
-`Content-Security-Policy`** —primero permisiva, luego estricta, lo que obliga a
-mover 21 manejadores inline a JavaScript externo— y **por último** migrar a
-cookies `httpOnly`. En ese orden: las dos primeras atacan la causa, y sin ellas
-las cookies protegen menos de lo que parece.
+En ese momento hay un orden recomendado, y migrar a cookies **no es el primer
+paso**: antes van dos medidas que atacan la causa —que se pueda ejecutar
+JavaScript ajeno— y sin las cuales las cookies protegen menos de lo que parece.
+Ese orden, con el detalle de qué hay que tocar en cada una, está en el
+documento privado de seguridad, fuera del repositorio.
