@@ -98,12 +98,16 @@ async function cargarHistorial(cif) {
 
             const expediente = s.num_expediente || "—";
 
+            // `data-label` no es decorativo: en móvil la tabla se convierte en
+            // tarjetas y el CSS pinta ese atributo como etiqueta a la izquierda
+            // de cada valor. Sin él queda un hueco vacío y el dato suelto a la
+            // derecha, que es como se veía antes.
             tr.innerHTML = `
-                <td>${anio}</td>
-                <td>${tipo}</td>
-                <td>${badgeEstadoHtml(estado)}</td>
-                <td>${importe}${tramoBadge}</td>
-                <td>${expediente}</td>
+                <td data-label="Año">${anio}</td>
+                <td data-label="Tipo">${tipo}</td>
+                <td data-label="Estado">${badgeEstadoHtml(estado)}</td>
+                <td data-label="Importe">${importe}${tramoBadge}</td>
+                <td data-label="Expediente">${expediente}</td>
             `;
 
             tablaBody.appendChild(tr);

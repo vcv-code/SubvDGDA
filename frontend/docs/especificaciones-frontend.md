@@ -809,7 +809,7 @@ Movimientos, iniciativas legales y casos recientes de relevancia pública:
 | ID | Label | Dato esperado |
 |---|---|---|
 | `#kpi-importe-medio` | Importe medio EPA | `datos.importe_medio` |
-| `#kpi-mediana` | Mediana del importe | `datos.mediana` |
+| `#kpi-tasa-concesion` | Solicitudes concedidas (%) | calculado de `datos.por_anio[].concedidas / .solicitudes` |
 | `#kpi-beneficiarios-unicos` | Beneficiarios únicos | `datos.beneficiarios_unicos` |
 | `#kpi-nuevas-entidades` | Nuevas entidades | `datos.nuevas_entidades` |
 
@@ -1438,6 +1438,62 @@ navegación y del botón flotante de subir, o los tapan:
 | 1200 | `.navbar` |
 | 2000 | modales |
 | 9999 | avisos y `skip-nav` |
+
+### Segunda ronda (agosto 2026): las insignias como elementos flex
+
+Volvió a pasar lo mismo —hamburguesa fuera de pantalla, modal cortado, botón de
+subir desplazado— y otra vez con **una sola causa y cuatro síntomas**.
+
+El culpable estaba en la conversión de tabla a tarjetas. Cada `<td>` es un
+contenedor flex con la etiqueta `::before` a la izquierda y el valor a la
+derecha, separados con `justify-content: space-between`. Eso da por hecho que la
+celda tiene **dos** partes.
+
+Pero `solicitudes.js` añade las insignias («Agrupación», «T1») como hijos
+directos del `<td>`, y **todos los hijos de un contenedor flex son elementos
+flex**. Esa celda pasaba a tener cuatro, y `space-between` los repartía a lo
+ancho: la última insignia acababa **75 px fuera de su propia celda**.
+
+Se ve en la cadena de antepasados, que es lo que lo destapó:
+
+```
+0. SPAN.badge-tramo   izq 365  der 392   ← la insignia
+1. TD.                izq  70  der 290   ← su celda acaba en 290
+```
+
+Un hijo 102 px a la derecha del borde de su padre solo puede significar
+posicionamiento flex, no desbordamiento normal.
+
+**Arreglo:** `justify-content: flex-end` con `margin-right: auto` en la
+etiqueta. El valor y sus insignias se agrupan a la derecha *sean los que sean*, y
+`flex-wrap` les permite bajar de línea. Se hizo en el CSS y no en el JavaScript
+a propósito: así queda protegida cualquier celda que en el futuro reciba hijos
+extra, no solo esta.
+
+#### `white-space: nowrap` sobre contenido de longitud desconocida
+
+En la misma revisión apareció otro, **aún sin manifestarse**: `.chip-causa`
+—que muestra todos los códigos de exclusión unidos por puntos— llevaba
+`white-space: nowrap`.
+
+Consultando la base de datos hay **63 entidades EELL con cuatro o más códigos**,
+y la peor tiene **once**. Ese chip habría medido unos 400 px sin posibilidad de
+partirse: más ancho que la pantalla. No se había visto porque hay que dar con una
+de esas 63 filas.
+
+La regla general que deja: **`nowrap` solo sobre contenido de longitud conocida**
+—una etiqueta, una fecha, un importe—. Sobre datos que vienen de la base de
+datos, hay que mirar antes cuánto pueden llegar a medir.
+
+#### Leyenda de tramos: unidades que no deben partirse
+
+La leyenda era texto seguido, así que la línea podía romperse en cualquier punto
+y se leía «T1 ≤» y en la siguiente línea «10.000 hab.».
+
+Pasa a ser una lista con `display: flex; flex-wrap: wrap`, y cada elemento con
+`white-space: nowrap`. En pantalla ancha los tres van en fila; al estrecharse
+**bajan de línea completos**. Es el uso correcto de `nowrap`: sobre una unidad
+corta y de longitud conocida, no sobre un dato variable.
 
 ---
 

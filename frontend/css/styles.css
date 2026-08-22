@@ -607,15 +607,29 @@ table tbody tr:hover {
         background: var(--color-fondo-verde);
     }
 
+    /* Cada celda es una fila: etiqueta a la izquierda, valor a la derecha.
+       NO se usa `justify-content: space-between`, y la razón importa: al ser
+       un contenedor flex, TODOS los hijos del <td> son elementos flex, y el
+       JavaScript añade insignias («Agrupación», «T1») como hijos sueltos.
+       Con `space-between`, una celda con cuatro elementos los repartía a lo
+       ancho y empujaba el último 75 px fuera de su propia celda, ensanchando
+       el documento a 392 px sobre un viewport de 360 —lo que además descolocaba
+       la barra de navegación, los modales y el botón de subir, que se
+       dimensionan respecto al ancho del documento—.
+       Con `flex-end` + `margin-right: auto` en la etiqueta, el valor y sus
+       insignias se agrupan a la derecha sean los que sean, y `flex-wrap`
+       permite que bajen de línea en vez de desbordar. */
     .tabla-wrapper table tbody td {
         display: flex;
-        justify-content: space-between;
+        flex-wrap: wrap;
+        justify-content: flex-end;
         align-items: flex-start;
         padding: 0.28rem 0;
         border: none;
         gap: 0.5rem;
         font-size: 0.88rem;
         text-align: right;
+        min-width: 0;
     }
 
     /* Línea separadora entre campos dentro de la tarjeta */
@@ -635,6 +649,7 @@ table tbody tr:hover {
         min-width: 70px;
         flex-shrink: 0;
         text-align: left;
+        margin-right: auto;   /* empuja la etiqueta a la izquierda */
     }
 }
 
@@ -4496,6 +4511,26 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     color: var(--color-gris-texto);
 }
 
+.leyenda-tramos__titulo {
+    margin: 0 0 0.4rem;
+}
+
+/* Flex con `wrap`: en pantalla ancha los tres tramos van en fila; al estrecharse
+   bajan de línea COMPLETOS. El `nowrap` de cada uno es lo que impide que se
+   parta por dentro, que era lo que hacía ilegible la leyenda en móvil. */
+.leyenda-tramos__lista {
+    display:    flex;
+    flex-wrap:  wrap;
+    gap:        0.35rem 1.1rem;
+    list-style: none;
+    margin:     0;
+    padding:    0;
+}
+
+.leyenda-tramos__lista li {
+    white-space: nowrap;
+}
+
 /* Info de resultados ("Mostrando X de Y…") */
 .info-resultados {
     font-size: 0.9rem;
@@ -4925,6 +4960,18 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     padding: var(--espacio-md);
     overflow-y: auto;
     flex: 1;
+    /* `min-width: 0` no es decorativo: un elemento flex vale por defecto
+       `min-width: auto`, así que NO puede encogerse por debajo del ancho
+       mínimo de su contenido. La tabla del histórico empujaba el modal a
+       392px sobre un viewport de 360, y el desbordamiento se propagaba a
+       toda la página. */
+    min-width: 0;
+}
+
+/* La tabla del histórico hace scroll dentro del modal en vez de ensancharlo */
+.modal-historico-tabla-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* 36.6 Filas de datos de la ficha */
@@ -5160,17 +5207,28 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
        leyenda es justo lo que traduce los colores del mapa. Antes bajaba a
        0.62rem (~10px), o sea que el texto se hacía más pequeño precisamente
        en la pantalla donde peor se lee. */
+    /* La leyenda va SIEMPRE encima del mapa (es un control de Leaflet anclado
+       en la esquina), así que en una pantalla pequeña tapa una parte visible.
+       Se aprieta el espaciado —interlineado, altura de las muestras de color,
+       separación entre filas— pero NO el tamaño de letra: bajarlo deshacía la
+       corrección de legibilidad, y esta leyenda es lo único que traduce los
+       colores del mapa. */
     .mapa-leyenda {
-        padding:   6px 8px;
-        font-size: 0.78rem;
+        padding:     6px 8px;
+        font-size:   0.78rem;
+        line-height: 1.25;
     }
     .mapa-leyenda__titulo {
         font-size:     0.75rem;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
     .mapa-leyenda__fila {
         gap:           5px;
-        margin-bottom: 2px;
+        margin-bottom: 1px;
+    }
+    .mapa-leyenda__color {
+        width:  11px;
+        height: 11px;
     }
     .mapa-leyenda__color {
         width:  10px;
@@ -5617,7 +5675,11 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     font-weight: 600;
     line-height: 1.2;
     cursor: pointer;
-    white-space: nowrap;
+    /* SIN `white-space: nowrap`: el chip muestra todos los códigos de causa
+       unidos por puntos, y hay 63 entidades EELL con cuatro o más —la peor,
+       con once—. Sin poder partir, ese chip mediría unos 400 px y se saldría
+       de una pantalla de 360. Partido en dos líneas se lee igual de bien. */
+    max-width: 100%;
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 

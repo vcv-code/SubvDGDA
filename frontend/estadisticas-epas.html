@@ -125,10 +125,17 @@
                         <span class="card-kpi__tag">Por concesión</span>
                     </div>
 
+                    <!-- Sustituye a la mediana, que seguía apareciendo en la gráfica
+                         «media vs mediana» pero como KPI exigía explicar qué es antes
+                         de aportar nada. La tasa de concesión se entiende sola y dice
+                         lo que de verdad importa a una protectora: qué probabilidad
+                         hay de conseguir la ayuda, y cómo ha cambiado. -->
                     <div class="card-kpi">
-                        <span class="card-kpi__label">Mediana del importe</span>
-                        <span class="card-kpi__numero" id="kpi-mediana">—</span>
-                        <span class="card-kpi__tag">Valor central</span>
+                        <span class="card-kpi__label">Solicitudes concedidas</span>
+                        <span class="card-kpi__numero" id="kpi-tasa-concesion">—</span>
+                        <span class="card-kpi__tag" id="kpi-tasa-anio">—</span>
+                        <span class="tendencia-badge" id="tendencia-concesion"
+                              style="display:none;" aria-live="polite"></span>
                     </div>
 
                     <div class="card-kpi">

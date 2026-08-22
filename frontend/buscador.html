@@ -338,10 +338,17 @@
                 -->
                 <!-- Leyenda de tramos EELL (oculto hasta que haya resultados con tramo) -->
                 <div id="leyenda-tramos" class="leyenda-tramos" style="display:none;">
-                    <strong>Tramos EELL</strong> (población del municipio):
-                    <span class="badge-tramo">T1</span> ≤ 10.000 hab. &nbsp;
-                    <span class="badge-tramo">T2</span> 10.001 – 50.000 hab. &nbsp;
-                    <span class="badge-tramo">T3</span> &gt; 50.000 hab.
+                    <p class="leyenda-tramos__titulo">
+                        <strong>Tramos EELL</strong> (población del municipio)
+                    </p>
+                    <!-- Lista y no texto seguido: así cada tramo es una unidad que puede
+                         bajar entera de línea, pero nunca partirse por dentro. Antes se
+                         leía «T1 ≤» y en la línea siguiente «10.000 hab.». -->
+                    <ul class="leyenda-tramos__lista">
+                        <li><span class="badge-tramo">T1</span> ≤ 10.000 hab.</li>
+                        <li><span class="badge-tramo">T2</span> 10.001 – 50.000 hab.</li>
+                        <li><span class="badge-tramo">T3</span> &gt; 50.000 hab.</li>
+                    </ul>
                 </div>
 
                 <div class="resultados-card" id="resultados-card" style="display:none;">
@@ -774,6 +781,9 @@
                 <!-- Histórico de solicitudes -->
                 <div id="modal-historico" style="display:none;">
                     <p class="modal-historico-titulo">Histórico de solicitudes</p>
+                    <!-- Scroll propio: sus columnas no caben en 360px y sin esto -->
+                    <!-- ensanchaban el modal y con él toda la página.        -->
+                    <div class="modal-historico-tabla-scroll">
                     <table class="modal-historico-tabla" aria-label="Histórico de solicitudes de la entidad">
                         <thead>
                             <tr>
@@ -786,6 +796,7 @@
                         </thead>
                         <tbody id="modal-tabla-body"></tbody>
                     </table>
+                    </div>
                 </div>
 
             </div>
