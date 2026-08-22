@@ -310,6 +310,23 @@ def get_estadisticas_epas(response: Response, db: Session = Depends(get_db)):
         for label, low, high in RANGOS
     ]
 
+    # Solicitudes presentadas y concedidas por año. Va aparte de la consulta
+    # principal porque aquella parte de `concesiones` y aquí hacen falta TODAS
+    # las solicitudes, concedidas o no: sin el denominador no hay tasa.
+    conteos = dict()
+    for anio, total, concedidas in (
+        db.query(
+            Convocatoria.anio_convocatoria,
+            func.count(Solicitud.id_solic),
+            func.sum(case((Solicitud.estado == "concedida", 1), else_=0)),
+        )
+        .join(Solicitud, Solicitud.id_convoc == Convocatoria.id_convoc)
+        .filter(Convocatoria.tipo_convoc == "epa")
+        .group_by(Convocatoria.anio_convocatoria)
+        .all()
+    ):
+        conteos[anio] = (int(total or 0), int(concedidas or 0))
+
     # Estadísticas por año
     anios_out: list[EpaAnio] = []
     for anio in sorted(por_anio_raw.keys()):
@@ -329,12 +346,16 @@ def get_estadisticas_epas(response: Response, db: Session = Depends(get_db)):
 
         top10 = sorted(acum.values(), key=lambda x: x["importe"], reverse=True)[:10]
 
+        total_anio, concedidas_anio = conteos.get(anio, (0, 0))
+
         anios_out.append(EpaAnio(
             anio        = anio,
             media       = round(sum(imp_anio) / len(imp_anio), 2),
             mediana     = round(median(imp_anio), 2),
             nuevos      = len(nuevos_anio),
             recurrentes = len(recurrentes_anio),
+            solicitudes = total_anio,
+            concedidas  = concedidas_anio,
             top_beneficiarios=[
                 TopBeneficiarioEpa(nombre=b["nombre"], importe=round(b["importe"], 2))
                 for b in top10
