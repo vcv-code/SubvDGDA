@@ -249,3 +249,8 @@ backup_*.sql
 # suyo: los volúmenes de Let's Encrypt y las rutas de su certificado.
 docker/docker-compose.override.yml
 docker/nginx-tls-prod/
+
+# Documentación privada: análisis que no debe publicarse aunque el repositorio
+# sea público (p. ej. el inventario de defensas pendientes, que leído del tirón
+# es un mapa de por dónde intentar entrar).
+docs/privado/
