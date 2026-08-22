@@ -470,7 +470,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 |--------|-------------|
 | `index.html` | Home con métricas, gráficas de evolución, una tabla por tipo de entidad con cada convocatoria (**estado de plazo**, enlace a la **convocatoria en BDNS**, a la **resolución en el BOE** y acceso a la búsqueda filtrada) y la tabla del **umbral de puntuación** (corte de concesión por año) y, al final, el **resumen por convocatoria** (recuento por estado + importe). Incluye enlaces a las **bases reguladoras** oficiales. Arriba puede aparecer una **franja de campaña** temporal (avisos del sector con fecha de caducidad: se ocultan solos pasada la fecha, ver `FIN_CAMPANA` en `home.js`) y el **banner de avisos** de convocatorias del año en curso sin resolución |
 | `buscador.html` | Buscador de solicitudes con filtros (incluida la **línea de subvención** en EPA 2024/2025), búsqueda por nombre de entidad o nº de expediente, paginación (con accesos a primera/última página), ordenación server-side, estado vacío con sugerencias y exportación CSV con nombre dinámico según filtros activos. Debajo, **buscador de exclusiones (EELL)**: entidades locales excluidas con su causa oficial — filtro de causa dependiente del año (cada convocatoria usa su propia numeración), chip con los códigos y modal con el motivo completo de cada uno |
-| `estadisticas-epas.html` | Análisis de protectoras: importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios, **exclusiones por año y causas más frecuentes** |
+| `estadisticas-epas.html` | Análisis de protectoras: **tasa de concesión** —qué porcentaje de solicitudes recibe ayuda, y cuántos puntos ha caído desde 2021—, importes, media/mediana, distribución por tramos, nuevas vs recurrentes, top beneficiarios, **exclusiones por año y causas más frecuentes** |
 | `estadisticas-eell.html` | Análisis de ayuntamientos: top provincias y CCAA, **tramos de importe**, recurrencia de entidades, **exclusiones por año y causas más frecuentes**, y **mapa de calor por CCAA** (choropleth con top de municipios al hacer clic) |
 | `exclusivo.html` | Resumen por convocatoria y mapa CCAA. Su contenido ya es **público** (el resumen en el inicio, el mapa en estadísticas EELL), así que la página queda **reservada a rol `admin`** (`exclusivo.js` redirige a los no-admin) como espacio para futuro contenido exclusivo; comparte el render con las páginas públicas (`js/resumen-tabla.js`, `js/modal-ccaa.js`) |
 | `privado.html` | Perfil del usuario: cambiar nombre y contraseña. La tarjeta de acceso a `exclusivo.html` solo se muestra al rol `admin` |
@@ -756,7 +756,7 @@ El proyecto combina pruebas automáticas y manuales:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | **396 funciones / 500 ejecuciones** | pytest (sin Docker) |
+| Automáticos | **399 funciones / 503 ejecuciones** | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 > El recuento detallado, fichero a fichero, está en **[docs/tests.md](docs/tests.md)**,
@@ -947,6 +947,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Navbar responsive (hamburguesa ≤900px) · botón "volver arriba" en páginas largas · sistema de color coherente · imagen hero
 - Maquetación móvil verificada **midiendo el desbordamiento real en el navegador**, no solo con la emulación de DevTools
 - Consola limpia en el mapa de calor: se corrigió un fallo de Leaflet que soltaba errores al tocar una comunidad en móvil
+- Menú de navegación operativo en **todas** las páginas: seis lo mostraban sin cargar su script, y en móvil eso las dejaba sin navegación (comprobado por tests)
 
 ### Calidad del código
 
