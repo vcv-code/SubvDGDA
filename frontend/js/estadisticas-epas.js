@@ -68,7 +68,9 @@ const errorSugerencia = document.getElementById('error-sugerencia');
 
 // KPIs
 const kpiImporteMedio      = document.getElementById('kpi-importe-medio');
-const kpiMediana           = document.getElementById('kpi-mediana');
+const kpiTasaConcesion     = document.getElementById('kpi-tasa-concesion');
+const kpiTasaAnio          = document.getElementById('kpi-tasa-anio');
+const tendenciaConcesion   = document.getElementById('tendencia-concesion');
 const kpiBeneficiariosUnicos = document.getElementById('kpi-beneficiarios-unicos');
 const kpiNuevasEntidades   = document.getElementById('kpi-nuevas-entidades');
 
@@ -161,10 +163,7 @@ function poblarKpis(datos) {
         kpiImporteMedio.textContent =
             datos.importe_medio != null ? formatearEuros(datos.importe_medio) : '—';
     }
-    if (kpiMediana) {
-        kpiMediana.textContent =
-            datos.mediana != null ? formatearEuros(datos.mediana) : '—';
-    }
+    mostrarTasaConcesion(datos.por_anio);
     if (kpiBeneficiariosUnicos) {
         kpiBeneficiariosUnicos.textContent =
             datos.beneficiarios_unicos != null
@@ -673,3 +672,45 @@ function formatearEjeY(n) {
 document.addEventListener('DOMContentLoaded', () => {
     cargarEstadisticasEpas();
 });
+
+
+/**
+ * mostrarTasaConcesion()
+ * Porcentaje de solicitudes concedidas en el último año con datos, con la
+ * variación respecto al primero.
+ *
+ * La variación se expresa en PUNTOS PORCENTUALES, no en porcentaje: pasar del
+ * 92 % al 53 % es una caída de 39 puntos, no del 42 %. Decir un porcentaje de
+ * un porcentaje es un error frecuente y aquí confundiría de verdad, porque el
+ * dato que se compara ya es un porcentaje.
+ *
+ * @param {Array} porAnio - Entradas con { anio, solicitudes, concedidas }.
+ */
+function mostrarTasaConcesion(porAnio) {
+    if (!kpiTasaConcesion) return;
+
+    const conDatos = (porAnio || []).filter(a => a.solicitudes > 0);
+    if (!conDatos.length) {
+        kpiTasaConcesion.textContent = '—';
+        return;
+    }
+
+    const ultimo  = conDatos[conDatos.length - 1];
+    const primero = conDatos[0];
+    const tasa    = (ultimo.concedidas / ultimo.solicitudes) * 100;
+
+    kpiTasaConcesion.textContent = `${tasa.toFixed(0)} %`;
+    if (kpiTasaAnio) kpiTasaAnio.textContent = `En ${ultimo.anio}`;
+
+    if (!tendenciaConcesion || conDatos.length < 2) return;
+
+    const tasaPrimera = (primero.concedidas / primero.solicitudes) * 100;
+    const puntos      = tasa - tasaPrimera;
+    const sube        = puntos >= 0;
+
+    tendenciaConcesion.className =
+        `tendencia-badge ${sube ? 'tendencia-badge--sube' : 'tendencia-badge--baja'}`;
+    tendenciaConcesion.textContent =
+        `${sube ? '↑' : '↓'} ${Math.abs(puntos).toFixed(0)} puntos desde ${primero.anio}`;
+    tendenciaConcesion.style.display = 'inline-flex';
+}

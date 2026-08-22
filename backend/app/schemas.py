@@ -137,6 +137,12 @@ class EpaAnio(BaseModel):
     mediana:           float
     nuevos:            int
     recurrentes:       int
+    # Solicitudes presentadas y concedidas ese año. Permiten calcular la tasa
+    # de concesión, que cayó del 92 % en 2021 al 53 % en 2025: es el dato que
+    # explica por qué hay protectoras que cumplen los requisitos y aun así se
+    # quedan sin ayuda desde que en 2024 se introdujo el corte por puntuación.
+    solicitudes:       int = 0
+    concedidas:        int = 0
     top_beneficiarios: list[TopBeneficiarioEpa]
 
 class RangoImporte(BaseModel):
