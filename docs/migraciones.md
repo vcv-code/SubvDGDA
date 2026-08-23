@@ -101,6 +101,18 @@ En `manuales/manual-despliegue.md`, apartado «Cuando el despliegue trae cambios
 de esquema o de datos». Resumen: backup, migración, y **después** reconstruir el
 backend — al revés, el servidor sirve 500 hasta que la migración pase.
 
+Un detalle que cuesta un intento fallido si se pasa por alto: las variables
+`MYSQL_*` viven en `docker/.env`, **no en el shell del servidor**. Hay que dejar
+que las expanda el `sh` de dentro del contenedor, con comillas simples:
+
+```bash
+docker compose exec -T db sh -c 'mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"' \
+    < ../scripts/migraciones/AAAA-MM-DD_descripcion.sql
+```
+
+Con comillas dobles las expande el shell del servidor, llegan vacías y `mariadb`
+toma el `-p` como nombre de usuario: «Access denied for user `'-p'@'localhost'`».
+
 ## Historial
 
 | Fichero | Qué hace |
