@@ -23,9 +23,13 @@
 --
 -- CÓMO LANZARLA (con backup previo, desde /opt/subvdgda):
 --   bash scripts/backup_db.sh
---   cd docker && docker compose exec -T db \
---       mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" \
+--   cd docker
+--   docker compose exec -T db sh -c 'mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"' \
 --       < ../scripts/migraciones/2026-08-23_periodo_y_erratas.sql
+--
+-- Las comillas SIMPLES no son un detalle: las variables MYSQL_* están en
+-- docker/.env, no en el shell del servidor. Con comillas dobles llegan vacías y
+-- mariadb responde «Access denied for user '-p'@'localhost'».
 --
 -- Ensayada contra una réplica del esquema y los datos de v1.6 antes de
 -- escribirla aquí.

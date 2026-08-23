@@ -811,9 +811,15 @@ git pull
 bash scripts/backup_db.sh
 
 # 2. La migración (ajusta el nombre del fichero)
+#
+#    OJO A LAS COMILLAS SIMPLES. Las variables MYSQL_* viven en docker/.env, no
+#    en tu shell: si se usan comillas dobles las expande el shell del servidor,
+#    llegan vacías y mariadb toma el «-p» como nombre de usuario
+#    («ERROR 1045: Access denied for user '-p'@'localhost'»). Con comillas
+#    simples las expande el `sh` de dentro del contenedor, que sí las tiene.
 cd docker
-docker compose exec -T db mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" \
-    "$MYSQL_DATABASE" < ../scripts/migraciones/2026-08-23_periodo_y_erratas.sql
+docker compose exec -T db sh -c 'mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"' \
+    < ../scripts/migraciones/2026-08-23_periodo_y_erratas.sql
 
 # 3. El backend, que va horneado en la imagen
 docker compose up -d --build backend
