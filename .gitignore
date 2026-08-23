@@ -254,3 +254,8 @@ docker/nginx-tls-prod/
 # sea público (p. ej. el inventario de defensas pendientes, que leído del tirón
 # es un mapa de por dónde intentar entrar).
 docs/privado/
+
+# Diccionario de municipios del INE, usado por scripts/revisar_duplicados.py
+# para comprobar que el nombre de un ayuntamiento cuadra con la provincia de su
+# CIF. Se descarga de www.ine.es y no se versiona: es de terceros y pesa 300 KB.
+datos/ine/

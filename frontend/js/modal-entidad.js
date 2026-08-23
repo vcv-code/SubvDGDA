@@ -69,13 +69,29 @@
 
     function cerrarModal() {
         backdrop.classList.remove('modal-abierto');
-        backdrop.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-        // Devuelve el foco al elemento que abrió el modal
+
+        // El foco tiene que SALIR del modal ANTES de marcarlo `aria-hidden`.
+        // Si un descendiente lo conserva, el navegador RECHAZA el atributo
+        // entero —lo avisa en consola— y el modal sigue expuesto a los lectores
+        // de pantalla pese a estar cerrado a la vista.
+        // Devuelve el foco al elemento que abrió el modal; si no consta, basta
+        // con quitárselo a quien lo tenga dentro.
         if (backdrop._openerEl) {
             backdrop._openerEl.focus();
             backdrop._openerEl = null;
         }
+
+        // Esto es una COMPROBACIÓN, no una alternativa al `focus()` de arriba:
+        // `focus()` sobre un elemento no enfocable —una <tr>, por ejemplo, que
+        // es justo lo que abre la ficha desde el buscador— no hace nada y NO
+        // lanza error. El foco puede seguir dentro aunque la línea anterior se
+        // haya ejecutado, así que hay que mirarlo de verdad antes de ocultar.
+        if (backdrop.contains(document.activeElement)) {
+            document.activeElement.blur();
+        }
+
+        backdrop.setAttribute('aria-hidden', 'true');
     }
 
     // ── Rellenar datos ────────────────────────────────────────────────────────
@@ -114,12 +130,21 @@
         if (elNombre) elNombre.textContent = primera.beneficiario.nombre || cif;
         if (elCif)    elCif.textContent    = primera.beneficiario.cif   || cif;
 
-        // CCAA — solo disponible en EELL; se oculta si está vacía
-        const ccaa = primera.beneficiario.ccaa || primera.ccaa || '—';
+        // Ubicación — solo la traen las EELL, donde se deriva del CIF; se oculta
+        // si está vacía. Se muestra la provincia además de la comunidad porque
+        // es lo que desambigua los municipios que el BOE nombra en forma corta
+        // («Burguillos» hay en Toledo y en Sevilla, «La Mata» en Castellón y en
+        // Toledo). Se busca en todas las solicitudes y no solo en la primera,
+        // porque una entidad puede tener años EPA (sin provincia) y años EELL.
+        const conUbic  = solicitudes.find(s => s.provincia) || primera;
+        const ccaa     = conUbic.beneficiario.ccaa || conUbic.ccaa || '';
+        const provincia = conUbic.provincia || '';
+        const ubicacion = provincia && ccaa ? `${provincia} (${ccaa})`
+                                            : (provincia || ccaa || '—');
         if (elCcaa) {
-            elCcaa.textContent = ccaa;
+            elCcaa.textContent = ubicacion;
             const bloque = elCcaa.closest('.modal-dato');
-            if (bloque) bloque.style.display = ccaa === '—' ? 'none' : '';
+            if (bloque) bloque.style.display = ubicacion === '—' ? 'none' : '';
         }
 
         // Totales

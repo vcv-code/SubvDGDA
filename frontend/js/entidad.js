@@ -11,6 +11,8 @@ const cif = params.get("cif");
 // Referencias al DOM
 const infoNombre = document.getElementById("entidad-nombre");
 const infoCif    = document.getElementById("entidad-cif");
+const infoUbic   = document.getElementById("entidad-ubicacion");
+const infoProv   = document.getElementById("entidad-provincia");
 
 const cargando   = document.getElementById("entidad-cargando");
 const errorBox   = document.getElementById("entidad-error");
@@ -78,6 +80,19 @@ async function cargarHistorial(cif) {
 
         // Nombre de la entidad (todas las solicitudes tienen el mismo)
         infoNombre.textContent = solicitudes[0].beneficiario.nombre;
+
+        // Ubicación: solo la traen las EELL, donde se deriva del CIF. Sirve para
+        // desambiguar los municipios que el BOE nombra abreviados —«El Cuervo»,
+        // «La Mata», «Burguillos», «La Frontera»—, que existen en más de una
+        // provincia. Se busca en todas las solicitudes porque una entidad puede
+        // tener años EPA (sin provincia) y años EELL (con ella).
+        const conUbicacion = solicitudes.find(s => s.provincia);
+        if (conUbicacion && infoUbic) {
+            infoProv.textContent = conUbicacion.ccaa
+                ? `${conUbicacion.provincia} (${conUbicacion.ccaa})`
+                : conUbicacion.provincia;
+            infoUbic.hidden = false;
+        }
 
         // Pintar tabla
         solicitudes.forEach(s => {

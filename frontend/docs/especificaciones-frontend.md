@@ -2531,7 +2531,7 @@ Añadido `text-align: left` explícito a `.filtros__fila .form-grupo` y sus labe
 
 **Implementación técnica:**
 
-- Reutilizada la clase `.convocatorias-nota` ya existente (misma usada por el asterisco *"Período subvencionable de 6 meses"*). Mismo tamaño (`0.8rem`) y mismo color de texto (`--color-gris-texto`), por lo que no compite visualmente con la tabla.
+- Reutilizada la clase `.convocatorias-nota` ya existente. Mismo tamaño (`0.8rem`) y mismo color de texto (`--color-gris-texto`), por lo que no compite visualmente con la tabla. (La nota del asterisco *"Período subvencionable de 6 meses"* que compartía esta clase se retiró en agosto de 2026 al añadirse la columna «Periodo subvencionable».)
 - Nueva regla CSS `.convocatorias-nota a` con color `var(--color-azul)` (`#1565C0`) y `text-decoration: underline`, coherente con el enlace "Volver al inicio" de las páginas legales. El hover quita el subrayado como feedback visual. El verde primario heredado por defecto tenía poco contraste sobre el fondo verde claro de la sección.
 - Atributos `target="_blank"` y `rel="noopener noreferrer"` en los tres enlaces (no exponen `window.opener`).
 - `aria-label` descriptivo en cada enlace que indica el formato del documento (PDF) y su origen (BOE o DGDA), para lectores de pantalla.
@@ -2571,3 +2571,41 @@ Ver implementación completa en [§ 12.34](#1234-tarea-132--refactor-css-inline-
 | `js/estadisticas-eell.js` | Función `pintarMapaCCAA(datosCcaa)` |
 | `css/styles.css` | Nuevas clases `.mapa-ccaa__*` |
 
+---
+
+## Columna «Periodo subvencionable» en las tablas de convocatorias (portada)
+
+**Problema:** el año de una convocatoria no es el año de gasto que financia, y
+eso desorientaba justamente a quien más lo necesita —las propias protectoras—.
+Las EPA de 2023 y 2024 no son dos años consecutivos, sino **las dos mitades de
+2024**; las EELL van un año por delante. La tabla no daba ninguna pista.
+
+**Solución:** una quinta columna en las dos tablas, con el año financiado
+destacado y el matiz debajo en pequeño (`1.er semestre`, `oct a mar`).
+
+| Convocatoria | Muestra |
+|---|---|
+| EPA 2021 / 2022 | `2022` / `2023` |
+| EPA 2023 / 2024 | `2024` + `1.er semestre` / `2.º semestre` |
+| EELL 2023 | `2023–24` + `oct a mar` |
+| EELL 2026 | `—` (su extracto no declara periodo) |
+
+**Implementación técnica:**
+
+- Campos `periodo_anio` y `periodo_matiz` en `ConvocatoriaOut`. El frontend solo
+  pinta lo que recibe: si el BOE no declara periodo, sale `—` en vez de un dato
+  deducido.
+- Clases `.convoc-periodo__anio` (bloque, `font-weight: 600`) y
+  `.convoc-periodo__matiz` (bloque, `0.8rem`, gris). Apiladas, no en línea,
+  porque el año es el dato que se busca y el matiz solo lo precisa.
+- Cabeceras sin artículos («Fecha convocatoria», no «Fecha de convocatoria») y
+  **sin `white-space: nowrap` en móvil**: con cinco columnas necesitan poder
+  partirse en dos líneas. El `min-width` móvil de `.tabla-convoc` sube de 280 a
+  420 px; el `.tabla-wrapper` hace scroll lateral si no cabe.
+- Se retiran el asterisco de la columna «Año» y su nota: la columna nueva ya dice
+  «1.er semestre», y aquella nota vivía solo bajo la tabla EPA pese a que la
+  EELL de 2023 también es semestral.
+
+**Relación con backend:** dos campos nuevos en `convocatorias`, sembrados desde
+`_PERIODO_SUBVENCIONABLE` en `cargar_dataset.py`. El dato no existe en ninguna
+API: solo en la prosa del extracto del BOE (ver `docs/pipeline-datos.md`).

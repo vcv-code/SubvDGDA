@@ -97,23 +97,54 @@ _TITULO_NORMALIZADO = {
 }
 
 
+# Periodo subvencionable de las convocatorias que este cron puede descubrir.
+#
+# Es un ESPEJO de _PERIODO_SUBVENCIONABLE en cargar_dataset.py: el cron corre en
+# su propio contenedor y no comparte código con el pipeline. Un test comprueba
+# que las dos tablas coinciden en los años que ambas conocen.
+#
+# El dato solo existe en la prosa del extracto del BOE (apartado «Objeto»), así
+# que un año nuevo entra con None y el log lo avisa, en vez de deducirlo.
+#
+#   (año, tipo) -> (meses, año financiado, matiz)
+_PERIODO_SUBVENCIONABLE = {
+    (2026, "epa"):  (12, "2026", None),
+    # El extracto de la EELL 2026 no declara ventana de gasto. Por la pauta de
+    # los años anteriores debería financiar 2027, pero eso es deducción.
+    (2026, "eell"): (12, None, None),
+}
+
+
 def insertar_convocatoria(conn, tipo, num_convoc, titulo, fecha_str):
     try:
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date() if fecha_str else None
     except (ValueError, TypeError):
         fecha = None
     titulo_final = _TITULO_NORMALIZADO.get(tipo, titulo).format(year=YEAR)
+    meses, periodo_anio, periodo_matiz = _PERIODO_SUBVENCIONABLE.get(
+        (YEAR, tipo), (12, None, None))
     with conn.cursor() as cur:
         cur.execute(
             """
             INSERT INTO convocatorias
                 (num_convoc, titulo_convoc, tipo_convoc, anio_convocatoria,
-                 fecha_convocatoria, fecha_resolucion, periodo_meses)
-            VALUES (%s, %s, %s, %s, %s, NULL, 12)
+                 fecha_convocatoria, fecha_resolucion, periodo_meses,
+                 periodo_anio, periodo_matiz)
+            VALUES (%s, %s, %s, %s, %s, NULL, %s, %s, %s)
             """,
-            (str(num_convoc), titulo_final, tipo, YEAR, fecha),
+            (str(num_convoc), titulo_final, tipo, YEAR, fecha,
+             meses, periodo_anio, periodo_matiz),
         )
     conn.commit()
+    if periodo_anio is None:
+        # Igual que con fecha_fin_plazo: el dato no se puede deducir, así que se
+        # inserta vacío y se avisa, en vez de inventar un año.
+        log.warning(
+            "ACCIÓN REQUERIDA: la convocatoria %s (%s) se ha insertado SIN periodo "
+            "subvencionable. Lee el apartado 'Objeto' de su extracto en el BOE y añade "
+            "el año a _PERIODO_SUBVENCIONABLE, aquí y en cargar_dataset.py.",
+            tipo.upper(), num_convoc,
+        )
 
 
 def actualizar_fecha_resolucion(conn, id_convoc, fecha):

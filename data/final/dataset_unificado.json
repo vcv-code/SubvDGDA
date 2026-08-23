@@ -5818,7 +5818,7 @@
     "tipo": "epa",
     "num_expediente": "SUBV2382021",
     "entidad": "LAS ALMAS DE COCOA",
-    "cif": null,
+    "cif": "G67811000",
     "puntuacion": null,
     "importe": 0.0,
     "estado": "desistida",
@@ -8751,7 +8751,7 @@
     "anio": 2022,
     "tipo": "epa",
     "num_expediente": "SUBV2022146",
-    "entidad": "ASSOCIACION GAT I CUA",
+    "entidad": "ASSOCIACIÓ GAT I CUA",
     "cif": "G16737041",
     "puntuacion": 19.22,
     "importe": 2419.92,
@@ -13755,8 +13755,8 @@
     "anio": 2022,
     "tipo": "epa",
     "num_expediente": "SUBV2022462",
-    "entidad": "GATOS DEL PUERTO",
-    "cif": "G72307358",
+    "entidad": "ASOCIACIÓN \"GATOS DE EL PUERTO\"",
+    "cif": "G72296254",
     "puntuacion": 68.4,
     "importe": 3990.71,
     "estado": "concedida",
@@ -24357,7 +24357,7 @@
     "anio": 2023,
     "tipo": "epa",
     "num_expediente": "2023B466",
-    "entidad": "GATOS DE EL PUERTO (ASOCIACIÓN)",
+    "entidad": "ASOCIACIÓN \"GATOS DE EL PUERTO\"",
     "cif": "G72296254",
     "puntuacion": 30.0,
     "importe": 4073.86,
@@ -31288,7 +31288,7 @@
     "tipo": "epa",
     "num_expediente": "2024B344",
     "entidad": "ASOCIACIÓN PROYECTO CES GATOS TORREVIEJA",
-    "cif": "B54999156",
+    "cif": "G54999156",
     "puntuacion": 70.13,
     "importe": 5019.74,
     "estado": "concedida",
@@ -33304,7 +33304,7 @@
     "tipo": "epa",
     "num_expediente": "2024B175",
     "entidad": "ASSOCIACIÓ GAT I CUA",
-    "cif": "G16734071",
+    "cif": "G16737041",
     "puntuacion": 53.5,
     "importe": 3005.82,
     "estado": "concedida",
@@ -41241,7 +41241,7 @@
     "anio": 2024,
     "tipo": "epa",
     "num_expediente": "2024B120",
-    "entidad": "GATOS DE EL PUERTO (ASOCIACIÓN)",
+    "entidad": "ASOCIACIÓN \"GATOS DE EL PUERTO\"",
     "cif": "G72296254",
     "puntuacion": 25.0,
     "importe": 0.0,
@@ -43420,7 +43420,7 @@
     "tipo": "epa",
     "num_expediente": "2024B566",
     "entidad": "SOS PELUDOS LEPEROS",
-    "cif": "G56705338",
+    "cif": "G56725328",
     "puntuacion": 14.95,
     "importe": 0.0,
     "estado": "no_beneficiaria",
@@ -60330,7 +60330,7 @@
     "causa_exclusion": null,
     "provincia": "Santa Cruz de Tenerife",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60347,7 +60347,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60364,7 +60364,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60381,7 +60381,7 @@
     "causa_exclusion": null,
     "provincia": "Cáceres",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60398,7 +60398,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60415,7 +60415,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60432,7 +60432,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60449,7 +60449,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60466,7 +60466,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60483,7 +60483,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60500,7 +60500,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60517,7 +60517,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60534,7 +60534,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60551,7 +60551,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60568,7 +60568,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60585,7 +60585,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60602,7 +60602,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60619,7 +60619,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60636,7 +60636,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60653,7 +60653,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60670,7 +60670,7 @@
     "causa_exclusion": null,
     "provincia": "Santa Cruz de Tenerife",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60687,7 +60687,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60704,7 +60704,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60721,7 +60721,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60738,7 +60738,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60755,7 +60755,7 @@
     "causa_exclusion": null,
     "provincia": "Cáceres",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60772,7 +60772,7 @@
     "causa_exclusion": null,
     "provincia": "Cáceres",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60789,7 +60789,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60806,7 +60806,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60823,7 +60823,7 @@
     "causa_exclusion": null,
     "provincia": "Santa Cruz de Tenerife",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60840,7 +60840,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60857,7 +60857,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60874,7 +60874,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60891,7 +60891,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60908,7 +60908,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60925,7 +60925,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60942,7 +60942,7 @@
     "causa_exclusion": null,
     "provincia": "A Coruña",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60959,7 +60959,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60976,7 +60976,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -60993,7 +60993,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61010,7 +61010,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61027,7 +61027,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61044,7 +61044,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61061,7 +61061,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61078,7 +61078,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61095,7 +61095,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61112,7 +61112,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61129,7 +61129,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61146,7 +61146,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61163,7 +61163,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61180,7 +61180,7 @@
     "causa_exclusion": null,
     "provincia": "Gipuzkoa",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61197,7 +61197,7 @@
     "causa_exclusion": null,
     "provincia": "Salamanca",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61214,7 +61214,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61231,7 +61231,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61248,7 +61248,7 @@
     "causa_exclusion": null,
     "provincia": "Cuenca",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61265,7 +61265,7 @@
     "causa_exclusion": null,
     "provincia": "Las Palmas",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61282,7 +61282,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61299,7 +61299,7 @@
     "causa_exclusion": null,
     "provincia": "Bizkaia",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61316,7 +61316,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61333,7 +61333,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61350,7 +61350,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61367,7 +61367,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61384,7 +61384,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61401,7 +61401,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61418,7 +61418,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61435,7 +61435,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61452,7 +61452,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61469,7 +61469,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61486,7 +61486,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61503,7 +61503,7 @@
     "causa_exclusion": null,
     "provincia": "Zamora",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61511,7 +61511,7 @@
     "anio": 2023,
     "tipo": "eell",
     "num_expediente": "EXP2023/008788",
-    "entidad": "AYUNTAMIENTO DE CASAVIEJA",
+    "entidad": "AYUNTAMIENTO DE CARLET",
     "cif": "P4608700C",
     "puntuacion": 75.0,
     "importe": 0.0,
@@ -61520,7 +61520,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61537,7 +61537,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61554,7 +61554,7 @@
     "causa_exclusion": null,
     "provincia": "Cantabria",
     "ccaa": "Cantabria",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61571,7 +61571,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61588,7 +61588,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61605,7 +61605,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61622,7 +61622,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61639,7 +61639,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61656,7 +61656,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61673,7 +61673,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61690,7 +61690,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61707,7 +61707,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61724,7 +61724,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61741,7 +61741,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61758,7 +61758,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61775,7 +61775,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61792,7 +61792,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61809,7 +61809,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61826,7 +61826,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61843,7 +61843,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61860,7 +61860,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61877,7 +61877,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61894,7 +61894,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61911,7 +61911,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61928,7 +61928,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61945,7 +61945,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61962,7 +61962,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61979,7 +61979,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -61996,7 +61996,7 @@
     "causa_exclusion": null,
     "provincia": "Huesca",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62013,7 +62013,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62030,7 +62030,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62047,7 +62047,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62064,7 +62064,7 @@
     "causa_exclusion": null,
     "provincia": "Huesca",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62081,7 +62081,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62098,7 +62098,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62115,7 +62115,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62132,7 +62132,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62149,7 +62149,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62166,7 +62166,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62183,7 +62183,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62200,7 +62200,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62208,7 +62208,7 @@
     "anio": 2023,
     "tipo": "eell",
     "num_expediente": "EXP2023/008510",
-    "entidad": "AYUNTAMIENTO DE CASTILFORTE",
+    "entidad": "AYUNTAMIENTO DE CARRIÓN DE CALATRAVA",
     "cif": "P1303100J",
     "puntuacion": 70.0,
     "importe": 0.0,
@@ -62217,7 +62217,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62234,7 +62234,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62251,7 +62251,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62268,7 +62268,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62285,7 +62285,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62302,7 +62302,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62319,7 +62319,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62336,7 +62336,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62353,7 +62353,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62370,7 +62370,7 @@
     "causa_exclusion": null,
     "provincia": "Las Palmas",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62387,7 +62387,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62404,7 +62404,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62421,7 +62421,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62438,7 +62438,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62455,7 +62455,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62472,7 +62472,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62489,7 +62489,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62506,7 +62506,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62523,7 +62523,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62540,7 +62540,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62557,7 +62557,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62574,7 +62574,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62591,7 +62591,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62608,7 +62608,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62625,7 +62625,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62642,7 +62642,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62659,7 +62659,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62676,7 +62676,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62693,7 +62693,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62710,7 +62710,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62727,7 +62727,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62744,7 +62744,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62761,7 +62761,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62778,7 +62778,7 @@
     "causa_exclusion": null,
     "provincia": "León",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62795,7 +62795,7 @@
     "causa_exclusion": null,
     "provincia": "Ourense",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62812,7 +62812,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62829,7 +62829,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62846,7 +62846,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62863,7 +62863,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62880,7 +62880,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62897,7 +62897,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62914,7 +62914,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62931,7 +62931,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62948,7 +62948,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62965,7 +62965,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62982,7 +62982,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -62999,7 +62999,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63016,7 +63016,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63033,7 +63033,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63050,7 +63050,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63067,7 +63067,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63084,7 +63084,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63101,7 +63101,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63118,7 +63118,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63135,7 +63135,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63152,7 +63152,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63169,7 +63169,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63186,7 +63186,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63203,7 +63203,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63220,7 +63220,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63237,7 +63237,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63254,7 +63254,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63271,7 +63271,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63288,7 +63288,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63305,7 +63305,7 @@
     "causa_exclusion": null,
     "provincia": "Salamanca",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63322,7 +63322,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63339,7 +63339,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63356,7 +63356,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63373,7 +63373,7 @@
     "causa_exclusion": null,
     "provincia": "Santa Cruz de Tenerife",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63390,7 +63390,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63407,7 +63407,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63424,7 +63424,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63441,7 +63441,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63458,7 +63458,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63475,7 +63475,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63492,7 +63492,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63509,7 +63509,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63526,7 +63526,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63543,7 +63543,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63560,7 +63560,7 @@
     "causa_exclusion": null,
     "provincia": "Gipuzkoa",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63577,7 +63577,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63594,7 +63594,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63611,7 +63611,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63628,7 +63628,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63645,7 +63645,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63662,7 +63662,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63679,7 +63679,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63696,7 +63696,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63713,7 +63713,7 @@
     "causa_exclusion": null,
     "provincia": "Lugo",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63730,7 +63730,7 @@
     "causa_exclusion": null,
     "provincia": "A Coruña",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63747,7 +63747,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63764,7 +63764,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63781,7 +63781,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63798,7 +63798,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63815,7 +63815,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63832,7 +63832,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63849,7 +63849,7 @@
     "causa_exclusion": null,
     "provincia": "Bizkaia",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63866,7 +63866,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63883,7 +63883,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63900,7 +63900,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63917,7 +63917,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63934,7 +63934,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63951,7 +63951,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63968,7 +63968,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -63985,7 +63985,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64002,7 +64002,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64019,7 +64019,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64036,7 +64036,7 @@
     "causa_exclusion": null,
     "provincia": "Cáceres",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64053,7 +64053,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64070,7 +64070,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64087,7 +64087,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64104,7 +64104,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64121,7 +64121,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64138,7 +64138,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64155,7 +64155,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64172,7 +64172,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64189,7 +64189,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64206,7 +64206,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64223,7 +64223,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64240,7 +64240,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64257,7 +64257,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64274,7 +64274,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64291,7 +64291,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64308,7 +64308,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64325,7 +64325,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64342,7 +64342,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64359,7 +64359,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64376,7 +64376,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64393,7 +64393,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64410,7 +64410,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64427,7 +64427,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64444,7 +64444,7 @@
     "causa_exclusion": null,
     "provincia": "León",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64461,7 +64461,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64478,7 +64478,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64495,7 +64495,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64512,7 +64512,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64529,7 +64529,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64546,7 +64546,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64563,7 +64563,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64580,7 +64580,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64597,7 +64597,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64614,7 +64614,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64631,7 +64631,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64648,7 +64648,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64665,7 +64665,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64682,7 +64682,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64699,7 +64699,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64716,7 +64716,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64733,7 +64733,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64750,7 +64750,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64767,7 +64767,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64784,7 +64784,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64801,7 +64801,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64818,7 +64818,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64835,7 +64835,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64852,7 +64852,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64869,7 +64869,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64886,7 +64886,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64903,7 +64903,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64920,7 +64920,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64937,7 +64937,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64954,7 +64954,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64971,7 +64971,7 @@
     "causa_exclusion": null,
     "provincia": "León",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -64988,7 +64988,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65005,7 +65005,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65022,7 +65022,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65039,7 +65039,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65056,7 +65056,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65073,7 +65073,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65090,7 +65090,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65107,7 +65107,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65124,7 +65124,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65141,7 +65141,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65158,7 +65158,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65175,7 +65175,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65192,7 +65192,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65209,7 +65209,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65226,7 +65226,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65243,7 +65243,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65260,7 +65260,7 @@
     "causa_exclusion": null,
     "provincia": "Las Palmas",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65277,7 +65277,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65294,7 +65294,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65311,7 +65311,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65328,7 +65328,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65345,7 +65345,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65362,7 +65362,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65379,7 +65379,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65396,7 +65396,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65413,7 +65413,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65430,7 +65430,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65447,7 +65447,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65464,7 +65464,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65481,7 +65481,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65498,7 +65498,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65515,7 +65515,7 @@
     "causa_exclusion": null,
     "provincia": "La Rioja",
     "ccaa": "La Rioja",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65532,7 +65532,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65549,7 +65549,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65566,7 +65566,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65583,7 +65583,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65600,7 +65600,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65617,7 +65617,7 @@
     "causa_exclusion": null,
     "provincia": "Cuenca",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65634,7 +65634,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65651,7 +65651,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65668,7 +65668,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65685,7 +65685,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65702,7 +65702,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65719,7 +65719,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65736,7 +65736,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65753,7 +65753,7 @@
     "causa_exclusion": null,
     "provincia": "Álava",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65770,7 +65770,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65787,7 +65787,7 @@
     "causa_exclusion": null,
     "provincia": "Gipuzkoa",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65804,7 +65804,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65821,7 +65821,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65838,7 +65838,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65855,7 +65855,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65872,7 +65872,7 @@
     "causa_exclusion": null,
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65889,7 +65889,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65906,7 +65906,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65923,7 +65923,7 @@
     "causa_exclusion": null,
     "provincia": "Bizkaia",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65940,7 +65940,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65948,7 +65948,7 @@
     "anio": 2023,
     "tipo": "eell",
     "num_expediente": "EXP2023/008756",
-    "entidad": "AYUNTAMIENTO DE CARRION CALATRAVA",
+    "entidad": "AYUNTAMIENTO DE CARRIÓN DE CALATRAVA",
     "cif": "P1303100J",
     "puntuacion": 40.0,
     "importe": 0.0,
@@ -65957,7 +65957,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65974,7 +65974,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -65991,7 +65991,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66008,7 +66008,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66025,7 +66025,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66042,7 +66042,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66059,7 +66059,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66076,7 +66076,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66093,7 +66093,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66110,7 +66110,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66127,7 +66127,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66144,7 +66144,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66161,7 +66161,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66178,7 +66178,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66195,7 +66195,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66212,7 +66212,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66229,7 +66229,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66246,7 +66246,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66263,7 +66263,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66280,7 +66280,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66297,7 +66297,7 @@
     "causa_exclusion": null,
     "provincia": "Soria",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66314,7 +66314,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66331,7 +66331,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66348,7 +66348,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66365,7 +66365,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66382,7 +66382,7 @@
     "causa_exclusion": null,
     "provincia": "A Coruña",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66399,7 +66399,7 @@
     "causa_exclusion": "5;6",
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66416,7 +66416,7 @@
     "causa_exclusion": "10;11",
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66433,7 +66433,7 @@
     "causa_exclusion": "10",
     "provincia": "Cáceres",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66450,7 +66450,7 @@
     "causa_exclusion": "11",
     "provincia": "Castellón",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66467,7 +66467,7 @@
     "causa_exclusion": "2;8",
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66484,7 +66484,7 @@
     "causa_exclusion": "10",
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66501,7 +66501,7 @@
     "causa_exclusion": "12;13;14;15;16",
     "provincia": "Zamora",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66518,7 +66518,7 @@
     "causa_exclusion": "13",
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66535,7 +66535,7 @@
     "causa_exclusion": "2",
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66552,7 +66552,7 @@
     "causa_exclusion": "13",
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66569,7 +66569,7 @@
     "causa_exclusion": "13",
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66586,7 +66586,7 @@
     "causa_exclusion": "11",
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66603,7 +66603,7 @@
     "causa_exclusion": "13",
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66620,7 +66620,7 @@
     "causa_exclusion": "5",
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66637,7 +66637,7 @@
     "causa_exclusion": "2;10;12;13;14;15;16",
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66654,7 +66654,7 @@
     "causa_exclusion": "13",
     "provincia": "Ourense",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66671,7 +66671,7 @@
     "causa_exclusion": "10",
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66688,7 +66688,7 @@
     "causa_exclusion": "8;13",
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66705,7 +66705,7 @@
     "causa_exclusion": "12",
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66722,7 +66722,7 @@
     "causa_exclusion": "5",
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66739,7 +66739,7 @@
     "causa_exclusion": "13;14;15;16",
     "provincia": "Bizkaia",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66756,7 +66756,7 @@
     "causa_exclusion": "2;14",
     "provincia": "Gipuzkoa",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66773,7 +66773,7 @@
     "causa_exclusion": "15;16",
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66790,7 +66790,7 @@
     "causa_exclusion": "16",
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66807,7 +66807,7 @@
     "causa_exclusion": "13;14;15;16",
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66824,7 +66824,7 @@
     "causa_exclusion": "7;10;12;13;14;15;16",
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66841,7 +66841,7 @@
     "causa_exclusion": "13",
     "provincia": "Bizkaia",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66858,7 +66858,7 @@
     "causa_exclusion": "2",
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66875,7 +66875,7 @@
     "causa_exclusion": "5",
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66892,7 +66892,7 @@
     "causa_exclusion": "13",
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66909,7 +66909,7 @@
     "causa_exclusion": "13",
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66926,7 +66926,7 @@
     "causa_exclusion": "10;16",
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66943,7 +66943,7 @@
     "causa_exclusion": "10",
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66960,7 +66960,7 @@
     "causa_exclusion": "2",
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66977,7 +66977,7 @@
     "causa_exclusion": "13",
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -66994,7 +66994,7 @@
     "causa_exclusion": "13",
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67011,7 +67011,7 @@
     "causa_exclusion": "7;8",
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67028,7 +67028,7 @@
     "causa_exclusion": "1",
     "provincia": null,
     "ccaa": null,
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67045,7 +67045,7 @@
     "causa_exclusion": "1",
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67062,7 +67062,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67079,7 +67079,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67096,7 +67096,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67113,7 +67113,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67130,7 +67130,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67147,7 +67147,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67164,7 +67164,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67181,7 +67181,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67198,7 +67198,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67215,7 +67215,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67232,7 +67232,7 @@
     "causa_exclusion": null,
     "provincia": "Málaga",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67249,7 +67249,7 @@
     "causa_exclusion": null,
     "provincia": "Alicante",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67266,7 +67266,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67283,7 +67283,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67300,7 +67300,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67317,7 +67317,7 @@
     "causa_exclusion": null,
     "provincia": "A Coruña",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67334,7 +67334,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67351,7 +67351,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67368,7 +67368,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67385,7 +67385,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67402,7 +67402,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67419,7 +67419,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67436,7 +67436,7 @@
     "causa_exclusion": null,
     "provincia": "Huesca",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67453,7 +67453,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67470,7 +67470,7 @@
     "causa_exclusion": null,
     "provincia": "Huesca",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67487,7 +67487,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67504,7 +67504,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67521,7 +67521,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67538,7 +67538,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67555,7 +67555,7 @@
     "causa_exclusion": null,
     "provincia": "Murcia",
     "ccaa": "Región de Murcia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67572,7 +67572,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67589,7 +67589,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67606,7 +67606,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67623,7 +67623,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67640,7 +67640,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67657,7 +67657,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67674,7 +67674,7 @@
     "causa_exclusion": null,
     "provincia": "Cuenca",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67691,7 +67691,7 @@
     "causa_exclusion": null,
     "provincia": "Huesca",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67708,7 +67708,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67725,7 +67725,7 @@
     "causa_exclusion": null,
     "provincia": "Cuenca",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67742,7 +67742,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67759,7 +67759,7 @@
     "causa_exclusion": null,
     "provincia": "Cuenca",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67776,7 +67776,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67793,7 +67793,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67810,7 +67810,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67827,7 +67827,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67844,7 +67844,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67861,7 +67861,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67878,7 +67878,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67895,7 +67895,7 @@
     "causa_exclusion": null,
     "provincia": "Salamanca",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67912,7 +67912,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67929,7 +67929,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67946,7 +67946,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67963,7 +67963,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67980,7 +67980,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -67997,7 +67997,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68014,7 +68014,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68031,7 +68031,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68048,7 +68048,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68065,7 +68065,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68082,7 +68082,7 @@
     "causa_exclusion": null,
     "provincia": "Huesca",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68099,7 +68099,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68116,7 +68116,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68133,7 +68133,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68150,7 +68150,7 @@
     "causa_exclusion": null,
     "provincia": "Cuenca",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68167,7 +68167,7 @@
     "causa_exclusion": null,
     "provincia": "Gipuzkoa",
     "ccaa": "País Vasco",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68184,7 +68184,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68201,7 +68201,7 @@
     "causa_exclusion": null,
     "provincia": "Santa Cruz de Tenerife",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68218,7 +68218,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68235,7 +68235,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68252,7 +68252,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68269,7 +68269,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68286,7 +68286,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68303,7 +68303,7 @@
     "causa_exclusion": null,
     "provincia": "La Rioja",
     "ccaa": "La Rioja",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68320,7 +68320,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68337,7 +68337,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68354,7 +68354,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68371,7 +68371,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68388,7 +68388,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68405,7 +68405,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68422,7 +68422,7 @@
     "causa_exclusion": null,
     "provincia": "Córdoba",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68439,7 +68439,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68456,7 +68456,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68473,7 +68473,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68490,7 +68490,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68507,7 +68507,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68524,7 +68524,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68541,7 +68541,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68558,7 +68558,7 @@
     "causa_exclusion": null,
     "provincia": "Salamanca",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68575,7 +68575,7 @@
     "causa_exclusion": null,
     "provincia": "Las Palmas",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68592,7 +68592,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68609,7 +68609,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68626,7 +68626,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68643,7 +68643,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68660,7 +68660,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68677,7 +68677,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68694,7 +68694,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68711,7 +68711,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68728,7 +68728,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68745,7 +68745,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68762,7 +68762,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68779,7 +68779,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68796,7 +68796,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68813,7 +68813,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68830,7 +68830,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68847,7 +68847,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68864,7 +68864,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68881,7 +68881,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68898,7 +68898,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68915,7 +68915,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68932,7 +68932,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68949,7 +68949,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68966,7 +68966,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -68983,7 +68983,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69000,7 +69000,7 @@
     "causa_exclusion": null,
     "provincia": "Badajoz",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69017,7 +69017,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69034,7 +69034,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69051,7 +69051,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69068,7 +69068,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69085,7 +69085,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69102,7 +69102,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69119,7 +69119,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69136,7 +69136,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69153,7 +69153,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69170,7 +69170,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69187,7 +69187,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69204,7 +69204,7 @@
     "causa_exclusion": null,
     "provincia": "Teruel",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69221,7 +69221,7 @@
     "causa_exclusion": null,
     "provincia": "Zaragoza",
     "ccaa": "Aragón",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69238,7 +69238,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69255,7 +69255,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69272,7 +69272,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69289,7 +69289,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69306,7 +69306,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69323,7 +69323,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69340,7 +69340,7 @@
     "causa_exclusion": null,
     "provincia": "Asturias",
     "ccaa": "Principado de Asturias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69357,7 +69357,7 @@
     "causa_exclusion": null,
     "provincia": "Ávila",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69374,7 +69374,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69391,7 +69391,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69408,7 +69408,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69425,7 +69425,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69442,7 +69442,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69459,7 +69459,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69476,7 +69476,7 @@
     "causa_exclusion": null,
     "provincia": "Ciudad Real",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69493,7 +69493,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69510,7 +69510,7 @@
     "causa_exclusion": null,
     "provincia": "Granada",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69527,7 +69527,7 @@
     "causa_exclusion": null,
     "provincia": "Tarragona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69544,7 +69544,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69561,7 +69561,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69578,7 +69578,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69595,7 +69595,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69612,7 +69612,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69629,7 +69629,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69646,7 +69646,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69663,7 +69663,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69680,7 +69680,7 @@
     "causa_exclusion": null,
     "provincia": "Toledo",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69697,7 +69697,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69714,7 +69714,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69731,7 +69731,7 @@
     "causa_exclusion": null,
     "provincia": "Salamanca",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69748,7 +69748,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69765,7 +69765,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69782,7 +69782,7 @@
     "causa_exclusion": null,
     "provincia": "Cantabria",
     "ccaa": "Cantabria",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69799,7 +69799,7 @@
     "causa_exclusion": null,
     "provincia": "Segovia",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69816,7 +69816,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69833,7 +69833,7 @@
     "causa_exclusion": null,
     "provincia": "Almería",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69850,7 +69850,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69867,7 +69867,7 @@
     "causa_exclusion": null,
     "provincia": "Illes Balears",
     "ccaa": "Illes Balears",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69884,7 +69884,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69901,7 +69901,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69918,7 +69918,7 @@
     "causa_exclusion": null,
     "provincia": "Navarra",
     "ccaa": "Comunidad Foral de Navarra",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69935,7 +69935,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69952,7 +69952,7 @@
     "causa_exclusion": null,
     "provincia": "Santa Cruz de Tenerife",
     "ccaa": "Canarias",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69969,7 +69969,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -69986,7 +69986,7 @@
     "causa_exclusion": null,
     "provincia": "Sevilla",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70003,7 +70003,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70020,7 +70020,7 @@
     "causa_exclusion": null,
     "provincia": "León",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70037,7 +70037,7 @@
     "causa_exclusion": null,
     "provincia": "Valencia",
     "ccaa": "Comunidad Valenciana",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70054,7 +70054,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70071,7 +70071,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70088,7 +70088,7 @@
     "causa_exclusion": null,
     "provincia": "Girona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70105,7 +70105,7 @@
     "causa_exclusion": null,
     "provincia": "Lleida",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70122,7 +70122,7 @@
     "causa_exclusion": null,
     "provincia": "Barcelona",
     "ccaa": "Cataluña",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70139,7 +70139,7 @@
     "causa_exclusion": null,
     "provincia": "Jaén",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70156,7 +70156,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70173,7 +70173,7 @@
     "causa_exclusion": null,
     "provincia": "Albacete",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70190,7 +70190,7 @@
     "causa_exclusion": null,
     "provincia": "Zamora",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70207,7 +70207,7 @@
     "causa_exclusion": null,
     "provincia": "La Rioja",
     "ccaa": "La Rioja",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70224,7 +70224,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70241,7 +70241,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70258,7 +70258,7 @@
     "causa_exclusion": null,
     "provincia": "Burgos",
     "ccaa": "Castilla y León",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70275,7 +70275,7 @@
     "causa_exclusion": null,
     "provincia": "Guadalajara",
     "ccaa": "Castilla-La Mancha",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70292,7 +70292,7 @@
     "causa_exclusion": null,
     "provincia": "Madrid",
     "ccaa": "Comunidad de Madrid",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70309,7 +70309,7 @@
     "causa_exclusion": null,
     "provincia": "Huelva",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70326,7 +70326,7 @@
     "causa_exclusion": null,
     "provincia": "Pontevedra",
     "ccaa": "Galicia",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70343,7 +70343,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70360,7 +70360,7 @@
     "causa_exclusion": null,
     "provincia": null,
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70377,7 +70377,7 @@
     "causa_exclusion": null,
     "provincia": "Cáceres",
     "ccaa": "Extremadura",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -70394,7 +70394,7 @@
     "causa_exclusion": null,
     "provincia": "Cádiz",
     "ccaa": "Andalucía",
-    "periodo_meses": 12,
+    "periodo_meses": 6,
     "es_agrupacion": false,
     "municipios_agrupacion": null
   },
@@ -74958,7 +74958,7 @@
     "anio": 2024,
     "tipo": "eell",
     "num_expediente": "EXP2024/005870",
-    "entidad": "AYUNTAMIENTO CARRION CALATRAVA",
+    "entidad": "AYUNTAMIENTO DE CARRIÓN DE CALATRAVA",
     "cif": "P1303100J",
     "puntuacion": 67.64,
     "importe": 0.0,
@@ -106623,7 +106623,7 @@
     "anio": 2025,
     "tipo": "eell",
     "num_expediente": "EXP2025/012914",
-    "entidad": "AYUNTAMIENTO DE CARRION DE CALATRAVA",
+    "entidad": "AYUNTAMIENTO DE CARRIÓN DE CALATRAVA",
     "cif": "P1303100J",
     "puntuacion": 79.0,
     "importe": 0.0,

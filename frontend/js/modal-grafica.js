@@ -43,14 +43,29 @@
 
         const cerrar = () => {
             modal.classList.remove('modal-grafica--visible');
-            modal.setAttribute('aria-hidden', 'true');
-            // Devuelve el foco al botón que abrió el modal (WCAG 2.4.3).
-            // Sin esto, al cerrar con teclado el foco vuelve al principio del
+
+            // El foco tiene que SALIR del modal ANTES de marcarlo `aria-hidden`.
+            // Si un descendiente lo conserva, el navegador RECHAZA el atributo
+            // entero —lo avisa en consola— y el modal sigue expuesto a los lectores
+            // de pantalla pese a estar cerrado a la vista.
+            // Devuelve además el foco al botón que abrió el modal (WCAG 2.4.3):
+            // sin esto, al cerrar con teclado el foco vuelve al principio del
             // documento y hay que tabular otra vez hasta donde se estaba.
             if (modal._openerEl) {
                 modal._openerEl.focus();
                 modal._openerEl = null;
             }
+
+        // Esto es una COMPROBACIÓN, no una alternativa al `focus()` de arriba:
+            // `focus()` sobre un elemento no enfocable —una <tr>, por ejemplo, que
+            // es justo lo que abre la ficha desde el buscador— no hace nada y NO
+            // lanza error. El foco puede seguir dentro aunque la línea anterior se
+            // haya ejecutado, así que hay que mirarlo de verdad antes de ocultar.
+            if (modal.contains(document.activeElement)) {
+                document.activeElement.blur();
+            }
+
+            modal.setAttribute('aria-hidden', 'true');
         };
 
         modal.querySelector('.modal-grafica__backdrop').addEventListener('click', cerrar);

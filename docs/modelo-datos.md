@@ -448,9 +448,11 @@ Las agrupaciones de ayuntamientos de EELL 2025 requieren un tratamiento especial
 
 ---
 
-### 6.11 Campo periodo_meses en convocatorias
+### 6.11 Periodo subvencionable en convocatorias (`periodo_meses`, `periodo_anio`, `periodo_matiz`)
 
-Las convocatorias EPA de 2023 y 2024 cubrieron un **periodo subvencionable semestral (6 meses)** en lugar del anual habitual (12 meses). Las convocatorias EELL tienen siempre periodo anual.
+Las convocatorias EPA de 2023 y 2024 cubrieron un **periodo subvencionable semestral (6 meses)** en lugar del anual habitual (12 meses). La convocatoria **EELL de 2023 también fue semestral** (1 de octubre de 2023 a 31 de marzo de 2024); el resto de EELL sí son anuales.
+
+Además del número de meses, la tabla `convocatorias` guarda **qué año de gasto financia** cada convocatoria, en `periodo_anio` y `periodo_matiz`. No coincide con `anio_convocatoria`: las EPA de 2021 a 2024 y todas las EELL pagan gastos del año siguiente. El detalle completo, con la cita del BOE de cada una, está en `docs/pipeline-datos.md`.
 
 Esta diferencia es relevante para el análisis comparativo de importes: los importes concedidos en 2023 y 2024 (EPA) corresponden a 6 meses de actividad, por lo que no son directamente comparables con los de otros años sin normalizar.
 
