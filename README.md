@@ -182,6 +182,8 @@ analisis-bdns-dgda/
 ├── scripts/
 │   ├── data_processing/    ← parsers EPA y EELL, carga de BD
 │   ├── ingestion/          ← cliente API BDNS
+│   ├── migraciones/        ← SQL para actualizar una BD que ya tiene datos (ver docs/migraciones.md)
+│   ├── revisar_duplicados.py ← auditoría de entidades: duplicados, CIF y provincias
 │   ├── crear_admin.sh      ← alta de la cuenta de administración
 │   └── backup_db.sh        ← volcado de la BD con rotación
 │
@@ -303,6 +305,8 @@ Los scripts transforman los datos crudos (XMLs, PDFs, Excel del BOE) en el datas
 `scripts/data_extractor/` — descarga los documentos del BOE (XML y PDF) con los datos de concesiones.
 
 ### Procesamiento
+
+`scripts/migraciones/` — SQL que lleva una base de datos **que ya tiene datos** de una versión a la siguiente. Hacen falta porque `modelo-fisico.sql` solo se ejecuta con el directorio de datos vacío: en un servidor desplegado, una columna nueva no aparece sola, y `cargar_dataset` es aditivo y no reescribe filas existentes. `docs/migraciones.md` explica cómo saber si el próximo despliegue necesita una, cómo escribirla y cómo ensayarla contra una réplica del servidor.
 
 `scripts/data_processing/` — parsers para cada tipo de fuente (EPA XML, EELL PDF/Excel), normalización de estados, unificación del dataset, normalización de las causas de exclusión a códigos canónicos (`normalizar_causa_exclusion.py`, guiada por el catálogo `data/final/causas_exclusion.json`) y carga en la base de datos (`cargar_dataset.py`).
 
@@ -540,8 +544,8 @@ La aplicación usa APIs modernas (ES2017+, `fetch`, CSS custom properties, `URLS
 
 La carpeta `frontend/` contiene:
 
-- `docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
-- `docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
+- `frontend/docs/diseño.md` — guía visual completa: paleta de colores, tipografía, espaciado y componentes base
+- `frontend/docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
 - `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)

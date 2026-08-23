@@ -421,7 +421,7 @@ la provincia de su CIF.
 
 Para lo último cruza con el diccionario de municipios del INE, que **no se
 versiona** (fichero de terceros); se descarga de `www.ine.es` y se coloca en
-`datos/ine/diccionario_municipios.xlsx`, o se indica con la variable
+`data/raw/ine/diccionario_municipios.xlsx`, o se indica con la variable
 `INE_MUNICIPIOS`. Sin él, las otras tres comprobaciones siguen funcionando.
 
 Un aviso importante sobre el método: **los tres dígitos de municipio del CIF no

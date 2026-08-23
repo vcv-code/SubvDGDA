@@ -227,7 +227,7 @@ def provincia_incoherente(entidades):
 # el resto del informe funciona igual. Se descarga de www.ine.es (Relación de
 # municipios y códigos por comunidades autónomas y provincias) y NO se versiona.
 INE_MUNICIPIOS = Path(os.environ.get(
-    "INE_MUNICIPIOS", RAIZ / "datos/ine/diccionario_municipios.xlsx"))
+    "INE_MUNICIPIOS", RAIZ / "data/raw/ine/diccionario_municipios.xlsx"))
 
 
 def municipios_por_provincia():
