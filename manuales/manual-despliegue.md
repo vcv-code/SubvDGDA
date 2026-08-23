@@ -754,6 +754,8 @@ reconstruir de más como quedarse corto:
 | Cualquier `.py` del backend | `docker compose up -d --build backend` |
 | `docker/nginx/default.conf` | `docker compose exec nginx nginx -s reload` |
 | Variables de `docker/.env` | `docker compose up -d` del servicio afectado |
+| **Columnas nuevas en la BD** | **migración SQL — ver abajo.** El `git pull` NO las crea |
+| **Correcciones de datos ya cargados** | **migración SQL — ver abajo.** `cargar_dataset` es aditivo y no reescribe filas |
 
 El backend va **horneado en la imagen**: un `restart` seguiría ejecutando el
 código viejo, por eso `--build`. Nginx, en cambio, mantiene su configuración
@@ -765,6 +767,63 @@ Si un despliegue borra un archivo del frontend y añade una regla de Nginx que
 lo sustituye —como pasó al convertir `solicitudes.html` en redirección—, entre
 el `git pull` y el `reload` hay unos segundos en que esa ruta da 404: el
 archivo ya no está y la regla que ocupa su lugar todavía no se ha cargado.
+
+#### Cuando el despliegue trae cambios de esquema o de datos
+
+Estos dos casos son los traicioneros, porque **parecen un `git pull` normal y no
+lo son**. Conviene entender por qué antes de ejecutar nada.
+
+`modelo-fisico.sql` está montado en `/docker-entrypoint-initdb.d/`, y MariaDB
+solo ejecuta lo que hay ahí **cuando el directorio de datos está vacío**. En un
+servidor con datos no se vuelve a ejecutar nunca, así que **una columna nueva no
+aparece sola**. Pero el modelo ORM sí la mapea, de modo que la API pediría
+`SELECT ... columna_nueva ...` contra una tabla que no la tiene: error 1054 y
+**500 en la portada**.
+
+Y `cargar_dataset` no sirve para arreglarlo: es **aditivo**. Inserta lo que falta,
+pero no reescribe filas existentes, así que no corrige nombres ni fusiona
+entidades duplicadas.
+
+> **Nunca `reset-db` en el servidor.** Borraría la cuenta de administración y las
+> `fecha_fin_plazo`, que no están en el dataset y se rellenan a mano desde el
+> panel. En local eso se recupera del backup; en producción es un susto.
+
+Las migraciones viven en `scripts/migraciones/`, con la fecha en el nombre. Son
+idempotentes: lanzarlas dos veces no estropea nada.
+
+**Cómo saber si el despliegue que viene necesita una**, cómo escribirla y cómo
+ensayarla contra una réplica del servidor antes de tocarlo: `docs/migraciones.md`.
+La comprobación rápida, antes de desplegar, es si el esquema o el modelo ORM
+cambiaron desde la última etiqueta desplegada:
+
+```bash
+git diff v1.6..main -- docker/init/modelo-fisico.sql backend/app/models.py
+```
+
+Si eso tiene salida, hace falta migración. Sin excepción.
+
+```bash
+ssh servidor
+cd /opt/subvdgda
+git pull
+
+# 1. Backup ANTES de tocar nada
+bash scripts/backup_db.sh
+
+# 2. La migración (ajusta el nombre del fichero)
+cd docker
+docker compose exec -T db mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" \
+    "$MYSQL_DATABASE" < ../scripts/migraciones/2026-08-23_periodo_y_erratas.sql
+
+# 3. El backend, que va horneado en la imagen
+docker compose up -d --build backend
+
+# 4. Comprobar que la API responde con los campos nuevos
+curl -s https://subvencionesdgda.org/convocatorias/ | head -c 400
+```
+
+**El orden importa**: si se reconstruye el backend antes de migrar, queda
+sirviendo 500 hasta que la migración pase.
 
 #### Comprobar que ha llegado de verdad
 
