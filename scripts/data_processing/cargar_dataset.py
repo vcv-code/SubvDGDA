@@ -87,10 +87,49 @@ _TITULO = {
     (2025, "eell"): "Subvenciones a entidades locales para protección animal 2025",
 }
 
-_PERIODO = {
-    (2023, "epa"): 6,
-    (2024, "epa"): 6,
+# Periodo subvencionable de cada convocatoria: qué gastos financia.
+#
+# NO coincide con el año de la convocatoria, y esa es justo la confusión que
+# esta tabla existe para deshacer: las EPA de 2021 a 2024 financiaban el año
+# SIGUIENTE, y a partir de 2025 se realinearon; las EELL siguen desfasadas.
+# Consecuencia que sorprende: ninguna convocatoria EPA financió el año 2021.
+#
+# El dato no está en ningún campo de la API de la BDNS. Solo aparece en la prosa
+# del extracto del BOE, que la BDNS sí devuelve dentro de `anuncios[].texto`,
+# en el apartado «Objeto». Parsear esa prosa automáticamente sería frágil, así
+# que se transcribe aquí una vez, con la cita literal al lado.
+#
+#   (año, tipo) -> (meses, año o años financiados, matiz o None)
+_PERIODO_SUBVENCIONABLE = {
+    # «... en el año 2022 ...»
+    (2021, "epa"):  (12, "2022", None),
+    # «... en el año 2023 ...»
+    (2022, "epa"):  (12, "2023", None),
+    # «... en el primer semestre de 2024 ...»
+    (2023, "epa"):  (6,  "2024", "1.er semestre"),
+    # «... en el segundo semestre del año 2024 ...»
+    (2024, "epa"):  (6,  "2024", "2.º semestre"),
+    # «... en el año 2025 ...»
+    (2025, "epa"):  (12, "2025", None),
+    # La resolución de 2026 convoca «para el año 2026» pero no declara ventana
+    # de gasto. Se deja el año sin matiz.
+    (2026, "epa"):  (12, "2026", None),
+    # «... entre el 1 de octubre de 2023 y el 31 de marzo del año 2024 ...»
+    # Es de SEIS meses, no de doce: durante mucho tiempo se dio por hecho que
+    # todas las EELL eran anuales y no lo son.
+    (2023, "eell"): (6,  "2023–24", "oct a mar"),
+    # «... entre el 1 de enero de 2025 y el 31 de diciembre del año 2025 ...»
+    (2024, "eell"): (12, "2025", None),
+    # «... entre el 1 de enero de 2026 y el 31 de diciembre del año 2026 ...»
+    (2025, "eell"): (12, "2026", None),
+    # La de 2026 no declara ventana de gasto en su extracto. Por la pauta de los
+    # años anteriores debería financiar 2027, pero eso es deducción, no fuente:
+    # se deja en blanco hasta que el BOE lo diga.
+    (2026, "eell"): (12, None, None),
 }
+
+# Compatibilidad: la duración en meses sale de la tabla de arriba.
+_PERIODO = {clave: v[0] for clave, v in _PERIODO_SUBVENCIONABLE.items()}
 
 # Fechas oficiales obtenidas de la API BDNS (fecha_convocatoria)
 # y de la API del BOE (fecha_resolucion = fecha de publicación en BOE).
@@ -142,7 +181,8 @@ def cargar_convocatorias(cursor, registros):
         if fila:
             mapa[(anio, tipo)] = fila["id_convoc"]
         else:
-            periodo = _PERIODO.get((anio, tipo), 12)
+            periodo, periodo_anio, periodo_matiz = _PERIODO_SUBVENCIONABLE.get(
+                (anio, tipo), (12, None, None))
             fecha_resol = _FECHAS.get((anio, tipo), (None, None))[1]
 
             bdns = indice_bdns.get((anio, tipo))
@@ -168,9 +208,10 @@ def cargar_convocatorias(cursor, registros):
             cursor.execute(
                 "INSERT INTO convocatorias "
                 "(num_convoc, titulo_convoc, tipo_convoc, anio_convocatoria, periodo_meses, "
-                " fecha_convocatoria, fecha_resolucion) "
-                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (num_convoc, titulo, tipo, anio, periodo, fecha_conv, fecha_resol),
+                " periodo_anio, periodo_matiz, fecha_convocatoria, fecha_resolucion) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (num_convoc, titulo, tipo, anio, periodo, periodo_anio, periodo_matiz,
+                 fecha_conv, fecha_resol),
             )
             mapa[(anio, tipo)] = cursor.lastrowid
 

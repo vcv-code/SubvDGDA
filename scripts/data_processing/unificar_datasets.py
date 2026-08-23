@@ -29,10 +29,17 @@ Esquema final de cada registro:
                              # None en el resto de registros.
 }
 
-Notas sobre el periodo subvencionable en EPAs:
-  2021, 2022, 2025 → periodo anual   (12 meses)
-  2023, 2024       → periodo semestral (6 meses)
+Notas sobre el periodo subvencionable:
+  EPA  2021, 2022, 2025 → anual (12 meses)
+  EPA  2023, 2024       → semestral (6 meses)
+  EELL 2023             → semestral (6 meses): oct 2023 a mar 2024
+  EELL 2024, 2025       → anual (12 meses)
   Tenerlo en cuenta al comparar importes entre años.
+
+  Ojo además con el AÑO que financia cada convocatoria, que no es el suyo: las
+  EPA de 2021-2024 y todas las EELL pagan gastos del año siguiente. El detalle,
+  con la cita del BOE de cada una, está en `_PERIODO_SUBVENCIONABLE`
+  (scripts/data_processing/cargar_dataset.py).
 
 Notas sobre EELL 2023/2024 (PDF):
   El parser PDF devuelve todos los registros con estado='concedida'.
@@ -215,6 +222,87 @@ def limpiar_entidad(valor):
 
 
 # =========================
+# CORRECCIONES DE ORIGEN
+# =========================
+# Erratas del BOE verificadas una a una contra fuentes oficiales. Se corrigen
+# aquí, en el único punto por el que pasan todos los registros, y NO en la base
+# de datos, para que sobrevivan a un `reset-db` y a cualquier recarga.
+#
+# El criterio es el mismo que en `resolver_anio_epa`: solo se toca lo que está
+# PROBADO. Un CIF sin autoridad para corregirlo sería inventar, y la web se
+# apoya en reproducir fielmente lo publicado.
+
+# CIF erróneo -> CIF bueno. Sin esta tabla la entidad aparece partida en dos
+# fichas y su histórico se ve incompleto.
+CIF_CORREGIDO = {
+    # Transposición de dos dígitos en el BOE de 2024 (…37041 -> …34071). El CIF
+    # bueno es el de 2022, 2023 y 2025 —tres años frente a uno— y lo confirma la
+    # concesión de 2022 publicada en la BDNS (convocatoria 645245).
+    "G16734071": "G16737041",
+    # Rectificación oficial: BOE-A-2023-13752, «Corrección de errores de la
+    # Resolución de 12 de diciembre de 2022 [...] Convocatoria 2022», que dice
+    # literalmente que donde pone G72307358 debe poner G72296254.
+    "G72307358": "G72296254",
+    # El BOE de 2024 la publica como B54999156 y el de 2025 como G54999156. La
+    # entidad está inscrita en el Registro de Asociaciones de Alicante (consulta
+    # pública del Ministerio del Interior), y una asociación no puede llevar un
+    # NIF con «B», que es de sociedad limitada. La letra buena es la G.
+    "B54999156": "G54999156",
+    # ATENCIÓN: el único de la tabla NO verificado contra una fuente externa.
+    # G56705338 (2024) frente a G56725328 (2025): ambos validan, difieren en dos
+    # posiciones y ninguno aparece en la web asociado a entidad alguna. Se adopta
+    # el de 2025 por ser la publicación más reciente de la misma autoridad.
+    # Decisión consciente, revisable si aparece una fuente mejor.
+    "G56705338": "G56725328",
+}
+
+# CIF -> nombre bueno. Dos casos distintos:
+#   - Municipios cuyo NOMBRE está mal en el BOE (el CIF sí es correcto, y por
+#     eso la provincia y las estadísticas ya salían bien). Verificados contra
+#     las webs municipales y contra el diccionario de municipios del INE.
+#   - Entidades unificadas arriba, que traían dos grafías: se fija la mayoritaria
+#     para que la ficha no cambie de nombre según el año.
+NOMBRE_CORREGIDO = {
+    "P4608700C": "AYUNTAMIENTO DE CARLET",                 # el BOE dice «Casavieja»
+    "P1303100J": "AYUNTAMIENTO DE CARRIÓN DE CALATRAVA",   # el BOE dice «Castilforte»
+    "G16737041": "ASSOCIACIÓ GAT I CUA",                   # grafía valenciana correcta
+    "G72296254": 'ASOCIACIÓN "GATOS DE EL PUERTO"',        # 3 años frente a 1
+}
+
+# (nombre, año) -> CIF. Para registros que salieron en el BOE SIN CIF y cuya
+# entidad sí lo tiene en otros años. Va con el año para no asignar a ciegas un
+# CIF a cualquier homónimo futuro.
+CIF_AUSENTE = {
+    # Confirmado además por la BDNS, que registra la concesión de 2022 de esta
+    # asociación con ese NIF.
+    ("LAS ALMAS DE COCOA", 2021): "G67811000",
+}
+
+# Cómo comprobar un NIF dudoso, por orden de solidez:
+#   1. Corrección de errores en el BOE (es lo que zanjó Gatos de El Puerto).
+#   2. BDNS: concesiones/busqueda?nifCif=<CIF>. Solo cubre CONCEDIDAS, y de
+#      nuestras convocatorias solo tiene cargada la de 2022 (645245).
+#   3. Consulta pública de asociaciones del Ministerio del Interior: no publica
+#      el NIF, pero sí confirma que la entidad es una asociación —y por tanto
+#      que su NIF empieza por G—, que es lo que resolvió Torrevieja.
+#   4. La propia entidad: muchas protectoras publican su CIF para donativos.
+
+
+def corregir_identidad(cif, nombre, anio):
+    """Aplica las correcciones de origen. Devuelve (cif, nombre, corregido)."""
+    original = (cif, nombre)
+
+    if cif is None and nombre is not None:
+        cif = CIF_AUSENTE.get((nombre, anio))
+
+    if cif is not None:
+        cif = CIF_CORREGIDO.get(cif, cif)
+        nombre = NOMBRE_CORREGIDO.get(cif, nombre)
+
+    return cif, nombre, (cif, nombre) != original
+
+
+# =========================
 # NORMALIZACIÓN DE ESTADO EELL
 # Los JSON de PDF tienen solo 'concedida'.
 # Los que tienen importe=0 se reclasifican como 'no_beneficiaria'.
@@ -324,6 +412,7 @@ def cargar_epas(archivos):
 
         sin_exp_en_archivo = 0
         reatribuidos_en_archivo = 0
+        corregidos_en_archivo = 0
         for item in data:
             # Saltar filas de totales parseadas como entidades
             # (ej: la fila "TOTAL" de la tabla de importes en EPA 2024 y 2025)
@@ -356,12 +445,20 @@ def cargar_epas(archivos):
 
             estado = normalizar_estado_epa(estado, anio_item)
 
+            cif_epa, entidad_epa, hubo_correccion = corregir_identidad(
+                limpiar_cif(item.get("cif")),
+                limpiar_entidad(item.get("entidad")),
+                anio_item,
+            )
+            if hubo_correccion:
+                corregidos_en_archivo += 1
+
             registros.append({
                 "anio": anio_item,
                 "tipo": "epa",
                 "num_expediente": str(expediente_raw).strip(),
-                "entidad": limpiar_entidad(item.get("entidad")),
-                "cif": limpiar_cif(item.get("cif")),
+                "entidad": entidad_epa,
+                "cif": cif_epa,
                 "puntuacion": puntuacion,
                 "importe": importe,
                 "estado": estado,
@@ -371,8 +468,15 @@ def cargar_epas(archivos):
                 # texto literal en 2021 (ese anexo no usa códigos). None en el resto.
                 "causa_exclusion": (str(item["causa_exclusion"]).strip()
                                     if item.get("causa_exclusion") else None),
-                "provincia": None,       # no derivable de CIF de asociación (mejora futura)
-                "ccaa": None,            # idem
+                # La provincia de una asociación NO se puede sacar de su CIF, y no
+                # es una precaución teórica: ASSOCIACIÓ GAT I CUA (G16737041) está
+                # en Cruïlles, Monells i Sant Sadurní de l\'Heura (Girona, 17) y
+                # esos dos dígitos dicen 16, que es Cuenca. En la mayoría de las
+                # protectoras del dataset ni siquiera son un código de provincia
+                # válido (G54…, G56…, G72…: series nacionales por encima de 52).
+                # Derivarla publicaría ubicaciones falsas. Hace falta otra fuente.
+                "provincia": None,
+                "ccaa": None,
                 # Propiedad de la convocatoria, por eso sigue a anio_item
                 # (no al fichero) en las resoluciones tardías reatribuidas.
                 "periodo_meses": 6 if anio_item in (2023, 2024) else 12,
@@ -382,7 +486,8 @@ def cargar_epas(archivos):
 
         aviso_sin_exp = f" ({sin_exp_en_archivo} sin expediente → ID sintético)" if sin_exp_en_archivo else ""
         aviso_reatrib = f" ({reatribuidos_en_archivo} resolución/es tardía/s reatribuida/s a su convocatoria)" if reatribuidos_en_archivo else ""
-        print(f"  EPA {anio_fallback}: {len(data)} registros cargados desde {os.path.basename(ruta)}{aviso_sin_exp}{aviso_reatrib}")
+        aviso_correc = f" ({corregidos_en_archivo} errata/s de origen corregida/s)" if corregidos_en_archivo else ""
+        print(f"  EPA {anio_fallback}: {len(data)} registros cargados desde {os.path.basename(ruta)}{aviso_sin_exp}{aviso_reatrib}{aviso_correc}")
 
     return registros
 
@@ -397,6 +502,7 @@ def cargar_eell(archivos):
     registros = []
 
     for ruta, anio in archivos:
+        corregidos_en_archivo = 0
         if not os.path.exists(ruta):
             print(f"  AVISO: no encontrado → {ruta}")
             continue
@@ -423,14 +529,21 @@ def cargar_eell(archivos):
             causa_raw = item.get("causa_exclusion")
             causa = str(causa_raw).strip() if causa_raw else None
 
-            cif_limpio = limpiar_cif(item.get("cif"))
+            cif_limpio, entidad_eell, hubo_correccion = corregir_identidad(
+                limpiar_cif(item.get("cif")),
+                limpiar_entidad(item.get("entidad")),
+                anio,
+            )
+            if hubo_correccion:
+                corregidos_en_archivo += 1
+            # La provincia se deriva DESPUÉS de corregir, no antes.
             provincia, ccaa = provincia_ccaa_de_cif(cif_limpio)
 
             registros.append({
                 "anio": anio,
                 "tipo": "eell",
                 "num_expediente": str(item["num_expediente"]).strip(),
-                "entidad": limpiar_entidad(item.get("entidad")),
+                "entidad": entidad_eell,
                 "cif": cif_limpio,
                 "puntuacion": puntuacion,
                 "importe": importe,
@@ -439,13 +552,17 @@ def cargar_eell(archivos):
                 "causa_exclusion": causa,
                 "provincia": provincia,
                 "ccaa": ccaa,
-                "periodo_meses": 12,     # las EELL siempre tienen periodo anual
+                # La EELL de 2023 NO fue anual: su extracto en el BOE fija el
+                # periodo «entre el 1 de octubre de 2023 y el 31 de marzo del
+                # año 2024», seis meses. El resto sí son anuales.
+                "periodo_meses": 6 if anio == 2023 else 12,
                 "es_agrupacion": bool(item.get("es_agrupacion", False)),
                 "municipios_agrupacion": item.get("municipios_agrupacion"),
                 # _meta se descarta intencionalmente
             })
 
-        print(f"  EELL {anio}: {len(data)} registros cargados desde {os.path.basename(ruta)}")
+        aviso_correc = f" ({corregidos_en_archivo} errata/s de origen corregida/s)" if corregidos_en_archivo else ""
+        print(f"  EELL {anio}: {len(data)} registros cargados desde {os.path.basename(ruta)}{aviso_correc}")
 
     return registros
 
@@ -506,7 +623,8 @@ def validar_y_mostrar(final):
     print("  Totales unificados esperados (tras dedup por tipo+expediente+anio):")
     print("    EPA=3351 (SUBV2022271 Peludosos dedup intra-año: se conserva la concedida;")
     print("              SUBV2022659 y 2023B628 reatribuidas a su convocatoria y deduplicadas), EELL=3045, Total=6396")
-    print("  Periodos subvencionables EPA: 2021/2022/2025=anual(12m), 2023/2024=semestral(6m)")
+    print("  Periodos subvencionables: EPA 2021/2022/2025 y EELL 2024/2025 = anual (12m);")
+    print("                           EPA 2023/2024 y EELL 2023 = semestral (6m)")
     print("  → Al comparar importes entre años tener en cuenta la diferencia de periodo.")
 
     print("======================================\n")

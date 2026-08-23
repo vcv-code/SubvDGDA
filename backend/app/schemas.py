@@ -14,6 +14,8 @@ class ConvocatoriaOut(BaseModel):
     tipo_convoc:        str
     anio_convocatoria:  int
     periodo_meses:      int
+    periodo_anio:       Optional[str] = None   # año de gasto financiado, ≠ anio_convocatoria
+    periodo_matiz:      Optional[str] = None   # "1.er semestre", "oct a mar"…
     fecha_convocatoria: Optional[date]
     fecha_resolucion:   Optional[date]
 

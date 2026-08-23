@@ -660,11 +660,18 @@ table tbody tr:hover {
         -webkit-overflow-scrolling: touch;
     }
 
-    .tabla-wrapper .tabla-convoc          { display: table; width: 100%; min-width: 280px; }
+    /* 420px, no 280: con cinco columnas (año, dos fechas, periodo y acceso) el
+       ancho anterior apelmazaba el texto hasta partir cada celda en tres o
+       cuatro líneas. Sumando el contenido real —fechas cortas, «1.er semestre»
+       y el botón «Ver»— hacen falta unos 380 px, así que 400 deja holgura sin
+       forzar scroll en un móvil normal. El .tabla-wrapper lo hace si no cabe. */
+    .tabla-wrapper .tabla-convoc          { display: table; width: 100%; min-width: 400px; }
     .tabla-wrapper .tabla-convoc thead    { display: table-header-group; }
     .tabla-wrapper .tabla-convoc tbody    { display: table-row-group; }
     .tabla-wrapper .tabla-convoc tr       { display: table-row; margin: 0; padding: 0; border: none; box-shadow: none; border-radius: 0; }
-    .tabla-wrapper .tabla-convoc th                { display: table-cell; padding: 8px 6px; font-size: 0.8rem; white-space: nowrap; text-align: center; }
+    /* Sin `nowrap`: con cinco columnas las cabeceras necesitan poder partirse en
+       dos líneas, o la tabla se va de ancho y obliga a hacer scroll lateral. */
+    .tabla-wrapper .tabla-convoc th                { display: table-cell; padding: 8px 6px; font-size: 0.8rem; text-align: center; }
     .tabla-wrapper .tabla-convoc td                { display: table-cell; padding: 8px 6px; font-size: 0.85rem; border: none; text-align: center; }
     .tabla-wrapper .tabla-convoc th:first-child,
     .tabla-wrapper .tabla-convoc td:first-child    { width: 18%; }
@@ -2651,10 +2658,61 @@ canvas {
     font-size: 0.88rem;
 }
 
+/* El botón «Ver» de las tablas de convocatorias, más ajustado que el `.btn--sm`
+   general: aquí va solo dentro de una celda estrecha y el padding de 6/16 px
+   dejaba demasiado aire alrededor de tres letras. No se toca `.btn--sm`, que lo
+   usan otras 22 llamadas en admin, buscador y privado.
+   El `nowrap` es deliberado: «Ver →» es una unidad corta y de longitud conocida,
+   y sin él la flecha caía a una segunda línea y el botón crecía a lo alto. */
+.tabla-convoc .btn--sm {
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
 .convoc-pendiente {
     color: var(--color-gris-texto);
     font-size: 0.875rem;
     font-style: italic;
+}
+
+/* Periodo subvencionable: el año de gasto que financia la convocatoria, que no
+   es el año de la propia convocatoria. Se apila el año destacado sobre su
+   matiz («1.er semestre») porque el año es el dato que la gente busca y el
+   matiz solo lo precisa. */
+.convoc-periodo {
+    line-height: 1.25;
+}
+
+/* La columna se resalta con una capa translúcida por `background-image`, no
+   cambiando `background-color`: así se superpone al rayado alterno de las filas
+   en vez de sustituirlo, y no hay que pelear con la especificidad de las reglas
+   `nth-child` que pintan ese rayado. Sirve igual en escritorio y en móvil. */
+.tabla-convoc .col-periodo {
+    background-image: linear-gradient(rgba(46, 107, 79, 0.08),
+                                      rgba(46, 107, 79, 0.08));
+    border-left:  1px solid rgba(46, 107, 79, 0.18);
+    border-right: 1px solid rgba(46, 107, 79, 0.18);
+}
+
+/* En la cabecera, que ya es verde oscuro, la capa clara no se vería: se aclara
+   ligeramente en vez de oscurecerse. */
+.tabla-convoc th.col-periodo {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1),
+                                      rgba(255, 255, 255, 0.1));
+    border-left:  1px solid rgba(255, 255, 255, 0.22);
+    border-right: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.convoc-periodo__anio {
+    display: block;
+    font-weight: 700;
+    color: var(--color-verde-tabla);
+}
+
+.convoc-periodo__matiz {
+    display: block;
+    color: var(--color-gris-texto);
+    font-size: 0.8rem;
 }
 
 .tabla-convoc th {
@@ -4535,6 +4593,30 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .info-resultados {
     font-size: 0.9rem;
     color: var(--color-gris-texto);
+}
+
+/* El separador va en CSS y no en el texto: así en móvil, donde las dos partes
+   se apilan, desaparece solo en vez de quedarse colgando al final de la línea. */
+.info-resultados__rango::before {
+    content: " · ";
+}
+
+@media (max-width: 600px) {
+    /* Una línea para el total y otra para el rango. Antes iba todo seguido y el
+       navegador partía por donde le cabía, dejando cosas como «… del 1 al» y el
+       «50» solo en la línea siguiente. */
+    .info-resultados__total,
+    .info-resultados__rango {
+        display: block;
+    }
+
+    .info-resultados__rango::before {
+        content: none;
+    }
+
+    .info-resultados__rango {
+        font-size: 0.85rem;
+    }
 }
 
 /* Zona derecha de los controles sobre la tabla (orden + CSV) */
