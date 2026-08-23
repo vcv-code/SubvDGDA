@@ -14,6 +14,10 @@ from scripts.data_processing.unificar_datasets import (
     limpiar_estado,
     indexar_solicitudes_epa,
     resolver_anio_epa,
+    corregir_identidad,
+    CIF_CORREGIDO,
+    NOMBRE_CORREGIDO,
+    CIF_AUSENTE,
 )
 
 
@@ -195,3 +199,180 @@ def test_mismo_expediente_distinto_cif_no_se_reatribuye(indice_epa):
 def test_indice_agrupa_por_anio_de_fichero(indice_epa):
     assert ("SUBV2022659", "G90180365") in indice_epa[2022]
     assert ("SUBV2022659", "G90180365") not in indice_epa[2021]
+
+
+# ─────────────────────────────────────────────
+# corregir_identidad
+# Erratas del BOE verificadas contra fuentes oficiales. Sin estas correcciones
+# la entidad sale partida en dos fichas y su histórico se ve incompleto.
+# ─────────────────────────────────────────────
+
+def test_gat_i_cua_2024_se_une_a_los_demas_anios():
+    """El BOE de 2024 transpuso dos dígitos: …37041 -> …34071."""
+    cif, nombre, corregido = corregir_identidad("G16734071", "ASSOCIACIÓ GAT I CUA", 2024)
+    assert cif == "G16737041"
+    assert corregido is True
+
+def test_gat_i_cua_queda_con_una_sola_grafia():
+    """Los cuatro años tienen que dar el mismo nombre, no dos."""
+    grafias = {
+        corregir_identidad(c, n, a)[1]
+        for c, n, a in [("G16737041", "ASSOCIACION GAT I CUA", 2022),
+                        ("G16737041", "ASSOCIACION GAT I CUA", 2023),
+                        ("G16734071", "ASSOCIACIÓ GAT I CUA", 2024),
+                        ("G16737041", "ASSOCIACION GAT I CUA", 2025)]
+    }
+    assert grafias == {"ASSOCIACIÓ GAT I CUA"}
+
+def test_gatos_de_el_puerto_unifica_el_nif_rectificado():
+    cif, nombre, _ = corregir_identidad("G72307358", "GATOS DEL PUERTO", 2022)
+    assert cif == "G72296254"
+    assert nombre == 'ASOCIACIÓN "GATOS DE EL PUERTO"'
+
+def test_cocoa_recupera_el_cif_que_faltaba_en_2021():
+    cif, _, corregido = corregir_identidad(None, "LAS ALMAS DE COCOA", 2021)
+    assert cif == "G67811000"
+    assert corregido is True
+
+def test_cocoa_sin_cif_solo_se_rellena_en_su_anio():
+    """La tabla va por (nombre, año) para no asignar a ciegas a un homónimo."""
+    assert corregir_identidad(None, "LAS ALMAS DE COCOA", 2030)[0] is None
+
+def test_municipios_con_el_nombre_mal_en_el_boe():
+    """El CIF es correcto —y por eso la provincia ya salía bien—, el nombre no."""
+    assert corregir_identidad("P4608700C", "AYUNTAMIENTO DE CASAVIEJA", 2023)[1] == \
+        "AYUNTAMIENTO DE CARLET"
+    assert corregir_identidad("P1303100J", "AYUNTAMIENTO DE CASTILFORTE", 2023)[1] == \
+        "AYUNTAMIENTO DE CARRIÓN DE CALATRAVA"
+
+def test_los_municipios_reales_no_se_tocan():
+    """Casavieja (Ávila) y Castilforte (Guadalajara) existen y tienen su propio CIF."""
+    assert corregir_identidad("P0505400B", "AYUNTAMIENTO DE CASAVIEJA", 2025) == \
+        ("P0505400B", "AYUNTAMIENTO DE CASAVIEJA", False)
+    assert corregir_identidad("P1909200F", "AYUNTAMIENTO DE CASTILFORTE", 2024) == \
+        ("P1909200F", "AYUNTAMIENTO DE CASTILFORTE", False)
+
+def test_una_entidad_cualquiera_pasa_intacta():
+    assert corregir_identidad("G12345678", "PROTECTORA X", 2024) == \
+        ("G12345678", "PROTECTORA X", False)
+    assert corregir_identidad(None, "SIN CIF NI TABLA", 2024) == \
+        (None, "SIN CIF NI TABLA", False)
+
+def test_las_tablas_no_se_pisan_entre_si():
+    """Un CIF corregido no puede ser a su vez clave de otra corrección."""
+    assert not set(CIF_CORREGIDO.values()) & set(CIF_CORREGIDO)
+
+def test_torrevieja_lleva_g_por_ser_asociacion():
+    """Inscrita en el Registro de Asociaciones de Alicante: una asociación no
+    puede tener un NIF con «B», que es de sociedad limitada."""
+    cif, _, corregido = corregir_identidad(
+        "B54999156", "ASOCIACIÓN PROYECTO CES GATOS TORREVIEJA", 2024)
+    assert cif == "G54999156"
+    assert corregido is True
+
+def test_leperos_adopta_el_cif_de_la_publicacion_mas_reciente():
+    """Único caso sin fuente externa: se adopta el de 2025 a conciencia."""
+    assert corregir_identidad("G56705338", "SOS PELUDOS LEPEROS", 2024)[0] == \
+        "G56725328"
+
+def test_ningun_cif_corregido_apunta_a_otro_corregido():
+    """Una corrección no puede encadenarse con otra: el resultado sería
+    dependiente del orden y silenciosamente inestable."""
+    assert not set(CIF_CORREGIDO.values()) & set(CIF_CORREGIDO)
+
+
+# ─────────────────────────────────────────────
+# Ubicación en la interfaz
+# Los municipios que el BOE nombra abreviados («Burguillos», «La Mata», «El
+# Cuervo», «La Frontera») existen en más de una provincia. No son erratas y no
+# se corrigen: se desambiguan mostrando la provincia, que ya viene del CIF.
+# ─────────────────────────────────────────────
+
+def test_la_ficha_de_entidad_tiene_hueco_para_la_ubicacion():
+    from pathlib import Path
+    html = Path("frontend/entidad.html").read_text(encoding="utf-8")
+    assert 'id="entidad-ubicacion"' in html
+    assert 'id="entidad-provincia"' in html
+    js = Path("frontend/js/entidad.js").read_text(encoding="utf-8")
+    assert "s.provincia" in js
+
+def test_el_modal_del_buscador_muestra_provincia_y_no_solo_ccaa():
+    from pathlib import Path
+    js = Path("frontend/js/modal-entidad.js").read_text(encoding="utf-8")
+    assert "conUbic.provincia" in js
+    html = Path("frontend/buscador.html").read_text(encoding="utf-8")
+    assert "Ubicación" in html
+
+
+# ─────────────────────────────────────────────
+# Periodo subvencionable
+# El año que financia una convocatoria NO es el suyo: las EPA de 2021-2024 y
+# todas las EELL pagan gastos del año siguiente. Es la confusión que la columna
+# «Periodo subvencionable» de la portada existe para deshacer.
+# ─────────────────────────────────────────────
+
+def test_la_eell_de_2023_es_semestral_no_anual():
+    """Su extracto fija «entre el 1 de octubre de 2023 y el 31 de marzo del año
+    2024»: seis meses. Durante mucho tiempo se dio por hecho que todas las EELL
+    eran anuales."""
+    from scripts.data_processing.cargar_dataset import _PERIODO_SUBVENCIONABLE
+    assert _PERIODO_SUBVENCIONABLE[(2023, "eell")][0] == 6
+
+def test_los_semestres_de_2024_son_epa_2023_y_epa_2024():
+    from scripts.data_processing.cargar_dataset import _PERIODO_SUBVENCIONABLE
+    assert _PERIODO_SUBVENCIONABLE[(2023, "epa")][1:] == ("2024", "1.er semestre")
+    assert _PERIODO_SUBVENCIONABLE[(2024, "epa")][1:] == ("2024", "2.º semestre")
+
+def test_ninguna_convocatoria_epa_financio_2021():
+    """Consecuencia del desfase que sorprende a quien mira la tabla."""
+    from scripts.data_processing.cargar_dataset import _PERIODO_SUBVENCIONABLE
+    financiados = {v[1] for (a, t), v in _PERIODO_SUBVENCIONABLE.items() if t == "epa"}
+    assert "2021" not in financiados
+
+def test_la_eell_de_2026_no_declara_periodo():
+    """Su extracto no fija ventana de gasto. Deducirla sería inventar."""
+    from scripts.data_processing.cargar_dataset import _PERIODO_SUBVENCIONABLE
+    assert _PERIODO_SUBVENCIONABLE[(2026, "eell")][1] is None
+
+def test_periodo_meses_deriva_de_la_tabla_unica():
+    """_PERIODO no puede desincronizarse de _PERIODO_SUBVENCIONABLE."""
+    from scripts.data_processing.cargar_dataset import _PERIODO, _PERIODO_SUBVENCIONABLE
+    assert _PERIODO == {k: v[0] for k, v in _PERIODO_SUBVENCIONABLE.items()}
+
+def test_la_portada_pinta_la_columna_de_periodo():
+    from pathlib import Path
+    html = Path("frontend/index.html").read_text(encoding="utf-8")
+    assert html.count("Periodo subvencionable</th>") == 2      # EPA y EELL
+    assert "Fecha de convocatoria" not in html                 # sin artículos
+    js = Path("frontend/js/home.js").read_text(encoding="utf-8")
+    assert "c.periodo_anio" in js and "convoc-periodo__matiz" in js
+
+def test_las_cabeceras_pueden_partirse_en_movil():
+    """Con cinco columnas, `nowrap` en las cabeceras desborda la tabla."""
+    from pathlib import Path
+    css = Path("frontend/css/styles.css").read_text(encoding="utf-8")
+    movil = css[css.index(".tabla-wrapper .tabla-convoc th"):][:220]
+    assert "nowrap" not in movil
+
+
+def test_el_cron_y_el_pipeline_no_se_desincronizan():
+    """`check_bdns.py` corre en su propio contenedor y no comparte código con el
+    pipeline, así que duplica la tabla de periodos. Los años que ambos conocen
+    tienen que coincidir, o una convocatoria mostraría un periodo distinto según
+    quién la insertara."""
+    import ast
+    from pathlib import Path
+    from scripts.data_processing.cargar_dataset import _PERIODO_SUBVENCIONABLE as pipeline
+
+    fuente = Path("docker/cron/scripts/check_bdns.py").read_text(encoding="utf-8")
+    arbol = ast.parse(fuente)
+    cron = next(
+        ast.literal_eval(n.value)
+        for n in arbol.body
+        if isinstance(n, ast.Assign)
+        and any(getattr(t, "id", None) == "_PERIODO_SUBVENCIONABLE" for t in n.targets)
+    )
+    comunes = set(cron) & set(pipeline)
+    assert comunes, "el cron no conoce ningún año del pipeline"
+    for clave in comunes:
+        assert cron[clave] == pipeline[clave], f"{clave} difiere entre cron y pipeline"
