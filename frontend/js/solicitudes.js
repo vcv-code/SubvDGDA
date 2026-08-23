@@ -485,8 +485,12 @@ function actualizarInfoResultados(cantidad, pagina) {
     const inicio = (pagina - 1) * LIMITE + 1;
     const fin    = inicio + cantidad - 1;
     infoResultados.style.display = '';
-    infoResultados.textContent =
-        `${estado.totalResultados} resultados · Mostrando del ${inicio} al ${fin}`;
+    // En dos <span> para que el CSS pueda apilarlos en móvil, donde la línea
+    // entera no cabe y se partía por cualquier punto («… del 1 al» / «50»).
+    // Los tres valores son números calculados aquí, no entran del usuario.
+    infoResultados.innerHTML =
+        `<span class="info-resultados__total">${estado.totalResultados} resultados</span>` +
+        `<span class="info-resultados__rango">Mostrando del ${inicio} al ${fin}</span>`;
 }
 
 

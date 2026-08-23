@@ -304,9 +304,26 @@
 
     function cerrarModalCausas() {
         modalCausas.classList.remove('modal-abierto');
-        modalCausas.setAttribute('aria-hidden', 'true');
+
+        // El foco tiene que SALIR del modal ANTES de marcarlo `aria-hidden`.
+        // Si un descendiente lo conserva, el navegador RECHAZA el atributo
+        // entero —lo avisa en consola— y el modal sigue expuesto a los lectores
+        // de pantalla pese a estar cerrado a la vista.
         // Devolver el foco al botón que abrió el modal (WCAG 2.4.3)
-        if (elementoConFocoPrevio) elementoConFocoPrevio.focus();
+        if (elementoConFocoPrevio) {
+            elementoConFocoPrevio.focus();
+        }
+
+        // Esto es una COMPROBACIÓN, no una alternativa al `focus()` de arriba:
+        // `focus()` sobre un elemento no enfocable —una <tr>, por ejemplo, que
+        // es justo lo que abre la ficha desde el buscador— no hace nada y NO
+        // lanza error. El foco puede seguir dentro aunque la línea anterior se
+        // haya ejecutado, así que hay que mirarlo de verdad antes de ocultar.
+        if (modalCausas.contains(document.activeElement)) {
+            document.activeElement.blur();
+        }
+
+        modalCausas.setAttribute('aria-hidden', 'true');
     }
 
     modalCausasCerrar.addEventListener('click', cerrarModalCausas);
@@ -339,8 +356,9 @@
         const inicio = (pagina - 1) * LIMITE + 1;
         const fin    = inicio + cantidad - 1;
         infoResultados.style.display = '';
-        infoResultados.textContent =
-            `${estado.totalResultados} exclusiones · Mostrando de la ${inicio} a la ${fin}`;
+        infoResultados.innerHTML =
+            `<span class="info-resultados__total">${estado.totalResultados} exclusiones</span>` +
+            `<span class="info-resultados__rango">Mostrando de la ${inicio} a la ${fin}</span>`;
     }
 
     /** Scroll al inicio de la sección de exclusiones (no de la página,
