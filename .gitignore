@@ -257,5 +257,6 @@ docs/privado/
 
 # Diccionario de municipios del INE, usado por scripts/revisar_duplicados.py
 # para comprobar que el nombre de un ayuntamiento cuadra con la provincia de su
-# CIF. Se descarga de www.ine.es y no se versiona: es de terceros y pesa 300 KB.
-datos/ine/
+# CIF. Va con el resto de fuentes en data/raw/, pero a diferencia de las demás
+# NO se versiona: es de terceros y se descarga de www.ine.es.
+data/raw/ine/
