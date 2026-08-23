@@ -18,7 +18,11 @@ class Convocatoria(Base):
     fecha_convocatoria = Column(Date, nullable=True)
     fecha_fin_plazo   = Column(Date, nullable=True)         # fin del plazo de solicitud; NULL hasta que se conoce
     fecha_resolucion  = Column(Date, nullable=True)         # NULL mientras la resolución está pendiente
-    periodo_meses     = Column(SmallInteger, nullable=False, default=12)  # 6 para EPA 2023/2024
+    periodo_meses     = Column(SmallInteger, nullable=False, default=12)  # 6 en EPA 2023/2024 y EELL 2023
+    # Año de gasto que financia la convocatoria. NO es anio_convocatoria: las EPA
+    # de 2021-2024 y todas las EELL pagan gastos del año siguiente.
+    periodo_anio      = Column(String(16), nullable=True)
+    periodo_matiz     = Column(String(40), nullable=True)   # p. ej. "1.er semestre"
 
     solicitudes = relationship("Solicitud", back_populates="convocatoria")
 

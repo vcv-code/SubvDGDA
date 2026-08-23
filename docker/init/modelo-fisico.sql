@@ -39,7 +39,9 @@ CREATE TABLE IF NOT EXISTS convocatorias (
     fecha_convocatoria DATE         NULL                    COMMENT 'Fecha de publicación de la convocatoria',
     fecha_fin_plazo    DATE         NULL                    COMMENT 'Fecha de fin del plazo de solicitud (NULL hasta que se conoce)',
     fecha_resolucion   DATE         NULL                    COMMENT 'Fecha de resolución definitiva',
-    periodo_meses      TINYINT      NOT NULL DEFAULT 12     COMMENT 'Duración del periodo subvencionable en meses. EPA 2023 y 2024 = 6; resto = 12',
+    periodo_meses      TINYINT      NOT NULL DEFAULT 12     COMMENT 'Duración del periodo subvencionable en meses. EPA 2023/2024 y EELL 2023 = 6; resto = 12',
+    periodo_anio       VARCHAR(16)  NULL                    COMMENT 'Año o años de gasto que financia la convocatoria. NO coincide con anio_convocatoria: las EPA de 2021-2024 y las EELL financian el año siguiente. NULL si el extracto del BOE no lo declara',
+    periodo_matiz      VARCHAR(40)  NULL                    COMMENT 'Precisión sobre el periodo cuando no es el año completo, p. ej. «1.er semestre». NULL si cubre el año entero',
     PRIMARY KEY (id_convoc)
 );
 
