@@ -62,6 +62,11 @@
                 <div id="entidad-info" class="tarjeta" style="margin-bottom: 2rem;">
                     <h2 id="entidad-nombre">Entidad</h2>
                     <p><strong>CIF:</strong> <span id="entidad-cif"></span></p>
+                    <!-- Solo se rellena en ayuntamientos: la provincia se deriva
+                         del CIF y desambigua los municipios que el BOE nombra en
+                         forma corta («Burguillos» hay en Toledo y en Sevilla). -->
+                    <p id="entidad-ubicacion" hidden><strong>Ubicación:</strong>
+                        <span id="entidad-provincia"></span></p>
                 </div>
 
                 <!-- Spinner de carga (Paso 17) -->
