@@ -795,7 +795,16 @@ async function cargarConvocatorias() {
             [...lista]
                 .sort((a, b) => b.anio_convocatoria - a.anio_convocatoria)
                 .map(c => {
-                    const asterisco = c.periodo_meses === 6 ? '&nbsp;*' : '';
+                    // Periodo subvencionable: el año de GASTO que financia la
+                    // convocatoria, que no es el suyo. Se destaca ese año, que es
+                    // el dato que la gente busca, y el matiz («1.er semestre») va
+                    // debajo en pequeño. Si el BOE no lo declara, no se inventa.
+                    const periodoCell = c.periodo_anio
+                        ? `<span class="convoc-periodo__anio">${c.periodo_anio}</span>` +
+                          (c.periodo_matiz
+                              ? `<span class="convoc-periodo__matiz">${c.periodo_matiz}</span>`
+                              : '')
+                        : '<span class="convoc-pendiente">—</span>';
 
                     const convocTxt  = fmtFecha(c.fecha_convocatoria, c.anio_convocatoria);
                     const convocCell = c.num_convoc
@@ -816,9 +825,10 @@ async function cargarConvocatorias() {
                     }
 
                     return `<tr>
-                        <td>${c.anio_convocatoria}${asterisco}</td>
+                        <td>${c.anio_convocatoria}</td>
                         <td>${convocCell}</td>
                         <td>${resolCell}</td>
+                        <td class="convoc-periodo col-periodo">${periodoCell}</td>
                         <td>${accesoCell}</td>
                     </tr>`;
                 }).join('');
@@ -827,10 +837,6 @@ async function cargarConvocatorias() {
         const tbodyEpa  = document.getElementById('convocatorias-epa');
         if (tbodyEell) tbodyEell.innerHTML = renderFila(porTipo.eell);
         if (tbodyEpa)  tbodyEpa.innerHTML  = renderFila(porTipo.epa);
-
-        const haySeisMeses = convocatorias.some(c => c.periodo_meses === 6);
-        const notaEl = document.getElementById('convocatorias-nota');
-        if (notaEl) notaEl.style.display = haySeisMeses ? '' : 'none';
 
         bloque.style.display = '';
         const seccion = document.getElementById('seccion-convocatorias');

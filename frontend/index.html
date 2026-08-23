@@ -314,13 +314,10 @@
                             <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Protectoras de Animales (EPA)</h3>
                             <div class="tabla-wrapper">
                                 <table class="tabla-convoc">
-                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha de convocatoria</th><th scope="col">Fecha de resolución</th><th scope="col">Acceso directo</th></tr></thead>
+                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha convocatoria</th><th scope="col">Fecha resolución</th><th scope="col" class="col-periodo">Periodo subvencionable</th><th scope="col">Acceso directo</th></tr></thead>
                                     <tbody id="convocatorias-epa"></tbody>
                                 </table>
                             </div>
-                            <p id="convocatorias-nota" class="convocatorias-nota" style="display:none;">
-                                * Período subvencionable de 6 meses (resto: 12 meses).
-                            </p>
                             <p class="convocatorias-nota">
                                 Bases reguladoras:
                                 <a href="https://www.boe.es/boe/dias/2021/10/01/pdfs/BOE-A-2021-16021.pdf"
@@ -336,7 +333,7 @@
                             <h3 class="card-grafico__titulo card-grafico__titulo--centrado">Entidades Locales (EELL)</h3>
                             <div class="tabla-wrapper">
                                 <table class="tabla-convoc">
-                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha de convocatoria</th><th scope="col">Fecha de resolución</th><th scope="col">Acceso directo</th></tr></thead>
+                                    <thead><tr><th scope="col">Año</th><th scope="col">Fecha convocatoria</th><th scope="col">Fecha resolución</th><th scope="col" class="col-periodo">Periodo subvencionable</th><th scope="col">Acceso directo</th></tr></thead>
                                     <tbody id="convocatorias-eell"></tbody>
                                 </table>
                             </div>
@@ -350,10 +347,13 @@
                                  tablas, donde se ve la diferencia entre ambas
                                  convocatorias, en vez de suelto en un párrafo. -->
                             <p class="convocatorias-nota convocatorias-nota--contraste">
-                                A las <strong>entidades locales</strong> se les adelanta el
-                                dinero. Las <strong>protectoras</strong>, que asumen esta
-                                labor de forma altruista y sin obligación ninguna, lo cobran
-                                a año vencido: se ven obligadas a adelantarlo ellas.
+                                A las <strong>entidades locales</strong> se les resuelve la
+                                ayuda antes del periodo que financia: la convocatoria de 2025
+                                cubre gastos de 2026. Las <strong>protectoras</strong> cobraban
+                                igual hasta la convocatoria de 2023, pero desde la de 2024 la
+                                resolución llega con el periodo ya consumido —la de 2025 se
+                                resolvió el 30 de diciembre—, así que adelantan de su bolsillo
+                                una labor que asumen de forma altruista y sin obligación ninguna.
                             </p>
                         </div>
                     </div>
@@ -463,7 +463,7 @@
 
                     <div class="card-grafico">
                         <div class="card-grafico__cabecera">
-                            <h3 class="card-grafico__titulo">Distribución por estado</h3>
+                            <h3 class="card-grafico__titulo">Distribución por estado (EPAs + EELL) </h3>
                             <button class="btn-descargar-png" id="btn-dl-donut"
                                     style="display:none;"
                                     aria-label="Descargar gráfico de distribución como PNG">
