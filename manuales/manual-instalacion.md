@@ -564,10 +564,10 @@ sed -n '/INSERT INTO `convocatorias`/,/;$/p' backups/backup_AAAAMMDD_HHMMSS.sql
 
 Eso imprime una convocatoria por línea. Un `grep` de la cabecera no vale: `mariadb-dump` deja el `INSERT INTO` en una línea y todos los valores en la siguiente, así que solo verías el encabezado.
 
-Cada convocatoria aparece con sus campos en este orden: `id_convoc`, `num_convoc`, `titulo_convoc`, `tipo_convoc`, `anio_convocatoria`, `fecha_convocatoria`, **`fecha_fin_plazo`**, `fecha_resolucion`, `periodo_meses`. Por ejemplo, aquí el fin de plazo es `2026-06-15`:
+Cada convocatoria aparece con sus campos en este orden: `id_convoc`, `num_convoc`, `titulo_convoc`, `tipo_convoc`, `anio_convocatoria`, `fecha_convocatoria`, **`fecha_fin_plazo`**, `fecha_resolucion`, `periodo_meses`, `periodo_anio`, `periodo_matiz`. Por ejemplo, aquí el fin de plazo es `2026-06-15` y la convocatoria financia gastos de `2026`:
 
 ```text
-(9,'904714','Subvenciones a entidades de protección animal 2026','epa',2026,'2026-05-11','2026-06-15',NULL,12)
+(9,'904714','Subvenciones a entidades de protección animal 2026','epa',2026,'2026-05-11','2026-06-15',NULL,12,'2026',NULL)
 ```
 
 Con la fecha localizada:

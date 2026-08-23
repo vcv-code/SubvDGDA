@@ -279,11 +279,45 @@ Reatribuir sin comprobar el CIF volvería a colapsar registros distintos bajo la
 
 Resultado: se reatribuyen **dos** registros (`SUBV2022659` → 2022, `2023B628` → 2023). Al caer en el año donde ya estaba su versión excluida, la prioridad intra-año conserva la concedida, de modo que cada solicitud queda con **un solo registro y su estado final**. El importe global no cambia (14.835.479,86 € concedidos); solo se reparte al año correcto: EPA 2022 +4.684,91 €, EPA 2023 −656,49 €, EPA 2024 −4.028,42 €. El total de registros pasa de 6398 a **6396**, y `periodo_meses` sigue al año reatribuido, no al del fichero.
 
-#### Periodo subvencionable semestral en EPAs 2023 y 2024
+#### El periodo subvencionable no es el año de la convocatoria
 
-Las convocatorias EPA de 2023 y 2024 cubrieron un periodo semestral (6 meses) en lugar del anual habitual. Esto no afecta a la estructura del dataset pero sí al análisis comparativo de importes entre años.
+Éste es el punto que más confunde a quien consulta los datos, incluidas las
+propias entidades: **el año de una convocatoria no es el año de gasto que
+financia.**
 
-Solución: se añade el campo `periodo_meses` a todos los registros (6 para EPA 2023/2024, 12 para el resto de EPA y para todos los EELL).
+| Convocatoria | Periodo subvencionable | Meses |
+|---|---|---|
+| EPA 2021 | año 2022 | 12 |
+| EPA 2022 | año 2023 | 12 |
+| EPA 2023 | **1.er semestre de 2024** | 6 |
+| EPA 2024 | **2.º semestre de 2024** | 6 |
+| EPA 2025 | año 2025 | 12 |
+| EPA 2026 | año 2026 | 12 |
+| EELL 2023 | **1 oct 2023 – 31 mar 2024** | **6** |
+| EELL 2024 | año 2025 | 12 |
+| EELL 2025 | año 2026 | 12 |
+| EELL 2026 | no declarado en el extracto | 12 |
+
+Las EPA de 2021 a 2024 financiaban el año siguiente y a partir de 2025 se
+realinearon; las EELL siguen desfasadas un año. Dos consecuencias que conviene
+tener presentes: **ninguna convocatoria EPA financió el año 2021**, y las EPA de
+2023 y 2024 no son dos años consecutivos sino **las dos mitades de 2024**.
+
+**Corrección de un dato que estaba mal.** Hasta agosto de 2026 el pipeline daba
+`periodo_meses = 12` a todas las EELL, con el comentario «las EELL siempre
+tienen periodo anual». No es cierto: la de 2023 fue de seis meses. Los importes
+EELL de 2023 no eran comparables con los de otros años sin normalizar, y no se
+estaban normalizando.
+
+**De dónde sale el dato.** De ningún campo de la API: solo aparece en la prosa
+del extracto del BOE, apartado «Objeto». La BDNS sí devuelve ese texto íntegro
+en `anuncios[].texto` del endpoint `convocatorias?numConv=<n>`, que es como se
+obtuvo. Parsear prosa automáticamente sería frágil, así que está transcrito una
+sola vez en `_PERIODO_SUBVENCIONABLE` (`scripts/data_processing/cargar_dataset.py`)
+con la cita literal de cada convocatoria al lado, y de ahí pasa a la base de
+datos en los campos `periodo_anio` y `periodo_matiz`. El frontend solo pinta lo
+que le llega: un año nuevo aparece en blanco hasta que alguien transcriba su
+extracto, en vez de mostrar un dato inventado.
 
 Contexto normativo relevante: el 17 de mayo de 2024 se modifica la Orden sobre las Bases de las subvenciones para EPAs (publicada en BOE el 29 de mayo 2024). Entre otros cambios, se crean dos líneas diferenciadas: animales abandonados y gestión de colonias felinas. Estas líneas aparecen por primera vez en la resolución de 2025.
 
@@ -321,6 +355,83 @@ Algunos parsers (PDF/XML) generan secuencias del tipo `uXXXX` sin la barra inver
 Solución: `_arreglar_escapes_unicode()` en `unificar_datasets.py` convierte `uXXXX` → carácter Unicode **solo dentro del rango Latin-1 Suplemento (U+00A0–U+00FF)**, que cubre los acentos y caracteres latinos comunes en castellano, catalán, gallego, etc. Esa restricción evita falsos positivos: nombres legítimos como `AYUNTAMIENTO DE UBEDA` (donde `UBEDA` es una secuencia "U" + 4 hex puramente casual) no se tocan porque `U+BEDA` cae fuera del rango protegido.
 
 ---
+
+#### Erratas del origen corregidas (`corregir_identidad`)
+
+Algunas entidades salían partidas en dos fichas porque el BOE publicó su CIF con
+una errata en un año concreto, o directamente sin CIF. El histórico de esas
+entidades se veía incompleto: faltaban años y faltaba dinero.
+
+Se corrigen en `unificar_datasets.py`, en el único punto por el que pasan todos
+los registros, y **no en la base de datos**, para que sobrevivan a un `reset-db`
+y a cualquier recarga. El criterio es el mismo que en `resolver_anio_epa`: solo
+se toca lo que está **probado** contra una fuente oficial.
+
+| Entidad | Qué pasaba | Corrección | Verificado en |
+|---|---|---|---|
+| ASSOCIACIÓ GAT I CUA | El BOE de 2024 transpuso dos dígitos (`…37041` → `…34071`), y ese año quedaba fuera del histórico | `G16734071` → `G16737041` | Los otros tres años (2022, 2023, 2025) llevan el mismo CIF, y la BDNS registra con él la concesión de 2022 |
+| ASOCIACIÓN "GATOS DE EL PUERTO" | El registro de 2022 conserva el NIF anterior a la rectificación del BOE | `G72307358` → `G72296254` | **BOE-A-2023-13752**, corrección de errores de la convocatoria 2022 |
+| LAS ALMAS DE COCOA | El registro de 2021 salió sin CIF | Se le asigna `G67811000` | Sus registros de 2022 y 2024, y la concesión de 2022 en la BDNS |
+| AYUNTAMIENTO DE CARLET | El BOE lo nombra «Casavieja» | Nombre → Carlet | Web municipal y diccionario del INE |
+| AYUNTAMIENTO DE CARRIÓN DE CALATRAVA | El BOE lo nombra «Castilforte» | Nombre → Carrión de Calatrava | Web municipal y diccionario del INE |
+| ASOCIACIÓN PROYECTO CES GATOS TORREVIEJA | El BOE de 2024 le pone un NIF con «B», de sociedad limitada | `B54999156` → `G54999156` | Inscrita en el Registro de Asociaciones de Alicante: siendo asociación, su NIF empieza por G |
+| SOS PELUDOS LEPEROS | Dos NIF distintos en 2024 y 2025 | `G56705338` → `G56725328` | **Sin fuente externa** — ver más abajo |
+
+En los dos municipios **el CIF sí era correcto**, solo el nombre estaba mal. Por
+eso la provincia, el mapa y las estadísticas por comunidad ya eran correctos
+antes de la corrección, y las seis solicitudes afectadas eran todas
+`no_beneficiaria`: no había ni un euro mal atribuido. Casavieja (Ávila,
+`P0505400B`) y Castilforte (Guadalajara, `P1909200F`) **existen** y aparecen en
+el dataset con su propio CIF; no se tocan.
+
+**El caso de SOS PELUDOS LEPEROS es distinto al resto** y conviene tenerlo
+presente: es la única entrada de la tabla que **no** está verificada contra una
+fuente externa. Sus dos NIF validan, difieren en dos posiciones (no es una
+transposición limpia) y ninguno aparece en la web indexada asociado a entidad
+alguna. Tampoco se resolverá solo: sus dos solicitudes son `no_beneficiaria`,
+así que nunca llegará a la BDNS, que solo publica concesiones. Se adopta el de
+2025 por ser la publicación más reciente de la misma autoridad. Es una decisión
+consciente y revisable, no un hecho comprobado.
+
+**Cómo comprobar un NIF dudoso**, por orden de solidez:
+
+1. **Corrección de errores en el BOE.** Es lo que zanjó Gatos de El Puerto.
+2. **BDNS**, `concesiones/busqueda?nifCif=<CIF>`. Su campo `beneficiario` trae
+   NIF y nombre juntos. Confirmó Gat i Cua y Las Almas de Cocoa.
+3. **Consulta pública de asociaciones** del Ministerio del Interior. No publica
+   el NIF, pero sí confirma que la entidad es una asociación —y por tanto que su
+   NIF empieza por G—, que es lo que resolvió Torrevieja. Ojo: si la entidad
+   está en un registro autonómico, la consulta nacional la lista pero no ofrece
+   ficha de detalle.
+4. **La propia entidad.** Muchas protectoras publican su CIF para donativos.
+
+**Contraste con la BDNS.** El endpoint `concesiones/busqueda?nifCif=<CIF>` de
+`infosubvenciones.es` permite comprobar un NIF contra una fuente oficial
+distinta del BOE, y su campo `beneficiario` trae NIF y nombre juntos. Tiene un
+límite importante: de nuestras convocatorias solo están cargadas las concesiones
+de la de **2022** (`645245`), y solo publica **concedidas**, así que no sirve
+para nada que sea `no_beneficiaria`, `excluida` o `desistida`.
+
+#### Detección de estos casos (`scripts/revisar_duplicados.py`)
+
+Herramienta de auditoría, no parte del pipeline. Recorre las entidades cargadas
+y avisa de cuatro cosas: posibles duplicados por nombre, entidades sin CIF, CIF
+que no cuadra con la comunidad declarada, y municipios cuyo nombre no cuadra con
+la provincia de su CIF.
+
+Para lo último cruza con el diccionario de municipios del INE, que **no se
+versiona** (fichero de terceros); se descarga de `www.ine.es` y se coloca en
+`datos/ine/diccionario_municipios.xlsx`, o se indica con la variable
+`INE_MUNICIPIOS`. Sin él, las otras tres comprobaciones siguen funcionando.
+
+Un aviso importante sobre el método: **los tres dígitos de municipio del CIF no
+son el código del INE**. Los asigna Hacienda por orden de alta. Traducir el CIF
+a un nombre por esa vía da falsos positivos masivos (715 de 1.759 en la prueba).
+Lo que sí es fiable son los **dos dígitos de provincia**, así que la
+comprobación va al revés: se busca el nombre en el INE y se mira si alguna de
+sus provincias coincide con la del CIF. Así, de 1.750 ayuntamientos salieron 7
+sospechosos, de los que 4 eran nombres abreviados, 1 el cambio de provincia de
+Gátova y 2 los errores reales de la tabla anterior.
 
 ## Organización del proyecto
 

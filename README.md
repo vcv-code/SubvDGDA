@@ -349,7 +349,7 @@ Campos:
 - `causa_exclusion` → código(s) de causa separados por `;` (todas las excluidas, EPA y EELL; `null` en el resto). La leyenda código→motivo por tipo y año está en `data/final/causas_exclusion.json`
 - `provincia` → provincia de la entidad, derivada del CIF (solo EELL; `null` para EPA)
 - `ccaa` → comunidad autónoma, derivada del CIF (solo EELL; `null` para EPA)
-- `periodo_meses` → duración del periodo subvencionable: `6` (EPA 2023 y 2024) o `12` (resto)
+- `periodo_meses` → duración del periodo subvencionable: `6` (EPA 2023 y 2024, y EELL 2023) o `12` (resto)
 - `es_agrupacion` → `true` si la concesión es una agrupación de ayuntamientos (solo EELL 2025 concedidas); `false` en el resto
 - `municipios_agrupacion` → lista de `{cif, nombre, importe_asignado}` con todos los municipios miembro, incluido el representante (solo cuando `es_agrupacion=true`); `null` en el resto
 
@@ -1312,8 +1312,30 @@ ser más informativo que la mejora en sí.
 
 ### Datos y análisis
 
-- **Provincia y CCAA para las EPA (asociaciones)** — no es derivable del CIF de
-  tipo G de forma estándar, así que hoy ese dato falta en las protectoras.
+- **Provincia y CCAA para las EPA (asociaciones)** — hoy ese dato falta en las
+  protectoras, y la ficha de entidad solo muestra la ubicación de los
+  ayuntamientos, donde sí se deriva del CIF.
+
+  *Por qué no se ha hecho:* **no se puede sacar del CIF**, y está comprobado con
+  casos concretos. `ASSOCIACIÓ GAT I CUA` (`G16737041`) está en Cruïlles,
+  Monells i Sant Sadurní de l'Heura, **Girona** (17), y sus dos dígitos dicen
+  **16, que es Cuenca**. En la mayoría ni siquiera son un código de provincia
+  válido: `G54…`, `G56…`, `G72…` son series nacionales por encima de 52 y no
+  devuelven nada. Derivarlo publicaría ubicaciones falsas en una web de datos
+  públicos, así que hace falta **otra fuente** —el registro de asociaciones, o
+  pedirlo a la DGDA—, no una heurística sobre el NIF.
+
+- **Filas de resultados operables con el teclado** — en el buscador, la fila de
+  la tabla abre la ficha de la entidad al pulsarla, pero solo con el ratón: la
+  `<tr>` lleva `cursor: pointer` y un manejador de `click`, y **ni `tabindex`,
+  ni `role`, ni manejador de teclas**. Quien navegue con teclado no puede abrir
+  esa ficha. Se arregla con `tabindex="0"`, `role="button"` y un `keydown` para
+  Enter y Espacio.
+
+  *Por qué no se ha hecho:* añade una parada de tabulación por fila —cincuenta
+  por página— y conviene decidir antes si la fila entera debe ser el objetivo o
+  si es mejor un botón dentro de ella. Encaja con la revisión de navegación por
+  teclado que ya estaba aplazada.
 
 - **Mover los enlaces oficiales a `frontend/data/resoluciones.json`** — las URLs
   de bases reguladoras (3) y resoluciones del BOE (8) están escritas en
