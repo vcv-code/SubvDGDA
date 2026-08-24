@@ -20,8 +20,9 @@ Qué se descuenta y por qué
   veinte ficheros. Lo que interesa es la página, no sus piezas.
 
 Uso:
-    python3 scripts/resumen_visitas.py
-    python3 scripts/resumen_visitas.py --dias 7
+    python3 scripts/resumen_visitas.py            # últimos 30 días
+    python3 scripts/resumen_visitas.py --dias 7   # última semana
+    python3 scripts/resumen_visitas.py --dias 3650  # prácticamente todo
 """
 import argparse
 import html
@@ -506,7 +507,10 @@ def render(d):
 
     p = [f'<!doctype html><html lang="es"><head><meta charset="utf-8">',
          '<meta name="viewport" content="width=device-width,initial-scale=1">',
-         '<title>Resumen de visitas — subvencionesdgda.org</title>',
+         # El periodo va en el <title> porque es lo que el navegador propone como
+         # nombre al guardar en PDF y lo que se ve en la pestaña. Sin él, dos
+         # informes de semanas distintas eran indistinguibles una vez guardados.
+         f'<title>Visitas {periodo} — subvencionesdgda.org</title>',
          f'<style>{CSS}</style></head><body><div class="envoltorio">',
          '<button class="imprimir" onclick="window.print()">Guardar como PDF</button>',
          '<h1>Resumen de visitas</h1>',
@@ -610,7 +614,9 @@ def render(d):
 def main():
     ap = argparse.ArgumentParser(description="Resumen de visitas en español.")
     ap.add_argument('--dias', type=int, default=30,
-                    help='Días hacia atrás a incluir (por defecto 30).')
+                    help='Días hacia atrás a incluir. Por defecto 30, NO todo el '
+                         'histórico: para eso hay que pedir un número grande, '
+                         'p. ej. --dias 3650.')
     ap.add_argument('--organizaciones', action='store_true',
                     help='Identificar administraciones públicas por DNS inverso. '
                          'Tarda más: consulta la red por cada visitante habitual.')
@@ -625,7 +631,10 @@ def main():
                          "el log_format de Nginx?")
 
     DESTINO.mkdir(exist_ok=True)
-    salida = DESTINO / f"resumen-{datetime.now():%Y-%m-%d}.html"
+    # El periodo va en el nombre: antes solo llevaba la fecha, así que lanzar el
+    # resumen del histórico y luego el de una semana el mismo día sobrescribía el
+    # primero sin avisar, y quedaba un fichero que no era lo que uno creía.
+    salida = DESTINO / f"resumen-{datetime.now():%Y-%m-%d}-{args.dias}dias.html"
     if args.organizaciones:
         print('Resolviendo nombres de red... (puede tardar un minuto)')
     datos = construir(filas, descartadas, args.dias, args.organizaciones)

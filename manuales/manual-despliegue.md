@@ -1119,6 +1119,28 @@ La base **no se versiona** —pesa decenas de MB y tiene licencia propia de
 MaxMind—: está en `.gitignore` y cada instalación descarga la suya. Conviene
 actualizarla un par de veces al año, porque los rangos de IP cambian.
 
+#### La forma corta: `make informes`
+
+Desde tu ordenador, en una sola orden: genera el informe en el servidor, se lo
+trae a `informes/servidor/` y lo abre en el navegador.
+
+```bash
+make informes                 # últimos 7 días
+make informes DIAS=30         # otro periodo
+make informes TIPO=goaccess   # el informe completo, con navegadores y errores
+make informes ABRIR=no        # solo descargar
+```
+
+**Ojo con no confundir dos cosas.** `informes/` guarda los informes **locales**,
+sacados de los registros del Docker de desarrollo: son tu propio trasteo, no
+visitas. Los del servidor van aparte, en `informes/servidor/`. La diferencia se
+ve sola —en agosto de 2026, 1.112 peticiones en local frente a 16.569 en el
+servidor—, pero mezclarlos lleva a conclusiones falsas.
+
+Y el aviso de siempre: **los informes llevan direcciones IP**. Por eso se
+escriben fuera de la carpeta que sirve Nginx y `informes/` está en `.gitignore`.
+No los subas a ningún sitio público.
+
 #### Cómo abrirlos
 
 Los informes **no son accesibles desde la web**, y es a propósito: contienen
