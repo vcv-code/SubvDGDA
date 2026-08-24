@@ -1246,6 +1246,48 @@ motivo. **Los tres textos tienen que decir lo mismo**: `robots.txt`, el aviso
 legal y el README. Hay tests que lo verifican; si algún día se bloquea un
 rastreador y se olvida actualizar los otros dos, la batería salta.
 
+#### Una sola dirección para el sitio
+
+El sitio responde en `subvencionesdgda.org` y en `www.subvencionesdgda.org`, y
+Nginx redirige la segunda a la primera con un 301. Sin eso, Google las trata
+como **dos webs distintas** y reparte entre ellas las señales de posicionamiento.
+
+Las etiquetas `<link rel="canonical">` de las páginas no bastan por sí solas:
+son una sugerencia, y mientras el servidor devuelva 200 en las dos variantes
+pueden ignorarse. Aquí se ignoraron.
+
+**Depende de algo que conviene no perder de vista: el certificado tiene que
+cubrir las dos direcciones.** Si dejara de cubrir `www`, el navegador fallaría
+en el saludo TLS *antes* de recibir la redirección, y quien entrara por `www`
+vería un aviso de seguridad en vez de la web. Se comprueba así:
+
+```bash
+openssl s_client -connect subvencionesdgda.org:443 -servername subvencionesdgda.org </dev/null 2>/dev/null \
+  | openssl x509 -noout -text | grep -A1 "Subject Alternative Name"
+```
+
+Tienen que aparecer los dos: `DNS:subvencionesdgda.org` y
+`DNS:www.subvencionesdgda.org`. Si algún día se reemite el certificado, hay que
+seguir pidiéndolo para ambos.
+
+El reto de Let's Encrypt sigue sirviéndose sin redirigir en las dos direcciones
+—va en un `location ^~`, que tiene prioridad—, así que la renovación no se ve
+afectada. Comprobado.
+
+Qué verificar tras desplegar un cambio en estas redirecciones:
+
+```bash
+for u in http://subvencionesdgda.org/ http://www.subvencionesdgda.org/ \
+         https://www.subvencionesdgda.org/ https://subvencionesdgda.org/index.html \
+         https://subvencionesdgda.org/; do
+  echo "$u → $(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$u")"
+done
+```
+
+Lo esperado: las cuatro primeras dan **301** y todas acaban en
+`https://subvencionesdgda.org/`; la última da **200**. Si la última diera 301,
+hay un bucle en la portada y hay que revertir.
+
 #### Google Search Console
 
 Es lo que de verdad mueve la aguja. Al publicar la web, Google **no la rastreó
