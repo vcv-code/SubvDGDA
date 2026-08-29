@@ -480,6 +480,7 @@ Botón flotante (`js/scroll-arriba.js` + clase `.btn-subir`) que permite regresa
 | Datos y métricas | 3 tarjetas: total solicitudes, importe concedido, entidades únicas | API `/estadisticas/` |
 | Convocatorias | Dos bloques (EELL / EPA) con año, fecha de convocatoria (BOE) y acceso rápido al buscador filtrado; pendientes sin `fecha_resolucion` muestran estado | API `/convocatorias/` |
 | Umbral de puntuación | Bajo Convocatorias: texto explicativo (EPA/EELL) + tabla del corte de concesión por año (puntuación mínima concedida; "Sin corte" donde todas las admitidas obtuvieron ayuda; por línea en EPA 2024+) | API `/estadisticas/` → `umbrales[]` |
+| Los datos que la ley exige y aún no están | Cierre de la portada: la Ley 7/2023 (arts. 13-15) obliga al ministerio a elaborar y publicar la Estadística de Protección Animal; la operación existe en el Inventario del INE (54113) «En proyecto» y no está en el PEN 2025-2028; el avance de junio de 2026 es solo de hogares; y el estudio municipal de Consejos para Mascotas cubre lo que falta | Estático |
 | Gráficos | Fila 1: Evolución importe por año (línea) + EPA vs EELL por año (barras agrupadas). Fila 2: Distribución estados (donut) + KPI tasa de éxito | API `/estadisticas/` |
 
 Las secciones "Convocatorias recientes" y "Transparencia" se eliminaron para simplificar la página y centrar el foco en los datos clave.
@@ -2709,3 +2710,93 @@ detalle»: ya no hay que explicar un gesto, porque la acción está a la vista.
 botón dentro de ella **hereda ese `none` y queda inerte**. El botón necesita
 `pointer-events: auto` explícito, y hay un test que lo comprueba, porque es un
 fallo que no da error: simplemente no pasa nada al pulsar.
+
+---
+
+## Recursos: de tarjetas a listado, y bloque del estudio municipal
+
+**Guías y documentos → «Guías, documentos y herramientas».** El bloque usaba una
+rejilla de tarjetas (`.card-guia`). Pasa a **listado** (`.lista-documentos`):
+cada entrada es un párrafo con el título enlazado, dos puntos y la descripción
+seguida. Sin fondo, sin sombra y sin etiqueta de tipo —«Documento oficial · PDF»
+ocupaba una línea por entrada sin aportar nada que el título no dijera—.
+
+El motivo es que la sección ocupaba demasiado para lo que aporta —son enlaces
+con contexto, no fichas— y la lista está pensada para crecer. Lleva **guion**
+en la viñeta (`::marker { content: "— " }`), no punto ni número: el orden va de
+lo general a lo concreto, y numerarlas sugeriría una prioridad que no existe.
+
+Una entrada puede llevar varios `<p>` cuando lo que explica no cabe en una
+frase. Hoy solo lo hace la de acceso a la información pública: el procedimiento
+cambia según qué Administración tenga el dato, y resumirlo en una línea llevaba
+a **reclamar ante el órgano equivocado**.
+
+**Se aloja el primer documento propio.** `assets/docs/propuesta-contratacion-pienso-colonias-felinas.pdf`
+es una plantilla para que una asociación o un particular pida a su ayuntamiento
+que contrate el suministro de pienso en vez de depender de subvenciones. A
+diferencia del resto de la lista, no enlaza fuera: se sirve desde el sitio y se
+versiona con el repositorio.
+
+### Bloque «Qué responden los ayuntamientos»
+
+Bloque propio (`.recursos-bloque--estudio`, melocotón `#FBE0CE`) para la
+Consulta de bienestar animal 2025-2026 de Consejos para Mascotas. No es una
+entrada más de la lista porque es **la otra mitad de lo que hace esta web**:
+aquí se ve cuánto dinero reparte el Estado, y ahí qué hacen después los
+ayuntamientos.
+
+- **El título entero es el enlace**, logo incluido: al retirarse el subtítulo se
+  quedó como único acceso al estudio, y conviene que el objetivo sea grande.
+- El logo (`assets/img/logos/consejosmascotas.webp`, 262×73) lleva **altura fija y
+  ancho automático** (34 px de alto), con
+  `flex-shrink: 0` para que no se aplaste, y `width`/`height` en el HTML para
+  que el navegador reserve el sitio y la página no dé un salto al cargar.
+- **Cada porcentaje va con su base.** Un dato sin ella engaña: el 0,4 % de
+  convenios con asociaciones es sobre quienes contestaron *esa* pregunta
+  (~2.436), no sobre los 8.132 municipios. Calculado mal daba 33 ayuntamientos
+  en vez de una decena.
+- Las cifras de recogidas y fallecidos llevan la advertencia de que **solo
+  cubren lo municipal**: sin ella, 302.147 animales parecen el problema entero
+  cuando es la parte que gestionan las administraciones.
+- **Aviso de contraste:** el verde de enlace (`#2E7D32`) sobre este melocotón da
+  **4,1:1**, por debajo del mínimo de 4,5:1. El enlace del título no lo sufre
+  porque hereda el negro (12,8:1), pero cualquier enlace nuevo dentro del bloque
+  necesitaría otro color.
+
+**Fondo blanco en el bloque de guías.** Era crema (`#FBF0DC`) como el resto de
+bloques pastel, pero es la lista más larga de la página y el color cansaba a lo
+largo de ocho entradas con sus descripciones. En blanco el texto respira y el
+bloque del estudio, que sí lleva color, destaca por contraste.
+
+### En móvil
+
+Por debajo de 600 px el título baja a `1.05rem` y el logo a 28 px. A 320 px solo
+quedaban unos 90 px a la derecha del logo, así que el texto pasaba de línea
+—`flex-wrap` lo permite— y a 1,2 rem ocupaba **cuatro líneas en negrita**. Con el
+ajuste son tres.
+
+## Cierre de la portada: la estadística que la ley exige
+
+Sección `.seccion-estadistica` al final de `index.html`, en cuatro párrafos con
+un orden deliberado: **obligación legal → estado real de la operación → lo que
+sí avanza → lo que sigue sin saberse.**
+
+El tercero es el que le da credibilidad al conjunto: sin él parecería una queja;
+con él es una constatación de que la estadística está en marcha pero aún no
+existe. El avance de junio de 2026 se acota expresamente a **hogares**, porque de
+la calle —que es lo que la ley pone en manos de las administraciones— no dice
+nada.
+
+**Fondo propio y no `.fondo-crema`**, aunque el color sea el mismo: aquella clase
+lleva `min-height: calc(100vh - altura-nav)` porque la pensaron para la sección
+del resumen, que tiene tabla. Aplicada a una sección de solo texto la estiraba
+hasta ocupar **una pantalla entera**, dejando medio hueco en blanco debajo.
+
+### Anclas y barra fija
+
+El enlace de esta sección a `recursos.html#bloque-estudio` destapó que la
+navegación es `position: fixed` y **no había `scroll-margin-top` en todo el
+proyecto**: al saltar a un ancla, el destino quedaba tapado por la barra. No se
+notaba porque hasta entonces el único ancla interno era «saltar al contenido»,
+que precisamente quiere quedar arriba del todo. Se añade para `h2[id]`,
+`h3[id]` y `section[id]`.

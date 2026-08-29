@@ -15,7 +15,7 @@ def get_avisos(db: Session = Depends(get_db)):
     """
     Devuelve las convocatorias sin resolución (fecha_resolucion IS NULL) del año
     en curso y del anterior. El frontend las usa para el banner "convocatoria en
-    tramitación, datos disponibles cuando se publique la resolución".
+    tramitación, datos disponibles cuando podamos obtenerlos tras la resolución".
 
     Por qué el año anterior y no solo el actual
     -------------------------------------------
