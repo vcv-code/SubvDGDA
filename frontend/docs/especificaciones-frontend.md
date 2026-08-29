@@ -1004,7 +1004,8 @@ La cuenta nace sin verificar y recibe el email de verificación: el login devuel
 
 **Mapa choropleth (`js/mapa-ccaa.js`):**
 
-- Librería: Leaflet 1.9.4 + CartoDB Positron sin etiquetas
+- Librería: Leaflet 1.9.4, **sin mapa base** (ver «Retirada del mapa base» al final de este documento)
+- Topes de zoom y arrastre calculados según el tamaño del contenedor, recalculados al cambiar de pantalla
 - GeoJSON: `assets/geojson/ccaa.geojson` (19 features, ~600 KB, nombres alineados con la API)
 - Paleta: 4 bandas de tonos tierra (beige → caramelo → marrón) + rojo para CCAA sin subvenciones EELL
 - Escala: cuartiles reales del dataset (p25/p50/p75) redondeados a valores "bonitos"
@@ -2609,3 +2610,68 @@ destacado y el matiz debajo en pequeño (`1.er semestre`, `oct a mar`).
 **Relación con backend:** dos campos nuevos en `convocatorias`, sembrados desde
 `_PERIODO_SUBVENCIONABLE` en `cargar_dataset.py`. El dato no existe en ninguna
 API: solo en la prosa del extracto del BOE (ver `docs/pipeline-datos.md`).
+
+---
+
+## Retirada del mapa base del mapa por CCAA
+
+**Qué ocurrió.** El 24 de agosto de 2026 el mapa apareció cubierto de marcas de
+agua «API KEY REQUIRED» sin que se hubiera tocado nada del proyecto. CARTO
+empezó a exigir clave para sus mapas base.
+
+Lo traicionero es cómo falla: CARTO **sigue devolviendo 200**, solo que la
+imagen que sirve lleva la marca de agua. No hay error en consola ni petición
+fallida, así que no lo detecta ninguna comprobación automática — solo se ve
+mirando la página.
+
+**La decisión.** Se retira el mapa base en vez de pedir una clave o cambiar de
+proveedor. Tres motivos, por orden de peso:
+
+1. **Los mapas base en PNG están en retirada.** La clave es gratuita —hasta 5
+   millones de teselas al mes, sin necesidad de cuenta— así que el coste no es
+   el problema. Pero CARTO anuncia que el requisito llegará también a los
+   vectoriales: pedirla sería aplazar el mismo trabajo unos meses.
+2. **El fondo no aporta.** En un mapa de «qué comunidad recibió cuánto», las 19
+   comunidades salen de un GeoJSON local y el mapa base solo pintaba el mar y
+   los países vecinos.
+3. **Privacidad.** Cada tesela es una conexión del navegador del visitante a un
+   servidor ajeno, que recibe su IP. Al revisarlo se vio que `privacidad.html`
+   declaraba Google Fonts, unpkg y jsDelivr como recursos externos pero **no el
+   proveedor de mapas**. Quitarlo cierra esa omisión: los tres que quedan son
+   exactamente los declarados. Cada recurso externo nuevo hay que añadirlo ahí.
+
+**Qué se hizo.**
+
+- Fuera el `L.tileLayer`. El fondo del contenedor pasa a ser el mapa base:
+  `#mapa-ccaa` lleva un gris neutro (`#eef1f0`) en vez del verde claro anterior,
+  que competía con la escala de tonos tierra del coropleto.
+- **Topes de zoom y arrastre.** Sin fondo, alejarse más allá de donde cabe
+  España solo enseña gris. El mínimo se obtiene con `getBoundsZoom` sobre la
+  extensión del GeoJSON —Canarias manda, en longitud −18,2 frente al 4,3 de
+  Baleares— y `setMaxBounds` impide arrastrar el mapa hasta perder el país de
+  vista.
+- **Se recalculan al cambiar de tamaño**, con 200 ms de retardo. El contenedor
+  mide 640, 400 o 320 px de alto según la pantalla, y a menor altura hace falta
+  **menos** zoom para que quepa lo mismo:
+
+  | Pantalla | Contenedor | Zoom mínimo |
+  |---|---|---|
+  | Escritorio 1440 px | 1180×640 | 5,43 |
+  | Portátil 1024 px | 900×640 | 5,43 |
+  | Tablet 768 px | 700×400 | 4,72 |
+  | Móvil 390 px | 350×320 | 4,34 |
+  | Móvil 320 px | 280×320 | 4,00 |
+
+  Son **1,4 niveles de diferencia**, casi un factor 3 de escala. Calcularlo una
+  sola vez al cargar era un fallo real: un mínimo obtenido en escritorio dejaba
+  a un móvil pequeño sin poder ver España entera, que es justo lo contrario de
+  lo que el tope pretende.
+- El margen de `setMaxBounds` es holgado (`pad(0.5)`) a propósito: en pantalla
+  ancha, al zoom mínimo el mapa abarca más longitud de la que ocupa España
+  —limita la altura, no el ancho—, y un margen ajustado quedaría más estrecho
+  que la vista, con lo que Leaflet centra y bloquea el arrastre. Se siente como
+  si el mapa se resistiera.
+
+**Tests:** `tests/test_mapa_ccaa.py` impide que vuelva a entrar un `L.tileLayer`
+o cualquier proveedor de teselas, y comprueba que las comunidades siguen
+saliendo del fichero local y que el contenedor conserva color de fondo.

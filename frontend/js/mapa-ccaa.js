@@ -208,13 +208,46 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
     // contenedor, y no es el mismo en escritorio (640 px de alto) que en móvil
     // (400 px). Un número fijo acertaría en uno y fallaría en el otro.
     var limitesEspana = capaGeojson.getBounds();
-    var zoomMinimo    = _mapaInstancia.getBoundsZoom(limitesEspana, false, [12, 12]);
-    _mapaInstancia.setMinZoom(zoomMinimo);
 
-    // Y que tampoco se pueda arrastrar el mapa hasta perder España de vista.
-    // El margen deja aire suficiente para que las comunidades del borde no
-    // queden pegadas al canto.
-    _mapaInstancia.setMaxBounds(limitesEspana.pad(0.25));
+    // Se recalcula en CADA cambio de tamaño, no solo al cargar. El contenedor
+    // mide 640, 400 o 320 px de alto según la pantalla (ver #mapa-ccaa en
+    // styles.css), y a menor altura hace falta un zoom MENOR para que quepa lo
+    // mismo. Con un único cálculo inicial, estrechar la ventana desde
+    // escritorio dejaba un mínimo demasiado alto: España ya no cabía y encima
+    // no se podía alejar para verla, que es justo lo contrario de lo que este
+    // tope pretende.
+    function ajustarTopes() {
+        // invalidateSize primero: si el contenedor acaba de cambiar de tamaño,
+        // Leaflet todavía arrastra el anterior y el cálculo saldría mal.
+        _mapaInstancia.invalidateSize(false);
+
+        var zMin = _mapaInstancia.getBoundsZoom(limitesEspana, false, [12, 12]);
+        _mapaInstancia.setMinZoom(zMin);
+        // Margen holgado a propósito. En una pantalla ancha, al zoom mínimo
+        // el mapa abarca más longitud de la que ocupa España —la altura es lo
+        // que limita, no el ancho—, y un margen ajustado quedaría más estrecho
+        // que la propia vista: Leaflet entonces centra y bloquea el arrastre,
+        // que se siente como si el mapa se resistiera. Con 0.5 hay sitio de
+        // sobra y solo actúa cuando de verdad se está perdiendo España de vista.
+        _mapaInstancia.setMaxBounds(limitesEspana.pad(0.5));
+
+        // Si al encoger la ventana el mapa se queda por debajo del nuevo suelo,
+        // se sube. Leaflet ya lo hace en `setMinZoom`, pero dejarlo explícito
+        // evita depender de un detalle de su implementación.
+        if (_mapaInstancia.getZoom() < zMin) _mapaInstancia.setZoom(zMin);
+    }
+
+    ajustarTopes();
+
+    // Con retardo: al arrastrar el borde de la ventana, `resize` se dispara
+    // decenas de veces por segundo, y recalcular en cada una haría dar saltos
+    // al mapa. El mapa se crea una sola vez (`if (_mapaInstancia) return` al
+    // principio), así que este escuchador no se duplica.
+    var temporizadorTopes;
+    window.addEventListener('resize', function() {
+        clearTimeout(temporizadorTopes);
+        temporizadorTopes = setTimeout(ajustarTopes, 200);
+    });
 
     // Solo móvil: 1 toque = info centrada; 2 toques = modal
     if (esTactilPrimario) {
