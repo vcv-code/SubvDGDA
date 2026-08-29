@@ -121,12 +121,18 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         if (el) el.textContent = 'Zoom: ' + Math.round(_mapaInstancia.getZoom() * 10) / 10;
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' +
-            ' contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-        subdomains: 'abcd', maxZoom: 19,
-    }).addTo(_mapaInstancia);
+    // SIN mapa base, a propósito. Antes se cargaban las teselas de CARTO, y en
+    // agosto de 2026 empezaron a exigir clave: el mapa pasó a mostrarse cubierto
+    // de marcas de agua «API KEY REQUIRED» sin que aquí hubiera cambiado nada.
+    //
+    // No se sustituye por otro proveedor. Para un mapa de «qué comunidad recibió
+    // cuánto» el fondo no aporta —solo pinta el mar y los países vecinos—, las
+    // comunidades salen del GeoJSON local, y prescindir de él quita de encima
+    // una dependencia externa que puede volver a cambiar de reglas. De paso
+    // evita que el navegador de cada visitante se conecte a un tercero, que es
+    // coherente con lo que la web declara sobre privacidad.
+    //
+    // El fondo del contenedor lo pone el CSS (#mapa-ccaa).
 
     var capaGeojson;
 

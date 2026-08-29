@@ -509,7 +509,7 @@ Componente compartido (`js/scroll-arriba.js` + clase `.btn-subir`) cargado en la
 **Visualizaciones:**
 
 - **Chart.js** — gráficas de barras, líneas, donut y distribución en las páginas de estadísticas. Cada gráfica abre un modal con conclusiones en HTML (`<p>`, `<ul>`, `<a>`).
-- **Leaflet + GeoJSON** — mapa choropleth por CCAA en las estadísticas EELL (público) y en `exclusivo.html`, con el mismo módulo `mapa-ccaa.js` y el modal de top municipios `modal-ccaa.js`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
+- **Leaflet + GeoJSON** — mapa choropleth por CCAA en las estadísticas EELL (público) y en `exclusivo.html`, con el mismo módulo `mapa-ccaa.js` y el modal de top municipios `modal-ccaa.js`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle. **Sin mapa base**: las comunidades salen del GeoJSON local y el fondo lo pone el CSS. Antes se cargaban teselas de CARTO, que en agosto de 2026 pasó a exigir clave y llenó el mapa de marcas de agua sin que aquí cambiara nada; prescindir del fondo quita esa dependencia y evita que el navegador de cada visitante se conecte a un tercero.
 
 Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-frontend.md](frontend/docs/especificaciones-frontend.md) · Paleta, tipografía y guía visual en [frontend/docs/diseño.md](frontend/docs/diseño.md).
 

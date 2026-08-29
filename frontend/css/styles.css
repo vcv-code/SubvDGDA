@@ -5227,7 +5227,11 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     height:           640px;
     width:            100%;
     border-radius:    8px;
-    background-color: var(--color-fondo-verde);
+    /* Este fondo ES el mapa base: desde que se retiraron las teselas externas,
+       lo único que hay debajo de las comunidades es este color. Se elige un gris
+       muy claro y neutro para que no compita con la escala de colores del
+       coropleto, que va en tonos tierra. */
+    background-color: #eef1f0;
 }
 
 .mapa-leyenda {
