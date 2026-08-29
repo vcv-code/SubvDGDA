@@ -736,7 +736,13 @@ async function cargarAvisos() {
                     <span class="aviso-banner__icono" aria-hidden="true">📢</span>
                     <div class="aviso-banner__texto">
                         <strong>${tipo} — Convocatoria ${aviso.anio_convocatoria}${publicacion}${plazo}</strong>
-                        <p>Los datos de solicitudes y concesiones estarán disponibles cuando se publique la resolución.</p>
+                        <!-- «cuando podamos obtenerlos», no «cuando se publique la
+                             resolución»: la frase anterior daba por hecho que la resolución
+                             trae los listados completos, y no siempre es así. En 2026 se
+                             apunta a que solo se publiquen las concedidas, con lo que el
+                             resto habría que pedirlo por transparencia. Mejor no prometer
+                             una fecha que no depende de nosotras. -->
+                        <p>Los datos estarán disponibles cuando podamos obtenerlos tras la resolución.</p>
                     </div>
                 </div>`;
         }).join('');
