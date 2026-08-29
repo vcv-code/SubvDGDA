@@ -100,7 +100,10 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
     var esTactilPrimario = window.matchMedia('(pointer: coarse)').matches;
     _mapaInstancia = L.map('mapa-ccaa', {
         center: [40.2, -3.5], zoom: 5.8,
-        minZoom: 2, maxZoom: 8,   // acotado: por debajo de 2 queda muy lejos y por encima de 8 no aporta
+        // minZoom se recalcula más abajo, en cuanto se sabe el tamaño real del
+        // contenedor: este 2 solo vale para el instante inicial. maxZoom 8
+        // porque por encima el GeoJSON ya no da más detalle.
+        minZoom: 2, maxZoom: 8,
         zoomControl: true, scrollWheelZoom: true, attributionControl: true,
         doubleClickZoom: !esTactilPrimario,
     });
@@ -191,6 +194,27 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
     if (window.innerWidth <= 768) {
         _mapaInstancia.fitBounds(capaGeojson.getBounds(), { padding: [8, 8] });
     }
+
+    // Topes de alejamiento y desplazamiento.
+    //
+    // Desde que no hay mapa base, alejarse más allá de donde ya cabe todo no
+    // enseña nada: solo el gris del contenedor, porque alrededor de las
+    // comunidades no queda nada que mirar. Así que el mínimo se calcula, no se
+    // fija a ojo: `getBoundsZoom` devuelve el nivel exacto al que entra la
+    // extensión completa —Canarias incluida, que es la que manda porque queda
+    // muy al suroeste— y se toma ése como suelo.
+    //
+    // Se calcula en vez de codificarlo porque depende del tamaño del
+    // contenedor, y no es el mismo en escritorio (640 px de alto) que en móvil
+    // (400 px). Un número fijo acertaría en uno y fallaría en el otro.
+    var limitesEspana = capaGeojson.getBounds();
+    var zoomMinimo    = _mapaInstancia.getBoundsZoom(limitesEspana, false, [12, 12]);
+    _mapaInstancia.setMinZoom(zoomMinimo);
+
+    // Y que tampoco se pueda arrastrar el mapa hasta perder España de vista.
+    // El margen deja aire suficiente para que las comunidades del borde no
+    // queden pegadas al canto.
+    _mapaInstancia.setMaxBounds(limitesEspana.pad(0.25));
 
     // Solo móvil: 1 toque = info centrada; 2 toques = modal
     if (esTactilPrimario) {
