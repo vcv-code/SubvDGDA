@@ -51,6 +51,8 @@ frontend/
 │   ├── solicitudes.js
 │   └── utils.js
 ├── assets/
+│   ├── docs/
+│   │   └── propuesta-contratacion-pienso-colonias-felinas.pdf   ← plantilla propia
 │   ├── geojson/
 │   │   └── ccaa.geojson
 │   ├── guia-estilo/
@@ -121,7 +123,7 @@ frontend/
 
 ### Zona privada
 
-Colores exclusivos de `privado.html` y `exclusivo.html`. Editables con `scripts/color-privado.sh` sin tocar el código.
+Colores exclusivos de `privado.html` y `exclusivo.html`. Editables con `frontend/scripts/color-privado.sh` sin tocar el código.
 
 - **Banner superior** (`--banner-privado`) — `#2D6A4F`  
 - **Fondo del cuerpo** (`--fondo-privado`) — `#FAF4EE`  
