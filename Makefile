@@ -11,7 +11,8 @@
         mantenimiento-on mantenimiento-off \
         reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
-        backup restore informe-visitas resumen-visitas shell-db mailpit uninstall
+        backup restore informe-visitas resumen-visitas shell-db mailpit uninstall \
+        informes
 
 # Los volcados de BD van a un directorio propio, ignorado por git: contienen
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
@@ -170,6 +171,20 @@ informe-visitas:
 # No necesita GoAccess ni nada instalado: solo Python.
 resumen-visitas:
 	@python3 scripts/resumen_visitas.py
+
+# Informes del SERVIDOR en una sola orden: los genera allí, se los trae a
+# informes/servidor/ y abre el último en el navegador.
+#
+# Van en una carpeta aparte a propósito. Los de `informes/` salen de los
+# registros del Docker de desarrollo —o sea, de tu propio trasteo— y confundirlos
+# con las visitas reales lleva a conclusiones falsas.
+#
+#   make informes                 → últimos 7 días
+#   make informes DIAS=30         → otro periodo
+#   make informes TIPO=goaccess   → informe completo, con navegadores y errores
+#   make informes ABRIR=no        → solo descargar
+informes:
+	@bash scripts/traer_informes.sh
 
 # Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
 # actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un

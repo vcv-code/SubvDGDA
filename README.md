@@ -509,7 +509,7 @@ Componente compartido (`js/scroll-arriba.js` + clase `.btn-subir`) cargado en la
 **Visualizaciones:**
 
 - **Chart.js** — gráficas de barras, líneas, donut y distribución en las páginas de estadísticas. Cada gráfica abre un modal con conclusiones en HTML (`<p>`, `<ul>`, `<a>`).
-- **Leaflet + GeoJSON** — mapa choropleth por CCAA en las estadísticas EELL (público) y en `exclusivo.html`, con el mismo módulo `mapa-ccaa.js` y el modal de top municipios `modal-ccaa.js`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle.
+- **Leaflet + GeoJSON** — mapa choropleth por CCAA en las estadísticas EELL (público) y en `exclusivo.html`, con el mismo módulo `mapa-ccaa.js` y el modal de top municipios `modal-ccaa.js`. En táctil (`pointer: coarse`): un toque muestra tooltip central, doble toque abre el modal de detalle. **Sin mapa base**: las comunidades salen del GeoJSON local y el fondo lo pone el CSS. Antes se cargaban teselas de CARTO, que en agosto de 2026 pasó a exigir clave y llenó el mapa de marcas de agua sin que aquí cambiara nada; prescindir del fondo quita esa dependencia y evita que el navegador de cada visitante se conecte a un tercero.
 
 Ver componentes y decisiones de diseño en [frontend/docs/especificaciones-frontend.md](frontend/docs/especificaciones-frontend.md) · Paleta, tipografía y guía visual en [frontend/docs/diseño.md](frontend/docs/diseño.md).
 
@@ -738,6 +738,9 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make redescubrir-convocatorias` | Relanza el cron para volver a detectar las convocatorias del año en curso, que no están en el dataset |
 | `make backup` | Vuelca la BD a `backups/backup_AAAAMMDD_HHMMSS.sql`, descarta el fichero si el volcado queda incompleto y borra los de más de 30 días (`BACKUP_DIAS` en `docker/.env` para cambiarlo) |
 | `make restore FILE=…` | Restaura una copia. **Sobrescribe la BD actual**, así que pide confirmación y rechaza los volcados truncados |
+| `make informes` | **Informes del servidor**: los genera allí, se los trae a `informes/servidor/` y abre el último en el navegador. `DIAS=30` para otro periodo, `TIPO=goaccess` para el detallado, `ABRIR=no` para solo descargar |
+| `make resumen-visitas` | Resumen **local** en español, de los registros del Docker de desarrollo. Últimos 30 días por defecto (`--dias N` para otro periodo) |
+| `make informe-visitas` | Informe **local** de GoAccess: navegadores, dispositivos, errores y tiempos. Requiere `goaccess` instalado |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
 | `make mailpit` | Abre Mailpit en el navegador (o muestra la URL) |
 | `make uninstall` | Ejecuta `uninstall.sh` para limpiar todo el entorno |
@@ -929,7 +932,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
 - **`robots.txt`, `sitemap.xml` y direcciones canónicas**: el sitemap lista las 6 páginas indexables —ni una menos ni una de más: las legales llevan `noindex` y estar en ambos sitios era contradecirse— y cada una declara su dirección canónica. Pero una etiqueta `canonical` es **una sugerencia**: mientras el servidor devuelva 200 en dos direcciones, Google puede ignorarla, y de hecho lo hizo —llegó a indexar `http://www.subvencionesdgda.org/` como página aparte—. Así que la unificación real la hace Nginx con redirecciones 301: `www` va a la variante sin `www`, y `/index.html` a `/`. `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal. Todo comprobado por tests
-- **Analítica propia sobre los registros de Nginx**, en dos informes: un **resumen en español** (`make resumen-visitas`, ~10 KB, sin dependencias) para el vistazo semanal, y **GoAccess** (`make informe-visitas`) para el detalle. Sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Descuentan robots y **tráfico de centros de datos**, que es la mayor parte de lo que recibe cualquier web pública. Los informes no se publican —llevan direcciones IP— y se consultan por `scp`
+- **Analítica propia sobre los registros de Nginx**, en dos informes: un **resumen en español** (`make resumen-visitas`, ~10 KB, sin dependencias) para el vistazo semanal, y **GoAccess** (`make informe-visitas`) para el detalle. Sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Descuentan robots y **tráfico de centros de datos**, que es la mayor parte de lo que recibe cualquier web pública. Los informes no se publican —llevan direcciones IP— y los del servidor se traen con `make informes`, que los descarga a `informes/servidor/` y los abre en el navegador. Van en carpeta aparte de los locales a propósito: confundir el tráfico real con el propio trasteo lleva a conclusiones falsas
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación

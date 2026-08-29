@@ -100,7 +100,10 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
     var esTactilPrimario = window.matchMedia('(pointer: coarse)').matches;
     _mapaInstancia = L.map('mapa-ccaa', {
         center: [40.2, -3.5], zoom: 5.8,
-        minZoom: 2, maxZoom: 8,   // acotado: por debajo de 2 queda muy lejos y por encima de 8 no aporta
+        // minZoom se recalcula más abajo, en cuanto se sabe el tamaño real del
+        // contenedor: este 2 solo vale para el instante inicial. maxZoom 8
+        // porque por encima el GeoJSON ya no da más detalle.
+        minZoom: 2, maxZoom: 8,
         zoomControl: true, scrollWheelZoom: true, attributionControl: true,
         doubleClickZoom: !esTactilPrimario,
     });
@@ -121,12 +124,18 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         if (el) el.textContent = 'Zoom: ' + Math.round(_mapaInstancia.getZoom() * 10) / 10;
     });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' +
-            ' contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-        subdomains: 'abcd', maxZoom: 19,
-    }).addTo(_mapaInstancia);
+    // SIN mapa base, a propósito. Antes se cargaban las teselas de CARTO, y en
+    // agosto de 2026 empezaron a exigir clave: el mapa pasó a mostrarse cubierto
+    // de marcas de agua «API KEY REQUIRED» sin que aquí hubiera cambiado nada.
+    //
+    // No se sustituye por otro proveedor. Para un mapa de «qué comunidad recibió
+    // cuánto» el fondo no aporta —solo pinta el mar y los países vecinos—, las
+    // comunidades salen del GeoJSON local, y prescindir de él quita de encima
+    // una dependencia externa que puede volver a cambiar de reglas. De paso
+    // evita que el navegador de cada visitante se conecte a un tercero, que es
+    // coherente con lo que la web declara sobre privacidad.
+    //
+    // El fondo del contenedor lo pone el CSS (#mapa-ccaa).
 
     var capaGeojson;
 
@@ -186,13 +195,71 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         _mapaInstancia.fitBounds(capaGeojson.getBounds(), { padding: [8, 8] });
     }
 
+    // Topes de alejamiento y desplazamiento.
+    //
+    // Desde que no hay mapa base, alejarse más allá de donde ya cabe todo no
+    // enseña nada: solo el gris del contenedor, porque alrededor de las
+    // comunidades no queda nada que mirar. Así que el mínimo se calcula, no se
+    // fija a ojo: `getBoundsZoom` devuelve el nivel exacto al que entra la
+    // extensión completa —Canarias incluida, que es la que manda porque queda
+    // muy al suroeste— y se toma ése como suelo.
+    //
+    // Se calcula en vez de codificarlo porque depende del tamaño del
+    // contenedor, y no es el mismo en escritorio (640 px de alto) que en móvil
+    // (400 px). Un número fijo acertaría en uno y fallaría en el otro.
+    var limitesEspana = capaGeojson.getBounds();
+
+    // Se recalcula en CADA cambio de tamaño, no solo al cargar. El contenedor
+    // mide 640, 400 o 320 px de alto según la pantalla (ver #mapa-ccaa en
+    // styles.css), y a menor altura hace falta un zoom MENOR para que quepa lo
+    // mismo. Con un único cálculo inicial, estrechar la ventana desde
+    // escritorio dejaba un mínimo demasiado alto: España ya no cabía y encima
+    // no se podía alejar para verla, que es justo lo contrario de lo que este
+    // tope pretende.
+    function ajustarTopes() {
+        // invalidateSize primero: si el contenedor acaba de cambiar de tamaño,
+        // Leaflet todavía arrastra el anterior y el cálculo saldría mal.
+        _mapaInstancia.invalidateSize(false);
+
+        var zMin = _mapaInstancia.getBoundsZoom(limitesEspana, false, [12, 12]);
+        _mapaInstancia.setMinZoom(zMin);
+        // Margen holgado a propósito. En una pantalla ancha, al zoom mínimo
+        // el mapa abarca más longitud de la que ocupa España —la altura es lo
+        // que limita, no el ancho—, y un margen ajustado quedaría más estrecho
+        // que la propia vista: Leaflet entonces centra y bloquea el arrastre,
+        // que se siente como si el mapa se resistiera. Con 0.5 hay sitio de
+        // sobra y solo actúa cuando de verdad se está perdiendo España de vista.
+        _mapaInstancia.setMaxBounds(limitesEspana.pad(0.5));
+
+        // Si al encoger la ventana el mapa se queda por debajo del nuevo suelo,
+        // se sube. Leaflet ya lo hace en `setMinZoom`, pero dejarlo explícito
+        // evita depender de un detalle de su implementación.
+        if (_mapaInstancia.getZoom() < zMin) _mapaInstancia.setZoom(zMin);
+    }
+
+    ajustarTopes();
+
+    // Con retardo: al arrastrar el borde de la ventana, `resize` se dispara
+    // decenas de veces por segundo, y recalcular en cada una haría dar saltos
+    // al mapa. El mapa se crea una sola vez (`if (_mapaInstancia) return` al
+    // principio), así que este escuchador no se duplica.
+    var temporizadorTopes;
+    window.addEventListener('resize', function() {
+        clearTimeout(temporizadorTopes);
+        temporizadorTopes = setTimeout(ajustarTopes, 200);
+    });
+
     // Solo móvil: 1 toque = info centrada; 2 toques = modal
     if (esTactilPrimario) {
         var hintEl   = document.querySelector('.mapa-ccaa-hint');
         var hintBase = hintEl ? hintEl.textContent : '';
         var ultimoToque = { layer: null, tiempo: 0 };
         var timerInfo = null;
-        var DOBLE_TOQUE_MS = 400;
+        // 600 ms, no 400: quien no sabe que hay que tocar dos veces lo hace
+        // despacio, y con el umbral corto sus dos toques contaban como dos
+        // toques sueltos. El botón de la caja es ahora la vía principal;
+        // esto solo hace más tolerante el atajo.
+        var DOBLE_TOQUE_MS = 600;
 
         // Caja de info centrada — reemplaza el tooltip de Leaflet en móvil
         var infoBox = document.createElement('div');
@@ -202,11 +269,30 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         wrapper.appendChild(infoBox);
 
         function mostrarInfo(layer, datos) {
-            infoBox.innerHTML = datos
-                ? '<strong>' + layer.feature.properties.name + '</strong><br>'
+            var nombre = layer.feature.properties.name;
+            infoBox.innerHTML = (datos
+                ? '<strong>' + nombre + '</strong><br>'
                   + 'Importe: ' + fmtEuro(datos.importe_total) + '<br>'
                   + 'Concesiones: ' + datos.num_concesiones.toLocaleString('es-ES')
-                : '<strong>' + layer.feature.properties.name + '</strong><br>Sin subvenciones';
+                : '<strong>' + nombre + '</strong><br>Sin subvenciones')
+                // Botón explícito. El doble toque sigue funcionando, pero es un
+                // gesto que nadie adivina: sin esto, en móvil la única forma de
+                // llegar al detalle era una interacción oculta, y quedaba menos
+                // información que en escritorio pulsando una vez.
+                + '<button type="button" class="mapa-info-central__ver">'
+                + 'Ver top de municipios →</button>';
+
+            var boton = infoBox.querySelector('.mapa-info-central__ver');
+            boton.addEventListener('click', function(ev) {
+                ev.stopPropagation();
+                clearTimeout(timerInfo);
+                ocultarInfo();
+                capaGeojson.resetStyle(layer);
+                ultimoToque = { layer: null, tiempo: 0 };
+                if (hintEl) hintEl.textContent = hintBase;
+                if (typeof onClickCCAA === 'function') onClickCCAA(nombre);
+            });
+
             infoBox.style.display = 'block';
         }
 
@@ -239,7 +325,7 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
                     clearTimeout(timerInfo);
                     onMouseOver({ target: layer });
                     mostrarInfo(layer, datosCCAA);
-                    if (hintEl) hintEl.textContent = 'Doble toque para ver el top de municipios.';
+                    if (hintEl) hintEl.textContent = 'Pulsa «Ver top de municipios» para el detalle.';
                     ultimoToque = { layer: layer, tiempo: ahora };
                     timerInfo = setTimeout(function() {
                         ocultarInfo();
