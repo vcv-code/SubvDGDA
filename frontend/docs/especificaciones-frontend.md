@@ -2675,3 +2675,37 @@ proveedor. Tres motivos, por orden de peso:
 **Tests:** `tests/test_mapa_ccaa.py` impide que vuelva a entrar un `L.tileLayer`
 o cualquier proveedor de teselas, y comprueba que las comunidades siguen
 saliendo del fichero local y que el contenedor conserva color de fondo.
+
+---
+
+## Acceso al detalle del mapa en móvil
+
+**Qué pasaba.** En escritorio, pasar el ratón muestra el importe y un clic abre
+el top de municipios. En móvil no hay ratón, así que se resolvió con un toque
+para la información y un **doble toque** para el modal, avisado con un texto
+bajo el título.
+
+Funcionaba. El problema es otro: **la propia autora del mapa no descubrió el
+gesto** al probarlo, porque no leyó el aviso. Si le ocurre a quien lo construyó,
+le ocurre a cualquiera. Nadie lee las instrucciones de una web.
+
+Y el coste era desigual: en escritorio se llega al detalle con un clic, y en
+móvil hacía falta conocer un gesto oculto. Quien no lo supiera se quedaba con
+menos información y sin pista de cómo obtener el resto.
+
+**Qué se hizo.** Un botón visible **«Ver top de municipios →»** dentro de la
+caja de información que ya aparecía al tocar. El doble toque **se conserva**
+como atajo para quien lo conozca, con el umbral ampliado de 400 a 600 ms: quien
+no sabe que hay que tocar rápido lo hace despacio, y sus dos toques contaban
+como dos toques sueltos.
+
+El aviso permanente pasa de «Toca para ver el importe · Doble toque para ver el
+top de municipios» a «Toca una comunidad para ver su importe y llegar al
+detalle»: ya no hay que explicar un gesto, porque la acción está a la vista.
+
+**Un fallo latente que salió al hacerlo.** `.mapa-info-central` lleva
+`pointer-events: none` para que los toques atraviesen la caja y lleguen al mapa
+—sin eso, tocar otra comunidad mientras está abierta no haría nada—. Cualquier
+botón dentro de ella **hereda ese `none` y queda inerte**. El botón necesita
+`pointer-events: auto` explícito, y hay un test que lo comprueba, porque es un
+fallo que no da error: simplemente no pasa nada al pulsar.

@@ -255,7 +255,11 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         var hintBase = hintEl ? hintEl.textContent : '';
         var ultimoToque = { layer: null, tiempo: 0 };
         var timerInfo = null;
-        var DOBLE_TOQUE_MS = 400;
+        // 600 ms, no 400: quien no sabe que hay que tocar dos veces lo hace
+        // despacio, y con el umbral corto sus dos toques contaban como dos
+        // toques sueltos. El botón de la caja es ahora la vía principal;
+        // esto solo hace más tolerante el atajo.
+        var DOBLE_TOQUE_MS = 600;
 
         // Caja de info centrada — reemplaza el tooltip de Leaflet en móvil
         var infoBox = document.createElement('div');
@@ -265,11 +269,30 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
         wrapper.appendChild(infoBox);
 
         function mostrarInfo(layer, datos) {
-            infoBox.innerHTML = datos
-                ? '<strong>' + layer.feature.properties.name + '</strong><br>'
+            var nombre = layer.feature.properties.name;
+            infoBox.innerHTML = (datos
+                ? '<strong>' + nombre + '</strong><br>'
                   + 'Importe: ' + fmtEuro(datos.importe_total) + '<br>'
                   + 'Concesiones: ' + datos.num_concesiones.toLocaleString('es-ES')
-                : '<strong>' + layer.feature.properties.name + '</strong><br>Sin subvenciones';
+                : '<strong>' + nombre + '</strong><br>Sin subvenciones')
+                // Botón explícito. El doble toque sigue funcionando, pero es un
+                // gesto que nadie adivina: sin esto, en móvil la única forma de
+                // llegar al detalle era una interacción oculta, y quedaba menos
+                // información que en escritorio pulsando una vez.
+                + '<button type="button" class="mapa-info-central__ver">'
+                + 'Ver top de municipios →</button>';
+
+            var boton = infoBox.querySelector('.mapa-info-central__ver');
+            boton.addEventListener('click', function(ev) {
+                ev.stopPropagation();
+                clearTimeout(timerInfo);
+                ocultarInfo();
+                capaGeojson.resetStyle(layer);
+                ultimoToque = { layer: null, tiempo: 0 };
+                if (hintEl) hintEl.textContent = hintBase;
+                if (typeof onClickCCAA === 'function') onClickCCAA(nombre);
+            });
+
             infoBox.style.display = 'block';
         }
 
@@ -302,7 +325,7 @@ async function pintarMapaCCAA(porCcaa, onClickCCAA) {
                     clearTimeout(timerInfo);
                     onMouseOver({ target: layer });
                     mostrarInfo(layer, datosCCAA);
-                    if (hintEl) hintEl.textContent = 'Doble toque para ver el top de municipios.';
+                    if (hintEl) hintEl.textContent = 'Pulsa «Ver top de municipios» para el detalle.';
                     ultimoToque = { layer: layer, tiempo: ahora };
                     timerInfo = setTimeout(function() {
                         ocultarInfo();

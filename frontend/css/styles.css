@@ -5218,9 +5218,36 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
     font-size:        0.78rem;
     line-height:      1.5;
     color:            var(--color-negro);
+    /* La caja deja pasar los toques al mapa que hay debajo: si los capturara,
+       tocar otra comunidad mientras está abierta no haría nada. El botón de
+       dentro sí los recibe — ver la regla siguiente. */
     pointer-events:   none;
     text-align:       center;
     white-space:      nowrap;
+}
+
+/* Única parte interactiva de la caja. Sin `pointer-events: auto` el botón
+   heredaría el `none` del contenedor y no respondería a nada, que es justo el
+   fallo que tenía la primera versión de este botón. */
+.mapa-info-central__ver {
+    pointer-events:   auto;
+    display:          block;
+    margin:           7px auto 0;
+    padding:          6px 10px;
+    border:           1px solid var(--color-verde-btn);
+    border-radius:    6px;
+    background:       var(--color-verde-btn);
+    color:            #fff;
+    font-family:      inherit;
+    font-size:        0.78rem;
+    font-weight:      600;
+    cursor:           pointer;
+    /* 32px de alto mínimo: por debajo, el objetivo queda incómodo para un dedo. */
+    min-height:       32px;
+}
+
+.mapa-info-central__ver:active {
+    background:       var(--color-verde-tabla);
 }
 
 #mapa-ccaa {

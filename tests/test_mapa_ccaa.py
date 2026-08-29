@@ -65,3 +65,40 @@ def test_el_contenedor_del_mapa_tiene_fondo_propio():
     bloque = css[css.index("#mapa-ccaa {"):]
     bloque = bloque[:bloque.index("}")]
     assert "background-color" in bloque
+
+
+# ─────────────────────────────────────────────
+# Acceso al detalle en móvil
+# En escritorio basta un clic para abrir el top de municipios. En móvil la única
+# vía era un DOBLE TOQUE, un gesto que nadie adivina: se veía menos información
+# que en escritorio y sin pista de cómo llegar al resto.
+# ─────────────────────────────────────────────
+
+def test_la_caja_de_info_movil_ofrece_un_boton_al_detalle():
+    from pathlib import Path
+    js = Path("frontend/js/mapa-ccaa.js").read_text(encoding="utf-8")
+    assert "mapa-info-central__ver" in js
+    assert "Ver top de municipios" in js
+
+
+def test_el_boton_del_mapa_es_pulsable():
+    """La caja lleva `pointer-events: none` para que los toques lleguen al mapa.
+
+    El botón heredaría ese `none` y no respondería a nada: necesita `auto`
+    explícito. La primera versión de este botón tenía justo ese fallo.
+    """
+    from pathlib import Path
+    css = Path("frontend/css/styles.css").read_text(encoding="utf-8")
+    bloque = css[css.index(".mapa-info-central__ver {"):]
+    bloque = bloque[:bloque.index("}")]
+    assert "pointer-events" in bloque and "auto" in bloque
+
+
+def test_el_doble_toque_sigue_valiendo_como_atajo():
+    """Se mantiene, pero con un umbral más tolerante: 400 ms era exigente para
+    quien no sabe que tiene que tocar rápido."""
+    import re
+    from pathlib import Path
+    js = Path("frontend/js/mapa-ccaa.js").read_text(encoding="utf-8")
+    ms = int(re.search(r"DOBLE_TOQUE_MS = (\d+)", js).group(1))
+    assert ms >= 500, f"umbral de doble toque demasiado corto: {ms} ms"
