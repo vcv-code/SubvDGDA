@@ -5613,66 +5613,212 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 .recursos-bloque--colonias       { background: #E1EEF9; }  /* azul pastel */
 .recursos-bloque--especializadas { background: #ECE6F6; }  /* lila pastel */
 .recursos-bloque--campanas       { background: #FCE4EC; }  /* rosa pastel */
-.recursos-bloque--guias          { background: #FBF0DC; }  /* crema pastel */
+.recursos-bloque--guias          { background: #FFFFFF; }  /* blanco: es la lista más larga y el color cansaba */
+/* Melocotón: recoge el naranja del propio estudio, así el bloque y el sitio al
+   que enlaza se reconocen. OJO si se añaden enlaces dentro: el verde de enlace
+   (#2E7D32) sobre este fondo da 4,1:1, por debajo del mínimo de 4,5:1. El
+   enlace del título no lo sufre porque hereda el negro (12,8:1). */
+.recursos-bloque--estudio        { background: #FBE0CE; }
 
-/* ── Tarjeta de guía o documento ──
-   El resto de la página son tarjetas de ORGANIZACIONES, con su logo. Estas
-   son documentos y artículos, que no tienen logo propio: forzarlos al mismo
-   molde habría obligado a repetir el logo de quien los publica. Aquí manda
-   el título, que es lo que se busca al mirar una lista de lecturas. */
-.card-guia {
-    background: #ffffff;
-    border-radius: var(--radio-card);
-    box-shadow: var(--sombra-card);
-    padding: var(--espacio-md);
+/* Cabecera del estudio: el logo y el título son un solo enlace. El título va
+   dentro de un <a> para que se pueda pulsar entero —logo incluido—, ya que al
+   quitar el subtítulo este es el único acceso al estudio. */
+.recursos-bloque__titulo a {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    color: inherit;
+    text-decoration: none;
 }
 
-.card-guia__tipo {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var(--color-verde-tabla);
-    margin: 0;
-}
-
-.card-guia__titulo {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.35;
-}
-
-.card-guia__titulo a {
-    color: var(--color-negro);
+.recursos-bloque__titulo a:hover span,
+.recursos-bloque__titulo a:focus-visible span {
     text-decoration: underline;
     text-underline-offset: 3px;
 }
 
-.card-guia__titulo a:hover {
-    color: var(--color-verde-btn);
+/* Altura fija y ancho automático: el logo es apaisado (262x73) y fijarle el
+   ancho lo deformaría en cuanto cambie el original. `flex-shrink: 0` evita que
+   se aplaste cuando el título ocupa varias líneas en pantalla estrecha. */
+.recursos-bloque__logo {
+    height: 34px;
+    width: auto;
+    flex-shrink: 0;
 }
 
-.card-guia__descripcion {
-    margin: 0;
+.recursos-estudio__texto {
+    margin: 0 0 10px;
     font-size: 0.9375rem;
-    line-height: 1.5;
+    line-height: 1.55;
 }
 
-/* Los <a> globales van sin subrayado y con color heredado, así que dentro de
-   un párrafo pasarían por texto corriente. Aquí hay enlaces a organismos en
-   mitad de la frase y tienen que verse pulsables. */
-.card-guia__descripcion a {
+.recursos-estudio__texto:last-child {
+    margin-bottom: 0;
+}
+
+/* Las cifras del estudio, en lista: son datos sueltos y comparables entre sí,
+   y en párrafo corrido se pierden unos entre otros. */
+.recursos-estudio__datos {
+    margin: 0 0 10px;
+    padding-left: 1.15rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+}
+
+.recursos-estudio__datos li {
+    margin-bottom: 5px;
+}
+
+.recursos-estudio__datos li:last-child {
+    margin-bottom: 0;
+}
+
+/* Guion en vez de punto: la lista son datos con su matiz al lado, no una
+   enumeración de elementos sueltos, y el guion se lee como una raya de
+   apertura. Si un navegador antiguo no entiende `content` en `::marker`,
+   vuelve al punto de siempre: se ve distinto, pero se lee igual. */
+/* Cierre de la portada: qué exige la ley y qué falta. Texto corrido, sin
+   tarjetas ni cifras destacadas: aquí lo que importa es el razonamiento
+   encadenado, y trocearlo en bloques lo rompería.
+
+   Fondo propio y NO `.fondo-crema`, aunque el color sea el mismo: aquella
+   clase lleva `min-height: calc(100vh - altura-nav)` porque la pensaron para
+   la sección del resumen, que tiene una tabla grande. Aplicada a una sección
+   de solo texto, la estira hasta ocupar una pantalla entera y deja medio
+   hueco en blanco debajo. */
+.seccion-estadistica {
+    background-color: var(--hero-crema, #FAF4EE);
+}
+
+/* La barra de navegación es `position: fixed`, así que al saltar a un ancla el
+   destino queda DEBAJO de ella y no se ve. `scroll-margin-top` reserva ese
+   hueco al desplazarse. Hasta ahora el único ancla interno era el enlace de
+   «saltar al contenido», que precisamente quiere quedar arriba del todo; el
+   enlace de la portada a «Recursos» fue el primero que lo destapó. */
+h2[id],
+h3[id],
+section[id] {
+    scroll-margin-top: calc(var(--altura-nav) + 12px);
+}
+
+.estadistica-texto p {
+    margin: 0 0 12px;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.estadistica-texto p:last-child {
+    margin-bottom: 0;
+}
+
+/* Los <a> globales van sin subrayado y con color heredado, así que en mitad de
+   un párrafo pasarían por texto corriente. */
+.estadistica-texto a {
     color: var(--color-verde-btn);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-.card-guia__descripcion a:hover {
+.estadistica-texto a:hover,
+.estadistica-texto a:focus-visible {
+    color: var(--color-hover);
+}
+
+.recursos-estudio__datos li::marker {
+    content: "— ";
+    color: var(--color-verde-tabla);
+}
+
+/* ── Tarjeta de guía o documento ──
+   El resto de la página son tarjetas de ORGANIZACIONES, con su logo. Estas
+   son documentos y artículos, que no tienen logo propio: forzarlos al mismo
+   molde habría obligado a repetir el logo de quien los publica. Aquí manda
+   el título, que es lo que se busca al mirar una lista de lecturas. */
+/* Guías y documentos útiles.
+   Listado, no tarjetas: se leen en fila y la lista va a crecer, así que el
+   título enlazado seguido de su descripción se recorre más rápido que una
+   rejilla. Sin fondo ni sombra —no son fichas, son entradas de un índice—,
+   separadas por una línea fina que basta para agruparlas visualmente. */
+/* Guías y documentos útiles.
+   Cada entrada es UN PÁRRAFO: título enlazado, dos puntos y la descripción
+   seguida. No van en tarjetas ni con etiqueta de tipo porque la sección
+   ocupaba demasiado para lo que aporta —son enlaces con contexto, no fichas—
+   y porque la lista está pensada para crecer. */
+.lista-documentos {
+    /* Con viñeta, no sin ella: cada entrada ocupa varias líneas —y una de
+       ellas, varios párrafos—, así que sin marca visible cuesta ver dónde
+       acaba una y empieza la siguiente. Se usa viñeta y no numeración porque
+       el orden va de lo general a lo concreto, no es una secuencia de pasos ni
+       una clasificación: numerarlas sugeriría una prioridad que no existe. */
+    list-style: disc;
+    margin: 0;
+    padding-left: 1.15rem;
+}
+
+.lista-documentos::marker,
+.lista-documentos__item::marker {
+    color: var(--color-verde-tabla);
+}
+
+.lista-documentos__item {
+    margin-bottom: var(--espacio-sm);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    /* Sin `max-width`. Se probó con 72ch por legibilidad, pero el bloque mide
+       hasta 1.130 px y el texto se quedaba a media anchura, dejando medio
+       recuadro de color vacío: chirriaba más que la línea larga que evitaba.
+       El resto de la página tampoco acota el texto dentro de estos bloques. */
+}
+
+.lista-documentos__item:last-child {
+    margin-bottom: 0;
+}
+
+/* Una entrada puede llevar párrafos sueltos cuando lo que explica no cabe en
+   una frase —el procedimiento de transparencia cambia según la Administración,
+   y resumirlo llevaba a reclamar donde no toca—. Separación menor que entre
+   entradas, para que se lean como partes de la misma y no como documentos
+   distintos. */
+.lista-documentos__item p {
+    margin: 8px 0 0;
+}
+
+/* Las entradas con párrafos necesitan más aire por debajo, o la siguiente
+   parece continuación de la última línea en vez de una entrada nueva.
+   `:has()` no lo entienden los navegadores anteriores a 2023; ahí la entrada
+   queda con la separación normal, que es solo algo más justa. Degrada bien. */
+.lista-documentos__item:has(p) {
+    margin-bottom: var(--espacio-md);
+}
+
+/* En línea, no en bloque: el título y su descripción forman una sola frase. */
+.lista-documentos__titulo {
+    font-weight: 700;
+    color: var(--color-negro);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.lista-documentos__titulo:hover,
+.lista-documentos__titulo:focus-visible {
+    color: var(--color-verde-btn);
+}
+
+/* Los <a> globales van sin subrayado y con color heredado, así que dentro de
+   un párrafo pasarían por texto corriente. Aquí hay enlaces a organismos en
+   mitad de la frase y tienen que verse pulsables. Se distinguen del título por
+   el color, ya que el peso y el subrayado los comparten. */
+.lista-documentos__item a:not(.lista-documentos__titulo) {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.lista-documentos__item a:not(.lista-documentos__titulo):hover,
+.lista-documentos__item a:not(.lista-documentos__titulo):focus-visible {
     color: var(--color-hover);
 }
 
@@ -5750,6 +5896,27 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 @media (max-width: 600px) {
     .grid-recursos {
         grid-template-columns: 1fr;
+    }
+}
+
+/* En pantalla estrecha, el título del estudio compite con su logo: a 320 px
+   solo quedan unos 90 px a la derecha del logo, así que el texto baja de línea
+   —lo permite el `flex-wrap`— y a 1,2 rem ocuparía cuatro líneas en negrita.
+   Se reducen ambos: el título a 1,05 rem y el logo a 28 px de alto. Los demás
+   bloques tienen títulos cortos y no lo notan. */
+@media (max-width: 600px) {
+    .recursos-bloque__titulo {
+        font-size: 1.05rem;
+    }
+
+    .recursos-bloque__logo {
+        height: 28px;
+    }
+
+    /* Menos sangrado: cada píxel cuenta cuando el texto ya va justo. */
+    .lista-documentos,
+    .recursos-estudio__datos {
+        padding-left: 1rem;
     }
 }
 
