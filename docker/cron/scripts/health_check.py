@@ -32,6 +32,16 @@ from email.utils import formataddr
 
 import requests
 
+# Los contenedores van en UTC y el planificador depende de ello, así que NO se
+# cambia la zona del contenedor: solo se traduce la hora que sale en el correo.
+# Un aviso que dice «12:00» cuando el reloj de quien lo lee marca las 14:00
+# obliga a hacer cuentas justo cuando menos apetece.
+try:
+    from zoneinfo import ZoneInfo
+    ZONA = ZoneInfo("Europe/Madrid")
+except Exception:      # sin tzdata en la imagen
+    ZONA = None
+
 BACKEND_URL = os.environ.get("BACKEND_INTERNAL_URL", "http://backend:8000")
 # Configurable para poder probar el script fuera del contenedor: dentro, la
 # ruta por defecto es la de siempre.
@@ -52,21 +62,28 @@ EMAIL_FROM = os.environ.get("EMAIL_FROM", "avisos@localhost")
 EMAIL_AVISOS = os.environ.get("EMAIL_AVISOS", "")
 SITE_URL = os.environ.get("SITE_URL", "")
 
+_FORMATO = logging.Formatter(
+    "%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+)
+log = logging.getLogger("health_check")
+log.setLevel(logging.INFO)
+
+# Salida por pantalla siempre: es la que recoge el log del contenedor.
+_consola = logging.StreamHandler(sys.stdout)
+_consola.setFormatter(_FORMATO)
+log.addHandler(_consola)
+
+# Y al fichero, SI SE PUEDE. Que no se pueda no debe tumbar el script: el disco
+# lleno es una causa clásica de caída, y sería absurdo que precisamente
+# entonces muriera lo único que iba a avisar de ella. Antes esto reventaba con
+# FileNotFoundError antes siquiera de comprobar nada.
 try:
     os.makedirs(LOG_DIR, exist_ok=True)
-except OSError:
-    # Sin poder escribir el log, la comprobación sigue teniendo sentido: lo que
-    # importa es que el aviso salga.
-    pass
-
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-log = logging.getLogger()
-log.addHandler(logging.StreamHandler(sys.stdout))
+    _fichero = logging.FileHandler(LOG_FILE, encoding="utf-8")
+    _fichero.setFormatter(_FORMATO)
+    log.addHandler(_fichero)
+except OSError as _e:
+    log.warning("No se puede escribir %s (%s); solo saldrá por pantalla", LOG_FILE, _e)
 
 
 def leer_estado():
@@ -79,7 +96,10 @@ def leer_estado():
     try:
         with open(ESTADO_FILE, encoding="utf-8") as f:
             return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except (OSError, json.JSONDecodeError):
+        # OSError y no solo FileNotFoundError: «no es un directorio», «permiso
+        # denegado» o «disco lleno» son hermanos suyos, no descendientes, y se
+        # escapaban. Justo los casos en los que hay que avisar.
         return {"caido": False, "desde": None, "avisado": False}
 
 
@@ -125,25 +145,56 @@ def enviar_aviso(asunto, cuerpo):
         return False
 
 
-def comprobar():
-    """Devuelve (ok, motivo). El motivo se usa en el correo."""
+def ahora_local():
+    """La hora tal como la ve quien recibe el aviso."""
+    momento = datetime.now(ZONA) if ZONA else datetime.utcnow()
+    sufijo = "" if ZONA else " UTC"
+    return momento.strftime("%d/%m/%Y a las %H:%M") + sufijo
+
+
+def _pedir(ruta, descripcion):
+    """Una petición, traduciendo los fallos a un motivo legible."""
     try:
-        resp = requests.get(f"{BACKEND_URL}/health", timeout=10)
+        resp = requests.get(f"{BACKEND_URL}{ruta}", timeout=10)
         if resp.status_code == 200:
-            return True, f"Backend OK — {resp.json()}"
-        return False, f"El backend respondió {resp.status_code}"
+            return True, None
+        return False, f"{descripcion} respondió {resp.status_code}"
     except requests.exceptions.ConnectionError:
-        return False, "El backend no es accesible: conexión rechazada"
+        return False, f"{descripcion} no es accesible: conexión rechazada"
     except requests.exceptions.Timeout:
-        return False, "El backend no respondió en 10 segundos"
+        return False, f"{descripcion} no respondió en 10 segundos"
     except Exception as e:
-        return False, f"Error inesperado al comprobar: {e}"
+        return False, f"Error inesperado al comprobar {descripcion.lower()}: {e}"
+
+
+def comprobar():
+    """Devuelve (ok, motivo). El motivo se usa en el correo.
+
+    Se comprueban DOS cosas, y la segunda es la que de verdad importa:
+
+      /health          dice si el proceso está vivo, y nada más: devuelve
+                       {"status": "ok"} sin tocar la base de datos.
+      /convocatorias/  recorre el camino completo hasta MariaDB.
+
+    Con solo la primera, una base de datos caída pasaba desapercibida: el
+    backend seguía respondiendo «ok» mientras la web mostraba las páginas
+    vacías, que para quien la visita es exactamente igual de inservible.
+    """
+    vivo, motivo = _pedir("/health", "El backend")
+    if not vivo:
+        return False, motivo
+
+    datos, motivo = _pedir("/convocatorias/", "La API de datos")
+    if not datos:
+        return False, f"{motivo} (el proceso sí responde: falla el acceso a los datos)"
+
+    return True, "Backend y datos OK"
 
 
 def main():
     ok, motivo = comprobar()
     estado = leer_estado()
-    ahora = datetime.now().strftime("%d/%m/%Y a las %H:%M")
+    ahora = ahora_local()
 
     if ok:
         log.info(motivo)

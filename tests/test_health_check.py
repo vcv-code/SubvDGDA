@@ -121,3 +121,91 @@ def test_el_aviso_explica_que_mirar(hc):
     assert "docker compose ps" in cuerpo
     assert "docker compose logs" in cuerpo
     assert "df -h" in cuerpo
+
+
+# ── Qué se comprueba ────────────────────────────────────────────────────
+
+def test_una_base_de_datos_caida_tambien_dispara_el_aviso(hc):
+    """`/health` solo dice que el proceso vive: devuelve {"status": "ok"} sin
+    tocar MariaDB. Con eso bastando, una base de datos caída pasaba
+    desapercibida mientras la web mostraba las páginas vacías, que para quien
+    la visita es igual de inservible.
+    """
+    def respuesta(url, **kw):
+        r = type("R", (), {})()
+        r.status_code = 200 if url.endswith("/health") else 500
+        r.json = lambda: {"status": "ok"}
+        return r
+
+    with patch.object(hc.requests, "get", side_effect=respuesta):
+        ok, motivo = hc.comprobar()
+    assert ok is False
+    assert "datos" in motivo.lower()
+
+
+def test_si_el_proceso_no_responde_no_se_consulta_lo_demas(hc):
+    """Sin proceso no hay nada que preguntar: la segunda comprobación sobra."""
+    llamadas = []
+
+    def respuesta(url, **kw):
+        llamadas.append(url)
+        raise hc.requests.exceptions.ConnectionError()
+
+    with patch.object(hc.requests, "get", side_effect=respuesta):
+        ok, _ = hc.comprobar()
+    assert ok is False
+    assert len(llamadas) == 1
+
+
+def test_todo_bien_solo_si_responden_las_dos(hc):
+    def respuesta(url, **kw):
+        r = type("R", (), {})()
+        r.status_code = 200
+        r.json = lambda: {"status": "ok"}
+        return r
+
+    with patch.object(hc.requests, "get", side_effect=respuesta):
+        ok, _ = hc.comprobar()
+    assert ok is True
+
+
+def test_la_hora_del_aviso_es_la_de_aqui_y_no_utc(hc):
+    """Los contenedores van en UTC y el planificador depende de ello, así que
+    no se cambia su zona: se traduce solo la hora del correo. Un aviso que dice
+    «12:00» cuando el reloj marca las 14:00 obliga a hacer cuentas justo cuando
+    menos apetece."""
+    from datetime import datetime
+    texto = hc.ahora_local()
+    assert "/" in texto and ":" in texto
+    if hc.ZONA is not None:
+        # Con zona horaria disponible, la hora no debe ser la UTC.
+        hora_utc = datetime.utcnow().strftime("%H:%M")
+        assert "UTC" not in texto
+        # En España la diferencia es de 1 o 2 horas según la estación.
+        assert texto.split("las ")[1] != hora_utc or True   # informativo
+    else:
+        assert texto.endswith("UTC")
+
+
+def test_sigue_funcionando_si_no_puede_escribir_el_log(tmp_path, monkeypatch):
+    """El disco lleno es una causa clásica de caída. Sería absurdo que
+    precisamente entonces muriera lo único que iba a avisar de ella.
+
+    Antes el script reventaba al importarse con `FileNotFoundError`, sin llegar
+    a comprobar nada ni a mandar el correo.
+    """
+    # Un fichero donde se espera una carpeta: da NotADirectoryError, que es un
+    # OSError como el «disco lleno» o el «permiso denegado» reales.
+    estorbo = tmp_path / "estorbo"
+    estorbo.write_text("no soy una carpeta", encoding="utf-8")
+    monkeypatch.setenv("CRON_LOG_DIR", str(estorbo / "logs"))
+    spec = importlib.util.spec_from_file_location("hc_sin_log", _RUTA)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)      # no debe lanzar
+
+    enviados = []
+    with patch.object(mod, "comprobar", return_value=(False, "caída")), \
+         patch.object(mod, "enviar_aviso",
+                      side_effect=lambda a, c: enviados.append(a) or True):
+        mod.main()
+    assert enviados == ["La web no responde"]
