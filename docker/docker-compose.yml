@@ -45,6 +45,11 @@ services:
   backend:
     build: ../backend
     container_name: bdns_api
+    # Sin esto, si el proceso muere Docker lo deja muerto. Era el ÚNICO
+    # servicio que no la tenía, y en septiembre de 2026 costó dos días de web
+    # caída: el backend murió, nadie lo levantó, y Nginx —que sí reinicia— se
+    # quedó en bucle porque no podía resolver el nombre «backend».
+    restart: unless-stopped
     environment:
       DB_HOST: db
       DB_PORT: 3306
@@ -103,7 +108,13 @@ services:
       - ../frontend:/usr/share/nginx/html:ro
       - ../logs/nginx:/var/log/nginx
     depends_on:
-      - backend
+      # `condition: service_healthy`, no la forma corta. La lista simple solo
+      # espera a que el contenedor EXISTA; Nginx arrancaba antes de que el
+      # backend respondiera, no podía resolverlo y moría con
+      # «host not found in upstream "backend"». Ahora espera a que su
+      # healthcheck pase.
+      backend:
+        condition: service_healthy
     healthcheck:
       # /healthz es un endpoint propio de Nginx (no pasa por el backend),
       # responde 200 "ok" sin redirigir a HTTPS. Verifica que Nginx vive.
@@ -127,6 +138,19 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       BACKEND_INTERNAL_URL: http://backend:8000
+      # Correo saliente, para avisar de una caída. Mismos valores que el
+      # backend: sin nada en .env apuntan a Mailpit y el aviso se queda en
+      # local, que es lo que se quiere en desarrollo.
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_TLS: ${SMTP_TLS:-false}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      # A dónde llegan los avisos. Si no se define, al correo de contacto, que
+      # es el que se lee.
+      EMAIL_AVISOS: ${EMAIL_AVISOS:-${EMAIL_CONTACTO:-}}
+      SITE_URL: ${SITE_URL:-}
     volumes:
       # Toda la carpeta de logs, no solo la del cron: rotar_logs.py necesita
       # ver también los de nginx y los del backend. Las rutas que ya usaban

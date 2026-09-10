@@ -3,7 +3,7 @@
 scheduler.py — Scheduler de tareas cron para el servicio BDNS/DGDA.
 
 Implementa la misma lógica que el crontab original:
-  · health_check.py — 0 */6 * * *    (00:00, 06:00, 12:00, 18:00 UTC)
+  · health_check.py — */30 * * * *   (cada media hora; avisa por correo al caer y al volver)
   · check_bdns.py   — Temporada convocatorias (marzo–junio):
                       0 8 */4 3 *    (marzo:   días 1,5,9,…)
                       0 8 */2 4 *    (abril:   días 1,3,5,…)
@@ -37,8 +37,18 @@ def _jobs_for(dt: datetime) -> list[str]:
     jobs: list[str] = []
     h, m, d, mo = dt.hour, dt.minute, dt.day, dt.month
 
-    # 0 */6 * * *  →  00:00, 06:00, 12:00, 18:00 UTC
-    if m == 0 and h % 6 == 0:
+    # */30 * * * *  →  cada media hora, en el minuto 0 y en el 30.
+    #
+    # Antes iba cada 6 horas, que basta para dejar constancia en el log pero no
+    # para enterarse de una caída: en el peor caso pasaban seis horas antes de
+    # que se registrara siquiera. Desde que el script AVISA por correo, la
+    # frecuencia es lo que separa enterarse en media hora de enterarse en dos
+    # días, que es lo que ocurrió en septiembre de 2026.
+    #
+    # Media hora y no cinco minutos porque el aviso solo se manda cuando el
+    # estado CAMBIA: comprobar más a menudo no adelantaría gran cosa y llenaría
+    # el log de líneas que nadie va a leer.
+    if m in (0, 30):
         jobs.append("health_check.py")
 
     # 0 8 */N M *  →  08:00 UTC en días (d-1)%N==0 del mes M
