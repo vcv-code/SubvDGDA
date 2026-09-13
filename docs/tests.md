@@ -26,7 +26,7 @@ def test_check_bdns_corre_en_marzo_cada_4_dias(day):
 
 Esa es **una función**, pero pytest la ejecuta 8 veces (una por cada día) y reporta 8 PASSED. `@pytest.mark.parametrize` es una técnica estándar de pytest para evitar duplicar código de test cuando solo cambian los datos de entrada.
 
-Solo `test_scheduler.py` usa `parametrize`. Los otros 22 archivos tienen una correspondencia 1:1 entre funciones de test y ejecuciones.
+Solo `test_scheduler.py` usa `parametrize`. Los otros 23 archivos tienen una correspondencia 1:1 entre funciones de test y ejecuciones.
 
 ---
 
@@ -102,7 +102,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_solicitudes.py` | 22 | 22 | Buscador: filtros, paginación, búsqueda, export CSV y **causas de exclusión** (filtro por token, catálogo `/solicitudes/causas`) |
 | `test_estadisticas.py` | 37 | 37 | `/estadisticas/`, `/epas`, `/eell`: cálculos, umbrales, tramos, recurrencia, **exclusiones** y **resumen por convocatoria** (público + privado protegido) |
 | `test_agrupaciones.py` | 7 | 7 | `GET /agrupaciones/{id}`: miembros de agrupaciones EELL |
-| `test_avisos.py` | 10 | 10 | `/avisos/`: convocatorias del año en curso sin resolución |
+| `test_avisos.py` | 11 | 11 | `/avisos/`: convocatorias del año en curso sin resolución |
 | `test_cache_headers.py` | 4 | 4 | Cabeceras `Cache-Control` en los endpoints públicos |
 | `test_auth.py` | 10 | 10 | Login, JWT y validación de contraseña (el alta vive en `test_admin.py`) |
 | `test_refresh_token.py` | 7 | 7 | Rotación y revocación del refresh token |
@@ -112,20 +112,25 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_admin.py` | 46 | 46 | Panel admin: **alta de usuarios**, listado paginado, cambio de rol/activo, logs de la app y del cron |
 | `test_contacto.py` | 9 | 9 | Formulario de contacto: honeypot, rate limiting, validación, error SMTP |
 | `test_despliegue_secretos.py` | 10 | 10 | Despliegue con secretos propios: credenciales fuera de los ficheros versionados y puertos de administración solo en local |
-| `test_smtp_config.py` | 16 | 16 | Correo saliente: STARTTLS, credenciales, `SITE_URL` de los enlaces y valores por defecto de Mailpit |
+| `test_smtp_config.py` | 22 | 22 | Correo saliente: STARTTLS, credenciales, `SITE_URL` de los enlaces y valores por defecto de Mailpit |
 | `test_mantenimiento.py` | 4 | 4 | Modo mantenimiento (503 controlado) |
-| `test_unificar_datasets.py` | 29 | 29 | Pipeline: unificación, deduplicación cross-year, provincia/CCAA desde CIF, estados |
+| `test_unificar_datasets.py` | 51 | 51 | Pipeline: unificación, deduplicación cross-year, provincia/CCAA desde CIF, estados |
 | `test_parser_epa2025.py` | 22 | 22 | Parser EPA 2025 (extracción heurística) y captura de causas |
 | `test_parser_epa_admitidas_2024.py` | 10 | 10 | Parser de la línea EPA 2024 (anclaje por CIF, nombres con "COLONIAS") |
 | `test_check_bdns.py` | 5 | 5 | Comprobación BDNS del cron y reintentos con backoff |
-| `test_scheduler.py` | 24 | 128 | Calendario del cron (parametrizado por días del mes y por meses) |
+| `test_scheduler.py` | 24 | 169 | Calendario del cron (parametrizado por días del mes y por meses) |
+| `test_health_check.py` | 15 | 15 | Aviso de caída: que salga **un solo correo** por incidente, que avise al recuperarse, que detecte una base de datos caída aunque el proceso viva, y que ni un fallo de correo ni uno de escritura tumben la comprobación |
 | `test_logging.py` | 10 | 10 | Logging de la aplicación y **formato de los registros de Nginx** (procedencia y dispositivo, declarados en la política de privacidad) |
 | `test_backup_db.py` | 11 | 11 | Copias de seguridad: credenciales del `.env`, descarte de volcados incompletos y rotación |
-| `test_nginx_tls.py` | 9 | 9 | Configuración TLS de Nginx: ruta del reto ACME antes de la redirección y rutas del certificado fuera del fichero versionado |
+| `test_nginx_tls.py` | 12 | 12 | Configuración TLS de Nginx: ruta del reto ACME antes de la redirección y rutas del certificado fuera del fichero versionado |
 | `test_https_config.py` | 9 | 9 | TLS/HTTPS y redirección (comprueba los ficheros, sin Docker) |
 | `test_rate_limiting.py` | 6 | 6 | Rate limiting de Nginx (comprueba la configuración, sin Docker) |
 | `test_css_indice.py` | 4 | 4 | Que el índice de secciones de `styles.css` refleje el cuerpo del archivo |
-| `test_mapa_ccaa.py` | 1 | 1 | Que el tooltip de Leaflet no se enlace en táctil: enlazarlo y deshacerlo dejaba escuchadores huérfanos que reventaban al tocar el mapa |
+| `test_mapa_ccaa.py` | 7 | 7 | Que el tooltip de Leaflet no se enlace en táctil: enlazarlo y deshacerlo dejaba escuchadores huérfanos que reventaban al tocar el mapa |
+| `test_accesibilidad_modales.py` | 3 | 7 | Que el foco salga de un modal **antes** de marcarlo `aria-hidden`: si un descendiente lo conserva, el navegador rechaza el atributo y el modal sigue anunciándose |
+| `test_nginx_canonico.py` | 6 | 6 | Una sola dirección: `www` y `/index.html` redirigen, y la portada NO (un 301 ahí sería un bucle) |
+| `test_recursos_documentos.py` | 10 | 10 | Listado de recursos: título enlazado y descripción, ninguna URL partida en dos líneas, y la vía estatal distinguida de la autonómica |
+| `test_estudio_ayuntamientos.py` | 12 | 12 | Bloque del estudio municipal y cierre de la portada: cada porcentaje con su base, y las anclas fuera del alcance de la barra fija |
 | `test_informe_visitas.py` | 20 | 20 | Informes de visitas: formato de log a la par con Nginx, robots y centros de datos descontados sin tocar operadoras de consumo, y que los informes no acaben publicados |
 | `test_robots_sitemap.py` | 11 | 11 | `robots.txt`, `sitemap.xml` y canónicas, y que los tres textos que permiten el rastreo de IA sigan diciendo lo mismo |
 | `test_aclaracion_no_oficial.py` | 4 | 4 | Que todas las páginas con pie aclaren que el sitio no es oficial |
@@ -230,7 +235,7 @@ Los tests mockean `requests.get` y `time.sleep` para no esperar tiempo real ni g
 
 Verifica el calendario completo del scheduler del cron (`docker/cron/scheduler.py`), que antes no tenía cobertura. Comprueba que `_jobs_for(dt)` devuelve los scripts correctos en función de la fecha y hora UTC. Cubre tres bloques:
 
-- **`health_check.py`**: corre cada 6 horas (00:00, 06:00, 12:00, 18:00) los 365 días del año, y nunca fuera del minuto 0.
+- **`health_check.py`**: corre **cada media hora** (minutos 0 y 30) los 365 días del año. Los tests cubren además el aviso por correo: que salga uno al caer, **ninguno más mientras siga caída** —96 comprobaciones en dos días serían 96 correos—, uno al recuperarse, y que un fallo al enviarlo o al escribir el log no tumbe la comprobación.
 - **`check_bdns.py` — temporada convocatorias (marzo–junio)**: marzo y junio cada 4 días; abril y mayo cada 2 días; siempre a las 08:00 UTC.
 - **`check_bdns.py` — temporada resoluciones (noviembre–enero)**: noviembre y diciembre cada 2 días; enero cada 4 días.
 

@@ -216,6 +216,9 @@ docker/ssl/server.key
 
 # Estado del cron (generado en runtime, varía por máquina)
 logs/cron/estado_*.json
+# Estado del aviso de caída: recuerda si el backend estaba caído, para no
+# repetir el correo en cada comprobación. También es de ejecución.
+logs/cron/health_estado.json
 
 # Bandera del modo mantenimiento (se crea/borra con make mantenimiento-on/off)
 frontend/maintenance.on

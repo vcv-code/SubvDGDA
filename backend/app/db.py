@@ -23,7 +23,32 @@ DB_PASSWORD = _cfg("DB_PASSWORD", "MYSQL_PASSWORD", defecto="bdns_pass")
 
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-engine = create_engine(DATABASE_URL)
+# Opciones de pool, y no son cosméticas: son la causa de la caída del 7-8 de
+# septiembre de 2026.
+#
+# SQLAlchemy guarda las conexiones abiertas para reutilizarlas. MariaDB, por su
+# parte, cierra sola las que llevan `wait_timeout` sin usarse —8 horas por
+# defecto—. Con la web tranquila de madrugada, al llegar la primera visita del
+# día el pool entregaba una conexión que el servidor ya había cerrado, y la
+# petición moría con:
+#
+#     OperationalError (2006) "MySQL server has gone away
+#     (ConnectionResetError(104, 'Connection reset by peer'))"
+#
+#   · pool_pre_ping — antes de entregar una conexión, hace un SELECT 1. Si está
+#     muerta, la descarta y abre otra sin que la petición se entere. Es el
+#     remedio estándar de este error.
+#   · pool_recycle  — además, jubila toda conexión con más de media hora de
+#     vida. Muy por debajo de las 8 horas de MariaDB, así que nunca se llega a
+#     usar una que el servidor haya cerrado por su cuenta.
+#
+# El pre_ping cuesta una consulta trivial por petición; el error que evita
+# costó dos días de web caída.
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+)
 
 # Cada petición a la API abre una sesión y la cierra al terminar
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)

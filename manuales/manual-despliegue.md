@@ -754,6 +754,7 @@ reconstruir de más como quedarse corto:
 | Cualquier `.py` del backend | `docker compose up -d --build backend` |
 | `docker/nginx/default.conf` | `docker compose exec nginx nginx -s reload` |
 | Variables de `docker/.env` | `docker compose up -d` del servicio afectado |
+| **`depends_on` o `restart` en compose** | `docker compose up -d --force-recreate <servicio>`. Un `up -d` normal **no** los aplica: solo recrea si cambió la imagen o el entorno |
 | **Columnas nuevas en la BD** | **migración SQL — ver abajo.** El `git pull` NO las crea |
 | **Correcciones de datos ya cargados** | **migración SQL — ver abajo.** `cargar_dataset` es aditivo y no reescribe filas |
 

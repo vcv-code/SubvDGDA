@@ -101,7 +101,7 @@ nginx:
 | `db` | Sí (oficial MariaDB) | `healthcheck.sh --connect --innodb_initialized` | Asegura arranque ordenado del backend |
 | `backend` | Sí (propio) | `curl -f http://localhost:8000/health` | Detecta cuelgues que no matan el proceso |
 | `nginx` | Sí (propio) | `curl -f http://localhost/healthz` | Verifica que Nginx responde a HTTP independientemente del backend |
-| `cron` | No | — | No expone HTTP. Su salud se ve en `logs/cron/health_check.log` y `restart: unless-stopped` cubre los crashes |
+| `cron` | No | — | No expone HTTP. Su salud se ve en `logs/cron/health_check.log` y `restart: unless-stopped` cubre los crashes. Es además quien **avisa por correo** si el backend deja de responder |
 | `mailpit` | Sí (de fábrica) | Heredado de la imagen oficial | No lo configuramos nosotros |
 | `adminer` | No | — | Herramienta de desarrollo, no crítica |
 
@@ -170,6 +170,10 @@ El volumen nombrado `db_data` garantiza que los datos de MariaDB sobreviven a `d
 ### restart: unless-stopped
 
 Todos los servicios tienen `restart: unless-stopped`. El contenedor se reinicia automáticamente si falla o si Docker Desktop arranca con el sistema, **excepto** si se paró explícitamente con `docker compose down`. Útil en un entorno de desarrollo que se usa a diario.
+
+> **Este documento afirmaba esto cuando no era cierto.** Hasta septiembre de 2026 el `backend` era el único servicio SIN política de reinicio, y la frase de arriba decía «todos» igualmente. El 8 de septiembre el proceso murió, Docker lo dejó muerto y la web estuvo dos días caída: Nginx —que sí la tenía— reintentaba, pero moría en cada intento con `host not found in upstream "backend"`, porque resuelve los nombres al cargar la configuración y no en cada petición.
+>
+> Se anota aquí y no se borra: una documentación que describe lo que *debería* haber en vez de lo que hay es peor que no tenerla, porque impide que alguien lo compruebe.
 
 ### Recrear contenedores cuando algo va mal
 
@@ -694,7 +698,7 @@ Hay **dos sistemas de tareas programadas** y conviene no confundirlos:
 
 | Tarea | Frecuencia |
 |---|---|
-| `health_check.py` | Cada 6 horas (00:00, 06:00, 12:00, 18:00 UTC) |
+| `health_check.py` | **Cada media hora** (minutos 0 y 30). Avisa por correo al caer y al recuperarse |
 | `rotar_logs.py` | Diaria, 04:15 UTC (retención de 30 días) |
 | `check_bdns.py` (marzo) | Cada 4 días a las 08:00 UTC |
 | `check_bdns.py` (abril–mayo) | Cada 2 días a las 08:00 UTC |
@@ -1042,3 +1046,114 @@ ALTER TABLE verificacion_tokens ADD UNIQUE INDEX ix_verificacion_token (token);
 | **TLS** | Transport Layer Security. Protocolo de cifrado de la conexión HTTPS (versiones 1.2 y 1.3 activas). |
 | **SQLite en memoria** | Base de datos temporal que vive en RAM durante los tests, sin tocar MariaDB. Rápida y aislada por test. |
 | **StaticPool** | Configuración de SQLAlchemy para que SQLite en memoria comparta una única conexión entre threads (necesario en tests). |
+
+---
+
+## Aviso de caída del backend
+
+`health_check.py` comprueba cada media hora que el backend responde y **manda un
+correo cuando deja de hacerlo**, y otro cuando vuelve.
+
+### Qué comprueba, y por qué dos cosas
+
+| Ruta | Qué prueba |
+|---|---|
+| `/health` | Que el proceso está vivo. Devuelve `{"status": "ok"}` y **no toca la base de datos** |
+| `/convocatorias/` | El camino completo hasta MariaDB |
+
+Con solo la primera, una base de datos caída pasaba desapercibida: el backend
+seguía respondiendo «ok» mientras la web mostraba las páginas vacías, que para
+quien la visita es exactamente igual de inservible.
+
+### Solo avisa cuando el estado cambia
+
+Con una comprobación cada media hora, dos días de caída serían **96 correos**. Al
+tercero se ignoran, al décimo se archivan sin leer, y el aviso deja de servir.
+Se manda uno al caer y otro al recuperarse; entre medias solo se registra en el
+log.
+
+El estado vive en `logs/cron/health_estado.json`, dentro de la carpeta montada
+desde el host: si estuviera dentro del contenedor se perdería justo al
+reiniciarse, que es cuando más falta hace. `rotar_logs.py` no lo toca, porque
+solo rota ficheros que acaban en `.log`.
+
+### La hora del correo es la de aquí
+
+Los contenedores van en UTC y el planificador depende de ello, así que **no se
+cambia su zona horaria**: moverla desplazaría todas las tareas programadas. Se
+traduce solo la hora que aparece en el mensaje, a `Europe/Madrid`. Un aviso que
+dice «12:00» cuando el reloj de quien lo lee marca las 14:00 obliga a hacer
+cuentas justo cuando menos apetece.
+
+Si la imagen no tuviera `tzdata`, la hora sale en UTC y así lo dice.
+
+### Nada de esto puede depender del log
+
+El disco lleno es una causa clásica de caída, y sería absurdo que precisamente
+entonces muriera lo único que iba a avisar. El script:
+
+- escribe **siempre** por pantalla, y al fichero solo si puede;
+- captura `OSError` al leer el estado, no solo `FileNotFoundError`: «no es un
+  directorio», «permiso denegado» y «disco lleno» son **hermanos** suyos, no
+  descendientes, y se escapaban;
+- si el envío del correo falla, lo registra y sigue: el cron no se cae por eso.
+
+### Límite conocido
+
+Esto corre **dentro** del servidor. Si se cae la máquina entera o se queda sin
+red, no habrá aviso porque no habrá quien lo mande. Para cubrir eso haría falta
+algo externo que vigile desde fuera.
+
+### Configuración
+
+| Variable | Para qué |
+|---|---|
+| `EMAIL_AVISOS` | A dónde llega el aviso. Si está vacía, usa `EMAIL_CONTACTO` |
+| `SMTP_*` | Las mismas del backend. Sin nada en `.env`, apuntan a Mailpit y el aviso se queda en local |
+
+Sin `EMAIL_AVISOS` ni `EMAIL_CONTACTO` el script **no falla**: registra un aviso
+en el log diciendo que hay algo que comunicar y no puede.
+
+---
+
+## Salud del pool de conexiones
+
+`backend/app/db.py` crea el motor con dos opciones que no son cosméticas:
+
+```python
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=1800)
+```
+
+**Por qué.** SQLAlchemy guarda las conexiones abiertas para reutilizarlas.
+MariaDB, por su parte, cierra sola las que llevan `wait_timeout` sin usarse —
+28.800 segundos, 8 horas, por defecto—. Con la web tranquila de madrugada, la
+primera visita del día recibía del pool una conexión que el servidor ya había
+cerrado, y la petición moría con:
+
+```
+OperationalError (2006) "MySQL server has gone away
+(ConnectionResetError(104, 'Connection reset by peer'))"
+```
+
+Eso es exactamente lo que ocurrió el 7 de septiembre de 2026, y el principio de
+la cadena que acabó con la web dos días caída.
+
+| Opción | Qué hace |
+|---|---|
+| `pool_pre_ping` | Antes de entregar una conexión, hace un `SELECT 1`. Si está muerta, la descarta y abre otra **sin que la petición se entere** |
+| `pool_recycle` | Jubila toda conexión con más de media hora de vida, muy por debajo de las 8 horas del servidor |
+
+El `pre_ping` cuesta una consulta trivial por petición. El error que evita costó
+dos días.
+
+**Cómo reproducirlo**, por si hiciera falta comprobarlo:
+
+```bash
+curl -sk https://localhost/convocatorias/ > /dev/null      # deja una en el pool
+docker compose exec -T db sh -c 'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" -N -B -e \
+  "SELECT CONCAT(\"KILL \",id,\";\") FROM information_schema.processlist WHERE user=\"$MYSQL_USER\";"' \
+  | docker compose exec -T db sh -c 'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD"'
+curl -sk -o /dev/null -w '%{http_code}\n' https://localhost/convocatorias/
+```
+
+Con las opciones puestas devuelve **200**; sin ellas, **500**.
