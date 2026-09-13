@@ -2,7 +2,7 @@
 test_scheduler.py — Tests del scheduler del cron BDNS/DGDA.
 
 Comprueba que `_jobs_for(dt)` devuelve los scripts correctos según fecha/hora UTC:
-  · health_check.py corre cada 6h (00:00, 06:00, 12:00, 18:00).
+  · health_check.py corre cada media hora (minutos 0 y 30).
   · check_bdns.py corre en temporada convocatorias (marzo–junio) y resoluciones
     (noviembre–enero), siempre a las 08:00 UTC, con frecuencia variable.
   · Fuera de calendario no se ejecuta nada.
@@ -28,21 +28,21 @@ def _dt(year, month, day, hour, minute=0):
 
 
 # ──────────────────────────────────────────────
-# health_check.py — cada 6 horas
+# health_check.py — cada media hora
 # ──────────────────────────────────────────────
 
-@pytest.mark.parametrize("hour", [0, 6, 12, 18])
-def test_health_check_corre_cada_6h(hour):
-    assert "health_check.py" in _jobs_for(_dt(2026, 7, 15, hour, 0))
+@pytest.mark.parametrize("hour", range(24))
+@pytest.mark.parametrize("minute", [0, 30])
+def test_health_check_corre_cada_media_hora(hour, minute):
+    """Antes iba cada 6 horas: bastaba para dejar constancia en el log, pero no
+    para enterarse de una caída. Desde que avisa por correo, la frecuencia es lo
+    que separa saberlo en media hora de saberlo en dos días."""
+    assert "health_check.py" in _jobs_for(_dt(2026, 7, 15, hour, minute))
 
 
-@pytest.mark.parametrize("hour", [1, 3, 5, 7, 11, 13, 17, 19, 23])
-def test_health_check_no_corre_fuera_de_horario(hour):
-    assert "health_check.py" not in _jobs_for(_dt(2026, 7, 15, hour, 0))
-
-
-def test_health_check_solo_en_minuto_0():
-    assert "health_check.py" not in _jobs_for(_dt(2026, 7, 15, 6, 30))
+@pytest.mark.parametrize("minute", [1, 15, 29, 31, 45, 59])
+def test_health_check_no_corre_en_otros_minutos(minute):
+    assert "health_check.py" not in _jobs_for(_dt(2026, 7, 15, 6, minute))
 
 
 # ──────────────────────────────────────────────
@@ -142,21 +142,29 @@ def test_solo_health_check_en_dia_valido_a_medianoche():
     assert jobs == ["health_check.py"]
 
 
-def test_solo_check_bdns_a_las_8_dia_valido():
-    """1 de abril a las 08:00 → solo check_bdns (las 8 no son múltiplo de 6)."""
+def test_check_bdns_a_las_8_dia_valido():
+    """1 de abril a las 08:00 → check_bdns, junto al health check.
+
+    Antes este test comprobaba que a esa hora corriera «solo» check_bdns,
+    porque el health iba cada 6 horas y las 8 no son múltiplo de 6. Al pasar a
+    cada media hora se cruzan, y no pasa nada: son tareas independientes.
+    """
     jobs = _jobs_for(_dt(2026, 4, 1, 8, 0))
-    assert jobs == ["check_bdns.py"]
+    assert "check_bdns.py" in jobs
+    assert set(jobs) == {"check_bdns.py", "health_check.py"}
 
 
 def test_dia_no_valido_check_bdns_a_las_8():
     """4 de abril (día par no válido) a las 08:00 → ningún job."""
-    assert _jobs_for(_dt(2026, 4, 4, 8, 0)) == []
+    # A las 08:00 en punto también corre el health check, que va cada media hora.
+    assert _jobs_for(_dt(2026, 4, 4, 8, 0)) == ["health_check.py"]
 
 
-def test_julio_a_medianoche_solo_health():
-    """En julio el cron de BDNS no corre nunca; el health sí cada 6h."""
+def test_julio_solo_corre_el_health():
+    """En julio el cron de BDNS no corre nunca; el health sí, cada media hora."""
     assert _jobs_for(_dt(2026, 7, 15, 0, 0)) == ["health_check.py"]
-    assert _jobs_for(_dt(2026, 7, 15, 8, 0)) == []
+    assert _jobs_for(_dt(2026, 7, 15, 8, 0)) == ["health_check.py"]
+    assert _jobs_for(_dt(2026, 7, 15, 8, 15)) == []
 
 
 # ──────────────────────────────────────────────
@@ -177,8 +185,13 @@ def test_rotar_logs_solo_a_las_4_15():
 
 
 def test_rotar_logs_no_choca_con_los_demas():
-    """Las 04:15 no coinciden con health_check (en punto cada 6 h) ni con
-    check_bdns (08:00), así que nunca se solapan."""
-    assert _jobs_for(_dt(2026, 4, 1, 0, 0))  == ["health_check.py"]
-    assert _jobs_for(_dt(2026, 4, 1, 8, 0))  == ["check_bdns.py"]
+    """Las 04:15 no son minuto 0 ni 30, así que no coinciden con el health
+    check; ni son las 08:00, así que tampoco con check_bdns."""
     assert _jobs_for(_dt(2026, 4, 1, 4, 15)) == ["rotar_logs.py"]
+
+
+def test_el_health_check_convive_con_las_demas_tareas():
+    """Corriendo cada media hora se cruza con las otras, y eso es correcto:
+    son tareas independientes y ninguna bloquea a la otra."""
+    assert _jobs_for(_dt(2026, 4, 1, 0, 0)) == ["health_check.py"]
+    assert set(_jobs_for(_dt(2026, 4, 1, 8, 0))) == {"health_check.py", "check_bdns.py"}

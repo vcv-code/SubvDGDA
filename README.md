@@ -629,7 +629,7 @@ El proyecto usa Docker Compose con seis servicios definidos en `docker/docker-co
 | `db`      | `bdns_dgda_db`   | mariadb:11.8             | Base de datos MariaDB con el dataset cargado              | 3307 solo local (interno: 3306) |
 | `backend` | `bdns_api`       | python:3.12-slim (build) | API FastAPI                                               | ninguno (interno 8000) |
 | `nginx`   | `bdns_nginx`     | nginx:alpine             | Proxy inverso, HTTPS, archivos estáticos                  | 80 (HTTP), 443 (HTTPS) |
-| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS, health check y rotación de logs | ninguno            |
+| `cron`    | `bdns_cron`      | python:3.12-slim (build) | Scheduler: comprobación BDNS, health check con aviso por correo si la web cae, y rotación de logs | ninguno            |
 | `mailpit` | `bdns_mailpit`   | axllent/mailpit          | SMTP de desarrollo — atrapa emails sin enviarlos          | 1025 y 8025, solo local |
 | `adminer` | `bdns_adminer`   | adminer                  | Interfaz web para explorar la BD                          | 8080, solo local       |
 
@@ -648,7 +648,7 @@ Mailpit intercepta todos los emails que el backend intenta enviar (recuperación
 
 El servicio `cron` usa un scheduler Python propio (`docker/cron/scheduler.py`) — sin supercronic ni binarios del sistema — que ejecuta tres tareas:
 
-- **`health_check.py`** — cada 6 horas, verifica que el backend responde correctamente.
+- **`health_check.py`** — cada media hora, verifica que el backend responde **y que la base de datos es accesible**, y **manda un correo** si deja de hacerlo (y otro cuando vuelve). Solo avisa al cambiar el estado, no en cada comprobación: ver [referencia técnica](docs/referencia-tecnica.md).
 - **`check_bdns.py`** — detecta nuevas convocatorias o resoluciones en la API BDNS. Frecuencia variable según temporada: cada 2 días en abril–mayo (pico de publicación de convocatorias DGDA) y en noviembre–diciembre (pico de publicación de resoluciones); cada 4 días en marzo, junio y enero. No se ejecuta entre febrero y octubre porque la DGDA no publica en esos meses. Opera en dos fases: primero actualiza `fecha_resolucion` en convocatorias pendientes del año en curso (el banner de aviso de la home desaparece automáticamente); después busca si ha aparecido alguna convocatoria nueva. Al insertar una convocatoria nueva (que entra sin fecha de fin de plazo, porque BDNS no la da de forma fiable), registra un **aviso de acción requerida** en su log para que se rellene la fecha desde el panel admin.
 
 - **`rotar_logs.py`** — a diario a las 04:15 UTC, rota los ficheros `.log` de `logs/` y borra las copias de más de 30 días. Hace falta porque Nginx y el backend escriben directamente a fichero: el `max-size` del logging de Docker solo afecta a la salida estándar, así que sin esto crecerían sin límite. Copia el contenido a un fichero con fecha y **vacía** el original en lugar de renombrarlo, para que los procesos que lo tienen abierto sigan escribiendo sin necesidad de recargarlos.
