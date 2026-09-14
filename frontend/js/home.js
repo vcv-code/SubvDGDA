@@ -867,10 +867,87 @@ async function cargarResumenTabla() {
         if (!respuesta.ok) throw new Error(`Error ${respuesta.status}`);
         const datos = await respuesta.json();
         window.renderResumenTabla(datos, contenedor);
+        // Fuera del try de la tabla: si el cálculo de la cifra fallara, el
+        // `catch` de abajo borraría la tabla —ya pintada y correcta— para poner
+        // un mensaje de error. Un problema en el añadido no puede tumbar lo que
+        // ya funcionaba.
+        try {
+            pintarCifraBdns(datos);
+        } catch (error) {
+            console.error('No se pudo calcular la cifra de la BDNS:', error);
+        }
     } catch (error) {
         console.error('Error al cargar el resumen por convocatoria:', error);
         contenedor.innerHTML = '<p class="tabla-error-msg">No se pudo cargar el resumen por convocatoria.</p>';
     }
+}
+
+
+/**
+ * La ÚNICA convocatoria de la DGDA cuyas concesiones están comunicadas a la
+ * Base de Datos Nacional de Subvenciones: la de 2022, dadas de alta el 14 de
+ * febrero de 2023 (592 concesiones, convocatoria nº 645245).
+ *
+ * Es un hecho sobre la BDNS, no sobre nuestra base de datos, así que no puede
+ * salir de la API: va aquí declarado en un solo sitio. Comprobado el 13 de
+ * septiembre de 2026 preguntando a la API de la BDNS por las 19 convocatorias
+ * de la Dirección General una a una, y descartado que estén registradas en
+ * otro sitio (`/minimis/busqueda` y `/ayudasestado/busqueda` devuelven 0).
+ *
+ * Para rehacer la comprobación:
+ *   curl "https://www.infosubvenciones.es/bdnstrans/api/concesiones/busqueda\
+ *         ?vpd=GE&pageSize=1&numeroConvocatoria=<nº>"
+ * y mirar `totalElements`. OJO: el parámetro es `numeroConvocatoria`; los
+ * nombres parecidos no dan error, se ignoran y devuelven toda España.
+ *
+ * Si algún día la DGDA comunica otro año, hay que añadirlo a esta lista.
+ */
+const CONVOCATORIAS_EN_BDNS = [
+    { tipo: 'epa', anio: 2022 }
+];
+
+/**
+ * pintarCifraBdns()
+ * Cuántas concesiones —y cuánto dinero— nunca llegaron a la BDNS.
+ *
+ * Se calcula a partir del mismo `/estadisticas/resumen-convocatorias` que ya
+ * alimenta la tabla de arriba, en lugar de escribir la cifra a mano, para que
+ * se actualice sola cuando entren las resoluciones de 2026. El bloque nace
+ * oculto y solo aparece si el cálculo sale: un dato de esta gravedad en blanco
+ * o a medias sería peor que no mostrarlo.
+ */
+function pintarCifraBdns(datos) {
+    const caja = document.getElementById('bdns-cifra');
+    const hueco = document.getElementById('bdns-cifra-num');
+    if (!caja || !hueco || !datos || !Array.isArray(datos.filas)) return;
+
+    const comunicada = (fila) => CONVOCATORIAS_EN_BDNS.some(
+        (c) => c.tipo === fila.tipo && c.anio === fila.anio
+    );
+
+    let concesiones = 0;
+    let importe = 0;
+    for (const fila of datos.filas) {
+        if (comunicada(fila)) continue;
+        concesiones += fila.concedidas || 0;
+        importe += fila.importe_total || 0;
+    }
+    if (concesiones === 0) return;
+
+    const euros = new Intl.NumberFormat('es-ES', {
+        style: 'currency', currency: 'EUR', maximumFractionDigits: 0
+    }).format(importe);
+
+    // `useGrouping: 'always'` y no el `formatearNumero` de esta misma página: en
+    // español los números de cuatro cifras van sin punto de millar, así que
+    // saldría «2030 concesiones» y, rodeado de años (2022, 2023…), se lee un
+    // instante como si fuera uno más. Aquí se fuerza el punto solo en este dato.
+    const numero = new Intl.NumberFormat('es-ES', {
+        useGrouping: 'always', maximumFractionDigits: 0
+    }).format(concesiones);
+
+    hueco.textContent = `${numero} concesiones y ${euros}`;
+    caja.hidden = false;
 }
 
 
