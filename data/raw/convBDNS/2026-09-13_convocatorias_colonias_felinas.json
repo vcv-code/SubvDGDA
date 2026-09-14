@@ -1,0 +1,54 @@
+[
+  {
+    "id": 898165,
+    "mrr": false,
+    "numeroConvocatoria": "696605",
+    "descripcion": "Subvenciones a entidades locales para gestión de colonias felinas 2023",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2023-05-19",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2023
+  },
+  {
+    "id": 966750,
+    "mrr": false,
+    "numeroConvocatoria": "765190",
+    "descripcion": "Subvenciones a entidades locales para gestión de colonias felinas 2024",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2024-05-31",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2024
+  },
+  {
+    "id": 1024928,
+    "mrr": false,
+    "numeroConvocatoria": "823367",
+    "descripcion": "Subvenciones a entidades locales destinadas a mejorar e impulsar el control poblacional de colonias felinas, correspondiente al año 2025.",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2025-03-27",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2025
+  },
+  {
+    "id": 1099029,
+    "mrr": false,
+    "numeroConvocatoria": "897468",
+    "descripcion": "Subvenciones a entidades locales destinadas a mejorar e impulsar el control poblacional de colonias felinas, correspondiente al año 2026.",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2026-04-08",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2026
+  }
+]

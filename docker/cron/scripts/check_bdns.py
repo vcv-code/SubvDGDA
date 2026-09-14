@@ -160,8 +160,29 @@ def actualizar_fecha_resolucion(conn, id_convoc, fecha):
 # API BDNS
 # ──────────────────────────────────────────────
 
+# Espejo de `scripts/data_processing/bdns_lookup.py:_INICIO_ESPERADO`.
+# La busqueda por descripcion trae tambien premios, certamenes artisticos y
+# otras lineas de subvencion de la misma Direccion General. Este script INSERTA
+# convocatorias en la base de datos de produccion, asi que clasificar de mas
+# significa dar de alta una convocatoria que no toca.
+#
+# Hasta ahora solo lo evitaba la suerte: se procesa en orden de numero
+# ascendente y `state[tipo]` corta tras la primera de cada tipo, de modo que la
+# buena entraba antes que el premio por llevar numero menor. En 2026 fue asi
+# (904714 antes que 904804), pero no hay nada que lo garantice.
+_INICIO_ESPERADO = "SUBVENCIONES A ENTIDADES"
+
+
 def detectar_tipo(descripcion):
-    desc = descripcion.upper()
+    """Tipo de convocatoria, o None si no es una de las que recoge el proyecto.
+
+    Devolver None es el camino seguro: quien llama lo registra como «Tipo no
+    detectado — Omitida» y queda en el log para revisarlo. Clasificar de mas
+    inserta una convocatoria equivocada sin avisar a nadie.
+    """
+    desc = (descripcion or "").upper()
+    if _INICIO_ESPERADO not in desc:
+        return None
     if "ENTIDADES LOCALES" in desc or "EELL" in desc:
         return "eell"
     if "ENTIDADES PRIVADAS" in desc or "ASOCIACIONES" in desc or "PROTECCI" in desc:
