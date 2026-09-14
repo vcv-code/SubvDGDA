@@ -4,13 +4,13 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 399 funciones / 503 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 487 funciones / 651 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **400 funciones / 504 ejecuciones** | |
+| **Total** | **477 funciones / 626 ejecuciones** | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: **las 503 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
+Nota sobre ejecución: **las 651 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
 
 ---
 
@@ -26,7 +26,7 @@ def test_check_bdns_corre_en_marzo_cada_4_dias(day):
 
 Esa es **una función**, pero pytest la ejecuta 8 veces (una por cada día) y reporta 8 PASSED. `@pytest.mark.parametrize` es una técnica estándar de pytest para evitar duplicar código de test cuando solo cambian los datos de entrada.
 
-Solo `test_scheduler.py` usa `parametrize`. Los otros 23 archivos tienen una correspondencia 1:1 entre funciones de test y ejecuciones.
+`test_scheduler.py` y `test_accesibilidad_modales.py` usan `parametrize`: el primero recorre días y meses del calendario del cron (24 funciones → 169 ejecuciones), el segundo repite la misma comprobación sobre los tres modales (3 → 7). Los otros 37 archivos tienen correspondencia 1:1 entre funciones de test y ejecuciones.
 
 ---
 
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **399 funciones de test automáticas** (503 ejecuciones con pytest) distribuidas en 27 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
+El proyecto incluye **487 funciones de test automáticas** (651 ejecuciones con pytest) distribuidas en 41 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (503)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (651)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -120,6 +120,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_check_bdns.py` | 5 | 5 | Comprobación BDNS del cron y reintentos con backoff |
 | `test_scheduler.py` | 24 | 169 | Calendario del cron (parametrizado por días del mes y por meses) |
 | `test_health_check.py` | 15 | 15 | Aviso de caída: que salga **un solo correo** por incidente, que avise al recuperarse, que detecte una base de datos caída aunque el proceso viva, y que ni un fallo de correo ni uno de escritura tumben la comprobación |
+| `test_conexion_bd.py` | 3 | 3 | Salud del pool de conexiones: que el motor no pueda volver a crearse sin `pool_pre_ping`, y que `pool_recycle` quede por debajo del `wait_timeout` de MariaDB. Es la causa raíz de la caída del 7-8 de septiembre de 2026 |
 | `test_logging.py` | 10 | 10 | Logging de la aplicación y **formato de los registros de Nginx** (procedencia y dispositivo, declarados en la política de privacidad) |
 | `test_backup_db.py` | 11 | 11 | Copias de seguridad: credenciales del `.env`, descarte de volcados incompletos y rotación |
 | `test_nginx_tls.py` | 12 | 12 | Configuración TLS de Nginx: ruta del reto ACME antes de la redirección y rutas del certificado fuera del fichero versionado |
@@ -135,7 +136,9 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_robots_sitemap.py` | 11 | 11 | `robots.txt`, `sitemap.xml` y canónicas, y que los tres textos que permiten el rastreo de IA sigan diciendo lo mismo |
 | `test_aclaracion_no_oficial.py` | 4 | 4 | Que todas las páginas con pie aclaren que el sitio no es oficial |
 | `test_navbar_paginas.py` | 3 | 3 | Que toda página con botón de menú cargue `navbar.js`: seis lo mostraban sin cargarlo y no hacía nada |
-| **Total** | **399** | **503** | 33 archivos |
+| `test_bloque_bdns_portada.py` | 6 | 6 | Que el bloque de la BDNS en la portada no falle en silencio: nace `hidden` y la cifra la calcula el JS, así que un id o un campo renombrado lo dejarían invisible sin dar error |
+| `test_deteccion_convocatorias.py` | 5 | 20 | Qué convocatorias de la BDNS son las de este proyecto: premios, certámenes y otras líneas quedan fuera, y las dos copias del detector (pipeline y cron) clasifican igual |
+| **Total** | **487** | **651** | 41 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
@@ -241,7 +244,7 @@ Verifica el calendario completo del scheduler del cron (`docker/cron/scheduler.p
 
 Incluye además casos negativos (fuera de temporada, horas distintas a 08:00, días no múltiplos del intervalo) y combinaciones realistas (un mismo instante puede activar `health_check`, `check_bdns` o ninguno).
 
-Es el primer archivo del proyecto que usa `@pytest.mark.parametrize`: 21 funciones de test se expanden a 119 ejecuciones independientes, una por cada fecha probada. Carga el módulo con `importlib.util` porque `docker/cron/` no es un paquete Python (sin `__init__.py`).
+Fue el primer archivo del proyecto en usar `@pytest.mark.parametrize`: 24 funciones de test se expanden a **169 ejecuciones** independientes, una por cada fecha probada. Carga el módulo con `importlib.util` porque `docker/cron/` no es un paquete Python (sin `__init__.py`).
 
 #### test_unificar_datasets.py
 
@@ -256,6 +259,28 @@ Prueba las funciones del parser EPA 2025 con XMLs mínimos generados en memoria 
 
 - `mapear_indices`: la columna "Concedido entidad – Euros" sobreescribía el índice de la columna Entidad. Ahora va a `importe_idx`.
 - `extraer_entidad_2025`: cuando el índice apuntaba al importe en lugar del nombre, el fallback heurístico recupera el nombre real recorriendo las celdas.
+
+#### test_bloque_bdns_portada.py
+
+Protege el bloque del cierre de la portada que cuenta cuántas concesiones nunca se comunicaron a la Base de Datos Nacional de Subvenciones.
+
+Existe por un motivo concreto: ese bloque **falla de forma invisible**. El párrafo de la cifra nace con `hidden` y solo se muestra si `pintarCifraBdns()` encuentra sus `id` y consigue sumar los campos de `/estadisticas/resumen-convocatorias`. Si algo se rompe no hay hueco, ni error en consola, ni un 500: simplemente el dato deja de estar, y eso no se detecta mirando la página.
+
+Se comprueban los tres puntos de rotura reales: que los `id` del HTML sigan siendo los que busca el JS, que el endpoint siga exponiendo `concedidas` e `importe_total`, y que la convocatoria EPA 2022 siga declarada en `CONVOCATORIAS_EN_BDNS` —sus 592 concesiones sí se comunicaron, y si se cayera de esa lista la web pasaría a afirmar que no se comunicó ninguna—.
+
+No se comprueba el número en sí: sale de la base de datos y cambia cuando entra un año nuevo. Lo que se verifica es que la maquinaria que lo calcula sigue conectada.
+
+Dos comprobaciones más, sobre cómo se presenta el dato: que el número lleve **punto de millar** (en español los de cuatro cifras no lo llevan, y «2030 concesiones» rodeado de años se lee como si fuera uno), y que la cifra **no se presente como el total absoluto** — excluye una concesión de 4.684,91 € de 2022 que la BDNS tampoco tiene, así que decir «en total» contradiría al párrafo siguiente de la propia página.
+
+#### test_deteccion_convocatorias.py
+
+Fija qué convocatorias de la API BDNS son las que recoge este proyecto y cuáles no. La búsqueda por descripción devuelve también premios, certámenes artísticos y otras líneas de subvención de la misma Dirección General.
+
+Cubre las **dos copias** del detector —`bdns_lookup._detectar_tipo` y `check_bdns.detectar_tipo`, duplicadas a propósito porque la carga y el cron no comparten código— con los títulos literales que devuelve la API, e incluye un test de que ambas clasifican igual: si se toca una y no la otra, salta.
+
+El riesgo que cubre es asimétrico, y por eso el detector prefiere descartar: clasificar de menos hace que la carga caiga al respaldo de `_FECHAS` y que el cron registre «Tipo no detectado — Omitida», dos fallos visibles; clasificar de más escribe el número, la fecha y el título equivocados en la base, o da de alta una convocatoria que no toca, sin que nadie se entere.
+
+El último test es una segunda red sobre `cargar_indice_bdns()`: aunque el detector fallara, dos convocatorias en la misma clave `(año, tipo)` deben avisar y conservar la primera, en vez de que la última gane en silencio.
 
 ### Tipos de test utilizados
 

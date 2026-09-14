@@ -1,0 +1,80 @@
+[
+  {
+    "id": 793451,
+    "mrr": false,
+    "numeroConvocatoria": "591891",
+    "descripcion": "Subvenciones a entidades de protección animal 2021",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2021-10-26",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2021
+  },
+  {
+    "id": 846805,
+    "mrr": false,
+    "numeroConvocatoria": "645245",
+    "descripcion": "Subvenciones a entidades de protección animal 2022",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2022-08-24",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2022
+  },
+  {
+    "id": 898193,
+    "mrr": false,
+    "numeroConvocatoria": "696633",
+    "descripcion": "Subvenciones a entidades de protección animal 2023",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2023-05-19",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2023
+  },
+  {
+    "id": 970415,
+    "mrr": false,
+    "numeroConvocatoria": "768855",
+    "descripcion": "Subvenciones a entidades de protección animal 2024",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2024-06-17",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2024
+  },
+  {
+    "id": 1031960,
+    "mrr": false,
+    "numeroConvocatoria": "830399",
+    "descripcion": "Subvenciones a entidades de protección animal 2025",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2025-05-05",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2025
+  },
+  {
+    "id": 1106275,
+    "mrr": false,
+    "numeroConvocatoria": "904714",
+    "descripcion": "Subvenciones a entidades de protección animal 2026",
+    "descripcionLeng": null,
+    "fechaRecepcion": "2026-05-11",
+    "nivel1": "ESTADO",
+    "nivel2": "MINISTERIO DE DERECHOS SOCIALES, CONSUMO Y AGENDA 2030",
+    "nivel3": "DIRECCIÓN GENERAL DE DERECHOS DE LOS ANIMALES",
+    "codigoInvente": null,
+    "anio_convocatoria": 2026
+  }
+]

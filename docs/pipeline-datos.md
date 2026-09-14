@@ -8,7 +8,7 @@ Documentación técnica del proceso completo de obtención, extracción, transfo
 
 ## API BDNS
 
-La API pública BDNS (<https://www.infosubvenciones.es/bdnstrans/doc>) es el punto de partida del pipeline. Proporciona datos de convocatorias, pero **no incluye los beneficiarios reales de las subvenciones de la DGDA** — esos datos solo existen en los documentos oficiales del BOE.
+La API pública BDNS (<https://www.infosubvenciones.es/bdnstrans/doc>) es el punto de partida del pipeline. Da las convocatorias completas, pero **de las concesiones de la DGDA solo publica las de una de las ocho convocatorias resueltas** — el resto solo existe en los documentos oficiales del BOE. El apartado siguiente detalla la comprobación.
 
 ### Endpoints utilizados
 
@@ -20,7 +20,174 @@ Campos principales: `id`, `numeroConvocatoria`, `descripcion`, `fechaRecepcion`,
 
 Campos principales: `id`, `codConcesion`, `fechaConcesion`, `beneficiario`, `importe`, `numeroConvocatoria`, `nivel1` / `nivel2` / `nivel3`.
 
-El problema: las concesiones gestionadas por la DGDA **no aparecen** en este endpoint. Solo están disponibles en las resoluciones publicadas en el BOE, lo que obliga a construir un pipeline adicional de parseo de documentos.
+### Qué publica realmente la BDNS de la DGDA
+
+**Comprobado el 13 de septiembre de 2026 preguntando a la API por las 19
+convocatorias de la Dirección General, una a una.** Conviene tener el dato medido
+y no de oído, porque es la justificación de que exista todo el pipeline del BOE y
+es lo primero que alguien va a rebatir.
+
+| Convocatoria | Concesiones en la BDNS |
+|---|---|
+| EPA 2021 · 2023 · 2024 · 2025 · 2026 | 0 |
+| EELL 2023 · 2024 · 2025 · 2026 | 0 |
+| Certámenes y premios (7 convocatorias) | 0 |
+| Subvención nominativa PGE 2023 | 1 |
+| **EPA 2022** (nº 645245) | **592** |
+
+La DGDA ha comunicado concesiones **una sola vez**: las de 2022, dadas de alta el
+14 de febrero de 2023. Comprobado también que no están registradas en otro sitio:
+`/minimis/busqueda` y `/ayudasestado/busqueda` devuelven 0 para las ocho
+convocatorias del proyecto.
+
+En cifras del propio dataset, **2.030 concesiones y 12.835.954 €** corresponden a
+convocatorias que nunca se comunicaron. El total real de lo que no llegó a la BDNS
+es **2.031 y 12.840.639,32 €**: hay que sumar una concesión de 4.684,91 € de la
+convocatoria de 2022 que sí se comunicó, pero de cuyas 593 concedidas la BDNS solo
+registró 592 (ver más abajo). La portada publica la primera cifra, que es la que se
+calcula sola desde la API, y por eso dice «de convocatorias que nunca se
+comunicaron» y no «en total» — decir lo segundo contradiría al párrafo siguiente de
+la propia página.
+
+**Matiz que hay que tener claro para no equivocarse: los PDF sí están.** La ficha
+de cada convocatoria (`GET /convocatorias?numConv=<n>`, campo `documentos`) trae
+los documentos que la DGDA ha ido subiendo, y **de las ocho convocatorias
+resueltas las ocho tienen su resolución de concesión**, varias con sus anexos de
+estimadas, desestimadas y desistidas:
+
+| Convocatoria | Fichero de resolución en la BDNS |
+|---|---|
+| EPA 2021 | `Resolución Concesion Subvenciones Convocatoria 2021.pdf` |
+| EPA 2022 | `Resolución Concesión Subvenciones 2022.pdf` + anexos I, II y III |
+| EPA 2023 | `RESOLUCION 2023 CON ANEXOS.pdf` |
+| EPA 2024 | `Resolución Concesión Subvenciones EPA2024.pdf` |
+| EPA 2025 | `report_Resol_conc_conv_epas_2025.pdf` |
+| EELL 2023 | `report_231207_Resolución Concesión EELL.pdf` + anexos |
+| EELL 2024 | `Resolucion con Anexos.pdf` |
+| EELL 2025 | `Resol_conc_EELL_2025.pdf` |
+
+Las de 2026 no la tienen porque aún no están resueltas: solo convocatoria y
+listados de admitidos y excluidos.
+
+Así que **la afirmación correcta no es «no están las resoluciones», sino «no están
+las concesiones como datos»**. Son cosas distintas: lo que el artículo 18.2 obliga
+a remitir es el registro de cada concesión —beneficiario, importe, fecha—, que es
+lo que aparece en la pestaña Concesiones, se puede filtrar, agregar y descargar en
+CSV, XLSX, JSON o XML. Un PDF colgado en la ficha no es eso: para explotarlo hay
+que parsearlo, que es exactamente el trabajo que hace este pipeline. Decirlo mal
+es además fácil de rebatir, porque cualquiera que abra la ficha ve los PDF.
+
+**Esto no es un hueco legal, es un incumplimiento.** El artículo 18.2 de la Ley
+38/2003 General de Subvenciones obliga a las administraciones concedentes a
+remitir a la BDNS «información sobre las convocatorias **y las resoluciones de
+concesión recaídas**», y el artículo 20.2 concreta que debe incluir
+«identificación de los beneficiarios, importe de las subvenciones otorgadas». El
+RD 130/2019 fija el plazo: antes de que acabe el mes siguiente al de la concesión.
+La única excepción es para concesiones de 100 € o menos, y aquí la más pequeña es
+de 600 €. El órgano concedente de las ocho convocatorias —EELL incluidas— es la
+DGDA: los ayuntamientos son beneficiarios, no concedentes, así que la obligación
+no es suya.
+
+### Por qué el volcado de 2022 tampoco habría bastado
+
+Aun en el único año disponible, `/concesiones/busqueda` devuelve **solo las
+concedidas**. No trae puntuaciones, ni causas de exclusión, ni las solicitudes que
+no obtuvieron nada:
+
+| Estado | Registros | % |
+|---|---|---|
+| concedida | 2.623 | 41,0 % |
+| no beneficiaria | 2.627 | 41,1 % |
+| excluida | 641 | 10,0 % |
+| desistida | 505 | 7,9 % |
+
+**El 59 % del dataset no existe en la BDNS de ninguna forma**, ni las 5.250
+puntuaciones ni las 641 causas de exclusión. El buscador de exclusiones sería
+imposible de construir desde esta fuente. El formato nunca fue el obstáculo —hay
+CSV, XLSX, JSON y XML—: la BDNS publica quién cobró, y el BOE publica quién pidió,
+cuánto puntuó y por qué se quedó fuera.
+
+### El cruce de 2022, y lo que revela
+
+Comparadas una a una las 592 concesiones de la BDNS con las 593 concedidas de 2022
+del dataset, difieren en exactamente dos cosas, y las dos a favor del BOE:
+
+1. **A la BDNS le falta una concesión.** `G90180365` (Protectora de Animales La
+   Sexta Huella, 4.684,91 €), que es justo la diferencia entre los dos importes
+   totales (1.999.525,45 € frente a 1.994.840,54 €). Fue denegada en la resolución
+   de 2022 por causa 10 y **concedida después**, publicada en el BOE de 2023 pero
+   perteneciente al expediente `SUBV2022659` de la convocatoria de 2022 — el caso
+   que `resolver_anio_epa` detecta y reatribuye. La BDNS se quedó con la foto de
+   febrero de 2023 y no la actualizó.
+2. **La BDNS arrastra un CIF que el BOE ya rectificó.** Registra `G72307358` para
+   Gatos de El Puerto, cuando el **BOE-A-2023-13752** lo corrigió a `G72296254`.
+   La corrección oficial nunca se propagó.
+
+Es decir: para el único año en que ambas fuentes coinciden, la reconstruida desde
+el BOE está más completa y más al día que la oficial.
+
+### Lo concedido no es lo que se queda cada entidad
+
+Un tercer hueco del artículo 20.2, que exige publicar los importes «efectivamente
+percibidos» y las «resoluciones de reintegros».
+
+**Las dos líneas NO cobran igual, y es fácil equivocarse aquí:**
+
+| | Norma | Pago |
+|---|---|---|
+| Entidades locales | [Orden DSA/1352/2022](https://www.boe.es/buscar/act.php?id=BOE-A-2023-104), art. 19 | «se realizará **con carácter anticipado** por el 100 por ciento de la subvención concedida». Sin condición y sin garantía (art. 18) |
+| Protectoras | [Orden DSA/1045/2021](https://www.boe.es/buscar/act.php?id=BOE-A-2021-16021), art. 14 | El anticipo del 100 % solo procede «**cuando la naturaleza de los gastos subvencionables lo permita**»; para gastos ya realizados se paga «una vez dictada la resolución de concesión» |
+
+En la práctica, como la resolución EPA llega con el periodo subvencionable ya
+cumplido, **la protectora adelanta el dinero de su bolsillo y cobra después**. En
+EELL sí lo recibe antes de gastarlo. Lo confirmó la autora del proyecto, que es
+beneficiaria, y se verificó contra el texto consolidado de ambas órdenes.
+
+En los dos casos hay que justificar, y lo no justificado se **reintegra con
+intereses de demora**; en EELL, ejecutar menos del 60 % del proyecto ya es
+incumplimiento parcial.
+
+Nada de eso se publica, así que el dataset solo puede contener **lo concedido**.
+Los campos `importe` de esta web son eso, no lo que cada entidad acabó reteniendo.
+
+**Lo único que se sabe viene de una solicitud de transparencia** (septiembre de
+2026). El Ministerio respondió que ninguna entidad local renunció en 2023, 2024 ni
+2025 y que no consta expediente de reintegro alguno, y facilitó los expedientes que
+**no presentaron la justificación en plazo**:
+
+| Convocatoria | Sin justificar en plazo | Importe | Nota |
+|---|---|---|---|
+| EELL 2023 | 5 de 60 concedidas (8,3 %) | 188.250 € | tras requerimiento solo 2 presentaron |
+| EELL 2024 | **21 de 55 (38,2 %)** | 624.986 € | se les requiere el trámite |
+| EELL 2025 | — | — | en ejecución, aún no vencen |
+
+**Verificado**: los 26 expedientes que cita la respuesta se cruzaron uno a uno con
+`dataset_unificado.json`. Existen los 26, los 26 constan como `concedida` y el
+nombre coincide en todos. El documento es coherente con el BOE hasta el número de
+expediente, lo que descarta que sea una respuesta genérica.
+
+Tres cautelas al usar estas cifras:
+
+1. **No justificar en plazo no es haber devuelto el dinero.** Es un trámite
+   incumplido cuyo paso siguiente es el requerimiento.
+2. **Es una foto a la fecha de la respuesta.** La convocatoria de 2025 sigue en
+   ejecución y sus justificaciones no han vencido, así que un «ninguna» de hoy no
+   cierra el asunto.
+3. **Solo cubre entidades locales**, que es por lo que se preguntó. De las
+   protectoras no hay equivalente, y eso no permite suponer que allí no ocurra.
+
+Los numeradores (5 y 21) son transcritos: no salen de ninguna resolución del BOE y
+no se pueden calcular. Los denominadores (60 y 55) sí son del dataset, y son
+convocatorias cerradas que ya no cambian.
+
+### Parámetros de la API que conviene no volver a averiguar
+
+El filtro por convocatoria del endpoint de concesiones es **`numeroConvocatoria`**.
+Los nombres intuitivos (`numConv`, `codigoBDNS`, `idConvocatoria`) **no dan error**:
+se ignoran en silencio y la respuesta devuelve las concesiones de toda España, lo
+que se confunde fácilmente con «aquí no hay filtro que valga». La API también
+responde `ERR_MANTENIMIENTO_BBDD` con HTTP 200 en sus ventanas de mantenimiento,
+así que cualquier script que la consulte debe mirar el cuerpo, no el código HTTP.
 
 ---
 
@@ -38,7 +205,7 @@ En conjunto, el dataset se construye de tres fuentes: API BDNS (convocatorias), 
 
 ## Estrategia técnica
 
-La API BDNS proporciona información de convocatorias, pero no incluye los beneficiarios reales de las subvenciones de la DGDA. Se utiliza un pipeline adicional basado en documentos oficiales del BOE (XML, PDF, Excel) para reconstruir los datos completos de concesiones.
+La API BDNS proporciona las convocatorias, pero las concesiones de la DGDA solo están comunicadas para 2022 (ver §API BDNS) y aun así sin puntuaciones ni exclusiones. Se utiliza un pipeline adicional basado en documentos oficiales del BOE (XML, PDF, Excel) para reconstruir los datos completos.
 
 ```text
 API BDNS
@@ -98,6 +265,24 @@ El módulo `scripts/data_processing/bdns_lookup.py` actúa de **puente** entre l
 - Si no la encuentra → usa los diccionarios hardcodeados como fallback y deja `num_convoc` a `NULL`.
 
 Esto sustituye el flujo anterior, en el que las fechas y títulos se mantenían a mano en `_FECHAS` / `_TITULO` y `num_convoc` quedaba siempre vacío para las históricas — perdiéndose la trazabilidad a la ficha BDNS oficial.
+
+**El snapshot se queda viejo, y conviene saber cuándo importa y cuándo no.** El
+que había en `data/raw/convBDNS/` era del **22 de marzo de 2026**, anterior a las
+dos convocatorias de ese año: **EPA 904714** (registrada el 11/05/2026) y
+**EELL 897468** (08/04/2026). Se ha regenerado el 13 de septiembre de 2026 y ya
+están las diez.
+
+Esto **no era un defecto de la base de datos en producción**. `cargar_convocatorias()`
+solo crea las convocatorias que aparecen en el dataset, y el dataset llega hasta
+2025: las de 2026 las insertó `check_bdns.py`, que consulta la API en directo y
+las da de alta con su `num_convoc` correcto. Los diccionarios `_FECHAS` y
+`_TITULO` tienen entradas de 2026 esperando a que haya datos que cargar.
+
+Donde sí habría mordido es en el futuro: cuando se publique la resolución de 2026
+y sus solicitudes entren en el dataset, una carga desde cero con el snapshot viejo
+habría dejado `num_convoc` a `NULL` para ese año, perdiendo el enlace a la ficha
+oficial. Conviene por tanto **regenerar el snapshot antes de incorporar un año
+nuevo**, lanzando `scripts/ingestion/bdns_client.py`.
 
 ---
 

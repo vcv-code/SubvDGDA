@@ -220,15 +220,17 @@ Endpoints:
 
 ### Limitación detectada
 
-Las concesiones de la **DGDA no aparecen en la API pública**, aunque sí existen en resoluciones oficiales.
+De las ocho convocatorias resueltas de la DGDA, **la API pública solo publica las concesiones de una**: la de 2022, comunicadas el 14 de febrero de 2023. Las demás no están, ni en el registro general ni en los de *de minimis* o ayudas de Estado. Y aun ese único año trae solo las concedidas: sin puntuaciones y sin causas de exclusión, que son el 59 % del dataset.
 
 Esto obliga a usar los documentos oficiales del BOE (XML y PDF) como fuente principal.
+
+No es un hueco de la norma: la Ley 38/2003 (arts. 18.2 y 20.2) obliga a comunicar también las resoluciones de concesión, con beneficiarios e importes. El detalle de la comprobación, con la tabla convocatoria a convocatoria, está en [docs/pipeline-datos.md](docs/pipeline-datos.md).
 
 ---
 
 ## Fuentes oficiales DGDA (BOE)
 
-Las resoluciones de concesión no aparecen en la API BDNS — se obtienen directamente de los documentos oficiales publicados en el BOE.
+Salvo las de 2022, las resoluciones de concesión no están en la API BDNS — se obtienen directamente de los documentos oficiales publicados en el BOE.
 
 ### Datos de protectoras (EPA) — XML BOE
 
@@ -260,7 +262,7 @@ Las resoluciones de concesión no aparecen en la API BDNS — se obtienen direct
 
 ## Pipeline de datos
 
-La API BDNS proporciona convocatorias pero no incluye los beneficiarios reales de las subvenciones de la DGDA. Los datos de concesiones se obtienen de documentos oficiales del BOE (XML, PDF, Excel) y se procesan mediante un pipeline de parseo, normalización y carga:
+La API BDNS proporciona las convocatorias, pero de los beneficiarios reales solo publica los de 2022 y sin puntuaciones ni exclusiones. Los datos de concesiones se obtienen de documentos oficiales del BOE (XML, PDF, Excel) y se procesan mediante un pipeline de parseo, normalización y carga:
 
 ```text
 XML / PDF / Excel BOE (DGDA)

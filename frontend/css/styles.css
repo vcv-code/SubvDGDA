@@ -4768,8 +4768,14 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
 
 
 /* ── Umbral de puntuación (corte de concesión por año) ── */
-/* Banda crema entre las dos secciones verdes del inicio (convocatorias y
-   gráficos), para romper la secuencia de dos verdes seguidos. */
+/* Banda crema entre los gráficos (verdes) y el bloque de cierre sobre lo que
+   la ley obliga a publicar (verde también, desde que reúne los dos
+   incumplimientos), para romper la secuencia de dos verdes seguidos.
+
+   OJO: esta sección nace con `display:none` y solo se muestra cuando responde
+   la API. Si la API fallara, las dos secciones verdes quedarían pegadas. Es un
+   defecto cosmético de un estado ya degradado —sin API tampoco hay tablas ni
+   cifras— y se acepta a sabiendas. */
 #seccion-umbral {
     background-color: var(--hero-crema, #FAF4EE);
     padding: var(--espacio-lg) 0;
@@ -5688,7 +5694,10 @@ details[open] .admin-resueltas__summary::before { content: '▼ '; }
    de solo texto, la estira hasta ocupar una pantalla entera y deja medio
    hueco en blanco debajo. */
 .seccion-estadistica {
-    background-color: var(--hero-crema, #FAF4EE);
+    /* Verde y no el crema de antes: el bloque reúne los dos incumplimientos y
+       se ha hecho largo, así que necesita despegarse del bloque del umbral de
+       puntuación, que va sin fondo y queda justo encima. */
+    background-color: var(--color-fondo-verde);
 }
 
 /* La barra de navegación es `position: fixed`, así que al saltar a un ancla el
@@ -5710,6 +5719,119 @@ section[id] {
 
 .estadistica-texto p:last-child {
     margin-bottom: 0;
+}
+
+/* El bloque reúne DOS incumplimientos —las concesiones que no llegan a la BDNS
+   y la estadística de la Ley 7/2023— y juntos son ocho párrafos seguidos. Sin
+   separarlos se leen como un muro. Van en h3 y no en negrita suelta para que
+   el índice de encabezados de un lector de pantalla refleje esa división. */
+.estadistica-subtitulo {
+    /* Sin subrayado: se probó con un borde inferior y, aunque era más grueso y
+       de otro color que el de los enlaces, en un bloque lleno de enlaces
+       subrayados seguía leyéndose como uno. La jerarquía la marcan el tamaño y
+       el color, que no se confunden con nada. Queda a medio camino entre el
+       título de la sección (1,75 rem) y el texto corrido (0,9375 rem). */
+    margin: 28px 0 10px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-verde-tabla, #2E6B4F);
+}
+
+.estadistica-subtitulo:first-child {
+    margin-top: 0;
+}
+
+/* Las dos cifras de justificaciones fuera de plazo. En lista y no dentro del
+   párrafo porque se comparan entre sí —el salto de 2023 a 2024 es el dato— y
+   en prosa seguida esa comparación se pierde. Hereda el tamaño de
+   `.estadistica-texto p`, que no la alcanza por ser `li` y no `p`. */
+.estadistica-lista {
+    margin: 0 0 12px;
+    /* Hay un `ul { list-style: none }` global, así que el marcador se dibuja a
+       mano. Con `::before` y no con `::marker`, que es lo que se usó en Recursos:
+       en este mismo bloque los ✓ y ✕ ya van por `::before`, y mezclar los dos
+       mecanismos en una sección obligaría a recordar cuál manda en cada lista. */
+    padding-left: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.estadistica-lista li {
+    position: relative;
+    padding-left: 1.2rem;
+}
+
+.estadistica-lista li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-verde-tabla, #2E6B4F);
+}
+
+.estadistica-lista li + li {
+    margin-top: 6px;
+}
+
+/* Variante con marcador de estado: lo que sí está publicado y lo que no.
+   El símbolo es DECORACIÓN: cada línea dice ya en palabras si hay algo («todas»,
+   «solo las de 2022», «nunca»), así que quien no vea el color o use un lector de
+   pantalla no pierde nada. Se reutiliza `--estado-excluida`, el rojo que el
+   proyecto ya usa para las solicitudes excluidas, en vez de introducir otro. */
+.estadistica-lista--estado {
+    list-style: none;
+    padding-left: 0;
+}
+
+.estadistica-lista--estado li {
+    position: relative;
+    padding-left: 1.6rem;
+}
+
+.estadistica-lista--estado li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+}
+
+.estadistica-lista--estado .es-si::before {
+    content: "\2713";                 /* ✓ */
+    color: var(--color-verde-btn, #2E7D32);
+}
+
+.estadistica-lista--estado .es-no::before {
+    content: "\2715";                 /* ✕ */
+    color: var(--estado-excluida, #C62828);
+}
+
+/* El total va en la misma lista pero no es un elemento más de la enumeración:
+   es la suma de las dos líneas anteriores. Sin marcador —no es ni un sí ni un
+   no— y separado por una línea fina, que es como se lee un total. */
+.estadistica-lista--estado .es-total {
+    margin-top: 12px;
+    padding-top: 10px;
+    padding-left: 0;
+    border-top: 1px solid var(--color-gris-medio, #E0E0E0);
+    font-size: 1.0625rem;
+    /* Centrado: es la suma de la lista, no un punto más de ella. Alineado a la
+       izquierda como los demás se leía como un quinto elemento. */
+    text-align: center;
+}
+
+.estadistica-lista--estado .es-total::before {
+    content: none;
+}
+
+.estadistica-lista--estado .es-total strong {
+    color: var(--color-verde-tabla, #2E6B4F);
+}
+
+/* `hidden` no basta si algún día se le da un `display` a este `li`: la regla de
+   arriba no lo hace, pero se deja explícito porque el bloque nace oculto y un
+   fallo aquí no se ve, solo desaparece el dato. */
+.estadistica-lista--estado .es-total[hidden] {
+    display: none;
 }
 
 /* Los <a> globales van sin subrayado y con color heredado, así que en mitad de
