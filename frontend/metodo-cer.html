@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<!--
+    metodo-cer.html — Qué es el método CER y por qué hay dinero público detrás
+    Proyecto: Subvenciones Bienestar Animal — BDNS / DGDA
+
+    Página 100% estática. Sin fetch ni dependencias de backend.
+
+    POR QUÉ EXISTE. El resto de la web enseña CUÁNTO dinero público va a esto.
+    Esta contesta al «¿y por qué?», que es la pregunta de quien llega escéptico
+    y la que no responde ninguna tabla.
+
+    FORMATO DE PREGUNTAS Y NO DE ARTÍCULO. Quien busca esto no quiere leerse un
+    texto seguido: llega con una duda concreta («¿por qué no se los llevan?»,
+    «¿por qué esterilizar en vez de retirar?»). Las preguntas van como
+    encabezados reales y con el contenido a la vista, no plegado: así se
+    encuentran con Ctrl+F, se pueden enlazar una a una y las indexa un buscador.
+
+    ATENCIÓN AL REDACTAR. Esta web se apoya en reproducir fielmente lo
+    publicado. Los datos que llevan comentario «FUENTE PENDIENTE» proceden de la
+    memoria del proyecto de La Gata Pirata y NO se han verificado contra una
+    fuente citable. Antes de publicar: o se les pone fuente, o se reformulan, o
+    se quitan. Lo que ya está verificado lleva su enlace en el propio texto.
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://subvencionesdgda.org/metodo-cer.html">
+    <title>El método CER y la gestión ética de colonias felinas — Subvenciones DGDA</title>
+    <meta name="description"
+          content="Qué es el método CER (capturar, esterilizar, retornar), por qué es el sistema que exige la ley para las colonias felinas, y el dinero público —y sobre todo privado— que hay detrás.">
+
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <meta property="og:title" content="El método CER y la gestión ética de colonias felinas">
+    <meta property="og:description" content="Qué es el método CER, y el dinero público y privado que hay detrás de la gestión de colonias felinas.">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="assets/img/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <a class="skip-nav" href="#contenido-principal">Saltar al contenido principal</a>
+
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Navegación principal">
+            <a class="navbar__logo" href="index.html" aria-label="Ir al inicio">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="49" height="54">
+                <span class="navbar__logo-text">Subvenciones DGDA</span>
+            </a>
+            <ul class="navbar__links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="buscador.html">Buscador</a></li>
+                <li><a href="estadisticas-epas.html" title="Entidades Protectoras de Animales">EPAs</a></li>
+                <li><a href="estadisticas-eell.html">EELL</a></li>
+                <li><a href="recursos.html">Recursos</a></li>
+            </ul>
+            <button class="navbar__hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <main id="contenido-principal">
+
+        <section class="seccion" aria-labelledby="cer-titulo">
+            <div class="contenedor">
+
+                <div class="bloque-intro">
+                    <h1 class="bloque-titulo" id="cer-titulo">El método CER y la gestión ética de colonias felinas</h1>
+                    <p class="bloque-subtitulo">
+                        Capturar, esterilizar y retornar. Qué es, por qué es el sistema
+                        que recoge la ley y por qué hay dinero público detrás — y muchísimo
+                        dinero privado que la Administración se ahorra.
+                    </p>
+                </div>
+
+                <!-- Índice: la página está pensada para llegar desde un buscador con
+                     una duda concreta, así que lo primero tiene que ser poder saltar
+                     a ella sin leerse el resto. -->
+                <nav class="faq-indice" aria-label="Preguntas de esta página">
+                    <ul>
+                        <li><a href="#que-es">¿Qué es exactamente el método CER?</a></li>
+                        <li><a href="#gato-comunitario">¿Qué es un gato comunitario? ¿No es un gato callejero?</a></li>
+                        <li><a href="#por-que-no-retirar">¿No sería más fácil retirarlos de la calle?</a></li>
+                        <li><a href="#reubicar">¿Y llevarlos a otro sitio?</a></li>
+                        <li><a href="#por-que-funciona">¿Por qué esterilizar funciona y otras cosas no?</a></li>
+                        <li><a href="#mutilar">¿No es mutilarlos?</a></li>
+                        <li><a href="#cer-30">¿Qué es el «CER 3.0»?</a></li>
+                        <li><a href="#dinero-publico">¿Por qué se gasta dinero público en gatos?</a></li>
+                        <li><a href="#quien-lo-hace">¿Quién hace este trabajo?</a></li>
+                        <li><a href="#prevenir">¿Se puede evitar que aparezcan colonias nuevas?</a></li>
+                        <li><a href="#que-dice-la-ley">¿Qué dice la ley?</a></li>
+                        <li><a href="#otros-paises">¿Funciona esto en otros sitios?</a></li>
+                        <li><a href="#ratas">¿No sirven para controlar las ratas?</a></li>
+                        <li><a href="#biodiversidad">¿Y el supuesto daño a la biodiversidad?</a></li>
+                        <li><a href="#datos">Otras cosas que conviene saber</a></li>
+                        <li><a href="#fuentes">De dónde sale todo esto</a></li>
+                    </ul>
+                </nav>
+
+                <div class="faq">
+
+                    <h2 class="faq__pregunta" id="que-es">¿Qué es exactamente el método CER?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            CER son las siglas de <strong>Capturar, Esterilizar y Retornar</strong>.
+                            Consiste en capturar a los gatos de una colonia, esterilizarlos
+                            quirúrgicamente y devolverlos al mismo sitio del que salieron, marcados
+                            en una oreja para identificarlos a simple vista y no volver a
+                            capturarlos sin necesidad.
+                        </p>
+                        <p>
+                            La idea de fondo es sencilla: si los gatos siguen ahí pero ya no se
+                            reproducen, la colonia deja de crecer y se va reduciendo sola con el
+                            tiempo. En inglés se conoce como <em>TNR</em> (<em>trap, neuter,
+                            return</em>) y se aplica en muchos países desde hace décadas.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="gato-comunitario">¿Qué es un gato comunitario? ¿No es un gato callejero?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            No son lo mismo, y la diferencia importa porque cada caso necesita una
+                            actuación distinta:
+                        </p>
+                        <ul class="faq__lista">
+                            <li><strong>Gato casero:</strong> vive en una casa. Si sale, debería hacerlo vigilado.</li>
+                            <li><strong>Gato perdido o abandonado:</strong> vivió en una casa y acabó en la calle. Lo que procede es buscar a su familia o rescatarlo y darlo en adopción — no está preparado para sobrevivir fuera.</li>
+                            <li><strong>Gato comunitario:</strong> ha nacido en la calle y no conoce otra cosa. Apenas se relaciona con personas, no se deja tocar y no se adapta a vivir en una casa. Es el destinatario del CER.</li>
+                        </ul>
+                        <p>
+                            Y dentro de los comunitarios <strong>hay grados</strong>, que es algo
+                            que se pierde cuando se habla de ellos como si fueran todos iguales.
+                            Algunos llegan a tener bastante confianza con su gestora —se dejan ver,
+                            se acercan a comer, en algún caso incluso tocar— y con nadie más. Otros
+                            no se fían de ninguna persona, ni siquiera de quien lleva años
+                            alimentándolos. Esa diferencia importa a la hora de capturar, de valorar
+                            si un animal podría adaptarse a un hogar y de decidir cómo actuar con
+                            cada uno.
+                        </p>
+                        <p>
+                            Sobre cómo llamarlos: lo correcto es <strong>gato comunitario</strong>,
+                            gato urbano o gato de vida libre. Conviene evitar «asilvestrado»,
+                            «silvestre» o «feral», porque el gato doméstico
+                            (<em lang="la">Felis catus</em>) está clasificado como especie
+                            doméstica, y tratarlo como fauna salvaje cambia la protección jurídica
+                            que le corresponde.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="por-que-no-retirar">¿No sería más fácil retirarlos de la calle?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Es la pregunta más frecuente, y la respuesta es que ya se probó durante
+                            décadas y <strong>no funciona</strong>. Cuando se vacía una colonia se
+                            produce el llamado <strong>efecto de nicho vacío</strong>: el territorio
+                            queda libre con su comida y sus refugios, y lo ocupan gatos de las zonas
+                            de alrededor. En unos meses hay otra vez una colonia en el mismo sitio,
+                            esta vez sin esterilizar.
+                        </p>
+                        <p>
+                            Además, un gato comunitario <strong>no es adoptable</strong>, y esto no
+                            es una opinión: la propia Ley 7/2023 lo define como el gato que «vive en
+                            libertad» y «no puede ser abordado o mantenido con facilidad por los
+                            seres humanos debido a su bajo o nulo grado de socialización» (art. 3.u).
+                            Encerrarlo no lo convierte en un gato de casa.
+                        </p>
+                        <p>
+                            Conviene decirlo claro, porque es lo que se propone cada vez que hay una
+                            queja vecinal: <strong>meter en una jaula de por vida a un animal que ha
+                            vivido siempre suelto es maltratarlo</strong>. Un gato no socializado
+                            encerrado no se adapta, se deteriora — deja de comer, se autolesiona,
+                            enferma de estrés. No es una solución intermedia entre dejarlo y matarlo:
+                            es una condena larga.
+                        </p>
+                        <p>
+                            Y la vía rápida tampoco está disponible: desde 2023 está
+                            <strong>prohibido sacrificar</strong> a un animal en un centro de
+                            protección por falta de plazas, por sobrepoblación o por no encontrarle
+                            adoptante (art. 27.a). La ley zanja además el debate de fondo: el
+                            objetivo es «reducir progresivamente su población manteniendo su
+                            protección como animales de compañía» (art. 38.1), con esterilización e
+                            identificación obligatorias. Es decir, el CER no es una opción entre
+                            varias — es el método que la ley ordena.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="reubicar">¿Y llevarlos a otro sitio?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Los gatos son territoriales: reubicados, tienden a intentar volver o a
+                            dispersarse buscando un territorio propio, con lo que eso implica de
+                            atropellos y peleas. Entre quienes trabajan en esto se repite que
+                            <strong>«la mejor reubicación es la que no se hace»</strong>.
+                        </p>
+                        <p>
+                            Solo tiene sentido cuando <strong>no queda otra opción</strong> —una
+                            demolición, una obra que se come el territorio entero— y aun así hay que
+                            hacerla de forma gradual, desplazando poco a poco el punto de
+                            alimentación durante semanas, no de un día para otro.
+                        </p>
+                        <p>
+                            El sitio de destino tampoco vale cualquiera: hace falta que haya
+                            <strong>comida, refugio y alguien que se ocupe</strong>, y que no haya ya
+                            otra colonia que los rechace. Sin eso, una reubicación es un abandono con
+                            otro nombre — y el abandono es infracción.
+                        </p>
+                        <p>
+                            Por eso <strong>dónde puede haber colonia no lo decide quien se queja</strong>.
+                            Es una decisión técnica, que parte de dónde están los gatos realmente y
+                            de si el sitio reúne condiciones, y que la ley pone en manos del
+                            ayuntamiento dentro de su Programa de Gestión de Colonias Felinas. Un
+                            traslado porque a alguien le molesta no es gestión: devuelve el problema
+                            al punto de partida, y unos meses después hay colonia otra vez.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="por-que-funciona">¿Por qué esterilizar funciona y otras cosas no?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Porque el problema es la velocidad de reproducción, y es la única
+                            variable sobre la que se puede actuar de forma permanente.
+                        </p>
+                        <!-- Datos tomados de un plan de acción 2026-2030 sobre gestión de colonias
+                             felinas, que a su vez cita a Nutter et al. 2004, Izawa et al. 1982,
+                             Say et al. 1999, Root Kustritz 2005 y Giménez et al. 2006.
+                             PENDIENTE: confirmar cómo citar ese plan (título exacto y si es
+                             público) para poder enlazarlo en el apartado de fuentes. -->
+                        <ul class="faq__lista">
+                            <li>Lo habitual son <strong>dos camadas al año</strong> —a veces una, a veces tres— de <strong>unas cuatro crías</strong> cada una.</li>
+                            <li>El primer celo suele llegar <strong>a los cinco o seis meses</strong>, aunque hay gatas que se quedan preñadas <strong>a los cuatro</strong>. Son minoría, pero ocurre.</li>
+                            <li>El celo lo regulan <strong>las horas de luz</strong> y la temperatura. En buena parte de España el clima permite que se dé casi todo el año.</li>
+                            <li>Puede volver a quedarse gestante <strong>a las cuatro semanas del parto</strong>, todavía dando de mamar a la camada anterior.</li>
+                            <li>Son de <strong>ovulación inducida</strong>: ovulan por el propio apareamiento, así que casi cada monta acaba en gestación.</li>
+                        </ul>
+                        <p>
+                            Que alguna se preñe a los cuatro meses es la razón de que en colonias
+                            convenga <strong>no esperar</strong>. La
+                            <a href="https://catvets.com/resource/pediatric-sterilization-position-statement-pediatric-sterilization-in-cats-position-statement/" target="_blank" rel="noopener noreferrer">Asociación Americana de Veterinarios de Felinos</a>
+                            considera segura la esterilización <strong>desde las seis semanas</strong>
+                            y recomienda hacerla antes de los cinco meses: no hay evidencia de más
+                            complicaciones ni de efectos adversos a largo plazo. En un gato de casa
+                            no corre tanta prisa; en uno que vive fuera, cada mes de espera puede
+                            ser una camada.
+                        </p>
+                        <p>
+                            Hay un detalle de esa ovulación inducida que explica por qué esto hay
+                            que hacerlo <strong>a fondo o no hacerlo</strong>: una misma camada
+                            puede tener varios padres. En colonias urbanas densas ocurre en el
+                            <strong>70-83 % de las camadas</strong>, frente al 0-22 % en zonas
+                            rurales. Es decir, esterilizar solo a unos cuantos machos de una colonia
+                            no frena prácticamente nada.
+                        </p>
+                        <p>
+                            Con esos números, una colonia sin gestionar crece de forma exponencial:
+                            <strong>diez gatos pueden pasar de cincuenta en tres años</strong>. Y
+                            alimentarla sin esterilizarla acelera el problema en vez de resolverlo.
+                        </p>
+                        <p>
+                            Se oye a veces que no hace falta intervenir porque «la naturaleza
+                            regula»: entre el <strong>50 % y el 75 % de los gatitos no llega a los
+                            seis meses</strong>, sobre todo en las primeras ocho semanas, por
+                            enfermedad, frío, hambre o depredación. Pero eso no es un argumento en
+                            contra de esterilizar, sino a favor. Esa mortalidad <strong>no controla
+                            la población</strong> —en cuanto mejoran las condiciones, se recupera
+                            sola— y mientras tanto lo que hay son camadas enteras muriendo en la
+                            calle.
+                        </p>
+                        <p>
+                            El efecto depende de <strong>la cobertura</strong>, y aquí hay cifras de
+                            referencia. Se considera que hace falta esterilizar en torno al
+                            <strong>70 %</strong> de la colonia solo para que <strong>deje de
+                            crecer</strong>; para que empiece a bajar de verdad hay que acercarse al
+                            <strong>90 %</strong> o más. Por eso un CER hecho a medias no sirve de
+                            mucho: lo que decide el resultado es llegar a casi toda la colonia y
+                            sostenerlo en el tiempo, no cuántos gatos se esterilizan en total.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="mutilar">¿No es mutilarlos?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Es una objeción que se hace desde el cariño a los animales, así que
+                            merece una respuesta honesta y no una evasiva. Son dos cosas distintas:
+                            la marca de la oreja y la propia operación.
+                        </p>
+                        <p>
+                            <strong>La marca de la oreja</strong> es un corte pequeño en la punta,
+                            hecho <strong>bajo la misma anestesia</strong> de la esterilización.
+                            Cicatriza en unos días y después no molesta: no afecta al oído ni al
+                            equilibrio. Y tiene una función muy concreta: es lo único que permite
+                            saber <strong>a distancia y sin tocar al animal</strong> que ese gato ya
+                            está esterilizado.
+                        </p>
+                        <p>
+                            Sin esa marca, el gato vuelve a ser capturado, trasladado, sedado y
+                            abierto para comprobar algo que ya se había hecho. Es decir:
+                            <strong>esa marca evita sufrimiento, no lo causa</strong>. Es el mínimo
+                            imprescindible para que el método funcione.
+                        </p>
+                        <p>
+                            <strong>La esterilización</strong> sí es una cirugía y sí retira los
+                            órganos reproductores. Pero la comparación honesta no es con un gato
+                            intacto que vive tranquilo, sino con lo que de verdad ocurre en la
+                            calle: camadas una detrás de otra, crías que mueren a las pocas semanas,
+                            peleas por celo, heridas que se infectan, enfermedades que se contagian
+                            precisamente en esas peleas y montas, y una vida corta.
+                        </p>
+                        <p>
+                            A eso se añade lo que la operación previene. En las hembras
+                            <strong>elimina la piometra</strong> —una infección de útero que mata si
+                            no se trata a tiempo— y otros trastornos reproductivos, y reduce mucho
+                            el riesgo de tumores mamarios: las gatas esterilizadas antes del año
+                            tienen un <strong>86 % menos de riesgo</strong> de desarrollarlos que
+                            las no esterilizadas, según
+                            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6070019/" target="_blank" rel="noopener noreferrer">la literatura veterinaria</a>.
+                            En los machos baja la agresividad, el vagabundeo y el marcaje, y con
+                            ello las heridas y los contagios que vienen de las peleas.
+                        </p>
+                        <p>
+                            Para ser justos: en medicina veterinaria se discute cuál es la edad
+                            óptima y qué otros riesgos introduce la cirugía en animales de compañía.
+                            En un gato que vive en la calle, en cambio, el balance no está en
+                            discusión.
+                        </p>
+                        <p>
+                            Si hay un dato que resume todo esto, es la esperanza de vida: un gato en
+                            una colonia sin gestionar vive <strong>entre dos y cinco años</strong>.
+                            En una colonia con CER, alimentación y seguimiento veterinario, entre
+                            <strong>ocho y diez</strong>. El doble o el triple de vida.
+                        </p>
+                        <p>
+                            Así que sí: es <strong>el mal menor</strong>, y se hace en lo mínimo
+                            imprescindible. Nadie que trabaje en esto lo hace por gusto — se hace
+                            porque la alternativa, para los propios gatos, es mucho peor.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="cer-30">¿Qué es el «CER 3.0»?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            La versión ampliada del método: aprovechando que el animal ya está
+                            sedado para la operación, se hace todo lo demás de una vez.
+                        </p>
+                        <ul class="faq__lista">
+                            <li><strong>Desparasitación</strong> interna y externa.</li>
+                            <li><strong>Vacunación.</strong></li>
+                            <li><strong>Identificación con microchip</strong>, a nombre de la administración.</li>
+                        </ul>
+                        <p>
+                            La vacunación no es un extra: la <strong>panleucopenia felina</strong>
+                            —la parvovirosis del gato— puede llevarse por delante <strong>hasta el
+                            90 % de los gatitos</strong> de una colonia durante un brote. Una colonia
+                            esterilizada pero sin protocolo sanitario sigue expuesta a perderse
+                            entera.
+                        </p>
+                        <p>
+                            El microchip es lo que más cambia las cosas: permite saber cuántos gatos
+                            hay de verdad, seguir a cada uno y tener un censo real en lugar de una
+                            estimación. Es también lo que convierte la gestión de colonias en algo
+                            medible — que es, precisamente, lo que esta web echa en falta en los
+                            datos públicos.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="dinero-publico">¿Por qué se gasta dinero público en gatos?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Porque no es solo una cuestión de bienestar animal: una colonia sin
+                            gestionar genera problemas que acaban costando dinero de todas formas.
+                            Ruido por peleas y celos, olores, suciedad, quejas vecinales que hay que
+                            tramitar, avisos a la policía local, animales enfermos o atropellados en
+                            la vía pública y plazas ocupadas en los centros de protección animal.
+                        </p>
+                        <p>
+                            La diferencia es que el CER es un gasto que <strong>decrece</strong>: una
+                            colonia controlada necesita cada vez menos intervenciones, mientras que
+                            no hacer nada genera un gasto que crece con la población.
+                        </p>
+                        <p>
+                            Y hay un motivo más simple: <strong>la ley lo atribuye a las entidades
+                            locales</strong>. No es una actividad opcional que unas administraciones
+                            decidan financiar por sensibilidad.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="quien-lo-hace">¿Quién hace este trabajo?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            En la práctica, buena parte lo sostienen <strong>asociaciones y personas
+                            voluntarias</strong>: alimentan las colonias, hacen las capturas, llevan
+                            a los animales a la clínica y los devuelven. Muchas veces adelantando el
+                            dinero de su bolsillo.
+                        </p>
+                        <p>
+                            Y no solo eso. Gracias a gestoras, rescatistas y asociaciones,
+                            <strong>miles de gatos salen cada año de las calles y de los
+                            pueblos</strong>: cachorros, animales sociables que sí pueden vivir en
+                            una casa, heridos y enfermos que necesitaban atención. Ese trabajo no
+                            aparece en ninguna estadística oficial, pero es el que evita que muchas
+                            de esas colonias existan siquiera.
+                        </p>
+                        <p>
+                            Esa es la razón de que existan las subvenciones que recoge esta web:
+                            <a href="estadisticas-epas.html">las de entidades de protección animal</a>
+                            y <a href="estadisticas-eell.html">las de entidades locales</a>.
+                        </p>
+                        <p>
+                            Conviene saber de qué cantidades hablamos, porque circula la idea de que
+                            esto son chiringuitos que viven de subvenciones. Según los datos de esta
+                            misma web, <strong>la mitad de las ayudas concedidas desde 2021 no
+                            llegó a los 3.668 €</strong> —esa es la mediana de las cinco
+                            convocatorias resueltas—. El tope por entidad estuvo en 5.000 € hasta
+                            2023 y subió después, pero sigue siendo una cifra modesta para lo que
+                            cuesta sostener colonias.
+                        </p>
+                        <p>Para situarlo, los dos gastos principales:</p>
+                        <ul class="faq__lista">
+                            <li><strong>Esterilizar.</strong> En clínica privada varía bastante, pero suele ir de <strong>30 a 50 € un macho</strong> y de <strong>60 a 100 € una hembra</strong>. En algunos municipios lo asume el propio ayuntamiento; en otros, no.</li>
+                            <li><strong>Alimentar.</strong> Un gato comunitario come entre 50 y 70 gramos de pienso seco al día, unos 18-22 kg al año. A precio de mercado salen <strong>36-44 € por gato y año</strong>, según los cálculos del <a href="recursos.html">modelo de propuesta de contratación</a> que puedes descargar en Recursos. Para una colonia de diez, unos 400 € anuales.</li>
+                        </ul>
+                        <p>
+                            Y ahí <strong>no entra la comida húmeda</strong>, que es un dineral y
+                            no un capricho: hace falta para desparasitar, para las capturas, para los
+                            gatos mayores o con problemas de boca y para hidratarlos en verano.
+                            Tampoco los medicamentos, las pruebas veterinarias, el material de
+                            captura ni la gasolina.
+                        </p>
+                        <p>
+                            Con esas cifras, la subvención mediana da para alimentar unas nueve
+                            colonias de diez gatos durante un año —solo pienso seco—, o para
+                            esterilizar entre cincuenta y ochenta gatos, según los precios de la
+                            zona. Poco más.
+                        </p>
+                        <p>
+                            Y hay algo que se entiende mal casi siempre: <strong>la subvención no
+                            financia un proyecto, reembolsa una parte de lo ya gastado</strong>. El
+                            artículo 11 de la
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2021-16021" target="_blank" rel="noopener noreferrer">Orden DSA/1045/2021</a>
+                            reparte el dinero «de forma directamente proporcional al importe de los
+                            gastos acreditados», con un tope de 5.000 € por entidad. Como la bolsa
+                            es fija y las solicitantes se cuentan por cientos —840 en 2025, 880 en
+                            2024—, a cada una le toca un porcentaje.
+                        </p>
+                        <p>
+                            En la práctica eso significa que hay asociaciones que
+                            <strong>justifican 14.000 o 15.000 € de gasto para acabar cobrando poco
+                            más de 5.000</strong>: alrededor de un tercio. Con las ayudas
+                            autonómicas y municipales pasa algo parecido <strong>donde las
+                            hay</strong>, que no es en todas partes: hay comunidades que convocan y
+                            ayuntamientos que no, y al revés. Y a veces con requisitos que no muchas
+                            entidades pueden cumplir.
+                        </p>
+                        <p>
+                            Y ese gasto declarado <strong>tampoco es el gasto real</strong>: solo
+                            entran los conceptos que la convocatoria admite como subvencionables. Lo
+                            que se queda fuera —y hay bastante— no aparece en ningún sitio.
+                        </p>
+                        <p>
+                            A eso se añade que <strong>muchas entidades ni se presentan</strong>
+                            —por desconocimiento, o porque no hay manos para la gestión— y que
+                            <strong>cada vez quedan más fuera las que sí lo hacen</strong>. Los
+                            datos de esta web lo enseñan con claridad:
+                        </p>
+                        <ul class="faq__lista">
+                            <li>En <strong>2021</strong>, el <strong>92 %</strong> de las protectoras que solicitaron la ayuda estatal la recibió.</li>
+                            <li>En <strong>2025</strong>, solo el <strong>53 %</strong>: de 840 solicitudes, 446 con ayuda y 394 sin nada.</li>
+                            <li>Ese año, <strong>279 entidades cumplían los requisitos y aun así se quedaron fuera</strong>, por el corte de puntuación. Uno de cada tres solicitantes.</li>
+                        </ul>
+                        <p>
+                            La diferencia la ponen las voluntarias y quienes donan. Y esto
+                            <strong>ya no hay que estimarlo</strong>: lo ha medido
+                            la propia Administración. En una encuesta de la Dirección General de
+                            Derechos de los Animales a <strong>463 cuidadoras</strong>, recogida en
+                            su Plan de Acción 2026-2030, sale que una persona cuidadora se gasta de
+                            media <strong>unos 2.200 € al año</strong>, y que
+                            <strong>el 93 % de ese dinero es suyo</strong>.
+                        </p>
+                        <p>
+                            El mismo plan calcula, a partir de presupuestos municipales reales, que
+                            aplicar el CER cuesta <strong>unos 150 € por gato el primer año</strong>
+                            y unos <strong>80 € al año</strong> de mantenimiento después: con la
+                            subvención mediana, unos veinticuatro gatos.
+                        </p>
+                        <p>
+                            Esa encuesta deja además otro dato que explica bastante: el
+                            <strong>72,5 % de las cuidadoras y entidades</strong> dice tener
+                            dificultades con su ayuntamiento. Los dos motivos más citados son el
+                            desinterés institucional y, directamente, la falta de respuesta.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="prevenir">¿Se puede evitar que aparezcan colonias nuevas?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Sí, y es la otra mitad del trabajo. El CER resuelve la colonia que ya
+                            existe, pero el origen está antes: la propia Ley 7/2023 dice que estas
+                            colonias tienen su origen en gatos «abandonados, extraviados o
+                            merodeadores sin esterilizar», y que son <strong>«producto de la
+                            tenencia irresponsable»</strong>.
+                        </p>
+                        <p>
+                            Por eso <strong>castrar e identificar a los gatos de casa ya es
+                            obligatorio</strong>. El artículo 26 impone «identificar mediante
+                            microchip y proceder a la esterilización quirúrgica de todos los gatos
+                            <strong>antes de los seis meses de edad</strong>», salvo los inscritos
+                            como reproductores a nombre de un criador registrado. Y no queda en una
+                            recomendación: el artículo 39.1.i) obliga a las entidades locales a
+                            establecer «mecanismos normativos y de vigilancia para llevar a cabo el
+                            control y la <strong>sanción</strong>» de quien tenga gatos sin
+                            identificar ni esterilizar.
+                        </p>
+                        <p>
+                            Y la identificación no es ninguna novedad: <strong>muchas comunidades
+                            autónomas ya la exigían antes</strong> de la ley estatal. En la
+                            Comunidad de Madrid, por ejemplo, la
+                            <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2016-11097" target="_blank" rel="noopener noreferrer">Ley 4/2016</a>
+                            obliga a identificar con microchip a perros y gatos
+                            <strong>antes de los tres meses de edad</strong> (art. 14.1), y a
+                            comunicar el cambio de titularidad en tres días hábiles.
+                        </p>
+                        <p>
+                            Lo que pasa es que <strong>apenas se comprueba</strong>. Un gato que
+                            vive en casa no se cruza con nadie que pueda pedirle la identificación
+                            —a diferencia de un perro, que sale a la calle todos los días—, así que
+                            la obligación pasa desapercibida durante años. Hasta que el animal se
+                            pierde o lo abandonan, que es exactamente cuando el chip habría servido
+                            para algo.
+                        </p>
+                        <p>
+                            Junto a eso está el trabajo menos vistoso y probablemente el más
+                            rentable a largo plazo: <strong>concienciar, informar y educar</strong>.
+                            Charlas en colegios, campañas de esterilización e identificación a
+                            precio asequible, información sobre proteger ventanas y terrazas, sobre
+                            qué implica adoptar, sobre por qué un gato no debe andar suelto sin
+                            castrar. Lo hacen las asociaciones —casi siempre por su cuenta— y
+                            algunos ayuntamientos que sí se lo han tomado en serio. La ley también
+                            lo contempla: entre sus fines están «desarrollar actividades
+                            formativas, divulgativas e informativas» y «promover campañas de
+                            identificación, vacunación, esterilización, cría y venta responsable».
+                        </p>
+                        <p>
+                            El razonamiento es sencillo: <strong>cada gato castrado a tiempo es una
+                            colonia que no llega a existir</strong>. Y cuanta menos gente pierda o
+                            abandone a su gato, menos trabajo hay que hacer después en la calle.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="que-dice-la-ley">¿Qué dice la ley?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            La <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-7936" target="_blank" rel="noopener noreferrer">Ley 7/2023</a>
+                            de protección de los derechos y el bienestar de los animales reparte el
+                            trabajo de las colonias así:
+                        </p>
+                        <ul class="faq__lista">
+                            <li>
+                                <strong>Los ayuntamientos</strong> deben desarrollar Programas de
+                                Gestión de Colonias Felinas, que incluyen censo y mapeo,
+                                esterilización con marcaje auricular, programa sanitario con
+                                identificación por microchip y protocolos para los conflictos
+                                vecinales (art. 39.1).
+                            </li>
+                            <li>
+                                <strong>Y lo pagan ellos.</strong> No es un servicio que se preste
+                                si sobra presupuesto: la entidad local asume «la responsabilidad de
+                                la atención sanitaria de los gatos comunitarios que así lo
+                                requieran», siempre con veterinario colegiado (art. 39.1.c), y el
+                                microchip se registra <strong>a su nombre</strong> (art. 38.2). Puede
+                                apoyarse en entidades de protección animal inscritas (art. 39.1.b),
+                                pero la obligación no deja de ser suya.
+                            </li>
+                            <li>
+                                <strong>Un municipio pequeño no se queda sin salida.</strong> La ley
+                                prevé expresamente hacerlo <strong>mancomunado o concertado</strong>
+                                (art. 22.2), y que las administraciones locales recaben el apoyo de
+                                <strong>diputaciones, cabildos y consejos insulares</strong>
+                                (art. 39.3). «No tenemos medios» no es una excepción que la ley
+                                contemple: es el supuesto para el que da estas vías.
+                            </li>
+                            <li>
+                                <strong>Las comunidades autónomas</strong> deben generar los
+                                protocolos marco de referencia, cuyo contenido mínimo enumera la
+                                propia ley en diez apartados (art. 40).
+                            </li>
+                        </ul>
+                        <p>
+                            Y la ley <strong>va mucho más allá de las colonias</strong>. Es extensa,
+                            pero conviene saber que también obliga a esto, porque casi todo acaba
+                            recayendo en las mismas manos:
+                        </p>
+                        <ul class="faq__lista">
+                            <li>
+                                <strong>Recoger a los animales perdidos y abandonados</strong> y
+                                alojarlos en un centro de protección animal corresponde a los
+                                ayuntamientos, que deben contar con un <strong>servicio de urgencia
+                                de recogida y atención veterinaria disponible las veinticuatro horas
+                                del día</strong> (art. 22.1). La ley prevé que se haga, siempre que
+                                sea posible, en colaboración con entidades de protección animal.
+                            </li>
+                            <li>
+                                <strong>Y tenerlos hasta que encuentren familia</strong>: está
+                                prohibido sacrificar a un animal en un centro de protección
+                                —público o privado— por motivos económicos, de sobrepoblación, por
+                                falta de plazas o por no hallar adoptante en un plazo determinado
+                                (art. 27.a).
+                            </li>
+                            <li>
+                                <strong>La ciudadanía también tiene obligaciones</strong>, no solo
+                                las administraciones: «todas las personas están obligadas a tratar a
+                                los animales conforme a su condición de <strong>seres
+                                sintientes</strong>», y quien convive con uno debe mantenerlo en
+                                condiciones de vida dignas (art. 24).
+                            </li>
+                            <li>
+                                Y reconoce por fin la <strong>casa de acogida</strong> como figura
+                                legal (art. 3.l): el domicilio particular que, en colaboración con
+                                una administración o una entidad, cuida a estos animales mientras
+                                tanto. Que es como funciona buena parte de las asociaciones que
+                                aparecen en esta web.
+                            </li>
+                        </ul>
+                        <p>
+                            Merece la pena detenerse en una cosa más: el
+                            <strong>artículo 39.2</strong> dice que la Administración General del
+                            Estado <strong>«establecerá líneas de subvención en favor de las
+                            entidades locales»</strong> para que puedan cumplir con las colonias
+                            felinas. Esa es, literalmente, la línea de ayudas a entidades locales
+                            cuyos datos recoge esta web.
+                        </p>
+                        <p>
+                            Hay una obligación más, la de rendir cuentas: los municipios deben
+                            «en todo caso, elevar anualmente» a su comunidad un informe estadístico
+                            sobre cómo van esos protocolos (art. 39.1.g). No consta que se esté
+                            recopilando en ninguna parte — eso se cuenta con detalle al final de la
+                            <a href="index.html#estadistica-titulo">página de inicio</a>.
+                        </p>
+                        <p>
+                            Y hay un cambio de fondo que conviene tener presente, porque es el que
+                            sostiene todo lo demás: desde la
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2021-20727" target="_blank" rel="noopener noreferrer">Ley 17/2021</a>
+                            los animales <strong>dejaron de ser «cosas» en el Código Civil</strong>.
+                            Su artículo 333 bis.1 dice ahora que
+                            <strong>«los animales son seres vivos dotados de sensibilidad»</strong>,
+                            y que solo les será aplicable el régimen jurídico de los bienes y de
+                            las cosas «en la medida en que sea compatible con su naturaleza o con
+                            las disposiciones destinadas a su protección». El apartado 2 del mismo
+                            artículo habla ya de su <strong>«cualidad de ser sintiente»</strong>.
+                        </p>
+                        <p>
+                            El <strong>Código Penal</strong> va en la misma línea. La
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-7935" target="_blank" rel="noopener noreferrer">Ley Orgánica 3/2023</a>
+                            creó un título propio para esto —el XVI bis, artículos
+                            <strong>340 bis y siguientes</strong>— que castiga el maltrato, la
+                            explotación sexual y el abandono de animales. Sustituyó al antiguo
+                            artículo 337, que quedó derogado, y amplió la protección a cualquier
+                            <strong>animal vertebrado</strong>, no solo a los domésticos. No
+                            estamos hablando de sensibilidad personal ni de opiniones sobre gatos,
+                            sino de lo que ya dice la ley.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="otros-paises">¿Funciona esto en otros sitios?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            No es un experimento: se aplica desde hace décadas. En el Reino Unido
+                            se empezó a promover en los años cincuenta, en Francia se organizó
+                            desde 1976 y el Ayuntamiento de París lo llevó a una prueba piloto en
+                            1992. En Estados Unidos se extendió desde los años noventa.
+                        </p>
+                        <!-- Fuentes de este apartado: la Guía Integral del CER (PACMA/AVATMA) para
+                             la lista de países y municipios, y el Consejo General de Colegios
+                             Veterinarios para las cifras de Córdoba; las de Barcelona, de su propio
+                             ayuntamiento. Las fechas de Gijón y Zaragoza NO se han podido
+                             confirmar, por eso van sin año.
+                             OJO al revisar: los ejemplos se quedan viejos. Un programa que hoy va
+                             bien puede haberse abandonado en dos años, y las cifras de Córdoba
+                             suben cada temporada. -->
+                        <p><strong>Fuera de España</strong></p>
+                        <ul class="faq__lista">
+                            <li><strong>Roma</strong> reconoció a sus colonias como parte de su patrimonio; hoy son hasta un atractivo de la ciudad.</li>
+                            <li>Según la <a href="https://pacma.es/wp-content/uploads/2023/03/GUIA-INTEGRAL-DEL-CER-PACMA.pdf" target="_blank" rel="noopener noreferrer">Guía Integral del CER</a>, el método está implantado en <strong>Francia, Alemania, Bélgica, Reino Unido, Italia, Países Bajos, Estados Unidos, Japón, Kenia y Túnez</strong>.</li>
+                        </ul>
+                        <p><strong>Las pioneras en España</strong></p>
+                        <ul class="faq__lista">
+                            <li><strong>Barcelona</strong> fue la primera: en <strong>2003</strong> aprobó la primera ordenanza municipal de protección animal de España y arrancó su programa CER, después de que el pleno declarara el sacrificio cero. Hoy tiene alrededor de <strong>640 colonias controladas</strong> con cerca de 7.300 gatos.</li>
+                            <li>Después vinieron <strong>Gijón</strong> y <strong>Zaragoza</strong>, entre otras. Y antes que todas ellas, en <strong>Empuriabrava</strong> (Girona) unos vecinos habían puesto en marcha por su cuenta el primer programa serio de esterilización, sin esperar a ninguna administración.</li>
+                        </ul>
+                        <p><strong>Y el mejor ejemplo de ahora</strong></p>
+                        <p>
+                            <strong>Córdoba</strong> es el caso que más se cita, y con motivo. Desde
+                            febrero de 2021 funciona un convenio entre <strong>SADECO</strong> —la
+                            empresa municipal—, el <strong>Colegio de Veterinarios</strong>, que sumó
+                            23 clínicas, y las asociaciones <strong>FdCATS y FAPAC</strong>. Los
+                            resultados, según el
+                            <a href="https://www.colvet.es/es/1-Noticias-actualidad/19524-La-ciudad-de-Cordoba-alcanza-ya-los-5000-gatos-esterilizados.htm" target="_blank" rel="noopener noreferrer">propio colegio profesional</a>:
+                        </p>
+                        <ul class="faq__lista">
+                            <li><strong>225 colonias</strong> gestionadas y más de <strong>5.000 gatos</strong> esterilizados.</li>
+                            <li>Una tasa de esterilización del <strong>95 %</strong>, muy por encima del umbral en el que la población deja de crecer.</li>
+                            <li>El <strong>70 % de las colonias</strong> de la ciudad, bajo control.</li>
+                        </ul>
+                        <p>
+                            Junto a la esterilización va todo lo demás: desparasitación, vacunación,
+                            microchip a nombre del ayuntamiento y adopción de los gatos sociables.
+                            Es, en la práctica, el CER 3.0 aplicado a escala de ciudad. También hay
+                            municipios pequeños que lo hacen bien, como <strong>Yecla</strong>
+                            (Murcia) o <strong>Albarracín</strong> (Teruel): no es cosa solo de
+                            ciudades grandes con presupuesto.
+                        </p>
+                        <p>
+                            Y no son cuatro casos sueltos. La misma guía enumera decenas de
+                            municipios españoles con el método implantado —Málaga, Bilbao, Huesca,
+                            Vitoria, Ourense, Mérida, Terrassa, Sabadell, Badalona, Torrevieja,
+                            Utrera y muchos más—. Entre ellos hay varios <strong>de
+                            Canarias</strong> (Güímar, El Rosario, Garachico, Santa Úrsula), que es
+                            precisamente donde el argumento de la biodiversidad tiene más peso: allí
+                            también han concluido que la salida es gestionar, no eliminar.
+                        </p>
+                        <p>
+                            Lo que tienen en común los que funcionan no es el tamaño ni el dinero:
+                            es <strong>haberlo sostenido en el tiempo</strong> y haberlo hecho con
+                            las asociaciones de la zona, no contra ellas.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="ratas">¿No sirven para controlar las ratas?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Es el argumento favorito de mucha gente que defiende a los gatos, y hay
+                            que decirlo: <strong>la evidencia no lo sostiene</strong>. Como resume
+                            <a href="https://theconversation.com/el-mayor-secreto-de-los-gatos-son-pesimos-cazando-ratas-236615" target="_blank" rel="noopener noreferrer">Eneko Arrondo</a>,
+                            investigador de la Universidad de Granada, los gatos no matan ratas
+                            suficientes como para que su población se resienta, suelen fallar cuando
+                            lo intentan —sobre todo con las grandes— y en ciudades tan pobladas de
+                            roedores como Nueva York las ratas <strong>ni siquiera aparecen</strong>
+                            en los estudios de dieta de los gatos de calle.
+                        </p>
+                        <p>
+                            Lo que ocurre es más sutil: las ratas cambian de comportamiento para no
+                            coincidir con los gatos. <strong>Desaparecen de la vista, no de la
+                            población.</strong>
+                        </p>
+                        <p>
+                            Pero hay una razón de fondo para no usar este argumento aunque
+                            funcionara, y es la que de verdad importa: <strong>un gato no es una
+                            herramienta</strong>. Defenderlos por su utilidad implica aceptar que,
+                            el día que dejaran de ser útiles, sobrarían. Y no sobran: son animales
+                            protegidos por la ley y reconocidos como seres sintientes, no un
+                            servicio de control de plagas.
+                        </p>
+                        <p>
+                            Los ayuntamientos ya tienen medios propios para los roedores. Y tampoco
+                            es que sean inocuos: los venenos que se usan matan de forma lenta, y
+                            además <strong>siguen subiendo por la cadena</strong>, envenenando a
+                            quien se come al roedor —rapaces y otra fauna, y también gatos—. Es
+                            decir, ni el CER va de ratas ni el método químico es precisamente
+                            amable con la biodiversidad.
+                        </p>
+                        <p>
+                            Y hay algo más, aunque se salga del asunto de los gatos: que en pleno
+                            siglo XXI se siga matando así a las ratas —que también son
+                            <strong>animales sintientes</strong>— dice bastante de lo poco que se
+                            ha buscado una alternativa. Una agonía de varios días no deja de ser
+                            crueldad porque la víctima caiga mal.
+                        </p>
+                        <p>
+                            Y dice bastante también de cómo funcionan las cosas: la sensibilidad
+                            social cambia mucho más deprisa que las administraciones, que casi
+                            siempre <strong>llegan tarde</strong> y se limitan a repetir lo que
+                            siempre se hizo. Pasó con el sacrificio de las colonias, que se mantuvo
+                            durante décadas sabiendo que no funcionaba, y sigue pasando aquí.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="biodiversidad">¿Y el supuesto daño a la biodiversidad?</h2>
+                    <div class="faq__respuesta">
+                        <p>
+                            Es la objeción más seria que se le hace al CER, y merece una respuesta
+                            seria en vez de una discusión. Lo primero es dejar de hablar de «los
+                            gatos» en abstracto: como resume un
+                            <a href="https://avatma.org/2022/12/12/gatos-cer-y-biodiversidad-a-la-ocv-organizacion-colegial-veterinaria/" target="_blank" rel="noopener noreferrer">informe de AVATMA</a>
+                            —asociación de más de 600 veterinarios, firmado entre otros por el
+                            catedrático Octavio Pérez Luzardo y basado en un texto del investigador
+                            del CSIC Francisco Rubén Badenes-Pérez—, «dependiendo de la ubicación y
+                            el contexto, el impacto general de los gatos en la biodiversidad puede
+                            ser <strong>negativo, neutro o positivo</strong>».
+                        </p>
+                        <ul class="faq__lista">
+                            <li><strong>En la península</strong>, «para la mayor parte de España, la fauna que puede ser depredada por los gatos <strong>está acostumbrada a depredadores como ellos</strong>».</li>
+                            <li><strong>En zonas urbanas</strong> —donde están las colonias gestionadas— los impactos «suelen ser limitados», porque la mayoría de gatos viven pegados a los asentamientos humanos.</li>
+                            <li><strong>En islas</strong> el riesgo sí es mayor, porque faltan depredadores nativos parecidos. Pero incluso en Canarias las presas más comunes de los gatos son <strong>mamíferos introducidos</strong>: conejos y roedores.</li>
+                        </ul>
+                        <p>
+                            El mismo informe recuerda que la Real Sociedad para la Protección de las
+                            Aves británica sostiene que «a pesar del gran número de aves que matan
+                            los gatos en los jardines, <strong>no hay evidencia científica clara de
+                            que tal mortalidad esté causando un descenso de las poblaciones de
+                            aves</strong>».
+                        </p>
+                        <p>
+                            Generalizar a partir de casos puntuales tiene además un nombre en la
+                            literatura: <strong>«pánico moral» a los gatos</strong>. Presentarlos
+                            como si siempre y en todas partes tuvieran un impacto negativo no es una
+                            conclusión científica, es una extrapolación.
+                        </p>
+                        <p>
+                            La pregunta útil, entonces, no es si los gatos cazan —cazan—, sino qué
+                            hacer al respecto. Y ahí hay tres opciones sobre la mesa:
+                        </p>
+                        <ul class="faq__lista">
+                            <li><strong>Matarlos.</strong> Además de estar hoy fuera de la ley, no funciona: el efecto de nicho vacío repuebla el territorio, y es «prácticamente imposible retirar a todos los gatos de una región».</li>
+                            <li><strong>Encerrarlos</strong> en centros de protección animal. Ni hay capacidad material para ello, ni es una alternativa humanitaria: un gato comunitario no está socializado, y encerrarlo de por vida en una jaula no lo convierte en un gato de casa, lo somete a un estrés permanente. <strong>Es otra forma de maltrato</strong>, solo que menos visible que matarlo. Y desde 2021 los animales son, también aquí, <strong>seres sintientes</strong> a efectos del Código Civil.</li>
+                            <li><strong>Gestionarlos.</strong> Esterilizar, censar e identificar, <strong>partiendo de dónde están las colonias en la realidad</strong>. Y conviene decirlo claro: eso no significa que se las pueda trasladar porque alguien lo decida sobre un mapa. Reubicar casi siempre fracasa —como se explica más arriba—, así que en un espacio de verdad vulnerable lo que procede son medidas concretas y graduales, no vaciarlo.</li>
+                        </ul>
+                        <p>
+                            Quien más claro lo ha explicado en España es
+                            <a href="https://theconversation.com/por-que-la-ley-que-protegera-los-gatos-callejeros-tambien-ayudara-a-proteger-la-biodiversidad-183467" target="_blank" rel="noopener noreferrer">Octavio Pérez Luzardo</a>,
+                            catedrático de la Universidad de Las Palmas de Gran Canaria —es decir,
+                            desde el sitio donde el problema sí es real—. Su argumento es que los
+                            programas de retirada fracasan, son «carísimos» y generan «gran rechazo
+                            social», mientras que una colonia <strong>esterilizada y bien
+                            alimentada caza menos</strong>, porque sus necesidades están cubiertas.
+                        </p>
+                        <p>
+                            Y hay algo que suele perderse en la discusión: <strong>la ley ya
+                            contempla esto</strong>. El artículo 40 de la Ley 7/2023 obliga a las
+                            comunidades autónomas a fijar, entre el contenido mínimo de sus
+                            protocolos, los
+                            <strong>«criterios para (…) evitar los efectos significativos de los
+                            individuos que habitan dichas colonias sobre la biodiversidad
+                            circundante»</strong>. No es que nadie haya pensado en ello: es que hay
+                            que aplicarlo.
+                        </p>
+                        <p>
+                            Por eso esto no debería ser un bando contra otro. Lo que pide la
+                            conservación —saber cuántos gatos hay, dónde están y que su número deje
+                            de crecer— es exactamente lo que produce un CER bien hecho: censo,
+                            mapeo, microchip y menos camadas cada año. <strong>Sin gestión no hay
+                            datos, y sin datos no hay conservación posible.</strong>
+                        </p>
+                        <p>
+                            Si hasta ahora no se ven grandes resultados en España, la explicación
+                            más sencilla es que <strong>apenas se ha hecho</strong>: tarde, a
+                            medias y sin continuidad. Donde sí se ha sostenido en el tiempo, los
+                            resultados están.
+                        </p>
+                        <p>
+                            Mientras tanto, quienes sacan gatos de la calle todos los días son las
+                            gestoras, las rescatistas y las asociaciones, casi siempre de forma
+                            voluntaria y adelantando el dinero. <strong>Ahí hay sitio para todo el
+                            mundo</strong>: quien se preocupa de verdad por la fauna silvestre y
+                            quiere menos gatos sueltos tiene en el CER a un aliado, no a un
+                            adversario — y unas manos de más siempre ayudan más que un debate.
+                        </p>
+                    </div>
+
+                    <h2 class="faq__pregunta" id="datos">Otras cosas que conviene saber</h2>
+                    <div class="faq__respuesta">
+                        <p><strong>«One Health»: la salud es una sola.</strong></p>
+                        <p>
+                            Es el enfoque que reconoce que la salud de las personas, la de los
+                            animales y la del medio ambiente están conectadas, y que no tiene
+                            sentido gestionarlas por separado. Lo impulsan la
+                            <a href="https://www.who.int/health-topics/one-health" target="_blank" rel="noopener noreferrer">Organización Mundial de la Salud</a>
+                            junto a las organizaciones de sanidad animal y alimentación. Una colonia
+                            censada, esterilizada, desparasitada y vacunada no es solo mejor para los
+                            gatos: es un foco menos de lo que sea, y sobre todo es
+                            <strong>información</strong> de la que antes no había nada.
+                        </p>
+
+                        <p><strong>El contagio es más mito que realidad.</strong></p>
+                        <p>
+                            La enfermedad que siempre sale en esta conversación es la
+                            <strong>toxoplasmosis</strong>, y conviene saber cómo se transmite de
+                            verdad. Según los
+                            <a href="https://www.cdc.gov/toxoplasmosis/causes/index.html" target="_blank" rel="noopener noreferrer">Centros para el Control de Enfermedades</a>
+                            de Estados Unidos, las vías habituales son
+                            <strong>comer carne poco hecha</strong>, agua contaminada, leche sin
+                            pasteurizar y <strong>frutas y verduras mal lavadas</strong>. Es, ante
+                            todo, una enfermedad de transmisión alimentaria.
+                        </p>
+                        <ul class="faq__lista">
+                            <li>Un gato elimina el parásito durante <strong>un máximo de unas tres semanas</strong> tras infectarse, y los adultos que ya pasaron por ello tienen menos probabilidad de volver a eliminarlo.</li>
+                            <li>El riesgo no está en acariciar a un gato, sino en <strong>manipular heces sin lavarse las manos</strong> después.</li>
+                            <li>Una colonia con el CER 3.0 aplicado —desparasitada, vacunada y con seguimiento— reduce todavía más ese margen.</li>
+                        </ul>
+                        <p>
+                            Dicho de otro modo: es bastante más probable llevarse un disgusto por
+                            una ensalada mal lavada que por un gato de la calle.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- FUENTES. Van al final y con su propio rótulo a propósito: es lo que
+                     distingue esta página de las muchas que explican el CER de oído, y
+                     es lo primero que mirará quien venga a discutirla. -->
+                <div class="faq-fuentes">
+                    <h2 class="faq-fuentes__titulo" id="fuentes">De dónde sale todo esto</h2>
+                    <p class="faq-fuentes__nota">
+                        Todo lo que se afirma en esta página se apoya en alguna de estas fuentes.
+                        Si encuentras algo que no cuadre, <a href="contacto.html">avísame</a>.
+                    </p>
+
+                    <h3 class="faq-fuentes__grupo">Normativa</h3>
+                    <ul class="lista-documentos">
+                        <li>
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-7936" target="_blank" rel="noopener noreferrer">Ley 7/2023</a>,
+                            de protección de los derechos y el bienestar de los animales: define al
+                            gato comunitario y la casa de acogida (art. 3), fija las obligaciones de
+                            toda la ciudadanía (art. 24), encarga a los ayuntamientos la recogida de
+                            animales perdidos y abandonados con urgencias veterinarias 24 horas
+                            (art. 22), prohíbe el sacrificio por falta de plazas o de adoptante
+                            (art. 27), obliga a esterilizar e identificar (arts. 26 y 38) y reparte
+                            el trabajo de las colonias entre ayuntamientos y comunidades autónomas
+                            (arts. 39 y 40).
+                        </li>
+                        <li>
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2021-16021" target="_blank" rel="noopener noreferrer">Orden DSA/1045/2021</a>:
+                            las bases de las subvenciones a entidades de protección animal. Su
+                            artículo 11 es el que reparte el dinero «de forma directamente
+                            proporcional al importe de los gastos acreditados».
+                        </li>
+                        <li>
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-7935" target="_blank" rel="noopener noreferrer">Ley Orgánica 3/2023</a>,
+                            de modificación del Código Penal en materia de maltrato animal: creó el
+                            Título XVI bis (arts. 340 bis y siguientes) y derogó el antiguo art. 337.
+                        </li>
+                        <li>
+                            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2021-20727" target="_blank" rel="noopener noreferrer">Ley 17/2021</a>:
+                            la que sacó a los animales de la categoría de «cosas» en el Código
+                            Civil y los reconoce como seres dotados de sensibilidad.
+                        </li>
+                        <li>
+                            <a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2016-11097" target="_blank" rel="noopener noreferrer">Ley 4/2016</a>
+                            de la Comunidad de Madrid, como ejemplo de que la identificación por
+                            microchip ya era obligatoria en muchas comunidades antes de la ley
+                            estatal.
+                        </li>
+                        <li>
+                            <a href="recursos.html">Plan de Acción 2026-2030 sobre poblaciones felinas</a>
+                            (Dirección General de Derechos de los Animales): de ahí salen la encuesta
+                            a 463 cuidadoras —los 2.200 € al año, el 93 % de dinero propio y el
+                            72,5 % con dificultades en su ayuntamiento— y el coste del CER por gato.
+                            En Recursos hay un resumen con qué cifras del plan son sólidas y cuáles
+                            conviene tomar con cautela.
+                        </li>
+                        <li>
+                            <a href="https://www.dsca.gob.es/sites/default/files/derechos-sociales/derechos-animales/docs/directriz-tecnica-colonias-felinas.pdf"
+                               target="_blank" rel="noopener noreferrer">Directriz técnica de colonias felinas</a>
+                            (Dirección General de Derechos de los Animales): el documento oficial
+                            español sobre cómo debe hacerse.
+                        </li>
+                    </ul>
+
+                    <h3 class="faq-fuentes__grupo">Ciencia y divulgación</h3>
+                    <ul class="lista-documentos">
+                        <li>
+                            <a href="https://theconversation.com/por-que-la-ley-que-protegera-los-gatos-callejeros-tambien-ayudara-a-proteger-la-biodiversidad-183467" target="_blank" rel="noopener noreferrer">Octavio Pérez Luzardo</a>,
+                            catedrático de la Universidad de Las Palmas de Gran Canaria, sobre por
+                            qué gestionar las colonias también protege la biodiversidad.
+                        </li>
+                        <li>
+                            <a href="https://theconversation.com/el-mayor-secreto-de-los-gatos-son-pesimos-cazando-ratas-236615" target="_blank" rel="noopener noreferrer">Eneko Arrondo</a>,
+                            de la Universidad de Granada, sobre por qué los gatos no controlan las
+                            poblaciones de ratas.
+                        </li>
+                        <li>
+                            <a href="https://avatma.org/2022/12/12/gatos-cer-y-biodiversidad-a-la-ocv-organizacion-colegial-veterinaria/" target="_blank" rel="noopener noreferrer">AVATMA</a>,
+                            asociación de más de 600 veterinarios: su informe «Gatos, CER y
+                            biodiversidad», con el detalle de qué dice la evidencia según el
+                            contexto. Su sección de
+                            <a href="https://avatma.org/category/estudios-cientificos-e-informes/gatos/" target="_blank" rel="noopener noreferrer">estudios e informes sobre gatos</a>
+                            recoge más material.
+                        </li>
+                        <li>
+                            <a href="https://www.cdc.gov/toxoplasmosis/causes/index.html" target="_blank" rel="noopener noreferrer">Centros para el Control y la Prevención de Enfermedades</a>
+                            (CDC, Estados Unidos): cómo se transmite realmente la toxoplasmosis.
+                        </li>
+                        <li>
+                            <a href="https://www.who.int/health-topics/one-health" target="_blank" rel="noopener noreferrer">Organización Mundial de la Salud</a>:
+                            el enfoque «One Health», que conecta la salud humana, la animal y la
+                            ambiental.
+                        </li>
+                        <li>
+                            <a href="https://catvets.com/resource/pediatric-sterilization-position-statement-pediatric-sterilization-in-cats-position-statement/" target="_blank" rel="noopener noreferrer">Asociación Americana de Veterinarios de Felinos</a>
+                            (AAFP): su posicionamiento sobre esterilización temprana, que la avala
+                            desde las seis semanas y la recomienda antes de los cinco meses.
+                        </li>
+                        <li>
+                            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6070019/" target="_blank" rel="noopener noreferrer">«Current perspectives on the optimal age to spay/castrate dogs and cats»</a>
+                            (Biblioteca Nacional de Medicina de EE. UU.): los efectos de la
+                            esterilización sobre la salud, incluida la reducción del riesgo de
+                            tumores mamarios.
+                        </li>
+                        <li>
+                            <a href="https://www.avepa.org/grupo-gemfe" target="_blank" rel="noopener noreferrer">GEMFE</a>,
+                            el grupo de medicina felina de AVEPA: el criterio veterinario sobre cómo
+                            hacer las esterilizaciones de forma segura.
+                        </li>
+                    </ul>
+
+                    <h3 class="faq-fuentes__grupo">Organizaciones y herramientas</h3>
+                    <ul class="lista-documentos">
+                        <li>
+                            <a href="https://pacma.es/wp-content/uploads/2023/03/GUIA-INTEGRAL-DEL-CER-PACMA.pdf" target="_blank" rel="noopener noreferrer">Guía Integral del CER</a>
+                            (PACMA y AVATMA): un manual de 50 páginas dirigido a ayuntamientos y
+                            diputaciones, con la perspectiva veterinaria, jurídica y ecosistémica, y
+                            el repaso de las leyes autonómicas que regulan las colonias.
+                        </li>
+                        <li>
+                            <a href="https://www.alleycat.org" target="_blank" rel="noopener noreferrer">Alley Cat Allies</a>
+                            (Estados Unidos): la organización que popularizó el TNR y de la que
+                            procede la clasificación de gatos por hábitat y socialización que se usa
+                            en casi todas partes.
+                        </li>
+                        <li>
+                            <a href="https://www.colvet.es/es/1-Noticias-actualidad/19524-La-ciudad-de-Cordoba-alcanza-ya-los-5000-gatos-esterilizados.htm" target="_blank" rel="noopener noreferrer">Consejo General de Colegios Veterinarios</a>:
+                            los resultados del programa CER de Córdoba, el más citado de España.
+                        </li>
+                        <li>
+                            <a href="https://icatcare.org" target="_blank" rel="noopener noreferrer">International Cat Care</a>
+                            (Reino Unido): referencia internacional en bienestar felino y en gestión
+                            de poblaciones de gatos sin hogar.
+                        </li>
+                        <li>
+                            <a href="https://www.institutodeproteccionanimal.com/es/" target="_blank" rel="noopener noreferrer">Instituto de Protección Animal</a>:
+                            formación especializada en protección y bienestar animal —derecho
+                            animal, normativa, gestión ética de colonias felinas— dirigida a
+                            profesionales del sector público y privado, con blog y materiales
+                            propios.
+                        </li>
+                        <li>
+                            <a href="https://www.fdcats.com/herramientas/" target="_blank" rel="noopener noreferrer">FDCats</a>
+                            y <a href="recursos.html">el resto del directorio de Recursos</a>, con
+                            herramientas y guías prácticas.
+                        </li>
+                    </ul>
+
+                    <p class="faq-fuentes__nota">
+                        Los datos de subvenciones —cuánto recibe una protectora, cuántas se quedan
+                        fuera— salen de la base de datos de esta misma web, construida desde el BOE
+                        y la Base de Datos Nacional de Subvenciones.
+                    </p>
+                </div>
+
+                <!-- PENDIENTE antes de publicar. Quedan cinco datos sin fuente citable,
+                     todos procedentes de la memoria del proyecto. Van marcados «FUENTE
+                     PENDIENTE» junto al texto al que afectan:
+                       1. Datos reproductivos de las gatas (camadas, crías, primer celo,
+                          ovulación inducida, estacionalidad por luz).
+                       2. La relación entre porcentaje de esterilización y estado de la colonia.
+                       3. Los beneficios sanitarios de la esterilización (piometra, tumores).
+                       4. Los costes (600 €/año por colonia, 40-90 € por esterilización).
+                       5. Las fechas de las pioneras y las cifras concretas de Córdoba.
+                     Para 1 y 3, la vía más probable son las guías de práctica clínica de la
+                     AAFP (catvets.com) y The Cat Group (thecatgroup.org.uk), que ya estaban
+                     en la bibliografía original del proyecto.
+
+                     DECIDIDO y hecho: no entra en el navbar (queda en cinco elementos); se
+                     enlaza desde el bloque de colonias felinas de Recursos y desde el tercer
+                     párrafo de la portada. Añadida ya a sitemap.xml. El ejemplo económico se
+                     mantiene anónimo, sin nombrar a la asociación.
+
+                     Pendiente de decidir: si añadir más preguntas —qué hacer si aparece una
+                     colonia en tu barrio, en qué se diferencia una protectora de una
+                     asociación de colonias, y qué pasa con los cachorros-->
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-principal">
+
+        <!-- Franja de apoyo: causa que el sitio señala, NO patrocinio ni
+             financiación de la web. Las dos ideas van deliberadamente
+             separadas: el dinero del grupo de Teaming es para la asociación,
+             y sugerir otro destino es causa de bloqueo en sus condiciones.
+             Ver aviso-legal.html. -->
+        <div class="footer-apoyo">
+            <!-- El logo enlaza a su web y redes. No se dice "pulsa en el logo":
+                 en móvil no se hace clic y quien usa lector de pantalla no
+                 percibe dónde está; el destino va en el aria-label. -->
+            <a class="footer-apoyo__logo"
+               href="https://linktr.ee/lagatapirata"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="La Gata Pirata: su trabajo, web y redes sociales">
+                <img src="assets/img/logos/logo-laGataPirata.webp"
+                     alt="Logo de la Asociación La Gata Pirata" loading="lazy">
+            </a>
+            <p class="footer-apoyo__texto">
+                Esta web se mantiene de forma voluntaria, es gratuita y no tiene publicidad:
+                prepararla y actualizar los datos lleva su trabajo.
+                Si te resulta útil y quieres ayudar, puedes apoyar con
+                <a href="https://www.teaming.net/asociacionla-gata-pirata"
+                   target="_blank" rel="noopener noreferrer">solo <strong>1&nbsp;€ al mes</strong> a La Gata Pirata</a>,
+                una asociación sin ánimo de lucro que trabaja por el bienestar animal.
+            </p>
+        </div>
+
+        <div class="footer-principal__zona">
+            <a class="footer-principal__marca" href="index.html"
+               aria-label="Ir a la página de inicio">
+                <img src="assets/img/logo.png" alt="Logo Subvenciones Bienestar Animal" width="33" height="36" loading="lazy">
+                <span><strong>Subvenciones DGDA</strong></span>
+            </a>
+            <!-- Aclaración presente en TODAS las páginas, no solo en el inicio:
+                 quien llega desde un buscador puede aterrizar en cualquiera, y
+                 el nombre del sitio suena a organismo oficial. -->
+            <p class="footer-principal__aclaracion">
+                Web independiente y no oficial.
+                No gestiona ni tramita subvenciones.
+            </p>
+            <nav class="footer-principal__nav" aria-label="Enlaces del pie de página">
+                <a href="https://github.com/vcv-code/SubvDGDA" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="aviso-legal.html">Aviso legal</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="privacidad.html">Privacidad</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="contacto.html">Contacto</a>
+                <span class="footer-principal__sep" aria-hidden="true">|</span>
+                <a href="login.html">Acceder</a>
+            </nav>
+        </div>
+        <div class="footer-principal__creditos">
+            Datos procedentes de la
+            <a href="https://www.pap.hacienda.gob.es/bdnstrans/GE/es/index"
+               target="_blank" rel="noopener noreferrer">
+                Base de Datos Nacional de Subvenciones (BDNS)
+            </a>
+            y la <a href="https://www.dsca.gob.es/es/derechos-sociales/derechos-animales/subvenciones"
+               target="_blank" rel="noopener noreferrer">
+                Dirección General de Derechos de los Animales (DGDA)
+            </a>.
+            &nbsp;·&nbsp; © 2026 Recopilación y Análisis de Subvenciones DGDA · Contenido bajo <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a>
+        </div>
+    </footer>
+
+    <script src="js/navbar.js" defer></script>
+    <script src="js/scroll-arriba.js" defer></script>
+</body>
+</html>

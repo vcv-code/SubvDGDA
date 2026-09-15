@@ -5953,6 +5953,30 @@ section[id] {
     border-bottom: 2px solid rgba(0, 0, 0, 0.08);
 }
 
+/* Entradilla de un bloque de Recursos: una frase que enmarca lo que viene y,
+   en el de colonias felinas, lleva a la página del método CER. Centrada como
+   la cabecera, y con el ancho limitado para que no se lea de pared a pared. */
+.recursos-bloque__intro {
+    max-width: 620px;
+    margin: 0 auto var(--espacio-md);
+    text-align: center;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-gris-texto);
+}
+
+.recursos-bloque__intro a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.recursos-bloque__intro a:hover,
+.recursos-bloque__intro a:focus-visible {
+    color: var(--color-hover);
+}
+
 .recursos-bloque__titulo {
     font-size: 1.2rem;
     font-weight: 700;
@@ -6154,4 +6178,209 @@ section[id] {
     background: var(--estado-excluida);
     color: var(--color-blanco);
     outline-color: var(--estado-excluida);
+}
+
+
+/* ============================================================
+   PÁGINA DEL MÉTODO CER (metodo-cer.html)
+   Preguntas frecuentes. Sin plegables a propósito: la página está
+   pensada para llegar desde un buscador con una duda concreta, y el
+   contenido oculto no se encuentra con Ctrl+F ni se enlaza solo.
+   ============================================================ */
+
+/* Índice de preguntas. Va arriba porque casi nadie lee esto entero:
+   se viene a una pregunta y se quiere saltar a ella. */
+.faq-indice {
+    margin: 0 auto var(--espacio-lg);
+    max-width: 900px;
+    padding: 16px 20px;
+    background-color: var(--color-fondo-verde);
+    border-radius: 10px;
+}
+
+.faq-indice ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.faq-indice a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-size: 0.9375rem;
+}
+
+.faq-indice a:hover,
+.faq-indice a:focus-visible {
+    color: var(--color-hover);
+}
+
+.faq {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* `scroll-margin-top` lo aplica ya la regla global para `h2[id]`, así que
+   al saltar desde el índice el título no queda bajo la barra fija. */
+.faq__pregunta {
+    margin: var(--espacio-lg) 0 var(--espacio-sm);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-verde-tabla);
+    line-height: 1.3;
+}
+
+.faq__respuesta p {
+    margin: 0 0 12px;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+}
+
+.faq__respuesta p:last-child {
+    margin-bottom: 0;
+}
+
+.faq__respuesta a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.faq__respuesta a:hover,
+.faq__respuesta a:focus-visible {
+    color: var(--color-hover);
+}
+
+.faq__lista {
+    margin: 0 0 12px;
+    padding-left: 0;
+    list-style: none;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+}
+
+.faq__lista li {
+    position: relative;
+    padding-left: 1.2rem;
+}
+
+.faq__lista li + li {
+    margin-top: 8px;
+}
+
+.faq__lista li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-verde-tabla);
+}
+
+/* Las fuentes, separadas del cuerpo por una línea: es lo que distingue esta
+   página de las que explican el CER de oído, así que tiene que verse que
+   está ahí y dónde acaba lo demás. */
+.faq-fuentes {
+    max-width: 900px;
+    margin: var(--espacio-lg) auto 0;
+    padding-top: var(--espacio-md);
+    border-top: 1px solid var(--color-gris-medio);
+}
+
+.faq-fuentes__titulo {
+    margin: 0 0 var(--espacio-sm);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-verde-tabla);
+}
+
+/* Las fuentes van agrupadas: catorce entradas seguidas no se leen, y separar
+   normativa de ciencia ayuda a quien busca una cosa concreta. */
+.faq-fuentes__grupo {
+    margin: var(--espacio-md) 0 var(--espacio-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-gris-texto);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Nota al pie de una entrada de la lista de documentos. Se usa para actualizar
+   un dato que el PDF trae desfasado sin tener que rehacer el PDF: va en gris y
+   algo más pequeño, para que se lea como apostilla y no como parte de la
+   descripción, pero sin esconderla — el sentido es justamente que se vea. */
+.lista-documentos__aviso {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-gris-texto);
+}
+
+.lista-documentos__aviso a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.faq-fuentes__nota {
+    margin: 0 0 var(--espacio-sm);
+    /* La nota final va después de una lista y se pegaba a ella: parecía un
+       elemento más en vez de un cierre. Ver el margen superior de abajo. */
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-gris-texto);
+}
+
+.faq-fuentes__nota:last-child {
+    margin-top: var(--espacio-md);
+    padding-top: var(--espacio-sm);
+    border-top: 1px solid var(--color-gris-medio);
+}
+
+.faq-fuentes__nota a {
+    color: var(--color-verde-btn);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* En pantalla ancha el índice va a dos columnas: con catorce preguntas, en una
+   sola ocupaba media pantalla antes de empezar a leer. Se usa `columns` y no
+   grid para que el reparto lo haga el navegador según lo que ocupe cada
+   pregunta, que son de largos muy distintos. */
+@media (min-width: 720px) {
+    .faq-indice ul {
+        columns: 2;
+        column-gap: 28px;
+    }
+
+    .faq-indice li {
+        /* Sin esto una pregunta de dos líneas puede partirse entre columnas. */
+        break-inside: avoid;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    .faq__pregunta,
+    .faq-fuentes__titulo {
+        font-size: 1.125rem;
+    }
+
+    /* El relleno del índice se suma al del contenedor (32 px a cada lado), así
+       que en un móvil de 360 px se comía casi un cuarto del ancho útil. */
+    .faq-indice {
+        padding: 14px 16px;
+    }
+
+    .faq-indice ul {
+        gap: 10px;
+    }
 }
