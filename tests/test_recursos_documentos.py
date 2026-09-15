@@ -116,7 +116,6 @@ def test_se_distingue_reclamar_de_quejarse():
 DOCUMENTOS_PROPIOS = (
     "gestion-colonias-felinas-metodo-cer.pdf",
     "plan-accion-2026-2030-colonias-felinas-resumen.pdf",
-    "triptico-colonias-felinas-tenencia-responsable.pdf",
 )
 
 
