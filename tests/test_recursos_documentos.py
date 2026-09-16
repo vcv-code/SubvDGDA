@@ -113,29 +113,31 @@ def test_se_distingue_reclamar_de_quejarse():
     assert "no son lo mismo" in texto
 
 
-DOCUMENTOS_PROPIOS = (
-    "gestion-colonias-felinas-metodo-cer.pdf",
+# PDF que sirve esta web, en vez de enlazarlos fuera. La mayoría son propios;
+# el de FDCats se aloja con permiso de uso divulgativo y con su origen citado en
+# la propia entrada, porque un enlace a otra web se muere cuando la reorganizan
+# —que es justo lo que pasó con la ficha de GEMFE en AVEPA—.
+DOCUMENTOS_ALOJADOS = (
     "plan-accion-2026-2030-colonias-felinas-resumen.pdf",
+    "gestion-etica-colonias-felinas-proyectos-cer.pdf",
 )
 
 
-def test_los_documentos_propios_estan_enlazados_y_existen():
-    """Tres PDF que no están en ninguna otra web: si el fichero no sube al
-    repo, el enlace da un 404 y nadie se entera hasta que alguien lo pulsa."""
+def test_el_documento_ajeno_cita_su_origen():
+    """Se aloja un PDF de FDCats en vez de enlazarlo. Servir el trabajo de otra
+    entidad sin decir de dónde sale es apropiárselo, aunque no se pretenda."""
     bloque = _bloque_lista()
-    for nombre in DOCUMENTOS_PROPIOS:
+    assert "assets/docs/gestion-etica-colonias-felinas-proyectos-cer.pdf" in bloque
+    assert "fdcats.com" in bloque, "falta el enlace a la web de origen"
+
+
+def test_los_documentos_alojados_estan_enlazados_y_existen():
+    """Si el fichero no sube al repo, el enlace da un 404 y nadie se entera
+    hasta que alguien lo pulsa: no hay error en consola ni en el servidor."""
+    bloque = _bloque_lista()
+    for nombre in DOCUMENTOS_ALOJADOS:
         assert f"assets/docs/{nombre}" in bloque, f"{nombre} no está enlazado"
         ruta = Path("frontend/assets/docs") / nombre
         assert ruta.exists(), f"falta el fichero {ruta}"
         assert ruta.stat().st_size > 50_000, f"{nombre} pesa sospechosamente poco"
         assert ruta.read_bytes()[:5] == b"%PDF-", f"{nombre} no es un PDF"
-
-
-def test_las_cifras_de_cordoba_del_pdf_llevan_nota():
-    """El documento cita 2.680 gatos de 118 colonias, que era el dato de 2022.
-    Rehacer el PDF por esto no compensa; la nota al pie sí, porque la cifra
-    actual es el argumento más fuerte que tiene la entrada."""
-    texto = _texto_plano()
-    assert "2.680 gatos de 118 colonias" in texto
-    assert "225 colonias y más de 5.000 gatos" in texto
-    assert "lista-documentos__aviso" in CSS, "la nota no tiene estilo propio"
