@@ -483,6 +483,7 @@ Interfaz web construida con **HTML5 + CSS3 + JavaScript vanilla** (sin framework
 | `admin.html` | Panel de administración: gestión de usuarios (paginada), avisos (incluida la **fecha de fin de plazo**) y logs de la app y del cron (solo rol `admin`) |
 | `entidad.html` | Ficha de entidad con historial completo de solicitudes por CIF — accesible desde el enlace "Ver página completa →" del modal del buscador o por URL directa (`entidad.html?cif=...`) |
 | `recursos.html` | Directorio de organizaciones de protección animal y campañas; un bloque destacado con la **Consulta de bienestar animal 2025-2026** de Consejos para Mascotas —el estudio que preguntó a 7.867 de los 8.132 municipios por sus datos de bienestar animal—; y un listado de **guías, documentos y herramientas**: una **plantilla propia en PDF** para proponer a un ayuntamiento que contrate el pienso de las colonias en vez de depender de subvenciones, la directriz técnica de la DGDA, REIAC (registros autonómicos de identificación animal), la Ley 19/2013 y cómo ejercer el derecho de acceso —distinguiendo la vía estatal de la autonómica y la reclamación de transparencia de la queja al Defensor del Pueblo—, más guías prácticas para asociaciones |
+| `metodo-cer.html` | **Qué es el método CER y por qué hay dinero público detrás**, en formato de preguntas y respuestas. Responde al *por qué* que la web no contaba: qué es un gato comunitario y sus grados de sociabilidad, por qué retirarlos o reubicarlos no funciona, por qué la marca de la oreja es el mal menor, qué es el CER 3.0, quién sostiene el trabajo en la práctica y con cuánto dinero privado, qué obliga la Ley 7/2023 a cada administración, cómo se hace en otros sitios, y las dos objeciones que más se repiten —las ratas y el supuesto daño a la biodiversidad—. Cada afirmación con su fuente: BOE, DGDA, AVATMA, International Cat Care, AAFP y los propios datos de esta web |
 | `login.html` | Acceso a la cuenta. No hay alta pública: las cuentas las crea la administradora desde el panel |
 | `recuperar-password.html` · `reset-password.html` | Flujo de recuperación de contraseña por email |
 | `contacto.html` | Formulario de contacto (honeypot antispam + rate limiting); envía el mensaje por email |
@@ -550,10 +551,11 @@ La carpeta `frontend/` contiene:
 - `frontend/docs/especificaciones-frontend.md` — especificaciones técnicas de implementación: componentes, páginas, integración con la API y decisiones de diseño justificadas
 - `css/styles.css` — hoja de estilos compartida por todas las páginas (variables CSS, componentes, layout)
 - `js/` — un archivo JS por página (`home.js`, `solicitudes.js` que también incluye el buscador de exclusiones vía `exclusiones.js`, `estadisticas-epas.js`, `estadisticas-eell.js`, `exclusivo.js`, `auth.js`, `privado.js`, `admin.js`, `entidad.js`, `recuperar-password.js`, `reset-password.js`, `contacto.js`) más helpers (`modal-grafica.js`, `modal-entidad.js`, `mapa-ccaa.js`, `utils.js`) y módulos compartidos entre varias páginas (`resumen-tabla.js` — tabla resumen en inicio y exclusivo; `modal-ccaa.js` — modal de top municipios del mapa en estadísticas EELL y exclusivo; `exclusiones.js` — buscador de exclusiones) y dos componentes en todas las páginas con navbar (`navbar.js`, `scroll-arriba.js`)
-- `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `docs/` (documentos propios descargables, como la plantilla de propuesta al ayuntamiento en PDF), `geojson/` (fronteras de las CCAA para el mapa), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
+- `assets/` — recursos estáticos organizados en subcarpetas: `img/` (logo, error404), `img/home/` (imágenes de portada), `img/logos/` (logos de entidades), `docs/` (PDF que sirve la web en vez de enlazar fuera: la plantilla de propuesta al ayuntamiento, el resumen del Plan de Acción 2026-2030 y el informe de FDCats sobre gestión ética de colonias —este último ajeno, alojado con su origen citado en la propia entrada, porque los enlaces a otras webs se mueren cuando las reorganizan), `geojson/` (fronteras de las CCAA para el mapa), `wireframes/` (capturas de diseño por pantalla), `guia-estilo/` (paleta, tipografía y PDF de wireframes)
 - `scripts/` — utilidades de desarrollo (ver abajo)
-- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `buscador.html`, `entidad.html`, `login.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido. La ruta antigua `/solicitudes.html` no es un archivo: Nginx la redirige con un 301 a `buscador.html` conservando los filtros de la URL
+- `index.html`, `estadisticas-epas.html`, `estadisticas-eell.html`, `recursos.html`, `metodo-cer.html`, `buscador.html`, `entidad.html`, `login.html`, `privado.html`, `exclusivo.html`, `admin.html`, `recuperar-password.html`, `reset-password.html`, `verificar-email.html` — páginas de contenido. La ruta antigua `/solicitudes.html` no es un archivo: Nginx la redirige con un 301 a `buscador.html` conservando los filtros de la URL
 - `404.html`, `50x.html` — páginas de error personalizadas (servidas por Nginx con `error_page`)
+- `favicon.ico` — el icono de la pestaña, en la **raíz**. Las páginas declaran además `<link rel="icon">` apuntando al logo, pero navegadores, lectores de RSS y buscadores piden `/favicon.ico` a la raíz de todas formas: sin el fichero ahí, cada una de esas peticiones era un 404
 - `aviso-legal.html`, `privacidad.html` — páginas legales con aviso legal y política de privacidad
 
 #### Scripts de desarrollo (`frontend/scripts/`)
@@ -765,7 +767,7 @@ El proyecto combina pruebas automáticas y manuales:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Automáticos | **399 funciones / 503 ejecuciones** | pytest (sin Docker) |
+| Automáticos | **489 funciones / 653 ejecuciones** | pytest (sin Docker) |
 | Manuales | 52 | Navegador + DevTools |
 
 > El recuento detallado, fichero a fichero, está en **[docs/tests.md](docs/tests.md)**,
@@ -933,7 +935,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - Docker: Nginx + FastAPI + MariaDB + cron + Mailpit + Adminer en contenedores. La base de datos, Adminer y Mailpit escuchan **solo en local**: en el servidor se llega a ellos por túnel SSH
 - El servidor es una **copia limpia del repositorio**: actualizar la web es `git pull`, y lo específico de producción vive en ficheros que git no versiona
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
-- **`robots.txt`, `sitemap.xml` y direcciones canónicas**: el sitemap lista las 6 páginas indexables —ni una menos ni una de más: las legales llevan `noindex` y estar en ambos sitios era contradecirse— y cada una declara su dirección canónica. Pero una etiqueta `canonical` es **una sugerencia**: mientras el servidor devuelva 200 en dos direcciones, Google puede ignorarla, y de hecho lo hizo —llegó a indexar `http://www.subvencionesdgda.org/` como página aparte—. Así que la unificación real la hace Nginx con redirecciones 301: `www` va a la variante sin `www`, y `/index.html` a `/`. `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal. Todo comprobado por tests
+- **`robots.txt`, `sitemap.xml` y direcciones canónicas**: el sitemap lista las 7 páginas indexables —ni una menos ni una de más: las legales llevan `noindex` y estar en ambos sitios era contradecirse— y cada una declara su dirección canónica. Pero una etiqueta `canonical` es **una sugerencia**: mientras el servidor devuelva 200 en dos direcciones, Google puede ignorarla, y de hecho lo hizo —llegó a indexar `http://www.subvencionesdgda.org/` como página aparte—. Así que la unificación real la hace Nginx con redirecciones 301: `www` va a la variante sin `www`, y `/index.html` a `/`. `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal. Todo comprobado por tests
 - **Analítica propia sobre los registros de Nginx**, en dos informes: un **resumen en español** (`make resumen-visitas`, ~10 KB, sin dependencias) para el vistazo semanal, y **GoAccess** (`make informe-visitas`) para el detalle. Sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Descuentan robots y **tráfico de centros de datos**, que es la mayor parte de lo que recibe cualquier web pública. Los informes no se publican —llevan direcciones IP— y los del servidor se traen con `make informes`, que los descarga a `informes/servidor/` y los abre en el navegador. Van en carpeta aparte de los locales a propósito: confundir el tráfico real con el propio trasteo lleva a conclusiones falsas
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
@@ -1393,6 +1395,12 @@ viven en `localStorage` y no en cookies— sí está explicada en
 [docs/autenticacion.md](docs/autenticacion.md), porque justificar una elección
 no es lo mismo que inventariar lo que no está puesto.
 
+### Contenido
+
+- **Reponer el proyecto de gestión de colonias en Recursos** — el PDF salió del repositorio mientras se reescribe (la sección de normativa ya se corrigió; quedan por actualizar las cifras de Córdoba dentro del propio documento). Cuando esté, son dos pasos: guardar el fichero como `frontend/assets/docs/gestion-colonias-felinas-metodo-cer.pdf`, reponer su entrada en la lista «Guías y documentos útiles» de `recursos.html` y añadir ese nombre a `DOCUMENTOS_ALOJADOS` en `tests/test_recursos_documentos.py`. El texto exacto de la entrada que se retiró está en el commit de la retirada, así que es copiar y pegar. La nota al pie sobre las cifras de Córdoba **no hay que reponerla**: el documento nuevo ya las trae actualizadas.
+
+- **Versión genérica del tríptico de convivencia** — el que había lleva los datos de contacto y la cuenta bancaria de una asociación concreta y los teléfonos de un ayuntamiento concreto, así que se retiró. Una versión sin datos de contacto y con «tu ayuntamiento» en lugar de un municipio serviría en toda España. Al rehacerlo, corregir la errata de su apartado legal: cita la «Ley orgánica 3/2003» de reforma del Código Penal cuando es la **3/2023**.
+
 ### Funcionalidades y UX
 
 - **Entidades favoritas** — marcar entidades (un máximo razonable, p. ej. 20)
@@ -1407,12 +1415,6 @@ no es lo mismo que inventariar lo que no está puesto.
   `privado.html`. Con muy pocas cuentas en juego, conviene decidir primero si la
   función aporta algo frente a guardar la búsqueda en la URL, que ya funciona
   sin cuenta.
-
-- **Página explicativa del método CER** — qué es la captura, esterilización y
-  retorno de colonias felinas, y por qué se destinan fondos públicos a ello. La
-  web muestra cuánto dinero se reparte; esto respondería al *por qué*. Hay
-  material oficial ya enlazado en Recursos (la directriz técnica de la DGDA y la
-  Ley 7/2023) para sostenerlo con fuente en vez de con opinión.
 
 ### Privacidad
 
