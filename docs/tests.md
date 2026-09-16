@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 489 funciones / 653 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 493 funciones / 657 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **489 funciones / 653 ejecuciones**, más 52 pruebas manuales | |
+| **Total** | **493 funciones / 657 ejecuciones**, más 52 pruebas manuales | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: **las 653 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
+Nota sobre ejecución: **las 657 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (653) es mayor que el número de **funciones de test** escritas (489). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (657) es mayor que el número de **funciones de test** escritas (493). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **489 funciones de test automáticas** (653 ejecuciones con pytest) distribuidas en 41 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
+El proyecto incluye **493 funciones de test automáticas** (657 ejecuciones con pytest) distribuidas en 42 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (653)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (657)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -131,6 +131,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_accesibilidad_modales.py` | 3 | 7 | Que el foco salga de un modal **antes** de marcarlo `aria-hidden`: si un descendiente lo conserva, el navegador rechaza el atributo y el modal sigue anunciándose |
 | `test_nginx_canonico.py` | 6 | 6 | Una sola dirección: `www` y `/index.html` redirigen, y la portada NO (un 301 ahí sería un bucle) |
 | `test_recursos_documentos.py` | 12 | 12 | Listado de recursos: título enlazado y descripción, ninguna URL partida en dos líneas, la vía estatal distinguida de la autonómica, y que los PDF propios existen de verdad en `assets/docs/` y no solo enlazados |
+| `test_favicon.py` | 4 | 4 | Que exista un `favicon.ico` de verdad en la raíz —con cabecera ICO y los tamaños de 16 y 32 px—, y que Nginx le siga poniendo caché larga |
 | `test_estudio_ayuntamientos.py` | 12 | 12 | Bloque del estudio municipal y cierre de la portada: cada porcentaje con su base, y las anclas fuera del alcance de la barra fija |
 | `test_informe_visitas.py` | 20 | 20 | Informes de visitas: formato de log a la par con Nginx, robots y centros de datos descontados sin tocar operadoras de consumo, y que los informes no acaben publicados |
 | `test_robots_sitemap.py` | 11 | 11 | `robots.txt`, `sitemap.xml` y canónicas, y que los tres textos que permiten el rastreo de IA sigan diciendo lo mismo |
@@ -138,7 +139,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_navbar_paginas.py` | 3 | 3 | Que toda página con botón de menú cargue `navbar.js`: seis lo mostraban sin cargarlo y no hacía nada |
 | `test_bloque_bdns_portada.py` | 6 | 6 | Que el bloque de la BDNS en la portada no falle en silencio: nace `hidden` y la cifra la calcula el JS, así que un id o un campo renombrado lo dejarían invisible sin dar error |
 | `test_deteccion_convocatorias.py` | 5 | 20 | Qué convocatorias de la BDNS son las de este proyecto: premios, certámenes y otras líneas quedan fuera, y las dos copias del detector (pipeline y cron) clasifican igual |
-| **Total** | **489** | **653** | 41 archivos |
+| **Total** | **493** | **657** | 42 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
@@ -284,22 +285,32 @@ El último test es una segunda red sobre `cargar_indice_bdns()`: aunque el detec
 
 #### test_recursos_documentos.py — los PDF propios
 
-Dos comprobaciones añadidas al incorporar tres documentos propios a Recursos
-(el proyecto genérico de gestión de colonias, el resumen del Plan de Acción
-2026-2030 y el tríptico de convivencia).
+Comprobación añadida al incorporar documentos propios a Recursos. Existe porque
+el fallo típico aquí no es de código: el HTML enlaza `assets/docs/loquesea.pdf`,
+el fichero se queda sin subir al repo y el enlace devuelve un 404 que nadie ve
+hasta que alguien lo pulsa. El test recorre los nombres declarados, exige que
+estén enlazados desde el bloque, que el fichero exista, que pese algo razonable
+y que empiece por `%PDF-`.
 
-La primera existe porque el fallo típico aquí no es de código: el HTML enlaza
-`assets/docs/loquesea.pdf`, el fichero se queda sin subir al repo y el enlace
-devuelve un 404 que nadie ve hasta que alguien lo pulsa. El test recorre los
-tres nombres, exige que estén enlazados desde el bloque, que el fichero exista,
-que pese algo razonable y que empiece por `%PDF-`.
+#### test_favicon.py
 
-La segunda vigila la nota al pie de Córdoba. El PDF de gestión de colonias cita
-2.680 gatos de 118 colonias, que era el dato de 2022; hoy el programa va por 225
-colonias y más de 5.000 gatos. Rehacer el PDF por eso no compensa, así que la
-cifra actualizada vive en la web como apostilla — y si alguien reescribe esa
-entrada y se la lleva por delante, el documento vuelve a quedarse desfasado sin
-que se note.
+Nace de un dato del informe de visitas de septiembre de 2026: **224 peticiones a
+`/favicon.ico` devolviendo 404** en treinta días. Las páginas declaran
+`<link rel="icon" href="assets/img/logo.png">`, pero navegadores, lectores de RSS
+y buscadores piden `/favicon.ico` a la raíz de todas formas, y allí no había
+nada.
+
+Es el tipo de fallo que dura meses porque **no rompe nada visible**: la web se ve
+igual, nadie recibe un error, solo se ensucia el registro. Se detectó mirando el
+apartado «rutas que no existen» del informe, donde casi todo es ruido de sondeos
+automáticos —y por eso el propio informe avisa de que ahí solo preocupa lo que
+sea tuyo.
+
+Se comprueba que el fichero existe en la raíz y no en `assets/`, que tiene
+cabecera ICO de verdad (renombrar un PNG no vale: parte de los clientes que
+piden esa ruta son justamente los que no interpretan PNG), que lleva los tamaños
+de 16 y 32 px, y que la regla de Nginx con `expires 1y` sigue incluyendo la
+extensión `.ico`.
 
 ### Tipos de test utilizados
 

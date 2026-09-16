@@ -15,6 +15,23 @@
 # permite uso comercial ni obras derivadas). Es un permiso expreso y adicional
 # de quien tiene los derechos, explicado en el aviso legal y en el README.
 # Se documenta aquí para que las dos cosas digan lo mismo.
+#
+# REVISADA EN SEPTIEMBRE DE 2026 con datos de tráfico reales, y se mantiene.
+# En treinta días: GPTBot 2.004 peticiones y ClaudeBot 932, frente a 19.997 de
+# Google y 47.100 de robots en total. Es decir, el coste es irrelevante.
+#
+# Lo que decidió el asunto fue otra cosa: bloquear aquí solo afecta a quien
+# obedece. GPTBot y ClaudeBot respetan este fichero —por eso se les puede
+# contar—, mientras que las 33.759 peticiones que ese mismo mes llegaron desde
+# centros de datos venían de rastreadores que NO se identifican y que se saltan
+# el robots.txt. Bloquear habría restado presencia en las herramientas que citan
+# con enlace, sin evitar una sola petición del raspado real.
+#
+# Si algún día se cambia de criterio, el término medio sería bloquear los de
+# entrenamiento (GPTBot, ClaudeBot, CCBot) y seguir permitiendo los que
+# consultan al responder (OAI-SearchBot, ChatGPT-User, Claude-User,
+# PerplexityBot), que suelen citar. Habría que tocar TAMBIÉN el aviso legal y el
+# README: hay un test que comprueba que los tres digan lo mismo.
 
 User-agent: *
 Allow: /
