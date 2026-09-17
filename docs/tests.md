@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 493 funciones / 657 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 499 funciones / 663 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **493 funciones / 657 ejecuciones**, más 52 pruebas manuales | |
+| **Total** | **499 funciones / 663 ejecuciones**, más 52 pruebas manuales | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: **las 657 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
+Nota sobre ejecución: **las 663 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (657) es mayor que el número de **funciones de test** escritas (493). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (663) es mayor que el número de **funciones de test** escritas (499). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **493 funciones de test automáticas** (657 ejecuciones con pytest) distribuidas en 42 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
+El proyecto incluye **499 funciones de test automáticas** (663 ejecuciones con pytest) distribuidas en 43 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (657)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (663)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -131,6 +131,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_accesibilidad_modales.py` | 3 | 7 | Que el foco salga de un modal **antes** de marcarlo `aria-hidden`: si un descendiente lo conserva, el navegador rechaza el atributo y el modal sigue anunciándose |
 | `test_nginx_canonico.py` | 6 | 6 | Una sola dirección: `www` y `/index.html` redirigen, y la portada NO (un 301 ahí sería un bucle) |
 | `test_recursos_documentos.py` | 12 | 12 | Listado de recursos: título enlazado y descripción, ninguna URL partida en dos líneas, la vía estatal distinguida de la autonómica, y que los PDF propios existen de verdad en `assets/docs/` y no solo enlazados |
+| `test_traer_copias.py` | 6 | 6 | Traer las copias del servidor: que vayan a su propia carpeta y no se versionen, y que se compruebe la marca de cierre del volcado |
 | `test_favicon.py` | 4 | 4 | Que exista un `favicon.ico` de verdad en la raíz —con cabecera ICO y los tamaños de 16 y 32 px—, y que Nginx le siga poniendo caché larga |
 | `test_estudio_ayuntamientos.py` | 12 | 12 | Bloque del estudio municipal y cierre de la portada: cada porcentaje con su base, y las anclas fuera del alcance de la barra fija |
 | `test_informe_visitas.py` | 20 | 20 | Informes de visitas: formato de log a la par con Nginx, robots y centros de datos descontados sin tocar operadoras de consumo, y que los informes no acaben publicados |
@@ -139,7 +140,7 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_navbar_paginas.py` | 3 | 3 | Que toda página con botón de menú cargue `navbar.js`: seis lo mostraban sin cargarlo y no hacía nada |
 | `test_bloque_bdns_portada.py` | 6 | 6 | Que el bloque de la BDNS en la portada no falle en silencio: nace `hidden` y la cifra la calcula el JS, así que un id o un campo renombrado lo dejarían invisible sin dar error |
 | `test_deteccion_convocatorias.py` | 5 | 20 | Qué convocatorias de la BDNS son las de este proyecto: premios, certámenes y otras líneas quedan fuera, y las dos copias del detector (pipeline y cron) clasifican igual |
-| **Total** | **493** | **657** | 42 archivos |
+| **Total** | **499** | **663** | 43 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
@@ -291,6 +292,25 @@ el fichero se queda sin subir al repo y el enlace devuelve un 404 que nadie ve
 hasta que alguien lo pulsa. El test recorre los nombres declarados, exige que
 estén enlazados desde el bloque, que el fichero exista, que pese algo razonable
 y que empiece por `%PDF-`.
+
+#### test_traer_copias.py
+
+Protege `scripts/traer_copias.sh`, que baja las copias de seguridad del
+servidor. No comprueba que el `scp` funcione —eso se ve ejecutándolo— sino las
+tres cosas que fallarían en silencio:
+
+- Que las copias del servidor **no se mezclen** con los volcados locales.
+  Restaurar la equivocada está entre los errores más caros posibles aquí, y los
+  nombres son casi idénticos.
+- Que **no acaben versionadas**: llevan las cuentas de usuario con sus hashes de
+  contraseña.
+- Que se verifique la **marca de cierre** del volcado. Uno cortado a medias
+  restaura una base de datos incompleta, y eso es peor que no tener copia porque
+  parece que ha funcionado.
+
+Esa última no es una precaución teórica: al probar el script apareció
+`backups/backup_20260806_000000.sql`, de **0 bytes**, ahí desde agosto. El
+fichero existe y tiene buen nombre, así que nunca habría saltado a la vista.
 
 #### test_favicon.py
 

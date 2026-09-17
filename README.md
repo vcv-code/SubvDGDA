@@ -743,6 +743,7 @@ El proyecto incluye un `Makefile` en la raíz con los comandos más habituales:
 | `make backup` | Vuelca la BD a `backups/backup_AAAAMMDD_HHMMSS.sql`, descarta el fichero si el volcado queda incompleto y borra los de más de 30 días (`BACKUP_DIAS` en `docker/.env` para cambiarlo) |
 | `make restore FILE=…` | Restaura una copia. **Sobrescribe la BD actual**, así que pide confirmación y rechaza los volcados truncados |
 | `make informes` | **Informes del servidor**: los genera allí, se los trae a `informes/servidor/` y abre el último en el navegador. `DIAS=30` para otro periodo, `TIPO=goaccess` para el detallado, `ABRIR=no` para solo descargar |
+| `make copias` | **Copias de seguridad del servidor**: trae a `backups/servidor/` las que falten y comprueba que no vengan truncadas. `TODAS=si` para bajarlas todas, `LISTAR=si` para solo ver qué hay |
 | `make resumen-visitas` | Resumen **local** en español, de los registros del Docker de desarrollo. Últimos 30 días por defecto (`--dias N` para otro periodo) |
 | `make informe-visitas` | Informe **local** de GoAccess: navegadores, dispositivos, errores y tiempos. Requiere `goaccess` instalado |
 | `make shell-db` | Abre la consola MariaDB dentro del contenedor |
@@ -901,6 +902,10 @@ que volver.
 | `v1.2` | Sin registro público y sin credenciales en el repositorio |
 | `v1.3` | Listo para el servidor: correo de producción y rotación de logs |
 | `v1.4` | Primera tanda de correcciones salidas de tener la web en producción |
+| `v1.5` | Correo en producción, analítica propia e indexación |
+| `v1.6` | Correcciones de móvil, menú de navegación y KPI de concesión |
+| `v1.7` | Correcciones de datos del origen y periodo subvencionable |
+| `v1.8` | Página del método CER, documentos descargables y arreglo de la caída de septiembre |
 
 ### Por qué este flujo
 
@@ -937,6 +942,7 @@ Cada funcionalidad o investigación se desarrolla en una rama feature/* y poster
 - **Copias de seguridad semanales** de la base de datos, con rotación y descarte de volcados incompletos
 - **`robots.txt`, `sitemap.xml` y direcciones canónicas**: el sitemap lista las 7 páginas indexables —ni una menos ni una de más: las legales llevan `noindex` y estar en ambos sitios era contradecirse— y cada una declara su dirección canónica. Pero una etiqueta `canonical` es **una sugerencia**: mientras el servidor devuelva 200 en dos direcciones, Google puede ignorarla, y de hecho lo hizo —llegó a indexar `http://www.subvencionesdgda.org/` como página aparte—. Así que la unificación real la hace Nginx con redirecciones 301: `www` va a la variante sin `www`, y `/index.html` a `/`. `robots.txt` permite todo el rastreo, incluido el de modelos de IA, como decisión explícita y coherente con el aviso legal. Todo comprobado por tests
 - **Analítica propia sobre los registros de Nginx**, en dos informes: un **resumen en español** (`make resumen-visitas`, ~10 KB, sin dependencias) para el vistazo semanal, y **GoAccess** (`make informe-visitas`) para el detalle. Sin cookies, sin JavaScript de terceros y sin banner de consentimiento. Descuentan robots y **tráfico de centros de datos**, que es la mayor parte de lo que recibe cualquier web pública. Los informes no se publican —llevan direcciones IP— y los del servidor se traen con `make informes`, que los descarga a `informes/servidor/` y los abre en el navegador. Van en carpeta aparte de los locales a propósito: confundir el tráfico real con el propio trasteo lleva a conclusiones falsas
+- **Copias de seguridad traíbles con una orden** (`make copias`) — las programadas viven en la misma máquina que la base de datos, así que no protegen del único fallo que importa de verdad: perder la máquina. Traérselas era un paso manual, y lo que hay que acordarse de hacer no se hace. El comando baja solo lo que falte, verifica la marca de cierre de cada volcado —uno truncado restaura una base de datos incompleta, que es peor que no tener copia porque parece que ha funcionado— y las deja en carpeta aparte de los volcados locales, porque restaurar la equivocada es de los errores más caros posibles aquí. Lo que se perdería sin esto no es el dataset, que se reconstruye desde el BOE, sino lo que solo existe en la base: las cuentas, los avisos y las fechas de fin de plazo
 - Instalación y desinstalación automatizadas (`install.sh` + `uninstall.sh` + Makefile), con credenciales generadas al azar en cada instalación
 
 ### API y autenticación
@@ -1373,11 +1379,6 @@ ser más informativo que la mejora en sí.
   plazo se reescriben en el panel en un par de minutos, y hay backup automático
   con el procedimiento en el manual. Una hora de código delicado, con riesgo de
   duplicar datos, para ahorrar un par de minutos al año.
-
-- **Copias de seguridad fuera del servidor** — las copias programadas viven en
-  la misma máquina que la base de datos, así que no protegen de perder la
-  máquina. El manual de despliegue explica cómo traérselas con `scp`, pero es un
-  paso manual.
 
 ### Seguridad — decisiones aplazadas a propósito
 

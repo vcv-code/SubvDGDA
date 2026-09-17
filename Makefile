@@ -12,7 +12,7 @@
         reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
         backup restore informe-visitas resumen-visitas shell-db mailpit uninstall \
-        informes
+        informes copias
 
 # Los volcados de BD van a un directorio propio, ignorado por git: contienen
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
@@ -185,6 +185,21 @@ resumen-visitas:
 #   make informes ABRIR=no        → solo descargar
 informes:
 	@bash scripts/traer_informes.sh
+
+# Trae las copias de seguridad del servidor a backups/servidor/.
+#
+# Existe por el mismo motivo que `informes`: las copias programadas viven en la
+# MISMA máquina que la base de datos, así que no protegen de perder la máquina,
+# y traérselas era un paso manual. Lo que hay que acordarse de hacer no se hace.
+#
+# Van a una carpeta aparte de los volcados locales: confundir una copia del
+# servidor con una de desarrollo lleva a restaurar la equivocada.
+#
+#   make copias                → trae la más reciente que no tengamos
+#   make copias TODAS=si       → trae todas las que falten
+#   make copias LISTAR=si      → solo mirar qué hay, sin descargar
+copias:
+	@bash scripts/traer_copias.sh
 
 # Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
 # actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un
