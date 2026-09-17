@@ -285,8 +285,8 @@ El último test es una segunda red sobre `cargar_indice_bdns()`: aunque el detec
 
 #### test_recursos_documentos.py — los PDF propios
 
-Comprobación añadida al incorporar documentos propios a Recursos. Existe porque
-el fallo típico aquí no es de código: el HTML enlaza `assets/docs/loquesea.pdf`,
+Comprobación sobre los cinco PDF que la web sirve en vez de enlazar fuera.
+Existe porque el fallo típico aquí no es de código: el HTML enlaza `assets/docs/loquesea.pdf`,
 el fichero se queda sin subir al repo y el enlace devuelve un 404 que nadie ve
 hasta que alguien lo pulsa. El test recorre los nombres declarados, exige que
 estén enlazados desde el bloque, que el fichero exista, que pese algo razonable
