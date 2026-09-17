@@ -118,7 +118,9 @@ def test_se_distingue_reclamar_de_quejarse():
 # la propia entrada, porque un enlace a otra web se muere cuando la reorganizan
 # —que es justo lo que pasó con la ficha de GEMFE en AVEPA—.
 DOCUMENTOS_ALOJADOS = (
+    "gestion-colonias-felinas-metodo-cer.pdf",
     "plan-accion-2026-2030-colonias-felinas-resumen.pdf",
+    "triptico-colonias-felinas-tenencia-responsable.pdf",
     "gestion-etica-colonias-felinas-proyectos-cer.pdf",
 )
 
