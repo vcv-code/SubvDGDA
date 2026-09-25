@@ -33,8 +33,20 @@ from datetime import date
 from pathlib import Path
 
 RAIZ = Path(__file__).parent.parent
-INFORMES = RAIZ / "informes/servidor"
 HISTORICO = RAIZ / "informes/historico.json"
+
+# Se miran las DOS carpetas, y no una, porque el mismo script corre en dos
+# sitios con la estructura invertida:
+#
+#   · En el servidor, los informes los genera `resumen_visitas.py` en
+#     `informes/` a secas. Ahí no existe `informes/servidor/`.
+#   · En la máquina de trabajo, `informes/` guarda los informes LOCALES —el
+#     trasteo con el Docker de desarrollo— y los del servidor se descargan a
+#     `informes/servidor/`.
+#
+# Mezclar unos con otros falsearía el histórico, así que lo que separa el grano
+# de la paja no es la carpeta sino `_es_local()`. Mirar las dos es seguro.
+INFORMES = [RAIZ / "informes", RAIZ / "informes/servidor"]
 
 # Las cifras van con punto de millar español: «3.166» son tres mil, no 3,166.
 _NUM = re.compile(r"^[\d.]+$")
@@ -178,9 +190,14 @@ def guardar(hist):
 
 
 def main(argv):
-    rutas = [Path(a) for a in argv[1:]] or sorted(INFORMES.glob("resumen-*.html"))
+    if argv[1:]:
+        rutas = [Path(a) for a in argv[1:]]
+    else:
+        rutas = sorted(r for d in INFORMES if d.exists()
+                       for r in d.glob("resumen-*.html"))
     if not rutas:
-        print(f"No hay informes que procesar en {INFORMES}/")
+        sitios = " ni ".join(str(d) for d in INFORMES)
+        print(f"No hay informes que procesar en {sitios}")
         return 1
 
     hist = cargar()

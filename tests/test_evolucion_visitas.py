@@ -164,6 +164,19 @@ def test_se_abre_en_chrome_y_se_puede_cambiar():
             f"{script.name} se queda sin respaldo si Chrome no está instalado")
 
 
+def test_busca_los_informes_en_las_dos_carpetas():
+    """El mismo script corre en dos sitios con la estructura invertida.
+
+    En el servidor los informes se generan en `informes/` a secas y no existe
+    `informes/servidor/`; en la máquina de trabajo es al revés. Mirar solo una
+    hacía que la tarea semanal del servidor no encontrara nada y saliera con
+    error, cosa que se vio ejecutándola allí después de desplegar.
+    """
+    texto = EXTRACTOR.read_text(encoding="utf-8")
+    assert 'RAIZ / "informes"' in texto and 'RAIZ / "informes/servidor"' in texto, (
+        "No mira las dos carpetas: en uno de los dos sitios no encontrará nada")
+
+
 def test_el_historico_tiene_la_forma_esperada():
     if not HISTORICO.exists():
         return
