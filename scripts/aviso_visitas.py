@@ -133,9 +133,15 @@ def componer(hist, evo, informes):
 
 def enviar(asunto, cuerpo):
     """Manda el correo. Nunca lanza: un fallo al avisar no rompe el cron."""
-    destino = os.environ.get("EMAIL_AVISOS", "")
+    # Misma cadena que usa docker-compose para el contenedor de cron:
+    #   EMAIL_AVISOS: ${EMAIL_AVISOS:-${EMAIL_CONTACTO:-}}
+    # En el servidor solo está puesto EMAIL_CONTACTO, así que mirar únicamente
+    # el primero dejaba el aviso sin destinatario — y el fallo solo salía al
+    # ejecutarlo allí, porque en local ninguno de los dos está definido.
+    destino = os.environ.get("EMAIL_AVISOS") or os.environ.get("EMAIL_CONTACTO", "")
     if not destino:
-        print("EMAIL_AVISOS está vacío: no hay a quién avisar.", file=sys.stderr)
+        print("Ni EMAIL_AVISOS ni EMAIL_CONTACTO están definidos en docker/.env: "
+              "no hay a quién avisar.", file=sys.stderr)
         return False
     try:
         msg = EmailMessage()
