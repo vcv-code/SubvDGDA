@@ -80,6 +80,21 @@ def test_compara_medias_y_avisa_de_ello():
     assert "MEDIA DIARIA" in r.stdout, "No advierte de que hay que comparar medias"
 
 
+def test_el_destinatario_respeta_la_cadena_del_compose():
+    """docker-compose resuelve EMAIL_AVISOS con respaldo en EMAIL_CONTACTO.
+
+    En el servidor solo está puesto el segundo, así que mirar únicamente el
+    primero dejaba el correo sin destinatario. No se ve en local: allí no está
+    definido ninguno de los dos.
+    """
+    texto = SCRIPT.read_text(encoding="utf-8")
+    assert "EMAIL_CONTACTO" in texto, (
+        "No cae a EMAIL_CONTACTO, que es lo único puesto en el servidor")
+    compose = (RAIZ / "docker/docker-compose.yml").read_text(encoding="utf-8")
+    assert "EMAIL_AVISOS:" in compose and "EMAIL_CONTACTO" in compose, (
+        "El compose ya no usa esa cadena: revisar que el script siga igual")
+
+
 def test_make_lo_expone_en_modo_seco():
     mk = MAKEFILE.read_text(encoding="utf-8")
     assert re.search(r"^aviso-visitas:", mk, re.M), "Falta el target"

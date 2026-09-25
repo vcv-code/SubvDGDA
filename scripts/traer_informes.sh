@@ -79,7 +79,9 @@ fi
 # huecos aunque el servidor los tuviera bien guardados. Se fusiona con el local
 # quedándose con el valor mayor de cada día, así que da igual cuál vaya por
 # delante.
-if scp -q "${SSH_OPTS[@]}" "$SERVIDOR:$RUTA_REMOTA/informes/historico.json" \
+# El del servidor se llama distinto a propósito: el versionado lo escribiría
+# allí el cron y bloquearía el `git pull` del siguiente despliegue.
+if scp -q "${SSH_OPTS[@]}" "$SERVIDOR:$RUTA_REMOTA/informes/historico-servidor.json" \
         "$DESTINO/historico-servidor.json" 2>/dev/null; then
     python3 - "$DESTINO/historico-servidor.json" <<'FIN' || true
 import json, sys

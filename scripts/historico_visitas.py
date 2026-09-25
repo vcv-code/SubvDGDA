@@ -27,13 +27,23 @@ Uso:
     python3 scripts/historico_visitas.py fichero.html…   → procesa los que se indiquen
 """
 import json
+import os
 import re
 import sys
 from datetime import date
 from pathlib import Path
 
 RAIZ = Path(__file__).parent.parent
-HISTORICO = RAIZ / "informes/historico.json"
+
+# Dónde se guarda. Configurable por una razón concreta y no por gusto:
+# `informes/historico.json` está VERSIONADO —es el único fichero de esa carpeta
+# que lo está—, y en el servidor lo escribe una tarea programada cada semana.
+# Un fichero rastreado que se modifica solo en el servidor acaba abortando el
+# `git pull` del siguiente despliegue con «local changes would be overwritten».
+# Por eso allí se apunta a `historico-servidor.json`, que queda ignorado, y de
+# ahí se lo trae `make informes` para fusionarlo con el versionado.
+HISTORICO = Path(os.environ.get("HISTORICO_FILE",
+                                str(RAIZ / "informes/historico.json")))
 
 # Se miran las DOS carpetas, y no una, porque el mismo script corre en dos
 # sitios con la estructura invertida:
