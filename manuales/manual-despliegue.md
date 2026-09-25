@@ -956,6 +956,43 @@ Y la tarea, en el mismo `crontab -e` que la copia de seguridad (el de Linux):
 
 Lunes a las 4:00, media hora después de la copia del domingo para no solaparse.
 
+#### Y otras dos, para el histórico y el aviso
+
+Esa tarea de arriba genera el informe **de GoAccess**, que no alimenta el
+histórico. Hacen falta dos más en el mismo `crontab -e`:
+
+```
+0 5 * * 1 cd /opt/subvdgda && python3 scripts/resumen_visitas.py --dias 30 && python3 scripts/historico_visitas.py >> /opt/subvdgda/logs/cron/resumen_visitas.log 2>&1
+0 9 1 * * cd /opt/subvdgda && python3 scripts/aviso_visitas.py >> /opt/subvdgda/logs/cron/aviso_visitas.log 2>&1
+```
+
+**La semanal es la que de verdad importa**, y conviene entender por qué no es
+mensual. Los registros de Nginx se borran a los 30 días: una tarea mensual
+cubriría justo los 30 anteriores, sin margen ninguno. Un mes que falle por
+cuatro días y esos días se pierden para siempre. Semanal deja tres semanas de
+colchón — puede fallar tres veces seguidas y el informe de 30 días sigue
+alcanzando.
+
+La mensual solo manda el correo con la evolución. **No adjunta el resumen de
+visitas**, que lleva direcciones IP de los visitantes: las cifras salen del
+histórico, que va filtrado.
+
+Antes de esperar a que salten, conviene probarlas a mano:
+
+```bash
+cd /opt/subvdgda
+python3 scripts/resumen_visitas.py --dias 30 && python3 scripts/historico_visitas.py
+python3 scripts/aviso_visitas.py --seco     # enseña el correo sin mandarlo
+python3 scripts/aviso_visitas.py            # y este ya lo manda
+```
+
+El último es el único que no se puede probar en local: en desarrollo el SMTP
+apunta a Mailpit, no a un buzón de verdad.
+
+> **Ojo con la hora.** Si el servidor va en UTC —compruébalo con `date`—, estas
+> tareas corren con una o dos horas de desfase respecto a la hora peninsular.
+> No afecta a nada, pero evita pensar que han fallado.
+
 #### Dos informes, para dos cosas distintas
 
 | | `make resumen-visitas` | `make informe-visitas` |
