@@ -12,7 +12,7 @@
         reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
         backup restore informe-visitas resumen-visitas shell-db mailpit uninstall \
-        informes copias
+        informes copias evolucion
 
 # Los volcados de BD van a un directorio propio, ignorado por git: contienen
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
@@ -200,6 +200,18 @@ informes:
 #   make copias LISTAR=si      → solo mirar qué hay, sin descargar
 copias:
 	@bash scripts/traer_copias.sh
+
+# Informe de evolución mes a mes, a partir de `informes/historico.json`.
+#
+# Va aparte del resumen porque contesta otra pregunta: el resumen dice cómo va
+# este mes, este dice si se va a mejor o a peor. Y no puede salir de los
+# registros de Nginx, que solo llegan a 30 días atrás: sale del histórico, que
+# `make informes` alimenta con cada descarga.
+#   make evolucion             → genera el informe y lo abre en el navegador
+#   make evolucion ABRIR=no    → solo genera, sin abrir
+evolucion:
+	@venv/bin/python scripts/historico_visitas.py
+	@venv/bin/python scripts/evolucion_visitas.py
 
 # Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
 # actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un

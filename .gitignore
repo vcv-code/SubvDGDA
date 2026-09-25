@@ -236,7 +236,16 @@ guia-estudio/
 backups/
 # Informes de visitas (scripts/informe_visitas.sh). Contienen direcciones IP
 # de los visitantes: ni se versionan ni se publican.
-informes/
+# Se ignora el CONTENIDO y no la carpeta: git no puede rescatar un fichero si su
+# directorio padre está excluido, y abajo hay que rescatar uno.
+informes/*
+
+# EXCEPCIÓN: el histórico sí se versiona, y a propósito. Los registros de Nginx
+# se borran a los 30 días, así que este fichero es el ÚNICO sitio donde viven
+# los datos anteriores: perderlo sería perderlos, y no se pueden reconstruir.
+# No lleva nada personal —solo totales por día y nombres de página y de dominio,
+# con las IP y las cadenas de ataque filtradas al extraerlo— y pesa unos pocos KB.
+!informes/historico.json
 
 # Base GeoLite2 de MaxMind para el resumen de visitas. Pesa decenas de MB y
 # tiene su propia licencia: se descarga con la cuenta de cada uno, no se

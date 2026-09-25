@@ -277,3 +277,19 @@ def test_la_base_asn_tambien_es_opcional():
     codigo = RESUMEN.read_text(encoding="utf-8")
     assert "hay_asn" in codigo
     assert "Sin la base GeoLite2-ASN" in codigo
+
+
+def test_traer_informes_reutiliza_una_sola_conexion():
+    """Sin multiplexar, el ssh que genera el informe y el scp que se lo trae
+    abren sesiones distintas y la clave pide la contraseña dos veces.
+
+    Mismo problema que se detectó en traer_copias.sh ejecutándolo de verdad.
+    """
+    traer = RAIZ / "scripts/traer_informes.sh"
+    texto = traer.read_text(encoding="utf-8")
+    assert "ControlMaster" in texto and "ControlPath" in texto, (
+        "No multiplexa: volvería a pedir la contraseña por cada orden"
+    )
+    assert "trap" in texto, (
+        "El socket de control se quedaría abierto si el script aborta"
+    )
