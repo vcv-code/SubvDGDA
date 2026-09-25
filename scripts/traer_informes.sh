@@ -74,9 +74,38 @@ if [ -z "$ULTIMO" ]; then
     exit 1
 fi
 
-# Alimentar el histórico ANTES de nada más: los registros del servidor se
-# borran a los 30 días, así que cada informe descargado es la única ocasión de
-# conservar esos días. Si falla, no se corta la descarga: el informe ya está.
+# Traerse también el histórico del servidor, que allí se mantiene por tarea
+# programada. Sin esto, un mes sin mirar el correo y sin descargar nada dejaría
+# huecos aunque el servidor los tuviera bien guardados. Se fusiona con el local
+# quedándose con el valor mayor de cada día, así que da igual cuál vaya por
+# delante.
+if scp -q "${SSH_OPTS[@]}" "$SERVIDOR:$RUTA_REMOTA/informes/historico.json" \
+        "$DESTINO/historico-servidor.json" 2>/dev/null; then
+    python3 - "$DESTINO/historico-servidor.json" <<'FIN' || true
+import json, sys
+from pathlib import Path
+remoto = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+local_p = Path("informes/historico.json")
+local = json.loads(local_p.read_text(encoding="utf-8")) if local_p.exists() else {"dias": {}, "periodos": []}
+antes = len(local["dias"])
+for d, n in remoto.get("dias", {}).items():
+    local["dias"][d] = max(local["dias"].get(d, 0), n)
+ya = {(p.get("desde"), p.get("hasta")) for p in local["periodos"]}
+for p in remoto.get("periodos", []):
+    if (p.get("desde"), p.get("hasta")) not in ya:
+        local["periodos"].append(p)
+local["dias"] = dict(sorted(local["dias"].items()))
+local["periodos"].sort(key=lambda p: p.get("desde") or "")
+local_p.write_text(json.dumps(local, ensure_ascii=False, indent=2), encoding="utf-8")
+ganados = len(local["dias"]) - antes
+print(f"Histórico del servidor incorporado: {'+' + str(ganados) if ganados else 'sin días nuevos'}.")
+FIN
+    rm -f "$DESTINO/historico-servidor.json"
+fi
+
+# Alimentar el histórico con el informe recién descargado. Los registros del
+# servidor se borran a los 30 días, así que cada informe es la única ocasión de
+# conservar esos días. Si falla, no se corta: el informe ya está.
 if [ "$TIPO" != "goaccess" ]; then
     python3 scripts/historico_visitas.py "$ULTIMO" >/dev/null 2>&1 \
         && echo "Histórico de visitas actualizado (make evolucion para verlo)." \

@@ -12,7 +12,7 @@
         reset-db redescubrir-convocatorias crear-admin dataset cargar \
         test logs logs-cron logs-nginx \
         backup restore informe-visitas resumen-visitas shell-db mailpit uninstall \
-        informes copias evolucion
+        informes copias evolucion aviso-visitas
 
 # Los volcados de BD van a un directorio propio, ignorado por git: contienen
 # datos reales (usuarios, hashes de contraseña) y no deben acabar en el repo.
@@ -212,6 +212,11 @@ copias:
 evolucion:
 	@venv/bin/python scripts/historico_visitas.py
 	@venv/bin/python scripts/evolucion_visitas.py
+
+# Prueba del correo mensual de visitas SIN enviarlo, para ver cómo queda.
+# En el servidor lo lanza el crontab del sistema una vez al mes.
+aviso-visitas:
+	@venv/bin/python scripts/aviso_visitas.py --seco
 
 # Restaurar es tan destructivo como reset-db: sobrescribe la base de datos
 # actual. Por eso pide confirmación igual que aquel — antes no lo hacía, y un
