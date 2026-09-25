@@ -173,6 +173,8 @@ def main(argv):
     seco = "--seco" in argv
     cargar_env()
 
+    # Se carga DESPUÉS de leer el .env para que respete HISTORICO_FILE si está
+    # puesto: en el servidor apunta a un fichero distinto del versionado.
     historico = _modulo("historico_visitas")
     evo = _modulo("evolucion_visitas")
 

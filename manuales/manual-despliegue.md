@@ -962,9 +962,26 @@ Esa tarea de arriba genera el informe **de GoAccess**, que no alimenta el
 histórico. Hacen falta dos más en el mismo `crontab -e`:
 
 ```
-0 5 * * 1 cd /opt/subvdgda && python3 scripts/resumen_visitas.py --dias 30 && python3 scripts/historico_visitas.py >> /opt/subvdgda/logs/cron/resumen_visitas.log 2>&1
+HISTORICO_FILE=/opt/subvdgda/informes/historico-servidor.json
+0 5 * * 1 cd /opt/subvdgda && { python3 scripts/resumen_visitas.py --dias 30; python3 scripts/historico_visitas.py; } >> /opt/subvdgda/logs/cron/resumen_visitas.log 2>&1
 0 9 1 * * cd /opt/subvdgda && python3 scripts/aviso_visitas.py >> /opt/subvdgda/logs/cron/aviso_visitas.log 2>&1
 ```
+
+Dos detalles de esas líneas que no son cosméticos:
+
+**Las llaves.** En `A && B >> fichero`, la redirección se aplica **solo a B**:
+si el resumen fallara, su error no acabaría en el log y el fichero diría
+únicamente que el histórico no encontró nada. Agrupando con `{ …; }` se
+recoge la salida de las dos. Y van separadas por `;` y no por `&&` a
+propósito: aunque el resumen falle, merece la pena intentar el histórico con
+los informes que ya hubiera.
+
+**`HISTORICO_FILE`.** El fichero `informes/historico.json` está **versionado**
+—es el único de esa carpeta que lo está—, y un fichero rastreado que el cron
+modifica cada semana acaba abortando el `git pull` del siguiente despliegue con
+«local changes would be overwritten». Por eso en el servidor el histórico va a
+`historico-servidor.json`, que queda ignorado. `make informes` se lo trae y lo
+fusiona con el versionado.
 
 **La semanal es la que de verdad importa**, y conviene entender por qué no es
 mensual. Los registros de Nginx se borran a los 30 días: una tarea mensual

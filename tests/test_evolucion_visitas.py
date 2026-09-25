@@ -177,6 +177,40 @@ def test_busca_los_informes_en_las_dos_carpetas():
         "No mira las dos carpetas: en uno de los dos sitios no encontrará nada")
 
 
+def test_la_ruta_del_historico_es_configurable():
+    """En el servidor NO puede escribir sobre el fichero versionado.
+
+    `informes/historico.json` es el único de esa carpeta que git rastrea, y
+    allí lo modificaría una tarea semanal: un fichero rastreado que cambia solo
+    en el servidor aborta el `git pull` del siguiente despliegue con «local
+    changes would be overwritten». Por eso allí se apunta con HISTORICO_FILE a
+    otro nombre, que queda ignorado.
+    """
+    texto = EXTRACTOR.read_text(encoding="utf-8")
+    assert "HISTORICO_FILE" in texto, "La ruta no se puede cambiar"
+    manual = (RAIZ / "manuales/manual-despliegue.md").read_text(encoding="utf-8")
+    assert "HISTORICO_FILE=" in manual, (
+        "El crontab documentado no la define: el servidor escribiría sobre el "
+        "fichero versionado")
+    r = subprocess.run(["git", "check-ignore", "-q",
+                        "informes/historico-servidor.json"],
+                       cwd=RAIZ, capture_output=True)
+    assert r.returncode == 0, "El histórico del servidor acabaría en el repositorio"
+
+
+def test_el_cron_recoge_la_salida_de_las_dos_ordenes():
+    """En `A && B >> fichero` la redirección se aplica solo a B.
+
+    Si el resumen fallara, su error no llegaría al log y este diría únicamente
+    que el histórico no encontró informes — culpando a la orden equivocada.
+    """
+    manual = (RAIZ / "manuales/manual-despliegue.md").read_text(encoding="utf-8")
+    linea = next(l for l in manual.splitlines()
+                 if "resumen_visitas.py --dias" in l and l.startswith("0 5"))
+    assert "{" in linea and "}" in linea, (
+        "Las dos órdenes no van agrupadas: la salida de la primera se pierde")
+
+
 def test_el_historico_tiene_la_forma_esperada():
     if not HISTORICO.exists():
         return
