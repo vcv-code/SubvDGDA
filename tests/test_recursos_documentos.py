@@ -121,6 +121,7 @@ DOCUMENTOS_ALOJADOS = (
     "gestion-colonias-felinas-metodo-cer.pdf",
     "plan-accion-2026-2030-colonias-felinas-resumen.pdf",
     "triptico-colonias-felinas-tenencia-responsable.pdf",
+    "convenio-colectivo-centros-veterinarios.pdf",
     "gestion-etica-colonias-felinas-proyectos-cer.pdf",
 )
 
