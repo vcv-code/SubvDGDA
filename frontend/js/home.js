@@ -703,6 +703,30 @@ function poblarUmbrales(umbrales) {
 // ─────────────────────────────────────────────────────────────
 
 /**
+ * Documentos intermedios de una convocatoria que sigue en trámite.
+ *
+ * Clave `tipo-año`, el mismo par que identifica cada aviso. Cuando hay entrada,
+ * el banner añade la frase; cuando no, se queda como estaba.
+ *
+ * Por qué está escrito aquí y no viene de la API: no es un dato de la base de
+ * datos. La alternativa era una columna en `convocatorias` editable desde el
+ * panel de administración, descartada por rapidez (decisión de oct 2026). Si
+ * esto se repite cada año —y se repite: provisional en octubre, definitiva en
+ * diciembre o enero, para EELL y para EPA—, merece la pena hacerlo bien.
+ *
+ * El enlace apunta a la página de EELL, NO al PDF del Ministerio: así la URL
+ * del Ministerio vive en un solo sitio (`estadisticas-eell.html`) y no hay que
+ * corregirla en dos ficheros cuando caduque.
+ *
+ * SE RETIRA al cargar los datos de 2026. No hace falta acordarse:
+ * `tests/test_aviso_provisional_2026.py` falla si sigue aquí.
+ */
+const DOCS_PROVISIONALES = {
+    'eell-2026': 'Ya hay <strong>propuesta de resolución provisional</strong>: '
+               + '<a href="estadisticas-eell.html#aviso-provisional-2026">ver las cifras</a>.'
+};
+
+/**
  * cargarAvisos()
  * Consulta GET /avisos/ y muestra un banner por cada convocatoria
  * detectada por el cron que aún no tiene resolución publicada.
@@ -731,6 +755,7 @@ async function cargarAvisos() {
             const publicacion = aviso.fecha_convocatoria
                 ? `, publicada el ${new Date(aviso.fecha_convocatoria).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}.`
                 : ' (fecha de publicación pendiente).';
+            const provisional = DOCS_PROVISIONALES[`${aviso.tipo_convoc}-${aviso.anio_convocatoria}`];
             return `
                 <div class="aviso-banner">
                     <span class="aviso-banner__icono" aria-hidden="true">📢</span>
@@ -742,7 +767,7 @@ async function cargarAvisos() {
                              apunta a que solo se publiquen las concedidas, con lo que el
                              resto habría que pedirlo por transparencia. Mejor no prometer
                              una fecha que no depende de nosotras. -->
-                        <p>Los datos estarán disponibles cuando podamos obtenerlos tras la resolución.</p>
+                        <p>${provisional ? provisional + ' ' : ''}Los datos estarán disponibles cuando podamos obtenerlos tras la resolución.</p>
                     </div>
                 </div>`;
         }).join('');

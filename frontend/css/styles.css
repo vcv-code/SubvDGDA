@@ -3195,7 +3195,10 @@ canvas {
     margin-top: 2px;
 }
 
-.aviso-banner__texto strong {
+/* `> strong` y no `strong` a secas: el título es hijo directo del contenedor,
+   pero un <strong> en línea dentro del <p> (para resaltar una cifra) heredaba
+   este display:block y se partía de línea. */
+.aviso-banner__texto > strong {
     display: block;
     font-size: 0.95rem;
     color: #78350f;
@@ -3207,6 +3210,52 @@ canvas {
     font-size: 0.875rem;
     color: #92400e;
     line-height: 1.4;
+}
+
+/* Variante verde — para avisos sobre fondo BLANCO (páginas de estadísticas).
+   ──────────────────────────────────────────────────────────────────────────
+   El ámbar de arriba se eligió para la portada, donde el banner va dentro de
+   `#avisos-banner`, que tiene su propia franja verde: allí el crema resalta.
+   Sobre el blanco de las páginas de estadísticas desaparece —#fffbeb da 1,04:1
+   contra el blanco, prácticamente el mismo color—.
+
+   El relleno por sí solo no lo arregla: el verde suave da 1,12:1, que sigue
+   siendo un tinte. Lo que hace que se lea como un bloque aparte es el borde
+   completo y la sombra; el color es lo que lo hace coherente con el sitio.
+
+   Todo sale de las variables de la paleta: el texto en --color-verde-tabla
+   sobre --color-fondo-verde da 5,6:1, por encima del 4,5:1 que pide WCAG AA. */
+.aviso-banner--verde {
+    background: var(--color-fondo-verde);
+    border: 1px solid var(--color-primario);
+    border-left: 5px solid var(--color-verde-tabla);
+    border-radius: var(--radio-card);
+    box-shadow: var(--sombra-card);
+}
+
+.aviso-banner--verde .aviso-banner__texto > strong,
+.aviso-banner--verde .aviso-banner__texto p {
+    color: var(--color-verde-tabla);
+}
+
+.aviso-banner--verde .aviso-banner__texto a {
+    color: var(--color-verde-btn);
+}
+
+.aviso-banner--verde .aviso-banner__texto a:hover,
+.aviso-banner--verde .aviso-banner__texto a:focus-visible {
+    color: var(--color-foco);
+}
+
+.aviso-banner__texto a {
+    color: #78350f;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.aviso-banner__texto a:hover,
+.aviso-banner__texto a:focus-visible {
+    color: #451a03;
 }
 
 /* ============================================================

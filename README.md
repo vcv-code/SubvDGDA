@@ -1369,6 +1369,37 @@ ser más informativo que la mejora en sí.
   hace falta multi-idioma; con ~10 enlaces que se actualizan una vez al año, el
   HTML directo es más fiable e igual de mantenible.
 
+- **Publicar las cifras de los tres años de EELL** — el 21 % de municipios que
+  se han presentado alguna vez, el 1,8 % que ha cobrado y el 83 % de los que
+  insisten los tres años sin conseguir nada. Están medidas y anotadas en
+  `data/raw/eell/README.md`. Coste estimado: ~2 horas entre el endpoint y el
+  bloque de la página.
+
+  *Por qué no se ha hecho:* son el tipo de cifra que **no debe hardcodearse**
+  —se mueven con cada convocatoria nueva— y eso obliga a calcularlas en
+  `GET /estadisticas/eell`, no en el HTML. Además hay un cabo suelto antes: el
+  desajuste de «desistidas» y «excluidas» entre 2025 y los años anteriores que
+  documenta ese mismo README y que **no está investigado**. Las tres cifras de
+  arriba no dependen de él (salen de `concedida` y del censo de solicitantes),
+  pero conviene cerrarlo antes de publicar un bloque de análisis que invite a
+  comparar años.
+
+- **Enlace a documentos intermedios desde la base de datos** — una columna en
+  `convocatorias` con la URL del documento publicado mientras la convocatoria
+  está en trámite (la propuesta provisional, por ejemplo), editable desde el
+  panel de administración como ya se edita `fecha_fin_plazo`. El banner de la
+  portada lo mostraría solo y desaparecería al marcar la resolución. Coste
+  estimado: ~2 horas con la migración, el endpoint espejo del de fin de plazo,
+  el campo en el panel y los tests.
+
+  *Por qué no se ha hecho:* en octubre de 2026 se resolvió con una nota estática
+  en `estadisticas-eell.html` más una entrada en `DOCS_PROVISIONALES`
+  (`home.js`), que se hizo en un rato frente a las dos horas de la versión con
+  migración de esquema en producción. El coste de la nota estática es que **hay
+  que editarla y redesplegar a mano** cada vez, y el caso se repite dos veces al
+  año y por cada línea: provisional en octubre, definitiva en diciembre o enero,
+  para EELL y para EPA. A la segunda o tercera vez, la columna sale más barata.
+
 ### Operación y despliegue
 
 - **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** —
