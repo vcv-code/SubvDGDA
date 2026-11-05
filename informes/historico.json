@@ -40,7 +40,48 @@
     "2026-09-22": 295,
     "2026-09-23": 579,
     "2026-09-24": 597,
-    "2026-09-25": 444
+    "2026-09-25": 669,
+    "2026-09-26": 263,
+    "2026-09-27": 237,
+    "2026-09-28": 392,
+    "2026-09-29": 229,
+    "2026-09-30": 245,
+    "2026-10-01": 191,
+    "2026-10-02": 229,
+    "2026-10-03": 135,
+    "2026-10-04": 173,
+    "2026-10-05": 374,
+    "2026-10-06": 346,
+    "2026-10-07": 405,
+    "2026-10-08": 203,
+    "2026-10-09": 161,
+    "2026-10-10": 115,
+    "2026-10-11": 119,
+    "2026-10-12": 325,
+    "2026-10-13": 633,
+    "2026-10-14": 766,
+    "2026-10-15": 312,
+    "2026-10-16": 462,
+    "2026-10-17": 409,
+    "2026-10-18": 750,
+    "2026-10-19": 800,
+    "2026-10-20": 770,
+    "2026-10-21": 704,
+    "2026-10-22": 649,
+    "2026-10-23": 272,
+    "2026-10-24": 87,
+    "2026-10-25": 101,
+    "2026-10-26": 315,
+    "2026-10-27": 456,
+    "2026-10-28": 1346,
+    "2026-10-29": 2484,
+    "2026-10-30": 183,
+    "2026-10-31": 100,
+    "2026-11-01": 202,
+    "2026-11-02": 373,
+    "2026-11-03": 518,
+    "2026-11-04": 286,
+    "2026-11-05": 104
   },
   "periodos": [
     {
@@ -136,7 +177,6 @@
         "baidu.com": 4,
         "android-app:": 2,
         "www.google.com": 1,
-        "94.b3.3aa9.ip4.static.sl-reverse.com:80": 1,
         "facebook.com": 1,
         "lagatapirata.org": 1
       }
@@ -193,6 +233,120 @@
       }
     },
     {
+      "desde": "2026-08-30",
+      "hasta": "2026-09-28",
+      "paginas": {
+        "Inicio": 3193,
+        "buscador.html": 775,
+        "entidad.html": 113,
+        "recursos.html": 95,
+        "estadisticas-epas.html": 62,
+        "estadisticas-eell.html": 62,
+        "contacto.html": 22,
+        "metodo-cer.html": 12,
+        "login.html": 6,
+        "aviso-legal.html": 6,
+        "privacidad.html": 5,
+        "recuperar-password.html": 5
+      },
+      "procedencias": {
+        "google.com": 366,
+        "android-app:": 68,
+        "lm.facebook.com": 6,
+        "dataindex.pro": 2,
+        "ecosia.org": 2,
+        "es.search.yahoo.com": 2,
+        "l.instagram.com": 1,
+        "facebook.com": 1
+      }
+    },
+    {
+      "desde": "2026-09-06",
+      "hasta": "2026-10-05",
+      "paginas": {
+        "Inicio": 3480,
+        "buscador.html": 806,
+        "entidad.html": 119,
+        "recursos.html": 102,
+        "estadisticas-eell.html": 63,
+        "estadisticas-epas.html": 63,
+        "contacto.html": 20,
+        "metodo-cer.html": 17,
+        "login.html": 8,
+        "aviso-legal.html": 5,
+        "privacidad.html": 4,
+        "admin.html": 3
+      },
+      "procedencias": {
+        "google.com": 382,
+        "android-app:": 72,
+        "lm.facebook.com": 7,
+        "facebook.com": 3,
+        "dataindex.pro": 2,
+        "ecosia.org": 2,
+        "es.search.yahoo.com": 2,
+        "bing.com": 2
+      }
+    },
+    {
+      "desde": "2026-09-11",
+      "hasta": "2026-10-10",
+      "paginas": {
+        "Inicio": 3976,
+        "buscador.html": 832,
+        "entidad.html": 122,
+        "recursos.html": 108,
+        "estadisticas-eell.html": 71,
+        "estadisticas-epas.html": 68,
+        "contacto.html": 24,
+        "metodo-cer.html": 22,
+        "login.html": 15,
+        "aviso-legal.html": 10,
+        "privacidad.html": 9,
+        "recuperar-password.html": 5
+      },
+      "procedencias": {
+        "google.com": 390,
+        "android-app:": 73,
+        "lm.facebook.com": 7,
+        "facebook.com": 4,
+        "ecosia.org": 3,
+        "bing.com": 3,
+        "es.search.yahoo.com": 2,
+        "l.instagram.com": 1,
+        "google.es": 1
+      }
+    },
+    {
+      "desde": "2026-09-13",
+      "hasta": "2026-10-12",
+      "paginas": {
+        "Inicio": 3619,
+        "buscador.html": 609,
+        "entidad.html": 98,
+        "recursos.html": 79,
+        "estadisticas-eell.html": 55,
+        "estadisticas-epas.html": 43,
+        "metodo-cer.html": 23,
+        "contacto.html": 21,
+        "login.html": 15,
+        "aviso-legal.html": 9,
+        "privacidad.html": 8,
+        "recuperar-password.html": 5
+      },
+      "procedencias": {
+        "google.com": 286,
+        "android-app:": 52,
+        "lm.facebook.com": 6,
+        "facebook.com": 4,
+        "ecosia.org": 3,
+        "bing.com": 3,
+        "es.search.yahoo.com": 2,
+        "google.es": 1,
+        "l.facebook.com": 1
+      }
+    },
+    {
       "desde": "2026-09-19",
       "hasta": "2026-09-25",
       "paginas": {
@@ -211,10 +365,146 @@
         "android-app:": 11,
         "lm.facebook.com": 1,
         "bing.com": 1,
+        "baidu.com": 1
+      }
+    },
+    {
+      "desde": "2026-09-20",
+      "hasta": "2026-10-19",
+      "paginas": {
+        "Inicio": 4988,
+        "buscador.html": 284,
+        "recursos.html": 62,
+        "estadisticas-eell.html": 44,
+        "estadisticas-epas.html": 34,
+        "entidad.html": 33,
+        "metodo-cer.html": 25,
+        "contacto.html": 21,
+        "login.html": 16,
+        "aviso-legal.html": 10,
+        "privacidad.html": 10,
+        "recuperar-password.html": 5
+      },
+      "procedencias": {
+        "google.com": 131,
+        "android-app:": 26,
+        "lm.facebook.com": 3,
+        "bing.com": 3,
+        "facebook.com": 3,
         "baidu.com": 1,
-        "94.b3.3aa9.ip4.static.sl-reverse.com": 1
+        "duckduckgo.com": 1,
+        "ecosia.org": 1
+      }
+    },
+    {
+      "desde": "2026-09-27",
+      "hasta": "2026-10-26",
+      "paginas": {
+        "Inicio": 6300,
+        "buscador.html": 201,
+        "recursos.html": 57,
+        "estadisticas-eell.html": 56,
+        "estadisticas-epas.html": 37,
+        "contacto.html": 30,
+        "metodo-cer.html": 30,
+        "login.html": 26,
+        "entidad.html": 24,
+        "aviso-legal.html": 18,
+        "privacidad.html": 18,
+        "recuperar-password.html": 10
+      },
+      "procedencias": {
+        "google.com": 85,
+        "android-app:": 17,
+        "bing.com": 6,
+        "facebook.com": 3,
+        "lm.facebook.com": 2,
+        "ecosia.org": 2,
+        "dataindex.pro": 2,
+        "lagatapirata.org": 1
+      }
+    },
+    {
+      "desde": "2026-10-04",
+      "hasta": "2026-10-10",
+      "paginas": {
+        "Inicio": 782,
+        "buscador.html": 35,
+        "recursos.html": 14,
+        "estadisticas-eell.html": 10,
+        "estadisticas-epas.html": 8,
+        "login.html": 7,
+        "entidad.html": 6,
+        "contacto.html": 6,
+        "privacidad.html": 5,
+        "aviso-legal.html": 5,
+        "metodo-cer.html": 5,
+        "recuperar-password.html": 3
+      },
+      "procedencias": {
+        "google.com": 18,
+        "android-app:": 4,
+        "ecosia.org": 1,
+        "facebook.com": 1,
+        "bing.com": 1
+      }
+    },
+    {
+      "desde": "2026-10-04",
+      "hasta": "2026-11-02",
+      "paginas": {
+        "Inicio": 6044,
+        "buscador.html": 178,
+        "estadisticas-eell.html": 65,
+        "recursos.html": 54,
+        "estadisticas-epas.html": 38,
+        "contacto.html": 32,
+        "metodo-cer.html": 29,
+        "login.html": 24,
+        "aviso-legal.html": 21,
+        "privacidad.html": 19,
+        "entidad.html": 13,
+        "recuperar-password.html": 11
+      },
+      "procedencias": {
+        "google.com": 71,
+        "android-app:": 17,
+        "bing.com": 5,
+        "ecosia.org": 3,
+        "lagatapirata.org": 2,
+        "dataindex.pro": 2,
+        "facebook.com": 1,
+        "lm.facebook.com": 1
+      }
+    },
+    {
+      "desde": "2026-10-07",
+      "hasta": "2026-11-05",
+      "paginas": {
+        "Inicio": 5802,
+        "buscador.html": 179,
+        "estadisticas-eell.html": 73,
+        "recursos.html": 64,
+        "estadisticas-epas.html": 45,
+        "contacto.html": 42,
+        "metodo-cer.html": 36,
+        "login.html": 31,
+        "aviso-legal.html": 28,
+        "privacidad.html": 27,
+        "entidad.html": 15,
+        "recuperar-password.html": 14
+      },
+      "procedencias": {
+        "google.com": 68,
+        "android-app:": 14,
+        "bing.com": 5,
+        "duckduckgo.com": 4,
+        "ecosia.org": 3,
+        "dataindex.pro": 2,
+        "lagatapirata.org": 2,
+        "facebook.com": 1
       }
     }
   ],
-  "actualizado": "2026-09-28"
+  "actualizado": "2026-11-05"
 }
