@@ -723,7 +723,9 @@ function poblarUmbrales(umbrales) {
  */
 const DOCS_PROVISIONALES = {
     'eell-2026': 'Ya hay <strong>propuesta de resolución provisional</strong>: '
-               + '<a href="estadisticas-eell.html#aviso-provisional-2026">ver las cifras</a>.'
+               + '<a href="estadisticas-eell.html#aviso-provisional-2026">ver las cifras</a>.',
+    'epa-2026':  'Ya hay <strong>propuesta de resolución provisional</strong>: '
+               + '<a href="estadisticas-epas.html#aviso-provisional-epa-2026">ver las cifras</a>.'
 };
 
 /**

@@ -113,6 +113,52 @@
                 </div>
 
 
+                <!-- Aviso de la convocatoria 2026, todavía en trámite.
+                     MANTENIMIENTO — HAY QUE RETIRARLO A MANO al cargar la
+                     resolución definitiva. Detalle del documento, de las cifras
+                     y de lo que se espera que cambie en data/raw/epas/2026/README.md.
+
+                     El enlace va a la ficha de la convocatoria en la BDNS y no a
+                     un PDF suelto, y esto NO es igual que en EELL: la propuesta
+                     provisional de EPA se publica en la BDNS (disposición
+                     octava.5 de la convocatoria), mientras que la de EELL va al
+                     portal del Ministerio. La ficha acumula documentos, así que
+                     el enlace seguirá sirviendo cuando salga la definitiva. Y la ruta
+                     canónica es la PLURAL: `convocatoria/:id` existe, pero es un
+                     redirect heredado hacia `convocatorias/:id`.
+
+                     La fecha de publicación (4-nov-2026) no se deduce de la firma: la
+                     da la propia BDNS en
+                     GET /bdnstrans/api/convocatorias?vpd=GE&numConv=904714, que lista
+                     los documentos con su `datPublicacion`. Por eso aquí el plazo se
+                     puede dar cerrado y en el aviso de EELL no.
+                     ───────────────────────────────────────────────── -->
+                <div class="aviso-banner aviso-banner--verde" id="aviso-provisional-epa-2026">
+                    <span class="aviso-banner__icono" aria-hidden="true">📄</span>
+                    <div class="aviso-banner__texto">
+                        <strong>Convocatoria 2026: ya hay propuesta provisional</strong>
+                        <p>
+                            Las cifras de esta página llegan hasta 2025. La convocatoria de
+                            2026 sigue en trámite: el 4 de noviembre de 2026 se firmó la
+                            propuesta de resolución provisional, que propone
+                            <strong>444 entidades beneficiarias</strong> de 759 solicitudes.
+                            Otras <strong>196 se quedaron sin fondos pese a ser evaluadas</strong>
+                            y 119 fueron excluidas. La puntuación mínima para entrar es de
+                            41 puntos en la línea de colonias felinas y 45,55 en la de
+                            animales abandonados.
+                            <a href="https://www.infosubvenciones.es/bdnstrans/GE/es/convocatorias/904714"
+                               target="_blank" rel="noopener noreferrer">Consultar la
+                                convocatoria en la Base de Datos Nacional de Subvenciones</a>.
+                            Es provisional: las entidades tienen <strong>diez días
+                            hábiles</strong> desde el día siguiente a su publicación para
+                            alegar. Se publicó el 4 de noviembre, así que el plazo vence el
+                            <strong>miércoles 18 de noviembre de 2026</strong>. Estos datos
+                            se incorporarán al análisis cuando se publique la resolución
+                            definitiva.
+                        </p>
+                    </div>
+                </div>
+
                 <!-- ─────────────────────────────────────────────────
                      FILA 1: KPIs
                      Datos de GET /estadisticas/epas
