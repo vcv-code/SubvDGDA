@@ -4,19 +4,19 @@ El proyecto tiene dos niveles de pruebas:
 
 | Nivel | Cantidad | Herramienta |
 |-------|----------|-------------|
-| Tests automáticos | 534 funciones / 698 ejecuciones | pytest (sin Docker) |
+| Tests automáticos | 537 funciones / 706 ejecuciones | pytest (sin Docker) |
 | Pruebas manuales | 52 | Navegador + DevTools con Docker levantado |
-| **Total** | **534 funciones / 698 ejecuciones**, más 52 pruebas manuales | |
+| **Total** | **537 funciones / 706 ejecuciones**, más 52 pruebas manuales | |
 
 Las pruebas manuales se distribuyen en seis bloques: 6 de HTTPS/infraestructura, 13 de flujos del frontend, 10 de endpoints de la API vía `/docs`, 2 de caché y rate limiting, 14 de las funcionalidades nuevas de rama 10 (agrupaciones, tramos, URL persistence y bloque convocatorias en Home) y 6 de recuperación de contraseña (rama 11b).
 
-Nota sobre ejecución: **las 698 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
+Nota sobre ejecución: **las 706 pasan sin Docker**. `test_https_config.py` y `test_rate_limiting.py` llegaron a necesitarlo, pero se reescribieron para comprobar los ficheros de configuración directamente, que es más rápido y no depende de tener el entorno levantado.
 
 ---
 
 ## Sobre el conteo de tests
 
-A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (698) es mayor que el número de **funciones de test** escritas (534). Ejemplo:
+A partir del archivo `test_scheduler.py` (verificación del calendario del cron) el proyecto incluye tests parametrizados. Pytest cuenta cada caso parametrizado como una ejecución independiente, por lo que el número de **ejecuciones** (706) es mayor que el número de **funciones de test** escritas (537). Ejemplo:
 
 ```python
 @pytest.mark.parametrize("day", [1, 5, 9, 13, 17, 21, 25, 29])
@@ -26,7 +26,7 @@ def test_check_bdns_corre_en_marzo_cada_4_dias(day):
 
 Esa es **una función**, pero pytest la ejecuta 8 veces (una por cada día) y reporta 8 PASSED. `@pytest.mark.parametrize` es una técnica estándar de pytest para evitar duplicar código de test cuando solo cambian los datos de entrada.
 
-`test_scheduler.py` y `test_accesibilidad_modales.py` usan `parametrize`: el primero recorre días y meses del calendario del cron (24 funciones → 169 ejecuciones), el segundo repite la misma comprobación sobre los tres modales (3 → 7). Los otros 38 archivos tienen correspondencia 1:1 entre funciones de test y ejecuciones.
+`test_scheduler.py`, `test_accesibilidad_modales.py` y `test_aviso_provisional_2026.py` usan `parametrize`: el primero recorre días y meses del calendario del cron (24 funciones → 169 ejecuciones), el segundo repite la misma comprobación sobre los tres modales (3 → 7) y el tercero la suya sobre los dos avisos (8 → 13). Los otros 37 archivos tienen correspondencia 1:1 entre funciones de test y ejecuciones.
 
 ---
 
@@ -61,7 +61,7 @@ Los tests actuales prueban **lógica de la aplicación** (filtros, respuestas HT
 
 ## Tests automáticos (pytest)
 
-El proyecto incluye **534 funciones de test automáticas** (698 ejecuciones con pytest) distribuidas en 46 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
+El proyecto incluye **537 funciones de test automáticas** (706 ejecuciones con pytest) distribuidas en 46 archivos que cubren la API REST, el sistema de autenticación, el panel de administración, la verificación de email, los refresh tokens, el formulario de contacto, el modo mantenimiento, el estado del plazo de las convocatorias, el pipeline de datos, los parsers, el sistema de logging, la configuración HTTPS, el endpoint de avisos, las cabeceras de caché, la configuración de rate limiting, el scheduler del cron, el helper de reintentos a la API BDNS, **el correo saliente** (STARTTLS, credenciales y enlaces de los correos) y **el despliegue con secretos propios** (credenciales fuera de los ficheros versionados y puertos de administración atados a la interfaz local).
 
 ### Cómo funcionan
 
@@ -89,7 +89,7 @@ un test), este resumen se **deriva de la propia suite** y se regenera en segundo
 
 ```bash
 pytest tests/ --collect-only -q            # lista todos los tests recogidos
-pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (698)
+pytest tests/ --collect-only -q | grep -c "::"   # total de ejecuciones (706)
 ```
 
 Recuento por archivo (**funciones** escritas / **ejecuciones** de pytest; solo
@@ -132,18 +132,18 @@ difieren en `test_scheduler.py`, que usa `@pytest.mark.parametrize`):
 | `test_nginx_canonico.py` | 6 | 6 | Una sola dirección: `www` y `/index.html` redirigen, y la portada NO (un 301 ahí sería un bucle) |
 | `test_recursos_documentos.py` | 12 | 12 | Listado de recursos: título enlazado y descripción, ninguna URL partida en dos líneas, la vía estatal distinguida de la autonómica, y que los PDF propios existen de verdad en `assets/docs/` y no solo enlazados |
 | `test_aviso_visitas.py` | 10 | 10 | Correo mensual de visitas: que no saque IPs del servidor, que un fallo de SMTP no tumbe el cron y que no afirme cuántos informes están sin descargar, cosa que el servidor no puede saber |
-| `test_evolucion_visitas.py` | 17 | 17 | Histórico y evolución: que no guarde IPs ni cadenas de ataque, que siga versionándose, que los meses incompletos se marquen y que la gráfica vaya en SVG para que se imprima |
+| `test_evolucion_visitas.py` | 18 | 18 | Histórico y evolución: que no guarde IPs ni cadenas de ataque, que siga versionándose, que los meses incompletos se marquen y que la gráfica vaya en SVG para que se imprima |
 | `test_traer_copias.py` | 6 | 6 | Traer las copias del servidor: que vayan a su propia carpeta y no se versionen, y que se compruebe la marca de cierre del volcado |
 | `test_favicon.py` | 4 | 4 | Que exista un `favicon.ico` de verdad en la raíz —con cabecera ICO y los tamaños de 16 y 32 px—, y que Nginx le siga poniendo caché larga |
 | `test_estudio_ayuntamientos.py` | 12 | 12 | Bloque del estudio municipal y cierre de la portada: cada porcentaje con su base, y las anclas fuera del alcance de la barra fija |
-| `test_informe_visitas.py` | 21 | 21 | Informes de visitas: formato de log a la par con Nginx, robots y centros de datos descontados sin tocar operadoras de consumo, y que los informes no acaben publicados |
+| `test_informe_visitas.py` | 22 | 22 | Informes de visitas: formato de log a la par con Nginx, robots y centros de datos descontados sin tocar operadoras de consumo, y que los informes no acaben publicados |
 | `test_robots_sitemap.py` | 11 | 11 | `robots.txt`, `sitemap.xml` y canónicas, y que los tres textos que permiten el rastreo de IA sigan diciendo lo mismo |
 | `test_aclaracion_no_oficial.py` | 4 | 4 | Que todas las páginas con pie aclaren que el sitio no es oficial |
 | `test_navbar_paginas.py` | 3 | 3 | Que toda página con botón de menú cargue `navbar.js`: seis lo mostraban sin cargarlo y no hacía nada |
 | `test_bloque_bdns_portada.py` | 6 | 6 | Que el bloque de la BDNS en la portada no falle en silencio: nace `hidden` y la cifra la calcula el JS, así que un id o un campo renombrado lo dejarían invisible sin dar error |
 | `test_deteccion_convocatorias.py` | 5 | 20 | Qué convocatorias de la BDNS son las de este proyecto: premios, certámenes y otras líneas quedan fuera, y las dos copias del detector (pipeline y cron) clasifican igual |
-| `test_aviso_provisional_2026.py` | 7 | 7 | El aviso de la propuesta provisional EELL 2026: que enlace el documento, que no dé el plazo de alegaciones como fecha cerrada, que la portada y el ancla cuadren, y que **el propio test avise cuando haya que retirarlo** |
-| **Total** | **534** | **698** | 46 archivos |
+| `test_aviso_provisional_2026.py` | 8 | 13 | Los avisos de las propuestas provisionales de 2026, EELL y EPA: que enlacen el documento oficial de cada una, que el plazo se dé como la fuente permita —cerrado en EPA, aproximado en EELL—, que la portada y las anclas cuadren, y que **el propio test avise cuando haya que retirarlos** |
+| **Total** | **537** | **706** | 46 archivos |
 
 > Para el detalle de qué comprueba cada archivo, ver la sección siguiente
 > ("Descripción por módulo"). Al añadir tests, basta con actualizar el recuento
@@ -378,8 +378,9 @@ extensión `.ico`.
 
 #### test_aviso_provisional_2026.py
 
-Vigila el aviso de la **propuesta de resolución provisional EELL 2026** que hay
-en `estadisticas-eell.html`, y sobre todo su caducidad.
+Vigila los avisos de las **propuestas de resolución provisional de 2026** que
+hay en `estadisticas-eell.html` y en `estadisticas-epas.html`, y sobre todo su
+caducidad.
 
 Dos cosas pueden quedarse obsoletas sin dar ningún error. **El enlace**: la
 propuesta provisional no se publica en el BOE —el art. 13.4 de la Orden
@@ -395,14 +396,17 @@ y el mensaje dice qué editar —el bloque de la página y la entrada `'eell-202
 de `DOCS_PROVISIONALES` en `home.js`—. El recordatorio no es un comentario en el
 HTML que se pueda pasar por alto, es un test rojo.
 
-Los otros comprueban tres decisiones que parecen de estilo y no lo son: que el
-plazo de alegaciones **no se dé como fecha cerrada** (el documento concede diez
-días hábiles desde la notificación, que es individual y no pública, así que
-vence el 23 o el 26 de octubre según el caso); que el ancla `#aviso-provisional-2026`
-exista de verdad en la página a la que enlaza la portada, porque un ancla mal
-escrita lleva al principio de la página sin avisar; y que la URL del Ministerio
-**no se duplique** en `home.js`, ya que tenerla en dos ficheros es garantía de
-corregir solo uno cuando caduque.
+Los otros comprueban decisiones que parecen de estilo y no lo son. **Que cada
+plazo se dé como su fuente permita**, que es donde las dos líneas se separan: el
+de EELL corre desde una notificación individual que no se publica, así que la
+web dice «en torno al 23 de octubre» y un test impide que alguien lo "limpie" a
+una fecha cerrada; el de EPA corre desde la publicación en la BDNS, que sí es
+pública —la propia API la expone en el campo `datPublicacion`—, así que ahí la
+fecha va cerrada y otro test impide lo contrario, que se vuelva aproximada por
+exceso de cautela. **Que las anclas existan** en la página a la que enlaza la
+portada, porque una mal escrita lleva al principio sin avisar. Y que las URL de
+los documentos **no se dupliquen** en `home.js`: la de EELL caduca, y tenerla en
+dos ficheros es garantía de corregir solo uno.
 
 
 ### Tipos de test utilizados
