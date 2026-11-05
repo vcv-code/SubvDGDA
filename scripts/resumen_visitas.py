@@ -293,6 +293,29 @@ def leer(dias):
     return filas, descartadas
 
 
+# Formas en que el propio servidor aparece como «procedencia».
+#
+# Las llamadas que la web se hace a sí misma —el health check del cron, por
+# ejemplo— llegan con un Referer propio y se contaban como si alguien nos
+# hubiera enlazado. Se filtraban por el dominio y por la IP literal, pero el
+# Referer también llega con el NOMBRE de esa IP: el rango 169.58.x.x es de
+# SoftLayer y su DNS inverso la codifica en hexadecimal, así que
+# `94.b3.3aa9.ip4.static.sl-reverse.com` resuelve a 169.58.179.148. Sin esta
+# entrada acabó siendo la segunda procedencia de la tabla, por delante de Bing,
+# creciendo de 6 a 27 en tres días (detectado el 5-nov-2026).
+#
+# Van los tres: el dominio cubre lo normal, la IP el acceso directo y el nombre
+# este caso. Si el servidor cambia de proveedor habrá que revisar el tercero —y
+# el informe lo delatará solo, porque volverá a aparecer una procedencia rara
+# arriba del todo.
+NUESTRAS_SENAS = ('subvencionesdgda', '169.58.179.148', 'sl-reverse.com')
+
+
+def _es_nuestro(referente):
+    r = referente.lower()
+    return any(s in r for s in NUESTRAS_SENAS)
+
+
 def construir(filas, descartadas, dias, resolver_dns=False):
     paginas   = Counter()
     api       = Counter()
@@ -359,7 +382,7 @@ def construir(filas, descartadas, dias, resolver_dns=False):
             api[ruta] += 1
 
         ref = d['referente']
-        if ref and ref != '-' and 'subvencionesdgda' not in ref and '169.58.179.148' not in ref:
+        if ref and ref != '-' and not _es_nuestro(ref):
             referentes[re.sub(r'^https?://(www\.)?', '', ref).split('/')[0]] += 1
 
     # Geolocalización: se resuelve al final, sobre las IPs ya recogidas

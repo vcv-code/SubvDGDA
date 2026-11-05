@@ -219,3 +219,32 @@ def test_el_historico_tiene_la_forma_esperada():
     for dia, n in d["dias"].items():
         assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", dia), f"fecha rara: {dia}"
         assert isinstance(n, int) and n >= 0
+
+
+def test_el_extractor_descarta_maquinas_y_puertos():
+    """Dos agujeros del filtro, encontrados el 5-nov-2026 con datos reales.
+
+    El DNS inverso de un centro de datos no es una procedencia, y el de nuestro
+    propio servidor llegó a ser la segunda de la tabla. Y una IP CON PUERTO
+    (`1.2.3.4:80`) no encajaba en la regla de IP desnuda, que va anclada al
+    final de la cadena, así que entraba igual.
+
+    Lo que no puede pasar es lo contrario: que se caigan procedencias de verdad.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("hv", EXTRACTOR)
+    hv = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(hv)
+
+    basura = [
+        "94.b3.3aa9.ip4.static.sl-reverse.com",
+        "94.b3.3aa9.ip4.static.sl-reverse.com:80",
+        "ec2-18-1-2-3.compute-1.amazonaws.com",
+        "1.2.3.4", "1.2.3.4:80", "[2a01:4f8::1]", "${jndi:ldap://x}",
+    ]
+    buenas = ["google.com", "lagatapirata.org", "ecosia.org", "android-app:", "dataindex.pro"]
+
+    for e in basura:
+        assert not hv._procedencia_util(e), f"«{e}» debería descartarse y no se descarta"
+    for e in buenas:
+        assert hv._procedencia_util(e), f"«{e}» es una procedencia real y se estaría perdiendo"
