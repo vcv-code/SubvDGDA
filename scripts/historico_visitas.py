@@ -121,12 +121,24 @@ def _dias(html):
 _BASURA = re.compile(
     r"^\[?(?:\d{1,3}\.){3}\d{1,3}\]?$"      # IPv4, con o sin corchetes
     r"|^\[[0-9a-fA-F:]+\]$"                  # IPv6
-    r"|[$}{]|jndi:|\$\{",                     # inyecciones en el Referer
+    r"|[$}{]|jndi:|\$\{"                      # inyecciones en el Referer
+    # DNS inverso de centros de datos: no son procedencias, son máquinas. El
+    # caso que lo destapó fue `94.b3.3aa9.ip4.static.sl-reverse.com`, que
+    # resuelve a nuestro propio servidor —el rango 169.58.x.x es de SoftLayer y
+    # su inverso codifica la IP en hexadecimal—. Se arregló también aguas
+    # arriba, en resumen_visitas.py, pero esto protege el fichero versionado
+    # aunque se vuelva a extraer de un informe viejo que ya la traía.
+    r"|\bsl-reverse\.com\b|\bip[46]\.static\b"
+    r"|\bec2-\d+-\d+-\d+-\d+\b|\bcompute\.amazonaws\.com\b"
+    r"|\bbc\.googleusercontent\.com\b",
     re.I)
 
 
 def _procedencia_util(etiqueta):
-    return not _BASURA.search(etiqueta)
+    """Un host con puerto (`1.2.3.4:80`) no encajaba en la regla de IP desnuda,
+    porque va anclada al final. Se quita el puerto antes de mirar."""
+    host = re.sub(r":\d+$", "", etiqueta.strip())
+    return not _BASURA.search(host)
 
 
 def _tabla(html, titulo):

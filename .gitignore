@@ -200,8 +200,15 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# XMLs de EPA descargados manualmente (el pipeline los obtiene por URL)
-data/raw/epas/
+# XMLs de EPA descargados manualmente (el pipeline los obtiene por URL).
+#
+# Se ignoran SOLO los XML, no la carpeta entera. Con `data/raw/epas/` se
+# colaban también los documentos del trámite —propuestas provisionales,
+# relaciones de admitidas y excluidas—, y esos SÍ hay que versionarlos: no
+# están en el BOE y desaparecen del portal al avanzar el procedimiento, así
+# que si no se guardan no se recuperan. Mismo caso que `informes/`: git no
+# puede rescatar un fichero cuyo directorio padre está excluido.
+data/raw/epas/**/*.xml
 
 # Archivo de contexto local (no se versiona)
 contexto.txt

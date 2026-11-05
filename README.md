@@ -1369,6 +1369,119 @@ ser más informativo que la mejora en sí.
   hace falta multi-idioma; con ~10 enlaces que se actualizan una vez al año, el
   HTML directo es más fiable e igual de mantenible.
 
+- **Ampliar a las subvenciones autonómicas y locales** — hoy el proyecto cubre
+  solo la línea estatal de la DGDA. La idea, de octubre de 2026, es añadir las
+  **convocatorias propias de cada comunidad** —la de la Comunidad de Madrid,
+  la catalana— y las de los propios ayuntamientos.
+
+  Es importante no confundirlo con recortar por territorio lo que ya hay. Una
+  ayuda autonómica es **otra convocatoria**: otras bases reguladoras, otro
+  baremo, otro órgano que resuelve y otros beneficiarios posibles. Filtrar la
+  línea estatal por comunidad enseña quién de ahí está en Madrid; esto es
+  enseñar una ayuda distinta que hoy no sale en ninguna parte.
+
+  *Lo que se comprobó al anotarlo:* es más barato de lo que parece. El cliente
+  `scripts/ingestion/bdns_client.py` ya lleva el parámetro que hace falta,
+  `tipoAdministracion`, fijo en `"C"` (estatal). Cambiándolo salen datos de
+  verdad, y la veta grande **no son las autonómicas**:
+
+  | Búsqueda en BDNS, 2020–2026 | Estatal | Autonómica | Local |
+  |---|---:|---:|---:|
+  | «colonias felinas» | 5 | 7 | 176 |
+  | «protección animal» | 8 | 18 | 82 |
+  | «bienestar animal» | 0 | 48 | 134 |
+
+  Y sobre todo: la BDNS expone `/concesiones/busqueda`, que devuelve
+  **beneficiario con CIF, fecha e importe** ya estructurados —556 concesiones de
+  «colonias felinas» a nivel local desde 2024—. Es decir, no haría falta parsear
+  la resolución de cada ayuntamiento, que es lo que haría inviable el trabajo.
+
+  *Por qué no se ha hecho:* más allá del tiempo, hay un límite que conviene
+  tener claro antes de empezar, porque cambia qué tipo de web saldría. La BDNS
+  da **quién cobró**, pero no **quién pidió y no cobró**: ni puntuaciones, ni
+  causas de exclusión, ni desistidas. Todo eso sale de las resoluciones del BOE,
+  y es justo lo que distingue a este proyecto de un listado de concesiones. Una
+  ampliación por API sería un mapa de dinero concedido, no un análisis de quién
+  queda fuera. Son dos cosas distintas y conviene no venderlas como la misma.
+
+  *Qué comunidades aparecen de verdad.* De 90 convocatorias autonómicas únicas
+  que devuelve la BDNS para estas búsquedas, **43 son de animales de compañía**
+  —el resto es ganadería, que usa las mismas palabras—:
+
+  | Comunidad | Convocatorias |
+  |---|---:|
+  | Comunidad de Madrid | 14 |
+  | Comunidad Foral de Navarra | 11 |
+  | Ciudad Autónoma de Melilla | 10 |
+  | Cantabria | 3 |
+  | Cataluña | 3 |
+  | Comunitat Valenciana | 1 |
+  | La Rioja | 1 |
+
+  Cataluña mantiene una línea que se repite —«fomentar la identificación y
+  esterilización», 2021, 2022 y 2023—, mientras que de la Comunitat Valenciana
+  solo consta un convenio puntual de 2020. Conviene no leer esa tabla como el
+  mapa real de lo que se convoca: la BDNS refleja lo que cada administración
+  publica, y una comunidad ausente puede estarlo por no publicar bien.
+
+  Y hay un indicio de que ahí estaría lo interesante, al menos en Madrid: en la
+  CAM existen líneas para ayuntamientos y para protectoras, pero el baremo
+  favorecería a los centros de protección animal y a las protectoras **con
+  albergue**, de forma que quien no tiene instalación física apenas puntúa y no
+  llega a presentarse. Los títulos de las convocatorias madrileñas apuntan en
+  esa dirección: separan «entidades locales» de «entidades sin ánimo de lucro»,
+  y estas últimas en dos líneas, **gastos corrientes y gastos de inversión**. Es conocimiento de campo, **sin verificar todavía contra
+  las bases reguladoras**, y anotarlo sirve para saber qué mirar: un baremo que
+  excluye de hecho a quien puede concurrir de derecho no se ve en las
+  concesiones, solo en la resolución completa.
+
+- **Quién presta de verdad el servicio en cada municipio** — qué entidad lleva
+  el centro de protección animal, la recogida de animales abandonados y la
+  gestión de colonias en cada ayuntamiento y mancomunidad. Idea de octubre de
+  2026, empezando por Madrid y ampliando después.
+
+  Tiene un encaje legal exacto: el art. 22.2 de la Ley 7/2023 permite prestar la
+  recogida con **servicio propio, mancomunado o concertado**, y la pregunta es
+  literalmente cuál de los tres usa cada municipio y, si está concertado, con
+  quién. Hoy eso no se sabe más que preguntando ayuntamiento por ayuntamiento.
+
+  *El modelo tiene que ser por servicio, no por municipio.* Son al menos tres
+  —centro de protección animal, recogida de abandonados y perdidos, y gestión de
+  colonias— y un mismo ayuntamiento puede resolverlos de forma distinta.
+  Fuenlabrada saca el servicio a licitación; **Getafe licita la parte del CER
+  pero no la de abandonados**. Una ficha con un solo campo «quién lo lleva»
+  sería falsa en cuanto se mira de cerca. Y como consecuencia práctica: que un
+  municipio no aparezca en los contratos de un servicio no dice nada sobre los
+  otros dos.
+
+  *La fuente es la contratación pública, no la BDNS.* Comprobado: de 300
+  concesiones locales de «colonias felinas» entre 2022 y 2026, **282 van a
+  ayuntamientos** —en su mayoría transferencias de diputación a municipio— y
+  solo 18 a entidades privadas. La BDNS dice quién recibe dinero, no quién
+  presta el servicio.
+
+  La Plataforma de Contratación del Sector Público sí sirve, y publica datos
+  abiertos. Comprobado que el feed de sindicación responde y trae lo necesario:
+  **órgano de contratación con municipio, provincia y comunidad**, códigos CPV,
+  importe, estado del expediente y adjudicatario cuando ya está resuelto.
+
+  *Por qué no se ha hecho:* el volumen y el filtrado. El feed entrega unas
+  decenas de expedientes por página, de todo el sector público español, con
+  enlaces `next` encadenados; el histórico va en ficheros mensuales aparte. Hay
+  que acotar por CPV —queda por confirmar cuáles aplican— y por texto libre,
+  sobre descripciones que cada ayuntamiento redacta a su manera.
+
+  Y una trampa que conviene tener presente antes de sacar conclusiones: **un
+  municipio con servicio propio no tiene contrato**. No aparecer en la
+  Plataforma no significa que no preste el servicio, puede significar lo
+  contrario. Ausencia de contrato no es ausencia de servicio, y confundirlo
+  daría un mapa que acusa a quien lo hace por su cuenta.
+
+  *Por dónde empezar a validar:* **Fuenlabrada y Getafe**, porque se conoce la
+  respuesta de antemano. Si el método no reproduce que Getafe tiene contratado
+  el CER y no la recogida de abandonados, el método está mal, y es mejor
+  descubrirlo con dos municipios que con doscientos.
+
 - **Publicar las cifras de los tres años de EELL** — el 21 % de municipios que
   se han presentado alguna vez, el 1,8 % que ha cobrado y el 83 % de los que
   insisten los tres años sin conseguir nada. Están medidas y anotadas en
@@ -1401,6 +1514,25 @@ ser más informativo que la mejora en sí.
   para EELL y para EPA. A la segunda o tercera vez, la columna sale más barata.
 
 ### Operación y despliegue
+
+- **Versionar la URL de `styles.css` y los `.js`** — añadir un parámetro a los
+  `<link>` y `<script>` de las páginas (`css/styles.css?v=2026-10-10`) para que
+  al cambiar el valor el navegador lo trate como un fichero distinto y lo pida
+  de nuevo al instante. Permitiría además subir la caché de estáticos de la hora
+  actual a un año, que es lo habitual cuando la URL lleva versión. Coste
+  estimado: ~15 líneas entre las páginas y la regla de Nginx.
+
+  *Por qué no se ha hecho:* aplazado por tiempo, no descartado. El coste de no
+  tenerlo se vio el 10 de octubre de 2026 al desplegar el aviso de la
+  convocatoria: `docker/nginx/default.conf` sirve CSS y JS con
+  `Cache-Control: max-age=3600`, así que durante una hora el navegador **ni
+  siquiera pregunta** al servidor. El HTML sí llega fresco —no lleva
+  `Cache-Control`—, y el resultado es lo peor de los dos mundos: contenido nuevo
+  con estilos viejos. Ni `Ctrl+R` ni cerrar el navegador lo arreglan, porque la
+  caché de disco sobrevive al cierre y una recarga normal reutiliza los
+  subrecursos que considera frescos; hace falta `Ctrl+Shift+R`. Afecta a
+  cualquier visitante que haya entrado en la última hora, no solo a quien
+  despliega.
 
 - **Preservar `fecha_fin_plazo` y usuarios a través de `make reset-db`** —
   volcar las tablas `convocatorias` y `usuarios` antes de borrar y reinsertarlas

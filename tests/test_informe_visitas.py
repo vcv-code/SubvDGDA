@@ -293,3 +293,36 @@ def test_traer_informes_reutiliza_una_sola_conexion():
     assert "trap" in texto, (
         "El socket de control se quedaría abierto si el script aborta"
     )
+
+
+# ── Autollamadas en la tabla de procedencias (5-nov-2026) ─────────────────
+
+def test_el_resumen_no_cuenta_al_propio_servidor_como_procedencia():
+    """Las llamadas que la web se hace a sí misma no son gente que nos enlaza.
+
+    Se filtraban por el dominio y por la IP literal, pero el Referer también
+    llega con el NOMBRE de esa IP: el rango 169.58.x.x es de SoftLayer y su DNS
+    inverso la codifica en hexadecimal, de modo que
+    `94.b3.3aa9.ip4.static.sl-reverse.com` resuelve a 169.58.179.148.
+
+    Sin filtrarlo llegó a ser la segunda procedencia del informe, por delante de
+    Bing, y crecía: 6 el 2 de noviembre, 27 el día 5. El histórico lo arrastraba
+    desde el 24 de agosto.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("rv", RESUMEN)
+    rv = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rv)
+
+    nuestras = [
+        "https://subvencionesdgda.org/recursos.html",
+        "https://169.58.179.148/",
+        "https://94.b3.3aa9.ip4.static.sl-reverse.com/",
+        "http://94.b3.3aa9.ip4.static.sl-reverse.com:80/",
+    ]
+    ajenas = ["https://google.com/", "https://lagatapirata.org/", "android-app://com.google.android.gm"]
+
+    for r in nuestras:
+        assert rv._es_nuestro(r), f"«{r}» es nuestro y se estaría contando como procedencia"
+    for r in ajenas:
+        assert not rv._es_nuestro(r), f"«{r}» es una procedencia real y se estaría descartando"
