@@ -6433,3 +6433,91 @@ section[id] {
         gap: 10px;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   JUSTIFICACIÓN DE LAS AYUDAS (estadisticas-eell.html)
+   Bloque de texto con dos listas largas plegadas. No es un gráfico:
+   reutiliza la tarjeta .card-grafico como contenedor y añade solo lo
+   que le falta. Tamaños por encima de 0.875rem, que es el suelo de
+   legibilidad del sitio.
+   ══════════════════════════════════════════════════════════════════ */
+
+.justif__texto {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 12px;
+}
+
+.justif__hallazgos {
+    margin: 0 0 14px;
+    padding-left: 1.1rem;
+}
+
+.justif__hallazgos li {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 4px;
+}
+
+.justif__detalle {
+    margin-bottom: 10px;
+    border: 1px solid var(--color-gris-medio);
+    border-radius: 6px;
+}
+
+.justif__summary {
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-verde-tabla);
+    padding: 10px 14px;
+    list-style: none;
+}
+
+/* El triángulo por defecto de Safari se cuela aunque list-style sea none. */
+.justif__summary::-webkit-details-marker { display: none; }
+.justif__summary::before { content: '▶ '; font-size: 0.7rem; }
+details[open] > .justif__summary::before { content: '▼ '; }
+.justif__summary:hover { background: var(--color-fondo-verde); }
+
+.justif__cuerpo {
+    padding: 0 14px 12px;
+    border-top: 1px solid var(--color-gris-medio);
+}
+
+.justif__lista {
+    margin: 12px 0 8px;
+    padding-left: 1.4rem;
+    columns: 2;
+    column-gap: 28px;
+}
+
+.justif__lista li {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    /* Que un municipio no quede partido entre las dos columnas. */
+    break-inside: avoid;
+}
+
+/* El número de expediente es la referencia con la que alguien puede ir a
+   preguntar, así que se distingue del nombre sin robarle protagonismo. */
+.justif__exp {
+    font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    color: var(--color-gris-texto);
+    margin-right: 6px;
+}
+
+.justif__ok {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 0.8rem;
+    color: var(--estado-concedida);
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+    /* A una columna: en móvil dos columnas dejan los nombres largos
+       partidos en tres líneas de dos palabras. */
+    .justif__lista { columns: 1; }
+}
