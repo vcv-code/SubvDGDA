@@ -131,8 +131,14 @@ def componer(hist, evo, informes):
     return asunto, "\n".join(lineas)
 
 
-def enviar(asunto, cuerpo):
-    """Manda el correo. Nunca lanza: un fallo al avisar no rompe el cron."""
+def enviar(asunto, cuerpo, etiqueta="visitas"):
+    """Manda el correo. Nunca lanza: un fallo al avisar no rompe el cron.
+
+    `etiqueta` es lo que aparece tras «Subvenciones DGDA - » en el remitente.
+    Existe para que otros avisos del servidor —como el recordatorio semestral
+    de las licitaciones— reutilicen este envío en vez de copiarlo, y aun así
+    se distingan en la bandeja de entrada.
+    """
     # Misma cadena que usa docker-compose para el contenedor de cron:
     #   EMAIL_AVISOS: ${EMAIL_AVISOS:-${EMAIL_CONTACTO:-}}
     # En el servidor solo está puesto EMAIL_CONTACTO, así que mirar únicamente
@@ -147,7 +153,7 @@ def enviar(asunto, cuerpo):
         msg = EmailMessage()
         msg["Subject"] = asunto
         msg["From"] = formataddr(
-            ("Subvenciones DGDA - visitas", os.environ.get("EMAIL_FROM", "avisos@localhost")))
+            (f"Subvenciones DGDA - {etiqueta}", os.environ.get("EMAIL_FROM", "avisos@localhost")))
         msg["To"] = destino
         msg.set_content(cuerpo)
 

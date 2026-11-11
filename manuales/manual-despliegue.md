@@ -965,9 +965,34 @@ histórico. Hacen falta dos más en el mismo `crontab -e`:
 HISTORICO_FILE=/opt/subvdgda/informes/historico-servidor.json
 0 5 * * 1 cd /opt/subvdgda && { python3 scripts/resumen_visitas.py --dias 30; python3 scripts/historico_visitas.py; } >> /opt/subvdgda/logs/cron/resumen_visitas.log 2>&1
 0 9 1 * * cd /opt/subvdgda && python3 scripts/aviso_visitas.py >> /opt/subvdgda/logs/cron/aviso_visitas.log 2>&1
+0 9 15 1,7 * cd /opt/subvdgda && python3 scripts/recordatorio_licitaciones.py >> /opt/subvdgda/logs/cron/recordatorio_licitaciones.log 2>&1
+0 9 15 5 * cd /opt/subvdgda && python3 scripts/recordatorio_transparencia.py >> /opt/subvdgda/logs/cron/recordatorio_transparencia.log 2>&1
 ```
 
-Dos detalles de esas líneas que no son cosméticos:
+**La tercera es semestral, el 15 de enero y el 15 de julio**, y las fechas no
+son redondas por casualidad. La web publica una tabla de licitaciones de pienso
+con fecha visible, y envejece sola. En los 64 contratos con fecha que tenía la
+primera versión, **marzo a junio concentra la mitad** (32) y diciembre es el otro
+pico (8), por el cierre de ejercicio; enero y julio son los meses más flojos (2 y
+3). Así que el recordatorio cae justo después de cada oleada y en temporada
+tranquila: a mediados de enero el año anterior ya está cerrado, y a mediados de
+julio ha pasado lo gordo. El correo lee de `recursos.html` la fecha de los datos
+publicados, así que dice solo cuántos meses llevan sin tocarse.
+
+**La cuarta es anual, el 15 de mayo**, y recuerda volver a preguntar a la
+Dirección General de Derechos de los Animales por las justificaciones de las
+entidades locales. Anual y no semestral porque estos expedientes duran más de
+seis meses en cuanto hay que reclamar, y el segundo aviso llegaría con el
+primero sin cerrar. Y en mayo porque es el mes que ya funcionó: la solicitud de
+2026 entró el 8 de mayo y la respuesta buena llegó el 9 de septiembre,
+reclamación incluida — cuatro meses, dentro del mismo año natural. Lee la fecha
+de `estadisticas-eell.html`, con el mismo truco que la anterior.
+
+Importa que no se olvide: la página publica hoy que no hay ningún reintegro, y
+eso es provisional. No justificar es causa de reintegro (Ley 38/2003,
+art. 37.1.c), así que ese cero puede dejar de serlo sin que nadie avise.
+
+Tres detalles de esas líneas que no son cosméticos:
 
 **Las llaves.** En `A && B >> fichero`, la redirección se aplica **solo a B**:
 si el resumen fallara, su error no acabaría en el log y el fichero diría
