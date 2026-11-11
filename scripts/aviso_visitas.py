@@ -193,7 +193,14 @@ def main(argv):
         info = historico.leer_informe(r)
         if info:
             historico.fusionar(hist, info)
-    historico.guardar(hist)
+
+    # En seco NO se guarda. El histórico está versionado y es el único sitio
+    # donde viven los datos anteriores a 30 días, así que una vista previa no
+    # tiene por qué tocarlo. Además, los tests ejecutan este script en seco y
+    # dejaban el fichero modificado en cada pasada: `git checkout` se negaba a
+    # cambiar de rama y parecía un problema de git sin serlo.
+    if not seco:
+        historico.guardar(hist)
 
     asunto, cuerpo = componer(hist, evo, rutas)
     if not asunto:

@@ -110,3 +110,24 @@ def test_traer_informes_se_trae_el_historico_del_servidor():
     texto = (RAIZ / "scripts/traer_informes.sh").read_text(encoding="utf-8")
     assert "historico.json" in texto, (
         "No se trae el histórico que el servidor mantiene por su cuenta")
+
+
+def test_el_modo_seco_no_toca_el_historico():
+    """Una vista previa no debe escribir nada.
+
+    `main()` guardaba el histórico ANTES de mirar si era modo seco, así que
+    `--seco` lo reescribía igual. Dos motivos para que no lo haga: el fichero
+    está versionado y es el único sitio donde viven los datos de más de 30
+    días —los registros de Nginx se borran—, y estos mismos tests ejecutan el
+    script en seco tres veces, de modo que cada pasada dejaba el árbol sucio y
+    `git checkout` se negaba a cambiar de rama.
+    """
+    historico = Path("informes/historico.json")
+    if not historico.exists():
+        return
+    antes = historico.read_bytes()
+    subprocess.run([sys.executable, str(SCRIPT), "--seco"],
+                   capture_output=True, text=True, timeout=60)
+    assert historico.read_bytes() == antes, (
+        "el modo seco ha reescrito informes/historico.json")
+
