@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Nota informativa — La compra pública de pienso para colonias felinas</title>
+<style>
+/* Documento para imprimir o guardar como PDF desde el navegador.
+   Los fondos de color NO se imprimen salvo que se marque «Gráficos de fondo»
+   en el diálogo de impresión, así que nada esencial depende de ellos: las
+   cabeceras de tabla se distinguen por borde y negrita, no por relleno. */
+:root { --verde:#2E6B4F; --tinta:#1a1a1a; --gris:#5a5a5a; --linea:#d4d4d4; }
+
+@page { size:A4; margin:1.7cm 1.8cm; }
+
+/* AL GUARDAR ESTE DOCUMENTO EN PDF, el destino tiene que ser «Guardar como
+   PDF» (el de Chrome), NUNCA la impresora virtual «Adobe PDF».
+   Esa segunda pasa por PostScript —Producer: Acrobat Distiller, Creator:
+   PScript5.dll— y pierde la tabla que dice qué letra es cada símbolo: el PDF se
+   ve e imprime perfecto, pero por dentro el texto son códigos `(cid:NN)`, así
+   que no se puede copiar ni buscar y un lector de pantalla no lo lee. En un
+   documento que va a un ayuntamiento eso importa: allí querrán sacar las cifras
+   y encontrarlo en su gestor documental.
+   Para comprobarlo: si al extraer el texto salen «(cid:», se imprimió mal. */
+body { font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+       color:var(--tinta); line-height:1.45; font-size:10.5pt;
+       max-width:19cm; margin:1.5cm auto; padding:0 1rem; background:#fff; }
+
+h1 { font-size:15pt; margin:0 0 .2rem; letter-spacing:.02em; }
+.subtitulo { font-size:12pt; font-weight:600; margin:0 0 .6rem; color:var(--tinta); }
+.entradilla { font-size:9.5pt; color:var(--gris); font-style:italic;
+              border-bottom:2px solid var(--verde); padding-bottom:.7rem; margin-bottom:1.4rem; }
+
+h2 { font-size:11.5pt; color:var(--verde); margin:1.15rem 0 .45rem;
+     padding-bottom:.2rem; border-bottom:1px solid var(--linea); }
+
+p { margin:.45rem 0; text-align:justify; }
+ul { margin:.5rem 0; padding-left:1.1rem; }
+li { margin:.22rem 0; text-align:justify; }
+
+table { border-collapse:collapse; width:100%; margin:.6rem 0; font-size:9.5pt; }
+th { text-align:left; font-weight:700; border-bottom:2px solid var(--verde);
+     padding:.35rem .5rem; }
+td { padding:.3rem .5rem; border-bottom:1px solid var(--linea); }
+.num { text-align:right; }
+tr.destacada td { font-weight:700; border-top:2px solid var(--verde);
+                  border-bottom:2px solid var(--verde); }
+tr.mediana td { font-weight:600; }
+
+.fuente { font-size:8.5pt; color:var(--gris); font-style:italic; margin-top:-.3rem; }
+.hueco { font-style:italic; border-bottom:1px dotted var(--verde); padding:0 .15em; }
+
+.aviso { border-left:3px solid var(--verde); padding:.1rem 0 .1rem .8rem; margin:.9rem 0; }
+
+.imprimir { position:fixed; top:1rem; right:1rem; background:var(--verde); color:#fff;
+            border:0; border-radius:6px; padding:.5rem .9rem; font-size:.85rem;
+            cursor:pointer; font-family:inherit; }
+
+@media print {
+  body { margin:0; padding:0; max-width:none; }
+  .imprimir { display:none; }
+  h2 { break-after:avoid; }
+  table { break-inside:avoid; }
+  .aviso { break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+
+<button class="imprimir" onclick="window.print()">Guardar como PDF</button>
+
+<h1>NOTA INFORMATIVA</h1>
+<p class="subtitulo">La compra pública de pienso para colonias felinas en los ayuntamientos españoles</p>
+<p class="entradilla">
+  Documento de apoyo a la propuesta de contratación del suministro de alimentación
+  para las colonias felinas de <span class="hueco">[ciudad]</span>. Elaborado a partir
+  de la Plataforma de Contratación del Sector Público, con datos a noviembre de 2026.
+</p>
+
+<h2>1. Cada vez más ayuntamientos compran pienso mediante contrato público</h2>
+<p>
+  Hemos revisado la Plataforma de Contratación del Sector Público. Desde 2019 constan
+  <strong>más de 90 contratos públicos</strong> destinados a la alimentación de gatos
+  comunitarios, convocados por <strong>70 ayuntamientos y entidades públicas</strong> de
+  todo el país. De ellos, <strong>65 son contratos específicos de suministro de pienso</strong>
+  para colonias, de 47 municipios distintos, y otros <strong>26 son contratos de gestión
+  de colonias</strong> que incluyen la alimentación.
+</p>
+<p>La tendencia es claramente creciente, sobre todo desde la entrada en vigor de la Ley 7/2023:</p>
+
+<table>
+  <tr>
+    <th>Año</th><th class="num">2019</th><th class="num">2020</th><th class="num">2021</th>
+    <th class="num">2022</th><th class="num">2023</th><th class="num">2024</th>
+    <th class="num">2025</th><th class="num">2026*</th>
+  </tr>
+  <tr>
+    <td>Suministro de pienso para colonias</td>
+    <td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">5</td>
+    <td class="num">8</td><td class="num">15</td><td class="num">17</td><td class="num">15</td>
+  </tr>
+  <tr>
+    <td>Gestión de colonias con alimentación</td>
+    <td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">–</td>
+    <td class="num">–</td><td class="num">5</td><td class="num">11</td><td class="num">10</td>
+  </tr>
+</table>
+
+<p class="fuente">
+  * 2026 hasta noviembre. Un contrato más, del Valle de Aranguren, está en evaluación sin
+  fecha límite publicada y por eso no figura en ningún año. Muchos municipios ya repiten el
+  contrato año tras año: Armilla lo ha licitado en cuatro ejercicios (2021, 2022, 2023 y 2025),
+  y Arroyo de la Encomienda, Erandio, Badalona, L'Alcora, Olesa de Montserrat, La Torre de
+  Claramunt y Sant Adrià de Besòs en dos cada uno. La alimentación de las colonias se está
+  consolidando como un gasto municipal ordinario, no como una ayuda puntual.
+</p>
+
+<h2>2. Importes en rangos razonables y comparables</h2>
+<p>
+  Dos de cada tres contratos de pienso se sitúan <strong>entre 10.000 y 35.000 € sin IVA</strong>,
+  con una mediana de 14.600 €. Algunos ejemplos de municipios de tamaño medio:
+</p>
+
+<table>
+  <tr><th>Municipio</th><th class="num">Habitantes</th><th class="num">Importe contrato</th><th class="num">€ por habitante</th></tr>
+  <tr><td>Burgos</td><td class="num">177.402</td><td class="num">33.389 €</td><td class="num">0,19 €</td></tr>
+  <tr><td>San Fernando (Cádiz)</td><td class="num">93.338</td><td class="num">22.000 €</td><td class="num">0,24 €</td></tr>
+  <tr><td>Mollet del Vallès</td><td class="num">52.990</td><td class="num">28.560 €</td><td class="num">0,54 €</td></tr>
+  <tr><td>Montcada i Reixac</td><td class="num">37.460</td><td class="num">21.817 €</td><td class="num">0,58 €</td></tr>
+  <tr><td>Castro-Urdiales</td><td class="num">33.450</td><td class="num">20.088 €</td><td class="num">0,60 €</td></tr>
+  <tr><td>Alcantarilla</td><td class="num">43.876</td><td class="num">60.000 €</td><td class="num">1,37 €</td></tr>
+  <tr class="mediana"><td>Mediana de todos los contratos de pienso</td><td class="num"></td><td class="num"></td><td class="num">0,59 €</td></tr>
+  <tr class="destacada">
+    <td>Propuesta para <span class="hueco">[ciudad]</span></td>
+    <td class="num"><span class="hueco">[habitantes]</span></td>
+    <td class="num"><span class="hueco">[importe]</span> €</td>
+    <td class="num"><span class="hueco">[x,xx]</span> €</td>
+  </tr>
+</table>
+<p class="fuente">
+  Fuente: Plataforma de Contratación del Sector Público (importes de licitación sin IVA)
+  e INE, padrón a 1 de enero de 2025.
+</p>
+
+<div class="aviso">
+  <p>
+    <strong>Una advertencia necesaria sobre esta tabla.</strong> La duración de los contratos
+    no es homogénea: algunos cubren un año y otros varios, y los importes publicados no siempre
+    lo precisan. El euro por habitante <strong>no es, por tanto, un gasto anual</strong>, sino
+    una referencia de orden de magnitud. Los extremos de la muestra lo evidencian: hay contratos
+    que equivaldrían a más de veinte veces la necesidad anual estimada del municipio, lo que solo
+    se explica por plazos plurianuales o por dimensionamientos muy holgados. Preferimos señalarlo
+    nosotras a que la comparación se use sin este matiz.
+  </p>
+</div>
+
+<p>
+  Aun así, lo que proponemos para <span class="hueco">[ciudad]</span> se sitúa en la parte baja
+  de lo que dedican municipios comparables en proporción a su población. No es una petición
+  desproporcionada, sino una primera fase prudente.
+</p>
+
+<h2>3. El precedente más cercano: un municipio del mismo tamaño</h2>
+<p>
+  El argumento más difícil de rebatir es el de <strong>un municipio comparable que ya lo hace</strong>,
+  porque la primera objeción suele ser «aquí no es lo mismo». Conviene buscar uno de tamaño
+  parecido y, a ser posible, cercano.
+</p>
+<p>
+  Como ejemplo, <strong>Getafe</strong> (193.238 habitantes) adjudicó en <strong>2025</strong> un
+  contrato de gestión de colonias felinas con suministro de pienso incluido por
+  <strong>75.375 €</strong>: <strong>0,39 € por habitante</strong>. Para un municipio grande es una
+  referencia sólida; para uno menor, la tabla anterior recoge casos desde 33.000 hasta 177.000
+  habitantes.
+</p>
+<p>
+  En el caso de <span class="hueco">[ciudad]</span>, el municipio comparable es
+  <span class="hueco">[municipio]</span>, de <span class="hueco">[habitantes]</span> habitantes,
+  que destinó <span class="hueco">[importe]</span> € —<span class="hueco">[x,xx]</span> € por
+  habitante—. Lo que aquí se propone es una fracción de esa cifra, y limitado además al suministro
+  de alimento.
+</p>
+<p class="fuente">
+  Si no hay ningún municipio de tamaño parecido, compara el <strong>euro por habitante</strong>:
+  es lo que permite poner en la misma escala municipios muy distintos. La tabla de licitaciones
+  que acompaña a esta nota recoge el detalle municipio a municipio.
+</p>
+
+<h2>4. Coste por gato: un cálculo sencillo</h2>
+<ul>
+  <li>Un gato comunitario consume unos <strong>18–22 kg de pienso seco al año</strong>, es decir
+      <strong>50–60 gramos diarios</strong>: el orden de magnitud que indican las tablas de ración
+      de los propios fabricantes, impresas en el envase, para un gato adulto. Los gatos de colonia
+      viven a la intemperie y gastan más energía que uno doméstico.</li>
+  <li>En compra por volumen, el pienso para colonias se encuentra en el mercado <strong>entre 1,80
+      y 2,70 € por kilo sin IVA</strong> —del orden de 2 a 3 € con el IVA del 10 % incluido—, según
+      la calidad del producto y la cantidad contratada. Las tarifas profesionales de los
+      fabricantes escalonan el precio por volumen y suelen incluir ya el transporte: un contrato
+      municipal mueve <strong>varias toneladas al año</strong>, muy por encima de los tramos en que
+      esas tarifas alcanzan su mayor descuento.</li>
+  <li>Por tanto, alimentar a un gato cuesta <strong>entre 32 y 59 € al año</strong>, es decir,
+      entre <strong>2,70 y 5 € al mes</strong>.</li>
+</ul>
+<p>
+  <strong>Esa cifra corresponde a una alimentación adecuada, no a la más barata del mercado.</strong>
+  Es el mínimo razonable para que los animales se mantengan sanos: existen gamas mejores, y por
+  debajo de esta banda se entra en productos cuyo ahorro tiende a pagarse después en atención
+  veterinaria —que, en el caso de los gatos comunitarios, corre también a cargo del Ayuntamiento
+  (Ley 7/2023, art. 39.1.c)—. Dimensionar el contrato por debajo de este rango no abarata el
+  servicio: traslada el coste a otra partida.
+</p>
+<p>
+  Tomamos el rango completo y no el extremo más favorable a propósito: un cálculo basado en el
+  precio más bajo imaginable produce contratos que se quedan cortos a mitad de ejercicio, que es
+  justo el problema descrito en el apartado siguiente. Con compras por volumen cabe situarse en
+  la banda baja, pero el expediente debe dimensionarse con la realidad del mercado.
+</p>
+<p>
+  Con los datos de las entidades —más de <span class="hueco">[cantidad]</span> gatos comunitarios
+  en <span class="hueco">[ciudad]</span>—, alimentarlos a todos supondría entre
+  <span class="hueco">[cantidad]</span> y <span class="hueco">[cantidad]</span> € al año. Un
+  contrato inicial de <span class="hueco">[importe]</span> € permitiría atender a entre
+  <span class="hueco">[cantidad]</span> y <span class="hueco">[cantidad]</span> gatos,
+  aproximadamente la población gestionada hoy por las entidades activas.
+</p>
+
+<h2>5. La cantidad debe basarse en las necesidades reales</h2>
+<p>
+  La Ley de Contratos del Sector Público exige que la necesidad del contrato se determine
+  <strong>con precisión</strong> y se justifique en el expediente (arts. 28 y 116), y que el
+  presupuesto sea <strong>adecuado a los precios de mercado</strong> (art. 100.2). En la práctica,
+  muchos ayuntamientos fijan una cifra redonda sin relación con el número de colonias y de gatos,
+  y eso provoca suministros insuficientes o mal dimensionados.
+</p>
+<p>
+  Proponemos que la memoria justificativa de <span class="hueco">[ciudad]</span> se base en el
+  <strong>censo de colonias autorizadas y el número de gatos</strong>, que las entidades podemos
+  aportar y actualizar cada año.
+</p>
+<p>
+  Cuando el municipio aún no tiene el censo cerrado, la cifra puede estimarse por dos caminos que
+  conviene contrastar entre sí: <strong>por colonias</strong>, aplicando la media de
+  <strong>10 a 12 gatos por colonia</strong> que se maneja habitualmente en la gestión de colonias
+  felinas; y <strong>por población</strong>, ya que los municipios que han hecho censo encuentran
+  del orden de <strong>diez gatos comunitarios por cada mil habitantes</strong>. Si los dos cálculos
+  coinciden, el orden de magnitud es fiable; si divergen mucho, probablemente queden colonias por
+  aflorar. En todo caso conviene revisar el censo cada año: el número de colonias registradas crece
+  a medida que el programa se consolida.
+</p>
+
+<h2>6. El precio no tiene por qué ser el único criterio</h2>
+<p>
+  La ley establece que los contratos se adjudiquen atendiendo a la <strong>mejor relación
+  calidad-precio</strong> (art. 145.1). En los contratos de suministro, el precio solo puede ser
+  el único criterio cuando el producto está perfectamente definido y no hay nada más que valorar
+  (art. 145.3.f), lo que no ocurre con un alimento cuya calidad y aceptación por los animales
+  varía mucho entre productos.
+</p>
+<p>
+  Además, la ley permite <strong>rechazar las ofertas anormalmente bajas</strong> (art. 149). Las
+  experiencias negativas de otros municipios —pienso de mala calidad, o que los gatos no comen— se
+  han dado precisamente cuando solo se valoró el precio. Por eso proponemos que la calidad
+  nutricional, la experiencia acreditada del producto y las condiciones de suministro pesen al
+  menos tanto como el precio.
+</p>
+<p>
+  <strong>Y una precaución práctica: el precio debe expresarse por kilo, no por saco.</strong> Los
+  formatos habituales del mercado son de <strong>15 y de 20 kilos</strong>, de modo que dos ofertas
+  al mismo precio por saco pueden diferir en <strong>un tercio</strong> en el precio por kilo, que
+  es lo único comparable. Conviene fijar en el pliego la unidad de medida —el kilogramo—, el
+  formato admitido y si el transporte y la descarga van incluidos, porque con frecuencia se
+  facturan aparte.
+</p>
+
+<h2>7. Mirando hacia adelante: el alimento húmedo</h2>
+<p>
+  En esta primera fase proponemos <strong>solo pienso seco</strong>, por ser lo más sencillo de
+  gestionar. El alimento húmedo, sin embargo, no es un complemento prescindible sino una
+  herramienta de salud y de gestión, y convendría incorporarlo en fases posteriores:
+</p>
+<ul>
+  <li><strong>Hidratación y prevención.</strong> El gato bebe poca agua por naturaleza, y una dieta
+      exclusivamente seca favorece los problemas urinarios y renales, muy frecuentes en los gatos
+      de colonia a medida que envejecen.</li>
+  <li><strong>Animales vulnerables.</strong> Cachorros, gatos enfermos o mayores y gatos con
+      problemas bucales, que no pueden comer pienso seco con normalidad.</li>
+  <li><strong>Tratamientos.</strong> Permite administrar desparasitaciones y medicación mezclada
+      con la comida, sin tener que capturar al animal.</li>
+  <li><strong>Capturas para el programa CER.</strong> Es el cebo más eficaz en las jaulas trampa,
+      lo que hace las capturas más rápidas y seguras.</li>
+  <li><strong>Rutina y control.</strong> Una toma diaria crea un hábito que facilita observar a los
+      gatos, detectar enfermedades a tiempo y localizar animales nuevos sin esterilizar.</li>
+</ul>
+<p>
+  Varios municipios ya lo incluyen en sus contratos, como Badalona, Mollet del Vallès o Súria.
+  Sugerimos que el contrato prevea, en una fase posterior o mediante una ampliación, una partida
+  de alimento húmedo.
+</p>
+
+<h2>8. De quién es el gasto: titularidad municipal y voluntariado</h2>
+<p>
+  La Ley 7/2023 no deja esto a la interpretación. Obliga a identificar a todos los gatos
+  comunitarios mediante microchip <strong>«registrada bajo la titularidad de la Administración
+  local competente»</strong> (art. 38.2); atribuye a las entidades locales <strong>su gestión</strong>
+  (art. 39.1); y define «gestión de colonias felinas» como el procedimiento mediante el cual los
+  gatos <strong>«son alimentados, censados y sometidos a un programa sanitario y de control
+  poblacional CER»</strong> (art. 3.w). A ello se añade que los protocolos autonómicos deben
+  desarrollar «criterios de alimentación, limpieza, atención mínima y cuidados sanitarios»
+  (art. 40.c), y que los gatos comunitarios conservan «su protección como animales de compañía»
+  (art. 38.1), a los que el artículo 28.d) exige garantizar «acceso a bebida y alimentación».
+</p>
+<p>
+  Alimentar las colonias no es, por tanto, una prestación voluntaria que el municipio pueda asumir
+  o no: <strong>forma parte de la competencia que la ley le atribuye</strong>, sobre animales cuya
+  titularidad registral es la suya.
+</p>
+<p>
+  <strong>Quien sostiene hoy ese gasto, sin embargo, es el voluntariado.</strong> La Ley 45/2015
+  define la acción voluntaria como la que se realiza «sin contraprestación económica o material» y
+  reconoce el derecho a ser reembolsada de los gastos ocasionados (arts. 3.1.c y 10.f). Conviene
+  leerlo con precisión: <strong>ese reembolso corresponde a la entidad de voluntariado, no a la
+  Administración</strong>. La ley no obliga a ningún ayuntamiento a pagar los gastos de una
+  voluntaria. Lo que sí presupone es que el voluntariado aporta tiempo y no dinero, y que alguien ha
+  de cubrir los gastos que genera; si la entidad no tiene con qué, los acaba cubriendo la persona
+  — que es justamente lo que la ley trata de evitar.
+</p>
+<p>
+  <strong>La denominación no altera nada de lo anterior.</strong> Es frecuente oír «colaboradoras»,
+  «cuidadoras» o «personas autorizadas» en lugar de voluntarias. La Ley 45/2015 define el
+  voluntariado por los requisitos de la actividad —solidaria, libre, sin contraprestación y a través
+  de una entidad con arreglo a un programa concreto (art. 3.1)— y enumera los supuestos excluidos
+  (art. 3.3), sin que ninguno describa la gestión organizada y continuada de una colonia. Y que una
+  asociación sea <strong>entidad colaboradora</strong> en gestión de colonias felinas a efectos del
+  artículo 47 de la Ley 7/2023 es compatible con ello: describe el régimen administrativo de la
+  entidad, no la condición de las personas que hacen el trabajo. Conviene recordar además que el
+  artículo 39.1.a) obliga al municipio a regular en su normativa <strong>los derechos</strong>, y no
+  solo las obligaciones, de las personas cuidadoras de colonias.
+</p>
+<div class="aviso">
+  <p>
+    De aquí no se sigue una reclamación de pago a las voluntarias, que sería incompatible con el
+    voluntariado. Se sigue algo más simple: <strong>el gasto básico y previsible de alimentar las
+    colonias no debería depender de la capacidad económica de quien se ofrece a cuidarlas.</strong>
+    Contratar el suministro es la vía ordinaria para que ese coste lo asuma quien tiene la
+    competencia y la titularidad registral de los animales.
+  </p>
+</div>
+
+<h2>Conclusión</h2>
+<p>
+  Contratar el suministro de pienso es hoy una práctica <strong>extendida, creciente y
+  económicamente asumible</strong>: más de noventa contratos en setenta entidades públicas, con una
+  tendencia al alza desde la Ley 7/2023 y municipios que ya lo han convertido en gasto ordinario.
+</p>
+<p>
+  Lo que proponemos está en línea con lo que hacen decenas de municipios, con un coste moderado por
+  habitante y dimensionado sobre el censo real de colonias, que es lo que la propia Ley de
+  Contratos exige y lo que evita los suministros que se quedan cortos a mitad de ejercicio. Las
+  entidades nos ponemos a disposición del Ayuntamiento para colaborar en el censo, la definición
+  técnica y el seguimiento del contrato.
+</p>
+<p>
+  Y hay una razón de fondo, más allá de las cifras: la alimentación de las colonias es un gasto
+  básico, previsible y cuantificable de un servicio que la ley atribuye al municipio. Que dependa
+  hoy de lo que puedan poner de su bolsillo quienes se ofrecen a cuidarlas no es una solución
+  estable, ni es lo que la Ley de Voluntariado contempla. Un contrato de suministro lo convierte en
+  lo que debería ser: una partida ordinaria, dimensionada y auditable.
+</p>
+
+</body>
+</html>

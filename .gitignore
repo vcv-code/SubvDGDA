@@ -279,3 +279,12 @@ docs/privado/
 # CIF. Va con el resto de fuentes en data/raw/, pero a diferencia de las demás
 # NO se versiona: es de terceros y se descarga de www.ine.es.
 data/raw/ine/
+
+# Nota de pienso adaptada a un municipio concreto. La versión GENÉRICA sí se
+# versiona y se publica; esta no. Lleva las cuentas de la asociación (gasto
+# anual, importe justificado, subvenciones recibidas) y describe la situación de
+# las otras entidades que trabajan en el municipio, que no han autorizado nada.
+# Mismo criterio que docs/privado/: no debe publicarse aunque el repo sea
+# público, y es un documento de negociación, no divulgativo.
+documentos/nota-pienso-*-fuenlabrada.html
+documentos/nota-pienso-fuenlabrada.*

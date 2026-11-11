@@ -123,6 +123,8 @@ DOCUMENTOS_ALOJADOS = (
     "triptico-colonias-felinas-tenencia-responsable.pdf",
     "convenio-colectivo-centros-veterinarios.pdf",
     "gestion-etica-colonias-felinas-proyectos-cer.pdf",
+    "nota-compra-publica-pienso-colonias.pdf",
+    "licitaciones-pienso-colonias-municipios.pdf",
 )
 
 
